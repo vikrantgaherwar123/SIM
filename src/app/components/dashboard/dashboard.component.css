@@ -1,0 +1,39 @@
+.dashboard-container {
+  padding-top: 15%;
+  background-color: #ededed;
+}
+.dashboard-top a :hover {
+  background-color: #a0ceef !important;
+  box-shadow: 0px 2px 6px 0px #a0ceef !important;
+  -webkit-box-shadow: 0px 2px 6px 0px #a0ceef !important;
+  -moz-box-shadow: 0px 2px 6px 0px #a0ceef !important; 
+}
+.dashboard-box {
+  min-height: 195px;
+  width : 220px;
+  background-color: #FAF8F8;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  padding: 21px;
+  margin-left: 35px;
+}
+.dashboard-box .btn{
+  width: 100%;margin:0;padding: 20px;
+}
+.dashboard-box img{
+  width: 86px;
+}
+.dashboard-box span {
+  font-size: 13.5px;
+  text-transform: capitalize;
+  color: #2b323a;
+}
+.font-custom-bold{
+  font-family: quicksand_bold !important;
+  font-weight: normal !important;
+}
+.option-card {
+  max-height: 260px;
+}
