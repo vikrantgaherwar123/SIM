@@ -11,8 +11,14 @@
   width: 100%;
 }
 .sidebar-switch-icon {
-  margin-left: 2%;
-  padding-top: 1%;
+  margin-left: 3%;
+  padding: 1% 2%;
+  max-height: 45px;
+  border-radius: 4px;
+}
+.sidebar-switch-icon:hover {
+  background-color: #dddddd;
+  cursor: pointer;
 }
 .user-logout {
   padding-top: 2%;
