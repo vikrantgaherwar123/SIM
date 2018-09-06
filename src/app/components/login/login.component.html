@@ -1,0 +1,90 @@
+<div class="row login-container">
+  <div class="col-md-7 pad-right-0">
+    <div class="info-container text-center">
+
+      <img src="assets/images/login/lh.png" class="">
+
+      <p>
+        readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
+        distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+        Many desktop publishing packages and web page edito
+      </p>
+    </div>
+  </div>
+  <div class="col-md-4 pad0">
+    <div class="login-form-container">
+      <img src="assets/images/login/lg.png" class="lock-image img-fluid">
+
+      <div class="login-form">
+        <form name="form">
+          <div class="form-group" style="margin-bottom: 8px;">
+            <i class="fa fa-envelope"></i>
+            <input type="text" class="login-input" name="email" ng-model="user.userName" autocomplete="off" placeholder="Email">
+          </div>
+          <div style="min-height: 15px;">
+            <!-- <span ng-show="errorStaus" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
+              <img src="assets/images/exclamation16.png" style="width: 12px;margin-top: -3px;">
+              {{registerMessage}}
+            </span> -->
+          </div>
+          <div class="form-group">
+            <i class="fa fa-key"></i>
+            <input type="password" class="login-input" name="password" placeholder="Password" ng-model="user.Password" required autocomplete="off"
+              style="margin-top: -6px;">
+          </div>
+          <div id="rem-for">
+            <div class="padl0 pull-left">
+              <input type="checkbox" id="remember"><label class="font-custom-bold fontsize12" style="vertical-align: text-top;"
+                for="remember"></label>Remember me
+            </div>
+            <a class="pull-right" ng-click="forgetPassword();">Forgot Password?</a>
+          </div>
+  
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="form-group">
+            <button type="submit" id="login-btn" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>" name="login-btn"
+              href="#" ng-click="loginUser(user);">Login</button>
+          </div>
+        </form>
+        <div id="or-div">
+          <div id="h2-div"><span>Or</span></div>
+        </div>
+        <div class="social-login-container text-center">
+          <a fb-login type="button" id="fbbtn" name="fbbtn" style="cursor: pointer">
+            <img src="assets/images/login/fb.png">
+          </a>
+          <a g-login type="button" id="googlebtn" name="googlebtn" style="cursor: pointer">
+            <img src="assets/images/login/gplus.png">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-md-4" id="login-right-outer1" ng-show="forgetFlag">
+    <div class="col-md-12" id="login-right-inner1">
+      <div class="col-md-12">
+        <img src="assets/images/login/lg.png" id="login-lock1">
+        <div class="font-custom-book" style="margin-top: 42.5px;font-weight: 900; font-size: 11px"> enter your email id
+          to reset password
+        </div>
+
+        <form name="forgetForm" ng-submit="verifyEmail(forget,true)">
+          <div class="form-group input--with-icon">
+            <i class="fa fa-envelope input-icons"></i>
+            <input type="email" class="login-input" name="email" ng-model="forget.email" required autocomplete="off" placeholder="Email">
+          </div>
+          <div style="min-height: 15px;" class="margin-bottom-5px">
+            <span ng-show="forgetResponseStatus" class="font-custom-bold" style="color: #ff8000; font-size: 11px"></span>
+          </div>
+          <div class="form-group">
+            <button type="submit" id="login-btn1" name="login-btn" ng-disabled="!forgetForm.$valid">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="forget-back text-center">
+      <span href="#" ng-click="forgetFlag = false;forgetResponseStatus = false;"> Go Back</span>
+    </div>
+  </div> -->
+</div>

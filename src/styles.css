@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+b, body, p, button {
+  font-family: quicksand_regular !important;
+  font-size: 13.5px;
+  font-style: normal;
+  font-weight: 800;
+}
+.pad0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.pad-right-0 {
+  padding-right: 0 !important;
+}
+.pad-left-0 {
+  padding-left: 0 !important;
+}
+input[type=text], input[type=password] {
+  font-family: quicksand_book !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 800 !important;
+}
