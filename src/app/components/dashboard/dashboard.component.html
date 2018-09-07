@@ -1,51 +1,48 @@
-<!--<div class="row" id="header-section" ng-include="'views/elements/header.html'"></div>-->
-<!-- <pageslide ps-speed="0.5" id="sidebar-menu" ps-side="left" ps-open="checked" ng-include="'views/elements/navigation.html'"
-  ps-click-outside="false"></pageslide> -->
-
-<div class="dashboard-container row">
-  <div class="col-md-12 col-sm-12  col-xs-12" id="main" style="display: flex;justify-content: center;height: 400px;">
-    <div class="row dashboard-top">
-      <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
-        <a ng-click="navigate('/client');">
-          <div class="dashboard-box text-center">
-            <div class="dashboard-icon ">
-              <img src="../assets/images/client_dash.png" class="img-responsive">
+<div class="dashboard-container">
+  <div class="row">
+    <div class="col-md-12 col-sm-12  col-xs-12" id="main" style="display: flex;justify-content: center;height: 400px;">
+      <div class="row dashboard-top">
+        <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
+          <a ng-click="navigate('/client');">
+            <div class="dashboard-box text-center">
+              <div class="dashboard-icon ">
+                <img src="../assets/images/client_dash.png" class="img-responsive">
+              </div>
+              <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_CLIENT' | translate}}</span>
             </div>
-            <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_CLIENT' | translate}}</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-md-3 col-sm-3 ml-0 col-xs-6 pad0 option-card">
-        <a ng-click="navigate('/product');">
-          <div class="dashboard-box text-center">
-            <div class="dashboard-icon">
-              <img src="../assets/images/product_dash.png" class="img-responsive">
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-3 ml-0 col-xs-6 pad0 option-card">
+          <a ng-click="navigate('/product');">
+            <div class="dashboard-box text-center">
+              <div class="dashboard-icon">
+                <img src="../assets/images/product_dash.png" class="img-responsive">
+              </div>
+              <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_PRODUCT' | translate}}</span>
             </div>
-            <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_PRODUCT' | translate}}</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
-        <a ng-click="navigate('/invoice/view/0');">
-          <div class="dashboard-box text-center">
-            <div class="dashboard-icon">
-              <img src="../assets/images/invoice_dash.png" class="img-responsive">
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
+          <a ng-click="navigate('/invoice/view/0');">
+            <div class="dashboard-box text-center">
+              <div class="dashboard-icon">
+                <img src="../assets/images/invoice_dash.png" class="img-responsive">
+              </div>
+              <span class="font-custom-bold " style="text-transform: uppercase;">{{'DASH_INVOICE' | translate}}</span>
             </div>
-            <span class="font-custom-bold " style="text-transform: uppercase;">{{'DASH_INVOICE' | translate}}</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-md-3 col-sm-3 col-xs-6 ml-0 pad0 option-card">
-        <a ng-click="navigate('/estimate/view/0');">
-          <div class="dashboard-box text-center">
-            <div class="dashboard-icon">
-              <img src="../assets/images/estimate_dash.png" class="img-responsive">
+          </a>
+        </div>
+  
+        <div class="col-md-3 col-sm-3 col-xs-6 ml-0 pad0 option-card">
+          <a ng-click="navigate('/estimate/view/0');">
+            <div class="dashboard-box text-center">
+              <div class="dashboard-icon">
+                <img src="../assets/images/estimate_dash.png" class="img-responsive">
+              </div>
+              <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_ESTIMATE' | translate}}</span>
             </div>
-            <span class="font-custom-bold" style="text-transform: uppercase;">{{'DASH_ESTIMATE' | translate}}</span>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
     </div>
   </div>

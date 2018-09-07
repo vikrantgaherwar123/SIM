@@ -1,6 +1,12 @@
-.content {
-  padding: 0 2%;
-}
 .app-container {
   background-color: #ededed;
+}
+.header-container {
+  position: fixed;
+  top: 0;
+  z-index: 2000;
+  width: 100%;
+}
+.content {
+  margin-top: 75px;
 }
