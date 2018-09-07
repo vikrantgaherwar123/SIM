@@ -20,10 +20,30 @@ input[type=text], input[type=password] {
   font-style: normal;
   font-weight: 800 !important;
 }
-.font-custom-bold{
+.font-custom-bold {
   font-family: quicksand_bold !important;
   font-weight: normal !important;
 }
 .ng-sidebar {
   z-index: 1000 !important;
+}
+body .btn-group-raised .btn:not(.btn-link), body .btn-group-raised .input-group-btn .btn:not(.btn-link), body .btn.btn-raised:not(.btn-link), body .input-group-btn .btn.btn-raised:not(.btn-link) {
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}
+.btn-success.disabled, .btn-success.disabled.active, .btn-success.disabled.focus, .btn-success.disabled:active, .btn-success.disabled:focus, .btn-success.disabled:hover, .btn-success[disabled], .btn-success[disabled].active, .btn-success[disabled].focus, .btn-success[disabled]:active, .btn-success[disabled]:focus, .btn-success[disabled]:hover, fieldset[disabled] .btn-success, fieldset[disabled] .btn-success.active, fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:active, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
+  background-color: #8fbae6 !important;
+  border: #8fbae6 solid 2px !important;
+  -webkit-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+  box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+  -moz-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+}
+.btn.btn-raised {
+  /* padding: 6px 12px !important; */
+  border-radius: 2px;
+}
+.item-form button {
+  width: 125px;
+  height: 42px;
+  font-size: 15px !important;
 }
