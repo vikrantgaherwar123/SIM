@@ -1,0 +1,21 @@
+@import '../../../assets/css/listForm.css';
+
+.product-form input{
+  height: 34px;
+  margin-bottom: 0px !important;
+}
+.product-form .input-group-addon{
+  background: #e0dede57 !important;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-right: 0;
+  padding: 4px 12px;
+}
+.product-form input[type=text]{
+  border-left: none !important;
+}
+.product-form img {
+  padding: 0px 8px 0px 12px;
+  width: 40px;
+  height: auto;
+}
