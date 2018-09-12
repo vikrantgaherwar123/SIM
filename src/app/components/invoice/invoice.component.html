@@ -1,0 +1,2207 @@
+<div class="row main-wrapper">
+  <div class="col-md-12 col-sm-12 col-xs-12" id="main">
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3 item-list inv-list pad-right-0">
+        <div ng-class="{'list-shadow':invoices.length > clientDisplayLimit,'scroll-bar-shadow': true}">
+
+          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+              <div class="row">
+                  <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;">
+                    <button style=" padding: 0;" ng-click="goNew(); " title="Add New" class="pull-left list-btn cus-img "><img
+                        src="/assets/images/list-icon/add-plus-button24.png"></button>
+    
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;">
+                    <button ng-click="myFunction();" style="cursor: pointer;background: #ffffff; padding: 0;" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" class="dropdown-toggle pull-right list-btn cus-img"><img
+                        alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <!--<li ng-class="{active:isNone}">
+                                            <a href="" ng-click="setSortInvoice('id')">None</a>
+                                        </li>-->
+                      <!-- <li ng-class="{active:isByClient}">
+                                            <a href="" ng-click="setSortInvoice('name')">By Client</a>
+                                        </li>-->
+                      <li ng-class="{active:isByDate}">
+                        <a href="" ng-click="setSortInvoice('created_date')">By Date</a>
+                      </li>
+                      <li ng-class="{active:isInvNo}">
+                        <a href="" ng-click="setSortInvoice('invoice_number')">By Inv no.</a>
+                      </li>
+                      <li ng-class="{active:isBalance}">
+                        <a href="" ng-click="setSortInvoice('balance')">By Balance</a>
+                      </li>
+                      <li ng-class="{active:isAmount}">
+                        <a href="" ng-click="setSortInvoice('amount')">By Amount</a>
+                      </li>
+                    </ul>
+    
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" ng-model="filterClient" placeholder="Search invoices" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="/assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoices
+          </div>
+
+
+          <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 pad0 scroll mCustomScrollbar" scroll-bar>
+            <div align="center" style="background-color: #fff;">
+              <!-- <md-progress-circular ng-hide="invoiceListLoader" style="color: #1A73CC" class="md-hue-2 text-center"
+                md-diameter="25px"></md-progress-circular> -->
+            </div>
+
+            <div class="item all-item row cursor-pointer" ng-repeat="(key, invoice) in invoices | orderBy:dynamicOrder:rev|  searchFilter:filterClient | filter : dynaFilter"
+              ng-click="getInvoice(invoice.unique_identifier, $index); tempInvoiceId = invoice.unique_identifier;"
+              ng-class="invoice.unique_identifier == routeParams.invId ? 'selected' : '';" ng-hide="!invoiceListLoader">
+              <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2 list-date font-custom-bold fontsize13" ng-show="!invoice.seperator">
+                {{ invoice.created_date | date: 'dd MMM' }}
+              </div>
+
+              <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10 " ng-show="!invoice.seperator">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 pad-right-0">
+                    <h5 class="font-custom-bold fontsize13">{{ invoice.orgName }}</h5>
+                  </div>
+                  <div class="col-lg-5 col-md-5 col-xs-5 col-sm-5 font-custom-book fontsize13">{{
+                    invoice.invoice_number }}</div>
+                  <div class="col-lg-7 col-md-7 col-xs-7 col-sm-7 txtr">
+                    <div class="font-custom-bold fontsize12"> {{ invoice.amount | currency }}</div>
+
+                    <!--<div class="balance-color">{{ invoice.balance | currency}}</div>-->
+                  </div>
+                  <!--<div class="col-md-6 balance-color txtr"><span> </span> </div>-->
+                </div>
+
+              </div>
+              <div ng-show="invoice.seperator" style="font-size: 15px;" class="text-center font-custom-bold">{{invoice.created_date
+                | date: 'MMM yyyy' }}</div>
+            </div>
+          </div>
+          <div class="no-data-messsage" ng-show="invoices.length > 0 && !invoiceListLoader">
+            <h4>No invoice to display, please create invoices</h4>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-9 col-sm-9 col-xs-12 item-form all-invoices inv-generator inv-gen" id="msgInv">
+        <form name="invoiceGenerator" id="invoiceGenerator" class="create-invoice" ng-submit="save(data, invoiceGenerator.$valid)">
+          <!--Div Content title INVOICE and Company's Name & Address-etc- start-->
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <div class="vtop text-right">
+              <span class="c-name" type="text" id="addtitle" name="title" ng-if="authenticated.setting.mTvInvoice">{{authenticated.setting.mTvInvoice}}</span>
+              <span class="c-name" type="text" id="addtitleelse" name="title" ng-if="!authenticated.setting.mTvInvoice">{{'INV_LABEL'
+                | translate}}
+              </span>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12 pad0">
+              <div class="row">
+                <div class="col-md-7 col-sm-7 col-xs-12" id="clientData" name="clientData">
+                  <div class="row">
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                      <span type="text" value="" id="addbillToLabel" class="adr bill-to font-custom-bold">{{tempBillLabel}}</span>
+                      <br />
+                      <div class="form-group pad-left-0">
+                        <div layout="column" ng-cloak>
+  
+                          <!-- <md-content class="md-padding font-custom" style="background-color: #ffffff ;    padding: 2px 2px 2px 2px;">
+                            <form name="autocompleteForm">
+                              <span class="has-error" style=" color: #ff0000;" ng-show="showClientError">Required!</span><br>
+                              <md-autocomplete md-dropdown-position="down" ng-disabled="false" md-selected-item="selectedItem"
+                                md-no-cache="true" md-search-text-change="searchTextChange(searchText)" md-search-text="searchText"
+                                md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)"
+                                md-item-text="item.name" md-min-length="0" placeholder="Search & Select Client"
+                                md-input-name="autocomplete" ng-invalid="error" required my-enter custom-mouse>
+                                <md-item-template>
+                                  <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
+                                </md-item-template>
+                                <div ng-show="showClientError">
+                                  <div ng-message="required">This field is required</div>
+                                </div>
+  
+                                <md-not-found>
+                                  <div ng-click="newState(searchText)">
+                                    <i class="material-icons" style="vertical-align: middle;" ng-click="">&#xE146;</i>
+                                    Add this client {{searchText}}..
+                                  </div>
+                                </md-not-found>
+                              </md-autocomplete>
+  
+  
+                              <br />
+                            </form>
+  
+  
+  
+                          </md-content> -->
+                        </div>
+  
+                        <!--</div>-->
+  
+                      </div>
+  
+  
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2" style="margin: 30px 0px 0px -26px;">
+                      <!-- <md-progress-circular ng-show="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
+                        md-diameter="25px"></md-progress-circular> -->
+                    </div>
+  
+                    <!--{{selectedItem}}-->
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin: -10px 0px 15px 3px;" id="addressBar" name="addressBar">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                          <span type="text" value="" id="add_BillAddress" class="adr bill-to font-custom-bold">Address</span><br>
+                          <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                          <div class="address-render">{{client.client.address_line1}}<br></div>
+    
+                          <div ng-hide="isEmpty11()">
+                            Email: {{client.client.email}}
+                          </div>
+                          <div ng-hide="isEmpty12()">
+                            Contact No: {{client.client.number}}
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 pad-right-0">
+                          <span type="text" value="" id="add_shippingAddress" class="adr bill-to font-custom-bold">Shipping
+                            Address</span><br>
+                          <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                          <div class="address-render">{{client.client.shippingAddress}}<br></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-12 pl-xs-0" id="invData" name="invData">
+                  <div class="row">
+                    <div class="offset-md-2 col-md-4 col-sm-6 col-xs-6" style="margin-top: 5px;"><span class="font-custom-bold text-left w100">Invoice#</span>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
+                      <ngForm name="invNumberForm">
+                        <div class="form-group" ng-class="{ 'has-error': (invoiceGenerator.$submitted || invNumberForm.invoiceNumber.$touched || errors.invoiceNumber ) && invNumberForm.invoiceNumber.$error.required } ">
+  
+                          <input type="text" name="invoiceNumber" id="invoiceNumber" ng-model="data.add_invoice.invoice_number"
+                            value="{{ data.add_invoice.invoice_number }}" class="form-control pad-right-0" required />
+                          <div class="form-error" ng-show="form.$submitted || invNumberForm.invoiceNumber.$touched || errors.invoiceNumber">
+                            <span ng-show="invNumberForm.invoiceNumber.$error.required">Invoice No. required</span>
+                          </div>
+                        </div>
+                      </ngForm>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                      <span class="font-custom-bold text-left w100">Invoice Date</span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+  
+                      <input type="text" name="invoiceDate" id="invoiceDate" ng-model="invoiceDate" class="form-control pad-right-0 font-custom" ng-change="watch()"
+                        readonly required />
+                      <div class="form-error" ng-show="form.$submitted || form.invoiceDate.$touched">
+                        <span ng-show="form.invoiceDate.$error.required">Invoice date required</span>
+                      </div>
+                      <input type="hidden" ng-model="data.add_invoice.created_date" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                      <span class="font-custom-bold text-left w100">Reference</span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                      <input type="text" name="invoiceNumber" id="referenceid" ng-model="data.add_invoice.reference"
+                        value="{{ data.add_invoice.reference }}" class="form-control pad-right-0" />
+  
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                      <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
+                      <!-- <label class="offset-md-2 col-md-3 control-label">Due Date :</label>-->
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 selectDueDate col-xs-6">
+                      <select name="selectDueDate" id="selectDueDate" ng-model="selectDueDate" ng-init="selectDueDate = 'no_due_date'"
+                        class="form-control pad-right-0 selectDueDate " ng-change="changeDueDate()">
+                        <option value="no_due_date">No Due Date</option>
+                        <option value="immediately">Immediately</option>
+                        <option value="custom_date">Custom Date</option>
+                        <option value="7_days">7 Days</option>
+                        <option value="10_days">10 Days</option>
+                        <option value="15_days">15 Days</option>
+                        <option value="30_days">30 Days</option>
+                        <option value="45_days">45 Days</option>
+                        <option value="60_days">60 Days</option>
+                        <option value="90_days">90 Days</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 pad-right-0  col-lg-6 col-sm-6 dueDate col-xs-6" ng-hide="customDate" style="float: right;">
+                    <input type="text" name="dueDate" id="dueDate" ng-model="dueDate" class="form-control pad-right-0 fontweight8 " ng-change="watch()" ng-disabled="readOnlyCustomeDate"
+                      readonly style=" margin-top : 3px;padding: 0px 23px;" />
+                    <!--<div class="form-error" ng-show="form.$submitted || form.dueDate.$touched" >-->
+                    <!--<span ng-show="form.dueDate.$error.required">Due date Required</span>-->
+                    <!--</div>-->
+                    <input type="hidden" ng-model="data.invoice.due_date" />
+  
+                  </div>
+  
+  
+                </div>
+              </div>
+            </div>
+            <div class="lineItemDiv">
+              <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed" id="item-table">
+                <!--table head content itemDescription , Qty , Rate ,Amount start -->
+                <thead>
+                  <tr class="hd font-custom-bold">
+                    <td width="48%">
+                      <input style="text-align:left;" type="text" ng-value="tempProLabel" id="additemDescLabel" class="bld w100"
+                        disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" style="text-align: center" ng-value="tempQtyLabel" id="additemQtyLabel" class="bld w100"
+                        name="quantity" disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" style="text-align: center" ng-value="tempRateLabel" id="additemRateLabel"
+                        class="bld w100 text-left" name="rate" disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" style="text-align: center" ng-value="tempAmtLabel" id="additemAmtLabel" class="bld w100 text-right"
+                        style="text-align:right;" name="amount" disabled>
+                    </td>
+                    <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
+
+                  </tr>
+                </thead>
+                <!--table head content itemDescription , Qty , Rate ,Amount end -->
+
+                <!--table Body content itemDescription , Qty , Rate ,Amount start-->
+                <tbody class="lineItems">
+                  <tr class="row-item" ng-repeat="item in data.add_invoice.listItems">
+                    <td ng-model="addProduct.itemDescription" ng-class="{'no-border-last':$last}">
+                      <!--<textarea type="text" class="w100" id="itemDesc.1" placeholder="Enter item name/description" name="itemDesc.1"  style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 46px;">Brochure Design</textarea>-->
+                      <div class="">
+                        <!--<input type="hidden" ng-model="" value="1" />-->
+                        <div class="form-group">
+                          <div class=" ">
+                            <div class="custom-add-product selectize-wrap">
+                              <select selectize="configProduct" options="productList" class="border-rad-0" ng-model="selected_product_id"
+                                name="selectProduct" id="selectProduct" ng-change="addItem($index,item,selected_product_id);onFocusOutSelect($index);"
+                                my-enter-in></select>
+                            </div>
+                            <div class="custom-description">
+                              <textarea elastic style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px;"
+                                id="descId" ng-model="item.description" class="form-control" placeholder="Description">
+                              </textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input id="qty{{$index}}" type="number" min="0.01" step="any" class="form-control text-right"
+                          my-enter-in ng-model="item.quantity" ng-change="calculateTotal($index)" select-on-click>
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input type="number" min="0.01" step="any" class="form-control text-right" name="itemRate.1"
+                          my-enter-in id="rate" required ng-model="item.rate" ng-change="calculateTotal($index)"
+                          select-on-click>
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input type="number" step="any" class="form-control text-right" title="Amount is calculated automatically."
+                          name="itemTotal.1" id="amt" ng-model="item.total" disabled convert-decimal>
+                      </div>
+                    </td>
+
+                    <td style="border-bottom:none;background:none;border-top:none" class="dele-icon" ng-class="{'no-border-last':$last}">
+                      <div style="padding-top:4px"><a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                          ng-click="removeItem(item)">
+                          <!--<span
+                                                        class="del pull-left glyphicon set-color-red glyphicon-remove">&nbsp;</span>-->
+                          <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                        </a>
+                      </div>
+                    </td>
+
+
+                  </tr>
+                </tbody>
+              </table>
+              <!--table Body content itemDescription , Qty , Rate ,Amount end-->
+
+              <!--Term and Condition and Sub-Total in table body start -->
+              <div class="row add-item-button">
+                <div class="col-md-6 col-xs-6 col-sm-6">
+                  <button type="button" class=" btnd add-line-item-button" ng-click="addLineItem()"><img src="assets/images/add16.png"
+                      alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">Line Item
+                  </button>
+                </div>
+
+                <div class="col-md-6 col-xs-6 col-sm-6 discount-tax-pad font-custom-bold">
+                  <div><a class="inline" ng-hide="tempflag" ng-click="showMe();data.add_invoice.discount_on_item = 0; discount_on = 'onBill'; ">{{tempDisLabel}}+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="tempflagShipping" ng-click="showMeShipping();">{{tempShippingLabel}}+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="tempflagTax" ng-click="showMeTax();data.add_invoice.tax_on_item = 1; tax_on = 'taxOnBill'; selectTax();">Tax+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="show_adjustment" ng-click="showMeAdjustment();">{{tempAdjLabel}}+</a>
+                  </div>
+                  <div class="inline" ng-repeat="tax in authenticated.setting.alstTaxName" ng-show="showMultipleTax && multiTaxButtonForAddInvoice(tax.taxName,$index)">
+                    <a ng-click="showMeMultipleTax($index); tax_on = 'taxDisabled';">{{tax.taxName}}+</a>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6">
+
+                  <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                    <span class="bld">{{tempTermLabel}}</span>
+  
+                    <a ng-click="addTerm(true)" class="pull-right" data-toggle="tooltip" data-placement="top"
+                      data-original-title="Add "
+                    >
+                      <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
+                      Add Terms
+                    </a>
+                  </div>
+  
+                  <div class="col-md-12 col-xs-12 col-md-12 pad0">
+                    <div class="form-group">
+                      <div class="col-md-12 col-xs-12 col-md-12 checkbox " ng-repeat="term in termList">
+                        <div class="row">
+                          <div class="term-text-align col-md-11 col-xs-8 col-sm-8 col-lg-8 pad-right-0 ">
+                            {{term.terms_condition}}
+                          </div>
+                          <div class="col-md-1 pad-right-0 " style="float: right;">
+                            <a class="closeicon show" ng-click="setTermsListDelete(term)" style="cursor:pointer;">
+                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <!--<div class="col-md-12" ng-hide="terms.length > 0">
+                                                  <h4>No Terms has been added</h4>
+                                              </div>-->
+                    </div>
+                  </div>
+                </div>
+      
+                <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6 pad-right-0">
+                  <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label " style="margin-bottom: 5px;">
+                    <div class="row">
+                      <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                        <span class="font-custom-bold" value="">{{tempSubToLabel}}</span>
+                      </div>
+    
+                      <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right ">
+                        <span class="font-custom-bold">{{data.add_invoice.gross_amount|currency:number:2}}</span>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show">
+                    <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
+                      <div class="row">
+                        <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
+                        <div ng-hide="isRate" class="inline font-custom">({{
+                          currencySymbolTemp }})
+                        </div>
+                        <div ng-hide="!isRate" class="inline font-custom">(%)</div>
+  
+                        <!--Discount<input type="number" placeholder="0.00%" style="text-align: right;"><i class="glyphicon glyphicon-remove" ng-click="hideMe();"></i>-->
+                        <!--<div style="text-align: left;"><a class="" ng-hide="tempflag" ng-click="showMe();">Discount+</a></div>-->
+                        <div class="pad0" style="float: right; padding-right: 10px;">
+                          <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
+                              title="Discount"></span>
+                          </div>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <li ng-class="{active:!isRate}">
+                              <a href="#" ng-click="isRate=false;$event.preventDefault();calculateInvoice(1);data.add_invoice.percentage_flag = 0;">Flat
+                                ({{currencySymbolTemp}})</a>
+                            </li>
+                            <li ng-class="{active:isRate}" class="active">
+                              <a href="#" ng-click="isRate=true;$event.preventDefault();calculateInvoice(1);data.add_invoice.percentage_flag = 1;">Percent
+                                (%)</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                      <ngForm name="form_discount">
+                        <div class="input-group addon-input pad-right-0" ng-init="data.add_invoice.percentage_flag = 0">
+                          <div ng-hide="data.add_invoice.percentage_flag == 0">
+  
+                            <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="percentage_input"
+                              type="number" min="0.00" id="percentage_input" step="any" max="100" autocomplete="off"
+                              tabindex="1005" ng-required="ngRequired" maxlength="data.add_invoice.gross_amount" ng-model="data.add_invoice.percentage_value"
+                              ng-change="calculateInvoice(1)" convert-decimal select-on-click my-enter-in disable-enter>
+  
+                          </div>
+                          <div ng-hide="data.add_invoice.percentage_flag == 1">
+                            <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " type="number"
+                              step="any" min="0.00" name="discount_input" id="discount_input" ng-maxlength="data.add_invoice.gross_amount"
+                              autocomplete="off" tabindex="1005" ng-required="ngRequired" ng-model="data.add_invoice.discount"
+                              ng-change="calculateInvoice(1)" select-on-click my-enter-in disable-enter>
+                          </div>
+                          <!-- <div class="input-group-addon addon-right " ng-hide="!isRate">%</div>-->
+  
+                          <div class="input-group-addon pad-right-0 remove-button">
+  
+                            <div class="addon selectorpad-right-0" ng-click="hideMe();data.add_invoice.discount_on_item = 2; discount_on = 'disabled';">
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
+  
+  
+                          </div>
+  
+                        </div>
+                      </ngForm>
+                      <div class="form-error" ng-hide="data.add_invoice.percentage_flag == 0 ">
+                        <span ng-show="form_discount.percentage_input.$error.max">Not more than 100</span>
+                      </div>
+                      <div class="form-error">
+                        <span ng-show="form_discount.discount_input.$error.ngMaxlength">Not more than Total</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_tax_input">
+                    <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                      <div class="row">
+                        <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                        <div class="inline font-custom">(%)</div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                      <ngForm name="form_tax_input">
+                        <div class="input-group pad-right-0">
+                          <input class="form-control" name="tax_input" id="tax_input" min="0.00" type="number" step="any"
+                            max="100" tabindex="1005" ng-required="ngRequired" ng-model="data.add_invoice.tax_rate"
+                            ng-value="0.00" ng-change="calculateInvoice(1)" select-on-click my-enter-in disable-enter>
+                          <!-- <div class="input-group-addon addon-right">%</div>-->
+                          <div class="input-group-addon pad-right-0 remove-button">
+                            <div class="addon selectorpad-right-0" ng-click="hideMeTax();data.add_invoice.tax_on_item = 2; tax_on = 'taxDisabled';">
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
+                          </div>
+                        </div>
+  
+                      </ngForm>
+                      <div class="form-error">
+                        <span ng-show="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                      </div>
+  
+                    </div>
+                  </div>
+                  <div ng-repeat="tax in data.add_invoice.taxList" class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px">
+                    <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                      <div class="row">
+                        <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                        <div class="inline font-custom">(%)</div>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                      <ngForm name="form_tax_input">
+                        <div class="input-group pad-right-0">
+                          <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
+                            max="100" tabindex="1005" ng-required="ngRequired" ng-model="tax.percentage" ng-value="tax.percentage"
+                            ng-change="calculateInvoice(1)" select-on-click my-enter-in disable-enter>
+  
+                          <!--<div class="input-group-addon ">%</div>-->
+                          <div class="input-group-addon pad-right-0 remove-button">
+                            <div class="addon selectorpad-right-0" ng-click="hideMeTaxMultiple($index);">
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
+                          </div>
+                        </div>
+                        <!--<input type="text" ng-model="data.invoice.taxList[$index].taxName" ng-value="{{tax.taxName}}"/>-->
+                      </ngForm>
+                      <div class="form-error">
+                        <span ng-show="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                      </div>
+  
+                    </div>
+                  </div>
+  
+                  <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_shipping_charge">
+  
+                    <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                      <div class="row">
+                        <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                      <ngForm name="form_shipping_input">
+                        <div class="input-group pad-right-0">
+                          <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="shipping_input"
+                            type="number" step="any" max="data.add_invoice.gross_amount" autocomplete="off" tabindex="1005"
+                            ng-required="ngRequired" ng-model="data.add_invoice.shipping_charges" ng-change="calculateInvoice(1)"
+                            select-on-click disable-enter>
+                          <div class="input-group-addon pad-right-0 remove-button">
+                            <div class="addon selectorpad-right-0" ng-click="hideMeShipping();">
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
+                          </div>
+                        </div>
+  
+                      </ngForm>
+                      <div class="form-error">
+                        <span ng-show="form_shipping_input.shipping_input.$error.max">Not more than 100</span>
+                      </div>
+  
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_adjustment">
+                    <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                      <div class="row">
+                        <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                      <ngForm name="form_tax_input">
+                        <div class="input-group pad-right-0">
+                          <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="tax_input"
+                            type="number" step="any" autocomplete="off" tabindex="1005" ng-required="ngRequired" ng-model="data.add_invoice.adjustment"
+                            ng-change="calculateInvoice(1)" select-on-click>
+                          <!-- <div class="input-group-addon set-color">%</div>-->
+                          <div class="input-group-addon pad-right-0 remove-button">
+                            <div class="addon selectorpad-right-0" ng-click="hideMeAdjustment();">
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
+                          </div>
+                        </div>
+  
+                      </ngForm>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label ">
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                    </div>
+  
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                      <span class="font-custom-bold">{{data.add_invoice.amount|currency:number}}</span>
+  
+  
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 margin-top-8">
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                      <span class="font-custom" value="">{{tempPaidLabel}}</span>
+                    </div>
+  
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                      <span class="font-custom">{{paid_amount|currency:number:2}}</span>
+  
+  
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 balance-row">
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="bld" value="">{{tempBalLabel}}</span>
+                    </div>
+  
+                    <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                      <span class="bld">{{data.add_invoice.balance|currency:number:2}}</span>
+  
+  
+                    </div>
+                  </div>
+  
+                  <div class="col-md-12 col-sm-12 col-xs-12 pad0 margin-top-8">
+                    <button style="width: 134px;" type="button" data-toggle="modal" class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold"
+                      ng-click="initializeMaxBalanceAddInvoice();fullPayment = false;" data-target="#addPaymentAddInvoice"
+                      title="ADD PAYMENT">
+                      Add Payment
+                    </button>
+                    <button type="submit" id="InvSbmtBtn" class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
+                      data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
+                      <!--ng-disabled="data.invoice.listItems.length == 0">-->
+                      <!--|| !clientValidation">-->
+                      SAVE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </form>
+      </div>
+      <div class="col-md-9 col-sm-9 col-xs-12 item-form all-invoices inv-generator inv-gen hide" id="invMain" name="invMain"
+        style="
+    margin-left: 15px;">
+
+        <form name="invoiceGenerator" ng-submit="save(data, invoiceGenerator.$valid)">
+          <!--<form name="invoiceGenerator">-->
+          <!--Div Content title INVOICE and Company's Name & Address-etc- start-->
+
+          <div class="col-md-12 margin-top-15">
+            <div class="col-md-12 pull-right font-custom-bold fontsize12 pad-right-0">
+              <button type="button" id="editInvoiceBtn" ng-click="goEdit(invoice.unique_identifier)" ng-disabled="!invoice.unique_identifier"
+                ng-hide="invoice.lock" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>" class="btn btn-raised btn-success no-border-radius pull-right width12perbtn margin-left-15  font-weight-bold"
+                title="Edit"><img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                Edit
+              </button>
+              <button type="button" id="download" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
+                ng-click="downloadInvoice(invoice.id, 1, 'download')" name="download" ng-disabled="!invoice.unique_identifier"
+                class="btn btnd btn-custom-1 no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
+                title="Download"><img src="/assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
+                Download
+              </button>
+              <button type="button" id="preview" ng-click="downloadInvoice(invoice.id, 1, 'preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+                name="preview" ng-disabled="!invoice.unique_identifier" class="btn btnd btn-custom-2 no-border-radius pull-right margin-left-15 edit-button width12perbtn font-weight-bold"
+                title="Preview"><img src="/assets/images/buttons-icon/view16.png"> Preview
+              </button>
+
+            </div>
+            <hr>
+          </div>
+          <div class="col-md-12 vtop text-right margin-top-8">
+            <span class="c-name" type="text" id="title" name="title" ng-if="authenticated.setting.mTvInvoice">{{authenticated.setting.mTvInvoice}}</span>
+            <span class="c-name" type="text" id="titleelse" name="title" ng-if="!authenticated.setting.mTvInvoice">{{'INV_LABEL'
+              | translate}}</span>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 25px">
+
+            <div class="col-md-7 col-sm-12 col-xs-12 pad-left-0 margin-bottom-5px">
+              <div class="col-md-12 col-sm-12 col-xs-12 pad-left-0">
+                <span type="text" value="" id="billToLabel" class="adr bill-to font-custom-bold">{{tempBillLabel}}</span>
+
+
+                <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
+
+
+                  {{clientsLocal[0].name}}
+
+
+                </div>
+
+              </div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12 pad-left-0 margin-top-8">
+                <div class="col-md-6 col-sm-6 col-xs-6 pad-left-0">
+                  <span type="text" value="" id="addBillAddress" class="adr bill-to font-custom-bold">Address</span><br>
+                  <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                  <div class="address-render">{{clientsLocal[0].addressLine1}}<br></div>
+
+                  <div ng-hide="isEmpty1()">
+                    Email: {{clientsLocal[0].email}}
+                  </div>
+                  <div ng-hide="isEmpty2()">
+                    Contact No: {{clientsLocal[0].number}}
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6 pad-right-0">
+                  <span type="text" value="" id="addshippingAddress" class="adr bill-to font-custom-bold">Shipping
+                    Address</span><br>
+                  <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                  <div class="address-render">{{clientsLocal[0].shippingAddress}}<br></div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-5 col-sm-12 col-xs-12" style="margin-bottom: 25px">
+              <div class="row margin-bottom-5px">
+                <div class="offset-md-2 col-md-4 col-sm-6 ">
+                  <span class="font-custom-bold text-left w100">Invoice#</span>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  {{ invoice.invoice_number }}
+                </div>
+              </div>
+              <div class="row margin-bottom-5px">
+                <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 ">
+                  <span class="font-custom-bold text-left w100">Invoice Date</span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  {{invoiceDate}}
+                </div>
+              </div>
+              <div class="row margin-bottom-5px">
+                <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6">
+                  <span class="font-custom-bold text-left w100">Reference</span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  {{invoice.reference}}
+
+                </div>
+              </div>
+              <div class="row margin-bottom-5px">
+                <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6">
+                  <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
+                  <!-- <label class="offset-md-2 col-md-3 control-label">Due Date :</label>-->
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+
+                  <div ng-if="selectDueDate == 'no_due_date'">
+                    No DueDate
+                  </div>
+                  <div ng-if="selectDueDate !== 'no_due_date'">
+                    {{dueDate}}
+                  </div>
+
+                </div>
+              </div>
+
+
+
+            </div>
+            <div class="lineItemDiv">
+              <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+                <!--table head content itemDescription , Qty , Rate ,Amount start -->
+                <thead>
+                  <tr class="hd font-custom-bold">
+                    <td width="48%">
+                      <input style="text-align:left;" type="text" ng-value="tempProLabel" id="itemDescLabel" class="bld w100"
+                        disabled>
+                    </td>
+                    <td width="17%">
+                      <input type="text" ng-value="tempQtyLabel" id="itemQtyLabel" class="bld w100" name="quantity"
+                        disabled>
+                    </td>
+                    <td width="17%">
+                      <input type="text" ng-value="tempRateLabel" id="itemRateLabel" class="bld w100 text-left" name="rate"
+                        disabled>
+                    </td>
+                    <td width="17%" ng-show="invoice.tax_on_item == 0">
+                      <input type="text" value="Tax" id="taxLabel" class="bld w100 text-left" name="rate" disabled>
+                    </td>
+                    <td width="17%" ng-if="invoice.discount_on_item == 1">
+                      <input type="text" value="Discount" id="discountLabel" class="bld w100 text-left" name="rate"
+                        disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" ng-value="tempAmtLabel" id="itemAmtLabel" class="bld w100 text-right" style="text-align:right;"
+                        name="amount" disabled>
+                    </td>
+
+                  </tr>
+                </thead>
+                <!--table head content itemDescription , Qty , Rate ,Amount end -->
+
+                <!--table Body content itemDescription , Qty , Rate ,Amount start-->
+                <tbody class="lineItems">
+                  <tr class="row-item" ng-repeat="item in invoice.listItems" ng-init="selected_product_id[$index] = item.uniqueKeyFKProduct">
+                    <td ng-class="{'no-border-last':$last}">
+                      <div class="">
+                        <div class="form-group">
+                          <div class="">
+                            <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                              {{item.productName}}
+                            </div>
+                            <div class="text-left">
+                              {{item.description}}
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="text-right">
+                        {{item.qty |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="text-right">
+                        {{item.rate |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="invoice.tax_on_item == 0" ng-class="{'no-border-last':$last}">
+                      <div class="text-right">
+                        {{item.tax_rate |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="invoice.discount_on_item == 1" ng-class="{'no-border-last':$last}">
+                      <div class="text-right">
+                        {{item.discountRate |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="text-right">
+                        {{item.price |number:2}}
+                      </div>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+
+
+              <div class="col-md-6 col-xs-6 col-md-6 term-row">
+                <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                  <span class="bld">{{tempTermLabel}}</span>
+
+                </div>
+                <div class="col-md-12 pad0 margin-top-8">
+
+                  <ul class=" col-sm-12 list-unstyled" ng-repeat="term in invoice.termsAndConditions">
+                    <li class="row">
+                      <div class="col-md-12 margin-bottom-5px">
+                        {{term.terms}} <br>
+                      </div>
+
+                    </li>
+                  </ul>
+
+                  <div class="col-md-12" ng-hide=" invoice.termsAndConditions.length > 0">
+                    <h4>No terms added</h4>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xs-6 col-md-6 pad-right-0">
+
+
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label " style="margin-bottom: 5px;">
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="font-custom-bold" value="">{{tempSubToLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right ">
+                    <span class="font-custom-bold">{{invoice.gross_amount|currency:number:2}}</span>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12  margin-bottom-5px" ng-show="show_discount && (invoice.percentage_value > 0  || invoice.discount > 0) ">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
+                    <div class="row">
+                      <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
+                      <div ng-hide="isRate" class="inline font-custom">({{
+                        currencySymbolTemp }})
+                      </div>
+                      <div ng-hide="!isRate" class="inline font-custom">(%)</div>
+
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 ">
+                    <div class="text-right" ng-init="invoice.percentage_flag = 1">
+
+                      <div ng-hide="invoice.percentage_flag == 0 ">
+
+
+                        {{invoice.percentage_value|number:2}}
+
+                      </div>
+                      <div ng-hide="invoice.percentage_flag == 1">
+
+                        {{invoice.discount|number:2}}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 margin-bottom-5px" ng-show="show_tax_input">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                      <div class="inline font-custom">(%)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8">
+                    <div class="text-right">{{data.invoice.tax_rate|number:2}}
+
+                    </div>
+                    <div class="form-error">
+                      <span ng-show="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                    </div>
+
+                  </div>
+                </div>
+                <div ng-repeat="tax in invoice.taxList | filter: greaterThan('percentage', 0)" class="col-md-12 col-sm-12 col-xs-12 margin-bottom-5px">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                      <div class="inline font-custom">(%)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 ">
+                    <div class="text-right">
+
+                      {{invoice.taxList[$index].percentage|number:2}}
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12  margin-bottom-5px" ng-show="show_shipping_charge">
+
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 ">
+                    <div class="text-right">
+
+                      {{invoice.shipping_charges|number:2}}
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 margin-bottom-5px" ng-if="invoice.adjustment != 0">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8">
+                    <div class="text-right">
+                      {{invoice.adjustment|number:2}}
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label ">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="font-custom-bold">{{invoice.amount|currency:number}}</span>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 margin-top-8">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                    <span class="font-custom" value="">{{tempPaidLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="font-custom">{{paid_amount|currency:number:2}}</span>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 balance-row">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="bld" value="">{{tempBalLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="bld">{{invoice.balance|currency:number:2}}</span>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 pad0 margin-top-8">
+                  <button style="width: 134px;" type="button" data-toggle="modal" class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold"
+                    ng-click="initializeMaxBalance();" data-target="#addPayment" title="Add Payment">
+                    ADD PAYMENT
+                  </button>
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <!--EDIT INVOICE TEMPLATE STARTED-->
+      <div class="col-md-9 col-sm-9 col-xs-12  item-form all-invoices inv-generator inv-gen" id="editInv" style="
+    margin-left: 15px;">
+        <form name="invoiceGeneratorEdit" class="edit-invoice" ng-submit="saveEdit(editdata, invoiceGeneratorEdit.$valid)">
+          <div class="col-md-12 margin-top-15">
+            <div class="col-md-12 pull-right pad0">
+
+              <h4 class="col-md-5 pad-left-0 form-header">Edit Invoice: {{ editdata.invoice.invoice_number }}</h4>
+              <button type="submit" id="updateButton" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
+                class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-weight-bold"
+                ng-disabled="editdata.invoice.listItems.length == 0 && existingItem.length == 0 || !pro_bar_load">Update</button>
+
+              <button type="button" id="deleteBtn" data-loading-text="Deleting <i class='fa fa-spinner fa-spin '></i>"
+                ng-click="deleteInvoice(routeParams.invoiceId)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-left-15 width10btn font-weight-bold"
+                ng-disabled="!pro_bar_load" title="Delete Invoice">Delete</button>
+
+              <button type="button" ng-click="cancel()" class="btn btn-raised btn-custom-2 no-border-radius pull-right margin-left-15 font-weight-bold"
+                ng-disabled="!pro_bar_load" title="Cancel">Cancel</button>
+
+
+            </div>
+          </div>
+          <!--Div Content title INVOICE and Company's Name & Address-etc- start-->
+          <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 30px;">
+            <div class="col-md-12 vtop text-right margin-top-8 pad-right-0">
+              <span class="c-name" type="text" id="edittitle" name="title" ng-if="authenticated.setting.mTvInvoice">
+                {{authenticated.setting.mTvInvoice}}</span>
+              <span class="c-name" type="text" id="edittitleelse" name="title" ng-if="!authenticated.setting.mTvInvoice">{{'INV_LABEL'
+                | translate}}</span>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 pad0" style="margin-bottom: 25px">
+              <div class="col-md-7 col-sm-7 col-xs-12 pad-left-0" id="editclientData" name="clientData">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12 col-xs-12 margin-bottom-5px" style="width: 88%;">
+                    <span type="text" value="" id="editbillToLabel" class="adr bill-to font-custom-bold">{{tempBillLabel}}</span>
+                    <br />
+                    <input type="hidden" ng-model="editdata.invoice.organization_id" value="1" />
+
+                    <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
+
+
+                      {{clientsLocal[0].name}}
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12" id="editaddressBar" name="addressBar">
+                    <div class="col-md-6 col-sm-6 col-xs-6 pad-left-0">
+                      <span type="text" value="" id="BillAddress" class="adr bill-to font-custom-bold">Address</span><br>
+                      <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                      <div class="address-render">{{clientsLocal[0].addressLine1}}<br></div>
+
+                      <div ng-hide="isEmpty1()">
+                        Email: {{clientsLocal[0].email}}
+                      </div>
+                      <div ng-hide="isEmpty2()">
+                        Contact No: {{clientsLocal[0].number}}
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6 pad-right-0">
+                      <span type="text" value="" id="shippingAddress" class="adr bill-to font-custom-bold">Shipping
+                        Address</span><br>
+                      <!--<textarea elastic  ng-model="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                      <div class="address-render">{{clientsLocal[0].shippingAddress}}<br></div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-5 col-xs-12 pad-right-0 pl-xs-0" id="editinvData" name="invData">
+                <div class="row">
+                  <div class="offset-md-2 col-md-4 col-sm-6 col-xs-6" style="margin-top: 5px;"><span class="font-custom-bold text-left w100">Invoice#</span>
+                  </div>
+
+                  <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
+                    <input type="text" name="invoiceNumber" id="editinvoiceNumber" ng-model="editdata.invoice.invoice_number"
+                      value="{{ editdata.invoice.invoice_number }}" class="form-control pad-right-0 font-custom" required
+                      disable-enter />
+                    <div class="form-error" ng-show="form.$submitted || form.invoiceNumber.$touched">
+                      <span ng-show="form.invoiceNumber.$error.required">Invoice No. required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                    <span class="font-custom-bold text-left w100">Invoice Date</span>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" name="invoiceDate" id="editinvoiceDate" ng-model="invoiceDateEdit" class="form-control pad-right-0 font-custom" ng-change="watchEdit()"
+                      readonly disable-enter required />
+                    <div class="form-error" ng-show="form.$submitted || form.invoiceDate.$touched">
+                      <span ng-show="form.invoiceDate.$error.required">Invoice date required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                    <span class="font-custom-bold text-left w100">Reference</span>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <input type="text" name="invoiceNumber" id="editreferenceid" ng-model="editdata.invoice.reference"
+                      value="{{ editdata.invoice.reference }}" disable-enter class="form-control pad-right-0 font-custom" />
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="offset-md-2 col-md-4 col-lg-offset-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                    <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
+                    <!-- <label class="offset-md-2 col-md-3 control-label">Due Date :</label>-->
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 selectDueDate col-xs-6">
+                    <select name="selectDueDate" id="editselectDueDate" ng-model="selectDueDateEdit" ng-init="selectDueDateEdit = 'no_due_date'"
+                      class="form-control pad-right-0 selectDueDate" ng-change="changeDueDateEdit()">
+                      <option value="no_due_date">No Due Date</option>
+                      <option value="immediately">Immediately</option>
+                      <option value="custom_date">Custom Date</option>
+                      <option value="7">7 Days</option>
+                      <option value="10">10 Days</option>
+                      <option value="15">15 Days</option>
+                      <option value="30">30 Days</option>
+                      <option value="45">45 Days</option>
+                      <option value="60">60 Days</option>
+                      <option value="90">90 Days</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 pad-right-0  col-lg-6 col-sm-6 dueDate col-xs-6" ng-hide="customDateEdit" style="float: right;">
+                  <input type="text" name="dueDate" id="editdueDate" ng-model="dueDateEdit" class="form-control pad-right-0 " ng-change="watchEdit()"
+                    ng-disabled="readOnlyCustomeDate" readonly style=" margin-top : 3px;padding: 0px 23px;" />
+                  <!--<div class="form-error" ng-show="form.$submitted || form.dueDate.$touched" >-->
+                  <!--<span ng-show="form.dueDate.$error.required">Due date Required</span>-->
+                  <!--</div>-->
+                  <input type="hidden" ng-model="editdata.invoice.due_date" />
+
+                </div>
+
+
+              </div>
+            </div>
+
+            <div class="lineItemDiv">
+              <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+                <!--table head content itemDescription , Qty , Rate ,Amount start -->
+                <thead>
+                  <tr class="hd font-custom-bold">
+                    <td width="45%">
+                      <input style="text-align:left;" type="text" ng-value="tempProLabel" id="edititemDescLabel" class="bld w100"
+                        disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" ng-value="tempQtyLabel" id="edititemQtyLabel" class="bld w100 text-left" name="quantity"
+                        disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" ng-value="tempRateLabel" id="edititemRateLabel" class="bld w100 text-left"
+                        name="rate" disabled>
+                    </td>
+                    <td width="18%" ng-show="editdata.invoice.tax_on_item == 0">
+                      <input type="text" value="Tax(%)" id="edittaxLabel" class="bld w100 text-left" name="rate"
+                        disabled>
+                    </td>
+                    <td width="18%" ng-if="editdata.invoice.discount_on_item == 1">
+                      <input type="text" value="Discount(%)" id="editdiscountLabel" class="bld w100 text-left" name="rate"
+                        disabled>
+                    </td>
+                    <td width="18%">
+                      <input type="text" ng-value="tempAmtLabel" id="edititemAmtLabel" class="bld w100 text-right"
+                        style="text-align:right;" name="amount" disabled>
+                    </td>
+                    <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
+
+                  </tr>
+                </thead>
+                <!--table head content itemDescription , Qty , Rate ,Amount end -->
+                <tbody class="lineItems">
+                  <tr class="row-item" ng-repeat="item in existingItem" ng-init="selected_product_id[$index] = item.uniqueKeyFKProduct">
+                    <td>
+                      <div class="">
+                        <div class="form-group">
+                          <div class="">
+                            <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                              {{item.product_name}}
+                            </div>
+                            <div class="text-left">
+                              {{item.description}}
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;">
+                      <div class="text-right">
+                        {{item.quantity |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;">
+                      <div class="text-right">
+                        {{item.rate |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="editdata.invoice.tax_on_item == 0">
+                      <div class="text-right">
+                        {{item.tax_rate |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="editdata.invoice.discount_on_item == 1">
+                      <div class="text-right">
+                        {{item.discount |number:2}}
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;">
+                      <div class="text-right">
+                        {{item.total |number:2}}
+                      </div>
+                    </td>
+                    <td style="border-bottom:none;background:none;border-top:none" class="dele-icon" ng-class="{'no-border-last':$last}">
+                      <div style="padding-top:4px"><a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                          ng-click="deleteExistingItemEdit($index)">
+                          <!--<span
+                                                        class="del pull-left glyphicon set-color-red glyphicon-remove">&nbsp;</span>-->
+                          <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="row-item" ng-repeat="item in editdata.invoice.listItems" ng-init="selected_product_id[$index] = item.product_name">
+
+                    <td ng-model="addProduct.itemDescription" ng-class="{'no-border-last':$last}">
+                      <div class="">
+                        <div class="form-group">
+                          <div class=" ">
+                            <div class="custom-add-product selectize-wrap">
+                              <select selectize="configProduct" options="productList" name="select_from" class="border-rad-0"
+                                ng-model="selected_product_id_edit[$index]" ng-change="addItemEdit($index,item,selected_product_id_edit[$index]);onFocusOutSelect($index)"
+                                my-enter-in></select>
+                            </div>
+                            <div class="custom-description">
+                              <textarea elastic style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px;"
+                                id="editdescId" ng-model="item.description" class="form-control" placeholder="Description">
+
+                                                        </textarea>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input id="editqty{{$index}}" type="number" min="0.01" step="any" class="form-control text-right"
+                          my-enter-in ng-model="item.quantity" ng-change="calculateTotalEdit($index)" required
+                          select-on-click>
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input type="number" min="0.01" step="any" class="form-control text-right" name="itemRate.1"
+                          my-enter-in id="editrate" required ng-model="item.rate" ng-change="calculateTotalEdit($index)"
+                          select-on-click>
+                      </div>
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="editdata.invoice.tax_on_item == 0" ng-class="{'no-border-last':$last}">
+                      <!--<div class="input-group">-->
+                      <input type="number" step="any" min="0.00" class="form-control text-right" name="taxRate"
+                        ng-model="item.tax_rate" ng-change="calculateTotalEdit($index)" select-on-click my-enter-in>
+                      <!--<div class="input-group-addon">%</div>-->
+                      <!--</div>-->
+                    </td>
+                    <td style="vertical-align: initial;" ng-if="editdata.invoice.discount_on_item == 1" ng-class="{'no-border-last':$last}">
+                      <!--<div class="input-group">-->
+                      <input type="number" min="0.00" step="any" class="form-control text-right" name="itemRate.1"
+                        ng-model="item.discount" ng-change="calculateTotalEdit($index)" select-on-click my-enter-in>
+                      <!--<div class="input-group-addon">%</div>-->
+                      <!--</div>-->
+                    </td>
+                    <td style="vertical-align: initial;" ng-class="{'no-border-last':$last}">
+                      <div class="form-group">
+                        <input type="number" step="any" class="form-control text-right" title="Amount is calculated automatically."
+                          name="itemTotal.1" id="edit_amt" ng-model="item.total" disabled convert-decimal>
+                      </div>
+                    </td>
+
+
+                    <td style="border-bottom:none;background:none;border-top:none" class="dele-icon" ng-class="{'no-border-last':$last}">
+                      <div style="padding-top:4px"><a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                          ng-click="removeItemEdit($index)">
+                          <!--<span
+                                                        class="del pull-left glyphicon set-color-red glyphicon-remove">&nbsp;</span>-->
+                          <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                        </a>
+                      </div>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+              <!--table Body content itemDescription , Qty , Rate ,Amount end-->
+
+              <!--Term and Condition and Sub-Total in table body start -->
+              <div class="row add-item-button">
+                <div class="col-md-6 col-xs-6 col-md-6">
+                  <button type="button" class=" btnd add-line-item-button" ng-click="addLineItemEdit()"><img src="assets/images/add16.png"
+                      alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">Line Item
+                  </button>
+                </div>
+                <div class="col-md-6 col-xs-6 col-md-6 discount-tax-pad">
+                  <div><a class="inline" ng-hide="show_discount_edit || editdata.invoice.discount_on_item == 1"
+                      ng-click="showMeEdit();editdata.invoice.discount_on_item = 0; discount_on_edit = 'onBill'; ">{{tempDisLabel}}+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="show_shipping_charge_edit" ng-click="showMeShippingEdit();">{{tempShippingLabel}}+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="show_tax_input_edit || editdata.invoice.tax_on_item == 0" ng-click="showMeTaxEdit();editdata.invoice.tax_on_item = 1; tax_on_edit = 'taxOnBill'; selectTaxEdit();">Tax+</a>
+                  </div>
+                  <div><a class="inline" ng-hide="show_adjustment_edit || editdata.invoice.adjustment != 0" ng-click="showMeAdjustmentEdit();">{{tempAdjLabel}}+</a>
+                  </div>
+                  <div class="inline" ng-repeat="tax in authenticated.setting.alstTaxName" ng-show="showMultipleTaxEdit && multiTaxButtonEdit(tax.taxName,$index)">
+                    <a ng-click="showMeMultipleTaxEdit($index);">{{tax.taxName}}+</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6 term-row">
+
+                <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                  <span class="bld">{{tempTermLabel}}</span>
+
+                  <a ng-click="addTermEdit(true)" class="pull-right" data-toggle="tooltip" data-placement="top"
+                    data-original-title="Add "> <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">Add
+                    Terms</a>
+                </div>
+                <div class="col-md-12 pad0 margin-top-8">
+
+                  <ul class=" col-sm-12 list-unstyled" ng-repeat="term in terms_edit |filter: {setDefault: 'DEFAULT' }">
+                    <li class="row">
+                      <div class="col-md-11 margin-bottom-5px">
+                        {{term.terms}} <br>
+                      </div>
+                      <div class="col-md-1 pad0 ">
+                        <a class="closeicon show" ng-click="setTermsListEdit(term)" title="delete" data-toggle="tooltip"
+                          data-placement="top" data-original-title="Delete " title="Delete Terms" style="cursor:pointer;">
+                          <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;"></a>
+                      </div>
+                    </li>
+                  </ul>
+                  <!--<div class="col-md-12" ng-hide=" editdata.invoice.termsAndConditions.length > 0">-->
+                  <!--<h4>No terms added</h4>-->
+                  <!--</div>-->
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6 pad-right-0">
+
+
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label " style="margin-bottom: 5px;">
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="font-custom-bold" value="">{{tempSubToLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right ">
+                    <span class="font-custom-bold">{{editdata.invoice.gross_amount|currency:number:2}}</span>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_discount_edit">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
+                      <div ng-hide="isRateEdit" class="inline font-custom">({{
+                        currencySymbolTemp }})
+                      </div>
+                      <div ng-hide="!isRateEdit" class="inline font-custom">(%)</div>
+
+                      <!--Discount<input type="number" placeholder="0.00%" style="text-align: right;"><i class="glyphicon glyphicon-remove" ng-click="hideMe();"></i>-->
+                      <!--<div style="text-align: left;"><a class="" ng-hide="tempflag" ng-click="showMe();">Discount+</a></div>-->
+                      <div class="pad0" style="float: right; padding-right: 10px;">
+                        <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
+                            title="Discount"></span>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li ng-class="{active:!isRateEdit}">
+                            <a href="#" ng-click="isRateEdit=false;$event.preventDefault();calculateInvoice(1);editdata.invoice.percentage_flag = 0;">Flat
+                              ({{currencySymbolTemp}})</a>
+                          </li>
+                          <li ng-class="{active:isRateEdit}" class="active">
+                            <a href="#" ng-click="isRateEdit=true;$event.preventDefault();calculateInvoice(1);editdata.invoice.percentage_flag = 1;">Percent
+                              (%)</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!--Discount<input type="number" placeholder="0.00%" style="text-align: right;"><i class="glyphicon glyphicon-remove" ng-click="hideMe();"></i>-->
+                    <!--<div style="text-align: left;"><a class="" ng-hide="tempflag" ng-click="showMe();">Discount+</a></div>-->
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                    <ngForm name="form_discount">
+                      <div class="input-group addon-input pad-right-0" ng-init="editdata.invoice.percentage_flag = 1">
+                        <!--<div class="glyphicon glyphicon-remove" ng-click=""></div>-->
+
+                        <!-- <div class="input-group-addon addon-left" ng-hide="isRate">{{
+                                                     currencySymbolTemp }}
+                                                 </div>-->
+                        <div ng-hide="editdata.invoice.percentage_flag == 0">
+
+                          <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="percentage_input"
+                            type="number" min="0.00" id="edit_percentage_input" step="any" max="100" autocomplete="off"
+                            tabindex="1005" ng-required="ngRequired" maxlength="editdata.invoice.gross_amount" ng-model="editdata.invoice.percentage_value"
+                            ng-change="calculateInvoiceEdit(1)" convert-decimal select-on-click my-enter-in
+                            disable-enter>
+
+                        </div>
+                        <div ng-hide="editdata.invoice.percentage_flag == 1">
+                          <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " type="number"
+                            step="any" min="0.00" name="discount_input" id="edit_discount_input" ng-maxlength="editdata.invoice.gross_amount"
+                            autocomplete="off" tabindex="1005" ng-required="ngRequired" ng-model="editdata.invoice.discount"
+                            ng-change="calculateInvoiceEdit(1)" select-on-click my-enter-in disable-enter
+                            convert-decimal>
+                        </div>
+                        <!-- <div class="input-group-addon addon-right " ng-hide="!isRate">%</div>-->
+
+                        <div class="input-group-addon pad-right-0 remove-button">
+
+                          <div class="addon selectorpad-right-0" ng-click="hideMeEdit();editdata.invoice.discount_on_item = 2; discount_on = 'disabled';">
+                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          </div>
+
+
+                        </div>
+
+                      </div>
+                    </ngForm>
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show=" show_tax_input_edit || (show_tax_input_edit && temp_tax_flag_edit)">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                      <div class="inline font-custom">(%)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                    <ngForm name="form_tax_input">
+                      <div class="input-group pad-right-0">
+                        <input class="form-control" name="tax_input" id="edit_tax_input" min="0.00" type="number" step="any"
+                          max="100" tabindex="1005" ng-required="ngRequired" ng-model="editdata.invoice.tax_rate"
+                          ng-value="0.00" ng-change="calculateInvoiceEdit(1)" select-on-click my-enter-in disable-enter>
+                        <!-- <div class="input-group-addon addon-right">%</div>-->
+                        <div class="input-group-addon pad-right-0 remove-button">
+                          <div class="addon selectorpad-right-0" ng-click="hideMeTaxEdit();editdata.invoice.tax_on_item = 2; tax_on_edit = 'taxDisabled';">
+                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          </div>
+                        </div>
+                      </div>
+
+                    </ngForm>
+                    <div class="form-error">
+                      <span ng-show="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                    </div>
+
+                  </div>
+                </div>
+                <div ng-repeat="tax in editdata.invoice.taxList" class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px"
+                  ng-show="tax.selected">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                      <div class="inline font-custom">(%)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                    <ngForm name="form_tax_input">
+                      <div class="input-group pad-right-0">
+                        <input class="form-control" name="tax_input" id="edit_tax_input_list" min="0.00" type="number"
+                          step="any" max="100" tabindex="1005" ng-required="ngRequired" ng-model="tax.percentage"
+                          ng-value="tax.percentage" ng-change="calculateInvoiceEdit(1)" select-on-click my-enter-in
+                          disable-enter>
+
+                        <!--<div class="input-group-addon ">%</div>-->
+                        <div class="input-group-addon pad-right-0 remove-button">
+                          <div class="addon selectorpad-right-0" ng-click="hideMeTaxMultipleEdit($index);">
+                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          </div>
+                        </div>
+                      </div>
+                      <!--<input type="text" ng-model="editdata.invoice.taxList[$index].taxName" ng-value="{{tax.taxName}}"/>-->
+                    </ngForm>
+                    <div class="form-error">
+                      <span ng-show="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_shipping_charge_edit">
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                    <ngForm name="form_shipping_input">
+                      <div class="input-group pad-right-0">
+                        <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="shipping_input"
+                          type="number" step="any" max="editdata.invoice.gross_amount" autocomplete="off" tabindex="1005"
+                          ng-required="ngRequired" ng-model="editdata.invoice.shipping_charges" ng-change="calculateInvoiceEdit(1)"
+                          select-on-click disable-enter>
+                        <div class="input-group-addon pad-right-0 remove-button">
+                          <div class="addon selectorpad-right-0" ng-click="hideMeShippingEdit();">
+                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          </div>
+                        </div>
+                      </div>
+
+                    </ngForm>
+                    <div class="form-error">
+                      <span ng-show="form_shipping_input.shipping_input.$error.max">Not more than 100</span>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" ng-show="show_adjustment_edit || editdata.invoice.adjustment != 0">
+
+                  <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                    <div class="row">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
+                    </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                    <ngForm name="form_tax_input">
+                      <div class="input-group pad-right-0">
+                        <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="tax_input"
+                          type="number" step="any" autocomplete="off" tabindex="1005" ng-required="ngRequired" ng-model="editdata.invoice.adjustment"
+                          ng-change="calculateInvoiceEdit(1)" select-on-click>
+                        <!-- <div class="input-group-addon set-color">%</div>-->
+                        <div class="input-group-addon pad-right-0 remove-button">
+                          <div class="addon selectorpad-right-0" ng-click="hideMeAdjustmentEdit();">
+                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          </div>
+                        </div>
+                      </div>
+
+                    </ngForm>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label ">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="font-custom-bold">{{editdata.invoice.amount|currency:number}}</span>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 margin-top-8">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                    <!--<a data-toggle="modal"
+                                                                                                      ng-click="initializeMaxBalance();fullPayment = false;"
+                                                                                                      data-target="#addPayment"
+                                                                                                      title="Add Payment">--><span
+                      class="font-custom" value="">{{tempPaidLabel}}</span>
+                    <!--</a>-->
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="font-custom">{{paid_amount_edit|currency:number:2}}</span>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 balance-row">
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left"><span class="bld" value="">{{tempBalLabel}}</span>
+                  </div>
+
+                  <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                    <span class="bld">{{editdata.invoice.balance|currency:number:2}}</span>
+
+
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12 pad0 margin-top-8">
+                  <button style="width: 134px;" type="button" data-toggle="modal" class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold"
+                    ng-click="initializeMaxBalanceEdit();fullPaymentEdit = false;" data-target="#addPaymentEdit" title="Add Payment">
+                    ADD PAYMENT
+                  </button>
+                </div>
+
+
+              </div>
+
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" ng-init="addButton = 0">
+        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Add Payment</h4>-->
+        <a class="pull-right" ng-click="close()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel1">
+          Add Payment
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 col-sm-12 col-xs-12 pad0 add-payment" style="margin-bottom: 10px;">
+          <div class="col-md-5 col-sm-4 col-xs-4 ">
+            <form name="innerform1">
+              <div class=" form-group payment-input">
+
+                <div class="input-group" style="width: 100%">
+
+
+                  <!--<label class="input-group-addon"><span >{{ authenticated.data.setting.currency_symbol }}</span></label>-->
+                  <input type="number" class="form-control default-height" name="paymentAmount" id="paymentAmount"
+                    ng-model="temp_payment.paid_amount" min="0.00" placeholder="Add Amount Paid" ng-change="setAddButton(temp_payment.paid_amount)"
+                    max="{{max_balance}}" my-enter-in select-on-click convert_decimal>
+
+                  <div class="form-error">
+                    <span ng-show="innerform1.paymentAmount.$error.max"> Should be Less than Balance</span>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-2 pad-left-0">
+
+            <button class="btn  btn-info btn-circle" ng-disabled="temp_payment.paid_amount == 0 || addButton == false "
+              ng-click="addPayment(temp_payment)"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="col-md-5 col-sm-6 col-xs-6pad-right-0">
+            <input type="text" name="paymentDate" id="addPaymentDate1" ng-model="paymentDate" data-picker-type="from"
+              class="form-control default-height pad-right-0"
+              ng-change="watch()" required />
+          </div>
+
+        </div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <table id="tableReport1" class="table table-hover table-striped ">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_30" data-id="30">
+                    <td class="pull-left font-custom-bold">
+                      Invoice
+                    </td>
+                    <td class="font-custom-bold pull-right">{{data.invoice.amount|currency:number:2 }}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport2" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media " id="carga_20" data-id="20" ng-repeat="payment in data.invoice.payments" style="border-top: 1px solid #ddd; ">
+                    <td class="pull-left font-custom-bold" style="border-top: none; ">
+                      {{payment.date_of_payment| date}}
+                    </td>
+                    <td class="font-custom-bold pull-right" style="border-top: none; ">
+                      {{payment.paid_amount|currency:number:2}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport3" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_10" data-id="10">
+                    <td class="pull-left font-custom-bold">
+                      Balance Due :
+                    </td>
+                    <td class="font-custom-bold pull-right">
+                      {{ data.invoice.balance |currency:number:2}}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15" ng-disabled="data.invoice.balance == 0 || fullPayment"
+            ng-click="addFullPayment(temp_payment);">
+            Full Payment
+          </button>
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn " ng-click="close()">
+            Cancel
+          </button>
+          <button id="paymentSaveBtn" type="button" class="btn btn-success btn-raised font-custom pull-right width20btn"
+            ng-disabled="" ng-click="updatePaymentView()">
+            <!--ng-click="addPayment(temp_payment, addPaymentDailog.$valid)" >-->
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="add-terms" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"
+  data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" ng-init="addButton = 0">
+        <a class="pull-right" ng-click="closeAddInvoice()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+          Add Terms & Condition
+        </h4>
+      </div>
+      <div class="modal-body">
+        <ngForm name="termForm">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="form-group">
+                <textarea elastic ng-model="termCondition.terms" name="term" class="form-control" class="form-control"
+                  placeholder="Add term & Condition" style="width: 95%;height: 110px;" required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="checkbox pull-left">
+                <input type="checkbox" ng-model="termCondition.set_default" name="set_default" id="addtermcheck"
+                  ng-true-value="'DEFAULT'" ng-false-value="''" ng-checked="termCondition.set_default == 'DEFAULT'"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                <label class="inline" for="addtermcheck"></label>
+                <div class="inline">Default?</div>
+              </div>
+              <button type="button" id="addtermbtn" name="addtermbtn" class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+                ng-disabled="!termForm.$valid" ng-click="saveTerm(termCondition, termForm.$valid)" title="save">SAVE
+              </button>
+            </div>
+          </div>
+        </ngForm>
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 20px 24px 20px 15px" scroll-bar>
+          <div class="col-md-12 col-sm-12 col-xs-12 scroll mCustomScrollbar">
+            <div class="item termlist row product-list" ng-repeat="term in terms | filter:{ enabled : 0}" id="term1{{$index}}"
+              ng-class="selectedTerm == $index ? 'selected' : '';">
+              <div class="col-md-12 col-sm-12 col-xs-12 pad0">
+                <div class="col-md-12 col-sm-12 col-xs-12 pad0 ">
+                  <div class="col-md-1 pad0">
+                    <input type="checkbox" id="termcheck{{$index}}" ng-model="data.terms[$index]" ng-true-value="true"
+                      ng-false-value="false" ng-change="setTermsList(term)" />
+                    <label class="" for="termcheck{{$index}}"></label>
+                  </div>
+                  <div class="col-md-9 pad-left-0">
+                    <span style="vertical-align: top;"> {{term.terms}}</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="add-client" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="pull-right" ng-click="closeClient()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+          Add New Client
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal add-client-form" name="clientform" ng-submit="">
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-6 " style="padding-right: 23px;">
+              <div class="form-group" ng-class="{ 'has-error':(clientform.$submitted || clientform.name.$touched || errors.name) &&  clientform.name.$error.required }">
+                <input type="text" ng-model="client.client.name" name="name" class="form-control add-client-input-custom"
+                  placeholder="Organization Name" required />
+                <div class="form-error" ng-show="clientform.$submitted || clientform.name.$touched || errors.name">
+                  <span ng-show="clientform.name.$error.required">Required</span>
+                  <span ng-show="errors.name">{{ errors.name[0] }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 23px;">
+              <div class="form-group " ng-class="{ 'has-error':(clientform.$submitted || clientform.contact_person_name.$touched || errors.contact_person_name) && clientform.contact_person_name.$error.required }">
+                <input type="text" ng-model="addClientModal.contact_person_name" name="contact_person_name" class="form-control add-client-input-custom"
+                  placeholder="Contact Person" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 23px;">
+              <div class="form-group " ng-class="{ 'has-error': (clientform.$submitted || clientform.email.$touched || errors.email ) && clientform.email.$error.required }">
+                <input type="text" ng-model="addClientModal.email" name="email" class="form-control add-client-input-custom"
+                  placeholder="Email" my-enter-in select-on-click />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 23px;">
+              <div class="form-group" ng-class="{ 'has-error': (clientform.$submitted || clientform.cont_number.$touched || errors.number) && (clientform.cont_number.$error.required || clientform.cont_number.$error.maxlength)  }">
+                <input type="text" ng-model="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
+                  placeholder="Number" my-enter-in select-on-click />
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12 pt-5">
+
+            <div class="form-group add-client-input-width" ng-class="{ 'has-error': (clientform.$submitted || clientform.address_line1.$touched || errors.address_line1) && (clientform.address_line1.$error.required || errors.address_line1) }"
+              style="padding-right: 12px;">
+
+              <textarea elastic ng-model="addClientModal.address_line1" name="address_line1" class="form-control"
+                placeholder="Address" select-on-click style="max-height: 69px; height: 69px;"></textarea>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group add-client-input-width" ng-class="{ 'has-error': (clientform.$submitted || clientform.shipping_address.$touched || errors.shipping_address) && clientform.shipping_address.$error.required }"
+              style="padding-right: 12px;">
+
+              <textarea elastic ng-model="addClientModal.shipping_address" name="shipping_address" class="form-control"
+                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;"></textarea>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0">
+            <div class="form-group add-client-input-width">
+              <input type="text" ng-model="addClientModal.business_id" name="business_id" class="form-control add-client-input-custom"
+                placeholder="Business Id " select-on-click />
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12 pt-5 pad-right-0">
+            <div class="form-group add-client-input-width">
+              <input type="text" ng-model="addClientModal.business_detail" name="business_detail" class="form-control add-client-input-custom"
+                placeholder="Business Detail" my-enter-in select-on-click />
+
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn" ng-click="closeClient()">
+            Close
+          </button>
+          <button id="InvClientAdd" type="button" class="btn  btn-raised  btn-success width20btn" ng-disabled="!clientform.$valid || client.itemList.length == 0"
+            ng-click="saveClient(client, clientform.$valid)" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
+            Add Client
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addPaymentAddInvoice" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
+  data-backdrop="static" data-keyboard="false" ng-init="addButton = false">
+  <div class="modal-dialog add-payment-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Add Payment</h4>-->
+        <!--<a class="pull-right" ng-click="closeAddInvoice()" style="margin-top: 6px;">-->
+        <a class="pull-right" ng-click="closePayAddInvoice()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel12">
+          Add Payment
+        </h4>
+      </div>
+      <div class="modal-body margin-top-15">
+        <div class="col-md-12 col-sm-12 col-xs-12 pad0 add-payment" style="margin-bottom: 10px;">
+          <div class="col-md-5 col-sm-4 col-xs-4 ">
+            <form name="innerform1">
+              <div class=" form-group payment-input">
+
+                <div class="input-group" style="width: 100%">
+                  <!--<label class="input-group-addon"><span >{{ authenticated.data.setting.currency_symbol }}</span></label>-->
+                  <input type="number" class="form-control default-height" name="paymentAmount" id="paymentAmount2"
+                    ng-model="temp_payment_add_invoice.paid_amount" min="0.00" placeholder="Add Amount Paid" ng-change="setAddButton(temp_payment_add_invoice.paid_amount)"
+                    max="{{max_balance_add_invoice}}" my-enter-in select-on-click convert_decimal>
+
+                  <div class="form-error">
+                    <span ng-show="innerform1.paymentAmount.$error.max"> Should be Less than Balance</span>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-2 pad-left-0">
+
+            <button class="btn  btn-info btn-circle" ng-disabled="temp_payment_add_invoice.paid_amount == 0 || addButton == false "
+              ng-click="addPaymentAddInvoice(temp_payment_add_invoice)"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="col-md-5 col-sm-6 col-xs-6pad-right-0">
+            <input type="text" name="paymentDate" id="addPaymentDate12" ng-model="paymentDate" class="form-control default-height pad-right-0" ng-change="watch()"
+              required readonly />
+          </div>
+
+        </div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <table id="tableReport12" class="table table-hover table-striped ">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_302" data-id="30">
+                    <td class="pull-left font-custom-bold">
+                      Invoice
+                    </td>
+                    <td class="font-custom-bold pull-right">{{data.add_invoice.amount|currency:number:2 }}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport22" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media " id="carga_202" data-id="20" ng-repeat="payment in data.add_invoice.payments" style="border-top: 1px solid #ddd; ">
+                    <td class="pull-left font-custom-bold" style="border-top: none; ">
+                      {{payment.date_of_payment| date}}
+                    </td>
+                    <td class="font-custom-bold pull-right" style="border-top: none; ">
+                      {{payment.paid_amount|currency:number:2}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport32" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_102" data-id="10">
+                    <td class="pull-left font-custom-bold">
+                      Balance Due :
+                    </td>
+                    <td class="font-custom-bold pull-right">
+                      {{ data.add_invoice.balance |currency:number:2}}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15" ng-disabled="data.add_invoice.balance == 0|| max_balance_add_invoice == 0.00 || fullPayment"
+            ng-click="addFullPaymentAddInvoice(temp_payment_add_invoice);">
+            Full Payment
+          </button>
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn " ng-click="closePayAddInvoice()">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-success btn-raised font-custom pull-right width20btn" ng-disabled=""
+            ng-click="updatePaymentAddInvoice()">
+            <!--ng-click="addPayment(temp_payment, addPaymentDailog.$valid)" >-->
+            Done
+          </button>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="add-terms-edit" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" ng-init="addButton = 0">
+        <a class="pull-right" ng-click="closeEdit()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabelEdit">
+          Add Terms & Condition
+        </h4>
+      </div>
+      <div class="modal-body">
+        <ngForm name="termForm">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="form-group">
+                <textarea elastic ng-model="termCondition.terms" name="term" class="form-control" class="form-control"
+                  placeholder="Add term & Condition" style="width: 95%;height: 110px;" required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="checkbox pull-left">
+                <input type="checkbox" ng-model="termCondition.set_default" name="set_default" id="addtermcheckEdit"
+                  ng-true-value="'DEFAULT'" ng-false-value="''" ng-checked="termCondition.set_default == 'DEFAULT'"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                <label class="inline" for="addtermcheck"></label>
+                <div class="inline">Default?</div>
+              </div>
+              <button type="button" class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+                ng-disabled="!termForm.$valid" id="addtermbtnEdit" ng-click="saveTermEdit(termCondition, termForm.$valid,editdata.terms)"
+                title="save">SAVE
+              </button>
+            </div>
+          </div>
+        </ngForm>
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 20px 24px 20px 15px" scroll-bar>
+          <div class="col-md-12 col-sm-12 col-xs-12 scroll mCustomScrollbar">
+            <div class="item termlist row product-list" ng-repeat="term in terms_edit | filter:{ enabled : 0}" id="term1Edit{{$index}}"
+              ng-init="term.setDefault == 'DEFAULT' ? editdata.terms[$index] = true : editdata.terms[$index] = false "
+              ng-class="selectedTerm == $index ? 'selected' : '';">
+              <div class="col-md-12 col-sm-12 col-xs-12 pad0">
+                <div class="col-md-12 col-sm-12 col-xs-12 pad0 ">
+                  <div class="col-md-1 pad0">
+                    <!--ng-init="term.setDefault == 'DEFAULT' ? data.terms[$index] = term.uniqueKeyTerms : data.terms[$index] = '' "-->
+                    <input type="checkbox" id="termcheckEdit{{$index}}" ng-model="editdata.terms[$index]" ng-true-value="true"
+                      ng-false-value="false" ng-change="setTermsListEdit(term)" />
+                    <label class="" for="termcheckEdit{{$index}}"></label>
+                  </div>
+                  <div class="col-md-10 pad-left-0">
+                    <span style="vertical-align: top;"> {{term.terms}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addPaymentEdit" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
+  data-backdrop="static" data-keyboard="false" ng-init="addButton = false">
+  <div class="modal-dialog add-payment-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="pull-right" ng-click="closeEdit()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel1_edit">
+          Add Payment
+        </h4>
+      </div>
+      <div class="modal-body margin-top-15">
+        <div class="col-md-12 col-sm-12 col-xs-12 pad0 add-payment" style="margin-bottom: 10px;">
+          <div class="col-md-5 col-sm-4 col-xs-4 ">
+            <form name="innerform1">
+              <div class=" form-group payment-input">
+
+                <div class="input-group" style="width: 100%">
+
+
+                  <!--<label class="input-group-addon"><span >{{ authenticated.data.setting.currency_symbol }}</span></label>-->
+                  <input type="number" class="form-control default-height" name="paymentAmount" id="paymentAmount_edit"
+                    ng-model="temp_payment_edit.paid_amount" min="0.00" placeholder="Add Amount Paid" ng-change="setAddButtonEdit(temp_payment_edit.paid_amount)"
+                    max="{{max_balance_edit}}" my-enter-in select-on-click convert_decimal>
+
+                  <div class="form-error">
+                    <span ng-show="innerform1.paymentAmount.$error.max"> Should be Less than Balance</span>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-2 pad-left-0">
+
+            <button class="btn  btn-info btn-circle" ng-disabled="temp_payment_edit.paid_amount == 0 || addButtonEdit == false "
+              ng-click="addPaymentEdit(temp_payment_edit)"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="col-md-5 col-sm-6 col-xs-6pad-right-0">
+            <input type="text" name="paymentDate" id="addPaymentDate1_edit" ng-model="paymentDateEdit" class="form-control default-height pad-right-0" ng-change="watchEdit()"
+              required readonly />
+          </div>
+
+        </div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <table id="tableReport1_edit" class="table table-hover table-striped ">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_30_edit" data-id="30">
+                    <td class="pull-left font-custom-bold">
+                      Invoice
+                    </td>
+                    <td class="font-custom-bold pull-right">{{editdata.invoice.amount|currency:number:2 }}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport2_edit" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media " id="carga_20_edit" data-id="20" ng-repeat="payment in editdata.invoice.payments"
+                    style="border-top: 1px solid #ddd; ">
+                    <td class="pull-left font-custom-bold" style="border-top: none; ">
+                      {{payment.date_of_payment| date}}
+                    </td>
+                    <td class="font-custom-bold pull-right" style="border-top: none; ">
+                      {{payment.paid_amount|currency:number:2}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table id="tableReport3_edit" class="table table-hover table-striped">
+                <tbody>
+                  <tr class="media add-payment-label" id="carga_10_edit" data-id="10">
+                    <td class="pull-left font-custom-bold">
+                      Balance Due :
+                    </td>
+                    <td class="font-custom-bold pull-right">
+                      {{ editdata.invoice.balance |currency:number:2}}
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15" ng-disabled="editdata.invoice.balance == 0 || fullPaymentEdit"
+            ng-click="addFullPaymentEdit(temp_payment_edit);">
+            Full Payment
+          </button>
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn " ng-click="closeEdit();">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-success btn-raised font-custom pull-right width20btn" ng-disabled=""
+            ng-click="updatePayment()">
+            <!--ng-click="addPayment(temp_payment, addPaymentDailog.$valid)" >-->
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

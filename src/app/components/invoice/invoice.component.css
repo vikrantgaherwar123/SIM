@@ -1,0 +1,100 @@
+@import '../../../assets/css/listForm.css';
+
+.inv-generator {
+  min-height: 1100px;
+  max-height: none;
+}
+.create-invoice {
+  background: #fff;
+  box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
+}
+.vtop {
+  vertical-align: top;
+  /* margin-bottom: 17px; */
+}
+input, textarea {
+  margin-bottom: 2px;
+}
+.hd td, .hd td input {
+  background-color: #666;
+}
+hd td {
+  border-bottom: 1px solid #ddd;
+}
+.column td {
+  padding: 4px 2px;
+  vertical-align: middle;
+}
+.hd td input {
+  text-align: right;
+  border: 1px solid #666;
+  color: #fff;
+}
+.w100 {
+  width: 100%;
+}
+.bld {
+  margin: 2px 0;
+}
+.row-item td {
+  border-bottom: 1px solid #e3e3e3;
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+.column td {
+  padding: 4px 2px;
+  vertical-align: middle;
+}
+.no-border-last {
+  border-bottom: none !important;
+}
+select {
+  font-family: quicksand_book !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 800 !important;
+  padding: 3px 12px !important;
+}
+.create-invoice .column tbody tr td:nth-last-child(1), .create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
+  position: absolute !important;
+}
+.set-color {
+  color: #2196f3 !important;
+}
+.add, .del {
+  height: 21px;
+  margin-top: 2px;
+  margin-bottom: 12px;
+}
+.del {
+  background-position: -404px -214px;
+  width: 20px;
+}
+.add-item-button {
+  margin-bottom: 10px;
+  margin-top: 3px;
+}
+button.add-line-item-button {
+  background: #d1e5f8 !important;
+  padding: 4px;
+  padding-right: 4px;
+  text-transform: none;
+  margin-left: 1px;
+  color: #2196f3 !important;
+  border: none !important;
+}
+.discount-tax-pad {
+  padding-top: 15px;
+}
+.term-cond-label {
+  background: #e0dede;
+  border: 1px solid #e3e3e3;
+  padding: 10px;
+}
+.bld {
+  margin: 2px 0;
+}
+.bld, .terms {
+  font-weight: 700;
+  font-size: 14px;
+}

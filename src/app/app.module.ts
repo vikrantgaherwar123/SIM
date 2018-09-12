@@ -14,6 +14,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ClientComponent } from './components/client/client.component';
 import { ProductComponent } from './components/product/product.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ProductComponent } from './components/product/product.component';
     DashboardComponent,
     SidebarComponent,
     ClientComponent,
-    ProductComponent
+    ProductComponent,
+    InvoiceComponent
   ],
   imports: [
     BrowserModule,

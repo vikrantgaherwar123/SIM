@@ -246,3 +246,9 @@ input[type=text] {
 	position: absolute;
 	top: 33px;
 }
+.custom-add-product {
+  height: 100%;
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px;
+}
