@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SidebarModule } from 'ng-sidebar'
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms'
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './components/index/index.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -26,9 +29,11 @@ import { ProductComponent } from './components/product/product.component';
     BrowserModule,
     AppRoutingModule,
     TranslateModule.forRoot(),
-    SidebarModule.forRoot()
+    SidebarModule.forRoot(),
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

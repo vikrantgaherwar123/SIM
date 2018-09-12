@@ -16,21 +16,20 @@
       <img src="assets/images/login/lg.png" class="lock-image img-fluid">
 
       <div class="login-form">
-        <form name="form">
+        <form name="form" (ngSubmit)="loginUser($event)">
           <div class="form-group" style="margin-bottom: 8px;">
             <i class="fa fa-envelope"></i>
-            <input type="text" class="login-input" name="email" ng-model="user.userName" autocomplete="off" placeholder="Email">
+            <input type="text" class="login-input" name="email" [(ngModel)]="user.userName" autocomplete="off" placeholder="Email">
           </div>
           <div style="min-height: 15px;">
-            <!-- <span ng-show="errorStaus" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
+            <span *ngIf="errorStatus" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
               <img src="assets/images/exclamation16.png" style="width: 12px;margin-top: -3px;">
               {{registerMessage}}
-            </span> -->
+            </span>
           </div>
           <div class="form-group">
             <i class="fa fa-key"></i>
-            <input type="password" class="login-input" name="password" placeholder="Password" ng-model="user.Password" required autocomplete="off"
-              style="margin-top: -6px;">
+            <input type="password" class="login-input" name="password" [(ngModel)]="user.password" placeholder="Password" required autocomplete="off" style="margin-top: -6px;">
           </div>
           <div id="rem-for">
             <div class="padl0 pull-left">
@@ -43,8 +42,11 @@
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
           <div class="form-group">
-            <button type="submit" id="login-btn" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>" name="login-btn"
-              href="#" ng-click="loginUser(user);">Login</button>
+            <button type="submit" id="login-btn" name="login-btn"
+              data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>" 
+            >
+              Login
+            </button>
           </div>
         </form>
         <div id="or-div">
