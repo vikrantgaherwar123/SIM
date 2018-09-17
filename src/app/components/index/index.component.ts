@@ -6,10 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./index.component.css']
 })
 export class AppComponent {
-  private _opened: boolean = false;
   public self = this
   private _toggleSidebar() {
-    this._opened = !this._opened;
+    if (window.location.pathname !== '/login') {
+      $('#sidebar, #content').toggleClass('active');
+      // $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+    }
   }
   title = 'simpleInvoiceManagerWeb';
 }

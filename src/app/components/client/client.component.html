@@ -1,5 +1,4 @@
 <div class="row main-wrapper">
-
   <div class="col-md-12 col-sm-12 col-xs-12" id="main">
     <div class="row">
       <div class="col-md-3 col-sm-3 col-xs-12 item-list cli-list pad-right-0">
@@ -44,7 +43,7 @@
                 md-diameter="25px">
               </md-progress-circular> -->
             </div>
-            <div class="item clientname row product-list" ng-repeat="client in clientList | orderBy:dynamicOrder| filter:{$:filterClient} | filter:isStatus | limitTo:clientDisplayLimit"
+            <div class="item clientname row product-list" *ngFor="let client of clientList; index as index"
               id="prod{{$index}}" ng-class="selectedClient == $index ? 'selected' : '' ">
 
               <div class="col-md-2 col-sm-2 col-xs-2">

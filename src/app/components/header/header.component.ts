@@ -1,4 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core'
+import { CookieService } from 'ngx-cookie-service'
+import { Router } from "@angular/router"
+import { CONSTANTS } from '../../constants'
 
 @Component({
   selector: 'app-header',
@@ -9,7 +12,7 @@ export class HeaderComponent implements OnInit {
 
   @Input() instance;
 
-  constructor() { }
+  constructor(private cookie: CookieService, private router: Router, private CONST: CONSTANTS) { }
 
   ngOnInit() {
   }
@@ -18,4 +21,9 @@ export class HeaderComponent implements OnInit {
     this.instance._toggleSidebar()
   }
 
+  logout() {
+    this.cookie.delete('user');
+    this.CONST.AUTHENTICATED = false
+    this.router.navigate(['/login']);
+  }
 }

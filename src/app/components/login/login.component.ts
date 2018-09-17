@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 import { AuthService } from '../../services/auth.service'
 import { CookieService } from 'ngx-cookie-service'
-import { Router } from "@angular/router";
+import { Router } from "@angular/router"
+import { CONSTANTS } from '../../constants'
 
 @Component({
   selector: 'app-login',
@@ -22,11 +23,19 @@ export class LoginComponent implements OnInit {
   status: String
   errorStatus: Boolean = false
 
-  constructor(private authService: AuthService, private cookie: CookieService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private cookie: CookieService,
+    private router: Router,
+    private CONST: CONSTANTS
+  ) { }
 
   ngOnInit() {
-    if(this.cookie.get('user')) {
-      this.router.navigate(['/dashboard'])
+    var user = this.cookie.get('user')
+
+    if(user) {
+      user = JSON.parse(user)
+      this.validateToken(user.access_token, user.user.orgId, user)
     }
   }
 
@@ -41,41 +50,7 @@ export class LoginComponent implements OnInit {
         const ids = parseInt(response.login_info.user.orgId);
 
         // Validate token
-        this.authService.validateToken(access, ids).subscribe((response2) => {
-          if (response2.status === 200) {
-            // console.log("cookiessset on login",$cookies.putObject('user', results, {'path': '/'}))
-            var tempOrgId = response.login_info.user.orgId;
-            delete response.login_info.user;
-            //console.log("oo",response.data.login_info);
-            response.login_info.user = {};
-            response.login_info.user.orgId = tempOrgId;
-            this.cookie.set('user', JSON.stringify(response.login_info), null, '/');
-            this.authenticated = response.login_info;
-
-            // DataStore.initializerStart();
-            // $rootScope;
-            // $scope;
-            // if (!$rootScope.referrer) {
-            //   $location.path('dashboard');
-            // }
-            // else {
-            //   $location.path($rootScope.referrer);
-            // }
-            $('#logoutBtn').removeClass("hide");
-            $('#logoutBtn').addClass("show");
-            $("#login-btn").button('reset');
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.pro_bar_load = true;
-            this.status = response.message;
-            var expire = new Date();
-            expire.setDate(expire.getDate() - 1);
-            this.cookies.remove('user');
-            this.authenticated = false;
-            this.router.navigate(['/login']);
-            $("#login-btn").button('reset');
-          }
-        })
+        this.validateToken(access, ids, response);
       } else {
         this.pro_bar_load = true;
         if (response.status == 410) {
@@ -94,5 +69,47 @@ export class LoginComponent implements OnInit {
         }
       }
     });
+  }
+
+  validateToken(access, ids, response) {
+    this.authService.validateToken(access, ids).subscribe((response2) => {
+      if (response2.status === 200) {
+        this.CONST.ACCESS_TOKEN = access
+        this.CONST.AUTHENTICATED = true
+        var tempOrgId = response.login_info ? response.login_info.user.orgId : response.user.orgId;
+
+        if(response.login_info) {
+          delete response.login_info.user;
+        } else {
+          response.login_info = {}
+          response.login_info.access_token = response.access_token
+          response.login_info.expiry = response.expiry
+          response.login_info.generated_time = response.generated_time
+          response.login_info.purchaseStatus = response.purchaseStatus
+          response.login_info.registered_email = response.registered_email
+          response.login_info.tokenStatus = response.tokenStatus
+        }
+        response.login_info.user = {};
+        response.login_info.user.orgId = tempOrgId;
+        this.cookie.set('user', JSON.stringify(response.login_info), null, '/');
+        this.authenticated = response.login_info;
+
+        $('#logoutBtn').removeClass("hide");
+        $('#logoutBtn').addClass("show");
+        $("#login-btn").button('reset');
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.pro_bar_load = true;
+        this.CONST.ACCESS_TOKEN = ''
+        this.CONST.AUTHENTICATED = false
+        this.status = response.message;
+        var expire = new Date();
+        expire.setDate(expire.getDate() - 1);
+        this.cookie.delete('user');
+        this.authenticated = false;
+        this.router.navigate(['/login']);
+        $("#login-btn").button('reset');
+      }
+    })
   }
 }

@@ -11,10 +11,12 @@ import { MD5 } from '../globalFunctions'
 })
 export class AuthService {
 
-  private loginUrl = `${CONSTANTS.BASE_URL}login`
-  private validateTokenUrl = `${CONSTANTS.BASE_URL}validate/token?id=`
+  private loginUrl = ''
+  private validateTokenUrl = ''
 
-  constructor( private http: HttpClient ) {
+  constructor( private http: HttpClient, private CONST: CONSTANTS ) {
+    this.loginUrl = `${CONST.BASE_URL}login`
+    this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
   }
   
   // User Login

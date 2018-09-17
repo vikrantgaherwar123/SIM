@@ -1,32 +1,32 @@
 <nav class="sidebar-nav font-custom-bold">
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/dashboard') }">
-    <div class="menu-parent btn" ng-click="toggle('/dashboard')">
-      <a href=""><span><img src="assets/images/dashboard@2x.png" alt="logo" /></span> Dashboard </a>
+    <div class="menu-parent btn" (click)="toggle('/dashboard')">
+      <a><span><img src="assets/images/dashboard@2x.png" alt="logo" /></span> Dashboard </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/client') || isActive('/client/batch') }">
-    <div ng-click="toggle('/client');" class="menu-parent btn ">
-      <a href=""><span><img src="assets/images/client_n.png" alt="logo" /></span> Clients</a>
+    <div (click)="toggle('/client');" class="menu-parent btn ">
+      <a><span><img src="assets/images/client_n.png" alt="logo" /></span> Clients</a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/product') || isActive('/product/batch') }">
-    <div class="menu-parent btn" ng-click="toggle('/product');">
-      <a href=""><span><img src="assets/images/product_n.png" alt="logo" /></span> Products</a>
+    <div class="menu-parent btn" (click)="toggle('/product');">
+      <a><span><img src="assets/images/product_n.png" alt="logo" /></span> Products</a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/invoice/view/0') || isActive('/invoice') || isActive('/invoice/edit/:invoiceId') }">
-    <div class="menu-parent btn" ng-click="toggle('/invoice/view/0');">
-      <a href=""><span><img src="assets/images/invoice_n.png" alt="logo" /></span> Invoices</a>
+    <div class="menu-parent btn" (click)="toggle('/invoice/view/0');">
+      <a><span><img src="assets/images/invoice_n.png" alt="logo" /></span> Invoices</a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/estimate/view/0') || isActive('/estimate') || isActive('/estimate/edit/:estimateId') }">
-    <div class="menu-parent btn" ng-click="toggle('/estimate/view/0');">
-      <a href=""><span><img src="assets/images/estimet_n.png" alt="logo" /></span> Estimates</a>
+    <div class="menu-parent btn" (click)="toggle('/estimate/view/0');">
+      <a><span><img src="assets/images/estimet_n.png" alt="logo" /></span> Estimates</a>
     </div>
   </div>
 
@@ -36,8 +36,8 @@
       <a href="javascript:void(0)"><span><img src="" alt="logo" /></span> Inventory</a>
     </div>
     <ul class="collapse">
-      <li class="btn" ng-click="toggle('/add-inventory')">
-        <a href=""> Add Inventory </a>
+      <li class="btn" (click)="toggle('/add-inventory')">
+        <a> Add Inventory </a>
       </li>
     </ul>
   </div>
@@ -47,23 +47,23 @@
       <a href="javascript:void(0)"><span><img src="assets/images/setting_n.png" alt="logo" /></span> Settings</a>
     </div>
     <ul class="collapse" id="menu_list4">
-      <li class="btn" ng-click="toggle('/settings')">
-        <a href=""> Primary Settings </a>
+      <li class="btn" (click)="toggle('/settings')">
+        <a> Primary Settings </a>
       </li>
-      <li class="btn" ng-click="toggle('/custom-field')">
-        <a href=""> Custom Field Name </a>
+      <li class="btn" (click)="toggle('/custom-field')">
+        <a> Custom Field Name </a>
       </li>
-      <li class="btn" ng-click="toggle('/banking-details')">
-        <a href=""> Banking details </a>
+      <li class="btn" (click)="toggle('/banking-details')">
+        <a> Banking details </a>
       </li>
-      <li class="btn" ng-click="toggle('/change-password')">
-        <a href=""> Change Password </a>
+      <li class="btn" (click)="toggle('/change-password')">
+        <a> Change Password </a>
       </li>
-      <li class="btn" ng-click="toggle('/terms-and-conditions')">
-        <a href=""> Terms and Conditions</a>
+      <li class="btn" (click)="toggle('/terms-and-conditions')">
+        <a> Terms and Conditions</a>
       </li>
-      <li onclick="window.location = '#/edit/me'" class="btn" ng-click="toggle('/edit/me')">
-        <a href="#/edit/me"> User Profile </a>
+      <li onclick="window.location = '#/edit/me'" class="btn" (click)="toggle('/edit/me')">
+        <a> User Profile </a>
       </li>
     </ul>
   </div>
