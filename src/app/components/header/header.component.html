@@ -1,4 +1,4 @@
-<div class="header row">
+<div class="header row mar0">
   <div class="col-6">
     <div class="row">
       <div class="col-3 col-md-1 sidebar-switch-icon" (click)="toggleSideNavBar()">
@@ -10,12 +10,12 @@
     </div>
   </div>
   <div class="col-6">
-    <div class="user-logout row">
+    <div class="user-logout row" *ngIf="CONST.AUTHENTICATED">
       <div class="col-10 col-md-11 welcome-user d-none d-sm-block">
         Welcome, <span>User This for test</span>
       </div>
       <div class="col-2 col-md-1 offset-10 offset-sm-0 text-right float-right">
-        <a href="">
+        <a (click)="logout()">
           <img src="/src/assets/images/logout.png" alt="icon" style="width: auto; height: 15px">
         </a>
       </div>

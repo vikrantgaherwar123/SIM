@@ -3,6 +3,7 @@
   height: 100%;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
   text-rendering: optimizeLegibility !important;
+  padding-top: 80px;
   -webkit-font-smoothing: antialiased !important;
 }
 #main {

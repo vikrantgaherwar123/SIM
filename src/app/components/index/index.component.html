@@ -1,19 +1,17 @@
-<ng-sidebar-container [animate]="true" class="app-container" style="height: 100vh;">
-  <!-- SideBar -->
-  <ng-sidebar [(opened)]="_opened">
-    <app-sidebar></app-sidebar>
-  </ng-sidebar>
+<div>
+  <!-- Header -->
+  <div class="header-container">
+    <app-header [instance]="self" ></app-header>
+  </div>
 
-  <div ng-sidebar-content>
-    <!-- Header -->
-    <div class="header-container container-fluid">
-      <app-header [instance]="self" ></app-header>
-    </div>
+  <!-- Content -->
+  <div class="wrapper">
+    <nav id="sidebar active">
+      <app-sidebar></app-sidebar>
+    </nav>
 
-    <!-- Content -->
-    <div ng-sidebar-content class="content container-fluid">
+    <div id="content" class="container-fluid app-container active">
       <router-outlet></router-outlet>
     </div>
   </div>
-
-</ng-sidebar-container>
+</div>
