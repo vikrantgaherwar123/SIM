@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { catchError, map, tap } from 'rxjs/operators'
+import { Observable, of } from 'rxjs'
+import { CookieService } from 'ngx-cookie-service'
 
 import { CONSTANTS } from '../constants'
 import { MD5 } from '../globalFunctions'
@@ -14,12 +15,21 @@ export class AuthService {
   private loginUrl = ''
   private validateTokenUrl = ''
 
-  constructor( private http: HttpClient, private CONST: CONSTANTS ) {
+  constructor( private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService ) {
     this.loginUrl = `${CONST.BASE_URL}login`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
   }
   
-  // User Login
+  // Check if user logged in
+  isLoggedIn() {
+    if(this.cookie.get('user')) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  // User Login api
   login(user) {
     const headers = {
       headers: new HttpHeaders({
@@ -36,7 +46,7 @@ export class AuthService {
     )
   }
 
-  // Validate Token
+  // Validate Token api
   validateToken(access, id) {
     const headers = {
       headers: new HttpHeaders({

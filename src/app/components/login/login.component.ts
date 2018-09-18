@@ -4,6 +4,15 @@ import { CookieService } from 'ngx-cookie-service'
 import { Router } from "@angular/router"
 import { CONSTANTS } from '../../constants'
 
+interface response {
+  status: number;
+  access_token: string;
+  user: Array<{
+    orgId: string
+  }>;
+  login_info: response
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -31,23 +40,22 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    var user = this.cookie.get('user')
+    var user: response = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
 
     if(user) {
-      user = JSON.parse(user)
-      this.validateToken(user.access_token, user.user.orgId, user)
+      this.validateToken(user.access_token, user.user['orgId'], user)
     }
   }
 
   loginUser(event) {
     event.preventDefault()
-    this.authService.login(this.user).subscribe((response) => {
+    this.authService.login(this.user).subscribe((response: response) => {
       if (response.status === 200) {
         this.registerMessage = null;
         this.reloadEntire = 1;
 
         const access = response.login_info.access_token;
-        const ids = parseInt(response.login_info.user.orgId);
+        const ids = parseInt(response.login_info.user['orgId']);
 
         // Validate token
         this.validateToken(access, ids, response);
@@ -72,7 +80,7 @@ export class LoginComponent implements OnInit {
   }
 
   validateToken(access, ids, response) {
-    this.authService.validateToken(access, ids).subscribe((response2) => {
+    this.authService.validateToken(access, ids).subscribe((response2: response) => {
       if (response2.status === 200) {
         this.CONST.ACCESS_TOKEN = access
         this.CONST.AUTHENTICATED = true

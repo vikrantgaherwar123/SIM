@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
-import { Routes, RouterModule } from '@angular/router'
+import { Routes, RouterModule, CanActivate } from '@angular/router'
+import { AuthGuard } from './auth.guard'
 
 import { LoginComponent } from './components/login/login.component'
 import { DashboardComponent } from './components/dashboard/dashboard.component'
@@ -9,11 +10,12 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'client', component: ClientComponent },
-  { path: 'product', component: ProductComponent },
-  { path: 'invoice/view/:id', component: InvoiceComponent }
+  { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
+  { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
+  { path: 'invoice', redirectTo: '/invoice/view/:id', pathMatch: 'full' },
+  { path: 'invoice/view/:id', component: InvoiceComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({

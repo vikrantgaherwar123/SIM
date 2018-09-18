@@ -21,7 +21,6 @@ export class ClientService {
         "lastEpoch": '0'
       })
     }
-console.log(this.CONST);
 
     return this.http.get(this.clienListUrl, headers)
   }
