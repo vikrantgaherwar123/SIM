@@ -189,3 +189,17 @@ export function MD5(string) {
 
   return temp.toLowerCase();
 }
+
+export function generateUUID (orgId) {
+  var d = new Date().getTime()
+  var epoch = new Date()
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+    d += performance.now()
+  }
+  var tempID = 'yxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return '@'+orgId+epoch.getTime()+tempID;
+};

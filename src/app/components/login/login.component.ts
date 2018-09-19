@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core'
 import { AuthService } from '../../services/auth.service'
 import { CookieService } from 'ngx-cookie-service'
 import { Router } from "@angular/router"
-import { CONSTANTS } from '../../constants'
 
 interface response {
-  status: number;
-  access_token: string;
-  user: Array<{
+  status: number
+  access_token: string
+  user: {
     orgId: string
-  }>;
+  }
   login_info: response
+  message: string
 }
 
 @Component({
@@ -35,15 +35,15 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private cookie: CookieService,
-    private router: Router,
-    private CONST: CONSTANTS
+    private router: Router
   ) { }
 
   ngOnInit() {
+    $('.user-logout').hide()
     var user: response = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
 
     if(user) {
-      this.validateToken(user.access_token, user.user['orgId'], user)
+      this.validateToken(user.access_token, user.user.orgId, user)
     }
   }
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         this.reloadEntire = 1;
 
         const access = response.login_info.access_token;
-        const ids = parseInt(response.login_info.user['orgId']);
+        const ids = parseInt(response.login_info.user.orgId);
 
         // Validate token
         this.validateToken(access, ids, response);
@@ -71,9 +71,9 @@ export class LoginComponent implements OnInit {
           $("#googlebtn").prop("disabled", false);
           $("#login-btn1").prop("disabled", false);
           $("#login-btn").prop("disabled", false);
-          // this.status = response.message;
+          // this.status = response.message
           this.errorStatus = true;
-          this.registerMessage = this.status;
+          this.registerMessage = response.message
         }
       }
     });
@@ -82,8 +82,7 @@ export class LoginComponent implements OnInit {
   validateToken(access, ids, response) {
     this.authService.validateToken(access, ids).subscribe((response2: response) => {
       if (response2.status === 200) {
-        this.CONST.ACCESS_TOKEN = access
-        this.CONST.AUTHENTICATED = true
+        $('.user-logout').show()
         var tempOrgId = response.login_info ? response.login_info.user.orgId : response.user.orgId;
 
         if(response.login_info) {
@@ -108,8 +107,6 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       } else {
         this.pro_bar_load = true;
-        this.CONST.ACCESS_TOKEN = ''
-        this.CONST.AUTHENTICATED = false
         this.status = response.message;
         var expire = new Date();
         expire.setDate(expire.getDate() - 1);
