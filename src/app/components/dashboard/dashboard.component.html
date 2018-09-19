@@ -3,7 +3,7 @@
     <div class="col-md-12 col-sm-12  col-xs-12" id="main" style="display: flex;justify-content: center;height: 400px;">
       <div class="row dashboard-top">
         <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
-          <a ng-click="navigate('/client');">
+          <a (click)="navigate('/client');">
             <div class="dashboard-box text-center">
               <div class="dashboard-icon ">
                 <img src="../assets/images/client_dash.png" class="img-responsive">
@@ -13,7 +13,7 @@
           </a>
         </div>
         <div class="col-md-3 col-sm-3 ml-0 col-xs-6 pad0 option-card">
-          <a ng-click="navigate('/product');">
+          <a (click)="navigate('/product');">
             <div class="dashboard-box text-center">
               <div class="dashboard-icon">
                 <img src="../assets/images/product_dash.png" class="img-responsive">
@@ -23,7 +23,7 @@
           </a>
         </div>
         <div class="col-md-3 col-sm-3 col-xs-6 pad0 option-card">
-          <a ng-click="navigate('/invoice/view/0');">
+          <a (click)="navigate('/invoice/view/0');">
             <div class="dashboard-box text-center">
               <div class="dashboard-icon">
                 <img src="../assets/images/invoice_dash.png" class="img-responsive">
@@ -34,7 +34,7 @@
         </div>
   
         <div class="col-md-3 col-sm-3 col-xs-6 ml-0 pad0 option-card">
-          <a ng-click="navigate('/estimate/view/0');">
+          <a (click)="navigate('/estimate/view/0');">
             <div class="dashboard-box text-center">
               <div class="dashboard-icon">
                 <img src="../assets/images/estimate_dash.png" class="img-responsive">

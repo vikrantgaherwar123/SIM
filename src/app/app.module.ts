@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core'
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms'
 import { CookieService } from 'ngx-cookie-service'
+import * as $ from 'jquery'
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 
 import { CONSTANTS } from './constants'
 
@@ -33,7 +35,8 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
     AppRoutingModule,
     TranslateModule.forRoot(),
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    SweetAlert2Module.forRoot()
   ],
   providers: [CookieService, CONSTANTS],
   bootstrap: [AppComponent]

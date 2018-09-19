@@ -3,12 +3,12 @@
     <div class="row">
       <div class="col-md-3 col-sm-3 col-xs-12 item-list cli-list pad-right-0">
 
-        <div ng-class="{'list-shadow':clientList.length > clientDisplayLimit ,'scroll-bar-shadow': true}" style="width: 100%;">
+        <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit ,'scroll-bar-shadow': true}" style="width: 100%;">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
               <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;">
-                  <a ng-click="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
                     <img src="/src/assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
@@ -17,11 +17,11 @@
                     aria-expanded="false" class="dropdown-toggle pull-right list-btn cus-img"><img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li ng-class="{active:isByClient}">
-                      <a href="" ng-click="setSortClients('name')">By Org. Name</a>
+                    <li [ngClass]="{'active':isByClient}">
+                      <a href="" (click)="setSortClients('name')">By Org. Name</a>
                     </li>
-                    <li ng-class="{active:isByDate}">
-                      <a href="" ng-click="setSortClients('contact_person_name')">By Client Name</a>
+                    <li [ngClass]="{'active':isByDate}">
+                      <a href="" (click)="setSortClients('contact_person_name')">By Client Name</a>
                     </li>
                   </ul>
                 </div>
@@ -30,296 +30,339 @@
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
               <div class="form-group label-floating">
                 <!--<label class="control-label fontsize13">Search, Filter Clients</label>-->
-                <input class="form-control" ng-model="filterClient" ng-change="selectedClient = -1;" placeholder="Search Clients" />
+                <input class="form-control" [(ngModel)]="filterClient" ng-change="selectedClient = -1;" placeholder="Search Clients" />
               </div>
             </div>
           </div>
 
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit</div>
-          <div class="col-md-12 col-sm-12 col-xs-12 scroll pad0 mCustomScrollbar" scroll-bar>
+          <div class="col-md-12 col-sm-12 col-xs-12 pad0 mCustomScrollbar" scroll-bar>
             <div align="center" style="background-color: #fff;">
-              <!-- <md-progress-circular ng-hide="clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
+              <!-- <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
                 md-diameter="25px">
               </md-progress-circular> -->
             </div>
-            <div class="item clientname row product-list" *ngFor="let client of clientList; index as index"
-              id="prod{{$index}}" ng-class="selectedClient == $index ? 'selected' : '' ">
-
-              <div class="col-md-2 col-sm-2 col-xs-2">
-                <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
-              </div>
-
-              <div class="col-md-8 col-sm-8 col-xs-8 pad0" ng-click="viewThis(client, $index)">
-                <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
-                  <div class="ellipsis">{{ client.name }}</div>
-                </h5>
-                <!--<span class="col-sm-5 txtr total-color">  {{ client.total_unpaid }}/{{client.total_invoices}} unpaid</span>-->
-                <span class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-book fontsize12">
-                  <div class="ellipsis">{{client.contactPersonName}}</div>
-                </span>
-                <!--<span class="col-sm-6 txtr balance-color">{{ authenticated.user.organization.setting.currency_symbol }}<span class="balance-color">{{ client.balance > 0 ? client.balance : 0.00 | number:2}}</span></span>-->
-              </div>
-
-              <div class="col-md-1 col-sm-1 col-xs-1" ng-class="selectedClient == $index ? 'selected1' : 'unselected1';">
-                <img src="/assets/images/next12.png">
+            <div class="clientname"
+              *ngFor="let client of (clientList | slice:0:clientDisplayLimit); index as index "
+              id="prod{{$index}}" [ngClass]="{'selected': selectedClient == $index}"
+            >
+              <div class="row item product-list" *ngIf="client.enabled == 0">
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client, $index)">
+                    <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
+                      <div class="ellipsis">{{ client.name }}</div>
+                    </h5>
+                    <span class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-book fontsize12">
+                      <div class="ellipsis">{{client.contactPersonName}}</div>
+                    </span>
+                  </div>
+                  <div class="col-md-1 col-sm-1 col-xs-1" [ngClass]="{'selected1': selectedClient == $index}">
+                    <img src="/assets/images/next12.png">
+                  </div>
               </div>
 
             </div>
-            <div class="no-data-messsage" ng-show="clientList.length > 0 && !clientListsLoader ">
+            <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListsLoader ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-md-12 col-sm-12 col-xs-12 pad0" ng-class="{'list-shadow':clients.length > clientDisplayLimit }">
-              <a href="javascript:void(0)" ng-click="loadMore()" class="btn more" ng-hide="clientList.length < clientDisplayLimit || clientList.length <= clientDisplayLimit || (clientList.length - clientDisplayLimit) == 0|| filterClient">Click
-                to view more >></a>
+            <div class="col-md-12 col-sm-12 col-xs-12 pad0" [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit }">
+              <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit || filterClient">
+                Click to view more >>
+              </a>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="col-md-9 col-sm-9 col-xs-12 item-form ">
-        <form class="form-horizontal " name="form" id="form">
+        <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
-              <div class="col-md-8 col-sm-7 col-xs-7 editBtnShow">
-                <h4 class="form-header text-right client-header" ng-hide="isCreate" style="margin-left: 61%;">Create a
-                  new client </h4>
-                <!--style="display: flex;justify-content: flex-end;"-->
-                <!--<div class="form-header" style="width: 100%;word-break: break-all;" ng-show="isEdit">Client : {{data.client.name}}</div>-->
-                <h4 class="form-header text-right client-header" ng-hide="rightDivBtns || cancle" style="margin-left: calc(44px + 25vw);">Edit
-                  client </h4>
-                <h4 class="form-header text-center client-header" ng-hide="isEditBtn"> View Client </h4>
-              </div>
-              <div class="col-md-4 col-sm-5 col-xs-5 pull-right pad0 font-custom-bold">
-                <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                  ng-click="editThis(client, $index)" ng-hide="isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
-                    style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit </button>
-                <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                  ng-click="deleteClient()" ng-hide="isEditBtn" ng-disabled="!form.$valid || inputReadonly == false">DELETE</button>
-                <!--<div class="editbtn btn " ng-click="editThis(client, $index)" ng-hide="isEditBtn"><i class="glyphicon glyphicon-edit" aria-hidden="true"></i> Click here to Edit </div>-->
-                <div class="rightDivBtns" ng-hide="rightDivBtns">
-
-                  <button type="button" id="updateClientBtn1" ng-click="save(data, form.$valid,2)" class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
-                    data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" ng-hide="cancle" ng-disabled="!form.$valid || inputReadonly == true">UPDATE</button>
-                  <button type="button" id="saveClientBtn1" ng-click="save(data, form.$valid,1)" class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
-                    data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" ng-show="cancle" ng-disabled="!form.$valid || inputReadonly == true">SAVE</button>
-                  <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    ng-click="cancelThis()" ng-hide="cancle" ng-disabled="inputReadonly == true"> CANCEL</button>
-                  <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    ng-click="clearThis()" ng-hide="clearBtn" ng-disabled="inputReadonly == true"> CLEAR</button>
-
+              <div class="row mar0">
+                <div class="col-md-8 col-sm-7 col-xs-7 editBtnShow">
+                  <h4 class="form-header text-right client-header" *ngIf="!isCreate" style="margin-left: 61%;">Create a new client </h4>
+                  <!--style="display: flex;justify-content: flex-end;"-->
+                  <!--<div class="form-header" style="width: 100%;word-break: break-all;" *ngIf="isEdit">Client : {{data.client.name}}</div>-->
+                  <h4 class="form-header text-right client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: calc(44px + 25vw);">Edit client </h4>
+                  <h4 class="form-header text-center client-header" *ngIf="!isEditBtn"> View Client </h4>
                 </div>
-              </div>
-
-
-              <div class=" client-form">
-                <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" ng-show="isEditBtn">
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group" ng-class="{ 'has-error': (form.$submitted || form.name.$touched || errors.name ) && form.name.$error.required } ">
-                      <div class="input-group client-input">
-                        <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_org_name.png"></span>
-                        <input type="text" ng-model="data.client.name" name="name" id="name" class="form-control"
-                          ng-readonly="inputReadonly" placeholder="Organization name" required />
-                      </div>
-                      <div class="form-error" ng-show="form.$submitted || form.name.$touched || errors.name">
-                        <span ng-show="form.name.$error.required">Organization name required</span>
-                        <!--<span ng-show="errors.name">{{ errors.name[0]}}</span>-->
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group">
-                      <div class="input-group client-input">
-                        <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_person.png"></span>
-                        <input type="text" ng-model="data.client.contact_person_name" name="contact_person_name" id="contact_person_name"
-                          class="form-control" ng-readonly="inputReadonly" placeholder="Contact person" />
-                        <!--<div class="form-error" ng-show="form.$submitted || form.contact_person_name.$touched || errors.contact_person_name">-->
-                        <!--<span ng-show="form.contact_person_name.$error.required">Required</span>-->
-                        <!--<span ng-show="errors.contact_person_name">{{ errors.contact_person_name[0] }}</span>-->
-                        <!--</div>-->
-                      </div>
-
-                    </div>
-                  </div>
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group" id="emailLabel" name="emailLabel">
-                      <div class="input-group client-input">
-                        <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
-                        <input type="text" ng-model="data.client.email" name="email" id="email" class="form-control"
-                          ng-readonly="inputReadonly" placeholder="Email address" />
-                        <!--<div class="form-error" ng-show="form.$submitted || form.email.$touched || errors.email">-->
-                        <!--<span ng-show="form.email.$error.required">Required</span>-->
-                        <!--<span ng-show="form.email.$error.email"><span ng-show="form.email.$error.required">,</span> must be valid email address</span>-->
-                        <!--<span ng-show="errors.email">{{ errors.email[0] }}</span>-->
-                        <!--</div>-->
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group">
-                      <div class="input-group client-input">
-                        <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
-                        <input type="text" ng-model="data.client.number" name="cont_number" id="cont_number" class="form-control"
-                          ng-readonly="inputReadonly" placeholder="Contact number" />
-                        <!--<div class="form-error" ng-show="form.$submitted || form.cont_number.$touched || errors.number">-->
-                        <!--<span ng-show="form.cont_number.$error.required">Required</span>-->
-                        <!--<span ng-show="form.cont_number.$error.maxlength">Must be of 10 characters</span>-->
-                        <!--</div>-->
-                      </div>
-
-                    </div>
-                  </div>
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-
-                    <div class="form-group">
-                      <textarea elastic type="text" ng-model="data.client.address_line1" name="address_line1" id="address_line1"
-                        class="form-control" ng-readonly="inputReadonly" placeholder="Address Line" style=""></textarea>
-                      <!--<div class="form-error" ng-show="form.$submitted || form.address_line1.$touched || errors.address_line1">-->
-                      <!--<span ng-show="form.address_line1.$error.required">Required</span>-->
-                      <!--<span ng-show="errors.address_line1">{{ errors.address_line1[0] }}</span>-->
-                      <!--</div>-->
-                    </div>
-
-                  </div>
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group">
-                      <textarea elastic type="text" ng-model="data.client.shipping_address" name="shipping_address" id="shipping_address"
-                        class="form-control" ng-readonly="inputReadonly" placeholder="Shipping Address"></textarea>
-                    </div>
-                  </div>
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group">
-                      <div class="input-group client-input">
-                        <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
-                        <input type="text" ng-model="data.client.business_id" name="business_id" id="business_id" class="form-control"
-                          ng-readonly="inputReadonly" placeholder="Business Id" />
-                      </div>
-
-                    </div>
-                  </div>
-                  <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                    <div class="form-group">
-                      <textarea elastic type="text" ng-model="data.client.business_detail" name="business_detail" id="business_detail"
-                        class="form-control" ng-readonly="inputReadonly" placeholder="Business Details"></textarea>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" ng-hide="isEditBtn">
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_org_name.png">
-                      Organization name:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.name}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_contact_person.png">
-                      Contact person:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.contact_person_name}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_email_id.png">
-                      Email:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.email}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_contact_no.png">
-                      Number:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.number}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_address_line.png">
-                      Address line:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.address_line1}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_address_line.png">
-                      Shipping address:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.shipping_address}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_org_name.png">
-                      Business Id:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.business_id}}
-                    </div>
-
-                  </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
-                      <img src="/assets/images/client-icon/ic_normal_business_detail.png">
-                      Business detail:
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                      {{data.client.business_detail}}
-                    </div>
-
-                  </div>
-                </div>
-
-                <div class="col-md-7 col-sm-7 col-xs-7 pull-right pad-right-0">
+                <div class="col-md-4 col-sm-5 col-xs-5 pull-right pad0 font-custom-bold">
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    ng-click="editThis(client, $index)" ng-hide="isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
-                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit </button>
-
-                  <!--<div class="editbtn btn " ng-click="editThis(client, $index)" ng-hide="isEditBtn"><i class="glyphicon glyphicon-edit" aria-hidden="true"></i> Click here to Edit </div>-->
+                    (click)="editThis(client, $index)" *ngIf="!isEditBtn"
+                  >
+                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                    Edit
+                  </button>
                   <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    ng-click="deleteClient()" ng-hide="isEditBtn" ng-disabled="!form.$valid || inputReadonly == false">DELETE</button>
-                  <div class="rightDivBtns" ng-hide="rightDivBtns">
-
-                    <button id="updateClientBtn" type="button" ng-click="save(data, form.$valid,2)" class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right  font-custom-bold"
-                      data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" ng-hide="cancle" ng-disabled="!form.$valid || inputReadonly == true">UPDATE</button>
-                    <button id="saveClientBtn" type="button" ng-click="save(data, form.$valid,1)" class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right  font-custom-bold"
-                      data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" ng-show="cancle" ng-disabled="!form.$valid || inputReadonly == true">SAVE</button>
-                    <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      ng-click="cancelThis()" ng-hide="cancle" ng-disabled="inputReadonly == true"> CANCEL</button>
-                    <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      ng-click="clearThis()" ng-hide="clearBtn" ng-disabled="inputReadonly == true"> CLEAR</button>
+                    [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
+                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                    "
+                    (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!f.valid || inputReadonly == false"
+                  >
+                    DELETE
+                  </button>
+                  <div class="rightDivBtns" *ngIf="!rightDivBtns">
+                    <button type="button" id="updateClientBtn1" (click)="save(data, f.valid, 2)"
+                      class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
+                      data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
+                      [disabled]="!f.valid || inputReadonly == true"
+                    >
+                      UPDATE
+                    </button>
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(data, f.valid, 1)"
+                      class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
+                      data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
+                      [disabled]="!f.valid || inputReadonly == true"
+                    >
+                      SAVE
+                    </button>
+                    <button type="button" (click)="cancelThis()" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                      *ngIf="!cancle" [disabled]="inputReadonly == true"
+                    >
+                      CANCEL
+                    </button>
+                    <button type="button" (click)="clearThis()" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                      *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                    >
+                      CLEAR
+                    </button>
                   </div>
-
                 </div>
-
               </div>
 
+              <div class="client-form">
+                <div class="row">
+                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isEditBtn">
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group" [ngClass]="{ 'has-error': (f.submitted || errors.name ) && f.value.name == '' } ">
+                        <div class="input-group client-input">
+                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_org_name.png"></span>
+                          <input type="text" [(ngModel)]="data.client.name" name="name" id="name" class="form-control"
+                            #name="ngModel" ng-readonly="inputReadonly" placeholder="Organization name" required />
+                        </div>
+                        <div class="form-error" *ngIf="f.submitted || errors.name">
+                          <span *ngIf="f.value.name == ''">Organization name required</span>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group client-input">
+                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_person.png"></span>
+                          <input type="text" [(ngModel)]="data.client.contact_person_name" name="contact_person_name" id="contact_person_name"
+                            class="form-control" ng-readonly="inputReadonly" placeholder="Contact person" />
+                          <!--<div class="form-error" *ngIf="f.submitted || form.contact_person_name.$touched || errors.contact_person_name">-->
+                          <!--<span *ngIf="form.contact_person_name.$error.required">Required</span>-->
+                          <!--<span *ngIf="errors.contact_person_name">{{ errors.contact_person_name[0] }}</span>-->
+                          <!--</div>-->
+                        </div>
+  
+                      </div>
+                    </div>
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group" id="emailLabel" name="emailLabel">
+                        <div class="input-group client-input">
+                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
+                          <input type="text" [(ngModel)]="data.client.email" name="email" id="email" class="form-control"
+                            ng-readonly="inputReadonly" placeholder="Email address" />
+                          <!--<div class="form-error" *ngIf="form.$submitted || form.email.$touched || errors.email">-->
+                          <!--<span *ngIf="form.email.$error.required">Required</span>-->
+                          <!--<span *ngIf="form.email.$error.email"><span *ngIf="form.email.$error.required">,</span> must be valid email address</span>-->
+                          <!--<span *ngIf="errors.email">{{ errors.email[0] }}</span>-->
+                          <!--</div>-->
+                        </div>
+  
+                      </div>
+                    </div>
+  
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group client-input">
+                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
+                          <input type="text" [(ngModel)]="data.client.number" name="cont_number" id="cont_number" class="form-control"
+                            ng-readonly="inputReadonly" placeholder="Contact number" />
+                          <!--<div class="form-error" *ngIf="form.$submitted || form.cont_number.$touched || errors.number">-->
+                          <!--<span *ngIf="form.cont_number.$error.required">Required</span>-->
+                          <!--<span *ngIf="form.cont_number.$error.maxlength">Must be of 10 characters</span>-->
+                          <!--</div>-->
+                        </div>
+  
+                      </div>
+                    </div>
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+  
+                      <div class="form-group">
+                        <textarea elastic type="text" [(ngModel)]="data.client.address_line1" name="address_line1" id="address_line1"
+                          class="form-control" ng-readonly="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
+                        <!--<div class="form-error" *ngIf="form.$submitted || form.address_line1.$touched || errors.address_line1">-->
+                        <!--<span *ngIf="form.address_line1.$error.required">Required</span>-->
+                        <!--<span *ngIf="errors.address_line1">{{ errors.address_line1[0] }}</span>-->
+                        <!--</div>-->
+                      </div>
+  
+                    </div>
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <textarea elastic type="text" [(ngModel)]="data.client.shipping_address" name="shipping_address" id="shipping_address"
+                          class="form-control" ng-readonly="inputReadonly" placeholder="Shipping Address" style="height: 47px;"></textarea>
+                      </div>
+                    </div>
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group client-input">
+                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
+                          <input type="text" [(ngModel)]="data.client.business_id" name="business_id" id="business_id" class="form-control"
+                            ng-readonly="inputReadonly" placeholder="Business Id" />
+                        </div>
+  
+                      </div>
+                    </div>
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <textarea elastic type="text" [(ngModel)]="data.client.business_detail" name="business_detail" id="business_detail"
+                          class="form-control" ng-readonly="inputReadonly" placeholder="Business Details" style="height: 47px;"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="!isEditBtn">
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                          Organization name:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.name}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_contact_person.png">
+                          Contact person:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.contact_person_name}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_email_id.png">
+                          Email:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.email}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_contact_no.png">
+                          Number:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.number}}
+                        </div>
+                      </div>  
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_address_line.png">
+                          Address line:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.address_line1}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_address_line.png">
+                          Shipping address:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.shipping_address}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                          Business Id:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.business_id}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                          <img src="/assets/images/client-icon/ic_normal_business_detail.png">
+                          Business detail:
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                          {{data.client.business_detail}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 align-self-end">
+                    <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                      (click)="editThis(client, $index)" *ngIf="!isEditBtn"
+                    >
+                      <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit 
+                    </button>
+  
+                    <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                      [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning'}"
+                      (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!form.$valid || inputReadonly == false"
+                    >
+                      DELETE
+                    </button>
+                    <div class="rightDivBtns" *ngIf="!rightDivBtns">
+                      <button id="updateClientBtn" type="button" (click)="save(data, f.valid, 2)"
+                        class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
+                        data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
+                        [disabled]="!f.valid || inputReadonly == true"
+                      >
+                        UPDATE
+                      </button>
+                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(data, f.valid, 1)"
+                        class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
+                        data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
+                        [disabled]="!f.valid || inputReadonly == true"
+                      >
+                        SAVE
+                      </button>
+                      <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                        (click)="cancelThis()" *ngIf="!cancle" [disabled]="inputReadonly == true"
+                      >
+                        CANCEL
+                      </button>
+                      <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                        (click)="clearThis()" *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                      >
+                        CLEAR
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
         </form>
-
       </div>
     </div>
   </div>

@@ -93,6 +93,8 @@
 .mCustomScrollbar {
 	-ms-touch-action: pinch-zoom;
 	touch-action: pinch-zoom;
+	height: 425px;
+	overflow-y: scroll;
 }
 .mCustomScrollBox {
 	position: relative;
@@ -244,7 +246,7 @@ input[type=text] {
 	font-size: 8px;
 }
 .form-error {
-	position: absolute;
+	position: absolute; 
 	top: 33px;
 }
 .custom-add-product {
@@ -252,4 +254,20 @@ input[type=text] {
   border-color: #ccc;
   border-style: solid;
   border-width: 1px;
+}
+.btn-success.disabled, .btn-success.disabled.active, .btn-success.disabled.focus,
+.btn-success.disabled:active, .btn-success.disabled:focus, .btn-success.disabled:hover,
+.btn-success[disabled], .btn-success[disabled].active, .btn-success[disabled].focus,
+.btn-success[disabled]:active, .btn-success[disabled]:focus, .btn-success[disabled]:hover,
+fieldset[disabled] .btn-success, fieldset[disabled] .btn-success.active,
+fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:active,
+fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
+  background-color: #8fbae6 !important;
+  border: #8fbae6 solid 2px !important;
+  -webkit-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+  box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+  -moz-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
+}
+.client-view-label {
+    padding-left: 14vw;
 }
