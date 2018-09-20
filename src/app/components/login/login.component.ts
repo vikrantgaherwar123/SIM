@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
           
           // window.location.href = 'http://www.simpleinvoiceweb.com/views/error-unpurchased.html';
         } else {
-          $("#login-btn").button('reset');
+          // $("#login-btn").button('reset');
           $("#fbbtn").prop("disabled", false)
           $("#googlebtn").prop("disabled", false);
           $("#login-btn1").prop("disabled", false);
@@ -83,6 +83,7 @@ export class LoginComponent implements OnInit {
     this.authService.validateToken(access, ids).subscribe((response2: response) => {
       if (response2.status === 200) {
         $('.user-logout').show()
+        $('.user-logout span').html(response.login_info.registered_email ? response.login_info.registered_email : 'User')
         var tempOrgId = response.login_info ? response.login_info.user.orgId : response.user.orgId;
 
         if(response.login_info) {
@@ -103,7 +104,7 @@ export class LoginComponent implements OnInit {
 
         $('#logoutBtn').removeClass("hide");
         $('#logoutBtn').addClass("show");
-        $("#login-btn").button('reset');
+        // $("#login-btn").button('reset');
         this.router.navigate(['/dashboard']);
       } else {
         this.pro_bar_load = true;
@@ -113,7 +114,7 @@ export class LoginComponent implements OnInit {
         this.cookie.delete('user');
         this.authenticated = false;
         this.router.navigate(['/login']);
-        $("#login-btn").button('reset');
+        // $("#login-btn").button('reset');
       }
     })
   }

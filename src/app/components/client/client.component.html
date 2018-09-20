@@ -12,16 +12,18 @@
                     <img src="/src/assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
+                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="dropdown-toggle pull-right list-btn cus-img"><img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                    aria-expanded="false" class="pull-right list-btn cus-img"
+                  >
+                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li [ngClass]="{'active':isByClient}">
-                      <a href="" (click)="setSortClients('name')">By Org. Name</a>
+                    <li [class.active]="isByClient">
+                      <a (click)="setSortClients('name')">By Org. Name</a>
                     </li>
-                    <li [ngClass]="{'active':isByDate}">
-                      <a href="" (click)="setSortClients('contact_person_name')">By Client Name</a>
+                    <li [class.active]="isByDate">
+                      <a (click)="setSortClients('contact_person_name')">By Client Name</a>
                     </li>
                   </ul>
                 </div>
@@ -30,7 +32,7 @@
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
               <div class="form-group label-floating">
                 <!--<label class="control-label fontsize13">Search, Filter Clients</label>-->
-                <input class="form-control" [(ngModel)]="filterClient" ng-change="selectedClient = -1;" placeholder="Search Clients" />
+                <input class="form-control" [(ngModel)]="filterClient.name" ng-change="selectedClient = -1;" placeholder="Search Clients" />
               </div>
             </div>
           </div>
@@ -44,7 +46,7 @@
               </md-progress-circular> -->
             </div>
             <div class="clientname"
-              *ngFor="let client of (clientList | slice:0:clientDisplayLimit); index as index "
+              *ngFor="let client of (clientList | orderBy: order.sortClient | filterBy: filterClient | slice:0:clientDisplayLimit); index as index "
               id="prod{{$index}}" [ngClass]="{'selected': selectedClient == $index}"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">

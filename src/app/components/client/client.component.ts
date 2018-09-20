@@ -71,13 +71,13 @@ export class ClientComponent implements OnInit {
     "purple"
   ];
   private checked = false
-  private filterClient: string
+  private filterClient: {name: string} = {name: ''}
   private isNone: boolean
   private isByClient: boolean
   private isByDate: boolean
   private order: {
     sortClient: string
-  }
+  } = {sortClient: 'name'}
   private clientListLoader: boolean
 
   constructor(public clientService: ClientService, private cookie: CookieService, private router: Router) {
@@ -103,7 +103,7 @@ export class ClientComponent implements OnInit {
   }
 
   setSortClients(searchfield) {
-    this.filterClient = '';
+    this.filterClient = {name: ''}
     if (searchfield == 'id') {
       this.isNone = true;
       this.isByClient = false;
@@ -166,12 +166,12 @@ export class ClientComponent implements OnInit {
   }
 
   save(data, status, edit) {
-    $('#saveClientBtn1').button('loading')
-    $('#saveClientBtn').button('loading')
+    // $('#saveClientBtn1').button('loading')
+    // $('#saveClientBtn').button('loading')
     var proStatus = true
     if (edit == 1) {
-      $('#updateClientBtn1').button('loading')
-      $('#updateClientBtn').button('loading')
+      // $('#updateClientBtn1').button('loading')
+      // $('#updateClientBtn').button('loading')
 
       var tempClientName = this.data.client.name.toLowerCase().replace(/ /g, '')
       //console.log("temp pro name" , tempProName)
@@ -216,10 +216,10 @@ export class ClientComponent implements OnInit {
       this.data.client.device_modified_on = d.getTime();
       var self = this
       this.clientService.addClient([this.data.client]).subscribe(function (response: response) {
-        $('#updateClientBtn').button('reset');
-        $('#saveClientBtn').button('reset');
-        $('#updateClientBtn1').button('reset');
-        $('#saveClientBtn1').button('reset');
+        // $('#updateClientBtn').button('reset');
+        // $('#saveClientBtn').button('reset');
+        // $('#updateClientBtn1').button('reset');
+        // $('#saveClientBtn1').button('reset');
         if (response.status === 200) {
           self.data.client = {
             name: "",
@@ -272,17 +272,17 @@ export class ClientComponent implements OnInit {
 
       });
     } else {
-      $('#updateClientBtn').button('reset');
-      $('#saveClientBtn').button('reset');
-      $('#updateClientBtn1').button('reset');
-      $('#saveClientBtn1').button('reset');
+      // $('#updateClientBtn').button('reset');
+      // $('#saveClientBtn').button('reset');
+      // $('#updateClientBtn1').button('reset');
+      // $('#saveClientBtn1').button('reset');
       // notifications.showError({ message: 'Unable to Save, Client already exist.', hideDelay: 5000, hide: true });
       console.log('Unable to Save, Client already exist.')
     }
   }
 
   addNew() {
-    this.filterClient = ''
+    this.filterClient = {name: ''}
 
     this.rightDivBtns = false
     this.data.client.name = ""
@@ -317,7 +317,7 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
-    this.filterClient = '';
+    this.filterClient = {name: ''}
 
     this.data.client.deleted_flag = 1
     this.save(this.data, true, null)
@@ -330,14 +330,14 @@ export class ClientComponent implements OnInit {
   }
 
   editThis() {
-    this.filterClient = '';
+    this.filterClient = {name: ''}
     this.inputReadonly = false;
     this.isEditBtn = true;
     this.rightDivBtns = false;
   }
 
   viewThis(client, index, cancelFlag) {
-    //filterClient = '';
+    this.filterClient = {name: ''}
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error');
     }

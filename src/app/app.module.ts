@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms'
 import { CookieService } from 'ngx-cookie-service'
 import * as $ from 'jquery'
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
+import { FilterPipeModule } from 'ngx-filter-pipe'
+import { OrderModule } from 'ngx-order-pipe'
 
 import { CONSTANTS } from './constants'
 
@@ -36,7 +38,9 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
     TranslateModule.forRoot(),
     HttpClientModule,
     FormsModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    FilterPipeModule,
+    OrderModule
   ],
   providers: [CookieService, CONSTANTS],
   bootstrap: [AppComponent]
