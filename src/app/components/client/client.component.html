@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-3 col-xs-12 item-list cli-list pad-right-0">
 
-        <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit ,'scroll-bar-shadow': true}" style="width: 100%;">
+        <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
               <div class="row">
@@ -39,38 +39,38 @@
 
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit</div>
-          <div class="col-md-12 col-sm-12 col-xs-12 pad0 mCustomScrollbar" scroll-bar>
-            <div align="center" style="background-color: #fff;">
-              <!-- <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
+          <div class="col-md-12 col-sm-12 col-xs-12 pad0 mCustomScrollbar">
+            <!-- <div align="center" style="background-color: #fff;">
+              <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
                 md-diameter="25px">
-              </md-progress-circular> -->
-            </div>
-            <div class="clientname"
+              </md-progress-circular>
+            </div> -->
+            <div class="clientname" 
               *ngFor="let client of (clientList | orderBy: order.sortClient | filterBy: filterClient | slice:0:clientDisplayLimit); index as index "
-              id="prod{{$index}}" [ngClass]="{'selected': selectedClient == $index}"
+              id="prod{{$index}}" [class.selected]="selectedClient == $index"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-md-2 col-sm-2 col-xs-2">
-                    <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
-                  </div>
-                  <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client, $index)">
-                    <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
-                      <div class="ellipsis">{{ client.name }}</div>
-                    </h5>
-                    <span class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-book fontsize12">
-                      <div class="ellipsis">{{client.contactPersonName}}</div>
-                    </span>
-                  </div>
-                  <div class="col-md-1 col-sm-1 col-xs-1" [ngClass]="{'selected1': selectedClient == $index}">
-                    <img src="/assets/images/next12.png">
-                  </div>
+                  <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client, $index)">
+                  <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
+                    <div class="ellipsis">{{ client.name }}</div>
+                  </h5>
+                  <span class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-book fontsize12">
+                    <div class="ellipsis">{{client.contactPersonName}}</div>
+                  </span>
+                </div>
+                <div class="col-md-1 col-sm-1 col-xs-1" [class.selected1]="selectedClient == $index">
+                  <img src="/assets/images/next12.png">
+                </div>
               </div>
 
             </div>
             <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListsLoader ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-md-12 col-sm-12 col-xs-12 pad0" [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit }">
+            <div class="col-md-12 col-sm-12 col-xs-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
               <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit || filterClient">
                 Click to view more >>
               </a>
@@ -139,7 +139,7 @@
                 <div class="row">
                   <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isEditBtn">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group" [ngClass]="{ 'has-error': (f.submitted || errors.name ) && f.value.name == '' } ">
+                      <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_org_name.png"></span>
                           <input type="text" [(ngModel)]="data.client.name" name="name" id="name" class="form-control"
