@@ -93,7 +93,7 @@
 .mCustomScrollbar {
 	-ms-touch-action: pinch-zoom;
 	touch-action: pinch-zoom;
-	height: 425px;
+	max-height: 425px;
 	overflow-y: scroll;
 }
 .mCustomScrollBox {
@@ -207,9 +207,6 @@ a.more {
 .form-horizontal .form-group {
 	padding: 0;
 }
-.form-group .input-group {
-	/* padding: 0 10px; */
-}
 .form-group .input-group .input-group-addon, .input-group .input-group-addon {
 	padding-right: 6px;
 	padding-left: 0;
@@ -269,5 +266,15 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   -moz-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
 }
 .client-view-label {
-    padding-left: 14vw;
+  padding-left: 14vw;
+}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus {
+  color: black !important;
+  text-decoration: none;
+  background-color: #e0dede !important;
+  outline: 0;
+}
+.dropdown-menu a:hover {
+  cursor: pointer;
+  background-color: #eceaea !important;
 }
