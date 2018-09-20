@@ -50,6 +50,7 @@ export class ClientComponent implements OnInit {
   private selectedClient = null
   private clientDisplayLimit = 12
   
+  private checked: boolean = false
   private isEdit: boolean = false
   private isCreate: boolean
   private clearBtn: boolean
@@ -70,7 +71,6 @@ export class ClientComponent implements OnInit {
     "fineblue",
     "purple"
   ];
-  private checked = false
   private filterClient: {name: string} = {name: ''}
   private isNone: boolean
   private isByClient: boolean
@@ -178,6 +178,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList) {
         for (var p = 0; p < this.clientList.length; p++) {
+console.log(this.clientList);
 
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
@@ -221,18 +222,17 @@ export class ClientComponent implements OnInit {
         // $('#updateClientBtn1').button('reset');
         // $('#saveClientBtn1').button('reset');
         if (response.status === 200) {
-          self.data.client = {
-            name: "",
-            contact_person_name: "",
-            email: "",
-            number: "",
-            address_line1: "",
-            shipping_address: "",
-            business_detail: "",
-            business_id: "",
-            unique_identifier: "",
-            deleted_flag: 0
-          }
+          self.data.client.name = "",
+          self.data.client.contact_person_name = "",
+          self.data.client.email = "",
+          self.data.client.number = "",
+          self.data.client.address_line1 = "",
+          self.data.client.shipping_address = "",
+          self.data.client.business_detail = "",
+          self.data.client.business_id = "",
+          self.data.client.unique_identifier = "",
+          self.data.client.deleted_flag = 0
+
           self.clientListsLoader = false
           self.clientService.fetchClients().subscribe((response: response) => {
             self.clientListsLoader = true
@@ -371,15 +371,13 @@ export class ClientComponent implements OnInit {
         "business_detail": client.business_detail,
         "business_id": client.business_id,
         "deleted_flag": client.enabled
-      };
+      }
       this.tempClient = this.data.client
     } else {
       this.data.client = this.tempClient
     }
 
     this.tempIndex = index
-
-
     this.isEditBtn = false
     this.inputReadonly = true
     this.isEdit = true
