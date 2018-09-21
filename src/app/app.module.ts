@@ -19,7 +19,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component'
 import { SidebarComponent } from './components/sidebar/sidebar.component'
 import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
-import { InvoiceComponent } from './components/invoice/invoice.component'
+import { InvoiceComponent } from './components/invoice/invoice.component';
+import { EstimateComponent } from './components/estimate/estimate.component'
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
     SidebarComponent,
     ClientComponent,
     ProductComponent,
-    InvoiceComponent
+    InvoiceComponent,
+    EstimateComponent
   ],
   imports: [
     BrowserModule,

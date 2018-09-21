@@ -7,18 +7,16 @@ import { CONSTANTS } from '../constants'
 @Injectable({
   providedIn: 'root'
 })
-export class ClientService {
+export class SettingService {
 
   private fetchUrl = ''
-  private fetchByIdUrl = ''
   private addUrl = ''
   private user: {
     access_token: string
   }
 
   constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
-    this.fetchUrl = `${CONST.BASE_URL}client/pull/client`
-    this.fetchByIdUrl = `${CONST.BASE_URL}client/pull/client`
+    this.fetchUrl = `${CONST.BASE_URL}settings/pull/settings`
     this.addUrl = `${CONST.BASE_URL}client/add-clients`
 
     this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
@@ -36,25 +34,18 @@ export class ClientService {
     return this.http.get(this.fetchUrl, headers)
   }
 
-  fetchById(id) {
+  add(setting) {
+    var d = new Date()
+    var currentTime = d.getTime()
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        "accessToken": this.user.access_token
+        "accessToken": this.user.access_token,
+        "Device-Time": String(currentTime)
       })
     }
 
-    return this.http.post(this.fetchByIdUrl, id, headers)
+    return this.http.post(this.addUrl, setting, headers)
   }
 
-  add(client) {
-    const headers = {
-      headers: new HttpHeaders({
-        "Content-Type": "application/json",
-        "accessToken": this.user.access_token
-      })
-    }
-
-    return this.http.post(this.addUrl, client, headers)
-  }
 }

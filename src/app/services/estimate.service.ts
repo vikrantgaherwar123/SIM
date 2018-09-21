@@ -7,20 +7,20 @@ import { CONSTANTS } from '../constants'
 @Injectable({
   providedIn: 'root'
 })
-export class ClientService {
+export class EstimateService {
 
   private fetchUrl = ''
-  private fetchByIdUrl = ''
   private addUrl = ''
+  private fetchByIdUrl = ''
   private user: {
     access_token: string
   }
 
-  constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
-    this.fetchUrl = `${CONST.BASE_URL}client/pull/client`
-    this.fetchByIdUrl = `${CONST.BASE_URL}client/pull/client`
-    this.addUrl = `${CONST.BASE_URL}client/add-clients`
-
+  constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) {
+    this.fetchUrl = `${CONST.BASE_URL}estimate/pull/quotation`
+    this.fetchByIdUrl = `${CONST.BASE_URL}estimate/pull/estimate/byId`
+    this.addUrl = `${CONST.BASE_URL}estimate/add-estimate`
+    
     this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
   }
 
@@ -47,7 +47,7 @@ export class ClientService {
     return this.http.post(this.fetchByIdUrl, id, headers)
   }
 
-  add(client) {
+  add(estimate) {
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -55,6 +55,6 @@ export class ClientService {
       })
     }
 
-    return this.http.post(this.addUrl, client, headers)
+    return this.http.post(this.addUrl, estimate, headers)
   }
 }

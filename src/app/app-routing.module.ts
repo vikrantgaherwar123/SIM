@@ -7,6 +7,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component'
 import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
 import { InvoiceComponent } from './components/invoice/invoice.component'
+import { EstimateComponent } from './components/estimate/estimate.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -15,7 +16,9 @@ const routes: Routes = [
   { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
   { path: 'invoice', redirectTo: '/invoice/view/:id', pathMatch: 'full' },
-  { path: 'invoice/view/:id', component: InvoiceComponent, canActivate: [AuthGuard] }
+  { path: 'invoice/view/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
+  { path: 'estimate', redirectTo: '/estimate/view/:id', pathMatch: 'full' },
+  { path: 'estimate/view/:id', component: EstimateComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({
