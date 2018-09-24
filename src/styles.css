@@ -8,6 +8,9 @@ b, body, p, button {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+.pad15 {
+  padding: 15px
+}
 .pad-right-0 {
   padding-right: 0 !important;
 }
@@ -270,4 +273,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
   border-bottom: 1px solid #a5a5a5;
+}
+.inline {
+  margin-right: 10px;
+  float: left;
 }

@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'invoice', redirectTo: '/invoice/view/:id', pathMatch: 'full' },
   { path: 'invoice/view/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
   { path: 'estimate', redirectTo: '/estimate/view/:id', pathMatch: 'full' },
-  { path: 'estimate/view/:id', component: EstimateComponent, canActivate: [AuthGuard] }
+  { path: 'estimate/view/:estId', component: EstimateComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({

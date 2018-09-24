@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
+import { FormControl } from '@angular/forms'
+import { DatepickerOptions } from 'ng2-datepicker'
+import * as frLocale from 'date-fns/locale/fr'
+
 import { EstimateService } from '../../services/estimate.service'
 import { ClientService } from '../../services/client.service'
 import { ProductService } from '../../services/product.service'
@@ -20,6 +24,27 @@ interface response {
   }
 }
 
+interface setting {
+  alstTaxName: []
+  adjustment: string
+  balance: string
+  dateDDMMYY: boolean
+  discount_on_item: string
+  mTvQty: string
+  mTvProducts: string
+  mTvRate: string
+  mTvAmount: string
+  mTvTermsAndConditions: string
+  mTvBillTo: string
+  mTvShipTo: string
+  mTvDueDate: string
+  discount: string
+  subtotal: string
+  shipping: string
+  tax_on_item: number
+  paid: string
+  total: string
+}
 interface termsAndCondition {
   _id: string,
   unique_identifier: string,
@@ -36,10 +61,24 @@ interface termsAndCondition {
 })
 export class EstimateComponent implements OnInit {
 
-  private estimates = []
-  private clientList = []
-  private estimateItems = [] // Items belongs to Estimate data
-  private clients = {} // Clients List
+  options: DatepickerOptions = {
+    minYear: 1970,
+    maxYear: 2030,
+    displayFormat: 'DD-MM-YYYY',
+    barTitleFormat: 'MMMM YYYY',
+    dayNamesFormat: 'dd',
+    firstCalendarDay: 0, // 0 - Sunday, 1 - Monday
+    locale: frLocale,
+    minDate: new Date(Date.now()), // Minimal selectable date
+    maxDate: new Date(Date.now()),  // Maximal selectable date
+    barTitleIfEmpty: 'Click to select a date',
+    placeholder: 'Click to select a date', // HTML input placeholder attribute (default: '')
+    addClass: 'form-control', // Optional, value to pass on to [ngClass] on the input field
+    addStyle: {}, // Optional, value to pass to [ngStyle] on the input field
+    fieldId: 'my-date-picker', // ID to assign to the input field. Defaults to datepicker-<counter>
+    useEmptyBarTitle: false, // Defaults to true. If set to false then barTitleIfEmpty will be disregarded and a date will always be shown 
+  }
+
   private data = {
     item: {},
     estimate: {
@@ -47,28 +86,76 @@ export class EstimateComponent implements OnInit {
     },
     terms: {},
     add_estimate: {
+      gross_amount: 0,
+      created_date: 0,
+      discount_on_item: '',
+      tax_on_item: '',
+      taxList: [],
       listItems: []
     }
   }
-  private testVar: string = 'asdfadfasdfasdfasdfa'
+  private estimates = []
+  private estimateItems = []
+  private estimateViewLoader: boolean
+  private estimateListLoader: boolean
   private selectedEstimate = null
-  private total = 0
-  private clientDisplayLimit = 10
-  private checked = false
-  // private routeParams = .current.params
-  private productList = []
+
   private client = {
     client: {
       email: '',
       number: ''
     }
   }
+  private clientList = []
+  private clients = {}
+  private clientDisplayLimit = 10
+  private clientListLoader: boolean
+  private clientFocus: boolean
+  private clientsLocal = []
+  private clientValidation: boolean
+
+  private productList = []
   private addProductList = []
+  private addProduct: {
+    itemDescription: string
+  } = {
+    itemDescription: ''
+  }
+
+  private repos
+  private show_tax_input_list: []
+  private tempflagTaxList: []
+
+  private customersSelect
+  private settings: {
+    date_format: string
+  }
+  private terms
+  private termList
+  private estimateDate: string
+  private tempQtyLabel: string
+  private tempProLabel: string
+  private tempAmtLabel: string
+  private tempRateLabel: string
+  private tempTermLabel: string
+  private tempBillLabel: string
+  private tempShipLabel: string
+  private tempDueLabel: string
+  private tempDisLabel: string
+  private tempSubToLabel: string
+  private tempShippingLabel: string
+  private tempAdjLabel: string
+  private tempPaidLabel: string
+  private tempTotalLabel: string
+  private tempBalLabel: string
+
+  private newItemCounter: number
+  private total = 0
+  
+  private checked = false
   private customDate = true
   private isRate = true
   private dueDate = ""
-  private clientsLocal = []
-  private clientValidation: boolean
 
   private isNone: boolean
   private isByClient: boolean
@@ -76,10 +163,11 @@ export class EstimateComponent implements OnInit {
   private isInvNo: boolean
   private sortEstimates: string
   private isAmount: boolean
-  private estimateViewLoader: boolean
-  private estimateListLoader: boolean
-  private clientListLoader: boolean
-  private clientFocus: boolean
+  
+  private showMultipleTax: boolean
+  private authenticated: {
+    setting: setting
+  }
 
   private config = {
     valueField: 'uniqueKeyClient',
@@ -110,9 +198,12 @@ export class EstimateComponent implements OnInit {
   private user: {
     user: {
       orgId: string
-    }
+    },
+    setting: setting
   }
+  private billingTo
   constructor(private router: Router,
+    private route: ActivatedRoute,
     private estimateService: EstimateService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
@@ -121,6 +212,9 @@ export class EstimateComponent implements OnInit {
     private productService: ProductService,
     private pdfService: PdfService) {
       this.user = JSON.parse(this.cookie.get('user'))
+      this.authenticated = {setting: this.user.setting}
+      console.log(this.authenticated);
+      this.billingTo = new FormControl('')
     }
 
   ngOnInit() {
@@ -129,7 +223,7 @@ export class EstimateComponent implements OnInit {
       if (response.records != null) {
         self.estimates = response.records.filter(pro => pro.enabled == 0)
         // console.log(self.estimates);
-        
+        self.init()
       }
     })
   }
@@ -189,22 +283,6 @@ export class EstimateComponent implements OnInit {
     this.sortEstimates = searchfield
   }
 
-  isEmpty1() {
-    return this.clientsLocal[0] && (typeof this.clientsLocal[0].email === 'undefined' || this.clientsLocal[0].email === '')
-  }
-
-  isEmpty2() {
-    return this.clientsLocal[0] && (typeof this.clientsLocal[0].number === 'undefined' || this.clientsLocal[0].number === '')
-  }
-
-  isEmpty11() {
-    return (typeof this.client.client.email === 'undefined' || this.client.client.email === '')
-  }
-  
-  isEmpty12() {
-    return (typeof this.client.client.number === 'undefined' || this.client.client.number === '')
-  }
-
   init() {
     $('#estMain').removeClass("show")
     $('#estMain').addClass("hide")
@@ -218,7 +296,7 @@ export class EstimateComponent implements OnInit {
     this.clientListLoader = true
     this.clientFocus = false
 
-    this.initializeSettings($rootScope.tempQuaNoOnAdd)
+    // this.initializeSettings($rootScope.tempQuaNoOnAdd)
 
     this.data.add_estimate.taxList = []
     this.show_tax_input_list = []
@@ -226,24 +304,39 @@ export class EstimateComponent implements OnInit {
     this.data.add_estimate.gross_amount = 0.00
     this.clients = []
 
+    var settings = this.authenticated.setting
 
-    var settings = $rootScope.authenticated.setting
+    this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
+    this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
+    this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : ''
+    this.tempRateLabel = settings.mTvAmount ? settings.mTvAmount : ''
+    this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : ''
+    this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo :''
+    this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : ''
+    this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : ''
+    this.tempDisLabel = settings.discount ? settings.discount : ''
+    this.tempSubToLabel = settings.subtotal ? settings.subtotal : ''
+    this.tempShippingLabel = settings.shipping ? settings.shipping : ''
+    this.tempAdjLabel = settings.adjustment ? settings.adjustment : ''
+    this.tempPaidLabel = settings.paid ? settings.paid : ''
+    this.tempTotalLabel = settings.total ? settings.total : ''
+    this.tempBalLabel = settings.balance ? settings.balance : ''
 
-    this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : $translate.instant('QTY_LABEL')
-    this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : $translate.instant('PRO_LABEL')
-    this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : $translate.instant('AMT_LABEL')
-    this.tempRateLabel = settings.mTvAmount ? settings.mTvAmount : $translate.instant('RATE_LABEL')
-    this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : $translate.instant('TERM_LABEL')
-    this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : $translate.instant('BILL_TO_LABEL')
-    this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : $translate.instant('SHIP_TO_LABEL')
-    this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : $translate.instant('DUE_DATE_LABEL')
-    this.tempDisLabel = settings.discount ? settings.discount : $translate.instant('DIS_LABEL')
-    this.tempSubToLabel = settings.subtotal ? settings.subtotal : $translate.instant('SUB_TOT_LABEL')
-    this.tempShippingLabel = settings.shipping ? settings.shipping : $translate.instant('SHIPPING_LABEL')
-    this.tempAdjLabel = settings.adjustment ? settings.adjustment : $translate.instant('ADJ_LABEL')
-    this.tempPaidLabel = settings.paid ? settings.paid : $translate.instant('PAID_LABEL')
-    this.tempTotalLabel = settings.total ? settings.total : $translate.instant('TOTAL_LABEL')
-    this.tempBalLabel = settings.balance ? settings.balance : $translate.instant('BAL_LABEL')
+    // this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : $translate.instant('QTY_LABEL')
+    // this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : $translate.instant('PRO_LABEL')
+    // this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : $translate.instant('AMT_LABEL')
+    // this.tempRateLabel = settings.mTvAmount ? settings.mTvAmount : $translate.instant('RATE_LABEL')
+    // this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : $translate.instant('TERM_LABEL')
+    // this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : $translate.instant('BILL_TO_LABEL')
+    // this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : $translate.instant('SHIP_TO_LABEL')
+    // this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : $translate.instant('DUE_DATE_LABEL')
+    // this.tempDisLabel = settings.discount ? settings.discount : $translate.instant('DIS_LABEL')
+    // this.tempSubToLabel = settings.subtotal ? settings.subtotal : $translate.instant('SUB_TOT_LABEL')
+    // this.tempShippingLabel = settings.shipping ? settings.shipping : $translate.instant('SHIPPING_LABEL')
+    // this.tempAdjLabel = settings.adjustment ? settings.adjustment : $translate.instant('ADJ_LABEL')
+    // this.tempPaidLabel = settings.paid ? settings.paid : $translate.instant('PAID_LABEL')
+    // this.tempTotalLabel = settings.total ? settings.total : $translate.instant('TOTAL_LABEL')
+    // this.tempBalLabel = settings.balance ? settings.balance : $translate.instant('BAL_LABEL')
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
@@ -255,18 +348,19 @@ export class EstimateComponent implements OnInit {
     var date = new Date()
 
     if (settings.dateDDMMYY === false) {
-      $rootScope.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = 'mm-dd-yy'
     } else if (settings.dateDDMMYY === true) {
-      $rootScope.settings.date_format = 'dd-mm-yy'
+      if(!this.settings) {
+        this.settings = {date_format: ''}
+      }
+      this.settings.date_format = 'dd-mm-yy'
     }
-    if ($rootScope.settings.date_format === 'dd-mm-yy') {
+    if (this.settings.date_format === 'dd-mm-yy') {
       this.estimateDate = ('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear()
-      this.data.add_estimate.created_date = (new Date(this.estimateDate.split('-')[2], parseInt(this.estimateDate.split('-')[1]) - 1, this.estimateDate.split('-')[0])).getTime()
-
-    } else if ($rootScope.settings.date_format = 'mm-dd-yy') {
+      this.data.add_estimate.created_date = (new Date(parseInt(this.estimateDate.split('-')[2]), parseInt(this.estimateDate.split('-')[1]) - 1, parseInt(this.estimateDate.split('-')[0]))).getTime()
+    } else if (this.settings.date_format = 'mm-dd-yy') {
       this.estimateDate = ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + '-' + date.getFullYear()
-      this.data.add_estimate.created_date = (new Date(this.estimateDate.split('-')[2], parseInt(this.estimateDate.split('-')[0]) - 1, this.estimateDate.split('-')[1])).getTime()
-
+      this.data.add_estimate.created_date = (new Date(parseInt(this.estimateDate.split('-')[2]), parseInt(this.estimateDate.split('-')[0]) - 1, parseInt(this.estimateDate.split('-')[1]))).getTime()
     }
 
     // DataStore.initializer([])
@@ -274,7 +368,7 @@ export class EstimateComponent implements OnInit {
     if (1) {
       this.estimateService.fetch().subscribe(function (response: response) {
         if (response.records != null) {
-          this.productList = response.data.records.filter(function (pro) {
+          this.productList = response.records.filter(function (pro) {
             return (pro.enabled == 0)
           })
           // DataStore.addProductsList(this.productList)
@@ -285,18 +379,17 @@ export class EstimateComponent implements OnInit {
     }
     // DataStore.clientsList.length == 0
     if (1) {
-      this.clientService.fetchClients().subscribe(function (response: response) {
+      this.clientService.fetch().subscribe((response: response) => {
         if (response.records !== null) {
           this.clients = response.records
+console.log('clients', this.clients);
 
-          this.repos = response.records.map(function (repo) {
+          this.repos = response.records.map((repo: {value: string, name: string}) => {
             repo.value = repo.name.toLowerCase()
             return repo
           })
-          this.repos.sort(compare)
-          this.repos = this.repos.filter(function (clien) {
-            return (clien.enabled == 0)
-          })
+          this.repos.sort(this.compare)
+          this.repos = this.repos.filter(clien => clien.enabled == 0)
           this.clientListLoader = false
           // DataStore.addClientsList(this.repos)
           // DataStore.addUnSortedClient(this.clients)
@@ -315,7 +408,6 @@ export class EstimateComponent implements OnInit {
     // DataStore.termsList.length == 0
     if (1) {
       this.termConditionService.fetch().subscribe((response: response) => {
-
         this.terms = response.termsAndConditionList
         // DataStore.addTermsList(this.terms)
         if (this.terms !== null) {
@@ -334,11 +426,8 @@ export class EstimateComponent implements OnInit {
             }
           }
         }
-        $rootScope.pro_bar_load = true
       })
     } else {
-      // this.terms = DataStore.termsList
-
       this.termList = []
       if (this.terms !== null && typeof this.terms !== 'undefined') {
         for (var i = 0; i < this.terms.length; i++) {
@@ -367,18 +456,14 @@ export class EstimateComponent implements OnInit {
         this.tax_on = 'taxOnItem'
         this.taxtext = "Tax (on Item)"
         this.data.add_estimate.tax_on_item = 2
-
       } else {
         this.tax_on = 'taxDisabled'
         this.taxtext = "Tax (Disabled)"
         this.data.add_estimate.tax_on_item = 2
         $('a.taxbtn').addClass('disabledBtn')
-
       }
 
-
       if (settings.discount_on_item == 0) {
-
         this.discount_on = 'onBill'
         this.discounttext = "Discount (on Bill)"
         this.data.add_estimate.discount_on_item = 0
@@ -419,7 +504,6 @@ export class EstimateComponent implements OnInit {
               }
             }
             var tempEstNo = this.estimates[i].quetationNo.replace(/[^\d.]/g, '!')
-
             this.estimates[i].tempEstNo = parseInt(tempEstNo.substr(tempEstNo.lastIndexOf('!') + 1))
             if (isNaN(this.estimates[i].tempEstNo)) {
               this.estimates[i].tempEstNo = 0
@@ -427,26 +511,41 @@ export class EstimateComponent implements OnInit {
           }
 
           this.estimateListLoader = true
-          $rootScope.pro_bar_load = true
           // console.log(result)
         })
-        if (this.routeParams.estId !== "0") {
-          this.getEstimate(this.routeParams.estId, 3)
-        }
-
+        this.route.params.subscribe(params => {
+          if (params.estId != "0") {
+            this.getEstimate(params.estId, 3)
+          }
+        })
       })
     } else {
       // this.estimates = DataStore.estimatesList
       this.estimateListLoader = true
-      $rootScope.pro_bar_load = true
+      // $rootScope.pro_bar_load = true
     }
     this.data.add_estimate.listItems.push({
-      'quantity': parseInt(1),
+      'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
-      'rate': parseFloat(0.00),
-      'total': parseFloat(0.00)
+      'rate': 0.00,
+      'total': 0.00
     })
+  }
 
+  isEmpty1() {
+    return this.clientsLocal[0] && (typeof this.clientsLocal[0].email === 'undefined' || this.clientsLocal[0].email === '')
+  }
+
+  isEmpty2() {
+    return this.clientsLocal[0] && (typeof this.clientsLocal[0].number === 'undefined' || this.clientsLocal[0].number === '')
+  }
+
+  isEmpty11() {
+    return (typeof this.client.client.email === 'undefined' || this.client.client.email === '')
+  }
+  
+  isEmpty12() {
+    return (typeof this.client.client.number === 'undefined' || this.client.client.number === '')
   }
 
   dynamicOrder(estimate) {
@@ -1787,13 +1886,13 @@ export class EstimateComponent implements OnInit {
     this.reloadCreateEstimate()
   }
 
-  $on('loading:progress', function () {
-    $('#loader').css('display', 'block')
-  })
+  // $on('loading:progress', function () {
+  //   $('#loader').css('display', 'block')
+  // })
 
-  $on('loading:finish', function () {
-    $('#loader').css('display', 'none')
-  })
+  // $on('loading:finish', function () {
+  //   $('#loader').css('display', 'none')
+  // })
 
   loadMore() {
     this.clientDisplayLimit += 10
