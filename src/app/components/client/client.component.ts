@@ -86,7 +86,7 @@ export class ClientComponent implements OnInit {
 
   ngOnInit() {
     this.clientListLoader = false
-    this.clientService.fetchClients().subscribe((response: response) => {
+    this.clientService.fetch().subscribe((response: response) => {
       if (response.status === 200) {
         this.clientListLoader = true
         this.clientList = response.records
@@ -178,8 +178,8 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList) {
         for (var p = 0; p < this.clientList.length; p++) {
-console.log(this.clientList);
-
+          console.log(this.clientList)
+          
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             proStatus = false
@@ -216,7 +216,7 @@ console.log(this.clientList);
       }
       this.data.client.device_modified_on = d.getTime();
       var self = this
-      this.clientService.addClient([this.data.client]).subscribe(function (response: response) {
+      this.clientService.add([this.data.client]).subscribe(function (response: response) {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');
@@ -234,7 +234,7 @@ console.log(this.clientList);
           self.data.client.deleted_flag = 0
 
           self.clientListsLoader = false
-          self.clientService.fetchClients().subscribe((response: response) => {
+          self.clientService.fetch().subscribe((response: response) => {
             self.clientListsLoader = true
             self.clientList = response.records
             self.selectedClient = 'none'

@@ -9,19 +9,19 @@ import { CONSTANTS } from '../constants'
 })
 export class ProductService {
 
-  private fetchProductsUrl = ''
-  private addProductsUrl = ''
+  private fetchUrl = ''
+  private addUrl = ''
   private user: {
     access_token: string
   }
 
   constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
-    this.fetchProductsUrl = `${CONST.BASE_URL}product/pull/product`
-    this.addProductsUrl = `${CONST.BASE_URL}product/add-products`
+    this.fetchUrl = `${CONST.BASE_URL}product/pull/product`
+    this.addUrl = `${CONST.BASE_URL}product/add-products`
     this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
   }
 
-  fetchProducts() {
+  fetch() {
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -30,10 +30,10 @@ export class ProductService {
       })
     }
 
-    return this.http.get(this.fetchProductsUrl, headers)
+    return this.http.get(this.fetchUrl, headers)
   }
 
-  addProducts(product) {
+  add(product) {
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -41,6 +41,6 @@ export class ProductService {
       })
     }
 
-    return this.http.post(this.addProductsUrl, product, headers)
+    return this.http.post(this.addUrl, product, headers)
   }
 }

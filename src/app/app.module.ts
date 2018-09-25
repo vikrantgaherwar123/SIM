@@ -2,9 +2,12 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { TranslateModule } from '@ngx-translate/core'
 import { HttpClientModule } from '@angular/common/http'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { CookieService } from 'ngx-cookie-service'
 import * as $ from 'jquery'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { MatAutocompleteModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { NgDatepickerModule } from 'ng2-datepicker'
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
@@ -20,6 +23,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component'
 import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
 import { InvoiceComponent } from './components/invoice/invoice.component'
+import { EstimateComponent } from './components/estimate/estimate.component'
 
 @NgModule({
   declarations: [
@@ -30,7 +34,8 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
     SidebarComponent,
     ClientComponent,
     ProductComponent,
-    InvoiceComponent
+    InvoiceComponent,
+    EstimateComponent
   ],
   imports: [
     BrowserModule,
@@ -38,9 +43,15 @@ import { InvoiceComponent } from './components/invoice/invoice.component'
     TranslateModule.forRoot(),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     SweetAlert2Module.forRoot(),
     FilterPipeModule,
-    OrderModule
+    OrderModule,
+    NgDatepickerModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [CookieService, CONSTANTS],
   bootstrap: [AppComponent]

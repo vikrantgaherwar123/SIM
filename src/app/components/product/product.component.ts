@@ -93,7 +93,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.productListsLoader = false
-    this.productService.fetchProducts().subscribe((response: response) => {
+    this.productService.fetch().subscribe((response: response) => {
       this.productList = response.records
       this.productListsLoader = true
 
@@ -408,7 +408,7 @@ export class ProductComponent implements OnInit {
       this.productListsLoader = false
 
       var self = this
-      this.productService.addProducts([this.data.product]).subscribe(function (result: response) {
+      this.productService.add([this.data.product]).subscribe(function (result: response) {
         if (result.status === 200) {
 
           self.data.product.unique_identifier = "",
@@ -429,7 +429,7 @@ export class ProductComponent implements OnInit {
           self.rightDivBtns = false
           self.deleteBtn = true
 
-          self.productService.fetchProducts().subscribe(function (response: response) {
+          self.productService.fetch().subscribe(function (response: response) {
             self.productListsLoader = true
             self.productList = response.records
 
