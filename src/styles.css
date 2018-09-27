@@ -1,3 +1,4 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 b, body, p, button {
   font-family: quicksand_regular !important;
   font-size: 13.5px;
@@ -277,4 +278,14 @@ input:checked + .slider:before {
 .inline {
   margin-right: 10px;
   float: left;
+}
+.loader {
+  left: 50%;
+  margin-left: -1em;
+  width: 30px !important;
+  height: 30px !important;
+}
+.mat-progress-spinner svg {
+  width: 30px !important;
+  height: 30px !important;
 }

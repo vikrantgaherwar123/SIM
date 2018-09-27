@@ -6,13 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { CookieService } from 'ngx-cookie-service'
 import * as $ from 'jquery'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { MatAutocompleteModule, MatFormFieldModule, MatInputModule } from '@angular/material';
-import { NgDatepickerModule } from 'ng2-datepicker'
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
 
 import { CONSTANTS } from './constants'
+import { MaterialModule } from './material'
 
 import { AppComponent } from './components/index/index.component'
 import { HeaderComponent } from './components/header/header.component'
@@ -47,11 +46,8 @@ import { EstimateComponent } from './components/estimate/estimate.component'
     SweetAlert2Module.forRoot(),
     FilterPipeModule,
     OrderModule,
-    NgDatepickerModule,
     BrowserAnimationsModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatInputModule
+    MaterialModule
   ],
   providers: [CookieService, CONSTANTS],
   bootstrap: [AppComponent]
