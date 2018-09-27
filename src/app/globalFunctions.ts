@@ -190,10 +190,10 @@ export function MD5(string) {
   return temp.toLowerCase();
 }
 
-export function generateUUID (orgId) {
+export function generateUUID(orgId) {
   var d = new Date().getTime()
   var epoch = new Date()
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now()
   }
   var tempID = 'yxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -201,5 +201,82 @@ export function generateUUID (orgId) {
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
-  return '@'+orgId+epoch.getTime()+tempID;
+  return '@' + orgId + epoch.getTime() + tempID;
 };
+
+export function changeEstimate(data) {
+  var tempEstimate = {};
+  var tempItemList = [];
+  var tempTermList = [];
+
+  tempEstimate = {
+    'orgName': data.orgName,
+    'unique_key_fk_client': data.unique_key_fk_client,
+    'unique_identifier': data.unique_identifier,
+    'serverUpdateTime': data.serverUpdateTime,
+    'localId': data._id,
+    'localClientId': data.local_client_id,
+    'quetationNo': data.estimate_number,
+    'amount': data.amount,
+    'discount': data.discount,
+    'organizationId': data.organization_id,
+    'createDate': data.created_date,
+    'enabled': data.deleted_flag,
+    'epochTime': data.epoch,
+    'shippingAddress': data.shipping_address,
+    'discountFlag': data.percentage_flag,
+    'percentageValue': data.percentage_value,
+    'adjustment': data.adjustment,
+    'shippingCharges': data.shipping_charges,
+    'grossAmount': data.gross_amount,
+    'assignDiscountFlag': data.discount_on_item,
+    'assignTaxFlag': data.tax_on_item,
+    'taxrate': data.tax_rate,
+    'taxAmt': data.tax_amount,
+    'deviceCreatedDate': data.device_modified_on,
+    'serverClientId': data.client_id,
+    'pushFlag': data.push_flag,
+    'deleteQuoProductIds': data.deletedItems,
+    'deleteQuoTermsIds': data.deletedTerms,
+    'alstQuotProduct': data.listItems,
+    'alstQuotTermsCondition': data.termsAndConditions
+  }
+
+  for (var j = 0; j < data.listItems.length; j++) {
+    var temp = {
+      'unique_identifier': data.listItems[j].uniqueKeyQuotationProduct,
+      'productName': data.listItems[j].product_name,
+      'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
+      'qty': data.listItems[j].quantity,
+      'unit': data.listItems[j].unit,
+      'rate': data.listItems[j].rate,
+      'discountRate': data.listItems[j].discount,
+      'taxRate': data.listItems[j].tax_rate,
+      'price': data.listItems[j].total,
+      'discountAmt': data.listItems[j].discount_amount,
+      'taxAmount': data.listItems[j].tax_amount,
+      'uniqueKeyFKProduct': data.listItems[j].unique_key_fk_product,
+      'unique_identifier1': data.listItems[j].unique_key_fk_quotation
+    }
+    tempItemList.push(temp);
+  }
+  tempEstimate.alstQuotProduct = tempItemList;
+  if (!isNaN(data.termsAndConditions && !data.termsAndConditions == null
+    && data.termsAndConditions.isEmpty())) {
+    for (var i = 0; i < data.termsAndConditions.length; i++) {
+      var temp = {
+        "termsConditionText": data.termsAndConditions[i].terms_condition,
+        "localId": data.termsAndConditions[i]._id,
+        "localQuotationId": data.termsAndConditions[i].local_quotation_id,
+        "serverQuotationId": data.termsAndConditions[i].estimate_id,
+        "orgId": data.termsAndConditions[i].organization_id,
+        "uniqueKeyQuotTerms": data.termsAndConditions[i].unique_identifier,
+        "uniqueKeyFKQuotation": data.termsAndConditions[i].unique_key_fk_quotation
+      }
+      tempTermList.push(temp);
+    }
+  }
+  tempEstimate.alstQuotTermsCondition = tempTermList;
+  tempEstimate.taxList = data.taxList;
+  return tempEstimate;
+}

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
-import { DatepickerOptions } from 'ng2-datepicker'
-import * as frLocale from 'date-fns/locale/fr'
+import {Observable} from 'rxjs'
+import {map, startWith} from 'rxjs/operators'
 
 import { EstimateService } from '../../services/estimate.service'
 import { ClientService } from '../../services/client.service'
@@ -10,7 +10,7 @@ import { ProductService } from '../../services/product.service'
 import { PdfService } from '../../services/pdf.service'
 import { TermConditionService } from '../../services/term-condition.service'
 import { SettingService } from '../../services/setting.service'
-import { generateUUID } from '../../globalFunctions'
+import { generateUUID, changeEstimate } from '../../globalFunctions'
 import { CookieService } from 'ngx-cookie-service'
 
 interface response {
@@ -20,16 +20,22 @@ interface response {
   error: string,
   termsAndConditionList: [termsAndCondition],
   settings: {
-    appSettings: []
-  }
+    appSettings: {
+      androidSettings: any
+    }
+  },
+  productList: Array<{}>,
+  quotationList: Array<{}>
 }
-
 interface setting {
   alstTaxName: []
   adjustment: string
   balance: string
+  currencyInText: string
   dateDDMMYY: boolean
-  discount_on_item: string
+  date_format: boolean
+  discount: string
+  discount_on_item: number
   mTvQty: string
   mTvProducts: string
   mTvRate: string
@@ -38,11 +44,12 @@ interface setting {
   mTvBillTo: string
   mTvShipTo: string
   mTvDueDate: string
-  discount: string
+  paid: string
+  quotFormat: string
+  quotNo: string
   subtotal: string
   shipping: string
   tax_on_item: number
-  paid: string
   total: string
 }
 interface termsAndCondition {
@@ -61,24 +68,6 @@ interface termsAndCondition {
 })
 export class EstimateComponent implements OnInit {
 
-  options: DatepickerOptions = {
-    minYear: 1970,
-    maxYear: 2030,
-    displayFormat: 'DD-MM-YYYY',
-    barTitleFormat: 'MMMM YYYY',
-    dayNamesFormat: 'dd',
-    firstCalendarDay: 0, // 0 - Sunday, 1 - Monday
-    locale: frLocale,
-    minDate: new Date(Date.now()), // Minimal selectable date
-    maxDate: new Date(Date.now()),  // Maximal selectable date
-    barTitleIfEmpty: 'Click to select a date',
-    placeholder: 'Click to select a date', // HTML input placeholder attribute (default: '')
-    addClass: 'form-control', // Optional, value to pass on to [ngClass] on the input field
-    addStyle: {}, // Optional, value to pass to [ngStyle] on the input field
-    fieldId: 'my-date-picker', // ID to assign to the input field. Defaults to datepicker-<counter>
-    useEmptyBarTitle: false, // Defaults to true. If set to false then barTitleIfEmpty will be disregarded and a date will always be shown 
-  }
-
   private data = {
     item: {},
     estimate: {
@@ -86,33 +75,60 @@ export class EstimateComponent implements OnInit {
     },
     terms: {},
     add_estimate: {
+      amount: 0.00,
+      adjustment: 0,
+      organization_id: '',
+      termsAndConditions: [],
+      created_date: '',
+      device_modified_on: 0,
+      discount: 0,
+      discount_on_item: 0,
+      estimate_number: '',
       gross_amount: 0,
-      created_date: 0,
-      discount_on_item: '',
-      tax_on_item: '',
+      listItems: [],
+      percentage_flag: 0,
+      percentage_value: '',
+      shipping_address: '',
+      shipping_charges: 0,
+      tax_amount: 0,
+      tax_on_item: 0,
+      tax_rate: 0,
       taxList: [],
-      listItems: []
+      unique_identifier: '',
+      unique_key_fk_client: 0
     }
   }
   private estimates = []
+  private estimate = []
   private estimateItems = []
   private estimateViewLoader: boolean
   private estimateListLoader: boolean
   private selectedEstimate = null
+  private tempQuaNoOnAdd: number
+  private estimateFilterTerm: string
+  private estimateDate
+  private tempEstNo: number
+  private createEstimate: boolean = true
+  private viewEstimate: boolean = false
+  private editEstimate: boolean = false
 
   private client = {
     client: {
       email: '',
-      number: ''
+      number: '',
+      name: '',
+      addressLine1: '',
+      shippingAddress: ''
     }
   }
   private clientList = []
-  private clients = {}
+  private clients = []
   private clientDisplayLimit = 10
   private clientListLoader: boolean
   private clientFocus: boolean
   private clientsLocal = []
   private clientValidation: boolean
+  private showClientError: boolean
 
   private productList = []
   private addProductList = []
@@ -122,17 +138,21 @@ export class EstimateComponent implements OnInit {
     itemDescription: ''
   }
 
-  private repos
+  private repos = []
+  filteredRepos: Observable<string[]>
   private show_tax_input_list: []
   private tempflagTaxList: []
 
+  private tax_on: string
+  private taxtext: string
+  private discount_on: string
+  private discounttext: string
+
   private customersSelect
-  private settings: {
-    date_format: string
-  }
+  private settings: any
   private terms
   private termList
-  private estimateDate: string
+
   private tempQtyLabel: string
   private tempProLabel: string
   private tempAmtLabel: string
@@ -148,8 +168,12 @@ export class EstimateComponent implements OnInit {
   private tempPaidLabel: string
   private tempTotalLabel: string
   private tempBalLabel: string
+  private routeParams: {
+    estId: string,
+    invId: string
+  }
 
-  private newItemCounter: number
+  private newItemCounter: number = 0
   private total = 0
   
   private checked = false
@@ -157,6 +181,7 @@ export class EstimateComponent implements OnInit {
   private isRate = true
   private dueDate = ""
 
+  private searchText: string = ''
   private isNone: boolean
   private isByClient: boolean
   private isByDate: boolean
@@ -201,7 +226,7 @@ export class EstimateComponent implements OnInit {
     },
     setting: setting
   }
-  private billingTo
+  billingTo = new FormControl('')
   constructor(private router: Router,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
@@ -213,19 +238,24 @@ export class EstimateComponent implements OnInit {
     private pdfService: PdfService) {
       this.user = JSON.parse(this.cookie.get('user'))
       this.authenticated = {setting: this.user.setting}
-      console.log(this.authenticated);
-      this.billingTo = new FormControl('')
+      // console.log(this.authenticated)
     }
 
   ngOnInit() {
-    var self = this
-    this.estimateService.fetch().subscribe(function (response: response) {
-      if (response.records != null) {
-        self.estimates = response.records.filter(pro => pro.enabled == 0)
-        // console.log(self.estimates);
-        self.init()
-      }
-    })
+    // var self = this
+    // this.estimateService.fetch().subscribe(function (response: response) {
+    //   if (response.records != null) {
+    //     self.estimates = response.records.filter(pro => pro.enabled == 0)
+    //     // console.log(self.estimates);
+    //     self.init()
+    //   }
+    // })
+    this.init()
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.repos.filter(option => option.value.toLowerCase().includes(filterValue));
   }
 
   toggle() {
@@ -284,11 +314,6 @@ export class EstimateComponent implements OnInit {
   }
 
   init() {
-    $('#estMain').removeClass("show")
-    $('#estMain').addClass("hide")
-    $('#editEst').removeClass("show")
-    $('#editEst').addClass('hide')
-
     this.estimateViewLoader = true
     this.estimateListLoader = false
     this.clientsLocal = []
@@ -296,7 +321,7 @@ export class EstimateComponent implements OnInit {
     this.clientListLoader = true
     this.clientFocus = false
 
-    // this.initializeSettings($rootScope.tempQuaNoOnAdd)
+    this.initializeSettings(this.tempQuaNoOnAdd)
 
     this.data.add_estimate.taxList = []
     this.show_tax_input_list = []
@@ -356,22 +381,22 @@ export class EstimateComponent implements OnInit {
       this.settings.date_format = 'dd-mm-yy'
     }
     if (this.settings.date_format === 'dd-mm-yy') {
-      this.estimateDate = ('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear()
-      this.data.add_estimate.created_date = (new Date(parseInt(this.estimateDate.split('-')[2]), parseInt(this.estimateDate.split('-')[1]) - 1, parseInt(this.estimateDate.split('-')[0]))).getTime()
+      this.estimateDate = new FormControl(new Date())
+      this.data.add_estimate.created_date = this.estimateDate.value.getTime()
     } else if (this.settings.date_format = 'mm-dd-yy') {
-      this.estimateDate = ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + '-' + date.getFullYear()
-      this.data.add_estimate.created_date = (new Date(parseInt(this.estimateDate.split('-')[2]), parseInt(this.estimateDate.split('-')[0]) - 1, parseInt(this.estimateDate.split('-')[1]))).getTime()
+      this.estimateDate = new FormControl(new Date())
+      this.data.add_estimate.created_date = this.estimateDate.value.getTime()
     }
 
     // DataStore.initializer([])
     // DataStore.productsList.length == 0
+    var self = this
     if (1) {
-      this.estimateService.fetch().subscribe(function (response: response) {
+      this.productService.fetch().subscribe((response: response) => {
         if (response.records != null) {
-          this.productList = response.records.filter(function (pro) {
-            return (pro.enabled == 0)
-          })
+          self.productList = response.records.filter((pro) => pro.enabled == 0)
           // DataStore.addProductsList(this.productList)
+          // console.log(self.productList);
         }
       })
     } else {
@@ -382,20 +407,22 @@ export class EstimateComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         if (response.records !== null) {
           this.clients = response.records
-console.log('clients', this.clients);
+          // console.log('clients', this.clients);
 
           this.repos = response.records.map((repo: {value: string, name: string}) => {
             repo.value = repo.name.toLowerCase()
             return repo
           })
           this.repos.sort(this.compare)
-          this.repos = this.repos.filter(clien => clien.enabled == 0)
+          this.repos = this.repos.filter(client => client.enabled == 0)
+          this.filteredRepos = this.billingTo.valueChanges.pipe(startWith(''),
+            map(value => this._filter(value))
+          )
           this.clientListLoader = false
           // DataStore.addClientsList(this.repos)
           // DataStore.addUnSortedClient(this.clients)
-        }
-        else {
-          this.clients = {}
+        }else {
+          this.clients = []
           this.clientListLoader = false
         }
         this.customersSelect = this.clients
@@ -481,22 +508,21 @@ console.log('clients', this.clients);
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      this.data.add_estimate.tax_on_item = parseInt(2)
+      this.data.add_estimate.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      this.data.add_estimate.discount_on_item = parseInt(2)
+      this.data.add_estimate.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
     // DataStore.estimatesList.length == 0
     if (1) {
       this.estimateService.fetch().subscribe((result: response) => {
         this.estimates = result.records.filter(est => est.enabled == 0)
-        this.estimates = this.estimates
         this.clientService.fetch().subscribe((response: response) => {
           this.clientList = response.records
-          this.clientList = this.clientList
+
           for (var i = 0; i < this.estimates.length; i++) {
             for (var j = 0; j < this.clientList.length; j++) {
               if (this.estimates[i].unique_key_fk_client == this.clientList[j].uniqueKeyClient) {
@@ -525,11 +551,253 @@ console.log('clients', this.clients);
       // $rootScope.pro_bar_load = true
     }
     this.data.add_estimate.listItems.push({
+      'description': '',
       'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
       'rate': 0.00,
       'total': 0.00
     })
+  }
+
+  initializeSettings(invNoParam) {
+    var settings = this.authenticated.setting
+    this.settingService.fetch().subscribe((response: response) => {
+      // $rootScope.pro_bar_load = true
+      if (response.status === 200) {
+        var cookie = this.user
+        if (response.settings === null) {
+          this.authenticated.setting = <setting>{}
+          this.authenticated.setting.date_format = true
+          this.settings.date_format = 'dd-mm-yy'
+          // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+          // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
+          // $rootScope.settings.alstTaxName = []
+        } else {
+          cookie.setting = response.settings.appSettings.androidSettings
+          this.settings = cookie.setting
+
+          // if (cookie.setting.numberFormat === "###,###,###.00") {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern1'
+          // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern2'
+          // } else if (cookie.setting.numberFormat === "###.###.###,00") {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern1'
+          // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern2'
+          // } else if (cookie.setting.numberFormat === "### ### ###,00") {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern1'
+          // } else {
+          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
+          //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+          //   $rootScope.settingscurrency_pattern = 'pattern1'
+          // }
+
+          if (cookie.setting.dateDDMMYY === false) {
+            // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
+            this.settings.date_format = 'mm-dd-yy'
+          } else if (cookie.setting.dateDDMMYY === true) {
+            // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+            this.settings.date_format = 'dd-mm-yy'
+          }
+
+          if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
+            // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
+          } else {
+            //$rootScope.authenticated.setting = {}
+            //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
+          }
+        }
+        this.cookie.set('user', JSON.stringify(cookie), null, '/')
+        if (invNoParam) {
+          if (settings.quotFormat)
+            this.data.add_estimate.estimate_number = settings.quotFormat + invNoParam
+          else if (typeof settings.quotFormat !== 'undefined')
+            this.data.add_estimate.estimate_number = "Est_" + invNoParam
+          else
+            this.data.add_estimate.estimate_number = invNoParam
+        } else {
+          if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+            this.tempEstNo = parseInt(settings.quotNo) + 1
+            this.tempQuaNoOnAdd = this.tempEstNo
+          } else {
+            this.tempEstNo = 1
+            this.tempQuaNoOnAdd = this.tempEstNo
+          }
+          if (settings.quotFormat || settings.quotFormat === '') {
+            this.data.add_estimate.estimate_number = settings.quotFormat + this.tempEstNo
+          } else if (typeof settings.quotFormat !== 'undefined') {
+            this.data.add_estimate.estimate_number = "Est_" + this.tempEstNo
+          } else {
+            this.data.add_estimate.estimate_number = this.tempEstNo.toString()
+          }
+        }
+      } else {
+        if (invNoParam) {
+          this.data.add_estimate.estimate_number = settings.quotFormat + invNoParam
+        } else {
+          if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+            this.tempEstNo = parseInt(settings.quotNo) + 1
+            this.tempQuaNoOnAdd = this.tempEstNo
+          } else {
+            this.tempEstNo = 1
+            this.tempQuaNoOnAdd = this.tempEstNo
+          }
+          if (settings.quotFormat) {
+            this.data.add_estimate.estimate_number = settings.quotFormat + this.tempEstNo
+          } else {
+            this.data.add_estimate.estimate_number = "Est_" + this.tempEstNo
+          }
+        }
+      }
+    })
+  }
+
+  getEstimate(id, index) {
+    this.estimateViewLoader = false
+    $('#msgInv').removeClass("show")
+    $('#msgInv').addClass("hide")
+    $('#estMain').removeClass("hide")
+    $('#estMain').addClass("show")
+    $('#editEst').removeClass("show")
+    $('#editEst').addClass('hide')
+
+    this.clientList = this.clients
+    if (this.estimates) {
+      var est_index = this.estimates.findIndex(estimate => estimate.unique_identifier == id)
+      this.estimate[0] = this.estimates[est_index]
+
+      this.data.estimate = this.estimate[0]
+      this.productList = this.estimate[0].alstQuotProduct
+      this.estimateItems = this.estimate[0].alstQuotProduct
+      this.estimateTerms = this.estimate[0].alstQuotTermsCondition
+      this.estimateDate = $filter('date')(this.data.estimate.createDate)
+      /* *
+      * Multiple Tax Names
+      * */
+      if (this.data.estimate.taxList) {
+        if (this.data.estimate.taxList.length > 0) {
+          this.showMultipleTax = true
+        } else {
+          this.showMultipleTax = false
+        }
+      } else {
+        this.showMultipleTax = false
+      }
+
+      if (this.clientList) {
+        var EST_index_client = findObjectIndex(this.clientList, 'uniqueKeyClient', this.data.estimate.unique_key_fk_client)
+        //this.clientsLocal[0] = $rootScope.clientList[EST_index_client]
+        this.estimateViewLoader = true
+
+        this.estimate.client = this.clientList[EST_index_client]
+        this.clientsLocal[0] = this.clientList[EST_index_client]
+      }
+
+      if (this.data.estimate.assignDiscountFlag == 1) {
+        this.discounttext = "Discount (On Item)"
+        this.show_discount = false
+      } else if (this.data.estimate.assignDiscountFlag == 0) {
+        this.discounttext = "Discount (On Bill)"
+        this.show_discount = true
+      } else {
+        this.show_discount = false
+        this.discounttext = "Discount (Disabled)"
+      }
+
+      if (this.data.estimate.assignTaxFlag == 0) {
+        this.taxtext = "Tax (On Item)"
+        this.show_tax_input = false
+      } else if (this.data.estimate.assignTaxFlag == 1 && this.data.estimate.taxrate > 0) {
+        this.taxtext = "Tax (On Bill)"
+        this.show_tax_input = true
+      } else {
+        this.show_tax_input = false
+        this.taxtext = "Tax (Disabled)"
+      }
+
+      if (this.data.estimate.shippingCharges && this.data.estimate.shippingCharges > 0)
+        this.show_shipping_charge = true
+      else
+        this.show_shipping_charge = false
+
+      if (this.data.estimate.discountFlag && this.data.estimate.discountFlag == 1)
+        this.isRate = true
+      else
+        this.isRate = false
+
+    }
+
+    this.routeParams.estId = this.estimate[0].unique_identifier
   }
 
   isEmpty1() {
@@ -596,177 +864,6 @@ console.log('clients', this.clients);
     return comparison
   }
 
-  initializeSettings(invNoParam) {
-    // $rootScope.pro_bar_load = false
-    var settings = $rootScope.authenticated.setting
-    this.settingService.fetch().subscribe((response: response) => {
-      // $rootScope.pro_bar_load = true
-      if (response.status === 200) {
-        var cookie = this.user
-        // if (response.settings === null) {
-        //   $rootScope.authenticated.setting = {}
-        //   $rootScope.authenticated.setting.date_format = true
-        //   $rootScope.settings.date_format = 'dd-mm-yy'
-        //   $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-        //   $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-        //   $rootScope.settings.alstTaxName = []
-        // } else {
-        //   cookie.setting = response.data.settings.appSettings.androidSettings
-        //   $rootScope.settings = cookie.setting
-
-        //   if (cookie.setting.numberFormat === "###,###,###.00") {
-
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern1'
-
-        //   } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern2'
-
-        //   } else if (cookie.setting.numberFormat === "###.###.###,00") {
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern1'
-
-        //   } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern2'
-
-        //   } else if (cookie.setting.numberFormat === "### ### ###,00") {
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern1'
-
-        //   } else {
-        //     $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-        //     $locale.NUMBER_FORMATS.GROUP_SEP = ","
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //     $rootScope.settingscurrency_pattern = 'pattern1'
-        //   }
-
-        //   if (cookie.setting.dateDDMMYY === false) {
-        //     $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
-        //     $rootScope.settings.date_format = 'mm-dd-yy'
-        //   } else if (cookie.setting.dateDDMMYY === true) {
-        //     $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-        //     $rootScope.settings.date_format = 'dd-mm-yy'
-        //   }
-
-        //   if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
-        //     $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
-        //   } else {
-        //     //$rootScope.authenticated.setting = {}
-        //     //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
-        //   }
-        // }
-        // $cookies.putObject('user', cookie, { 'path': '/' })
-        if (invNoParam) {
-          if (settings.quotFormat)
-            this.data.add_estimate.estimate_number = settings.quotFormat + invNoParam
-          else if (typeof settings.quotFormat !== 'undefined')
-            this.data.add_estimate.estimate_number = "Est_" + invNoParam
-          else
-            this.data.add_estimate.estimate_number = invNoParam
-
-        } else {
-          if (!isNaN(settings.quotNo) && settings.quotNo !== null) {
-            this.tempEstNo = parseInt(settings.quotNo) + 1
-            $rootScope.tempQuaNoOnAdd = this.tempEstNo
-          } else {
-            this.tempEstNo = 1
-            $rootScope.tempQuaNoOnAdd = this.tempEstNo
-          }
-          if (settings.quotFormat || settings.quotFormat === '') {
-            this.data.add_estimate.estimate_number = settings.quotFormat + this.tempEstNo
-          } else if (typeof settings.quotFormat !== 'undefined') {
-            this.data.add_estimate.estimate_number = "Est_" + this.tempEstNo
-          } else {
-            this.data.add_estimate.estimate_number = this.tempEstNo
-          }
-        }
-
-      } else
-        if (invNoParam) {
-          this.data.add_estimate.estimate_number = settings.quotFormat + invNoParam
-        } else {
-          if (!isNaN(settings.quotNo && settings.quotNo !== null)) {
-            this.tempEstNo = parseInt(settings.quotNo) + 1
-            $rootScope.tempQuaNoOnAdd = this.tempEstNo
-          } else {
-            this.tempEstNo = 1
-            $rootScope.tempQuaNoOnAdd = this.tempEstNo
-          }
-          if (settings.quotFormat) {
-            this.data.add_estimate.estimate_number = settings.quotFormat + this.tempEstNo
-          } else {
-            this.data.add_estimate.estimate_number = "Est_" + this.tempEstNo
-          }
-        }
-    })
-  }
-
   saveTermEdit(data, status) {
     $('#addtermbtn').prop('disabled', true)
     var baseURL = Data.getBaseUrl()
@@ -815,13 +912,10 @@ console.log('clients', this.clients);
           $('#addtermbtn').prop('disabled', false)
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true })
           //$('#add-terms').modal('hide')
-
         } else {
           $('#addtermbtn').prop('disabled', false)
           // notifications.showError({ message: response.message, hideDelay: 1500, hide: true })
-
         }
-
       })
     }
   }
@@ -901,7 +995,6 @@ console.log('clients', this.clients);
   }
 
   searchTextChange(text) {
-
     //$log.info('Text changed to '+ text)
     //this.clientFocus = true
     this.focusOut(this.searchText)
@@ -941,49 +1034,38 @@ console.log('clients', this.clients);
   }
 
   focusOutMessage(name) {
-    //console.log("focusOut",name)
     this.showClientError = false
-    var lowercaseQuery = angular.lowercase(name)
+    var lowercaseQuery = name.toLowerCase()
     var tempFlag = true
-    if (this.repos)
+    if (this.repos) {
       for (var i = 0; i < this.repos.length; i++) {
-        var lowercaseQuery1 = angular.lowercase(this.repos[i].name)
-        //console.log("focus out mESSAGE",i,this.repos.length,lowercaseQuery1,lowercaseQuery)
+        var lowercaseQuery1 = this.repos[i].name.toLowerCase()
         if (lowercaseQuery1 === lowercaseQuery) {
           this.showClientError = false
           tempFlag = false
-        }
-        else if ((i === (this.repos.length) - 1) && tempFlag) {
-          //console.log('else',this.repos.length)
+        } else if ((i === (this.repos.length) - 1) && tempFlag) {
           this.showClientError = true
           this.searchText = ''
         }
       }
+    }
   }
 
-  selectedItemChange(item) {
-    //$log.info('Item changed to ' + JSON.stringify(item))
+  selectedClientChange(item) {
+    item = this.repos.filter(client => client.value == item.option.value)[0]
+
     if (typeof item !== 'undefined') {
       var clientId = item.uniqueKeyClient
-      //console.log("clients",this.clients)
       if (typeof this.clients !== 'undefined') {
-        //console.log("in")
-        var index = findObjectIndex(this.clients, 'uniqueKeyClient', clientId)
-        //console.log("  pp ", clientId, index)
+        var index = this.clients.findIndex(client => client.uniqueKeyClient == clientId)
         if (typeof clientId !== 'undefined' && index === -1) {
-          this.client.client = {}
-          this.client.client.address_line1 = ''
-          this.client.client.email = ''
-          this.client.client.number = ''
-          this.client.client.name = clientId
-          console.log("1")
-          this.addClient(true)
+          this.client.client = {email: '', number: '', addressLine1: '', name: clientId, shippingAddress: ''}
+          // this.addClient(true)
         } else {
-          this.client.client.address_line1 = ''
+          this.client.client.addressLine1 = ''
           this.client.client.email = ''
           this.client.client.number = ''
           this.client.client.name = clientId
-          console.log("2")
         }
         for (var j = 0; j < this.clients.length; j++) {
           if (this.clients[j].uniqueKeyClient == clientId) {
@@ -991,34 +1073,20 @@ console.log('clients', this.clients);
             //$rootScope.selectClient = this.client.client
             this.data.add_estimate.unique_key_fk_client = clientId
             this.data.add_estimate.shipping_address = this.client.client.shippingAddress
-            this.client.client.address_line1 = this.client.client.addressLine1
-            console.log("4")
+            this.client.client.addressLine1 = this.client.client.addressLine1
             break
           }
-          //console.log("3")
         }
-        this.focusOut(item.name)
+        // this.focusOut(item.name)
         this.showClientError = false
       } else {
-        this.client.client = {}
-        this.client.client.address_line1 = ''
-        this.client.client.email = ''
-        this.client.client.number = ''
-
+        this.client.client = {addressLine1: '', email: '', name: '', number: '', shippingAddress: ''}
       }
-    }
-    //$rootScope.selectClient(item.uniqueKeyClient)
-    else {
+    } else {
       //console.log("clients",this.clients)
-      this.client.client = {}
-      this.client.client.address_line1 = ''
-      this.client.client.email = ''
-      this.client.client.number = ''
+      this.client.client = {addressLine1: '', email: '', name: '', number: '', shippingAddress: ''}
       this.searchText = ''
-      this.searchText = ''
-
     }
-    //console.log('Item changed to ' + JSON.stringify(item))
   }
 
   createFilterFor(query) {
@@ -1039,101 +1107,100 @@ console.log('clients', this.clients);
     this.addClient(state)
   }
 
-  // this.newItemCounter = 0
   addLineItem() {
     this.newItemCounter += 1
     this.data.add_estimate.listItems.push({
-      'quantity': parseInt(1),
+      'description': '',
+      'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
-      'rate': parseFloat(0.00),
-      'total': parseFloat(0.00)
+      'rate': 0.00,
+      'total': 0.00
     })
+    // console.log(this.data.add_estimate.listItems)
+
     if (this.newItemCounter > 0) {
       this.focusOutMessage(this.searchText)
     }
-
   }
 
-  addItem($event, item, selected_product_id) {
-
-    var index = findObjectIndex(this.productList, 'prodName', selected_product_id)
+  addItem(index, product) {
+    // console.log(index, product);
 
     if (index !== -1) {
-
-      item.unique_key_fk_product = this.productList[index].uniqueKeyProduct
-      item.unique_identifier = utility.generateUUID()
-      item.product_name = this.productList[index].prodName
-      item.description = this.productList[index].discription == null ? '' : this.productList[index].discription
-      item.quantity = 1
-      item.unit = this.productList[index].unit
-      item.rate = this.productList[index].rate
-      //item.discount = this.productList[index].discount
-      //item.tax_rate = this.productList[index].taxRate
-      item.tax_rate = 0.00
-
-    } else if (selected_product_id !== '' && typeof selected_product_id !== 'undefined') {
-      var tempProAddFlag = false
-      var tempSelectedProduct = angular.lowercase(selected_product_id)
-      var tempProName = ''
-      var tempMatchPro = {}
-      for (var k = 0; k < this.productList.length; k++) {
-        tempProName = angular.lowercase(this.productList[k].prodName)
-        if (tempSelectedProduct == tempProName) {
-          tempProAddFlag = true
-          tempMatchPro = this.productList[k]
-        }
-      }
-      if (!tempProAddFlag) {
-        item.unique_key_fk_product = utility.generateUUID()
-        item.unique_identifier = utility.generateUUID()
-        item.product_name = selected_product_id
-        item.description = ""
-        item.quantity = 1
-        item.unit = ""
-        item.rate = 0.00
-        item.discount = 0.00
-        item.tax_rate = 0.00
-        /**
-         * Adding Product to Product List
-         * */
-
-        var d = new Date()
-        var temp1 = {
-          'prod_name': item.product_name,
-          'rate': parseFloat(item.rate),
-          'tax_rate': item.tax_rate,
-          //'description' : item.description,
-          'device_modified_on': d.getTime(),
-          'organization_id': $rootScope.authenticated.user.orgId,
-          'unique_identifier': item.unique_key_fk_product
-
-        }
-        this.addProductList.push(temp1)
-        //console.log("count1",item,temp1,this.addProductList,selected_product_id)
-      } else {
-        item.unique_key_fk_product = tempMatchPro.uniqueKeyProduct
-        item.unique_identifier = utility.generateUUID()
-        item.product_name = tempMatchPro.prodName
-        item.description = tempMatchPro.discription
-        item.quantity = 1
-        item.unit = tempMatchPro.unit
-        item.rate = tempMatchPro.rate
-        //item.discount = this.productList[index].discount
-        //item.tax_rate = this.productList[index].taxRate
-        item.tax_rate = 0.00
-        //console.log("count12",this.productList)
-      }
-    } else {
-      item.description = ""
-      item.quantity = 1
-      item.unit = ""
-      item.rate = 0.00
-      item.discount = 0.00
-      item.tax_rate = 0.00
+      this.data.add_estimate.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
+      this.data.add_estimate.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
+      this.data.add_estimate.listItems[index].description = product.discription == null ? '' : product.discription
+      this.data.add_estimate.listItems[index].product_name = product.prodName
+      this.data.add_estimate.listItems[index].quantity = 1
+      this.data.add_estimate.listItems[index].unit = product.unit
+      this.data.add_estimate.listItems[index].rate = product.rate
+      this.data.add_estimate.listItems[index].tax_rate = 0.00
     }
-    this.calculateTotal(this.data.add_estimate.listItems.indexOf(item))
+    // console.log(this.data.add_estimate.listItems);
+    
+    //New product add logic
+    // else if (selected_product_id !== '' && typeof selected_product_id !== 'undefined') {
+    //   var tempProAddFlag = false
+    //   var tempSelectedProduct = angular.lowercase(selected_product_id)
+    //   var tempProName = ''
+    //   var tempMatchPro = {}
+    //   for (var k = 0; k < this.productList.length; k++) {
+    //     tempProName = angular.lowercase(this.productList[k].prodName)
+    //     if (tempSelectedProduct == tempProName) {
+    //       tempProAddFlag = true
+    //       tempMatchPro = this.productList[k]
+    //     }
+    //   }
+    //   if (!tempProAddFlag) {
+    //     item.unique_key_fk_product = utility.generateUUID()
+    //     item.unique_identifier = utility.generateUUID()
+    //     item.product_name = selected_product_id
+    //     item.description = ""
+    //     item.quantity = 1
+    //     item.unit = ""
+    //     item.rate = 0.00
+    //     item.discount = 0.00
+    //     item.tax_rate = 0.00
+    //     /**
+    //      * Adding Product to Product List
+    //      * */
 
-    this.calculateEstimate(1)
+    //     var d = new Date()
+    //     var temp1 = {
+    //       'prod_name': item.product_name,
+    //       'rate': parseFloat(item.rate),
+    //       'tax_rate': item.tax_rate,
+    //       //'description' : item.description,
+    //       'device_modified_on': d.getTime(),
+    //       'organization_id': $rootScope.authenticated.user.orgId,
+    //       'unique_identifier': item.unique_key_fk_product
+
+    //     }
+    //     this.addProductList.push(temp1)
+    //     //console.log("count1",item,temp1,this.addProductList,selected_product_id)
+    //   } else {
+    //     item.unique_key_fk_product = tempMatchPro.uniqueKeyProduct
+    //     item.unique_identifier = utility.generateUUID()
+    //     item.product_name = tempMatchPro.prodName
+    //     item.description = tempMatchPro.discription
+    //     item.quantity = 1
+    //     item.unit = tempMatchPro.unit
+    //     item.rate = tempMatchPro.rate
+    //     //item.discount = this.productList[index].discount
+    //     //item.tax_rate = this.productList[index].taxRate
+    //     item.tax_rate = 0.00
+    //     //console.log("count12",this.productList)
+    //   }
+    // } else {
+    //   item.description = ""
+    //   item.quantity = 1
+    //   item.unit = ""
+    //   item.rate = 0.00
+    //   item.discount = 0.00
+    //   item.tax_rate = 0.00
+    // }
+    this.calculateTotal(index)
+    // this.calculateEstimate(1)
   }
 
   calculateTotal(index) {
@@ -1145,30 +1212,8 @@ console.log('clients', this.clients);
         rateParse = 0
       }
       var productRate = (this.data.add_estimate.listItems[index].quantity * rateParse)
-
       this.data.add_estimate.listItems[index].total = productRate
-
       this.calculateEstimate(1)
-    }
-  }
-
-  setTermsList(term) {
-
-    var index23 = findObjectIndex(this.terms.filter(function (pro) {
-      return (pro.enabled == 0)
-    }), 'uniqueKeyTerms', term.uniqueKeyTerms)
-    if (this.data.terms[index23]) {
-      var temp = {
-        "_id": term.serverTermCondId,
-        "unique_identifier": term.uniqueKeyTerms,
-        "organization_id": term.orgId,
-        "terms_condition": term.terms
-        //"unique_key_fk_invoice" :
-      }
-      this.termList.push(temp)
-    } else {
-      var index26 = findObjectIndex(this.termList, 'unique_identifier', term.uniqueKeyTerms)
-      this.termList.splice(index26, 1)
     }
   }
 
@@ -1189,37 +1234,31 @@ console.log('clients', this.clients);
     var discoutAmount = 0
     var tax_rate = 0
 
-
     if (this.data.add_estimate.percentage_flag == 1) {
       var discountPercent = parseFloat(this.data.add_estimate.percentage_value) / 100
       if (isNaN(discountPercent)) {
         discountPercent = 0
       }
-      discoutAmount = discountPercent * grossAmount
 
+      discoutAmount = discountPercent * grossAmount
       this.data.add_estimate.discount = discoutAmount
       discountTotal = grossAmount - discoutAmount
-
-
     } else if (this.data.add_estimate.percentage_flag == 0) {
-      var estimateDiscount = parseFloat(this.data.add_estimate.discount)
 
+      var estimateDiscount = this.data.add_estimate.discount
       if (isNaN(estimateDiscount)) {
         estimateDiscount = 0
       }
       discountTotal = grossAmount - estimateDiscount
-
-
-      var discountAmount = (parseFloat(this.data.add_estimate.discount) / grossAmount) * 100
+      var discountAmount = (this.data.add_estimate.discount / grossAmount) * 100
       if (isNaN(discountAmount)) {
         discountAmount = 0
       }
-      this.data.add_estimate.percentage_value = discountAmount
-
+      this.data.add_estimate.percentage_value = discountAmount.toString()
     }
 
     if (this.tax_on == 'taxOnBill') {
-      tax_rate = (parseFloat(this.data.add_estimate.tax_rate) * discountTotal) / 100
+      tax_rate = (this.data.add_estimate.tax_rate * discountTotal) / 100
       if (isNaN(tax_rate)) {
         tax_rate = 0
       }
@@ -1243,13 +1282,13 @@ console.log('clients', this.clients);
       tax_rate = tax_rate + temp_tax_rate
     }
 
-    shippingCharges = parseFloat(this.data.add_estimate.shipping_charges)
+    shippingCharges = this.data.add_estimate.shipping_charges
     if (isNaN(shippingCharges)) {
       shippingCharges = 0
     }
     totalAmount = discountTotal + shippingCharges + tax_rate
 
-    var adjustmentAmount = parseFloat(this.data.add_estimate.adjustment)
+    var adjustmentAmount = this.data.add_estimate.adjustment
     if (isNaN(adjustmentAmount)) {
       adjustmentAmount = 0
     }
@@ -1258,22 +1297,40 @@ console.log('clients', this.clients);
     if (isNaN(finalAmount)) {
       finalAmount = 0
     }
-    this.data.add_estimate.amount = finalAmount.toFixed(2)
+    this.data.add_estimate.amount = parseFloat(finalAmount.toFixed(2))
+  }
 
+  setTermsList(term) {
+    var index23 = findObjectIndex(this.terms.filter(function (pro) {
+      return (pro.enabled == 0)
+    }), 'uniqueKeyTerms', term.uniqueKeyTerms)
+    if (this.data.terms[index23]) {
+      var temp = {
+        "_id": term.serverTermCondId,
+        "unique_identifier": term.uniqueKeyTerms,
+        "organization_id": term.orgId,
+        "terms_condition": term.terms
+        //"unique_key_fk_invoice" :
+      }
+      this.termList.push(temp)
+    } else {
+      var index26 = findObjectIndex(this.termList, 'unique_identifier', term.uniqueKeyTerms)
+      this.termList.splice(index26, 1)
+    }
   }
 
   removeItem(index) {
-    var status = -1
-    for (var i = 0; i < this.data.add_estimate.listItems.length; i++) {
-      var temProName = angular.lowercase(index.product_name)
-      var temProName1 = angular.lowercase(this.data.add_estimate.listItems[i].product_name)
-      if (temProName == temProName1) {
-        status = i
-        break
-
-      }
-    }
-    this.data.add_estimate.listItems.splice(status, 1)
+    // var status = -1
+    // for (var i = 0; i < this.data.add_estimate.listItems.length; i++) {
+    //   var temProName = angular.lowercase(index.product_name)
+    //   var temProName1 = angular.lowercase(this.data.add_estimate.listItems[i].product_name)
+    //   if (temProName == temProName1) {
+    //     status = i
+    //     break
+    //   }
+    // }
+    // console.log(index, this.data.add_estimate.listItems)
+    this.data.add_estimate.listItems.splice(index, 1)
     this.calculateEstimate(1)
   }
 
@@ -1361,14 +1418,15 @@ console.log('clients', this.clients);
     return status
   }
 
-  save(data, status) {
-    $rootScope.pro_bar_load = false
-    $('#estSubmitBtn').button('loading')
+  save(status) {
+    // $rootScope.pro_bar_load = false
+    // $('#estSubmitBtn').button('loading')
+
     var createdTime = new Date()
-    createdTime.setTime(this.data.add_estimate.created_date)
+    createdTime.setTime(parseInt(this.data.add_estimate.created_date))
     this.data.add_estimate.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
-    var baseURL = Data.getBaseUrl()
-    this.data.add_estimate.organization_id = $rootScope.authenticated.user.orgId
+
+    this.data.add_estimate.organization_id = this.user.user.orgId
     this.data.add_estimate.termsAndConditions = this.termList
     var update_status = 0
     var estimate_id = null
@@ -1378,61 +1436,56 @@ console.log('clients', this.clients);
         this.data.add_estimate.listItems.splice(i - 1, 1)
       }
     }
-    var tempIndexName1 = findObjectIndex(this.repos, 'name', this.searchText)
-    //console.log("in",tempIndexName1)
+    var tempIndexName1 = this.repos.findIndex(repo => repo.name == this.billingTo.value)
+
     if (this.data.add_estimate.listItems.length !== 0 && tempIndexName1 !== -1) {
       if (status) {
-
-        // $('button[type="submit"]').button('loading')
-
-        this.data.add_estimate.unique_identifier = utility.generateUUID()
-
+        this.data.add_estimate.unique_identifier = generateUUID(this.user.user.orgId)
 
         for (var j = 0; j < this.data.add_estimate.termsAndConditions.length; j++) {
           this.data.add_estimate.termsAndConditions[j].unique_key_fk_quotation = this.data.add_estimate.unique_identifier
         }
-        if (this.addProductList.length > 0)
+        if (this.addProductList.length > 0) {
           this.saveProduct(this.addProductList)
+        }
 
         var d = new Date()
         this.data.add_estimate.device_modified_on = d.getTime()
-        //console.log("invoice data : "+JSON.stringify(this.data.add_estimate))
         this.estimateService.add([this.data.add_estimate]).subscribe((result: response) => {
-          $('#estSubmitBtn').button('reset')
-          $rootScope.pro_bar_load = true
+          // $('#estSubmitBtn').button('reset')
+          // $rootScope.pro_bar_load = true
           if (result.status !== 200) {
             alert('Some error occurred, please try again!')
             // $('button[type="submit"]').button('reset')
           } else if (result.status === 200) {
             // this.clientList = DataStore.clientsList
+            alert('estimate added successfully!')
             for (var j = 0; j < this.clientList.length; j++) {
               if (result.quotationList[0].unique_key_fk_client == this.clientList[j].uniqueKeyClient) {
                 result.quotationList[0].orgName = this.clientList[j].name
               }
             }
-            var tempCh = InterChangeKey.changeEstimate(result.data.quotationList[0])
+            var tempCh = changeEstimate(result.quotationList[0])
             //console.log("ff",tempCh,result.data.quotationList[0] )
             // DataStore.pushEstimateList(tempCh)
             this.routeParams.invId = tempCh.unique_identifier
 
-            $rootScope.tempQuaNoOnAdd = parseInt(this.tempQuaNoOnAdd) + 1
+            this.tempQuaNoOnAdd = this.tempQuaNoOnAdd + 1
             this.updateSettings()
             //$location.path('/estimate/view/'+result.data.quotationList[0].unique_identifier)
-            notifications.showSuccess({ message: 'Success', hideDelay: 1500, hide: true })
+            // notifications.showSuccess({ message: 'Success', hideDelay: 1500, hide: true })
             this.routeParams.estId = tempCh.unique_identifier
             this.getEstimate(tempCh.unique_identifier, 0)
-            $rootScope.pro_bar_load = true
-
+            // $rootScope.pro_bar_load = true
           }
           this.filterClient = ''
         })
       }
       else {
         // $('#estSubmitBtn').button('reset')
-        $rootScope.pro_bar_load = true
+        // $rootScope.pro_bar_load = true
         // alert("Form not valid")
         // notifications.showError({ message: 'Form not valid', hideDelay: 1500, hide: true })
-
       }
     } else {
       if (tempIndexName1 == -1) {
@@ -1440,25 +1493,24 @@ console.log('clients', this.clients);
         // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true })
         // $rootScope.pro_bar_load = true
         // $('#estSubmitBtn').button('reset')
+        alert('client not selected!')
+        console.log('client not selected', this.billingTo.value)
       } else {
         // $rootScope.pro_bar_load = true
         // $('#estSubmitBtn').button('reset')
         // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true })
-
       }
     }
-    //console.log(data)
-
   }
 
   saveProduct(add_product_list) {
-    var baseURL = Data.getBaseUrl()
-    //console.log("data.product",add_product_list)
     var d = new Date()
     var deleteIndexArray = []
     for (var i = 0; i < add_product_list.length; i++) {
-      var uniqueIdProduct = findObjectIndex(this.data.add_estimate.listItems, 'unique_key_fk_product', add_product_list[i].unique_identifier)
-      //console.log("data.product in for :",uniqueIdProduct,JSON.stringify(add_product_list.rate = this.data.invoice.listItems[uniqueIdProduct].rate))
+      var uniqueIdProduct = this.data.add_estimate.listItems.findIndex(
+        item => item.unique_key_fk_product == add_product_list[i].unique_identifier
+      )
+
       if (uniqueIdProduct !== -1) {
         add_product_list[i].device_modified_on = d.getTime()
         add_product_list[i].rate = this.data.add_estimate.listItems[uniqueIdProduct].rate
@@ -1745,85 +1797,6 @@ console.log('clients', this.clients);
     return function (item) {
       return item[prop] > val
     }
-  }
-
-  getEstimate(id, index) {
-    this.estimateViewLoader = false
-    $('#msgInv').removeClass("show")
-    $('#msgInv').addClass("hide")
-    $('#estMain').removeClass("hide")
-    $('#estMain').addClass("show")
-    $('#editEst').removeClass("show")
-    $('#editEst').addClass('hide')
-
-    // this.clientList = DataStore.unSortedClient
-    if (this.estimates) {
-
-      var est_index = findObjectIndex(this.estimates, 'unique_identifier', id)
-      this.estimate[0] = this.estimates[est_index]
-
-      this.data.estimate = this.estimate[0]
-      this.productList = this.estimate[0].alstQuotProduct
-      this.estimateItems = this.estimate[0].alstQuotProduct
-      this.estimateTerms = this.estimate[0].alstQuotTermsCondition
-      this.estimateDate = $filter('date')(this.data.estimate.createDate)
-      /* *
-      * Multiple Tax Names
-      * */
-      if (this.data.estimate.taxList) {
-        if (this.data.estimate.taxList.length > 0) {
-          this.showMultipleTax = true
-        } else {
-          this.showMultipleTax = false
-        }
-      } else {
-        this.showMultipleTax = false
-      }
-
-      if (this.clientList) {
-        var EST_index_client = findObjectIndex(this.clientList, 'uniqueKeyClient', this.data.estimate.unique_key_fk_client)
-        //this.clientsLocal[0] = $rootScope.clientList[EST_index_client]
-        this.estimateViewLoader = true
-
-        this.estimate.client = this.clientList[EST_index_client]
-        this.clientsLocal[0] = this.clientList[EST_index_client]
-      }
-
-      if (this.data.estimate.assignDiscountFlag == 1) {
-        this.discounttext = "Discount (On Item)"
-        this.show_discount = false
-      } else if (this.data.estimate.assignDiscountFlag == 0) {
-        this.discounttext = "Discount (On Bill)"
-        this.show_discount = true
-      } else {
-        this.show_discount = false
-        this.discounttext = "Discount (Disabled)"
-      }
-
-      if (this.data.estimate.assignTaxFlag == 0) {
-        this.taxtext = "Tax (On Item)"
-        this.show_tax_input = false
-      } else if (this.data.estimate.assignTaxFlag == 1 && this.data.estimate.taxrate > 0) {
-        this.taxtext = "Tax (On Bill)"
-        this.show_tax_input = true
-      } else {
-        this.show_tax_input = false
-        this.taxtext = "Tax (Disabled)"
-      }
-
-      if (this.data.estimate.shippingCharges && this.data.estimate.shippingCharges > 0)
-        this.show_shipping_charge = true
-      else
-        this.show_shipping_charge = false
-
-      if (this.data.estimate.discountFlag && this.data.estimate.discountFlag == 1)
-        this.isRate = true
-      else
-        this.isRate = false
-
-    }
-
-    this.routeParams.estId = this.estimate[0].unique_identifier
   }
 
   assignClientId(client_id) {
@@ -2517,122 +2490,6 @@ console.log('clients', this.clients);
     this.show_adjustment_edit = false
   }
 
-  multiTaxButtonEdit(taxname, index) {
-    var status = true
-    if (this.editdata.estimate.taxList)
-      for (var k = 0; k < this.editdata.estimate.taxList.length; k++) {
-        //console.log("multiTaxButton",this.data.invoice.taxList,$rootScope.authenticated.setting.alstTaxName)
-        if (this.editdata.estimate.taxList[k].taxName !== taxname) {
-          status = true
-        } else {
-          status = false
-          break
-        }
-      }
-    else
-      status = true
-
-    return status
-  }
-
-  calculateEstimateEdit(indexTaxMultiple) {
-
-    var total = 0
-
-    for (var i = 0; i < this.editdata.estimate.listItems.length; i++) {
-      if (this.editdata.estimate.listItems[i].deleted_flag != 1) {
-        var item = this.editdata.estimate.listItems[i]
-        total += parseFloat(item.total)
-      }
-    }
-    for (var i = 0; i < this.existingItem.length; i++) {
-
-      if (this.existingItem.deleted_flag != 1) {
-        var item = this.existingItem[i]
-        total += parseFloat(item.total)
-      }
-    }
-    this.editdata.estimate.gross_amount = total
-
-    var grossAmount = total
-    var discountTotal = 0
-    var finalAmount = 0
-    var shippingCharges = 0
-    var totalAmount = 0
-    var discoutAmount = 0
-    var tax_rate = 0
-
-    if (this.editdata.estimate.percentage_flag == 1) {
-      var discountPercent = parseFloat(this.editdata.estimate.percentage_value) / 100
-      if (isNaN(discountPercent)) {
-        discountPercent = 0
-      }
-      discoutAmount = discountPercent * grossAmount
-
-      this.editdata.estimate.discount = discoutAmount
-      discountTotal = grossAmount - discoutAmount
-
-
-    } else if (this.editdata.estimate.percentage_flag == 0) {
-      var estimateDiscount = parseFloat(this.editdata.estimate.discount)
-
-      if (isNaN(estimateDiscount)) {
-        estimateDiscount = 0
-      }
-      discountTotal = grossAmount - estimateDiscount
-
-      var discountAmount = (parseFloat(this.editdata.estimate.discount) / grossAmount) * 100
-      if (isNaN(discountAmount)) {
-        discountAmount = 0
-      }
-      this.editdata.estimate.percentage_value = discountAmount
-
-    }
-
-    if (this.tax_on_edit == 'taxOnBill') {
-      tax_rate = (parseFloat(this.editdata.estimate.tax_rate) * discountTotal) / 100
-      if (isNaN(tax_rate)) {
-        tax_rate = 0
-      }
-      // console.log("tax_ rate bill", tax_rate)
-    }
-    if (indexTaxMultiple) {
-      //console.log("indexmultiple in",indexTaxMultiple,this.data.invoice.taxList)
-      var temp_tax_rate = 0
-      if (this.editdata.estimate.taxList) {
-        for (var i = 0; i < this.editdata.estimate.taxList.length; i++) {
-          if (this.editdata.estimate.taxList[i]) {
-            if (isNaN(parseFloat(this.editdata.estimate.taxList[i].percentage)))
-              this.editdata.estimate.taxList[i].percentage = 0
-            //console.log("090" + parseFloat(this.data.invoice.taxList[i].percentage))
-            this.editdata.estimate.taxList[i].calculateValue = (parseFloat(this.editdata.estimate.taxList[i].percentage) * discountTotal) / 100
-            this.editdata.estimate.taxList[i].selected = true
-            temp_tax_rate = temp_tax_rate + (parseFloat(this.editdata.estimate.taxList[i].percentage) * discountTotal) / 100
-          }
-        }
-        tax_rate = tax_rate + temp_tax_rate
-      }
-    }
-
-    shippingCharges = parseFloat(this.editdata.estimate.shipping_charges)
-    if (isNaN(shippingCharges)) {
-      shippingCharges = 0
-    }
-    totalAmount = discountTotal + shippingCharges + tax_rate
-
-    var adjustmentAmount = parseFloat(this.editdata.estimate.adjustment)
-    if (isNaN(adjustmentAmount)) {
-      adjustmentAmount = 0
-    }
-    finalAmount = totalAmount - adjustmentAmount
-
-    if (isNaN(finalAmount)) {
-      finalAmount = 0
-    }
-    this.editdata.estimate.amount = finalAmount
-
-  }
-
   addItemEdit(indexTemp, item, selected_product_id) {
     console.log("Add item edit", indexTemp, item, selected_product_id)
     var index = findObjectIndex(this.productList, 'prodName', selected_product_id)
@@ -2838,7 +2695,7 @@ console.log('clients', this.clients);
 
           // var tempInv = DataStore.estimatesList
           var indexInv = findObjectIndex(tempInv, "unique_identifier", result.data.quotationList[0].unique_identifier)
-          var tempCh = InterChangeKey.changeEstimate(result.data.quotationList[0])
+          var tempCh = changeEstimate(result.data.quotationList[0])
 
           // this.clientList = DataStore.clientsList
           for (var j = 0; j < this.clientList.length; j++) {
@@ -3106,14 +2963,8 @@ console.log('clients', this.clients);
     return status
   }
 
-  setTermsListDelete(term) {
-
-    var index23 = findObjectIndex(this.termList, 'unique_identifier', term.unique_identifier)
-    this.termList.splice(index23, 1)
-
-    var index29 = findObjectIndex(this.terms.filter(function (pro) {
-      return (pro.enabled == 0)
-    }), 'uniqueKeyTerms', term.unique_identifier)
-    this.data.terms[index29] = false
+  setTermsListDelete(index) {
+    this.termList.splice(index, 1)
+    this.data.terms[index] = false
   }
 }

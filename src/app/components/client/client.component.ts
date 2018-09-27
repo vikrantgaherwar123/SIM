@@ -178,7 +178,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList) {
         for (var p = 0; p < this.clientList.length; p++) {
-          console.log(this.clientList)
+          console.log(this.clientList);
           
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {

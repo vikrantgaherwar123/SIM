@@ -1,0 +1,7 @@
+interface response {
+
+}
+
+interface product {
+
+}

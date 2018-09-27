@@ -1,5 +1,3 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
 .main-wrapper {
   overflow-x: hidden;
   height: 100%;
@@ -327,4 +325,24 @@ button.add-line-item-button {
   margin-left: 1px;
   color: #2196f3 !important;
   border: none !important;
+}
+.remove-button {
+	border: none !important;
+	padding-left: 8px !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-transition: none !important;
+	-o-transition: none !important;
+	transition: none !important;
+}
+.input-group-addon {
+	padding: 6px 12px;
+	text-align: center;
+	background: #ffffff !important;
+	border: 1px solid #ccc;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
