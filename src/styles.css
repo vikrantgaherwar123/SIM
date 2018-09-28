@@ -289,3 +289,8 @@ input:checked + .slider:before {
   width: 30px !important;
   height: 30px !important;
 }
+.mat-icon-button {
+  width: 30px !important;
+  height: 30px !important;
+  top: -7px;
+}

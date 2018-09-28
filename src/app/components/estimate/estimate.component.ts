@@ -7,7 +7,6 @@ import {map, startWith} from 'rxjs/operators'
 import { EstimateService } from '../../services/estimate.service'
 import { ClientService } from '../../services/client.service'
 import { ProductService } from '../../services/product.service'
-import { PdfService } from '../../services/pdf.service'
 import { TermConditionService } from '../../services/term-condition.service'
 import { SettingService } from '../../services/setting.service'
 import { generateUUID, changeEstimate } from '../../globalFunctions'
@@ -234,8 +233,7 @@ export class EstimateComponent implements OnInit {
     private termConditionService: TermConditionService,
     private cookie: CookieService,
     private settingService: SettingService,
-    private productService: ProductService,
-    private pdfService: PdfService) {
+    private productService: ProductService) {
       this.user = JSON.parse(this.cookie.get('user'))
       this.authenticated = {setting: this.user.setting}
       // console.log(this.authenticated)
@@ -1859,14 +1857,6 @@ export class EstimateComponent implements OnInit {
     this.reloadCreateEstimate()
   }
 
-  // $on('loading:progress', function () {
-  //   $('#loader').css('display', 'block')
-  // })
-
-  // $on('loading:finish', function () {
-  //   $('#loader').css('display', 'none')
-  // })
-
   loadMore() {
     this.clientDisplayLimit += 10
   }
@@ -1899,7 +1889,7 @@ export class EstimateComponent implements OnInit {
     }
 
     var id = this.data.estimate.unique_identifier
-    this.pdfService.fetch(id).subscribe((result: response) => {
+    this.estimateService.fetchPdf(id).subscribe((result: response) => {
 
       var file = new Blob([result], { type: 'application/pdf' })
       var fileURL = URL.createObjectURL(file)

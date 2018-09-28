@@ -346,3 +346,10 @@ button.add-line-item-button {
 	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+.item .list-date {
+	text-align: center;
+	padding: 5px 5px 5px 8px;
+}
+.lineItemDiv {
+	margin-top: 5px;
+}
