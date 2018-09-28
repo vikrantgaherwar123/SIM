@@ -10,6 +10,9 @@ import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
 
+import { StoreModule } from '@ngrx/store'
+import { clientReducer } from './reducers/client.reducer'
+
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
 
@@ -47,7 +50,10 @@ import { EstimateComponent } from './components/estimate/estimate.component'
     FilterPipeModule,
     OrderModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot({
+      client: clientReducer
+    })
   ],
   providers: [CookieService, CONSTANTS],
   bootstrap: [AppComponent]

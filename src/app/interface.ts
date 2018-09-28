@@ -1,7 +1,3 @@
-interface response {
-
-}
-
-interface product {
-
+export interface client {
+  name: string
 }
