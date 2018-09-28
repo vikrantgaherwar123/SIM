@@ -10,9 +10,13 @@ import { CONSTANTS } from '../../constants'
 })
 export class HeaderComponent implements OnInit {
 
-  @Input() instance;
+  @Input() instance
+  private email
 
-  constructor(private cookie: CookieService, private router: Router, private CONST: CONSTANTS) { }
+  constructor(private cookie: CookieService, private router: Router, private CONST: CONSTANTS) {
+    var user = JSON.parse(this.cookie.get('user'))
+    this.email = (user && user.registered_email) ? user.registered_email : 'user'
+  }
 
   ngOnInit() {
   }

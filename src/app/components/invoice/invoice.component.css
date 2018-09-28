@@ -98,3 +98,15 @@ button.add-line-item-button {
   font-weight: 700;
   font-size: 14px;
 }
+a, a:hover, a:focus {
+  color: #2196f3 !important;
+}
+.mat-form-field-infix {
+  border-top: 0 !important;
+}
+.billing-input {
+  border: 1px solid #ccc;
+  padding: 0px 10px;
+  height: 40px;
+  margin-bottom: 2px;
+}
