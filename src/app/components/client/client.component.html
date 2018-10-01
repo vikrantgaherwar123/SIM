@@ -23,7 +23,7 @@
                       <a (click)="setSortClients('name')">By Org. Name</a>
                     </li>
                     <li [class.active]="isByDate">
-                      <a (click)="setSortClients('contact_person_name')">By Client Name</a>
+                      <a (click)="setSortClients('contactPersonName')">By Client Name</a>
                     </li>
                   </ul>
                 </div>
@@ -46,14 +46,14 @@
               </md-progress-circular>
             </div> -->
             <div class="clientname" 
-              *ngFor="let client of (clientList | orderBy: order.sortClient | filterBy: filterClient | slice:0:clientDisplayLimit); index as index "
-              id="prod{{$index}}" [class.selected]="selectedClient == $index"
+              *ngFor="let client of (clientList | async | orderBy: order.sortClient | filterBy: filterClient | slice:0:clientDisplayLimit); index as index "
+              id="prod{{index}}" [class.selected]="selectedClient == index"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-md-2 col-sm-2 col-xs-2">
                   <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
                 </div>
-                <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client, $index)">
+                <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client)">
                   <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
                     <div class="ellipsis">{{ client.name }}</div>
                   </h5>
@@ -87,7 +87,7 @@
                 <div class="col-md-8 col-sm-7 col-xs-7 editBtnShow">
                   <h4 class="form-header text-right client-header" *ngIf="!isCreate" style="margin-left: 61%;">Create a new client </h4>
                   <!--style="display: flex;justify-content: flex-end;"-->
-                  <!--<div class="form-header" style="width: 100%;word-break: break-all;" *ngIf="isEdit">Client : {{data.client.name}}</div>-->
+                  <!--<div class="form-header" style="width: 100%;word-break: break-all;" *ngIf="isEdit">Client : {{activeClient.name}}</div>-->
                   <h4 class="form-header text-right client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: calc(44px + 25vw);">Edit client </h4>
                   <h4 class="form-header text-center client-header" *ngIf="!isEditBtn"> View Client </h4>
                 </div>
@@ -107,14 +107,14 @@
                     DELETE
                   </button>
                   <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                    <button type="button" id="updateClientBtn1" (click)="save(data, f.valid, 2)"
+                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 2)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
                       data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
                       [disabled]="!f.valid || inputReadonly == true"
                     >
                       UPDATE
                     </button>
-                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(data, f.valid, 1)"
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 1)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
                       data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
                       [disabled]="!f.valid || inputReadonly == true"
@@ -141,9 +141,12 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
-                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_org_name.png"></span>
-                          <input type="text" [(ngModel)]="data.client.name" name="name" id="name" class="form-control"
-                            #name="ngModel" ng-readonly="inputReadonly" placeholder="Organization name" required />
+                          <span class="input-group-addon">
+                            <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                          </span>
+                          <input type="text" name="name" id="name" class="form-control" placeholder="Organization name"
+                            [(ngModel)]="activeClient.name" ng-readonly="inputReadonly" required
+                          />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || errors.name">
                           <span *ngIf="f.value.name == ''">Organization name required</span>
@@ -155,11 +158,11 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_person.png"></span>
-                          <input type="text" [(ngModel)]="data.client.contact_person_name" name="contact_person_name" id="contact_person_name"
+                          <input type="text" [(ngModel)]="activeClient.contactPersonName" name="contactPersonName" id="contactPersonName"
                             class="form-control" ng-readonly="inputReadonly" placeholder="Contact person" />
-                          <!--<div class="form-error" *ngIf="f.submitted || form.contact_person_name.$touched || errors.contact_person_name">-->
-                          <!--<span *ngIf="form.contact_person_name.$error.required">Required</span>-->
-                          <!--<span *ngIf="errors.contact_person_name">{{ errors.contact_person_name[0] }}</span>-->
+                          <!--<div class="form-error" *ngIf="f.submitted || form.contactPersonName.$touched || errors.contactPersonName">-->
+                          <!--<span *ngIf="form.contactPersonName.$error.required">Required</span>-->
+                          <!--<span *ngIf="errors.contactPersonName">{{ errors.contactPersonName[0] }}</span>-->
                           <!--</div>-->
                         </div>
   
@@ -169,7 +172,7 @@
                       <div class="form-group" id="emailLabel" name="emailLabel">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
-                          <input type="text" [(ngModel)]="data.client.email" name="email" id="email" class="form-control"
+                          <input type="text" [(ngModel)]="activeClient.email" name="email" id="email" class="form-control"
                             ng-readonly="inputReadonly" placeholder="Email address" />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.email.$touched || errors.email">-->
                           <!--<span *ngIf="form.email.$error.required">Required</span>-->
@@ -185,7 +188,7 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
-                          <input type="text" [(ngModel)]="data.client.number" name="cont_number" id="cont_number" class="form-control"
+                          <input type="text" [(ngModel)]="activeClient.number" name="cont_number" id="cont_number" class="form-control"
                             ng-readonly="inputReadonly" placeholder="Contact number" />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.cont_number.$touched || errors.number">-->
                           <!--<span *ngIf="form.cont_number.$error.required">Required</span>-->
@@ -198,18 +201,18 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
   
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="data.client.address_line1" name="address_line1" id="address_line1"
+                        <textarea elastic type="text" [(ngModel)]="activeClient.addressLine1" name="addressLine1" id="addressLine1"
                           class="form-control" ng-readonly="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
-                        <!--<div class="form-error" *ngIf="form.$submitted || form.address_line1.$touched || errors.address_line1">-->
-                        <!--<span *ngIf="form.address_line1.$error.required">Required</span>-->
-                        <!--<span *ngIf="errors.address_line1">{{ errors.address_line1[0] }}</span>-->
+                        <!--<div class="form-error" *ngIf="form.$submitted || form.addressLine1.$touched || errors.addressLine1">-->
+                        <!--<span *ngIf="form.addressLine1.$error.required">Required</span>-->
+                        <!--<span *ngIf="errors.addressLine1">{{ errors.addressLine1[0] }}</span>-->
                         <!--</div>-->
                       </div>
   
                     </div>
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="data.client.shipping_address" name="shipping_address" id="shipping_address"
+                        <textarea elastic type="text" [(ngModel)]="activeClient.shippingAddress" name="shippingAddress" id="shippingAddress"
                           class="form-control" ng-readonly="inputReadonly" placeholder="Shipping Address" style="height: 47px;"></textarea>
                       </div>
                     </div>
@@ -217,7 +220,7 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
-                          <input type="text" [(ngModel)]="data.client.business_id" name="business_id" id="business_id" class="form-control"
+                          <input type="text" [(ngModel)]="activeClient.business_id" name="business_id" id="business_id" class="form-control"
                             ng-readonly="inputReadonly" placeholder="Business Id" />
                         </div>
   
@@ -225,7 +228,7 @@
                     </div>
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="data.client.business_detail" name="business_detail" id="business_detail"
+                        <textarea elastic type="text" [(ngModel)]="activeClient.business_detail" name="business_detail" id="business_detail"
                           class="form-control" ng-readonly="inputReadonly" placeholder="Business Details" style="height: 47px;"></textarea>
                       </div>
                     </div>
@@ -238,7 +241,7 @@
                           Organization name:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.name}}
+                          {{activeClient.name}}
                         </div>
                       </div>
                     </div>
@@ -249,7 +252,7 @@
                           Contact person:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.contact_person_name}}
+                          {{activeClient.contactPersonName}}
                         </div>
                       </div>
                     </div>
@@ -260,7 +263,7 @@
                           Email:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.email}}
+                          {{activeClient.email}}
                         </div>
                       </div>
                     </div>
@@ -271,7 +274,7 @@
                           Number:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.number}}
+                          {{activeClient.number}}
                         </div>
                       </div>  
                     </div>
@@ -282,7 +285,7 @@
                           Address line:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.address_line1}}
+                          {{activeClient.addressLine1}}
                         </div>
                       </div>
                     </div>
@@ -293,7 +296,7 @@
                           Shipping address:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.shipping_address}}
+                          {{activeClient.shippingAddress}}
                         </div>
                       </div>
                     </div>
@@ -304,7 +307,7 @@
                           Business Id:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.business_id}}
+                          {{activeClient.business_id}}
                         </div>
                       </div>
                     </div>
@@ -315,7 +318,7 @@
                           Business detail:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.client.business_detail}}
+                          {{activeClient.business_detail}}
                         </div>
                       </div>
                     </div>
@@ -334,14 +337,14 @@
                       DELETE
                     </button>
                     <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                      <button id="updateClientBtn" type="button" (click)="save(data, f.valid, 2)"
+                      <button id="updateClientBtn" type="button" (click)="save(f.valid, 2)"
                         class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
                         data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
                         [disabled]="!f.valid || inputReadonly == true"
                       >
                         UPDATE
                       </button>
-                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(data, f.valid, 1)"
+                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 1)"
                         class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
                         data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
                         [disabled]="!f.valid || inputReadonly == true"

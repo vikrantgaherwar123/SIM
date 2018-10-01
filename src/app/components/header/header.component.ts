@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   private email
 
   constructor(private cookie: CookieService, private router: Router, private CONST: CONSTANTS) {
-    var user = JSON.parse(this.cookie.get('user'))
+    var user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
     this.email = (user && user.registered_email) ? user.registered_email : 'user'
   }
 

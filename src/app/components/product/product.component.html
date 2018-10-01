@@ -16,8 +16,9 @@
               </div>
               <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-top: 15px;" ng-init="sortProduct = 'id';setSortProducts('id');">
                 <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"><img alt="logo"
-                    src="/assets/images/list-icon/sort-ascending-button24.png">
+                  aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                >
+                  <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
                   <li [class.active]="isByClient">
@@ -104,7 +105,7 @@
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right margin-left-15 width10btn"
                     (click)="editThis(product)" *ngIf="!isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit</button>
-                  <button type="button" (click)="deleteProduct(data.product)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
+                  <button type="button" (click)="deleteProduct(activeProduct)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
                     *ngIf="!deleteBtn" title="Delete Product" [disabled]="!f.valid ||inputReadonly == false">DELETE</button>
                   <div class="rightDivBtns" *ngIf="!rightDivBtns">
                     <button id="updateProBtn" type="button" (click)="save(data, f.valid,1)" class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
@@ -135,15 +136,15 @@
                 <div class="row">
                   <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isEditBtn && !isBatchBtn">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group " [class.has-error]="(f.submitted || f.touched) && f.value.prod_name == ''">
+                      <div class="form-group " [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
                           <span class="input-group-addon"><img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png"></span>
-                          <input type="text" ng-maxlength="45" [(ngModel)]="data.product.prod_name" name="prod_name" id="prod_name"
+                          <input type="text" ng-maxlength="45" [(ngModel)]="activeProduct.prodName" name="prodName" id="prodName"
                             class="form-control" ng-readonly="inputReadonly" placeholder="Product Name" required />
                         </div>
-                        <div class="form-error" *ngIf="f.submitted || f.value.prod_name !== ''">
-                          <span *ngIf="f.value.prod_name == ''">Product name required</span>
-                          <!-- <span *ngIf="f.value.prod_name.length > 45">Must not be longer than 45 chars</span> -->
+                        <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
+                          <span *ngIf="f.value.prodName == ''">Product name required</span>
+                          <!-- <span *ngIf="f.value.prodName.length > 45">Must not be longer than 45 chars</span> -->
                         </div>
                       </div>
                     </div>
@@ -152,7 +153,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon"><img src="/assets/images/product-icon/ic_product_code_grey.png"></span>
-                          <input type="text" [(ngModel)]="data.product.productCode" name="productCode" id="productCode"
+                          <input type="text" [(ngModel)]="activeProduct.productCode" name="productCode" id="productCode"
                             class="form-control" ng-readonly="inputReadonly" placeholder="HSN Code" />
                         </div>
 
@@ -163,7 +164,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_unit.png"></span>
-                          <input type="text" [(ngModel)]="data.product.unit" name="unit" id="unit" class="form-control"
+                          <input type="text" [(ngModel)]="activeProduct.unit" name="unit" id="unit" class="form-control"
                             ng-readonly="inputReadonly" placeholder="Unit" />
                         </div>
 
@@ -171,7 +172,7 @@
                     </div>
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic [(ngModel)]="data.product.discription" name="discription" id="discription" class="form-control"
+                        <textarea elastic [(ngModel)]="activeProduct.discription" name="discription" id="discription" class="form-control"
                           ng-readonly="inputReadonly" placeholder="Description" style="max-height: 72px; height: 72px;"></textarea>
                       </div>
                     </div>
@@ -180,7 +181,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_rate.png"></span>
-                          <input type="number" step="any" [(ngModel)]="data.product.rate" name="rate" class="form-control"
+                          <input type="number" step="any" [(ngModel)]="activeProduct.rate" name="rate" class="form-control"
                             ng-readonly="inputReadonly" convert_decimal select-on-click required />
                           <!--min="0.01"-->
                         </div>
@@ -191,7 +192,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_tax_rate.png"></span>
-                          <input type="number" step="any" min="0" [(ngModel)]="data.product.tax_rate" name="tax_rate" class="form-control"
+                          <input type="number" step="any" min="0" [(ngModel)]="activeProduct.taxRate" name="taxRate" class="form-control"
                             ng-readonly="inputReadonly" convert_decimal select-on-click />
                         </div>
                       </div>
@@ -201,7 +202,7 @@
                         <span class="font-custom-bold"> Manage Inventory</span>
                         <span style="padding-left: 20px">
                           <label class="switch">
-                            <input type="checkbox" [(ngModel)]="data.product.inventory_enabled" name="inventory">
+                            <input type="checkbox" [(ngModel)]="activeProduct.inventory_enabled" name="inventory">
                             <span class="slider round"></span>
                           </label>
                         </span>
@@ -216,7 +217,7 @@
                           Product name:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.prod_name}}
+                          {{activeProduct.prodName}}
                         </div>
                       </div>
                     </div>
@@ -227,7 +228,7 @@
                           HSN code:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.productCode}}
+                          {{activeProduct.productCode}}
                         </div>
                       </div>
                     </div>
@@ -238,7 +239,7 @@
                           Unit:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.unit}}
+                          {{activeProduct.unit}}
                         </div>
                       </div>
                     </div>
@@ -249,7 +250,7 @@
                           Description:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.discription}}
+                          {{activeProduct.discription}}
                         </div>
                       </div>
                     </div>
@@ -260,7 +261,7 @@
                           Rate:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.rate}}
+                          {{activeProduct.rate}}
                         </div>
                       </div>
                     </div>
@@ -271,7 +272,7 @@
                           Tax Rate:
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
-                          {{data.product.tax_rate}}
+                          {{activeProduct.taxRate}}
                         </div>
                       </div>
                     </div>
@@ -294,7 +295,7 @@
                     >
                       Edit
                     </button>
-                    <button type="button" (click)="deleteProduct(data.product)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                    <button type="button" (click)="deleteProduct(activeProduct)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
                       *ngIf="!deleteBtn" title="Delete Product" [disabled]="!f.valid ||inputReadonly == false"
                     >
                       DELETE
@@ -327,7 +328,6 @@
             </div>
           </div>
         </form>
-
       </div>
     </div>
   </div>

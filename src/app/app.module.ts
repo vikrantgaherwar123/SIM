@@ -12,6 +12,10 @@ import { OrderModule } from 'ngx-order-pipe'
 
 import { StoreModule } from '@ngrx/store'
 import { clientReducer } from './reducers/client.reducer'
+import { productReducer } from './reducers/product.reducer'
+import { termsReducer } from './reducers/terms.reducer'
+import { estimateReducer } from './reducers/estimate.reducer'
+import { invoiceReducer } from './reducers/invoice.reducer'
 
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
@@ -52,7 +56,11 @@ import { EstimateComponent } from './components/estimate/estimate.component'
     BrowserAnimationsModule,
     MaterialModule,
     StoreModule.forRoot({
-      client: clientReducer
+      client: clientReducer,
+      product: productReducer,
+      terms: termsReducer,
+      estimate: estimateReducer,
+      invoice: invoiceReducer
     })
   ],
   providers: [CookieService, CONSTANTS],

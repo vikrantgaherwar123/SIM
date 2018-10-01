@@ -24,27 +24,23 @@ export class ProductComponent implements OnInit {
     }
   }
   private productList: Array<{}> = []
-  private data:{
-    product: {
-      prod_name: string,
-      unit: string,
-      discription: string,
-      rate: 0.01,
-      tax_rate: number,
-      inventory_enabled: number
-      device_modified_on: number,
-      unique_identifier: string
-    }
+  private activeProduct: {
+    prod_name: string,
+    unit: string,
+    discription: string,
+    rate: 0.01,
+    tax_rate: number,
+    inventory_enabled: number
+    device_modified_on: number,
+    unique_identifier: string
   } = {
-    product: {
-      "prod_name": "",
-      "unit": "",
-      "discription": "",
-      "rate": 0.01,
-      "tax_rate": 0,
-      "device_modified_on": 112,
-      "unique_identifier": ""
-    }
+    "prod_name": "",
+    "unit": "",
+    "discription": "",
+    "rate": 0.01,
+    "tax_rate": 0,
+    "device_modified_on": 112,
+    "unique_identifier": ""
   }
   private openingDate: string = ""
 
@@ -94,6 +90,8 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.productListsLoader = false
     this.productService.fetch().subscribe((response: response) => {
+      // console.log(response)
+      
       this.productList = response.records
       this.productListsLoader = true
 
@@ -336,21 +334,21 @@ export class ProductComponent implements OnInit {
   //   this.productListsLoader = false
   //   var baseURL = Data.getBaseUrl()
   //   var date = new Date()
-  //   this.data.product.opening_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+  //   this.activeProduct.opening_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
 
 
   //   ValidateInventoryField() {
-  //     if (this.data.product.inventory_enabled == 0) {
+  //     if (this.activeProduct.inventory_enabled == 0) {
   //       this.minInput = 0
-  //       // this.data.product.buy_price = 0
+  //       // this.activeProduct.buy_price = 0
   //       // notifications.showError({message:"Opening Date , stock and buy price must Be required"})
   //       // this.form.$setUntouched()
 
   //     } else {
   //       this.minInput = 0.01
-  //       this.data.product.opening_stock = 0.01
-  //       this.data.product.buy_price = 0.01
-  //       this.data.product.opening_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+  //       this.activeProduct.opening_stock = 0.01
+  //       this.activeProduct.buy_price = 0.01
+  //       this.activeProduct.opening_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
 
   //     }
   //   }
@@ -363,7 +361,7 @@ export class ProductComponent implements OnInit {
     if (edit == 1) {
       // $('#updateProBtn').button('loading')
       // $('#updateProBtn1').button('loading')
-      var tempProName = this.data.product.prod_name.toLowerCase().replace(/ /g, '')
+      var tempProName = this.activeProduct.prod_name.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       if (this.productList) {
         for (var p = 0; p < this.productList.length; p++) {
@@ -378,14 +376,14 @@ export class ProductComponent implements OnInit {
         proStatus = true
       }
     } else if (edit == 2) {
-      var tempProName = this.data.product.prod_name.toLowerCase().replace(/ /g, '')
+      var tempProName = this.activeProduct.prod_name.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       if (this.productList) {
         for (var p = 0; p < this.productList.length; p++) {
 
           tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempProName) {
-            if (data.product.unique_identifier !== this.productList[p].uniqueKeyProduct) {
+            if (activeProduct.unique_identifier !== this.productList[p].uniqueKeyProduct) {
               proStatus = false
               break
             }
@@ -399,24 +397,24 @@ export class ProductComponent implements OnInit {
     }
     if (status && proStatus) {
       var d = new Date()
-      if (data.product.unique_identifier == "") {
-        this.data.product.unique_identifier = generateUUID(this.user.user.orgId)
+      if (activeProduct.unique_identifier == "") {
+        this.activeProduct.unique_identifier = generateUUID(this.user.user.orgId)
       }
-      this.data.product.device_modified_on = d.getTime()
-      this.data.product.organization_id = this.user.user.orgId
-      this.data.product.inventory_enabled = this.data.product.inventory_enabled ? 1 : 0
+      this.activeProduct.device_modified_on = d.getTime()
+      this.activeProduct.organization_id = this.user.user.orgId
+      this.activeProduct.inventory_enabled = this.activeProduct.inventory_enabled ? 1 : 0
       this.productListsLoader = false
 
       var self = this
-      this.productService.add([this.data.product]).subscribe(function (result: response) {
+      this.productService.add([this.activeProduct]).subscribe(function (result: response) {
         if (result.status === 200) {
 
-          self.data.product.unique_identifier = "",
-          self.data.product.prod_name = "",
-          self.data.product.unit = "",
-          self.data.product.discription = "",
-          self.data.product.rate = 0.01,
-          self.data.product.tax_rate = 0
+          self.activeProduct.unique_identifier = "",
+          self.activeProduct.prod_name = "",
+          self.activeProduct.unit = "",
+          self.activeProduct.discription = "",
+          self.activeProduct.rate = 0.01,
+          self.activeProduct.tax_rate = 0
 
           // notifications.showSuccess({ message: result.data.message, hideDelay: 1500, hide: true })
           // this.form.$setUntouched()
@@ -459,9 +457,9 @@ export class ProductComponent implements OnInit {
   addNew() {
     this.isBatchBtn = false
     this.filterProduct = {prodName: ''}
-    this.data.product.unique_identifier = "",
-    this.data.product.rate = 0.01,
-    this.data.product.tax_rate = 0
+    this.activeProduct.unique_identifier = "",
+    this.activeProduct.rate = 0.01,
+    this.activeProduct.tax_rate = 0
 
     this.isEdit = false
     this.selectedProduct = null
@@ -479,7 +477,7 @@ export class ProductComponent implements OnInit {
   deleteProduct(product) {
     this.filterProduct = {prodName: ''}
 
-    this.data.product.deleted_flag = 1
+    this.activeProduct.deleted_flag = 1
     this.save(this.data, true, null)
     this.addNew()
 
@@ -507,19 +505,19 @@ export class ProductComponent implements OnInit {
     this.isBatchBtn = false
     this.filterProduct = {prodName: ''}
     if (!cancelFlag) {
-      this.data.product.id = product.id,
-      this.data.product.prod_name = product.prodName,
-      this.data.product.unit = product.unit,
-      this.data.product.discription = product.discription,
-      this.data.product.rate = product.rate,
-      this.data.product.tax_rate = product.taxRate,
-      this.data.product.organization_id = product.serverOrgId,
-      this.data.product.inventory_enabled = product.inventoryEnabled,
-      this.data.product.opening_stock = product.openingStock,
-      this.data.product.opening_date = product.openingDate,
-      this.data.product.buy_price = product.buyPrice,
-      this.data.product.productCode = product.productCode,
-      this.data.product.unique_identifier = product.uniqueKeyProduct
+      this.activeProduct.id = product.id,
+      this.activeProduct.prod_name = product.prodName,
+      this.activeProduct.unit = product.unit,
+      this.activeProduct.discription = product.discription,
+      this.activeProduct.rate = product.rate,
+      this.activeProduct.tax_rate = product.taxRate,
+      this.activeProduct.organization_id = product.serverOrgId,
+      this.activeProduct.inventory_enabled = product.inventoryEnabled,
+      this.activeProduct.opening_stock = product.openingStock,
+      this.activeProduct.opening_date = product.openingDate,
+      this.activeProduct.buy_price = product.buyPrice,
+      this.activeProduct.productCode = product.productCode,
+      this.activeProduct.unique_identifier = product.uniqueKeyProduct
     }
     this.selectedProduct = index
 
@@ -539,9 +537,9 @@ export class ProductComponent implements OnInit {
         "productCode": product.productCode,
         "unique_identifier": product.uniqueKeyProduct
       }
-      this.tempProduct = this.data.product
+      this.tempProduct = this.activeProduct
     } else {
-      this.data.product = this.tempProduct
+      this.activeProduct = this.tempProduct
     }
     this.tempIndex = index
     this.isEditBtn = false
@@ -563,16 +561,16 @@ export class ProductComponent implements OnInit {
   }
 
   clearThis() {
-    this.data.product.prod_name = ""
-    this.data.product.productCode = ""
-    this.data.product.unit = ""
-    this.data.product.discription = ""
-    this.data.product.rate = 0.01
-    this.data.product.tax_rate = 0
-    this.data.product.inventory_enabled = 0
-    this.data.product.opening_stock = 0
-    this.data.product.opening_date = 0
-    this.data.product.buy_price = 0
+    this.activeProduct.prod_name = ""
+    this.activeProduct.productCode = ""
+    this.activeProduct.unit = ""
+    this.activeProduct.discription = ""
+    this.activeProduct.rate = 0.01
+    this.activeProduct.tax_rate = 0
+    this.activeProduct.inventory_enabled = 0
+    this.activeProduct.opening_stock = 0
+    this.activeProduct.opening_date = 0
+    this.activeProduct.buy_price = 0
 
     $('#prod_name').val("")
   }

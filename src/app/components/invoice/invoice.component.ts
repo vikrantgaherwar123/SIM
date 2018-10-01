@@ -506,6 +506,8 @@ export class InvoiceComponent implements OnInit {
     // DataStore.invoicesList.length == 0
     if (1) {
       this.invoiceService.fetch().subscribe((result: response) => {
+        console.log('invoice', result);
+        
         this.invoices = result.records.filter(est => est.deleted_flag == 0)
 
         this.clientService.fetch().subscribe((response: response) => {
