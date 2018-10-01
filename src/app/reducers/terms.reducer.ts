@@ -1,24 +1,24 @@
 import { Action } from '@ngrx/store'
 import { client } from '../interface'
 
-import * as ClientActions from '../actions/client.action'
+import * as TermsActions from '../actions/terms.action'
 
-const initialState: client[] = []
+const initialState: terms[] = []
 
-export function clientReducer(state = initialState, action: ClientActions.Action) {
+export function termsReducer(state = initialState, action: TermsActions.Action) {
 	switch (action.type) {
-		case ClientActions.ADD:
+		case TermsActions.ADD:
       return [...state, ...action.payload]
     
-    case ClientActions.EDIT:
+    case TermsActions.EDIT:
       state[action.payload.index] = action.payload.value
       return state
 
-    case ClientActions.REMOVE:
+    case TermsActions.REMOVE:
       state.splice(action.payload, 1)
       return state
 
-		default:
-			return state
+    default:
+      return state
 	}
 }

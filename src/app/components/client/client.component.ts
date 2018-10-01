@@ -2,19 +2,13 @@ import { Component, OnInit } from '@angular/core'
 import { ClientService } from '../../services/client.service'
 import { CookieService } from 'ngx-cookie-service'
 import { generateUUID } from '../../globalFunctions'
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'
+import { client, response } from '../../interface'
+import { Observable } from 'rxjs'
+import { Store } from '@ngrx/store'
+import * as clientActions from '../../actions/client.action'
+import { AppState } from '../../app.state'
 
-interface response {
-  status: number,
-  records: Array<{}>,
-  message: string,
-  error: string
-}
-
-interface repo {
-  value: string,
-  name: string
-}
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -27,23 +21,22 @@ export class ClientComponent implements OnInit {
       orgId: string
     }
   }
-  private clientList: Array<{}> = []
-  private data = {
-    client: {
-      name: "",
-      contact_person_name: "",
-      email: "",
-      number: "",
-      address_line1: "",
-      shipping_address: "",
-      business_detail: "",
-      business_id: "",
-      organization_id: "",
-      unique_identifier: "",
-      device_modified_on: 0,
-      deleted_flag: 0
-    }
+  private clientList: Observable<client[]>
+  private activeClient = {
+    name: "",
+    contactPersonName: "",
+    email: "",
+    number: "",
+    addressLine1: "",
+    shippingAddress: "",
+    businessDetail: "",
+    businessId: "",
+    organizationId: "",
+    uniqueKeyClient: "",
+    device_modified_on: 0,
+    deleted_flag: 0
   }
+  private activeClientIndex
   private errors: object = {}
   private clientListsLoader: boolean
 
@@ -80,16 +73,28 @@ export class ClientComponent implements OnInit {
   } = {sortClient: 'name'}
   private clientListLoader: boolean
 
-  constructor(public clientService: ClientService, private cookie: CookieService, private router: Router) {
+  constructor(public clientService: ClientService, private cookie: CookieService,
+    private router: Router, private store: Store<AppState>
+  ) {
+    this.clientList = store.select('client')
     this.user = JSON.parse(this.cookie.get('user'))
   }
 
   ngOnInit() {
     this.clientListLoader = false
-    this.clientService.fetch().subscribe((response: response) => {
-      if (response.status === 200) {
+
+    this.clientList.subscribe(clients => {
+      if(clients.length < 1) {
+        this.clientService.fetch().subscribe((response: response) => {
+          console.log('fetch response', response)
+
+          if (response.status === 200) {
+            this.clientListLoader = true
+            this.store.dispatch(new clientActions.add(response.records))
+          }
+        })
+      } else {
         this.clientListLoader = true
-        this.clientList = response.records
       }
     })
   }
@@ -112,7 +117,7 @@ export class ClientComponent implements OnInit {
       this.isNone = false;
       this.isByClient = true;
       this.isByDate = false;
-    } else if (searchfield == 'contact_person_name') {
+    } else if (searchfield == 'contactPersonName') {
       this.isNone = false;
       this.isByClient = false;
       this.isByDate = true;
@@ -128,7 +133,7 @@ export class ClientComponent implements OnInit {
         order = client.name;
         break;
 
-      case 'contact_person_name':
+      case 'contactPersonName':
         order = client.contactPersonName;
         break;
 
@@ -138,18 +143,6 @@ export class ClientComponent implements OnInit {
 
     return order;
   }
-
-  // $('input').on('focus', function() {
-  //   $(this).prev().addClass('focused-icon');
-  //   $(this).prev().css({ "color": "#176cc1" });
-  //   $(this).addClass('focused-input');
-  // });
-  // $('input').on('blur', function() {
-  //   $(this).prev().removeClass('focused-icon');
-  //   $(this).prev().css({ "color": "#555" });
-  //   $(this).removeClass('focused-input');
-  // });
-  // panCardRegex = '^[0-9?=.*!@#$%^&*,.-]+$';
 
   compare(a, b) {
     // Use toUpperCase() to ignore character casing
@@ -165,7 +158,7 @@ export class ClientComponent implements OnInit {
     return comparison;
   }
 
-  save(data, status, edit) {
+  save(status, edit) {
     // $('#saveClientBtn1').button('loading')
     // $('#saveClientBtn').button('loading')
     var proStatus = true
@@ -173,98 +166,93 @@ export class ClientComponent implements OnInit {
       // $('#updateClientBtn1').button('loading')
       // $('#updateClientBtn').button('loading')
 
-      var tempClientName = this.data.client.name.toLowerCase().replace(/ /g, '')
+      var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
       //console.log("temp pro name" , tempProName)
       var tempCompare = ''
-      if (this.clientList) {
-        for (var p = 0; p < this.clientList.length; p++) {
-          console.log(this.clientList);
-          
-          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
-          if (tempCompare === tempClientName) {
-            proStatus = false
-            break
-          }
-        }
-      } else {
-        proStatus = true;
-      }
-    } else if (edit == 2) {
-      var tempClientName = this.data.client.name.toLowerCase().replace(/ /g, '')
-      var tempCompare = ''
-      if (this.clientList) {
-        for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
-          if (tempCompare === tempClientName) {
-            if (data.client.unique_identifier !== this.clientList[p].uniqueKeyClient) {
-              proStatus = false;
+
+      this.clientList.subscribe(clients => {
+        if (clients.length) {
+          for (var p = 0; p < clients.length; p++) {
+            tempCompare = clients[p].name.toLowerCase().replace(/ /g, '')
+            if (tempCompare === tempClientName) {
+              proStatus = false
               break
             }
           }
+        } else {
+          proStatus = true;
         }
-      } else {
-        proStatus = true
-      }
+      }) 
+    } else if (edit == 2) {
+      var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+      var tempCompare = ''
+      this.clientList.subscribe(clients => {
+        if (this.clientList) {
+          for (var p = 0; p < clients.length; p++) {
+            tempCompare = clients[p].name.toLowerCase().replace(/ /g, '')
+            if (tempCompare === tempClientName) {
+              if (this.activeClient.uniqueKeyClient !== clients[p].uniqueKeyClient) {
+                proStatus = false;
+                break
+              }
+            }
+          }
+        } else {
+          proStatus = true
+        }
+      })
     } else {
       proStatus = true
     }
     if (status && proStatus) {
-      this.data.client.organization_id = this.user.user.orgId
+      this.activeClient.organizationId = this.user.user.orgId
       var d = new Date()
-      if (data.client.unique_identifier == "" || typeof data.client.unique_identifier == 'undefined') {
-        this.data.client.unique_identifier = generateUUID(this.user.user.orgId);
+      if (this.activeClient.uniqueKeyClient == "" || typeof this.activeClient.uniqueKeyClient == 'undefined') {
+        this.activeClient.uniqueKeyClient = generateUUID(this.user.user.orgId);
       }
-      this.data.client.device_modified_on = d.getTime();
+      this.activeClient.device_modified_on = d.getTime();
       var self = this
-      this.clientService.add([this.data.client]).subscribe(function (response: response) {
+      this.clientService.add([this.clientService.changeKeys(this.activeClient)]).subscribe(function (response: response) {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');
         // $('#saveClientBtn1').button('reset');
+        console.log('add response', response)
+        
         if (response.status === 200) {
-          self.data.client.name = "",
-          self.data.client.contact_person_name = "",
-          self.data.client.email = "",
-          self.data.client.number = "",
-          self.data.client.address_line1 = "",
-          self.data.client.shipping_address = "",
-          self.data.client.business_detail = "",
-          self.data.client.business_id = "",
-          self.data.client.unique_identifier = "",
-          self.data.client.deleted_flag = 0
+          self.activeClient.name = "",
+          self.activeClient.contactPersonName = "",
+          self.activeClient.email = "",
+          self.activeClient.number = "",
+          self.activeClient.addressLine1 = "",
+          self.activeClient.shippingAddress = "",
+          self.activeClient.businessDetail = "",
+          self.activeClient.businessId = "",
+          self.activeClient.uniqueKeyClient = "",
+          self.activeClient.deleted_flag = 0
 
           self.clientListsLoader = false
+          // Implement SMS changes here add, edit or remove depending on edit flag
           self.clientService.fetch().subscribe((response: response) => {
             self.clientListsLoader = true
             self.clientList = response.records
             self.selectedClient = 'none'
-
-            self.repos = response.records.map((repo:repo) => {
-              repo.value = repo.name.toLowerCase();
-              return repo;
-            })
-            // this.repos.sort(compare);
-            // repos = repos.filter(function (clien) {
-            //   return (clien.enabled == 0);
-            // });
-            // DataStore.addClientsList(repos);
-            // DataStore.addUnSortedClient(clientList);
-          });
-          self.errors = {};
+          })
+          self.errors = {}
 
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
           console.log(response.message)
 
-          self.selectedClient = null;
-          self.isEditBtn = true;
-          self.isCreate = false;
-          self.isEdit = false;
-          self.cancle = true;
-          self.clearBtn = false;
-          self.rightDivBtns = false;
+          self.selectedClient = null
+          self.isEditBtn = true
+          self.isCreate = false
+          self.isEdit = false
+          self.cancle = true
+          self.clearBtn = false
+          self.rightDivBtns = false
         }
         else {
-          self.errors = [response.error];
+          self.errors = [response.error]
           // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
           console.log(response.error)
           // alert('Some error occurred, please try again!');
@@ -285,15 +273,15 @@ export class ClientComponent implements OnInit {
     this.filterClient = {name: ''}
 
     this.rightDivBtns = false
-    this.data.client.name = ""
-    this.data.client.contact_person_name = ""
-    this.data.client.email = ""
-    this.data.client.number = ""
-    this.data.client.address_line1 = ""
-    this.data.client.shipping_address = ""
-    this.data.client.business_detail = ""
-    this.data.client.business_id = ""
-    this.data.client.deleted_flag = 0
+    this.activeClient.name = ""
+    this.activeClient.contactPersonName = ""
+    this.activeClient.email = ""
+    this.activeClient.number = ""
+    this.activeClient.addressLine1 = ""
+    this.activeClient.shippingAddress = ""
+    this.activeClient.businessDetail = ""
+    this.activeClient.businessId = ""
+    this.activeClient.deleted_flag = 0
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -319,10 +307,10 @@ export class ClientComponent implements OnInit {
   deleteClient() {
     this.filterClient = {name: ''}
 
-    this.data.client.deleted_flag = 1
-    this.save(this.data, true, null)
+    this.activeClient.deleted_flag = 1
+    this.save(true, null)
     var self = this
-    this.clientService.fetchClients().subscribe(function (response: response) {
+    this.clientService.fetch().subscribe(function (response: response) {
       self.clientListsLoader = true
       self.clientList = response.records
       self.selectedClient = 'none'
@@ -336,45 +324,50 @@ export class ClientComponent implements OnInit {
     this.rightDivBtns = false;
   }
 
-  viewThis(client, index, cancelFlag) {
+  viewThis(client, cancelFlag) {
+    var index
+    this.clientList.subscribe(clients => {
+      index = clients.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
+    })
+    
     this.filterClient = {name: ''}
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error');
     }
     $('#emailLabel').addClass('is-empty');
     if (!cancelFlag) {
-      this.data.client.unique_identifier = client.uniqueKeyClient,
-      this.data.client._id = client.localClientid,
-      this.data.client.name = client.name,
-      this.data.client.contact_person_name = client.contactPersonName,
-      this.data.client.email = client.email,
-      this.data.client.number = client.number,
-      this.data.client.organization_id = client.organizationId,
-      this.data.client.address_line1 = client.addressLine1,
-      this.data.client.shipping_address = client.shippingAddress,
-      this.data.client.business_detail = client.businessDetail,
-      this.data.client.business_id = client.businessId,
-      this.data.client.deleted_flag = client.enabled
+      this.activeClient.uniqueKeyClient = client.uniqueKeyClient,
+      this.activeClient.localClientid = client.localClientid,
+      this.activeClient.name = client.name,
+      this.activeClient.contactPersonName = client.contactPersonName,
+      this.activeClient.email = client.email,
+      this.activeClient.number = client.number,
+      this.activeClient.organizationId = client.organizationId,
+      this.activeClient.addressLine1 = client.addressLine1,
+      this.activeClient.shippingAddress = client.shippingAddress,
+      this.activeClient.businessDetail = client.businessDetail,
+      this.activeClient.businessId = client.businessId,
+      this.activeClient.deleted_flag = client.enabled
     }
     this.selectedClient = index
     if (!cancelFlag) {
       this.tempClient = {
-        "unique_identifier": client.uniqueKeyClient,
-        "_id": client.localClientid,
+        "uniqueKeyClient": client.uniqueKeyClient,
+        "localClientid": client.localClientid,
         "name": client.name,
-        "contact_person_name": client.contact_person_name,
+        "contactPersonName": client.contactPersonName,
         "email": client.email,
-        "organization_id": client.organizationId,
+        "organizationId": client.organizationId,
         "number": client.number,
-        "address_line1": client.address_line1,
-        "shipping_address": client.shipping_address,
-        "business_detail": client.business_detail,
-        "business_id": client.business_id,
+        "addressLine1": client.addressLine1,
+        "shippingAddress": client.shippingAddress,
+        "businessDetail": client.businessDetail,
+        "businessId": client.businessId,
         "deleted_flag": client.enabled
       }
-      this.tempClient = this.data.client
+      this.tempClient = this.activeClient
     } else {
-      this.data.client = this.tempClient
+      this.activeClient = this.tempClient
     }
 
     this.tempIndex = index
@@ -389,28 +382,28 @@ export class ClientComponent implements OnInit {
   }
 
   cancelThis() {
-    //data.client = tempClient ;
+    //activeClient = tempClient ;
 
     this.isEditBtn = false
     this.inputReadonly = true
     this.rightDivBtns = true
-    this.viewThis(this.tempClient, this.tempIndex, true)
+    this.viewThis(this.tempClient, true)
     if ($('#emailLabel').hasClass('has-error')) {
-      $('#emailLabel').removeClass('has-error');
+      $('#emailLabel').removeClass('has-error')
     }
     $('#emailLabel').addClass('is-empty');
   }
 
   clearThis() {
-    this.data.client.name = ""
-    this.data.client.contact_person_name = ""
-    this.data.client.email = ""
-    this.data.client.number = ""
-    this.data.client.address_line1 = ""
-    this.data.client.shipping_address = ""
-    this.data.client.business_detail = ""
-    this.data.client.business_id = ""
-    this.data.client.deleted_flag = 0
+    this.activeClient.name = ""
+    this.activeClient.contactPersonName = ""
+    this.activeClient.email = ""
+    this.activeClient.number = ""
+    this.activeClient.addressLine1 = ""
+    this.activeClient.shippingAddress = ""
+    this.activeClient.businessDetail = ""
+    this.activeClient.businessId = ""
+    this.activeClient.deleted_flag = 0
     // form.$setUntouched()
     // form.email.$touched = false
     if ($('#emailLabel').hasClass('has-error')) {
@@ -420,6 +413,6 @@ export class ClientComponent implements OnInit {
   }
 
   loadMore() {
-    this.clientDisplayLimit += 10;
+    this.clientDisplayLimit += 10
   }
 }

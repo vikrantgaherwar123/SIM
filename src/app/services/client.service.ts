@@ -57,4 +57,21 @@ export class ClientService {
 
     return this.http.post(this.addUrl, client, headers)
   }
+
+  changeKeys(client) {
+    var tempClient = {
+      name: client.name,
+      contact_person_name: client.contactPersonName,
+      email: client.email,
+      number: client.number,
+      address_line1: client.addressLine1,
+      shipping_address: client.shippingAddress,
+      business_detail: client.businessDetail,
+      business_id: client.businessId,
+      unique_identifier: client.uniqueKeyClient,
+      deleted_flag: client.enabled
+    }
+
+    return tempClient
+  }
 }

@@ -43,4 +43,18 @@ export class ProductService {
 
     return this.http.post(this.addUrl, product, headers)
   }
+
+  changeKeys(product) {
+    var tempProduct = {
+      prod_name: product.prodName,
+      unit: product.unit,
+      discription: product.discription,
+      rate: product.rate,
+      tax_rate: product.taxRate,
+      device_modified_on: product.modifiedDate,
+      unique_identifier: product.productuniqueKeyProduct
+    }
+
+    return tempProduct
+  }
 }

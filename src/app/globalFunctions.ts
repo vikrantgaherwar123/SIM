@@ -261,8 +261,8 @@ export function changeEstimate(data) {
     tempItemList.push(temp);
   }
   tempEstimate.alstQuotProduct = tempItemList;
-  if (!isNaN(data.termsAndConditions && !data.termsAndConditions == null
-    && data.termsAndConditions.isEmpty())) {
+  if (!isNaN(data.termsAndConditions) && data.termsAndConditions !== null
+    && !data.termsAndConditions.isEmpty()) {
     for (var i = 0; i < data.termsAndConditions.length; i++) {
       var temp = {
         "termsConditionText": data.termsAndConditions[i].terms_condition,
@@ -361,4 +361,4 @@ export function dateDifference (date1: any, date2: any){
   var timeDiff = Math.abs(date2.getTime() - date1.getTime())
   var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
   return diffDays
-};
+}
