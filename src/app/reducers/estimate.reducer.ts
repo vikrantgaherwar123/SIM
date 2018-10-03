@@ -7,8 +7,9 @@ const initialState: estimate[] = []
 
 export function estimateReducer(state = initialState, action: EstimateActions.Action) {
 	switch (action.type) {
-		case EstimateActions.ADD:
-      return [...state, ...action.payload]
+    case EstimateActions.ADD:
+      state.push(...action.payload)
+      return state
     
     case EstimateActions.EDIT:
       state[action.payload.index] = action.payload.value

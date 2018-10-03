@@ -8,7 +8,8 @@ const initialState: invoice[] = []
 export function invoiceReducer(state = initialState, action: InvoiceActions.Action) {
 	switch (action.type) {
 		case InvoiceActions.ADD:
-      return [...state, ...action.payload]
+      state.push(...action.payload)
+      return state
     
     case InvoiceActions.EDIT:
       state[action.payload.index] = action.payload.value
