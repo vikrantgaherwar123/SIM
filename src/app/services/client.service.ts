@@ -58,7 +58,7 @@ export class ClientService {
     return this.http.post(this.addUrl, client, headers)
   }
 
-  changeKeys(client) {
+  changeKeysForApi(client) {
     var tempClient = {
       name: client.name,
       contact_person_name: client.contactPersonName,
@@ -73,5 +73,25 @@ export class ClientService {
     }
 
     return tempClient
+  }
+
+  changeKeysForStore(client) {
+    var temp = {
+      addressLine1: client.address_line1,
+      addressLine2: client.addressLine2,
+      addressLine3: client.addressLine3,
+      businessDetail: client.business_detail,
+      businessId: client.business_id,
+      contactPersonName: client.contact_person_name,
+      email: client.email,
+      enabled: client.deleted_flag,
+      name: client.name,
+      number: client.number,
+      organizationId: client.organization_id,
+      shippingAddress: client.shipping_address,
+      uniqueKeyClient: client.unique_identifier
+    }
+
+    return temp
   }
 }

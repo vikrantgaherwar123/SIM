@@ -3,6 +3,7 @@ import { Observable } from 'rxjs'
 export interface response {
   status: number,
   records: Observable<client[]>,
+  clientList: Observable<client[]>,
   message: string,
   error: string
 }

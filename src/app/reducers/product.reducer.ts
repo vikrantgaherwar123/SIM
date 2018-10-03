@@ -8,7 +8,8 @@ const initialState: product[] = []
 export function productReducer(state = initialState, action: ProductActions.Action) {
 	switch (action.type) {
 		case ProductActions.ADD:
-      return [...state, ...action.payload]
+      state.push(...action.payload)
+      return state
       
     case ProductActions.REMOVE:
       state.splice(action.payload, 1)

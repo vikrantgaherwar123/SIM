@@ -86,8 +86,6 @@ export class ClientComponent implements OnInit {
     this.clientList.subscribe(clients => {
       if(clients.length < 1) {
         this.clientService.fetch().subscribe((response: response) => {
-          console.log('fetch response', response)
-
           if (response.status === 200) {
             this.clientListLoader = true
             this.store.dispatch(new clientActions.add(response.records))
@@ -123,22 +121,22 @@ export class ClientComponent implements OnInit {
       this.isByDate = true;
     }
     this.order.sortClient = searchfield;
-    this.selectedClient = -1;
+    this.selectedClient = null
   }
 
   dynamicOrder(client) {
     var order = 0;
     switch (this.order.sortClient) {
       case 'name':
-        order = client.name;
-        break;
+        order = client.name
+      break
 
       case 'contactPersonName':
-        order = client.contactPersonName;
-        break;
+        order = client.contactPersonName
+      break
 
       default:
-        order = -(parseInt(client.deviceCreatedDate));
+        order = -(parseInt(client.deviceCreatedDate))
     }
 
     return order;
@@ -162,6 +160,7 @@ export class ClientComponent implements OnInit {
     // $('#saveClientBtn1').button('loading')
     // $('#saveClientBtn').button('loading')
     var proStatus = true
+    // edit = 1 ==> add, edit = 2 ==> edit
     if (edit == 1) {
       // $('#updateClientBtn1').button('loading')
       // $('#updateClientBtn').button('loading')
@@ -211,15 +210,31 @@ export class ClientComponent implements OnInit {
         this.activeClient.uniqueKeyClient = generateUUID(this.user.user.orgId);
       }
       this.activeClient.device_modified_on = d.getTime();
+      this.clientListLoader = false
       var self = this
-      this.clientService.add([this.clientService.changeKeys(this.activeClient)]).subscribe(function (response: response) {
+      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: response) => {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');
         // $('#saveClientBtn1').button('reset');
-        console.log('add response', response)
-        
+
         if (response.status === 200) {
+          self.clientListLoader = true
+          let index
+          self.clientList.subscribe(clients => {
+            index = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          })
+          if (index == -1) {  // add
+            self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
+          } else {
+            if (self.activeClient.deleted_flag) {   // delete
+              self.store.dispatch(new clientActions.remove(index))
+            } else {    //edit
+              self.store.dispatch(new clientActions.edit({index, value: self.clientService.changeKeysForStore(response.clientList[0])}))
+            }
+          }
+          self.errors = {}
+
           self.activeClient.name = "",
           self.activeClient.contactPersonName = "",
           self.activeClient.email = "",
@@ -231,18 +246,6 @@ export class ClientComponent implements OnInit {
           self.activeClient.uniqueKeyClient = "",
           self.activeClient.deleted_flag = 0
 
-          self.clientListsLoader = false
-          // Implement SMS changes here add, edit or remove depending on edit flag
-          self.clientService.fetch().subscribe((response: response) => {
-            self.clientListsLoader = true
-            self.clientList = response.records
-            self.selectedClient = 'none'
-          })
-          self.errors = {}
-
-          // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
-          console.log(response.message)
-
           self.selectedClient = null
           self.isEditBtn = true
           self.isCreate = false
@@ -250,6 +253,9 @@ export class ClientComponent implements OnInit {
           self.cancle = true
           self.clearBtn = false
           self.rightDivBtns = false
+
+          // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
+          console.log(response.message)
         }
         else {
           self.errors = [response.error]
@@ -257,8 +263,7 @@ export class ClientComponent implements OnInit {
           console.log(response.error)
           // alert('Some error occurred, please try again!');
         }
-
-      });
+      })
     } else {
       // $('#updateClientBtn').button('reset');
       // $('#saveClientBtn').button('reset');
