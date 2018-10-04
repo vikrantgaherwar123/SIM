@@ -5,12 +5,12 @@ import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
 import { DatePipe } from '@angular/common';
 
-import { InvoiceService } from '../../services/invoice.service'
-import { ClientService } from '../../services/client.service'
-import { ProductService } from '../../services/product.service'
-import { TermConditionService } from '../../services/term-condition.service'
-import { SettingService } from '../../services/setting.service'
-import { generateUUID, changeInvoice, dateDifference } from '../../globalFunctions'
+import { InvoiceService } from '../../../services/invoice.service'
+import { ClientService } from '../../../services/client.service'
+import { ProductService } from '../../../services/product.service'
+import { TermConditionService } from '../../../services/term-condition.service'
+import { SettingService } from '../../../services/setting.service'
+import { generateUUID, changeInvoice, dateDifference } from '../../../globalFunctions'
 import { CookieService } from 'ngx-cookie-service'
 
 interface response {
@@ -64,11 +64,11 @@ interface termsAndCondition {
 
 @Component({
   selector: 'app-invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.css'],
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.css'],
   providers: [DatePipe]
 })
-export class InvoiceComponent implements OnInit {
+export class AddComponent implements OnInit {
 
   private data = {
     item: {},
@@ -161,8 +161,8 @@ export class InvoiceComponent implements OnInit {
   private addProduct: {
     itemDescription: string
   } = {
-      itemDescription: ''
-    }
+    itemDescription: ''
+  }
 
   private repos = []
   filteredRepos: Observable<string[]>
@@ -283,10 +283,6 @@ export class InvoiceComponent implements OnInit {
     return this.repos.filter(option => option.value.toLowerCase().includes(filterValue));
   }
 
-  toggle() {
-    this.checked = !this.checked
-  }
-
   init() {
     this.invoiceViewLoader = true
     this.invoiceListLoader = false
@@ -300,9 +296,9 @@ export class InvoiceComponent implements OnInit {
     this.data.add_invoice.taxList = []
     this.show_tax_input_list = []
     this.tempflagTaxList = []
-    this.fullPayment = false;
+    this.fullPayment = false
     this.data.add_invoice.gross_amount = 0.00
-    this.data.add_invoice.balance = 0.00;
+    this.data.add_invoice.balance = 0.00
     this.clients = []
 
     var settings = this.authenticated.setting
@@ -2120,10 +2116,6 @@ export class InvoiceComponent implements OnInit {
     this.checked = false
 
     this.reloadCreateInvoice()
-  }
-
-  loadMore() {
-    this.clientDisplayLimit += 10
   }
 
   printODownloadInvoice(invoiceId, type) {

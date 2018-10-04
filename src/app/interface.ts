@@ -68,9 +68,9 @@ export interface invoice {
   gross_amount: number
   id: number
   invoice_number: string
-  listItems: []
+  listItems: Array<{}>
   organization_id: number
-  payments: []
+  payments: Array<{}>
   percentage_flag: number
   percentage_value: number
   push_flag: number
@@ -80,7 +80,7 @@ export interface invoice {
   tax_amount: number
   tax_on_item: number
   tax_rate: number
-  termsAndConditions: []
+  termsAndConditions: Array<{}>
   unique_identifier: string
   unique_key_fk_client: string
   version: number

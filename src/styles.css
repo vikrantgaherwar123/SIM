@@ -5,6 +5,9 @@ b, body, p, button {
   font-style: normal;
   font-weight: 800;
 }
+.w100 {
+  width: 100%;
+}
 .pad0 {
   padding-left: 0 !important;
   padding-right: 0 !important;
@@ -172,6 +175,14 @@ table td [ng-click] {
   background-color: #d1e5f8 !important;
   border-color: #1966b7 !important;
   border: #d1e5f8 solid 2px !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+.btn-custom-2 {
+  color: #1a73cc !important;
+  background-color: #fafafa !important;
+  border: #1a73cc solid 2px !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   -moz-box-shadow: none !important;

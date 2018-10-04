@@ -130,13 +130,6 @@
 .fontsize13 {
 	font-size: 13px !important;
 }
-.ellipsis {
-	display: inline-block;
-	width: 100%;
-	white-space: nowrap;
-	overflow: hidden !important;
-	text-overflow: ellipsis;
-}
 .no-data-messsage {
 	text-align: center;
 	font-size: 30px;
@@ -352,4 +345,14 @@ button.add-line-item-button {
 }
 .lineItemDiv {
 	margin-top: 5px;
+}
+.balance-row {
+	margin-top: 8px;
+	padding: 10px;
+	background-color: #666666;
+	color: #fff;
+}
+.adr {
+	font-size: 14px;
+	width: 98%;
 }
