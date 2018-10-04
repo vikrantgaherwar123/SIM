@@ -1,4 +1,4 @@
-@import '../../../assets/css/listForm.css';
+@import '../../../../assets/css/listForm.css';
 
 .inv-generator {
   min-height: 1100px;
@@ -29,9 +29,6 @@ hd td {
   text-align: right;
   border: 1px solid #666;
   color: #fff;
-}
-.w100 {
-  width: 100%;
 }
 .bld {
   margin: 2px 0;
