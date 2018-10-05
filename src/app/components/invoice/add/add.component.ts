@@ -3,64 +3,24 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
-import { DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common'
 
+import { response, client, invoice, terms, setting, product } from '../../../interface'
+import { generateUUID, changeInvoice, dateDifference } from '../../../globalFunctions'
+
+import { CookieService } from 'ngx-cookie-service'
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
-import { generateUUID, changeInvoice, dateDifference } from '../../../globalFunctions'
-import { CookieService } from 'ngx-cookie-service'
 
-interface response {
-  status: number,
-  records: Array<{}>,
-  message: string,
-  error: string,
-  termsAndConditionList: [termsAndCondition],
-  settings: {
-    appSettings: {
-      androidSettings: any
-    }
-  },
-  productList: Array<{}>,
-  quotationList: Array<{}>,
-  invoiceList: Array<{}>
-}
-interface setting {
-  alstTaxName: []
-  adjustment: string
-  balance: string
-  currencyInText: string
-  dateDDMMYY: boolean
-  date_format: boolean
-  discount: string
-  discount_on_item: number
-  mTvQty: string
-  mTvProducts: string
-  mTvRate: string
-  mTvAmount: string
-  mTvTermsAndConditions: string
-  mTvBillTo: string
-  mTvShipTo: string
-  mTvDueDate: string
-  paid: string
-  quotFormat: string
-  quotNo: string
-  subtotal: string
-  shipping: string
-  tax_on_item: number
-  total: string
-}
-interface termsAndCondition {
-  _id: string,
-  unique_identifier: string,
-  organization_id: string,
-  terms: string,
-  set_default: boolean,
-  deleted_flag: boolean
-}
+import { Store } from '@ngrx/store'
+import * as invoiceActions from '../../../actions/invoice.action'
+import * as clientActions from '../../../actions/client.action'
+import * as productActions from '../../../actions/product.action'
+import * as termActions from '../../../actions/terms.action'
+import { AppState } from '../../../app.state'
 
 @Component({
   selector: 'app-invoice',
@@ -111,12 +71,10 @@ export class AddComponent implements OnInit {
     },
     idList: ''
   }
-  private invoices = []
-  private invoice
+  private invoiceList: Observable<invoice[]>
+  private activeInvoice: invoice
   private invoiceItems = []
   private invoiceTerms = []
-  private invoiceViewLoader: boolean
-  private invoiceListLoader: boolean
   private selectedInvoice = null
   private tempQuaNoOnAdd: number
   private invoiceFilterTerm: string
@@ -137,26 +95,19 @@ export class AddComponent implements OnInit {
   private selectDueDate = 'no_due_date'
   private balance
 
-  private client = {
-    client: {
-      email: '',
-      number: '',
-      name: '',
-      addressLine1: '',
-      shippingAddress: ''
-    }
-  }
-  private clientList = []
+  private clientList: Observable<client[]>
+  private activeClient: client
   private clients = []
   private clientDisplayLimit = 10
-  private clientListLoader: boolean
+  private clientListLoading: boolean
   private clientFocus: boolean
   private clientsLocal = []
   private clientValidation: boolean
   private showClientError: boolean
   private receiptList
+  private addClientModal: any = {}
 
-  private productList = []
+  private productList: Observable<product[]>
   private addProductList = []
   private addProduct: {
     itemDescription: string
@@ -164,8 +115,7 @@ export class AddComponent implements OnInit {
     itemDescription: ''
   }
 
-  private repos = []
-  filteredRepos: Observable<string[]>
+  filteredRepos: Observable<string[] | client[]>
   private show_tax_input_list: []
   private tempflagTaxList: []
 
@@ -177,7 +127,7 @@ export class AddComponent implements OnInit {
   private customersSelect
   private settings: any
   private terms
-  private termList
+  private termList: Observable<terms[]>
   private editdata
 
   private tempQtyLabel: string
@@ -257,7 +207,7 @@ export class AddComponent implements OnInit {
     },
     setting: setting
   }
-  billingTo = new FormControl('')
+  billingTo = new FormControl()
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -267,10 +217,15 @@ export class AddComponent implements OnInit {
     private cookie: CookieService,
     private settingService: SettingService,
     private productService: ProductService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private store: Store<AppState>
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
     this.authenticated = { setting: this.user.setting }
+    this.clientList = store.select('client')
+    this.productList = store.select('product')
+    this.invoiceList = store.select('invoice')
+    this.termList = store.select('terms')
     // console.log(this.authenticated)
   }
 
@@ -280,15 +235,22 @@ export class AddComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.repos.filter(option => option.value.toLowerCase().includes(filterValue));
+    var client
+
+    this.clientList.subscribe(clients => {
+      client = clients
+    })
+    return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
+  }
+
+  displayWith(client?: client): string | undefined {
+    return client ? client.name : undefined;
   }
 
   init() {
-    this.invoiceViewLoader = true
-    this.invoiceListLoader = false
     this.clientsLocal = []
 
-    this.clientListLoader = true
+    this.clientListLoading = true
     this.clientFocus = false
 
     this.initializeSettings(this.tempQuaNoOnAdd)
@@ -362,98 +324,101 @@ export class AddComponent implements OnInit {
       this.data.add_invoice.created_date = this.invoiceDate.value.getTime()
     }
 
-    // DataStore.initializer([])
-    // DataStore.productsList.length == 0
     var self = this
-    if (1) {
-      this.productService.fetch().subscribe((response: response) => {
-        if (response.records != null) {
-          self.productList = response.records.filter((pro) => pro.enabled == 0)
-          // DataStore.addProductsList(this.productList)
-          // console.log(self.productList);
-        }
-      })
-    } else {
-      // this.productList = DataStore.productsList
-    }
-    // DataStore.clientsList.length == 0
-    if (1) {
-      this.clientService.fetch().subscribe((response: response) => {
-        if (response.records !== null) {
-          this.clients = response.records
-          // console.log('clients', this.clients);
 
-          this.repos = response.records.map((repo: { value: string, name: string }) => {
-            repo.value = repo.name.toLowerCase()
-            return repo
-          })
-          this.repos.sort(this.compare)
-          this.repos = this.repos.filter(client => client.enabled == 0)
-          this.filteredRepos = this.billingTo.valueChanges.pipe(startWith(''),
-            map(value => this._filter(value))
-          )
-
-          this.clientListLoader = false
-          // DataStore.addClientsList(this.repos)
-          // DataStore.addUnSortedClient(this.clients)
-        } else {
-          this.clients = []
-          this.clientListLoader = false
-        }
-        this.customersSelect = this.clients
-      })
-    } else {
-      this.clientListLoader = false
-      // this.repos = DataStore.clientsList
-      // this.clients = DataStore.unSortedClient
-    }
-    // DataStore.termsList.length == 0
-    if (1) {
-      this.termConditionService.fetch().subscribe((response: response) => {
-        this.terms = response.termsAndConditionList.filter(tnc => tnc.enabled == 0)
-        // DataStore.addTermsList(this.terms)
-        if (this.terms !== null) {
-          this.termList = []
-          if (this.terms !== null && typeof this.terms !== 'undefined') {
-            for (var i = 0; i < this.terms.length; i++) {
-              if (this.terms[i].setDefault == 'DEFAULT' && this.terms[i].enabled == 0) {
-                var temp = {
-                  "_id": this.terms[i].serverTermCondId,
-                  "unique_identifier": this.terms[i].uniqueKeyTerms,
-                  "organization_id": this.terms[i].orgId,
-                  "terms_condition": this.terms[i].terms
-                }
-                this.termList.push(temp)
-
-                var index29 = this.terms.filter((pro) => pro.enabled == 0).findIndex(
-                  t => t.uniqueKeyTerms == this.terms[i].uniqueKeyTerms
-                )
-                this.data.terms[index29] = true;
-              }
-            }
+    // Fetch Products if not in store
+    this.productList.subscribe(products => {
+      if(products.length < 1) {
+        this.productService.fetch().subscribe((response: response) => {
+          // console.log(response)
+          if (response.records != null) {
+            self.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
           }
-        }
-      })
-    } else {
-      this.termList = []
-      if (this.terms !== null && typeof this.terms !== 'undefined') {
-        for (var i = 0; i < this.terms.length; i++) {
-          if (this.terms[i].setDefault == 'DEFAULT' && this.terms[i].enabled == 0) {
-            var temp = {
-              "_id": this.terms[i].serverTermCondId,
-              "unique_identifier": this.terms[i].uniqueKeyTerms,
-              "organization_id": this.terms[i].orgId,
-              "terms_condition": this.terms[i].terms
-            }
-            this.termList.push(temp)
-            var index29 = this.terms.filter((pro) => pro.enabled == 0).findIndex(
-              t => t.uniqueKeyTerms == this.terms[i].uniqueKeyTerms
-            )
-            this.data.terms[index29] = true;
-          }
-        }
+        })
       }
-    }
+    })
+
+    // Fetch Clients if not in store
+    this.clientList.subscribe(clients => {
+      if(clients.length < 1) {
+        this.clientService.fetch().subscribe((response: response) => {
+          if (response.records !== null) {
+            this.store.dispatch(new clientActions.add(response.records.filter(recs => recs.enabled == 0)))
+
+            // Filter for client autocomplete
+            this.clientList.subscribe(clients => {
+              this.filteredRepos = this.billingTo.valueChanges.pipe(
+                startWith<string | client>(''),
+                map(value => typeof value === 'string' ? value : value.name),
+                map(name => name ? this._filter(name) : clients.slice())
+              )
+            })
+            this.clientListLoading = false
+          } else {
+            this.clientListLoading = false
+          }
+        })
+      }
+    })
+
+    // Fetch Terms if not in store
+    this.termList.subscribe(terms => {
+      if(terms.length < 1) {
+        this.termConditionService.fetch().subscribe((response: response) => {
+          if (response.termsAndConditionList !== null) {
+            this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+            // if (this.terms !== null && typeof this.terms !== 'undefined') {
+            //   for (var i = 0; i < this.terms.length; i++) {
+            //     if (this.terms[i].setDefault == 'DEFAULT' && this.terms[i].enabled == 0) {
+            //       var temp = {
+            //         "_id": this.terms[i].serverTermCondId,
+            //         "unique_identifier": this.terms[i].uniqueKeyTerms,
+            //         "organization_id": this.terms[i].orgId,
+            //         "terms_condition": this.terms[i].terms
+            //       }
+            //       this.termList.push(temp)
+  
+            //       var index29 = this.terms.filter((pro) => pro.enabled == 0).findIndex(
+            //         t => t.uniqueKeyTerms == this.terms[i].uniqueKeyTerms
+            //       )
+            //       this.data.terms[index29] = true;
+            //     }
+            //   }
+            // }
+          }
+        })
+      }
+    })
+
+    // this.termList = []
+    // if (this.terms !== null && typeof this.terms !== 'undefined') {
+    //   for (var i = 0; i < this.terms.length; i++) {
+    //     if (this.terms[i].setDefault == 'DEFAULT' && this.terms[i].enabled == 0) {
+    //       var temp = {
+    //         "_id": this.terms[i].serverTermCondId,
+    //         "unique_identifier": this.terms[i].uniqueKeyTerms,
+    //         "organization_id": this.terms[i].orgId,
+    //         "terms_condition": this.terms[i].terms
+    //       }
+    //       this.termList.push(temp)
+    //       var index29 = this.terms.filter((pro) => pro.enabled == 0).findIndex(
+    //         t => t.uniqueKeyTerms == this.terms[i].uniqueKeyTerms
+    //       )
+    //       this.data.terms[index29] = true;
+    //     }
+    //   }
+
+    // Fetch invoices if not in store
+    this.invoiceList.subscribe(invoices => {
+      if(invoices.length < 1) {
+        this.invoiceService.fetch().subscribe((result: any) => {
+          // console.log('invoice', result)
+          if(result.status === 200) {
+            this.store.dispatch(new invoiceActions.add(result.records.filter(est => est.deleted_flag == 0)))
+          }
+        })
+      }
+    })
 
     //console.log("settings",settings)
     if (settings) {
@@ -499,114 +464,7 @@ export class AddComponent implements OnInit {
       this.data.add_invoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
-    // DataStore.invoicesList.length == 0
-    if (1) {
-      this.invoiceService.fetch().subscribe((result: response) => {
-        console.log('invoice', result);
-        
-        this.invoices = result.records.filter(est => est.deleted_flag == 0)
 
-        this.clientService.fetch().subscribe((response: response) => {
-          var dates = []
-          this.clientList = response.records
-
-          for (var i = 0; i < this.invoices.length; i++) {
-            for (var j = 0; j < this.clientList.length; j++) {
-              if (this.invoices[i].unique_key_fk_client == this.clientList[j].uniqueKeyClient) {
-                this.invoices[i].orgName = this.clientList[j].name
-                this.invoices[i].disp = true
-              }
-            }
-            var tempEstNo = this.invoices[i].invoice_number.replace(/[^\d.]/g, '!')
-            this.invoices[i].tempEstNo = parseInt(tempEstNo.substr(tempEstNo.lastIndexOf('!') + 1))
-            if (isNaN(this.invoices[i].tempEstNo)) {
-              this.invoices[i].tempEstNo = 0
-            }
-            dates.push(this.invoices[i])
-          }
-
-          dates.reverse();
-          var groupedDates = dates.reduce((l, r) => {
-            var keyParts = r.created_date.split("-"),
-              key = keyParts[0] + keyParts[1]
-
-            if (typeof l[key] === "undefined") {
-              l[key] = []
-            }
-            l[key].push(r)
-            return l
-          }, {})
-
-          var result = Object.keys(groupedDates).sort((a, b) => Number(b) - Number(a)).map((key) => {
-            return groupedDates[key]
-          })
-
-          this.tempInv12 = []
-          this.tempkey = Object.keys(groupedDates).reverse()
-          var tempy = this.tempkey[0].slice(0, 4)
-          var tempm = this.tempkey[0].slice(4, 6)
-          tempm = ('0' + (parseInt(tempm))).slice(-2)
-
-          if ('02' == tempm) {
-            var tempComD = tempy + '-' + tempm + '-' + '28'
-          } else if ('01' == tempm || '03' == tempm || '05' == tempm || '07' == tempm || '08' == tempm || '10' == tempm || '12' == tempm) {
-            var tempComD = tempy + '-' + tempm + '-' + '31'
-          } else {
-            var tempComD = tempy + '-' + tempm + '-' + '30'
-          }
-          //console.log("io",dte);
-          var tempObj = {
-            "created_date": tempComD,
-            "seperator": true,
-            "disp": false
-          }
-          this.tempInv12.push(tempObj)
-          var count = 0
-          this.tempkey = Object.keys(groupedDates).reverse()
-          result.forEach((key) => {
-            key.forEach((innerKey) => {
-              this.tempInv12.push(innerKey)
-            })
-            count++
-            var tempComD = '';
-            if (this.tempkey[count]) {
-              var tempy1 = this.tempkey[count].slice(0, 4)
-              var tempm1 = self.tempkey[count].slice(4, 6)
-              tempm1 = ('0' + (parseInt(tempm1))).slice(-2)
-              if ('02' == tempm1) {
-                var tempComD = tempy1 + '-' + tempm1 + '-' + '28'
-              } else if ('01' == tempm1 || '03' == tempm1 || '05' == tempm1 || '07' == tempm1 || '08' == tempm1 || '10' == tempm1 || '12' == tempm1) {
-                var tempComD = tempy1 + '-' + tempm1 + '-' + '31'
-              } else {
-                var tempComD = tempy1 + '-' + tempm1 + '-' + '30'
-              }
-            }
-            var tempObj = {
-              "created_date": tempComD,
-              "seperator": true,
-              "disp": false
-            }
-            self.tempInv12.push(tempObj)
-          })
-
-          self.invoices = this.tempInv12
-          // DataStore.addInvoicesList(this.invoices)
-          //console.log("34",JSON.stringify(this.tempInv12))
-          self.invoiceListLoader = true
-          // $rootScope.pro_bar_load = true
-        })
-
-        this.route.params.subscribe(params => {
-          if (params.invId != "0") {
-            this.getInvoice(params.invId, 0)
-          }
-        })
-      })
-    } else {
-      // this.invoices = DataStore.invoicesList
-      this.invoiceListLoader = true
-      // $rootScope.pro_bar_load = true
-    }
     this.data.add_invoice.listItems.push({
       'description': '',
       'quantity': 1,
@@ -779,178 +637,176 @@ export class AddComponent implements OnInit {
     })
   }
 
-  getInvoice(id, index) {
-    if (id) {
-      this.invoiceViewLoader = false
-      $('#msgInv').removeClass("show")
-      $('#msgInv').addClass("hide")
-      $('#invMain').removeClass("hide")
-      $('#invMain').addClass("show")
-      $('#editInv').removeClass("show")
-      $('#editInv').addClass('hide')
-      // this.data.invoice = {}
-      // this.invoice = {}
-      this.data.invoice.payments = []
-      this.tempPaymentList = []
-      this.tempItemList = []
-      this.tempTermList = []
-      this.customDate = true
+  // getInvoice(id, index) {
+  //   if (id) {
+  //     $('#msgInv').removeClass("show")
+  //     $('#msgInv').addClass("hide")
+  //     $('#invMain').removeClass("hide")
+  //     $('#invMain').addClass("show")
+  //     $('#editInv').removeClass("show")
+  //     $('#editInv').addClass('hide')
+  //     // this.data.invoice = {}
+  //     // this.invoice = {}
+  //     this.data.invoice.payments = []
+  //     this.tempPaymentList = []
+  //     this.tempItemList = []
+  //     this.tempTermList = []
+  //     this.customDate = true
 
-      // this.clientList = DataStore.unSortedClient
-      // this.invoices = DataStore.invoicesList;
-      if (this.invoices) {
-        var inv_index = this.invoices.findIndex(inv => inv.unique_identifier == id)
-        this.invoice = this.invoices[inv_index]
-        this.data.invoice = Object.assign({}, this.invoice)
-        delete this.data.invoice.orgName
-        delete this.data.invoice.tempInvNo
-        delete this.data.invoice.disp
-        this.invoice.termsAndConditions = this.invoice.termsAndConditions
-        this.invoice.payments = this.invoice.payments
+  //     // this.clientList = DataStore.unSortedClient
+  //     // this.invoices = DataStore.invoicesList;
+  //     if (this.invoices) {
+  //       var inv_index = this.invoices.findIndex(inv => inv.unique_identifier == id)
+  //       this.invoice = this.invoices[inv_index]
+  //       this.data.invoice = Object.assign({}, this.invoice)
+  //       delete this.data.invoice.orgName
+  //       delete this.data.invoice.tempInvNo
+  //       delete this.data.invoice.disp
+  //       this.invoice.termsAndConditions = this.invoice.termsAndConditions
+  //       this.invoice.payments = this.invoice.payments
 
-        this.invoiceDate = this.datePipe.transform(this.invoice.created_date)
-        this.dueDate = this.datePipe.transform(this.invoice.due_date)
+  //       this.invoiceDate = this.datePipe.transform(this.invoice.created_date)
+  //       this.dueDate = this.datePipe.transform(this.invoice.due_date)
 
-        if (this.invoice.taxList) {
-          if (this.invoice.taxList.length > 0) {
-            this.showMultipleTax = true
-          } else {
-            this.showMultipleTax = false
-          }
-        } else {
-          this.showMultipleTax = false
-        }
+  //       if (this.invoice.taxList) {
+  //         if (this.invoice.taxList.length > 0) {
+  //           this.showMultipleTax = true
+  //         } else {
+  //           this.showMultipleTax = false
+  //         }
+  //       } else {
+  //         this.showMultipleTax = false
+  //       }
 
-        for (var j = 0; j < this.data.invoice.listItems.length; j++) {
-          var temp = {
-            'unique_identifier': this.data.invoice.listItems[j].uniqueKeyListItem,
-            'product_name': this.data.invoice.listItems[j].productName,
-            'description': this.data.invoice.listItems[j].description == null ? '' : this.data.invoice.listItems[j].description,
-            'quantity': this.data.invoice.listItems[j].qty,
-            /*'inventory_enabled':this.productList[index].inventoryEnabled,*/
-            'unit': this.data.invoice.listItems[j].unit,
-            'rate': this.data.invoice.listItems[j].rate,
-            'discount': this.data.invoice.listItems[j].discountRate,
-            'tax_rate': this.data.invoice.listItems[j].tax_rate,
-            'total': this.data.invoice.listItems[j].price,
-            'tax_amount': this.data.invoice.listItems[j].taxAmount,
-            'discount_amount': this.data.invoice.listItems[j].discountAmount,
-            'unique_key_fk_product': this.data.invoice.listItems[j].uniqueKeyFKProduct,
-            '_id': this.data.invoice.listItems[j].listItemId,
-            'local_prod_id': this.data.invoice.listItems[j].prodId,
-            'organization_id': this.data.invoice.listItems[j].org_id,
-            'invoiceProductCode': this.data.invoice.listItems[j].invoiceProductCode,
-            'unique_key_fk_invoice': this.data.invoice.listItems[j].uniqueKeyFKInvoice
-          }
-          this.tempItemList.push(temp);
-        }
-        if (!isNaN(this.data.invoice.termsAndConditions && !this.data.invoice.termsAndConditions == null
-          && this.data.invoice.termsAndConditions.isEmpty())
-        ) {
-          for (var i = 0; i < this.data.invoice.termsAndConditions.length; i++) {
-            var temp1 = {
-              "terms_condition": this.data.invoice.termsAndConditions[i].terms,
-              "_id": this.data.invoice.termsAndConditions[i].localId,
-              "local_invoiceId": this.data.invoice.termsAndConditions[i].invoiceId,
-              "invoice_id": this.data.invoice.termsAndConditions[i].serverInvoiceId,
-              "organization_id": this.data.invoice.termsAndConditions[i].serverOrgId,
-              "unique_identifier": this.data.invoice.termsAndConditions[i].uniqueInvoiceTerms,
-              "unique_key_fk_invoice": this.data.invoice.termsAndConditions[i].uniqueKeyFKInvoice
-            }
-            this.tempTermList.push(temp1);
-          }
-        }
+  //       for (var j = 0; j < this.data.invoice.listItems.length; j++) {
+  //         var temp = {
+  //           'unique_identifier': this.data.invoice.listItems[j].uniqueKeyListItem,
+  //           'product_name': this.data.invoice.listItems[j].productName,
+  //           'description': this.data.invoice.listItems[j].description == null ? '' : this.data.invoice.listItems[j].description,
+  //           'quantity': this.data.invoice.listItems[j].qty,
+  //           /*'inventory_enabled':this.productList[index].inventoryEnabled,*/
+  //           'unit': this.data.invoice.listItems[j].unit,
+  //           'rate': this.data.invoice.listItems[j].rate,
+  //           'discount': this.data.invoice.listItems[j].discountRate,
+  //           'tax_rate': this.data.invoice.listItems[j].tax_rate,
+  //           'total': this.data.invoice.listItems[j].price,
+  //           'tax_amount': this.data.invoice.listItems[j].taxAmount,
+  //           'discount_amount': this.data.invoice.listItems[j].discountAmount,
+  //           'unique_key_fk_product': this.data.invoice.listItems[j].uniqueKeyFKProduct,
+  //           '_id': this.data.invoice.listItems[j].listItemId,
+  //           'local_prod_id': this.data.invoice.listItems[j].prodId,
+  //           'organization_id': this.data.invoice.listItems[j].org_id,
+  //           'invoiceProductCode': this.data.invoice.listItems[j].invoiceProductCode,
+  //           'unique_key_fk_invoice': this.data.invoice.listItems[j].uniqueKeyFKInvoice
+  //         }
+  //         this.tempItemList.push(temp);
+  //       }
+  //       if (!isNaN(this.data.invoice.termsAndConditions && !this.data.invoice.termsAndConditions == null
+  //         && this.data.invoice.termsAndConditions.isEmpty())
+  //       ) {
+  //         for (var i = 0; i < this.data.invoice.termsAndConditions.length; i++) {
+  //           var temp1 = {
+  //             "terms_condition": this.data.invoice.termsAndConditions[i].terms,
+  //             "_id": this.data.invoice.termsAndConditions[i].localId,
+  //             "local_invoiceId": this.data.invoice.termsAndConditions[i].invoiceId,
+  //             "invoice_id": this.data.invoice.termsAndConditions[i].serverInvoiceId,
+  //             "organization_id": this.data.invoice.termsAndConditions[i].serverOrgId,
+  //             "unique_identifier": this.data.invoice.termsAndConditions[i].uniqueInvoiceTerms,
+  //             "unique_key_fk_invoice": this.data.invoice.termsAndConditions[i].uniqueKeyFKInvoice
+  //           }
+  //           this.tempTermList.push(temp1);
+  //         }
+  //       }
 
-        this.data.invoice.listItems = this.tempItemList;
-        this.data.invoice.termsAndConditions = this.tempTermList
+  //       this.data.invoice.listItems = this.tempItemList;
+  //       this.data.invoice.termsAndConditions = this.tempTermList
 
-        if (typeof this.data.invoice.payments !== 'undefined') {
-          var paidAmountTemp = 0;
-          for (var i = 0; i < this.data.invoice.payments.length; i++) {
-            var temp = {
-              "date_of_payment": this.data.invoice.payments[i].dateOfPayment,
-              "paid_amount": this.data.invoice.payments[i].paidAmount,
-              "organization_id": this.data.invoice.payments[i].orgId,
-              "unique_identifier": this.data.invoice.payments[i].uniqueKeyInvoicePayment,
-              "unique_key_fk_client": this.data.invoice.payments[i].uniqueKeyFKClient,
-              "unique_key_fk_invoice": this.data.invoice.payments[i].uniqueKeyFKInvoice,
-              "deleted_flag": this.data.invoice.payments[i].enabled,
-              "unique_key_voucher_no": this.data.invoice.payments[i].uniqueKeyVoucherNo,
-              "voucher_no": this.data.invoice.payments[i].voucherNo,
-              "_id": this.data.invoice.payments[i].invPayId,
-              "local_invoice_id": this.data.invoice.payments[i].invoiceId,
-              "local_client_id": this.data.invoice.payments[i].clientId,
-              "paymentNote": this.data.invoice.payments[i].paymentNote
-            }
-            this.tempPaymentList.push(temp)
-            paidAmountTemp = paidAmountTemp + this.data.invoice.payments[i].paidAmount
-          }
-          if (paidAmountTemp > 0) {
-            this.itemDisabled = true
-          }
-        }
+  //       if (typeof this.data.invoice.payments !== 'undefined') {
+  //         var paidAmountTemp = 0;
+  //         for (var i = 0; i < this.data.invoice.payments.length; i++) {
+  //           var temp = {
+  //             "date_of_payment": this.data.invoice.payments[i].dateOfPayment,
+  //             "paid_amount": this.data.invoice.payments[i].paidAmount,
+  //             "organization_id": this.data.invoice.payments[i].orgId,
+  //             "unique_identifier": this.data.invoice.payments[i].uniqueKeyInvoicePayment,
+  //             "unique_key_fk_client": this.data.invoice.payments[i].uniqueKeyFKClient,
+  //             "unique_key_fk_invoice": this.data.invoice.payments[i].uniqueKeyFKInvoice,
+  //             "deleted_flag": this.data.invoice.payments[i].enabled,
+  //             "unique_key_voucher_no": this.data.invoice.payments[i].uniqueKeyVoucherNo,
+  //             "voucher_no": this.data.invoice.payments[i].voucherNo,
+  //             "_id": this.data.invoice.payments[i].invPayId,
+  //             "local_invoice_id": this.data.invoice.payments[i].invoiceId,
+  //             "local_client_id": this.data.invoice.payments[i].clientId,
+  //             "paymentNote": this.data.invoice.payments[i].paymentNote
+  //           }
+  //           this.tempPaymentList.push(temp)
+  //           paidAmountTemp = paidAmountTemp + this.data.invoice.payments[i].paidAmount
+  //         }
+  //         if (paidAmountTemp > 0) {
+  //           this.itemDisabled = true
+  //         }
+  //       }
 
-        this.data.invoice.payments = this.tempPaymentList
-        this.setPaidAmountTotalView()
-        this.initialPayment = { ...this.tempPaymentList }
+  //       this.data.invoice.payments = this.tempPaymentList
+  //       this.setPaidAmountTotalView()
+  //       this.initialPayment = { ...this.tempPaymentList }
 
-        if (this.clientList) {
-          var inv_index_client = this.clientList.findIndex(client => client.uniqueKeyClient == this.invoice.unique_key_fk_client)
-          this.clientsLocal[0] = this.clientList[inv_index_client];
-          this.invoiceViewLoader = true;
-        }
+  //       if (this.clientList) {
+  //         var inv_index_client = this.clientList.findIndex(client => client.uniqueKeyClient == this.invoice.unique_key_fk_client)
+  //         this.clientsLocal[0] = this.clientList[inv_index_client];
+  //       }
 
-        if (this.invoice.discount_on_item == 1) {
-          this.discounttext = "Discount (On Item)"
-          this.discountLabel = true;
-          this.show_discount = false;
-        } else if (this.invoice.discount_on_item == 0) {
-          this.discounttext = "Discount (On Bill)"
-          this.show_discount = true;
-        } else {
-          this.show_discount = false;
-          this.discounttext = "Discount (Disabled)"
-        }
+  //       if (this.invoice.discount_on_item == 1) {
+  //         this.discounttext = "Discount (On Item)"
+  //         this.discountLabel = true;
+  //         this.show_discount = false;
+  //       } else if (this.invoice.discount_on_item == 0) {
+  //         this.discounttext = "Discount (On Bill)"
+  //         this.show_discount = true;
+  //       } else {
+  //         this.show_discount = false;
+  //         this.discounttext = "Discount (Disabled)"
+  //       }
 
-        if (this.invoice.tax_on_item == 0) {
-          this.taxtext = "Tax (On Item)"
-          this.taxLabel = true;
-          this.show_tax_input = false;
-        } else if (this.invoice.tax_on_item == 1 && this.invoice.tax_rate > 0) {
-          this.taxtext = "Tax (On Bill)"
-          this.show_tax_input = true;
-        } else {
-          this.show_tax_input = false;
-          this.taxtext = "Tax (Disabled)"
-        }
+  //       if (this.invoice.tax_on_item == 0) {
+  //         this.taxtext = "Tax (On Item)"
+  //         this.taxLabel = true;
+  //         this.show_tax_input = false;
+  //       } else if (this.invoice.tax_on_item == 1 && this.invoice.tax_rate > 0) {
+  //         this.taxtext = "Tax (On Bill)"
+  //         this.show_tax_input = true;
+  //       } else {
+  //         this.show_tax_input = false;
+  //         this.taxtext = "Tax (Disabled)"
+  //       }
 
-        if (this.invoice.shipping_charges && this.invoice.shipping_charges >= 0)
-          this.show_shipping_charge = true
-        else
-          this.show_shipping_charge = false
-        if (this.invoice.percentage_flag && this.invoice.percentage_flag == 1)
-          this.isRate = true
-        else
-          this.isRate = false
-        if (this.invoice.due_date == null || this.invoice.due_date === '') {
-          this.selectDueDate = "no_due_date";
-        } else if (this.invoice.due_date == this.invoice.created_date) {
-          this.selectDueDate = "immediate";
-          this.customDate = false;
-        } else if (this.invoice.due_date != this.invoice.created_date) {
-          this.customDate = false;
-          var difference = dateDifference(this.invoice.created_date, this.invoice.due_date);
-          if (this.dueDateDays.indexOf(difference) > -1) {
-            var index = this.dueDateDays.indexOf(difference);
-            this.selectDueDate = ''
-          } else {
-            this.selectDueDate = "custom_date";
-          }
-        }
-      }
-      this.routeParams.invId = this.invoice.unique_identifier;
-    }
-  }
+  //       if (this.invoice.shipping_charges && this.invoice.shipping_charges >= 0)
+  //         this.show_shipping_charge = true
+  //       else
+  //         this.show_shipping_charge = false
+  //       if (this.invoice.percentage_flag && this.invoice.percentage_flag == 1)
+  //         this.isRate = true
+  //       else
+  //         this.isRate = false
+  //       if (this.invoice.due_date == null || this.invoice.due_date === '') {
+  //         this.selectDueDate = "no_due_date";
+  //       } else if (this.invoice.due_date == this.invoice.created_date) {
+  //         this.selectDueDate = "immediate";
+  //         this.customDate = false;
+  //       } else if (this.invoice.due_date != this.invoice.created_date) {
+  //         this.customDate = false;
+  //         var difference = dateDifference(this.invoice.created_date, this.invoice.due_date);
+  //         if (this.dueDateDays.indexOf(difference) > -1) {
+  //           var index = this.dueDateDays.indexOf(difference);
+  //           this.selectDueDate = ''
+  //         } else {
+  //           this.selectDueDate = "custom_date";
+  //         }
+  //       }
+  //     }
+  //     this.routeParams.invId = this.invoice.unique_identifier;
+  //   }
+  // }
 
   multiTaxButton(taxname) {
     var status = true
@@ -1012,20 +868,81 @@ export class AddComponent implements OnInit {
     this.paid_amount = temp
   }
 
-  isEmpty1() {
-    return this.clientsLocal[0] && (typeof this.clientsLocal[0].email === 'undefined' || this.clientsLocal[0].email === '')
+  selectedClientChange(client) {
+    var item
+    this.clientList.subscribe(clients => {
+      item = clients.filter(cli => cli.name == client.option.value.name)[0]
+    })
+
+    if (item !== undefined) {
+      this.activeClient = item
+    } else {
+      //console.log("clients",this.clients)
+      if(this.activeClient) {
+        this.activeClient.email = ''
+        this.activeClient.number = ''
+        this.activeClient.addressLine1 = ''
+        this.activeClient.name = ''
+        this.activeClient.shippingAddress = ''
+      }
+
+      this.addClient(client.option.value)
+    }
   }
 
-  isEmpty2() {
-    return this.clientsLocal[0] && (typeof this.clientsLocal[0].number === 'undefined' || this.clientsLocal[0].number === '')
+  addClient(name) {
+    this.addClientModal = {}
+    this.addClientModal.addressLine1 = ''
+    this.addClientModal.email = ''
+    this.addClientModal.number = ''
+    this.addClientModal.name = name
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', function (e) {
+      $('#add-client input[type="text"]')[1].select()
+    })
   }
 
-  isEmpty11() {
-    return (typeof this.client.client.email === 'undefined' || this.client.client.email === '')
+  closeClient() {
+    //alert('closed!!')
+    $("#loadb").css("display", "none")
+    $('#add-client').modal('hide')
+
+    this.addClientModal = {}
+    $('#refreshClient').addClass('rotator')
+    $("#loadb").css("display", "none")
   }
 
-  isEmpty12() {
-    return (typeof this.client.client.number === 'undefined' || this.client.client.number === '')
+  saveClient(status) {
+    $('#saveClientButton').attr("disabled", 'true');
+    // console.log(data)
+
+    if (status) {
+      this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
+      var d = new Date()
+      this.addClientModal.device_modified_on = d.getTime()
+      this.addClientModal.organizationId = this.user.user.orgId
+
+      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
+        if (response.status === 200) {
+          // console.log('add client respo', response)
+          
+          this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+          this.clientList.subscribe(clients => {
+            // console.log(clients);            
+            this.activeClient = clients.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
+            this.billingTo.setValue(this.activeClient)
+            // console.log(this.activeClient)
+            //$('#refreshClient').removeClass('rotator')
+            // $('#saveClientButton').button('reset')
+          })
+          $('#add-client').modal('hide')
+          //this.data.invoice.unique_key_fk_client = this.activeClient.unique_identifier
+        }
+        else {
+          //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
+        }
+      })
+    }
   }
 
   dynamicOrder(invoice) {
@@ -1263,46 +1180,8 @@ export class AddComponent implements OnInit {
     }
   }
 
-  selectedClientChange(item) {
-    item = this.repos.filter(client => client.value == item.option.value)[0]
-
-    if (typeof item !== 'undefined') {
-      var clientId = item.uniqueKeyClient
-      if (typeof this.clients !== 'undefined') {
-        var index = this.clients.findIndex(client => client.uniqueKeyClient == clientId)
-        if (typeof clientId !== 'undefined' && index === -1) {
-          this.client.client = { email: '', number: '', addressLine1: '', name: clientId, shippingAddress: '' }
-          // this.addClient(true)
-        } else {
-          this.client.client.addressLine1 = ''
-          this.client.client.email = ''
-          this.client.client.number = ''
-          this.client.client.name = clientId
-        }
-        for (var j = 0; j < this.clients.length; j++) {
-          if (this.clients[j].uniqueKeyClient == clientId) {
-            this.client.client = this.clients[j]
-            //$rootScope.selectClient = this.client.client
-            this.data.add_invoice.unique_key_fk_client = clientId
-            this.data.add_invoice.shipping_address = this.client.client.shippingAddress
-            this.client.client.addressLine1 = this.client.client.addressLine1
-            break
-          }
-        }
-        // this.focusOut(item.name)
-        this.showClientError = false
-      } else {
-        this.client.client = { addressLine1: '', email: '', name: '', number: '', shippingAddress: '' }
-      }
-    } else {
-      //console.log("clients",this.clients)
-      this.client.client = { addressLine1: '', email: '', name: '', number: '', shippingAddress: '' }
-      this.searchText = ''
-    }
-  }
-
   createFilterFor(query) {
-    var lowercaseQuery = angular.lowercase(query)
+    var lowercaseQuery = query.toLowerCase()
 
     return function filterFn(item) {
       return (item.value.indexOf(lowercaseQuery) === 0) || (item.value.indexOf(lowercaseQuery) === 1)
@@ -1336,8 +1215,7 @@ export class AddComponent implements OnInit {
   }
 
   addItem(index, product) {
-    // console.log(index, product);
-
+    // console.log(index, product)
     if (index !== -1) {
       this.data.add_invoice.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
       this.data.add_invoice.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
@@ -1445,7 +1323,11 @@ export class AddComponent implements OnInit {
       }
     }
 
-    var tempIndexName1 = this.repos.findIndex(client => client.name == this.billingTo.value)
+    var tempIndexName1
+    this.clientList.subscribe(clients => {
+      tempIndexName1 = clients.findIndex(client => client.name == this.billingTo.value)
+    })
+
     if (this.data.add_invoice.listItems.length !== 0 && tempIndexName1 !== -1) {
       if (status) {
         // $('#InvSbmtBtn').button('loading');
@@ -1963,93 +1845,6 @@ export class AddComponent implements OnInit {
 
   close() {
     $('#add-terms').modal('hide')
-  }
-
-  addClient(name) {
-    //console.log('add new client',name)
-    this.client.client = {}
-    this.addClientModal = {}
-    this.client.client.address_line1 = ''
-    this.client.client.email = ''
-    this.client.client.number = ''
-    this.client.client.name = name
-    $('#add-client').modal('show')
-    $('#add-client').on('shown.bs.modal', function (e) {
-      $('#add-client input[type="text"]')[1].select()
-    })
-  }
-
-  closeClient() {
-    //alert('closed!!')
-    $("#loadb").css("display", "none")
-    $('#add-client').modal('hide')
-
-    this.client.client = {}
-
-    //this.client_display.addressLine1 = ''
-    this.addClientModal = {}
-    this.data.add_invoice.unique_key_fk_client = 0
-
-    $('#refreshClient').addClass('rotator')
-
-    this.searchText = ''
-    this.clientform.$setUntouched()
-    // this.repos = DataStore.clientsList
-    $("#loadb").css("display", "none")
-  }
-
-  saveClient(data, status) {
-    // $('#saveClientButton').button('loading')
-    var baseURL = Data.getBaseUrl()
-    if (status) {
-      this.client.client.contact_person_name = this.addClientModal.contact_person_name
-      this.client.client.email = this.addClientModal.email
-      this.client.client.number = this.addClientModal.number
-      this.client.client.address_line1 = this.addClientModal.address_line1
-      this.client.client.shipping_address = this.addClientModal.shipping_address
-      this.client.client.business_detail = this.addClientModal.business_detail
-      this.client.client.business_id = this.addClientModal.business_id
-
-      this.client.client.unique_identifier = utility.generateUUID()
-      var d = new Date()
-      this.client.client.device_modified_on = d.getTime()
-      this.client.client.organization_id = $rootScope.authenticated.user.orgId
-      this.data.add_invoice.unique_key_fk_client = this.client.client.unique_identifier
-
-      this.clientService.add([this.client.client]).subscribe((response: response) => {
-        if (response.status === 200) {
-          $('#refreshClient').addClass('rotator')
-          this.clientService.fetch().subscribe((response: response) => {
-            this.clients = response.records
-
-            this.data.add_invoice.unique_key_fk_client = this.client.client.unique_identifier
-            this.repos = response.records.map((repo: { name: string, value: string }) => {
-              repo.value = repo.name.toLowerCase()
-              return repo
-            })
-            this.repos = this.repos.filter(clien => clien.enabled == 0)
-
-            for (var l = 0; l < this.clients.length; l++) {
-              if (this.clients[l].uniqueKeyClient === this.client.client.unique_identifier) {
-                this.selectedItem = this.clients[l]
-              }
-            }
-            this.searchText = this.client.client.name
-            this.clientValidation = true
-            this.showClientError = false
-
-            //$('#refreshClient').removeClass('rotator')
-            // $('#saveClientButton').button('reset')
-
-          })
-          $('#add-client').modal('hide')
-          //this.data.invoice.unique_key_fk_client = this.client.client.unique_identifier
-        }
-        else {
-          //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
-        }
-      })
-    }
   }
 
   greaterThan(prop, val) {
@@ -3141,7 +2936,7 @@ export class AddComponent implements OnInit {
       'total': parseFloat(0.00)
     })
     this.client = {}
-    this.client.client = {}
+    this.activeClient = {}
     this.addProductList = []
     this.customDate = true
     this.isRate = true
@@ -3330,4 +3125,20 @@ export class AddComponent implements OnInit {
     this.termList.splice(index, 1)
     this.data.terms[index] = false
   }
+
+  // isEmpty1() {
+  //   return this.clientsLocal[0] && (typeof this.clientsLocal[0].email === 'undefined' || this.clientsLocal[0].email === '')
+  // }
+
+  // isEmpty2() {
+  //   return this.clientsLocal[0] && (typeof this.clientsLocal[0].number === 'undefined' || this.clientsLocal[0].number === '')
+  // }
+
+  // isEmpty11() {
+  //   return (typeof this.activeClient.email === 'undefined' || this.activeClient.email === '')
+  // }
+
+  // isEmpty12() {
+  //   return (typeof this.activeClient.number === 'undefined' || this.activeClient.number === '')
+  // }
 }

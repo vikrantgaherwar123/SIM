@@ -55,7 +55,7 @@
                           >
                           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedClientChange($event)">
                             <mat-option *ngFor="let client of filteredClients | async" [value]="client.name">{{client.name}}</mat-option>
-                            <!-- <mat-option *ngIf="(filteredClients | async).length < 1" [value]="client.name">{{client.name}}</mat-option> -->
+                            <mat-option *ngIf="(filteredClients | async).length == 0" [value]="billingTo.value">Add Client {{billingTo.value}}</mat-option>
                           </mat-autocomplete>
                           <!-- <md-content class="md-padding font-custom" style="background-color: #ffffff ;    padding: 2px 2px 2px 2px;">
                                   <form name="autocompleteForm">

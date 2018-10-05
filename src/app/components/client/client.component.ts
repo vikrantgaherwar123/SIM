@@ -23,18 +23,19 @@ export class ClientComponent implements OnInit {
   }
   private clientList: Observable<client[]>
   private activeClient = {
-    name: "",
-    contactPersonName: "",
-    email: "",
-    number: "",
     addressLine1: "",
-    shippingAddress: "",
     businessDetail: "",
     businessId: "",
-    organizationId: "",
-    uniqueKeyClient: "",
+    contactPersonName: "",
+    deleted_flag: 0,
     device_modified_on: 0,
-    deleted_flag: 0
+    email: "",
+    localClientid: 0,
+    name: "",
+    number: "",
+    shippingAddress: "",
+    organizationId: "",
+    uniqueKeyClient: ""
   }
   private activeClientIndex
   private errors: object = {}

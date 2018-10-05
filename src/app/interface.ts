@@ -2,10 +2,37 @@ import { Observable } from 'rxjs'
 
 export interface response {
   status: number,
-  records: Observable<client[]>,
-  clientList: Observable<client[]>,
+  records: client[],
+  clientList: client[],
+  termsAndConditionList: terms[]
   message: string,
   error: string
+}
+
+export interface setting {
+  alstTaxName: []
+  adjustment: string
+  balance: string
+  currencyInText: string
+  dateDDMMYY: boolean
+  date_format: boolean
+  discount: string
+  discount_on_item: number
+  mTvQty: string
+  mTvProducts: string
+  mTvRate: string
+  mTvAmount: string
+  mTvTermsAndConditions: string
+  mTvBillTo: string
+  mTvShipTo: string
+  mTvDueDate: string
+  paid: string
+  quotFormat: string
+  quotNo: string
+  subtotal: string
+  shipping: string
+  tax_on_item: number
+  total: string
 }
 
 export interface client {
@@ -49,8 +76,17 @@ export interface product {
 }
 
 export interface terms {
-  name: string,
-  value: string
+  createDate: number
+  deviceCreateDate: number
+  enabled: number
+  modifiedDate: number
+  modifiedOn: number
+  orgId: number
+  serverTermCondId: number
+  serverUpdateTime: number
+  setDefault: string
+  terms: string
+  uniqueKeyTerms: string
 }
 
 export interface invoice {

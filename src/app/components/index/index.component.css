@@ -4,7 +4,7 @@
 .header-container {
   position: fixed;
   top: 0;
-  z-index: 2000;
+  z-index: 1030;
   width: 100%;
 }
 .content {
