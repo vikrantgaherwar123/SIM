@@ -24,7 +24,7 @@ export class edit implements Action {
 export class remove implements Action {
   readonly type = REMOVE
 
-  constructor(public payload: any) {
+  constructor(public payload: number) {
     
   }
 }

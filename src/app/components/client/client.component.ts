@@ -213,7 +213,7 @@ export class ClientComponent implements OnInit {
       this.activeClient.device_modified_on = d.getTime();
       this.clientListLoader = false
       var self = this
-      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: response) => {
+      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: any) => {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');

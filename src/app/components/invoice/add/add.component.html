@@ -31,38 +31,12 @@
                               <mat-option *ngFor="let client of filteredRepos | async" [value]="client">{{client.name}}</mat-option>
                               <mat-option *ngIf="filteredRepos && (filteredRepos | async).length == 0" [value]="billingTo.value">Add Client {{billingTo.value}}</mat-option>
                             </mat-autocomplete>
-                            <!-- <md-content class="md-padding font-custom" style="background-color: #ffffff ;    padding: 2px 2px 2px 2px;">
-                                    <form name="autocompleteForm">
-                                      <md-autocomplete md-dropdown-position="down" [disabled]="false" md-selected-item="selectedItem"
-                                        md-no-cache="true" md-search-text-change="searchTextChange(searchText)" md-search-text="searchText"
-                                        md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)"
-                                        md-item-text="item.name" md-min-length="0" placeholder="Search & Select Client"
-                                        md-input-name="autocomplete" ng-invalid="error" required my-enter custom-mouse>
-                                        <md-item-template>
-                                          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
-                                        </md-item-template>
-                                        <div *ngIf="showClientError">
-                                          <div ng-message="required">This field is required</div>
-                                        </div>
-          
-                                        <md-not-found>
-                                          <div (click)="newState(searchText)">
-                                            <i class="material-icons" style="vertical-align: middle;" (click)="">&#xE146;</i>
-                                            Add this client {{searchText}}..
-                                          </div>
-                                        </md-not-found>
-                                      </md-autocomplete>
-                                      <br />
-                                    </form>          
-                                  </md-content> -->
                           </div>
                         </div>
                       </div>
 
                       <div class="col-md-2 col-sm-2 col-xs-2" style="padding-top: 30px;">
                         <span><i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i></span>
-                        <!-- <md-progress-circular *ngIf="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
-                                md-diameter="25px"></md-progress-circular> -->
                       </div>
       
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
@@ -170,7 +144,6 @@
                   </div>
                 </div>
 
-                <!--Div Content title INVOICE and Company's Name & Address-etc- end-->
                 <div class="lineItemDiv">
                   <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
                     <!--table head content itemDescription , Qty , Rate ,Amount start -->
@@ -255,7 +228,6 @@
                     </tbody>
                   </table>
 
-                  <!--Term and Condition and Sub-Total in table body start -->
                   <div class="row add-item-button">
                     <div class="col-md-6 col-xs-6 col-sm-6">
                       <button type="button" class="btnd add-line-item-button" (click)="addLineItem()">
@@ -279,6 +251,7 @@
                     </div>
                   </div>
 
+                  <!--Term and Condition and Sub-Total in table body start -->
                   <div class="row mar0">
                     <div class="col-md-6 col-xs-6 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
@@ -293,11 +266,11 @@
         
                       <div class="col-md-12 col-xs-12 col-md-12 pad0">
                         <div class="form-group">
-                          <div *ngFor="let term of (termList | async); index as index" class="row mar0">
+                          <div *ngFor="let term of terms; index as index" class="row mar0">
                             <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
-                              {{term.terms_condition}}
+                              {{term.terms}}
                             </div>
-                            <div class="col-md-2 ml-auto" (click)="setTermsListDelete(index)" style="cursor:pointer;">
+                            <div class="col-md-2 ml-auto" (click)="removeTermFromInvoice(index)" style="cursor:pointer;">
                               <a class="closeicon show float-right">
                                 <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
                               </a>

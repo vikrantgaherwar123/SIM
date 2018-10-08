@@ -44,4 +44,13 @@ export class TermConditionService {
 
     return this.http.post(this.addUrl, termCondition, headers)
   }
+
+  changeKeysForApi(terms) {
+    return {
+      _id: terms.serverTermCondId,
+      unique_identifier: terms.uniqueKeyTerms,
+      organization_id: terms.orgId,
+      terms_condition: terms.terms
+    }
+  }
 }
