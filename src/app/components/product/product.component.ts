@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core'
 import { ProductService } from '../../services/product.service'
 import { CookieService } from 'ngx-cookie-service'
 import { generateUUID } from '../../globalFunctions'
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'
 
-interface response {
-  status: number,
-  records: Array<{}>,
-  message: string,
-  error: string
-}
+import { product, response } from '../../interface'
+import { Observable } from 'rxjs'
+import { Store } from '@ngrx/store'
+import * as productActions from '../../actions/product.action'
+import { AppState } from '../../app.state'
 
 @Component({
   selector: 'app-product',
@@ -23,17 +22,8 @@ export class ProductComponent implements OnInit {
       orgId: string
     }
   }
-  private productList: Array<{}> = []
-  private activeProduct: {
-    prod_name: string,
-    unit: string,
-    discription: string,
-    rate: 0.01,
-    tax_rate: number,
-    inventory_enabled: number
-    device_modified_on: number,
-    unique_identifier: string
-  } = {
+  private productList: Observable<product[]>
+  private activeProduct = {
     "prod_name": "",
     "unit": "",
     "discription": "",
@@ -55,7 +45,7 @@ export class ProductComponent implements OnInit {
   private deleteBtn: boolean = true
   private isBatchBtn: boolean = false
 
-  private productListsLoader: boolean = false
+  private productListLoading: boolean = false
 
   private tempProduct = null
   private tempIndex = null
@@ -83,21 +73,27 @@ export class ProductComponent implements OnInit {
     "purple"
   ]
 
-  constructor(private productService: ProductService, private cookie: CookieService, private router: Router) { 
+  constructor(private productService: ProductService, private cookie: CookieService,
+    private router: Router, private store : Store<AppState>
+  ) {
+    this.productList = store.select('product')
     this.user = JSON.parse(this.cookie.get('user'))
   }
 
   ngOnInit() {
-    this.productListsLoader = false
-    this.productService.fetch().subscribe((response: response) => {
-      // console.log(response)
-      
-      this.productList = response.records
-      this.productListsLoader = true
+    this.productListLoading = true
 
-      this.productList = this.productList.filter(function (pro) {
-        return (pro.enabled == 0)
-      })
+    this.productList.subscribe(products => {
+      if(products.length < 1) {
+        this.productService.fetch().subscribe((response: response) => {
+          this.productListLoading = false
+          if(response.status === 200) {
+            this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
+          }
+        })
+      } else {
+        this.productListLoading = false
+      }
     })
   }
 

@@ -69,7 +69,7 @@ export class AddComponent implements OnInit {
       termsAndConditions: []
     },
     terms: {},
-    add_invoice: this.emptyInvoice,
+    add_invoice: {...this.emptyInvoice},
     idList: ''
   }
   private invoiceList: Observable<invoice[]>
@@ -94,9 +94,10 @@ export class AddComponent implements OnInit {
   private balance
 
   private clientList: Observable<client[]>
-  private activeClient: any
+  private activeClient: any = {}
   private clientListLoading: boolean
-  private clientFocus: boolean
+  billingTo = new FormControl()
+  filteredClients: Observable<string[] | client[]>
   private clientsLocal = []
   private clientValidation: boolean
   private showClientError: boolean
@@ -105,13 +106,14 @@ export class AddComponent implements OnInit {
 
   private productList: Observable<product[]>
   private addProductList = []
+  productListFormControls = [new FormControl()]
+  filteredProducts: Observable<string[] | product[]>
   private addProduct: {
     itemDescription: string
   } = {
     itemDescription: ''
   }
 
-  filteredRepos: Observable<string[] | client[]>
   private show_tax_input_list: []
   private tempflagTaxList: []
 
@@ -202,7 +204,6 @@ export class AddComponent implements OnInit {
     },
     setting: setting
   }
-  billingTo = new FormControl()
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -228,26 +229,18 @@ export class AddComponent implements OnInit {
     this.init()
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    var client
-
-    this.clientList.subscribe(clients => {
-      client = clients
-    })
-    return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
-  }
-
-  displayWith(client?: client): string | undefined {
-    return client ? client.name : undefined;
+  displayWith(disp): string | undefined {
+    if (disp && disp.name) {
+      return disp.name
+    } else if ( disp && disp.prodName) {
+      return disp.prodName
+    }
+    return undefined
   }
 
   init() {
     this.clientsLocal = []
-
     this.clientListLoading = true
-    this.clientFocus = false
-
     this.initializeSettings(this.tempQuaNoOnAdd)
 
     this.data.add_invoice.taxList = []
@@ -327,8 +320,13 @@ export class AddComponent implements OnInit {
           // console.log(response)
           if (response.records != null) {
             self.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
+            this.setProductFilter(0)
+          } else {
+            this.setProductFilter(0)
           }
         })
+      } else {
+        this.setProductFilter(0)
       }
     })
 
@@ -338,20 +336,13 @@ export class AddComponent implements OnInit {
         this.clientService.fetch().subscribe((response: response) => {
           if (response.records !== null) {
             this.store.dispatch(new clientActions.add(response.records.filter(recs => recs.enabled == 0)))
-
-            // Filter for client autocomplete
-            this.clientList.subscribe(clients => {
-              this.filteredRepos = this.billingTo.valueChanges.pipe(
-                startWith<string | client>(''),
-                map(value => typeof value === 'string' ? value : value.name),
-                map(name => name ? this._filter(name) : clients.slice())
-              )
-            })
-            this.clientListLoading = false
+            this.setClientFilter()
           } else {
-            this.clientListLoading = false
+            this.setClientFilter()
           }
         })
+      } else {
+        this.setClientFilter()
       }
     })
 
@@ -366,6 +357,10 @@ export class AddComponent implements OnInit {
             self.terms = trms
           })
         })
+      } else {
+        this.termList.subscribe(trms => {
+          self.terms = trms
+        })
       }
     })
 
@@ -375,7 +370,7 @@ export class AddComponent implements OnInit {
         this.invoiceService.fetch().subscribe((result: any) => {
           // console.log('invoice', result)
           if(result.status === 200) {
-            this.store.dispatch(new invoiceActions.add(result.records.filter(est => est.deleted_flag == 0)))
+            this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
           }
         })
       }
@@ -598,54 +593,47 @@ export class AddComponent implements OnInit {
     })
   }
 
-  multiTaxButton(taxname) {
-    var status = true
-    if (this.data.invoice.taxList)
-      for (var k = 0; k < this.data.invoice.taxList.length; k++) {
-        if (this.data.invoice.taxList[k].taxName !== taxname) {
-          status = true
-        } else {
-          status = false
-          break
-        }
-      }
-
-    return status
+  setProductFilter(index) {
+    // Filter for product autocomplete
+    this.productList.subscribe(products => {
+      this.filteredProducts = this.productListFormControls[index].valueChanges.pipe(
+        startWith<string | product>(''),
+        map(value => typeof value === 'string' ? value : value.prodName),
+        map(name => name ? this._filterProd(name) : products.slice())
+      )
+    })
   }
 
-  setSortInvoice(searchfield) {
-    if (searchfield == 'id') {
-      this.isNone = true
-      this.isByClient = false
-      this.isByDate = false
-      this.isInvNo = false
-      this.isAmount = false
-    } else if (searchfield == 'name') {
-      this.isNone = false
-      this.isByClient = true
-      this.isByDate = false
-      this.isInvNo = false
-      this.isAmount = false
-    } else if (searchfield == 'created_date') {
-      this.isNone = false
-      this.isByClient = false
-      this.isByDate = true
-      this.isInvNo = false
-      this.isAmount = false
-    } else if (searchfield == 'invoice_number') {
-      this.isNone = false
-      this.isByClient = false
-      this.isByDate = false
-      this.isInvNo = true
-      this.isAmount = false
-    } else if (searchfield == 'amount') {
-      this.isNone = false
-      this.isByClient = false
-      this.isByDate = false
-      this.isInvNo = false
-      this.isAmount = true
-    }
-    this.sortInvoices = searchfield
+  private _filterProd(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    var product
+
+    this.productList.subscribe(products => {
+      product = products
+    })
+    return product.filter(prod => prod.prodName.toLowerCase().includes(filterValue));
+  }
+
+  setClientFilter() {
+    // Filter for client autocomplete
+    this.clientList.subscribe(clients => {
+      this.filteredClients = this.billingTo.valueChanges.pipe(
+        startWith<string | client>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterCli(name) : clients.slice())
+      )
+    })
+    this.clientListLoading = false
+  }
+
+  private _filterCli(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    var client
+
+    this.clientList.subscribe(clients => {
+      client = clients
+    })
+    return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
   }
 
   setPaidAmountTotalView() {
@@ -730,6 +718,117 @@ export class AddComponent implements OnInit {
         }
       })
     }
+  }
+
+  addLineItem() {
+    this.newItemCounter += 1
+    this.data.add_invoice.listItems.push({
+      'description': '',
+      'quantity': 1,
+      'unique_identifier': 'new' + this.newItemCounter,
+      'rate': 0.00,
+      'total': 0.00
+    })
+    this.productListFormControls.push(new FormControl())
+    this.setProductFilter(this.productListFormControls.length - 1)
+    // console.log(this.data.add_invoice.listItems)
+
+    if (this.newItemCounter > 0) {
+      this.focusOutMessage(this.searchText)
+    }
+  }
+
+  addItem(index, product) {
+    this.data.add_invoice.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
+    this.data.add_invoice.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
+    this.data.add_invoice.listItems[index].description = product.discription == null ? '' : product.discription
+    this.data.add_invoice.listItems[index].product_name = product.prodName
+    this.data.add_invoice.listItems[index].quantity = 1
+    this.data.add_invoice.listItems[index].unit = product.unit
+    this.data.add_invoice.listItems[index].rate = product.rate
+    this.data.add_invoice.listItems[index].tax_rate = 0.00
+
+    // this.productName.setValue('')
+    // console.log(this.data.add_invoice.listItems);
+
+    //New product add logic
+    // else if (selected_product_id !== '' && typeof selected_product_id !== 'undefined') {
+    //   var tempProAddFlag = false
+    //   var tempSelectedProduct = angular.lowercase(selected_product_id)
+    //   var tempProName = ''
+    //   var tempMatchPro = {}
+    //   for (var k = 0; k < this.productList.length; k++) {
+    //     tempProName = angular.lowercase(this.productList[k].prodName)
+    //     if (tempSelectedProduct == tempProName) {
+    //       tempProAddFlag = true
+    //       tempMatchPro = this.productList[k]
+    //     }
+    //   }
+    //   if (!tempProAddFlag) {
+    //     item.unique_key_fk_product = utility.generateUUID()
+    //     item.unique_identifier = utility.generateUUID()
+    //     item.product_name = selected_product_id
+    //     item.description = ""
+    //     item.quantity = 1
+    //     item.unit = ""
+    //     item.rate = 0.00
+    //     item.discount = 0.00
+    //     item.tax_rate = 0.00
+    //     /**
+    //      * Adding Product to Product List
+    //      * */
+
+    //     var d = new Date()
+    //     var temp1 = {
+    //       'prod_name': item.product_name,
+    //       'rate': parseFloat(item.rate),
+    //       'tax_rate': item.tax_rate,
+    //       //'description' : item.description,
+    //       'device_modified_on': d.getTime(),
+    //       'organization_id': $rootScope.authenticated.user.orgId,
+    //       'unique_identifier': item.unique_key_fk_product
+
+    //     }
+    //     this.addProductList.push(temp1)
+    //     //console.log("count1",item,temp1,this.addProductList,selected_product_id)
+    //   } else {
+    //     item.unique_key_fk_product = tempMatchPro.uniqueKeyProduct
+    //     item.unique_identifier = utility.generateUUID()
+    //     item.product_name = tempMatchPro.prodName
+    //     item.description = tempMatchPro.discription
+    //     item.quantity = 1
+    //     item.unit = tempMatchPro.unit
+    //     item.rate = tempMatchPro.rate
+    //     //item.discount = this.productList[index].discount
+    //     //item.tax_rate = this.productList[index].taxRate
+    //     item.tax_rate = 0.00
+    //     //console.log("count12",this.productList)
+    //   }
+    // } else {
+    //   item.description = ""
+    //   item.quantity = 1
+    //   item.unit = ""
+    //   item.rate = 0.00
+    //   item.discount = 0.00
+    //   item.tax_rate = 0.00
+    // }
+    this.calculateTotal(index)
+    // this.calculateInvoice(1)
+  }
+
+  multiTaxButton(taxname) {
+    var status = true
+    if (this.data.invoice.taxList)
+      for (var k = 0; k < this.data.invoice.taxList.length; k++) {
+        if (this.data.invoice.taxList[k].taxName !== taxname) {
+          status = true
+        } else {
+          status = false
+          break
+        }
+      }
+
+    return status
   }
 
   dynamicOrder(invoice) {
@@ -854,104 +953,8 @@ export class AddComponent implements OnInit {
     this.addClient(state)
   }
 
-  addLineItem() {
-    this.newItemCounter += 1
-    this.data.add_invoice.listItems.push({
-      'description': '',
-      'quantity': 1,
-      'unique_identifier': 'new' + this.newItemCounter,
-      'rate': 0.00,
-      'total': 0.00
-    })
-    // console.log(this.data.add_invoice.listItems)
-
-    if (this.newItemCounter > 0) {
-      this.focusOutMessage(this.searchText)
-    }
-  }
-
-  addItem(index, product) {
-    // console.log(index, product)
-    if (index !== -1) {
-      this.data.add_invoice.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
-      this.data.add_invoice.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
-      this.data.add_invoice.listItems[index].description = product.discription == null ? '' : product.discription
-      this.data.add_invoice.listItems[index].product_name = product.prodName
-      this.data.add_invoice.listItems[index].quantity = 1
-      this.data.add_invoice.listItems[index].unit = product.unit
-      this.data.add_invoice.listItems[index].rate = product.rate
-      this.data.add_invoice.listItems[index].tax_rate = 0.00
-    }
-    // console.log(this.data.add_invoice.listItems);
-
-    //New product add logic
-    // else if (selected_product_id !== '' && typeof selected_product_id !== 'undefined') {
-    //   var tempProAddFlag = false
-    //   var tempSelectedProduct = angular.lowercase(selected_product_id)
-    //   var tempProName = ''
-    //   var tempMatchPro = {}
-    //   for (var k = 0; k < this.productList.length; k++) {
-    //     tempProName = angular.lowercase(this.productList[k].prodName)
-    //     if (tempSelectedProduct == tempProName) {
-    //       tempProAddFlag = true
-    //       tempMatchPro = this.productList[k]
-    //     }
-    //   }
-    //   if (!tempProAddFlag) {
-    //     item.unique_key_fk_product = utility.generateUUID()
-    //     item.unique_identifier = utility.generateUUID()
-    //     item.product_name = selected_product_id
-    //     item.description = ""
-    //     item.quantity = 1
-    //     item.unit = ""
-    //     item.rate = 0.00
-    //     item.discount = 0.00
-    //     item.tax_rate = 0.00
-    //     /**
-    //      * Adding Product to Product List
-    //      * */
-
-    //     var d = new Date()
-    //     var temp1 = {
-    //       'prod_name': item.product_name,
-    //       'rate': parseFloat(item.rate),
-    //       'tax_rate': item.tax_rate,
-    //       //'description' : item.description,
-    //       'device_modified_on': d.getTime(),
-    //       'organization_id': $rootScope.authenticated.user.orgId,
-    //       'unique_identifier': item.unique_key_fk_product
-
-    //     }
-    //     this.addProductList.push(temp1)
-    //     //console.log("count1",item,temp1,this.addProductList,selected_product_id)
-    //   } else {
-    //     item.unique_key_fk_product = tempMatchPro.uniqueKeyProduct
-    //     item.unique_identifier = utility.generateUUID()
-    //     item.product_name = tempMatchPro.prodName
-    //     item.description = tempMatchPro.discription
-    //     item.quantity = 1
-    //     item.unit = tempMatchPro.unit
-    //     item.rate = tempMatchPro.rate
-    //     //item.discount = this.productList[index].discount
-    //     //item.tax_rate = this.productList[index].taxRate
-    //     item.tax_rate = 0.00
-    //     //console.log("count12",this.productList)
-    //   }
-    // } else {
-    //   item.description = ""
-    //   item.quantity = 1
-    //   item.unit = ""
-    //   item.rate = 0.00
-    //   item.discount = 0.00
-    //   item.tax_rate = 0.00
-    // }
-    this.calculateTotal(index)
-    // this.calculateInvoice(1)
-  }
-
   save(status) {
-    //this.setTermsList(this.data.terms);
-    // $rootScope.pro_bar_load = false;
+    $('#invSubmitBtn').attr('disabled', 'disabled')
     var createdTime = new Date()
     var dueDateTime = new Date()
     if (this.data.add_invoice.due_date && this.data.add_invoice.due_date !== '') {
@@ -985,9 +988,6 @@ export class AddComponent implements OnInit {
 
     if (this.data.add_invoice.listItems.length !== 0 && this.activeClient.name) {
       if (status) {
-        // $('#InvSbmtBtn').button('loading');
-        //$('#invoiceSavebtn').button('loading');
-
         for (var j = 0; j < this.data.add_invoice.termsAndConditions.length; j++) {
           this.data.add_invoice.termsAndConditions[j].unique_key_fk_invoice = this.data.add_invoice.unique_identifier;
         }
@@ -1029,38 +1029,21 @@ export class AddComponent implements OnInit {
 
             // Reset Create Invoice page for new invoice creation
             self.resetCreateInvoice()
-            // var tempCh = changeInvoice(result.invoiceList[0])
-            // tmpInv.splice(0, 0, tempCh)
-            // DataStore.addInvoicesList(tmpInv)
-            // self.getInvoice(tempCh.unique_identifier, 0)
-            // if ($rootScope.tempInvNoOnAdd)
-            //   $rootScope.tempInvNoOnAdd = parseInt(this.tempInvNoOnAdd) + 1
-            // else
-            //   $rootScope.tempInvNoOnAdd = parseInt(this.tempInvNo) + 1
-            //this.updateInvNum()
-            // notifications.showSuccess({
-            //   message: result.data.message,
-            //   hideDelay: 1500,
-            //   hide: true
-            // })
             alert('Invoice saved successfully')
-
-            // $rootScope.add_inv_status = true
-            // $rootScope.pro_bar_load = true
-            // $('#InvSbmtBtn').button('reset')
           }
-          // $('#invoiceSavebtn').button('reset');
+          $('#invSubmitBtn').removeAttr('disabled')
         })
       }
       else {
         // $rootScope.pro_bar_load = true;
-        // $('#invoiceSavebtn').button('reset')
+        $('#invSubmitBtn').removeAttr('disabled')
         alert('You haven\'t added item')
         // if (this.data.add_invoice.listItems.length == 0) {
         //   notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
         // }
       }
     } else {
+      $('#invSubmitBtn').removeAttr('disabled')
       // $rootScope.pro_bar_load = true;
       if (!this.activeClient.name) {
         alert('client not selected')
@@ -1190,17 +1173,8 @@ export class AddComponent implements OnInit {
   }
 
   removeItem(index) {
-    // var status = -1
-    // for (var i = 0; i < this.data.add_invoice.listItems.length; i++) {
-    //   var temProName = angular.lowercase(index.product_name)
-    //   var temProName1 = angular.lowercase(this.data.add_invoice.listItems[i].product_name)
-    //   if (temProName == temProName1) {
-    //     status = i
-    //     break
-    //   }
-    // }
-    // console.log(index, this.data.add_invoice.listItems)
     this.data.add_invoice.listItems.splice(index, 1)
+    this.productListFormControls.splice(index, 1)
     this.calculateInvoice(1)
   }
 
@@ -1231,63 +1205,6 @@ export class AddComponent implements OnInit {
   showMeTax() {
     this.show_tax_input = true
     this.tempflagTax = true
-  }
-
-  searchTextChange(text) {
-    //$log.info('Text changed to '+ text)
-    //this.clientFocus = true
-    this.focusOut(this.searchText)
-    //this.searchText = ''
-    //console.log('Text changed to ' + text)
-  }
-
-  focusOut(name) {
-    this.clientValidation = false
-    var lowercaseQuery = name.toLowerCase()
-    if (this.repos)
-      for (var i = 0; i < this.repos.length; i++) {
-        var lowercaseQuery1 = angular.lowercase(this.repos[i].name)
-        if (lowercaseQuery1 === lowercaseQuery) {
-          this.clientValidation = true
-          break
-        }
-        else {
-          this.clientValidation = false
-        }
-      }
-  }
-
-  watch() {
-    var invoiceDateArray = ''
-    if (this.invoiceDate.indexOf('.') > -1)
-      invoiceDateArray = this.invoiceDate.split('.')
-    else
-      invoiceDateArray = this.invoiceDate.split('-')
-
-    if ($rootScope.settings.date_format === 'dd-mm-yy') {
-      this.data.add_invoice.created_date = (new Date(invoiceDateArray[2], parseInt(invoiceDateArray[1]) - 1, invoiceDateArray[0])).getTime()
-
-    } else if ($rootScope.settings.date_format = 'mm-dd-yy') {
-      this.data.add_invoice.created_date = (new Date(invoiceDateArray[2], parseInt(invoiceDateArray[0]) - 1, invoiceDateArray[1])).getTime()
-    }
-  }
-
-  focusOutMessage(name) {
-    this.showClientError = false
-    var lowercaseQuery = name.toLowerCase()
-    var tempFlag = true
-    if (this.repos) {
-      for (var i = 0; i < this.repos.length; i++) {
-        var lowercaseQuery1 = this.repos[i].name.toLowerCase()
-        if (lowercaseQuery1 === lowercaseQuery) {
-          this.showClientError = false
-          tempFlag = false
-        } else if ((i === (this.repos.length) - 1) && tempFlag) {
-          this.showClientError = true
-          this.searchText = ''
-        }
-      }
-    }
   }
 
   createFilterFor(query) {
@@ -1868,8 +1785,13 @@ export class AddComponent implements OnInit {
 
   resetCreateInvoice() {
     this.billingTo.setValue('')
-    this.data.add_invoice = this.emptyInvoice
+    this.productListFormControls = [new FormControl()]
+    this.setProductFilter(0)
+    console.log(this.emptyInvoice);
+    
+    this.data.add_invoice = {...this.emptyInvoice}
     this.data.add_invoice.listItems = []
+    this.newItemCounter = 0
     this.data.add_invoice.listItems.push({
       'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
@@ -1886,9 +1808,7 @@ export class AddComponent implements OnInit {
     var settings = this.authenticated.setting
     this.data.add_invoice.taxList = []
     this.data.add_invoice.percentage_flag = 1
-
     this.show_tax_input = false
-
     this.show_shipping_charge = false
     this.data.terms = []
 
@@ -1977,14 +1897,16 @@ export class AddComponent implements OnInit {
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      this.data.add_invoice.tax_on_item = parseInt(2)
+      this.data.add_invoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      this.data.add_invoice.discount_on_item = parseInt(2)
+      this.data.add_invoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
+    console.log(this.data);
+    
   }
 
   // isEmpty1() {

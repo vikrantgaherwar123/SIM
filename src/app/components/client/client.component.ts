@@ -3,6 +3,7 @@ import { ClientService } from '../../services/client.service'
 import { CookieService } from 'ngx-cookie-service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
+
 import { client, response } from '../../interface'
 import { Observable } from 'rxjs'
 import { Store } from '@ngrx/store'
@@ -89,7 +90,7 @@ export class ClientComponent implements OnInit {
         this.clientService.fetch().subscribe((response: response) => {
           if (response.status === 200) {
             this.clientListLoader = true
-            this.store.dispatch(new clientActions.add(response.records))
+            this.store.dispatch(new clientActions.add(response.records.filter(client => client.enabled == 0)))
           }
         })
       } else {
