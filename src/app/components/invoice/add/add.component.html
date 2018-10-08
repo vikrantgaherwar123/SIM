@@ -1,5 +1,4 @@
 <div class="row main-wrapper">
-  <!--<div class="pad0" id="sidebar-menu" ng-include="'views/elements/navigation.html'" pageslide ps-open="checked" ps-side="left"  ps-push="true" ps-click-outside="false" ps-auto-close="true" ></div>-->
   <div class="col-12" id="main">
     <div class="row">
 
@@ -28,61 +27,34 @@
                             <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
                               matInput [formControl]="billingTo" [matAutocomplete]="auto"
                             >
-                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedClientChange($event)">
-                              <mat-option *ngFor="let client of filteredRepos | async" [value]="client.name">{{client.name}}</mat-option>
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" (optionSelected)="selectedClientChange($event)">
+                              <mat-option *ngFor="let client of filteredRepos | async" [value]="client">{{client.name}}</mat-option>
+                              <mat-option *ngIf="filteredRepos && (filteredRepos | async).length == 0" [value]="billingTo.value">Add Client {{billingTo.value}}</mat-option>
                             </mat-autocomplete>
-                            <!-- <md-content class="md-padding font-custom" style="background-color: #ffffff ;    padding: 2px 2px 2px 2px;">
-                                    <form name="autocompleteForm">
-                                      <md-autocomplete md-dropdown-position="down" [disabled]="false" md-selected-item="selectedItem"
-                                        md-no-cache="true" md-search-text-change="searchTextChange(searchText)" md-search-text="searchText"
-                                        md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)"
-                                        md-item-text="item.name" md-min-length="0" placeholder="Search & Select Client"
-                                        md-input-name="autocomplete" ng-invalid="error" required my-enter custom-mouse>
-                                        <md-item-template>
-                                          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
-                                        </md-item-template>
-                                        <div *ngIf="showClientError">
-                                          <div ng-message="required">This field is required</div>
-                                        </div>
-          
-                                        <md-not-found>
-                                          <div (click)="newState(searchText)">
-                                            <i class="material-icons" style="vertical-align: middle;" (click)="">&#xE146;</i>
-                                            Add this client {{searchText}}..
-                                          </div>
-                                        </md-not-found>
-                                      </md-autocomplete>
-                                      <br />
-                                    </form>          
-                                  </md-content> -->
                           </div>
                         </div>
                       </div>
 
-                      <div class="col-md-2 col-sm-2 col-xs-2">
-                        <!-- <md-progress-circular *ngIf="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
-                                md-diameter="25px"></md-progress-circular> -->
+                      <div class="col-md-2 col-sm-2 col-xs-2" style="padding-top: 30px;">
+                        <span><i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i></span>
                       </div>
       
-                      <!--{{selectedItem}}-->
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
                         <div class="row mar0">
-                          <div class="col-md-6 col-sm-6 col-xs-6 pad-left-0">
+                          <div class="col-6 pad-left-0">
                             <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
-                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                            <div class="address-render">{{client.client.address_line1}}<br /></div>
-                            <div *ngIf="!isEmpty11()">
-                              Email: {{client.client.email}}
+                            <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
+                            <div *ngIf="activeClient && activeClient.email">
+                              Email: {{activeClient.email}}
                             </div>
-                            <div *ngIf="!isEmpty12()">
-                              Contact No: {{client.client.number}}
+                            <div *ngIf="activeClient && activeClient.number">
+                              Contact No: {{activeClient.number}}
                             </div>
                           </div>
-                          <div class="col-md-6 col-sm-6 col-xs-6 pad-right-0">
+                          <div class="col-6 pad-right-0">
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">Shipping
                               Address</span><br />
-                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                            <div class="address-render">{{client.client.shippingAddress}}<br /></div>
+                            <div class="address-render" *ngIf="activeClient">{{activeClient.shippingAddress}}<br /></div>
                           </div>
                         </div>
                       </div>
@@ -91,8 +63,8 @@
 
                   <div class="col-md-5 col-lg-5 col-sm-5 col-xs-12 pad-right-0" id="invDataAdd">
                     <div class="row">
-                      <div class="offset-md-2 col-md-4 col-sm-6 col-xs-6" style="margin-top: 5px;"><span
-                        class="font-custom-bold text-left w100">Invoice#</span>
+                      <div class="offset-md-2 col-md-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                        <span class="font-custom-bold text-left w100">Invoice#</span>
                       </div>
                       <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
                         <form #invNumberForm="ngForm" name="invNumberForm">
@@ -110,7 +82,7 @@
                       <div class="offset-md-2 col-md-4 offset-lg-2 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w100">Invoice Date</span>
                       </div>
-                      <div class="col-md-6 col-sm-6 col-xs-6">
+                      <div class="col-6">
                         <div style="max-width: 100%;">
                           <div class="row mar0">
                             <input type="text" class="form-control" [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly style="max-width: 110px;">
@@ -129,7 +101,7 @@
                       <div class="offset-md-2 col-md-4 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w100">Reference</span>
                       </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                      <div class="col-lg-6 col-6">
                         <input type="text" name="invoiceNumber" id="referenceid"
                           [(ngModel)]="data.add_invoice.reference" class="form-control pad-right-0"
                         />
@@ -172,7 +144,6 @@
                   </div>
                 </div>
 
-                <!--Div Content title INVOICE and Company's Name & Address-etc- end-->
                 <div class="lineItemDiv">
                   <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
                     <!--table head content itemDescription , Qty , Rate ,Amount start -->
@@ -199,7 +170,7 @@
                       </tr>
                     </thead>
 
-                    <!--table Body content itemDescription , Qty , Rate ,Amount start-->
+                    <!-- itemDescription, Qty, Rate, Amount -->
                     <tbody class="lineItems">
                       <tr class="row-item" *ngFor="let item of data.add_invoice.listItems; let index = index; let last = last">
                         <td [class.no-border-last]="last">
@@ -209,12 +180,13 @@
                                 [matAutocomplete]="auto" [(ngModel)]="item.product_name"
                               >
                               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem(index, $event.option.value)">
-                                <mat-option *ngFor="let product of productList" [value]="product">{{product.prodName}}</mat-option>
+                                <mat-option *ngFor="let product of (productList | async)" [value]="product">{{product.prodName}}</mat-option>
                               </mat-autocomplete>
                             </div>
                             <div class="custom-description">
-                              <textarea id="descId" name="description_{{index}}" elastic style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
-                                [(ngModel)]="item.description" class="form-control" placeholder="Description"
+                              <textarea id="descId" name="description_{{index}}" class="form-control" elastic
+                                style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
+                                [(ngModel)]="item.description"  placeholder="Description"
                               ></textarea>
                             </div>
                           </div>
@@ -256,7 +228,6 @@
                     </tbody>
                   </table>
 
-                  <!--Term and Condition and Sub-Total in table body start -->
                   <div class="row add-item-button">
                     <div class="col-md-6 col-xs-6 col-sm-6">
                       <button type="button" class="btnd add-line-item-button" (click)="addLineItem()">
@@ -280,6 +251,7 @@
                     </div>
                   </div>
 
+                  <!--Term and Condition and Sub-Total in table body start -->
                   <div class="row mar0">
                     <div class="col-md-6 col-xs-6 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
@@ -294,11 +266,11 @@
         
                       <div class="col-md-12 col-xs-12 col-md-12 pad0">
                         <div class="form-group">
-                          <div *ngFor="let term of termList; index as index" class="row mar0">
+                          <div *ngFor="let term of terms; index as index" class="row mar0">
                             <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
-                              {{term.terms_condition}}
+                              {{term.terms}}
                             </div>
-                            <div class="col-md-2 ml-auto" (click)="setTermsListDelete(index)" style="cursor:pointer;">
+                            <div class="col-md-2 ml-auto" (click)="removeTermFromInvoice(index)" style="cursor:pointer;">
                               <a class="closeicon show float-right">
                                 <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
                               </a>
@@ -536,6 +508,117 @@
   </div>
 </div>
 
+<!-- ADD CLIENT MODAL -->
+<div class="modal fade" id="add-client" role="dialog" aria-labelledby="clientFormLabel" 
+  aria-hidden="true" data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+          Add New Client
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <img src="assets/images/cross16.png" alt="logo">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-6" style="padding-right: 23px;">
+                <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
+                  <input type="text" name="name" class="form-control add-client-input-custom"
+                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
+                  />
+                  <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
+                    <span *ngIf="clientform.name.$error.required">Required</span>
+                    <span *ngIf="errors">{{ errors.name[0] }}</span>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="col-6" style="padding-left: 23px;">
+                <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
+                  <input type="text" name="contactPersonName" class="form-control add-client-input-custom"
+                    [(ngModel)]="addClientModal.contactPersonName" placeholder="Contact Person"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="row">
+              <div class="col-6" style="padding-right: 23px;">
+                <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
+                  <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
+                    placeholder="Email" my-enter-in select-on-click
+                  />
+                </div>
+              </div>
+              <div class="col-6" style="padding-left: 23px;">
+                <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
+                  <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
+                    placeholder="Number" my-enter-in select-on-click
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group add-client-input-width" style="padding-right: 12px;"
+              [class.has-error]="(clientform.submitted && clientform.errors)"
+            >
+              <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
+                class="form-control" placeholder="Address" select-on-click style="max-height: 69px; height: 69px;"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group add-client-input-width" style="padding-right: 12px;"
+              [class.has-error]="(clientform.submitted && clientform.errors)"
+            >
+              <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
+                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group add-client-input-width">
+              <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
+                placeholder="Business Id " select-on-click
+              />
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group add-client-input-width">
+              <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
+                placeholder="Business Detail" my-enter-in select-on-click
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
+          [disabled]="!clientform.valid" (click)="saveClient(clientform.valid)"
+        >
+          Add Client
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="add-terms" tabindex="-1" role="dialog" 
   aria-labelledby="gridSystemModalLabel" data-backdrop="static" data-keyboard="false"
 >
@@ -602,111 +685,6 @@
         </div>
       </div>
       <div class="modal-footer"></div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="add-client" role="dialog" aria-labelledby="clientFormLabel" 
-  aria-hidden="true" data-backdrop="static" data-keyboard="false"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <a class="pull-right" (click)="closeClient()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
-        </a>
-        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-          Add New Client
-        </h4>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-          <div class="col-12">
-            <div class="col-md-6 col-sm-6 col-xs-6 " style="padding-right: 23px;">
-              <!-- <div class="form-group" [class.has-error]="(clientform.submitted || clientform.name.touched || errors.name) && clientform.name.$error.required">
-                <input type="text" [(ngModel)]="client.client.name" name="name" class="form-control add-client-input-custom"
-                  placeholder="Organization Name" required
-                />
-                <div class="form-error" *ngIf="clientform.submitted || clientform.name.touched || errors.name">
-                  <span *ngIf="clientform.name.$error.required">Required</span>
-                  <span *ngIf="errors.name">{{ errors.name[0] }}</span>
-                </div>
-              </div> -->
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 23px;">
-              <!-- <div class="form-group " [class]="{ 'has-error':(clientform.submitted || clientform.contact_person_name.touched || errors.contact_person_name) && clientform.contact_person_name.$error.required }">
-                <input type="text" [(ngModel)]="addClientModal.contact_person_name" name="contact_person_name" class="form-control add-client-input-custom"
-                  placeholder="Contact Person" />
-              </div> -->
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 23px;">
-              <!-- <div class="form-group " [class]="{ 'has-error': (clientform.submitted || clientform.email.touched || errors.email ) && clientform.email.$error.required }">
-                <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
-                  placeholder="Email" my-enter-in select-on-click />
-              </div> -->
-            </div>
-            <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 23px;">
-              <!-- <div class="form-group" [class]="{ 'has-error': (clientform.submitted || clientform.cont_number.touched || errors.number) && (clientform.cont_number.$error.required || clientform.cont_number.$error.maxlength)  }">
-                <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
-                  placeholder="Number" my-enter-in select-on-click />
-              </div> -->
-            </div>
-          </div>
-
-          <div class="col-12 pt-5">
-            <!-- <div class="form-group add-client-input-width" [class]="{ 'has-error': (clientform.submitted || clientform.address_line1.touched || errors.address_line1) && (clientform.address_line1.$error.required || errors.address_line1) }"
-              style="padding-right: 12px;"
-            >
-              <textarea elastic [(ngModel)]="addClientModal.address_line1" name="address_line1"
-                class="form-control" placeholder="Address" select-on-click style="max-height: 69px; height: 69px;"
-              ></textarea>
-            </div> -->
-          </div>
-
-          <div class="col-12">
-            <!-- <div class="form-group add-client-input-width" [class]="{ 'has-error': (clientform.submitted || clientform.shipping_address.touched || errors.shipping_address) && clientform.shipping_address.$error.required }"
-              style="padding-right: 12px;"
-            >
-              <textarea elastic [(ngModel)]="addClientModal.shipping_address" name="shipping_address" class="form-control"
-                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;"
-              ></textarea>
-            </div> -->
-          </div>
-
-          <div class="col-12 pad-right-0">
-            <div class="form-group add-client-input-width">
-              <!-- <input type="text" [(ngModel)]="addClientModal.business_id" name="business_id" class="form-control add-client-input-custom"
-                placeholder="Business Id " select-on-click
-              /> -->
-            </div>
-          </div>
-
-          <div class="col-12 pt-5 pad-right-0">
-            <div class="form-group add-client-input-width">
-              <!-- <input type="text" [(ngModel)]="addClientModal.business_detail" name="business_detail" class="form-control add-client-input-custom"
-                placeholder="Business Detail" my-enter-in select-on-click
-              /> -->
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <div class="col-12">
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeClient()">
-            Close
-          </button>
-          <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
-            [disabled]="!clientform.valid" (click)="saveClient(client, clientform.valid)"
-          >
-            Add Client
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>

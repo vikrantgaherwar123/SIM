@@ -2,10 +2,94 @@ import { Observable } from 'rxjs'
 
 export interface response {
   status: number,
-  records: Observable<client[]>,
-  clientList: Observable<client[]>,
+  records: client[],
+  clientList: client[],
+  termsAndConditionList: terms[]
   message: string,
   error: string
+}
+
+export interface setting {
+  CommasThree: boolean
+  CommasTwo: boolean
+  adjustment: string
+  alstTaxName: Array<{}>
+  appDataDateOptionFlag: number
+  appVersionCode: string
+  appVersionNo: number
+  applyFilterOptionToAllUser: false
+  balance: string
+  bankingDetails: string
+  baseAmount: string
+  carrier: string
+  colorcode: number
+  commaSeperator: string
+  country: string
+  countryIndex: number
+  currencyInText: string
+  currencyPos: number
+  currencySymbol: boolean
+  currencyText: boolean
+  dateDDMMYY: boolean
+  dateMMDDYY: boolean
+  date_format: string
+  decimalSeperator: string
+  deviceCreatedEpoch: number
+  discount: string
+  discountFlagLevel: number
+  dontShowGSTMsgAgain: boolean
+  dropboxEmail: string
+  fobPoint: string
+  googleDriveEmail: string
+  gstApplied: boolean
+  invNo: number
+  inventoryEnabledFlag: boolean
+  inventoryStockAlertsFlag: boolean
+  invoiceOldShowFlag: boolean
+  invoiceQuickShowFlag: boolean
+  isLinkToDrive: boolean
+  isLinkToDropbox: boolean
+  languageCode: number
+  legecyOrQuickVersion: number
+  mTvAmount: string
+  mTvAmountDue: string
+  mTvBillTo: string
+  mTvDueDate: string
+  mTvEstimate: string
+  mTvInvoice: string
+  mTvProducts: string
+  mTvQty: string
+  mTvRate: string
+  mTvShipTo: string
+  mTvTermsAndConditions: string
+  notes: string
+  numberFormat: string
+  order: string
+  otherDetails: string
+  paid: string
+  payPalActivatinFlag: boolean
+  payPalUserAccountURL: string
+  payableTo: string
+  productCode: string
+  pushFlag: number
+  quotFormat: string
+  quotNo: string
+  receiptLable: string
+  receiptNo: string
+  savePDFOnDrive: boolean
+  savePDFOnDropBox: boolean
+  setInvoiceFormat: string
+  shipping: string
+  shippingDetails: string
+  signature: string
+  subtotal: string
+  taxFlagLevel: number
+  taxIDLable: string
+  taxLable: string
+  templateVersion: number
+  total: string
+  totalSaleOrPayMonthly: boolean
+  totalSaleOrPayWeekly: boolean
 }
 
 export interface client {
@@ -49,8 +133,17 @@ export interface product {
 }
 
 export interface terms {
-  name: string,
-  value: string
+  createDate: number
+  deviceCreateDate: number
+  enabled: number
+  modifiedDate: number
+  modifiedOn: number
+  orgId: number
+  serverTermCondId: number
+  serverUpdateTime: number
+  setDefault: string
+  terms: string
+  uniqueKeyTerms: string
 }
 
 export interface invoice {
@@ -59,14 +152,19 @@ export interface invoice {
   balance: number
   client_id: number
   created_date: string
+  deletedItems: Array<{}>
+  deletedPayments: Array<{}>
+  deletedTerms: Array<{}>
   deleted_flag: number
   device_modified_on: number
   discount: number
   discount_on_item: number
+  due_date: string
   due_date_flag: number
   epoch: number
   gross_amount: number
   id: number
+  invoiceNote: string
   invoice_number: string
   listItems: Array<{}>
   organization_id: number
@@ -74,6 +172,7 @@ export interface invoice {
   percentage_flag: number
   percentage_value: number
   push_flag: number
+  reference: string
   serverUpdateTime: number
   shipping_address: string
   shipping_charges: number
@@ -84,6 +183,7 @@ export interface invoice {
   unique_identifier: string
   unique_key_fk_client: string
   version: number
+  _id: number
 }
 
 export interface estimate {

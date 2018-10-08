@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms'
 import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
 
+import { client } from '../../interface'
 import { EstimateService } from '../../services/estimate.service'
 import { ClientService } from '../../services/client.service'
 import { ProductService } from '../../services/product.service'
@@ -27,7 +28,7 @@ interface response {
   quotationList: Array<{}>
 }
 interface setting {
-  alstTaxName: []
+  alstTaxName: [{}]
   adjustment: string
   balance: string
   currencyInText: string
@@ -137,7 +138,7 @@ export class EstimateComponent implements OnInit {
     itemDescription: ''
   }
 
-  private repos = []
+  private repos:client[] = []
   filteredRepos: Observable<string[]>
   private show_tax_input_list: []
   private tempflagTaxList: []

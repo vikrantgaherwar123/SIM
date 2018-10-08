@@ -282,10 +282,10 @@ export function changeEstimate(data) {
 }
 
 export function changeInvoice(data) {
-  var tempInvoice = data;
-  var tempItemList = [];
-  var tempTermList = [];
-  var tempPaymentList = [];
+  var tempInvoice = data
+  var tempItemList = []
+  var tempTermList = []
+  var tempPaymentList = []
   for (var j = 0; j < data.listItems.length; j++) {
     var temp = {
       'uniqueKeyListItem': data.listItems[j].unique_identifier,
@@ -307,8 +307,7 @@ export function changeInvoice(data) {
       'invoiceProductCode': data.listItems[j].invoiceProductCode,
       'uniqueKeyFKInvoice': data.listItems[j].unique_key_fk_invoice
     }
-    tempItemList.push(temp);
-
+    tempItemList.push(temp)
   }
   if (!isNaN(data.termsAndConditions && !data.termsAndConditions == null
     && data.termsAndConditions.isEmpty())) {
@@ -323,14 +322,14 @@ export function changeInvoice(data) {
         "uniqueInvoiceTerms": data.termsAndConditions[i].unique_identifier,
         "uniqueKeyFKInvoice": data.termsAndConditions[i].unique_key_fk_invoice
       }
-      tempTermList.push(temp);
+      tempTermList.push(temp)
     }
   }
 
-  tempInvoice.listItems = tempItemList;
+  tempInvoice.listItems = tempItemList
   tempInvoice.termsAndConditions = tempTermList;
   if (typeof data.payments !== 'undefined') {
-    var paidAmountTemp = 0;
+    var paidAmountTemp = 0
     for (var i = 0; i < data.payments.length; i++) {
       var temp = {
         "dateOfPayment": data.payments[i].date_of_payment,
@@ -347,12 +346,12 @@ export function changeInvoice(data) {
         "clientId": data.payments[i].local_client_id,
         "paymentNote": data.payments[i].paymentNote
       }
-      tempPaymentList.push(temp);
+      tempPaymentList.push(temp)
     }
 
-    tempInvoice.payments = tempPaymentList;
+    tempInvoice.payments = tempPaymentList
   }
-  return tempInvoice;
+  return tempInvoice
 }
 
 export function dateDifference (date1: any, date2: any){

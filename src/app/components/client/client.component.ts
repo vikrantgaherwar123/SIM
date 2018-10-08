@@ -23,18 +23,19 @@ export class ClientComponent implements OnInit {
   }
   private clientList: Observable<client[]>
   private activeClient = {
-    name: "",
-    contactPersonName: "",
-    email: "",
-    number: "",
     addressLine1: "",
-    shippingAddress: "",
     businessDetail: "",
     businessId: "",
-    organizationId: "",
-    uniqueKeyClient: "",
+    contactPersonName: "",
+    deleted_flag: 0,
     device_modified_on: 0,
-    deleted_flag: 0
+    email: "",
+    localClientid: 0,
+    name: "",
+    number: "",
+    shippingAddress: "",
+    organizationId: "",
+    uniqueKeyClient: ""
   }
   private activeClientIndex
   private errors: object = {}
@@ -212,7 +213,7 @@ export class ClientComponent implements OnInit {
       this.activeClient.device_modified_on = d.getTime();
       this.clientListLoader = false
       var self = this
-      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: response) => {
+      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: any) => {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');
