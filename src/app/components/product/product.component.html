@@ -1,8 +1,8 @@
 <div class="row main-wrapper">
   <div class="col-md-12 col-sm-12 col-xs-12" id="main">
     <div class="row">
+      <!-- Product List -->
       <div class="col-md-3 col-sm-3 col-xs-12 item-list prod-list pad-right-0">
-
         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
             <div class="row">
@@ -43,14 +43,14 @@
           Select Product to view or edit
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12 pad0 scroll mCustomScrollbar" scroll-bar>
-          <div align="center" style="background-color: #fff;">
-            <!-- <md-progress-circular *ngIf="!productListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
-              md-diameter="25px"></md-progress-circular> -->
+          <div style="background-color: #fff;" *ngIf="productListLoading">
+            <mat-spinner style="color: #1A73CC" class="loader"
+            ></mat-spinner>
           </div>
-          <div *ngFor="let product of (productList | orderBy:order.sortProduct | filterBy:filterProduct | slice:0:productDisplayLimit); index as index"
-            class="prodname" id="prod{{$index}}" [class.selected]="selectedProduct == $index"
+          <div *ngFor="let product of (productList | async | orderBy:order.sortProduct | filterBy:filterProduct | slice:0:productDisplayLimit); index as index"
+            class="prodname" id="prod{{index}}" [class.selected]="selectedProduct == index"
           >
-            <div class="row item product-list" *ngIf="product.enabled == 0">
+            <div class="row item product-list">
               <div class="col-md-2 col-sm-2 col-xs-2 padl5">
                 <img src="../assets/images/list-icon/pro.png" style="vertical-align: middle;width: 36px; height: 36px;">
                 <!--<div class="circle" ng-random-color-class ng-classes="classes"><img src="../assets/images/product.png"  > </div>-->
@@ -78,7 +78,7 @@
               </div>
             </div>
           </div>
-          <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListsLoader">
+          <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
             <h4>No Product to display, please create a product</h4>
           </div>
           <div class="col-md-12 col-sm-12 col-xs-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
@@ -89,6 +89,7 @@
         </div>
       </div>
 
+      <!-- Product CRUD operations -->
       <div class="col-md-9 col-sm-9 col-xs-12 item-form">
         <form class="form-horizontal" #f="ngForm" name="form">
           <div class="shadow">

@@ -176,10 +176,11 @@ export interface invoice {
   serverUpdateTime: number
   shipping_address: string
   shipping_charges: number
+  taxList: Array<{}>
   tax_amount: number
   tax_on_item: number
   tax_rate: number
-  termsAndConditions: Array<{}>
+  termsAndConditions: Array<terms>
   unique_identifier: string
   unique_key_fk_client: string
   version: number
