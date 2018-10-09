@@ -205,7 +205,7 @@ export function generateUUID(orgId) {
 };
 
 export function changeEstimate(data) {
-  var tempEstimate = {};
+  var tempEstimate: any = {};
   var tempItemList = [];
   var tempTermList = [];
 
@@ -243,7 +243,7 @@ export function changeEstimate(data) {
   }
 
   for (var j = 0; j < data.listItems.length; j++) {
-    var temp = {
+    var temp: any = {
       'unique_identifier': data.listItems[j].uniqueKeyQuotationProduct,
       'productName': data.listItems[j].product_name,
       'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
@@ -264,7 +264,7 @@ export function changeEstimate(data) {
   if (!isNaN(data.termsAndConditions) && data.termsAndConditions !== null
     && !data.termsAndConditions.isEmpty()) {
     for (var i = 0; i < data.termsAndConditions.length; i++) {
-      var temp = {
+      var temp: any = {
         "termsConditionText": data.termsAndConditions[i].terms_condition,
         "localId": data.termsAndConditions[i]._id,
         "localQuotationId": data.termsAndConditions[i].local_quotation_id,
@@ -287,7 +287,7 @@ export function changeInvoice(data) {
   var tempTermList = []
   var tempPaymentList = []
   for (var j = 0; j < data.listItems.length; j++) {
-    var temp = {
+    var temp: any = {
       'uniqueKeyListItem': data.listItems[j].unique_identifier,
       'productName': data.listItems[j].product_name,
       'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
@@ -313,7 +313,7 @@ export function changeInvoice(data) {
     && data.termsAndConditions.isEmpty())) {
     for (var i = 0; i < data.termsAndConditions.length; i++) {
 
-      var temp = {
+      var temp: any = {
         "terms": data.termsAndConditions[i].terms_condition,
         "localId": data.termsAndConditions[i]._id,
         "invoiceId": data.termsAndConditions[i].local_invoiceId,
@@ -331,7 +331,7 @@ export function changeInvoice(data) {
   if (typeof data.payments !== 'undefined') {
     var paidAmountTemp = 0
     for (var i = 0; i < data.payments.length; i++) {
-      var temp = {
+      var temp: any = {
         "dateOfPayment": data.payments[i].date_of_payment,
         "paidAmount": data.payments[i].paid_amount,
         "orgId": data.payments[i].organization_id,

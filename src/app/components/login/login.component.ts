@@ -45,6 +45,9 @@ export class LoginComponent implements OnInit {
     if(user) {
       this.validateToken(user.access_token, user.user.orgId, user)
     }
+
+    // Hide sidebar if active
+    $('#sidebar, #content').addClass('active')
   }
 
   loginUser(event) {

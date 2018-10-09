@@ -31,49 +31,48 @@ import { AppState } from '../../../app.state'
 export class AddComponent implements OnInit {
 
   private emptyInvoice = {
-    amount: 0.00,
     adjustment: 0,
+    amount: 0.00,
     balance: 0.00,
-    due_date: '',
-    due_date_flag: 0,
-    organization_id: '',
-    termsAndConditions: [],
+    client_id: 0,
     created_date: '',
+    deletedItems: [],
+    deletedPayments: [],
+    deletedTerms: [],
+    deleted_flag: 0,
     device_modified_on: 0,
     discount: 0,
     discount_on_item: 0,
+    due_date: '',
+    due_date_flag: 0,
+    epoch: 0,
+    gross_amount: 0.00,
+    id: 0,
+    invoiceNote: '',
     invoice_number: '',
-    gross_amount: 0,
     listItems: [],
+    organization_id: 0,
     payments: [],
     percentage_flag: 0,
-    percentage_value: '',
+    percentage_value: 0,
+    push_flag: 0,
+    reference: '',
+    serverUpdateTime: 0,
     shipping_address: '',
     shipping_charges: 0,
+    taxList: [],
     tax_amount: 0,
     tax_on_item: 0,
     tax_rate: 0,
-    taxList: [],
+    termsAndConditions: [],
     unique_identifier: '',
-    unique_key_fk_client: 0
+    unique_key_fk_client: '',
+    version: 0,
+    _id: 0
   }
-  private data = {
-    item: {},
-    invoice: {
-      payments: [],
-      taxList: [],
-      orgName: '',
-      tempInvNo: '',
-      disp: false,
-      listItems: [],
-      termsAndConditions: []
-    },
-    terms: {},
-    add_invoice: {...this.emptyInvoice},
-    idList: ''
-  }
+
   private invoiceList: Observable<invoice[]>
-  private activeInvoice: invoice
+  private activeInvoice: invoice = {...this.emptyInvoice}
   private invoiceItems = []
   private invoiceTerms = []
   private selectedInvoice = null
@@ -114,18 +113,17 @@ export class AddComponent implements OnInit {
     itemDescription: ''
   }
 
-  private show_tax_input_list: []
-  private tempflagTaxList: []
+  private show_tax_input_list: any
+  private tempflagTaxList: any
 
   private tax_on: string
   private taxtext: string
   private discount_on: string
   private discounttext: string
-
-  private customersSelect
   private settings: any
-  private terms: Array<{}> = []
+
   private termList: Observable<terms[]>
+  private addTermModal: any = {}
 
   private tempQtyLabel: string
   private tempProLabel: string
@@ -142,24 +140,20 @@ export class AddComponent implements OnInit {
   private tempPaidLabel: string
   private tempTotalLabel: string
   private tempBalLabel: string
-  private tempInv12: []
+  private tempInv12: any
   private tempPaymentList
   private tempItemList
   private tempTermList
   private routeParams: {
-    estId: string,
     invId: string
   }
 
   private newItemCounter: number = 0
-  private total = 0
 
-  private checked = false
   private customDate = true
   private isRate = true
   private dueDate = ""
 
-  private searchText: string = ''
   private isNone: boolean
   private isByClient: boolean
   private isByDate: boolean
@@ -169,9 +163,8 @@ export class AddComponent implements OnInit {
 
   private showMultipleTax: boolean
   private authenticated: {
-    setting: setting
+    setting: any
   }
-  private fullPayment: boolean
 
   private config = {
     valueField: 'uniqueKeyClient',
@@ -243,12 +236,11 @@ export class AddComponent implements OnInit {
     this.clientListLoading = true
     this.initializeSettings(this.tempQuaNoOnAdd)
 
-    this.data.add_invoice.taxList = []
+    this.activeInvoice.taxList = []
     this.show_tax_input_list = []
     this.tempflagTaxList = []
-    this.fullPayment = false
-    this.data.add_invoice.gross_amount = 0.00
-    this.data.add_invoice.balance = 0.00
+    this.activeInvoice.gross_amount = 0.00
+    this.activeInvoice.balance = 0.00
 
     var settings = this.authenticated.setting
 
@@ -304,11 +296,11 @@ export class AddComponent implements OnInit {
     if (this.settings.date_format === 'dd-mm-yy') {
       this.invoiceDate = new FormControl(new Date())
       this.paymentDate = new FormControl(new Date())
-      this.data.add_invoice.created_date = this.invoiceDate.value.getTime()
+      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
     } else if (this.settings.date_format = 'mm-dd-yy') {
       this.invoiceDate = new FormControl(new Date())
       this.paymentDate = new FormControl(new Date())
-      this.data.add_invoice.created_date = this.invoiceDate.value.getTime()
+      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
     }
 
     var self = this
@@ -351,15 +343,15 @@ export class AddComponent implements OnInit {
       if(terms.length < 1) {
         this.termConditionService.fetch().subscribe((response: response) => {
           if (response.termsAndConditionList !== null) {
-            this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0 && tnc.setDefault == 'DEFAULT')))
+            this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
           }
           this.termList.subscribe(trms => {
-            self.terms = trms
+            self.activeInvoice.termsAndConditions = trms.filter(trm => trm.setDefault == 'DEFAULT')
           })
         })
       } else {
         this.termList.subscribe(trms => {
-          self.terms = trms
+          self.activeInvoice.termsAndConditions = trms.filter(trm => trm.setDefault == 'DEFAULT')
         })
       }
     })
@@ -378,50 +370,50 @@ export class AddComponent implements OnInit {
 
     //console.log("settings",settings)
     if (settings) {
-      this.data.add_invoice.discount_on_item = settings.discount_on_item
-      this.data.add_invoice.tax_on_item = settings.tax_on_item
+      this.activeInvoice.discount_on_item = settings.discount_on_item
+      this.activeInvoice.tax_on_item = settings.tax_on_item
       if (settings.tax_on_item == 1) {
         this.tax_on = 'taxOnBill'
         this.taxtext = "Tax (on Bill)"
-        this.data.add_invoice.tax_on_item = 1
+        this.activeInvoice.tax_on_item = 1
       } else if (settings.tax_on_item == 0) {
         this.tax_on = 'taxOnItem'
         this.taxtext = "Tax (on Item)"
-        this.data.add_invoice.tax_on_item = 2
+        this.activeInvoice.tax_on_item = 2
       } else {
         this.tax_on = 'taxDisabled'
         this.taxtext = "Tax (Disabled)"
-        this.data.add_invoice.tax_on_item = 2
+        this.activeInvoice.tax_on_item = 2
         $('a.taxbtn').addClass('disabledBtn')
       }
       if (settings.discount_on_item == 0) {
         this.discount_on = 'onBill'
         this.discounttext = "Discount (on Bill)"
-        this.data.add_invoice.discount_on_item = 0
+        this.activeInvoice.discount_on_item = 0
       } else if (settings.discount_on_item == 1) {
-        this.data.add_invoice.discount_on_item = 2
+        this.activeInvoice.discount_on_item = 2
         this.discount_on = 'onItem'
         this.discounttext = "Discount (on Item)"
       } else {
         this.discount_on = 'disabled'
         this.discounttext = "Discount (Disabled)"
-        this.data.add_invoice.discount_on_item = 2
+        this.activeInvoice.discount_on_item = 2
         $('a.discountbtn').addClass('disabledBtn')
       }
     } else {
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      this.data.add_invoice.tax_on_item = 2
+      this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      this.data.add_invoice.discount_on_item = 2
+      this.activeInvoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
 
-    this.data.add_invoice.listItems.push({
+    this.activeInvoice.listItems.push({
       'description': '',
       'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
@@ -432,7 +424,7 @@ export class AddComponent implements OnInit {
 
   initializeSettings(invNoParam) {
     var settings = this.authenticated.setting
-    this.settingService.fetch().subscribe((response: response) => {
+    this.settingService.fetch().subscribe((response: any) => {
       // $rootScope.pro_bar_load = true
       if (response.status === 200) {
         var cookie = this.user
@@ -551,11 +543,11 @@ export class AddComponent implements OnInit {
         this.cookie.set('user', JSON.stringify(cookie), null, '/')
         if (invNoParam) {
           if (settings.quotFormat)
-            this.data.add_invoice.invoice_number = settings.quotFormat + invNoParam
+            this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
           else if (typeof settings.quotFormat !== 'undefined')
-            this.data.add_invoice.invoice_number = "Est_" + invNoParam
+            this.activeInvoice.invoice_number = "Est_" + invNoParam
           else
-            this.data.add_invoice.invoice_number = invNoParam
+            this.activeInvoice.invoice_number = invNoParam
         } else {
           if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
             this.tempInvNo = parseInt(settings.quotNo) + 1
@@ -565,16 +557,16 @@ export class AddComponent implements OnInit {
             this.tempQuaNoOnAdd = this.tempInvNo
           }
           if (settings.quotFormat || settings.quotFormat === '') {
-            this.data.add_invoice.invoice_number = settings.quotFormat + this.tempInvNo
+            this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
           } else if (typeof settings.quotFormat !== 'undefined') {
-            this.data.add_invoice.invoice_number = "Est_" + this.tempInvNo
+            this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
           } else {
-            this.data.add_invoice.invoice_number = this.tempInvNo.toString()
+            this.activeInvoice.invoice_number = this.tempInvNo.toString()
           }
         }
       } else {
         if (invNoParam) {
-          this.data.add_invoice.invoice_number = settings.quotFormat + invNoParam
+          this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
         } else {
           if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
             this.tempInvNo = parseInt(settings.quotNo) + 1
@@ -584,9 +576,9 @@ export class AddComponent implements OnInit {
             this.tempQuaNoOnAdd = this.tempInvNo
           }
           if (settings.quotFormat) {
-            this.data.add_invoice.invoice_number = settings.quotFormat + this.tempInvNo
+            this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
           } else {
-            this.data.add_invoice.invoice_number = "Est_" + this.tempInvNo
+            this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
           }
         }
       }
@@ -636,15 +628,15 @@ export class AddComponent implements OnInit {
     return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
   }
 
-  setPaidAmountTotalView() {
-    var temp = 0
-    if (typeof this.invoice.payments !== 'undefined') {
-      for (var i = 0; i < this.invoice.payments.length; i++) {
-        temp = temp + parseFloat(this.invoice.payments[i].paidAmount)
-      }
-    }
-    this.paid_amount = temp
-  }
+  // setPaidAmountTotalView() {
+  //   var temp = 0
+  //   if (typeof this.invoice.payments !== 'undefined') {
+  //     for (var i = 0; i < this.invoice.payments.length; i++) {
+  //       temp = temp + parseFloat(this.invoice.payments[i].paidAmount)
+  //     }
+  //   }
+  //   this.paid_amount = temp
+  // }
 
   selectedClientChange(client) {
     var item
@@ -654,7 +646,7 @@ export class AddComponent implements OnInit {
 
     if (item !== undefined) {
       this.activeClient = item
-      this.data.add_invoice.unique_key_fk_client = item.uniqueKeyClient
+      this.activeInvoice.unique_key_fk_client = item.uniqueKeyClient
     } else {
       //console.log("clients",this.clients)
       if(this.activeClient) {
@@ -665,6 +657,7 @@ export class AddComponent implements OnInit {
     }
   }
 
+  // Client Functions
   addClient(name) {
     this.addClientModal = {}
     this.addClientModal.addressLine1 = ''
@@ -673,11 +666,11 @@ export class AddComponent implements OnInit {
     this.addClientModal.name = name
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', function (e) {
-      $('#add-client input[type="text"]')[1].select()
+      $('#add-client input[type="text"]')[1].focus()
     })
   }
 
-  closeClient() {
+  closeAddClientModal() {
     //alert('closed!!')
     $("#loadb").css("display", "none")
     $('#add-client').modal('hide')
@@ -699,8 +692,6 @@ export class AddComponent implements OnInit {
 
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
-          // console.log('add client respo', response)
-          
           this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
           this.clientList.subscribe(clients => {
             // console.log(clients);            
@@ -720,9 +711,64 @@ export class AddComponent implements OnInit {
     }
   }
 
+  // Term Functions
+  addTerm() {
+    $('#add-terms').modal('show')
+  }
+
+  closeAddTermModal() {
+    $('#add-terms').modal('hide')
+  }
+
+  setTermsList(term) {
+    console.log(term)
+    var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
+    if(index == -1) {
+      this.activeInvoice.termsAndConditions.push(term)
+    } else {
+      this.activeInvoice.termsAndConditions.splice(index, 1)
+    }
+  }
+
+  removeTermFromInvoice(index) {
+    this.activeInvoice.termsAndConditions.splice(index, 1)
+  }
+
+  saveTerm(status) {
+    $('#addtermbtn').attr('disabled', 'disabled')
+    if (status) {
+      this.addTermModal.orgId = this.user.user.orgId
+      this.addTermModal.uniqueKeyTerms = generateUUID(this.user.user.orgId)
+      this.addTermModal.deviceModifiedOn = new Date().getTime()
+
+      this.termConditionService.add([
+        this.termConditionService.changeKeysForApi(this.addTermModal)
+      ]).subscribe((response: any) => {
+        if (response.status === 200) {
+          var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
+          this.store.dispatch(new termActions.add([temp]))
+
+          this.addTermModal = {}
+
+          if (temp.setDefault === 'DEFAULT') {
+            this.activeInvoice.termsAndConditions.push(temp)
+          }
+
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
+          $('#add-terms').modal('hide')
+        } else {
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
+          alert(response.message)
+        }
+      })
+    }
+  }
+
   addLineItem() {
     this.newItemCounter += 1
-    this.data.add_invoice.listItems.push({
+    this.activeInvoice.listItems.push({
       'description': '',
       'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
@@ -731,25 +777,25 @@ export class AddComponent implements OnInit {
     })
     this.productListFormControls.push(new FormControl())
     this.setProductFilter(this.productListFormControls.length - 1)
-    // console.log(this.data.add_invoice.listItems)
+    // console.log(this.activeInvoice.listItems)
 
     if (this.newItemCounter > 0) {
-      this.focusOutMessage(this.searchText)
+      // this.focusOutMessage(this.searchText)
     }
   }
 
   addItem(index, product) {
-    this.data.add_invoice.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
-    this.data.add_invoice.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
-    this.data.add_invoice.listItems[index].description = product.discription == null ? '' : product.discription
-    this.data.add_invoice.listItems[index].product_name = product.prodName
-    this.data.add_invoice.listItems[index].quantity = 1
-    this.data.add_invoice.listItems[index].unit = product.unit
-    this.data.add_invoice.listItems[index].rate = product.rate
-    this.data.add_invoice.listItems[index].tax_rate = 0.00
+    this.activeInvoice.listItems[index].unique_key_fk_product = product.uniqueKeyProduct
+    this.activeInvoice.listItems[index].unique_identifier = generateUUID(this.user.user.orgId)
+    this.activeInvoice.listItems[index].description = product.discription == null ? '' : product.discription
+    this.activeInvoice.listItems[index].product_name = product.prodName
+    this.activeInvoice.listItems[index].quantity = 1
+    this.activeInvoice.listItems[index].unit = product.unit
+    this.activeInvoice.listItems[index].rate = product.rate
+    this.activeInvoice.listItems[index].tax_rate = 0.00
 
     // this.productName.setValue('')
-    // console.log(this.data.add_invoice.listItems);
+    // console.log(this.activeInvoice.listItems);
 
     //New product add logic
     // else if (selected_product_id !== '' && typeof selected_product_id !== 'undefined') {
@@ -816,201 +862,62 @@ export class AddComponent implements OnInit {
     // this.calculateInvoice(1)
   }
 
-  multiTaxButton(taxname) {
-    var status = true
-    if (this.data.invoice.taxList)
-      for (var k = 0; k < this.data.invoice.taxList.length; k++) {
-        if (this.data.invoice.taxList[k].taxName !== taxname) {
-          status = true
-        } else {
-          status = false
-          break
-        }
-      }
-
-    return status
-  }
-
-  dynamicOrder(invoice) {
-    //console.log("invoices",invoice)
-    var order = 0
-    switch (this.sortInvoices) {
-      case 'name':
-        order = invoice.orgName
-        this.rev = false
-        break
-
-      case 'created_date':
-        {
-          var date = new Date(invoice.createDate)
-          order = date.getTime()
-          this.rev = true
-          break
-        }
-      case 'invoice_number':
-        order = invoice.tempInvNo
-        this.rev = true
-        break
-
-      case 'amount':
-        order = parseFloat(invoice.amount)
-        this.rev = true
-        break
-
-      default:
-        order = invoice.deviceCreatedDate
-        this.rev = true
-    }
-
-    return order
-  }
-
-  compare(a, b) {
-    // Use toUpperCase() to ignore character casing
-    var genreA = a.value.toUpperCase()
-    var genreB = b.value.toUpperCase()
-
-    var comparison = 0
-    if (genreA > genreB) {
-      comparison = 1
-    } else if (genreA < genreB) {
-      comparison = -1
-    }
-    return comparison
-  }
-
-  addTerm() {
-    $('#add-terms').modal('show')
-  }
-
-  close() {
-    $('#add-terms').modal('hide')
-  }
-  
-  removeTermFromInvoice(index) {
-    this.terms.splice(index, 1)
-    this.data.terms[index] = false
-  }
-
-  saveTerm(data, status) {
-    $('#addtermbtn').prop('disabled', true)
-    if (status) {
-      data.organization_id = this.user.user.orgId
-      if (!data.unique_identifier) data.unique_identifier = generateUUID(this.user.user.orgId)
-      var d = new Date()
-      data.device_modified_on = d.getTime()
-      this.termConditionService.addTermAndCondition([data]).subscribe(function (response: response) {
-        if (response.status === 200) {
-          data = {}
-          this.termCondition = {}
-
-          var tempTerm78 = {
-            "serverTermCondId": response.termsAndConditionList[0]._id,
-            "uniqueKeyTerms": response.termsAndConditionList[0].unique_identifier,
-            "orgId": response.termsAndConditionList[0].organization_id,
-            "terms": response.termsAndConditionList[0].terms,
-            "setDefault": response.termsAndConditionList[0].set_default,
-            "enabled": response.termsAndConditionList[0].deleted_flag
-          }
-          //this.terms.push(tempTerm78)
-          // DataStore.pushTermsList(tempTerm78)
-
-
-          if (tempTerm78.setDefault === 'DEFAULT') {
-            var temp45 = {
-              "_id": tempTerm78.serverTermCondId,
-              "unique_identifier": tempTerm78.uniqueKeyTerms,
-              "organization_id": tempTerm78.orgId,
-              "terms_condition": tempTerm78.terms
-            }
-            this.termList.push(temp45)
-
-            var index29 = findObjectIndex(this.terms.filter(function (pro) {
-              return (pro.enabled == 0)
-            }), 'uniqueKeyTerms', tempTerm78.uniqueKeyTerms)
-            this.data.terms[index29] = true
-
-          }
-
-          this.term = {}
-          this.termForm.$setUntouched()
-          $('#addtermbtn').prop('disabled', false)
-          // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
-          //$('#add-terms').modal('hide')
-
-        } else {
-          $('#addtermbtn').prop('disabled', false)
-          // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
-
-          // alert(result.message)
-        }
-
-      })
-    }
-  }
-
-  newState(state) {
-    this.addClient(state)
-  }
-
   save(status) {
     $('#invSubmitBtn').attr('disabled', 'disabled')
     var createdTime = new Date()
     var dueDateTime = new Date()
-    if (this.data.add_invoice.due_date && this.data.add_invoice.due_date !== '') {
-      dueDateTime.setTime(parseInt(this.data.add_invoice.due_date))
-      this.data.add_invoice.due_date = dueDateTime.getFullYear() + '-' + ('0' + (dueDateTime.getMonth() + 1)).slice(-2) + '-' + ('0' + dueDateTime.getDate()).slice(-2);
+    if (this.activeInvoice.due_date && this.activeInvoice.due_date !== '') {
+      dueDateTime.setTime(parseInt(this.activeInvoice.due_date))
+      this.activeInvoice.due_date = dueDateTime.getFullYear() + '-' + ('0' + (dueDateTime.getMonth() + 1)).slice(-2) + '-' + ('0' + dueDateTime.getDate()).slice(-2);
     } else {
-      this.data.add_invoice.due_date
+      this.activeInvoice.due_date
     }
 
-    if (parseInt(this.data.add_invoice.created_date)) {
-      createdTime.setTime(parseInt(this.data.add_invoice.created_date))
+    if (parseInt(this.activeInvoice.created_date)) {
+      createdTime.setTime(parseInt(this.activeInvoice.created_date))
     }
-    this.data.add_invoice.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
+    this.activeInvoice.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
+    this.activeInvoice.organization_id = this.user.user.orgId
 
-    this.data.add_invoice.organization_id = this.user.user.orgId
-    // Change terms array api compatible
-    this.termList.subscribe(terms => {
-      terms.forEach(tnc => {
-        this.data.add_invoice.termsAndConditions.push(this.termConditionService.changeKeysForApi(tnc))
-      })
+    // Add terms in invoice from terms array api compatible
+    this.terms.forEach(tnc => {
+      this.activeInvoice.termsAndConditions.push(this.termConditionService.changeKeysForApi(tnc))
     })
-    this.data.add_invoice.unique_identifier = generateUUID(this.user.user.orgId)
-    this.data.add_invoice.balance = this.balance
+    this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
+    this.activeInvoice.balance = this.balance
 
-    for (var i = this.data.add_invoice.listItems.length; i > 0; i--) {
-      this.data.add_invoice.listItems[i - 1].unique_key_fk_invoice = this.data.add_invoice.unique_identifier;
-      if (!this.data.add_invoice.listItems[i - 1].product_name || this.data.add_invoice.listItems[i - 1].product_name == '') {
-        this.data.add_invoice.listItems.splice(i - 1, 1);
+    for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
+      this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier;
+      if (!this.activeInvoice.listItems[i - 1].product_name || this.activeInvoice.listItems[i - 1].product_name == '') {
+        this.activeInvoice.listItems.splice(i - 1, 1);
       }
     }
 
-    if (this.data.add_invoice.listItems.length !== 0 && this.activeClient.name) {
+    if (this.activeInvoice.listItems.length !== 0 && this.activeClient.name) {
       if (status) {
-        for (var j = 0; j < this.data.add_invoice.termsAndConditions.length; j++) {
-          this.data.add_invoice.termsAndConditions[j].unique_key_fk_invoice = this.data.add_invoice.unique_identifier;
+        for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
+          this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier;
         }
-        for (var t = 0; t < this.data.add_invoice.taxList.length; t++) {
-          if (this.data.add_invoice.taxList[t] == null) {
-            this.data.add_invoice.taxList.splice(t, 1)
+        for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
+          if (this.activeInvoice.taxList[t] == null) {
+            this.activeInvoice.taxList.splice(t, 1)
           }
         }
 
         if (this.addProductList.length > 0)
           this.saveProduct(this.addProductList)
-        for (var k = 0; k < this.data.add_invoice.payments.length; k++) {
-          this.data.add_invoice.payments[k].unique_key_fk_invoice = this.data.add_invoice.unique_identifier
-          this.data.add_invoice.payments[k].unique_key_fk_client = this.data.add_invoice.unique_key_fk_client
+        for (var k = 0; k < this.activeInvoice.payments.length; k++) {
+          this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+          this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
         }
 
         var update_status = 0;
         var invoice_id = null;
         var d = new Date();
-        this.data.add_invoice.device_modified_on = d.getTime();
+        this.activeInvoice.device_modified_on = d.getTime();
 
         var self = this
-        this.invoiceService.add([this.data.add_invoice]).subscribe(function (result: any) {
+        this.invoiceService.add([this.activeInvoice]).subscribe(function (result: any) {
           if (result.status !== 200) {
             alert('Couldnt save invoice')
             console.log(result)
@@ -1038,7 +945,7 @@ export class AddComponent implements OnInit {
         // $rootScope.pro_bar_load = true;
         $('#invSubmitBtn').removeAttr('disabled')
         alert('You haven\'t added item')
-        // if (this.data.add_invoice.listItems.length == 0) {
+        // if (this.activeInvoice.listItems.length == 0) {
         //   notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
         // }
       }
@@ -1058,14 +965,14 @@ export class AddComponent implements OnInit {
 
   calculateTotal(index) {
     //console.log("in total " + index)
-    if (this.data.add_invoice.listItems.length > 0 && typeof this.data.add_invoice.listItems[index].quantity !== "undefined") {
-      var rateParse = parseFloat(this.data.add_invoice.listItems[index].rate)
+    if (this.activeInvoice.listItems.length > 0 && typeof this.activeInvoice.listItems[index].quantity !== "undefined") {
+      var rateParse = parseFloat(this.activeInvoice.listItems[index].rate)
       // console.log{""}
       if (isNaN(rateParse)) {
         rateParse = 0
       }
-      var productRate = (this.data.add_invoice.listItems[index].quantity * rateParse)
-      this.data.add_invoice.listItems[index].total = productRate
+      var productRate = (this.activeInvoice.listItems[index].quantity * rateParse)
+      this.activeInvoice.listItems[index].total = productRate
       this.calculateInvoice(1)
     }
   }
@@ -1073,11 +980,11 @@ export class AddComponent implements OnInit {
   calculateInvoice(indexTaxMultiple) {
     var total = 0
 
-    for (var i = 0; i < this.data.add_invoice.listItems.length; i++) {
-      var item = this.data.add_invoice.listItems[i]
+    for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+      var item = this.activeInvoice.listItems[i]
       total += parseFloat(item.total)
     }
-    this.data.add_invoice.gross_amount = total
+    this.activeInvoice.gross_amount = total
 
     var grossAmount = total
     var discountTotal = 0
@@ -1087,61 +994,59 @@ export class AddComponent implements OnInit {
     var discoutAmount = 0
     var tax_rate = 0
 
-    if (this.data.add_invoice.percentage_flag == 1) {
-      var discountPercent = parseFloat(this.data.add_invoice.percentage_value) / 100
+    if (this.activeInvoice.percentage_flag == 1) {
+      var discountPercent = parseFloat(this.activeInvoice.percentage_value) / 100
       if (isNaN(discountPercent)) {
         discountPercent = 0
       }
 
       discoutAmount = discountPercent * grossAmount
-      this.data.add_invoice.discount = discoutAmount
+      this.activeInvoice.discount = discoutAmount
       discountTotal = grossAmount - discoutAmount
-    } else if (this.data.add_invoice.percentage_flag == 0) {
+    } else if (this.activeInvoice.percentage_flag == 0) {
 
-      var invoiceDiscount = this.data.add_invoice.discount
+      var invoiceDiscount = this.activeInvoice.discount
       if (isNaN(invoiceDiscount)) {
         invoiceDiscount = 0
       }
       discountTotal = grossAmount - invoiceDiscount
-      var discountAmount = (this.data.add_invoice.discount / grossAmount) * 100
+      var discountAmount = (this.activeInvoice.discount / grossAmount) * 100
       if (isNaN(discountAmount)) {
         discountAmount = 0
       }
-      this.data.add_invoice.percentage_value = discountAmount.toString()
+      this.activeInvoice.percentage_value = discountAmount.toString()
     }
 
     if (this.tax_on == 'taxOnBill') {
-      tax_rate = (this.data.add_invoice.tax_rate * discountTotal) / 100
+      tax_rate = (this.activeInvoice.tax_rate * discountTotal) / 100
       if (isNaN(tax_rate)) {
         tax_rate = 0
       }
-      this.data.add_invoice.tax_amount = tax_rate
+      this.activeInvoice.tax_amount = tax_rate
       // console.log("tax_ rate bill", tax_rate)
     }
 
     if (indexTaxMultiple) {
-      //console.log("indexmultiple in",indexTaxMultiple,this.data.invoice.taxList)
       var temp_tax_rate = 0
-      for (var i = 0; i < this.data.add_invoice.taxList.length; i++) {
-        if (this.data.add_invoice.taxList[i]) {
-          if (isNaN(parseFloat(this.data.add_invoice.taxList[i].percentage)))
-            this.data.add_invoice.taxList[i].percentage = 0
-          //console.log("090"+parseFloat(this.data.invoice.taxList[i].percentage))
-          this.data.add_invoice.taxList[i].calculateValue = (parseFloat(this.data.add_invoice.taxList[i].percentage) * discountTotal) / 100
-          this.data.add_invoice.taxList[i].selected = true
-          temp_tax_rate = temp_tax_rate + (parseFloat(this.data.add_invoice.taxList[i].percentage) * discountTotal) / 100
+      for (var i = 0; i < this.activeInvoice.taxList.length; i++) {
+        if (this.activeInvoice.taxList[i]) {
+          if (isNaN(parseFloat(this.activeInvoice.taxList[i].percentage)))
+            this.activeInvoice.taxList[i].percentage = 0
+          this.activeInvoice.taxList[i].calculateValue = (parseFloat(this.activeInvoice.taxList[i].percentage) * discountTotal) / 100
+          this.activeInvoice.taxList[i].selected = true
+          temp_tax_rate = temp_tax_rate + (parseFloat(this.activeInvoice.taxList[i].percentage) * discountTotal) / 100
         }
       }
       tax_rate = tax_rate + temp_tax_rate
     }
 
-    shippingCharges = this.data.add_invoice.shipping_charges
+    shippingCharges = this.activeInvoice.shipping_charges
     if (isNaN(shippingCharges)) {
       shippingCharges = 0
     }
     totalAmount = discountTotal + shippingCharges + tax_rate
 
-    var adjustmentAmount = this.data.add_invoice.adjustment
+    var adjustmentAmount = this.activeInvoice.adjustment
     if (isNaN(adjustmentAmount)) {
       adjustmentAmount = 0
     }
@@ -1150,62 +1055,106 @@ export class AddComponent implements OnInit {
     if (isNaN(finalAmount)) {
       finalAmount = 0
     }
-    this.data.add_invoice.amount = parseFloat(finalAmount.toFixed(2))
+    this.activeInvoice.amount = parseFloat(finalAmount.toFixed(2))
   }
 
-  setTermsList(term) {
-    var index23 = findObjectIndex(this.terms.filter(function (pro) {
-      return (pro.enabled == 0)
-    }), 'uniqueKeyTerms', term.uniqueKeyTerms)
-    if (this.data.terms[index23]) {
-      var temp = {
-        "_id": term.serverTermCondId,
-        "unique_identifier": term.uniqueKeyTerms,
-        "organization_id": term.orgId,
-        "terms_condition": term.terms
-        //"unique_key_fk_invoice" :
+  multiTaxButton(taxname) {
+    var status = true
+    if (this.data.invoice.taxList)
+      for (var k = 0; k < this.data.invoice.taxList.length; k++) {
+        if (this.data.invoice.taxList[k].taxName !== taxname) {
+          status = true
+        } else {
+          status = false
+          break
+        }
       }
-      this.termList.push(temp)
-    } else {
-      var index26 = findObjectIndex(this.termList, 'unique_identifier', term.uniqueKeyTerms)
-      this.termList.splice(index26, 1)
+
+    return status
+  }
+
+  dynamicOrder(invoice) {
+    //console.log("invoices",invoice)
+    var order = 0
+    switch (this.sortInvoices) {
+      case 'name':
+        order = invoice.orgName
+        // this.rev = false
+        break
+
+      case 'created_date':
+        {
+          var date = new Date(invoice.createDate)
+          order = date.getTime()
+          // this.rev = true
+          break
+        }
+      case 'invoice_number':
+        order = invoice.tempInvNo
+        // this.rev = true
+        break
+
+      case 'amount':
+        order = parseFloat(invoice.amount)
+        // this.rev = true
+        break
+
+      default:
+        order = invoice.deviceCreatedDate
+        // this.rev = true
     }
+
+    return order
+  }
+
+  compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    var genreA = a.value.toUpperCase()
+    var genreB = b.value.toUpperCase()
+
+    var comparison = 0
+    if (genreA > genreB) {
+      comparison = 1
+    } else if (genreA < genreB) {
+      comparison = -1
+    }
+    return comparison
   }
 
   removeItem(index) {
-    this.data.add_invoice.listItems.splice(index, 1)
+    this.activeInvoice.listItems.splice(index, 1)
     this.productListFormControls.splice(index, 1)
     this.calculateInvoice(1)
   }
 
-  showMe() {
-    this.show = true
-    this.tempflag = true
-  }
+  // showMe() {
+  //   this.show = true
+  //   this.tempflag = true
+  // }
 
-  hideMe() {
-    this.data.add_invoice.discount = 0
-    this.data.add_invoice.percentage_value = 0
-    this.calculateInvoice(1)
-    this.show = false
-    this.tempflag = false
-  }
+  // hideMe() {
+  //   this.activeInvoice.discount = 0
+  //   this.activeInvoice.percentage_value = 0
+  //   this.calculateInvoice(1)
+  //   this.show = false
+  //   this.tempflag = false
+  // }
 
-  showMeAdjustment() {
-    this.show_adjustment = true
-  }
+  // showMeAdjustment() {
+  //   this.show_adjustment = true
+  // }
 
-  hideMeAdjustment() {
-    this.data.add_invoice.adjustment = 0
-    this.calculateInvoice(1)
+  // hideMeAdjustment() {
+  //   this.activeInvoice.adjustment = 0
+  //   this.calculateInvoice(1)
 
-    this.show_adjustment = false
-  }
+  //   this.show_adjustment = false
+  // }
 
-  showMeTax() {
-    this.show_tax_input = true
-    this.tempflagTax = true
-  }
+  // showMeTax() {
+  //   this.show_tax_input = true
+  //   this.tempflagTax = true
+  // }
 
   createFilterFor(query) {
     var lowercaseQuery = query.toLowerCase()
@@ -1221,74 +1170,74 @@ export class AddComponent implements OnInit {
 
   }
 
-  showMeMultipleTax(index) {
-    //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
-    var tempIndex = this.data.add_invoice.taxList.length
-    this.data.add_invoice.taxList[tempIndex] = {}
-    this.data.add_invoice.taxList[tempIndex].taxName = $rootScope.authenticated.setting.alstTaxName[index].taxName
-    this.data.add_invoice.taxList[tempIndex].selected = true
-    this.multi_tax_index.push(index)
-    this.show_tax_input_list[index] = true
-    this.tempflagTaxList[index] = true
-  }
+  // showMeMultipleTax(index) {
+  //   //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
+  //   var tempIndex = this.activeInvoice.taxList.length
+  //   this.activeInvoice.taxList[tempIndex] = {}
+  //   this.activeInvoice.taxList[tempIndex].taxName = $rootScope.authenticated.setting.alstTaxName[index].taxName
+  //   this.activeInvoice.taxList[tempIndex].selected = true
+  //   this.multi_tax_index.push(index)
+  //   this.show_tax_input_list[index] = true
+  //   this.tempflagTaxList[index] = true
+  // }
 
-  hideMeTax() {
-    this.data.add_invoice.tax_rate = 0
-    this.calculateInvoice(1)
-    this.show_tax_input = false
-    this.tempflagTax = false
-  }
+  // hideMeTax() {
+  //   this.activeInvoice.tax_rate = 0
+  //   this.calculateInvoice(1)
+  //   this.show_tax_input = false
+  //   this.tempflagTax = false
+  // }
 
-  hideMeTaxMultiple(index) {
-    this.data.add_invoice.tax_rate = 0
-    this.multi_tax_index.splice(index, 1)
-    this.data.add_invoice.taxList.splice(index, 1)
-    this.calculateInvoice(index)
-    //this.show_tax_input_list[index] = false
-    this.tempflagTaxList[index] = false
-  }
+  // hideMeTaxMultiple(index) {
+  //   this.activeInvoice.tax_rate = 0
+  //   this.multi_tax_index.splice(index, 1)
+  //   this.activeInvoice.taxList.splice(index, 1)
+  //   this.calculateInvoice(index)
+  //   //this.show_tax_input_list[index] = false
+  //   this.tempflagTaxList[index] = false
+  // }
 
-  showMeShipping() {
-    this.show_shipping_charge = true
-    this.tempflagShipping = true
-  }
+  // showMeShipping() {
+  //   this.show_shipping_charge = true
+  //   this.tempflagShipping = true
+  // }
 
-  hideMeShipping() {
-    this.data.add_invoice.shipping_charges = 0
-    this.calculateInvoice(1)
+  // hideMeShipping() {
+  //   this.activeInvoice.shipping_charges = 0
+  //   this.calculateInvoice(1)
 
-    this.show_shipping_charge = false
-    this.tempflagShipping = false
-  }
+  //   this.show_shipping_charge = false
+  //   this.tempflagShipping = false
+  // }
 
-  multiTaxButtonForAddInvoice(taxname, index) {
-    var status = true
-    for (var k = 0; k < this.multi_tax_index.length; k++) {
-      //console.log("in button",index,k,"..")
-      if (this.multi_tax_index[k] !== index) {
-        status = true
-      } else {
-        status = false
-        break
-      }
-    }
+  // multiTaxButtonForAddInvoice(taxname, index) {
+  //   var status = true
+  //   for (var k = 0; k < this.multi_tax_index.length; k++) {
+  //     //console.log("in button",index,k,"..")
+  //     if (this.multi_tax_index[k] !== index) {
+  //       status = true
+  //     } else {
+  //       status = false
+  //       break
+  //     }
+  //   }
 
-    return status
-  }
+  //   return status
+  // }
 
   saveProduct(add_product_list) {
     var d = new Date()
     var deleteIndexArray = []
     for (var i = 0; i < add_product_list.length; i++) {
-      var uniqueIdProduct = this.data.add_invoice.listItems.findIndex(
+      var uniqueIdProduct = this.activeInvoice.listItems.findIndex(
         item => item.unique_key_fk_product == add_product_list[i].unique_identifier
       )
 
       if (uniqueIdProduct !== -1) {
         add_product_list[i].device_modified_on = d.getTime()
-        add_product_list[i].rate = this.data.add_invoice.listItems[uniqueIdProduct].rate
+        add_product_list[i].rate = this.activeInvoice.listItems[uniqueIdProduct].rate
         add_product_list[i].unit = ""
-        add_product_list[i].discription = this.data.add_invoice.listItems[uniqueIdProduct].description
+        add_product_list[i].discription = this.activeInvoice.listItems[uniqueIdProduct].description
       } else {
         deleteIndexArray.push(i)
       }
@@ -1296,7 +1245,7 @@ export class AddComponent implements OnInit {
     for (var j = 0; j < deleteIndexArray.length; j++) {
       add_product_list.splice(deleteIndexArray[j], 1)
     }
-    this.productService.add(add_product_list).subscribe((result: response) => {
+    this.productService.add(add_product_list).subscribe((result: any) => {
       if (result.status === 200) {
         var tempProAdded = {
           "buyPrice": result.productList[0].buy_price,
@@ -1325,8 +1274,7 @@ export class AddComponent implements OnInit {
   }
 
   updateSettings() {
-    this.settingService.fetch().subscribe((response: response) => {
-
+    this.settingService.fetch().subscribe((response: any) => {
       if (response.status == 200) {
         var settings1 = response.settings.appSettings
         settings1.androidSettings.quotNo = this.tempQuaNoOnAdd - 1
@@ -1474,9 +1422,9 @@ export class AddComponent implements OnInit {
     }
   }
 
-  assignClientId(client_id) {
-    this.invoice.client_id = client_id
-  }
+  // assignClientId(client_id) {
+  //   this.invoice.client_id = client_id
+  // }
 
   addRow() {
     this.invoiceItems.push({
@@ -1495,20 +1443,20 @@ export class AddComponent implements OnInit {
     })
   }
 
-  calculateSum() {
+  // calculateSum() {
 
-    var total = 0
+  //   var total = 0
 
-    for (var i = 0; i < this.invoiceItems.length; i++) {
-      var item = this.invoiceItems[i]
-      total += parseFloat(item.total, 10)
-    }
-    this.data.invoice.total = total
-  }
+  //   for (var i = 0; i < this.invoiceItems.length; i++) {
+  //     var item = this.invoiceItems[i]
+  //     total += parseFloat(item.total, 10)
+  //   }
+  //   this.data.invoice.total = total
+  // }
 
   goEdit(uniqueIdentity) {
-    $('#editBtn').button('loading')
-    $('#updateButton').button('loading')
+    // $('#editBtn').button('loading')
+    // $('#updateButton').button('loading')
 
     //$location.path('/invoice/edit/' + this.invoice.unique_identifier)
     $('#msgInv').removeClass("show")
@@ -1517,138 +1465,132 @@ export class AddComponent implements OnInit {
     $('#estMain').addClass("hide")
     $('#editEst').removeClass("hide")
     $('#editEst').addClass('show')
-    this.filterClient = ''
-    this.editTempInitializer(uniqueIdentity)
+    // this.editTempInitializer(uniqueIdentity)
   }
 
   goNew() {
-    this.filterClient = ''
     $('#msgInv').removeClass("hide")
     $('#msgInv').addClass("show")
     $('#estMain').removeClass("show")
     $('#estMain').addClass("hide")
     $('#editEst').removeClass("show")
     $('#editEst').addClass('hide')
-    this.checked = false
-
-    this.reloadCreateInvoice()
+    this.resetCreateInvoice()
   }
 
-  printODownloadInvoice(invoiceId, type) {
+  // printODownloadInvoice(invoiceId, type) {
 
-    Data.get('invoice/get-pdf?invoiceId=' + invoiceId + '&type=' + type + '&timeZone=' + $rootScope.timeZone + '&accessToken=' + $rootScope.settings.dropbox_token, { responseType: 'arraybuffer' }).then(function (result) {
-      //console.log(result)
+  //   Data.get('invoice/get-pdf?invoiceId=' + invoiceId + '&type=' + type + '&timeZone=' + $rootScope.timeZone + '&accessToken=' + $rootScope.settings.dropbox_token, { responseType: 'arraybuffer' }).then(function (result) {
+  //     //console.log(result)
 
-      var a = window.document.createElement('a')
+  //     var a = window.document.createElement('a')
 
-      a.href = window.URL.createObjectURL(new Blob([result], {
-        type: 'application/pdf'
-      }))
+  //     a.href = window.URL.createObjectURL(new Blob([result], {
+  //       type: 'application/pdf'
+  //     }))
 
-      // Append anchor to body.
-      document.body.appendChild(a)
-      a.download = this.getFileName(invoiceId)
-      a.click()
-    })
+  //     // Append anchor to body.
+  //     document.body.appendChild(a)
+  //     a.download = this.getFileName(invoiceId)
+  //     a.click()
+  //   })
 
-  }
+  // }
 
-  downloadInvoice(invoiceId, type, mode) {
-    if (mode == "download") {
-      $('#downloadBtn').button('loading')
-    }
-    else if (mode == "preview") {
-      $('#previewBtn').button('loading')
-    }
+  // downloadInvoice(invoiceId, type, mode) {
+  //   if (mode == "download") {
+  //     $('#downloadBtn').button('loading')
+  //   }
+  //   else if (mode == "preview") {
+  //     $('#previewBtn').button('loading')
+  //   }
 
-    var id = this.data.invoice.unique_identifier
-    this.invoiceService.fetchPdf(id).subscribe((result: response) => {
+  //   var id = this.data.invoice.unique_identifier
+  //   this.invoiceService.fetchPdf(id).subscribe((result: response) => {
 
-      var file = new Blob([result], { type: 'application/pdf' })
-      var fileURL = URL.createObjectURL(file)
-      this.content = fileURL
-      //console.log(this.content)
-      var a = window.document.createElement('a')
+  //     var file = new Blob([result], { type: 'application/pdf' })
+  //     var fileURL = URL.createObjectURL(file)
+  //     this.content = fileURL
+  //     //console.log(this.content)
+  //     var a = window.document.createElement('a')
 
-      a.href = window.URL.createObjectURL(new Blob([result.data], {
-        type: 'application/pdf'
-      }))
+  //     a.href = window.URL.createObjectURL(new Blob([result.data], {
+  //       type: 'application/pdf'
+  //     }))
 
-      // Append anchor to body.
-      document.body.appendChild(a)
-      if (mode == "download") {
-        a.download = this.getFileName(invoiceId)
-        a.click()
-        // $('#downloadBtn').button('reset')
-      }
-      else if (mode == "preview") {
-        window.open(a)
-        // $('#previewBtn').button('reset')
-      }
-    })
+  //     // Append anchor to body.
+  //     document.body.appendChild(a)
+  //     if (mode == "download") {
+  //       a.download = this.getFileName(invoiceId)
+  //       a.click()
+  //       // $('#downloadBtn').button('reset')
+  //     }
+  //     else if (mode == "preview") {
+  //       window.open(a)
+  //       // $('#previewBtn').button('reset')
+  //     }
+  //   })
 
-  }
+  // }
 
-  getFileName(invoiceId) {
-    var day = (new Date()).getDate() <= 9 ? '0' + (new Date()).getDate() : (new Date()).getDate()
-    var month = this.findMonth((new Date()).getMonth())
-    var year = (new Date()).getFullYear()
-    var time = getTime()
+  // getFileName(invoiceId) {
+  //   var day = (new Date()).getDate() <= 9 ? '0' + (new Date()).getDate() : (new Date()).getDate()
+  //   var month = this.findMonth((new Date()).getMonth())
+  //   var year = (new Date()).getFullYear()
+  //   var time = getTime()
 
-    function getTime() {
-      var hour = (new Date()).getHours() < 13 ? (new Date()).getHours() : ((new Date()).getHours() - 12)
-      hour = hour < 10 ? '0' + hour.toString() : hour.toString()
-      var min = (new Date()).getMinutes() < 10 ? '0' + (new Date()).getMinutes() : (new Date()).getMinutes()
-      return hour + min
-    }
+  //   function getTime() {
+  //     var hour = (new Date()).getHours() < 13 ? (new Date()).getHours().toString() : ((new Date()).getHours() - 12).toString()
+  //     hour = parseInt(hour) < 10 ? '0' + hour.toString() : hour.toString()
+  //     var min = (new Date()).getMinutes() < 10 ? '0' + (new Date()).getMinutes() : (new Date()).getMinutes()
+  //     return hour + min
+  //   }
 
-    //console.log(time)
+  //   //console.log(time)
 
-    var ampm = (new Date()).getHours() < 12 ? 'AM' : 'PM'
+  //   var ampm = (new Date()).getHours() < 12 ? 'AM' : 'PM'
 
-    // eg: INVPDF_INV_21_02Dec2015_1151AM
-    return 'ESTPDF_EST_' + this.data.invoice.invoice_number + '_' + day + month + year + '_' + time + ampm + '.pdf'
-  }
+  //   // eg: INVPDF_INV_21_02Dec2015_1151AM
+  //   return 'ESTPDF_EST_' + this.data.invoice.invoice_number + '_' + day + month + year + '_' + time + ampm + '.pdf'
+  // }
 
   findMonth(expression) {
     switch (expression) {
       case 0:
         return "Jan"
-        break
+
       case 1:
         return "Feb"
-        break
 
       case 2:
         return "Mar"
-        break
+
       case 3:
         return "Apr"
-        break
+
       case 4:
         return "May"
-        break
+
       case 5:
         return "Jun"
-        break
+
       case 6:
         return "Jul"
-        break
+
       case 7:
         return "Aug"
-        break
+
       case 8:
         return "Sep"
-        break
+
       case 9:
         return "Oct"
-        break
+
       case 10:
         return "Nov"
-        break
+
       case 11:
         return "Dec"
-        break
     }
   }
 
@@ -1659,110 +1601,110 @@ export class AddComponent implements OnInit {
       case 'no_due_date':
         this.customDate = true
         this.dueDate = ''
-        this.data.add_invoice.due_date = ''
-        this.data.add_invoice.due_date_flag = 0
+        this.activeInvoice.due_date = ''
+        this.activeInvoice.due_date_flag = 0
       break
 
       case 'immediately':
         this.customDate = false
-        date.setTime(parseInt(this.data.add_invoice.created_date))
+        date.setTime(parseInt(this.activeInvoice.created_date))
         if (this.settings.date_format === 'dd-mm-yy') {
           this.dueDate = ('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear()
-          this.data.add_invoice.due_date = (new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0]))).getTime().toString()
+          this.activeInvoice.due_date = (new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0]))).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
           this.dueDate = ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + '-' + date.getFullYear()
-          this.data.add_invoice.due_date = new Date(this.dueDate).getTime().toString()
+          this.activeInvoice.due_date = new Date(this.dueDate).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 1
+        this.activeInvoice.due_date_flag = 1
       break
 
       case 'custom_date':
         this.customDate = false
-        this.data.add_invoice.due_date_flag = 2
+        this.activeInvoice.due_date_flag = 2
       break
 
       case '7_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 7)
-        this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[1]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[2])).getTime().toString()
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 7)
+        this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[1]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[2])).getTime().toString()
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 3
+        this.activeInvoice.due_date_flag = 3
       break
 
       case '10_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 10);
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 10);
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 4
+        this.activeInvoice.due_date_flag = 4
       break
 
       case '15_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 15)
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 15)
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 5
+        this.activeInvoice.due_date_flag = 5
       break
 
       case '30_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 30)
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 30)
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 6
+        this.activeInvoice.due_date_flag = 6
       break
 
       case '45_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 45)
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 45)
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 7
+        this.activeInvoice.due_date_flag = 7
       break
 
       case '60_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 60)
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 60)
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 8
+        this.activeInvoice.due_date_flag = 8
       break
 
       case '90_days':
         this.customDate = false
-        this.dueDate = this.addDays(this.data.add_invoice.created_date, 90)
+        this.dueDate = this.addDays(this.activeInvoice.created_date, 90)
         if (this.settings.date_format === 'dd-mm-yy') {
-          this.data.add_invoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
+          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
         } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.data.add_invoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
+          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
         }
-        this.data.add_invoice.due_date_flag = 9
+        this.activeInvoice.due_date_flag = 9
       break
 
       default:
         this.customDate = true
         this.dueDate = ''
-        this.data.add_invoice.due_date = ''
+        this.activeInvoice.due_date = ''
       break
     }
   }
@@ -1787,12 +1729,11 @@ export class AddComponent implements OnInit {
     this.billingTo.setValue('')
     this.productListFormControls = [new FormControl()]
     this.setProductFilter(0)
-    console.log(this.emptyInvoice);
-    
-    this.data.add_invoice = {...this.emptyInvoice}
-    this.data.add_invoice.listItems = []
+
+    this.activeInvoice = {...this.emptyInvoice}
+    this.activeInvoice.listItems = []
     this.newItemCounter = 0
-    this.data.add_invoice.listItems.push({
+    this.activeInvoice.listItems.push({
       'quantity': 1,
       'unique_identifier': 'new' + this.newItemCounter,
       'rate': 0.00,
@@ -1806,11 +1747,10 @@ export class AddComponent implements OnInit {
 
     var d = new Date()
     var settings = this.authenticated.setting
-    this.data.add_invoice.taxList = []
-    this.data.add_invoice.percentage_flag = 1
+    this.activeInvoice.taxList = []
+    this.activeInvoice.percentage_flag = 1
     this.show_tax_input = false
     this.show_shipping_charge = false
-    this.data.terms = []
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
@@ -1822,9 +1762,9 @@ export class AddComponent implements OnInit {
 
     if (this.tempQuaNoOnAdd) {
       if (typeof settings.quotFormat !== 'undefined')
-        this.data.add_invoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
+        this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
       else
-        this.data.add_invoice.invoice_number = this.tempQuaNoOnAdd.toString()
+        this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
     } else {
       if (!isNaN(settings.invNo)) {
         this.tempInvNo = parseInt(settings.quotNo) + 1
@@ -1833,9 +1773,9 @@ export class AddComponent implements OnInit {
         this.tempInvNo = 1
       }
       if (settings.quotFormat) {
-        this.data.add_invoice.invoice_number = settings.quotFormat + this.tempInvNo
+        this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
       } else {
-        this.data.add_invoice.invoice_number = "Inv_" + this.tempInvNo
+        this.activeInvoice.invoice_number = "Inv_" + this.tempInvNo
       }
     }
     // this.productList = DataStore.productsList
@@ -1854,59 +1794,57 @@ export class AddComponent implements OnInit {
     }
 
     if (this.settings.date_format === 'dd-mm-yy') {
-      this.data.add_invoice.created_date = this.invoiceDate.value.getTime()
+      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
     } else if (this.settings.date_format = 'mm-dd-yy') {
-      this.data.add_invoice.created_date = this.invoiceDate.value.getTime()
+      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
     }
     if (settings) {
       if (settings.tax_on_item == 1) {
         this.tax_on = 'taxOnBill'
         this.taxtext = "Tax (on Bill)"
-        this.data.add_invoice.tax_on_item = 1
+        this.activeInvoice.tax_on_item = 1
         //console.log("setting 1")
       } else if (settings.tax_on_item == 0) {
         this.tax_on = 'taxOnItem'
         this.taxtext = "Tax (on Item)"
-        this.data.add_invoice.tax_on_item = 2
+        this.activeInvoice.tax_on_item = 2
         //console.log("setting 2")
       } else {
         this.tax_on = 'taxDisabled'
         this.taxtext = "Tax (Disabled)"
-        this.data.add_invoice.tax_on_item = 2
+        this.activeInvoice.tax_on_item = 2
         //console.log("setting 3")
         $('a.taxbtn').addClass('disabledBtn')
       }
       if (settings.discount_on_item == 0) {
         this.discount_on = 'onBill'
         this.discounttext = "Discount (on Bill)"
-        this.data.add_invoice.discount_on_item = 0
+        this.activeInvoice.discount_on_item = 0
         //console.log("setting 1,1")
       } else if (settings.discount_on_item == 1) {
         //console.log("setting 1,2")
-        this.data.add_invoice.discount_on_item = 2
+        this.activeInvoice.discount_on_item = 2
         this.discount_on = 'onItem'
         this.discounttext = "Discount (on Item)"
       } else {
         //console.log("setting 1,3")
         this.discount_on = 'disabled'
         this.discounttext = "Discount (Disabled)"
-        this.data.add_invoice.discount_on_item = 2
+        this.activeInvoice.discount_on_item = 2
         $('a.discountbtn').addClass('disabledBtn')
       }
     } else {
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      this.data.add_invoice.tax_on_item = 2
+      this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      this.data.add_invoice.discount_on_item = 2
+      this.activeInvoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
-    console.log(this.data);
-    
   }
 
   // isEmpty1() {

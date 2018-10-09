@@ -1,15 +1,15 @@
 <div class="row main-wrapper">
   <div class="col-md-12 col-sm-12 col-xs-12" id="main">
     <div class="row">
+      <!-- Client List -->
       <div class="col-md-3 col-sm-3 col-xs-12 item-list cli-list pad-right-0">
-
         <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
           <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
               <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;">
                   <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="/src/assets/images/list-icon/add-plus-button24.png">
+                    <img src="assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
@@ -79,6 +79,7 @@
         </div>
       </div>
 
+      <!-- Client Add, Edit and Delete Form -->
       <div class="col-md-9 col-sm-9 col-xs-12 item-form ">
         <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div class="shadow">

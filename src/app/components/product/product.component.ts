@@ -359,47 +359,39 @@ export class ProductComponent implements OnInit {
       // $('#updateProBtn1').button('loading')
       var tempProName = this.activeProduct.prod_name.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
-      if (this.productList) {
-        for (var p = 0; p < this.productList.length; p++) {
-
-          tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+      this.productList.subscribe(products => {
+        for (var p = 0; p < products.length; p++) {
+          tempCompare = products[p].prodName.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempProName) {
             proStatus = false
             break
           }
         }
-      } else {
-        proStatus = true
-      }
+      })
     } else if (edit == 2) {
       var tempProName = this.activeProduct.prod_name.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
-      if (this.productList) {
-        for (var p = 0; p < this.productList.length; p++) {
-
-          tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+      this.productList.subscribe(products => {
+        for (var p = 0; p < products.length; p++) {
+          tempCompare = products[p].prodName.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempProName) {
-            if (activeProduct.unique_identifier !== this.productList[p].uniqueKeyProduct) {
-              proStatus = false
-              break
-            }
+            proStatus = false
+            break
           }
         }
-      } else {
-        proStatus = true
-      }
+      })
     } else {
       proStatus = true
     }
     if (status && proStatus) {
       var d = new Date()
-      if (activeProduct.unique_identifier == "") {
+      if (this.activeProduct.unique_identifier == "") {
         this.activeProduct.unique_identifier = generateUUID(this.user.user.orgId)
       }
       this.activeProduct.device_modified_on = d.getTime()
-      this.activeProduct.organization_id = this.user.user.orgId
-      this.activeProduct.inventory_enabled = this.activeProduct.inventory_enabled ? 1 : 0
-      this.productListsLoader = false
+      // this.activeProduct.organization_id = this.user.user.orgId
+      // this.activeProduct.inventory_enabled = this.activeProduct.inventory_enabled ? 1 : 0
+      // this.productListsLoader = false
 
       var self = this
       this.productService.add([this.activeProduct]).subscribe(function (result: response) {
@@ -423,14 +415,15 @@ export class ProductComponent implements OnInit {
           self.rightDivBtns = false
           self.deleteBtn = true
 
-          self.productService.fetch().subscribe(function (response: response) {
-            self.productListsLoader = true
-            self.productList = response.records
+          // Implement SMS add, edit or delete depending on edit flag
+          // self.productService.fetch().subscribe(function (response: response) {
+          //   // self.productListsLoader = true
+          //   // self.productList = response.records
 
-            self.productList = self.productList.filter(function (pro) {
-              return (pro.enabled == 0)
-            })
-          })
+          //   self.productList = self.productList.filter(function (pro) {
+          //     return (pro.enabled == 0)
+          //   })
+          // })
           self.selectedProduct = 'none'
         } else if (result.status != 200) {
           this.selectedProduct = 'none'
@@ -470,23 +463,23 @@ export class ProductComponent implements OnInit {
     $('#prod_name').select()
   }
 
-  deleteProduct(product) {
-    this.filterProduct = {prodName: ''}
+  // deleteProduct(product) {
+  //   this.filterProduct = {prodName: ''}
 
-    this.activeProduct.deleted_flag = 1
-    this.save(this.data, true, null)
-    this.addNew()
+  //   this.activeProduct.deleted_flag = 1
+  //   this.save(this.data, true, null)
+  //   this.addNew()
 
-    // SweetAlert.swal({
-    //   title: "Are you sure want to delete Product ?", //Bold text
-    //   type: "warning", //type -- adds appropiriate icon
-    //   showCancelButton: true, // displays cancel btton
-    //   confirmButtonColor: "#DD6B55",
-    //   confirmButtonText: "Yes, delete it!",
-    //   closeOnConfirm: true, //do not close popup after click on confirm, usefull when you want to display a subsequent popup
-    //   closeOnCancel: true
-    // })
-  }
+  //   // SweetAlert.swal({
+  //   //   title: "Are you sure want to delete Product ?", //Bold text
+  //   //   type: "warning", //type -- adds appropiriate icon
+  //   //   showCancelButton: true, // displays cancel btton
+  //   //   confirmButtonColor: "#DD6B55",
+  //   //   confirmButtonText: "Yes, delete it!",
+  //   //   closeOnConfirm: true, //do not close popup after click on confirm, usefull when you want to display a subsequent popup
+  //   //   closeOnCancel: true
+  //   // })
+  // }
 
   editThis(product) {
     this.filterProduct = {prodName: ''}
@@ -497,79 +490,79 @@ export class ProductComponent implements OnInit {
     this.deleteBtn = true
   }
 
-  viewThis(product, index, cancelFlag) {
-    this.isBatchBtn = false
-    this.filterProduct = {prodName: ''}
-    if (!cancelFlag) {
-      this.activeProduct.id = product.id,
-      this.activeProduct.prod_name = product.prodName,
-      this.activeProduct.unit = product.unit,
-      this.activeProduct.discription = product.discription,
-      this.activeProduct.rate = product.rate,
-      this.activeProduct.tax_rate = product.taxRate,
-      this.activeProduct.organization_id = product.serverOrgId,
-      this.activeProduct.inventory_enabled = product.inventoryEnabled,
-      this.activeProduct.opening_stock = product.openingStock,
-      this.activeProduct.opening_date = product.openingDate,
-      this.activeProduct.buy_price = product.buyPrice,
-      this.activeProduct.productCode = product.productCode,
-      this.activeProduct.unique_identifier = product.uniqueKeyProduct
-    }
-    this.selectedProduct = index
+  // viewThis(product, index, cancelFlag) {
+  //   this.isBatchBtn = false
+  //   this.filterProduct = {prodName: ''}
+  //   if (!cancelFlag) {
+  //     this.activeProduct.id = product.id,
+  //     this.activeProduct.prod_name = product.prodName,
+  //     this.activeProduct.unit = product.unit,
+  //     this.activeProduct.discription = product.discription,
+  //     this.activeProduct.rate = product.rate,
+  //     this.activeProduct.tax_rate = product.taxRate,
+  //     this.activeProduct.organization_id = product.serverOrgId,
+  //     this.activeProduct.inventory_enabled = product.inventoryEnabled,
+  //     this.activeProduct.opening_stock = product.openingStock,
+  //     this.activeProduct.opening_date = product.openingDate,
+  //     this.activeProduct.buy_price = product.buyPrice,
+  //     this.activeProduct.productCode = product.productCode,
+  //     this.activeProduct.unique_identifier = product.uniqueKeyProduct
+  //   }
+  //   this.selectedProduct = index
 
-    if (!cancelFlag) {
-      this.tempProduct = {
-        "id": product.id,
-        "prod_name": product.prod_name,
-        "unit": product.unit,
-        "discription": product.discription,
-        "rate": product.rate,
-        "tax_rate": product.tax_rate,
-        "organization_id": product.serverOrgId,
-        "inventory_enabled": product.inventoryEnabled,
-        "opening_stock": product.openingStock,
-        "opening_date": product.openingDate,
-        "buy_price": product.buyPrice,
-        "productCode": product.productCode,
-        "unique_identifier": product.uniqueKeyProduct
-      }
-      this.tempProduct = this.activeProduct
-    } else {
-      this.activeProduct = this.tempProduct
-    }
-    this.tempIndex = index
-    this.isEditBtn = false
-    this.inputReadonly = true
-    this.isEdit = true
-    this.isCreate = true
-    this.cancle = false
-    this.clearBtn = true
-    this.rightDivBtns = true
-    this.deleteBtn = false
-  }
+  //   if (!cancelFlag) {
+  //     this.tempProduct = {
+  //       "id": product.id,
+  //       "prod_name": product.prod_name,
+  //       "unit": product.unit,
+  //       "discription": product.discription,
+  //       "rate": product.rate,
+  //       "tax_rate": product.tax_rate,
+  //       "organization_id": product.serverOrgId,
+  //       "inventory_enabled": product.inventoryEnabled,
+  //       "opening_stock": product.openingStock,
+  //       "opening_date": product.openingDate,
+  //       "buy_price": product.buyPrice,
+  //       "productCode": product.productCode,
+  //       "unique_identifier": product.uniqueKeyProduct
+  //     }
+  //     this.tempProduct = this.activeProduct
+  //   } else {
+  //     this.activeProduct = this.tempProduct
+  //   }
+  //   this.tempIndex = index
+  //   this.isEditBtn = false
+  //   this.inputReadonly = true
+  //   this.isEdit = true
+  //   this.isCreate = true
+  //   this.cancle = false
+  //   this.clearBtn = true
+  //   this.rightDivBtns = true
+  //   this.deleteBtn = false
+  // }
 
   cancelThis() {
     this.isEditBtn = false
     this.inputReadonly = true
     this.rightDivBtns = true
     this.deleteBtn = false
-    this.viewThis(this.tempProduct, this.tempIndex, true)
+    // this.viewThis(this.tempProduct, this.tempIndex, true)
   }
 
-  clearThis() {
-    this.activeProduct.prod_name = ""
-    this.activeProduct.productCode = ""
-    this.activeProduct.unit = ""
-    this.activeProduct.discription = ""
-    this.activeProduct.rate = 0.01
-    this.activeProduct.tax_rate = 0
-    this.activeProduct.inventory_enabled = 0
-    this.activeProduct.opening_stock = 0
-    this.activeProduct.opening_date = 0
-    this.activeProduct.buy_price = 0
+  // clearThis() {
+  //   this.activeProduct.prod_name = ""
+  //   this.activeProduct.productCode = ""
+  //   this.activeProduct.unit = ""
+  //   this.activeProduct.discription = ""
+  //   this.activeProduct.rate = 0.01
+  //   this.activeProduct.tax_rate = 0
+  //   this.activeProduct.inventory_enabled = 0
+  //   this.activeProduct.opening_stock = 0
+  //   this.activeProduct.opening_date = 0
+  //   this.activeProduct.buy_price = 0
 
-    $('#prod_name').val("")
-  }
+  //   $('#prod_name').val("")
+  // }
 
   batchUpload() {
     this.router.navigate(['/product/batch/'])

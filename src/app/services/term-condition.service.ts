@@ -47,10 +47,27 @@ export class TermConditionService {
 
   changeKeysForApi(terms) {
     return {
-      _id: terms.serverTermCondId,
       unique_identifier: terms.uniqueKeyTerms,
       organization_id: terms.orgId,
-      terms_condition: terms.terms
+      terms: terms.terms,
+      device_modified_on: terms.deviceModifiedOn,
+      set_default: terms.setDefault ? 'DEFAULT' : undefined
+    }
+  }
+
+  changeKeysForStore(terms) {
+    return {
+      createDate: terms.created_on,
+      enabled: terms.deleted_flag,
+      deviceCreateDate: terms.device_modified_on,
+      modifiedOn: terms.modified_on,
+      modifiedDate: terms.modified_on,
+      orgId: terms.organization_id,
+      serverTermCondId: terms._id,
+      serverUpdateTime: terms.serverUpdateTime,
+      setDefault: terms.set_default,
+      terms: terms.terms,
+      uniqueKeyTerms: terms.unique_identifier
     }
   }
 }

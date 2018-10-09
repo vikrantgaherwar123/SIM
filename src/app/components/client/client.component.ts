@@ -316,12 +316,6 @@ export class ClientComponent implements OnInit {
 
     this.activeClient.deleted_flag = 1
     this.save(true, null)
-    var self = this
-    this.clientService.fetch().subscribe(function (response: response) {
-      self.clientListsLoader = true
-      self.clientList = response.records
-      self.selectedClient = 'none'
-    })
   }
 
   editThis() {

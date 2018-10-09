@@ -31,14 +31,19 @@ export class EditComponent implements OnInit {
     balance: 0,
     client_id: 0,
     created_date: '',
+    deletedItems: [],
+    deletedPayments: [],
+    deletedTerms: [],
     deleted_flag: 0,
     device_modified_on: 0,
     discount: 0,
     discount_on_item: 0,
+    due_date: '',
     due_date_flag: 0,
     epoch: 0,
     gross_amount: 0,
     id: 0,
+    invoiceNote:'',
     invoice_number: '',
     listItems: [],
     organization_id: 0,
@@ -46,6 +51,7 @@ export class EditComponent implements OnInit {
     percentage_flag: 0,
     percentage_value: 0,
     push_flag: 0,
+    reference: '',
     serverUpdateTime: 0,
     shipping_address: '',
     shipping_charges: 0,
@@ -55,7 +61,8 @@ export class EditComponent implements OnInit {
     termsAndConditions: [],
     unique_identifier: '',
     unique_key_fk_client: '',
-    version: 0
+    version: 0,
+    _id: 0
   }
   private activeInvIndex: number
 
