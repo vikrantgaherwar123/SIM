@@ -166,9 +166,9 @@ export interface invoice {
   id: number
   invoiceNote: string
   invoice_number: string
-  listItems: Array<{}>
+  listItems: Array<any>
   organization_id: number
-  payments: Array<{}>
+  payments: Array<any>
   percentage_flag: number
   percentage_value: number
   push_flag: number
@@ -176,11 +176,11 @@ export interface invoice {
   serverUpdateTime: number
   shipping_address: string
   shipping_charges: number
-  taxList: Array<{}>
+  taxList: Array<any>
   tax_amount: number
   tax_on_item: number
   tax_rate: number
-  termsAndConditions: Array<terms>
+  termsAndConditions: Array<any>
   unique_identifier: string
   unique_key_fk_client: string
   version: number

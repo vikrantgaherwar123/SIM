@@ -342,6 +342,7 @@ export class AddComponent implements OnInit {
     this.termList.subscribe(terms => {
       if(terms.length < 1) {
         this.termConditionService.fetch().subscribe((response: response) => {
+          // console.log(response)
           if (response.termsAndConditionList !== null) {
             this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
           }
@@ -720,8 +721,8 @@ export class AddComponent implements OnInit {
     $('#add-terms').modal('hide')
   }
 
-  setTermsList(term) {
-    console.log(term)
+  addRemoveTermsFromInvoice(term) {
+    // console.log(term)
     var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
     if(index == -1) {
       this.activeInvoice.termsAndConditions.push(term)
@@ -730,8 +731,8 @@ export class AddComponent implements OnInit {
     }
   }
 
-  removeTermFromInvoice(index) {
-    this.activeInvoice.termsAndConditions.splice(index, 1)
+  isTermInInvoice(term) {
+    return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
   }
 
   saveTerm(status) {
@@ -766,6 +767,7 @@ export class AddComponent implements OnInit {
     }
   }
 
+  // Invoice Functions
   addLineItem() {
     this.newItemCounter += 1
     this.activeInvoice.listItems.push({
@@ -877,26 +879,28 @@ export class AddComponent implements OnInit {
       createdTime.setTime(parseInt(this.activeInvoice.created_date))
     }
     this.activeInvoice.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
-    this.activeInvoice.organization_id = this.user.user.orgId
+    this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
 
     // Add terms in invoice from terms array api compatible
-    this.terms.forEach(tnc => {
-      this.activeInvoice.termsAndConditions.push(this.termConditionService.changeKeysForApi(tnc))
+    var temp = []
+    this.activeInvoice.termsAndConditions.forEach(tnc => {
+      temp.push(this.termConditionService.changeKeysForApi(tnc))
     })
+    this.activeInvoice.termsAndConditions = temp
     this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
     this.activeInvoice.balance = this.balance
 
     for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
-      this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier;
+      this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
       if (!this.activeInvoice.listItems[i - 1].product_name || this.activeInvoice.listItems[i - 1].product_name == '') {
-        this.activeInvoice.listItems.splice(i - 1, 1);
+        this.activeInvoice.listItems.splice(i - 1, 1)
       }
     }
 
     if (this.activeInvoice.listItems.length !== 0 && this.activeClient.name) {
       if (status) {
         for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
-          this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier;
+          this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
         }
         for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
           if (this.activeInvoice.taxList[t] == null) {
@@ -995,7 +999,7 @@ export class AddComponent implements OnInit {
     var tax_rate = 0
 
     if (this.activeInvoice.percentage_flag == 1) {
-      var discountPercent = parseFloat(this.activeInvoice.percentage_value) / 100
+      var discountPercent = this.activeInvoice.percentage_value / 100
       if (isNaN(discountPercent)) {
         discountPercent = 0
       }
@@ -1014,7 +1018,7 @@ export class AddComponent implements OnInit {
       if (isNaN(discountAmount)) {
         discountAmount = 0
       }
-      this.activeInvoice.percentage_value = discountAmount.toString()
+      this.activeInvoice.percentage_value = discountAmount
     }
 
     if (this.tax_on == 'taxOnBill') {
@@ -1060,16 +1064,15 @@ export class AddComponent implements OnInit {
 
   multiTaxButton(taxname) {
     var status = true
-    if (this.data.invoice.taxList)
-      for (var k = 0; k < this.data.invoice.taxList.length; k++) {
-        if (this.data.invoice.taxList[k].taxName !== taxname) {
+    if (this.activeInvoice.taxList)
+      for (var k = 0; k < this.activeInvoice.taxList.length; k++) {
+        if (this.activeInvoice.taxList[k].taxName !== taxname) {
           status = true
         } else {
           status = false
           break
         }
       }
-
     return status
   }
 
@@ -1782,7 +1785,7 @@ export class AddComponent implements OnInit {
     // this.terms = DataStore.termsList
 
     this.termList.subscribe(trms => {
-      this.terms = trms
+      this.activeInvoice.termsAndConditions = trms
     })
 
     if (settings.dateDDMMYY === false) {
