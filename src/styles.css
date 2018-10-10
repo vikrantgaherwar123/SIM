@@ -27,6 +27,9 @@ b, body, p, button {
 .padt15 {
   padding-top: 15px;
 }
+.margin-bottom-5px {
+  margin-bottom: 5px;
+}
 input[type=text], input[type=password] {
   font-family: quicksand_book !important;
   font-size: 14px !important;

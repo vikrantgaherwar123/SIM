@@ -45,6 +45,15 @@ export class TermConditionService {
     return this.http.post(this.addUrl, termCondition, headers)
   }
 
+  changeKeysForInvoiceApi(terms) {
+    return {
+      unique_identifier: terms.uniqueKeyTerms,
+      organization_id: terms.orgId,
+      terms_condition: terms.terms,
+      _id: terms._id
+    }
+  }
+
   changeKeysForApi(terms) {
     return {
       unique_identifier: terms.uniqueKeyTerms,
