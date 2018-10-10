@@ -31,7 +31,7 @@ import { AppState } from '../../../app.state'
 export class AddComponent implements OnInit {
 
   private emptyInvoice = {
-    adjustment: 0,
+    adjustment: null,
     amount: 0.00,
     balance: 0.00,
     client_id: 0,
@@ -41,7 +41,7 @@ export class AddComponent implements OnInit {
     deletedTerms: [],
     deleted_flag: 0,
     device_modified_on: 0,
-    discount: 0,
+    discount: null,
     discount_on_item: 0,
     due_date: '',
     due_date_flag: 0,
@@ -59,7 +59,7 @@ export class AddComponent implements OnInit {
     reference: '',
     serverUpdateTime: 0,
     shipping_address: '',
-    shipping_charges: 0,
+    shipping_charges: null,
     taxList: [],
     tax_amount: 0,
     tax_on_item: 0,
@@ -82,13 +82,7 @@ export class AddComponent implements OnInit {
   private paymentDate
   private tempInvNo: number
   private initialPayment
-  private discountLabel
-  private show_discount
-  private itemDisabled
   private paid_amount
-  private show_tax_input
-  private taxLabel
-  private show_shipping_charge
   private selectDueDate = 'no_due_date'
   private balance
 
@@ -100,26 +94,13 @@ export class AddComponent implements OnInit {
   private clientsLocal = []
   private clientValidation: boolean
   private showClientError: boolean
-  private receiptList
   private addClientModal: any = {}
 
   private productList: Observable<product[]>
   private addProductList = []
   productListFormControls = [new FormControl()]
   filteredProducts: Observable<string[] | product[]>
-  private addProduct: {
-    itemDescription: string
-  } = {
-    itemDescription: ''
-  }
 
-  private show_tax_input_list: any
-  private tempflagTaxList: any
-
-  private tax_on: string
-  private taxtext: string
-  private discount_on: string
-  private discounttext: string
   private settings: any
 
   private termList: Observable<terms[]>
@@ -149,19 +130,16 @@ export class AddComponent implements OnInit {
   }
 
   private newItemCounter: number = 0
-
   private customDate = true
-  private isRate = true
   private dueDate = ""
 
-  private isNone: boolean
-  private isByClient: boolean
-  private isByDate: boolean
-  private isInvNo: boolean
-  private sortInvoices: string
-  private isAmount: boolean
-
   private showMultipleTax: boolean
+  private show_tax_input_list: any
+  private tempflagTaxList: any
+  private taxtext: string
+  private discount_on: string
+  private discounttext: string
+
   private authenticated: {
     setting: any
   }
@@ -374,15 +352,12 @@ export class AddComponent implements OnInit {
       this.activeInvoice.discount_on_item = settings.discount_on_item
       this.activeInvoice.tax_on_item = settings.tax_on_item
       if (settings.tax_on_item == 1) {
-        this.tax_on = 'taxOnBill'
         this.taxtext = "Tax (on Bill)"
         this.activeInvoice.tax_on_item = 1
       } else if (settings.tax_on_item == 0) {
-        this.tax_on = 'taxOnItem'
         this.taxtext = "Tax (on Item)"
         this.activeInvoice.tax_on_item = 2
       } else {
-        this.tax_on = 'taxDisabled'
         this.taxtext = "Tax (Disabled)"
         this.activeInvoice.tax_on_item = 2
         $('a.taxbtn').addClass('disabledBtn')
@@ -402,8 +377,6 @@ export class AddComponent implements OnInit {
         $('a.discountbtn').addClass('disabledBtn')
       }
     } else {
-      //console.log("2")
-      this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
       this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
@@ -881,10 +854,10 @@ export class AddComponent implements OnInit {
     this.activeInvoice.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
     this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
 
-    // Add terms in invoice from terms array api compatible
+    // Add terms in invoice from terms array Invoice api compatible
     var temp = []
     this.activeInvoice.termsAndConditions.forEach(tnc => {
-      temp.push(this.termConditionService.changeKeysForApi(tnc))
+      temp.push(this.termConditionService.changeKeysForInvoiceApi(tnc))
     })
     this.activeInvoice.termsAndConditions = temp
     this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
@@ -1021,13 +994,12 @@ export class AddComponent implements OnInit {
       this.activeInvoice.percentage_value = discountAmount
     }
 
-    if (this.tax_on == 'taxOnBill') {
+    if (this.activeInvoice.tax_on_item == 1) {
       tax_rate = (this.activeInvoice.tax_rate * discountTotal) / 100
       if (isNaN(tax_rate)) {
         tax_rate = 0
       }
       this.activeInvoice.tax_amount = tax_rate
-      // console.log("tax_ rate bill", tax_rate)
     }
 
     if (indexTaxMultiple) {
@@ -1079,7 +1051,7 @@ export class AddComponent implements OnInit {
   dynamicOrder(invoice) {
     //console.log("invoices",invoice)
     var order = 0
-    switch (this.sortInvoices) {
+    switch (this.balance) {
       case 'name':
         order = invoice.orgName
         // this.rev = false
@@ -1130,35 +1102,6 @@ export class AddComponent implements OnInit {
     this.calculateInvoice(1)
   }
 
-  // showMe() {
-  //   this.show = true
-  //   this.tempflag = true
-  // }
-
-  // hideMe() {
-  //   this.activeInvoice.discount = 0
-  //   this.activeInvoice.percentage_value = 0
-  //   this.calculateInvoice(1)
-  //   this.show = false
-  //   this.tempflag = false
-  // }
-
-  // showMeAdjustment() {
-  //   this.show_adjustment = true
-  // }
-
-  // hideMeAdjustment() {
-  //   this.activeInvoice.adjustment = 0
-  //   this.calculateInvoice(1)
-
-  //   this.show_adjustment = false
-  // }
-
-  // showMeTax() {
-  //   this.show_tax_input = true
-  //   this.tempflagTax = true
-  // }
-
   createFilterFor(query) {
     var lowercaseQuery = query.toLowerCase()
 
@@ -1184,13 +1127,6 @@ export class AddComponent implements OnInit {
   //   this.tempflagTaxList[index] = true
   // }
 
-  // hideMeTax() {
-  //   this.activeInvoice.tax_rate = 0
-  //   this.calculateInvoice(1)
-  //   this.show_tax_input = false
-  //   this.tempflagTax = false
-  // }
-
   // hideMeTaxMultiple(index) {
   //   this.activeInvoice.tax_rate = 0
   //   this.multi_tax_index.splice(index, 1)
@@ -1198,19 +1134,6 @@ export class AddComponent implements OnInit {
   //   this.calculateInvoice(index)
   //   //this.show_tax_input_list[index] = false
   //   this.tempflagTaxList[index] = false
-  // }
-
-  // showMeShipping() {
-  //   this.show_shipping_charge = true
-  //   this.tempflagShipping = true
-  // }
-
-  // hideMeShipping() {
-  //   this.activeInvoice.shipping_charges = 0
-  //   this.calculateInvoice(1)
-
-  //   this.show_shipping_charge = false
-  //   this.tempflagShipping = false
   // }
 
   // multiTaxButtonForAddInvoice(taxname, index) {
@@ -1745,15 +1668,12 @@ export class AddComponent implements OnInit {
     this.activeClient = {}
     this.addProductList = []
     this.customDate = true
-    this.isRate = true
     this.dueDate = ""
 
     var d = new Date()
     var settings = this.authenticated.setting
     this.activeInvoice.taxList = []
     this.activeInvoice.percentage_flag = 1
-    this.show_tax_input = false
-    this.show_shipping_charge = false
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
@@ -1781,8 +1701,6 @@ export class AddComponent implements OnInit {
         this.activeInvoice.invoice_number = "Inv_" + this.tempInvNo
       }
     }
-    // this.productList = DataStore.productsList
-    // this.terms = DataStore.termsList
 
     this.termList.subscribe(trms => {
       this.activeInvoice.termsAndConditions = trms
@@ -1803,42 +1721,31 @@ export class AddComponent implements OnInit {
     }
     if (settings) {
       if (settings.tax_on_item == 1) {
-        this.tax_on = 'taxOnBill'
         this.taxtext = "Tax (on Bill)"
         this.activeInvoice.tax_on_item = 1
-        //console.log("setting 1")
       } else if (settings.tax_on_item == 0) {
-        this.tax_on = 'taxOnItem'
         this.taxtext = "Tax (on Item)"
         this.activeInvoice.tax_on_item = 2
-        //console.log("setting 2")
       } else {
-        this.tax_on = 'taxDisabled'
         this.taxtext = "Tax (Disabled)"
         this.activeInvoice.tax_on_item = 2
-        //console.log("setting 3")
         $('a.taxbtn').addClass('disabledBtn')
       }
       if (settings.discount_on_item == 0) {
         this.discount_on = 'onBill'
         this.discounttext = "Discount (on Bill)"
         this.activeInvoice.discount_on_item = 0
-        //console.log("setting 1,1")
       } else if (settings.discount_on_item == 1) {
-        //console.log("setting 1,2")
         this.activeInvoice.discount_on_item = 2
         this.discount_on = 'onItem'
         this.discounttext = "Discount (on Item)"
       } else {
-        //console.log("setting 1,3")
         this.discount_on = 'disabled'
         this.discounttext = "Discount (Disabled)"
         this.activeInvoice.discount_on_item = 2
         $('a.discountbtn').addClass('disabledBtn')
       }
     } else {
-      //console.log("2")
-      this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
       this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
@@ -1849,22 +1756,6 @@ export class AddComponent implements OnInit {
       $('a.discountbtn').addClass('disabledBtn')
     }
   }
-
-  // isEmpty1() {
-  //   return this.clientsLocal[0] && (typeof this.clientsLocal[0].email === 'undefined' || this.clientsLocal[0].email === '')
-  // }
-
-  // isEmpty2() {
-  //   return this.clientsLocal[0] && (typeof this.clientsLocal[0].number === 'undefined' || this.clientsLocal[0].number === '')
-  // }
-
-  // isEmpty11() {
-  //   return (typeof this.activeClient.email === 'undefined' || this.activeClient.email === '')
-  // }
-
-  // isEmpty12() {
-  //   return (typeof this.activeClient.number === 'undefined' || this.activeClient.number === '')
-  // }
 
   // getInvoice(id, index) {
   //   if (id) {
@@ -2014,9 +1905,7 @@ export class AddComponent implements OnInit {
   //       else
   //         this.show_shipping_charge = false
   //       if (this.invoice.percentage_flag && this.invoice.percentage_flag == 1)
-  //         this.isRate = true
   //       else
-  //         this.isRate = false
   //       if (this.invoice.due_date == null || this.invoice.due_date === '') {
   //         this.selectDueDate = "no_due_date";
   //       } else if (this.invoice.due_date == this.invoice.created_date) {
