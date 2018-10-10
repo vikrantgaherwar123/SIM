@@ -55,6 +55,7 @@ export class EditComponent implements OnInit {
     serverUpdateTime: 0,
     shipping_address: '',
     shipping_charges: 0,
+    taxList: [],
     tax_amount: 0,
     tax_on_item: 0,
     tax_rate: 0,

@@ -268,11 +268,11 @@
         
                       <div class="col-md-12 col-xs-12 col-md-12 pad0">
                         <div class="form-group">
-                          <div *ngFor="let term of activeInvoice.termsAndConditions | filterBy:{setDefault: 'DEFAULT'}; index as index" class="row mar0">
+                          <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mar0">
                             <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
                               {{term.terms}}
                             </div>
-                            <div class="col-md-2 ml-auto" (click)="removeTermFromInvoice(index)" style="cursor:pointer;">
+                            <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
                               <a class="closeicon show float-right">
                                 <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
                               </a>
@@ -674,8 +674,8 @@
                 <div class="row">
                   <div class="col-md-1 pad0">
                     <input type="checkbox" id="termcheck{{index}}" name="term"
-                      (change)="setTermsList(term)"
-                      [checked]="term.setDefault == 'DEFAULT'"
+                      (change)="addRemoveTermsFromInvoice(term)"
+                      [checked]="isTermInInvoice(term)"
                     />
                     <!-- <label class="" for="termcheck{{$index}}"></label> -->
                   </div>
