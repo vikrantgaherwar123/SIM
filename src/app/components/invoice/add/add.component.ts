@@ -91,17 +91,12 @@ export class AddComponent implements OnInit {
   private clientListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
-  private clientsLocal = []
-  private clientValidation: boolean
-  private showClientError: boolean
   private addClientModal: any = {}
 
   private productList: Observable<product[]>
   private addProductList = []
   productListFormControls = [new FormControl()]
   filteredProducts: Observable<string[] | product[]>
-
-  private settings: any
 
   private termList: Observable<terms[]>
   private addTermModal: any = {}
@@ -137,9 +132,8 @@ export class AddComponent implements OnInit {
   private show_tax_input_list: any
   private tempflagTaxList: any
   private taxtext: string
-  private discount_on: string
-  private discounttext: string
 
+  private settings: any
   private authenticated: {
     setting: any
   }
@@ -210,7 +204,6 @@ export class AddComponent implements OnInit {
   }
 
   init() {
-    this.clientsLocal = []
     this.clientListLoading = true
     this.initializeSettings(this.tempQuaNoOnAdd)
 
@@ -363,16 +356,10 @@ export class AddComponent implements OnInit {
         $('a.taxbtn').addClass('disabledBtn')
       }
       if (settings.discount_on_item == 0) {
-        this.discount_on = 'onBill'
-        this.discounttext = "Discount (on Bill)"
         this.activeInvoice.discount_on_item = 0
       } else if (settings.discount_on_item == 1) {
         this.activeInvoice.discount_on_item = 2
-        this.discount_on = 'onItem'
-        this.discounttext = "Discount (on Item)"
       } else {
-        this.discount_on = 'disabled'
-        this.discounttext = "Discount (Disabled)"
         this.activeInvoice.discount_on_item = 2
         $('a.discountbtn').addClass('disabledBtn')
       }
@@ -381,8 +368,6 @@ export class AddComponent implements OnInit {
       this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
-      this.discount_on = 'disabled'
-      this.discounttext = "Discount (Disabled)"
       this.activeInvoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
@@ -559,27 +544,7 @@ export class AddComponent implements OnInit {
     })
   }
 
-  setProductFilter(index) {
-    // Filter for product autocomplete
-    this.productList.subscribe(products => {
-      this.filteredProducts = this.productListFormControls[index].valueChanges.pipe(
-        startWith<string | product>(''),
-        map(value => typeof value === 'string' ? value : value.prodName),
-        map(name => name ? this._filterProd(name) : products.slice())
-      )
-    })
-  }
-
-  private _filterProd(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    var product
-
-    this.productList.subscribe(products => {
-      product = products
-    })
-    return product.filter(prod => prod.prodName.toLowerCase().includes(filterValue));
-  }
-
+  // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
     this.clientList.subscribe(clients => {
@@ -602,15 +567,14 @@ export class AddComponent implements OnInit {
     return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
   }
 
-  // setPaidAmountTotalView() {
-  //   var temp = 0
-  //   if (typeof this.invoice.payments !== 'undefined') {
-  //     for (var i = 0; i < this.invoice.payments.length; i++) {
-  //       temp = temp + parseFloat(this.invoice.payments[i].paidAmount)
-  //     }
-  //   }
-  //   this.paid_amount = temp
-  // }
+  addClient(name) {
+    this.addClientModal = {}
+    this.addClientModal.name = name
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+      $('#add-client input[type="text"]')[1].focus()
+    })
+  }
 
   selectedClientChange(client) {
     var item
@@ -629,19 +593,6 @@ export class AddComponent implements OnInit {
 
       this.addClient(client.option.value)
     }
-  }
-
-  // Client Functions
-  addClient(name) {
-    this.addClientModal = {}
-    this.addClientModal.addressLine1 = ''
-    this.addClientModal.email = ''
-    this.addClientModal.number = ''
-    this.addClientModal.name = name
-    $('#add-client').modal('show')
-    $('#add-client').on('shown.bs.modal', function (e) {
-      $('#add-client input[type="text"]')[1].focus()
-    })
   }
 
   closeAddClientModal() {
@@ -687,6 +638,7 @@ export class AddComponent implements OnInit {
 
   // Term Functions
   addTerm() {
+    this.addTermModal = {}
     $('#add-terms').modal('show')
   }
 
@@ -738,6 +690,58 @@ export class AddComponent implements OnInit {
         }
       })
     }
+  }
+
+  // Product Functions
+  setProductFilter(index) {
+    // Filter for product autocomplete
+    this.productList.subscribe(products => {
+      this.filteredProducts = this.productListFormControls[index].valueChanges.pipe(
+        startWith<string | product>(''),
+        map(value => typeof value === 'string' ? value : value.prodName),
+        map(name => name ? this._filterProd(name) : products.slice())
+      )
+    })
+  }
+
+  private _filterProd(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    var product
+
+    this.productList.subscribe(products => {
+      product = products
+    })
+    return product.filter(prod => prod.prodName.toLowerCase().includes(filterValue));
+  }
+
+  saveProduct(add_product_list) {
+    var d = new Date()
+    var deleteIndexArray = []
+    for (var i = 0; i < add_product_list.length; i++) {
+      var uniqueIdProduct = this.activeInvoice.listItems.findIndex(
+        item => item.unique_key_fk_product == add_product_list[i].unique_identifier
+      )
+
+      if (uniqueIdProduct !== -1) {
+        add_product_list[i].device_modified_on = d.getTime()
+        add_product_list[i].rate = this.activeInvoice.listItems[uniqueIdProduct].rate
+        add_product_list[i].unit = ""
+        add_product_list[i].discription = this.activeInvoice.listItems[uniqueIdProduct].description
+      } else {
+        deleteIndexArray.push(i)
+      }
+    }
+    for (var j = 0; j < deleteIndexArray.length; j++) {
+      add_product_list.splice(deleteIndexArray[j], 1)
+    }
+    this.productService.add(add_product_list).subscribe((result: any) => {
+      if (result.status === 200) {
+        this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(result.productList[0])]))
+        alert('Product had been added!')
+      } else {
+        // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
+      }
+    })
   }
 
   // Invoice Functions
@@ -834,10 +838,21 @@ export class AddComponent implements OnInit {
     //   item.tax_rate = 0.00
     // }
     this.calculateTotal(index)
-    // this.calculateInvoice(1)
   }
 
   save(status) {
+    if(this.activeInvoice.unique_key_fk_client == '') {
+      alert('client not selected')
+      return false
+    }
+    if (this.activeInvoice.listItems.length == 0 || !status) {
+      // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
+      alert('You haven\'t added item')
+      // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
+      // $('#invoiceSavebtn').button('reset');
+      return false
+    }
+
     $('#invSubmitBtn').attr('disabled', 'disabled')
     var createdTime = new Date()
     var dueDateTime = new Date()
@@ -870,74 +885,50 @@ export class AddComponent implements OnInit {
       }
     }
 
-    if (this.activeInvoice.listItems.length !== 0 && this.activeClient.name) {
-      if (status) {
-        for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
-          this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
-        }
-        for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
-          if (this.activeInvoice.taxList[t] == null) {
-            this.activeInvoice.taxList.splice(t, 1)
-          }
-        }
-
-        if (this.addProductList.length > 0)
-          this.saveProduct(this.addProductList)
-        for (var k = 0; k < this.activeInvoice.payments.length; k++) {
-          this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
-          this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
-        }
-
-        var update_status = 0;
-        var invoice_id = null;
-        var d = new Date();
-        this.activeInvoice.device_modified_on = d.getTime();
-
-        var self = this
-        this.invoiceService.add([this.activeInvoice]).subscribe(function (result: any) {
-          if (result.status !== 200) {
-            alert('Couldnt save invoice')
-            console.log(result)
-            // $rootScope.pro_bar_load = true
-            // notifications.showError({
-            //   message: result.message + '\n' + '.. Reason: ' + result.error.invoice_number[0],
-            //   hideDelay: 1500,
-            //   hide: true
-            // })
-          } else if (result.status === 200) {
-            // var tmpInv = DataStore.invoicesList
-            // this.clientList = DataStore.clientsList
-
-            // Add Invoice to store
-            self.store.dispatch(new invoiceActions.add(result.invoiceList))
-
-            // Reset Create Invoice page for new invoice creation
-            self.resetCreateInvoice()
-            alert('Invoice saved successfully')
-          }
-          $('#invSubmitBtn').removeAttr('disabled')
-        })
-      }
-      else {
-        // $rootScope.pro_bar_load = true;
-        $('#invSubmitBtn').removeAttr('disabled')
-        alert('You haven\'t added item')
-        // if (this.activeInvoice.listItems.length == 0) {
-        //   notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
-        // }
-      }
-    } else {
-      $('#invSubmitBtn').removeAttr('disabled')
-      // $rootScope.pro_bar_load = true;
-      if (!this.activeClient.name) {
-        alert('client not selected')
-        // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
-      } else {
-        alert('item not selected')
-        // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
-        // $('#invoiceSavebtn').button('reset');
+    for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
+      this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+    }
+    for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
+      if (this.activeInvoice.taxList[t] == null) {
+        this.activeInvoice.taxList.splice(t, 1)
       }
     }
+
+    if (this.addProductList.length > 0) {
+      this.saveProduct(this.addProductList)
+    }
+
+    for (var k = 0; k < this.activeInvoice.payments.length; k++) {
+      this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+      this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
+    }
+
+    var update_status = 0;
+    var invoice_id = null;
+    var d = new Date();
+    this.activeInvoice.device_modified_on = d.getTime();
+
+    var self = this
+    this.invoiceService.add([this.activeInvoice]).subscribe(function (result: any) {
+      if (result.status !== 200) {
+        alert('Couldnt save invoice')
+        console.log(result)
+        // $rootScope.pro_bar_load = true
+        // notifications.showError({
+        //   message: result.message + '\n' + '.. Reason: ' + result.error.invoice_number[0],
+        //   hideDelay: 1500,
+        //   hide: true
+        // })
+      } else if (result.status === 200) {
+        // Add Invoice to store
+        self.store.dispatch(new invoiceActions.add(result.invoiceList))
+
+        // Reset Create Invoice page for new invoice creation
+        self.resetCreateInvoice()
+        alert('Invoice saved successfully')
+      }
+      $('#invSubmitBtn').removeAttr('disabled')
+    })
   }
 
   calculateTotal(index) {
@@ -1048,54 +1039,6 @@ export class AddComponent implements OnInit {
     return status
   }
 
-  dynamicOrder(invoice) {
-    //console.log("invoices",invoice)
-    var order = 0
-    switch (this.balance) {
-      case 'name':
-        order = invoice.orgName
-        // this.rev = false
-        break
-
-      case 'created_date':
-        {
-          var date = new Date(invoice.createDate)
-          order = date.getTime()
-          // this.rev = true
-          break
-        }
-      case 'invoice_number':
-        order = invoice.tempInvNo
-        // this.rev = true
-        break
-
-      case 'amount':
-        order = parseFloat(invoice.amount)
-        // this.rev = true
-        break
-
-      default:
-        order = invoice.deviceCreatedDate
-        // this.rev = true
-    }
-
-    return order
-  }
-
-  compare(a, b) {
-    // Use toUpperCase() to ignore character casing
-    var genreA = a.value.toUpperCase()
-    var genreB = b.value.toUpperCase()
-
-    var comparison = 0
-    if (genreA > genreB) {
-      comparison = 1
-    } else if (genreA < genreB) {
-      comparison = -1
-    }
-    return comparison
-  }
-
   removeItem(index) {
     this.activeInvoice.listItems.splice(index, 1)
     this.productListFormControls.splice(index, 1)
@@ -1114,89 +1057,6 @@ export class AddComponent implements OnInit {
         || (item.value.indexOf(lowercaseQuery) === 10) || (item.value.indexOf(lowercaseQuery) === 11)
     }
 
-  }
-
-  // showMeMultipleTax(index) {
-  //   //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
-  //   var tempIndex = this.activeInvoice.taxList.length
-  //   this.activeInvoice.taxList[tempIndex] = {}
-  //   this.activeInvoice.taxList[tempIndex].taxName = $rootScope.authenticated.setting.alstTaxName[index].taxName
-  //   this.activeInvoice.taxList[tempIndex].selected = true
-  //   this.multi_tax_index.push(index)
-  //   this.show_tax_input_list[index] = true
-  //   this.tempflagTaxList[index] = true
-  // }
-
-  // hideMeTaxMultiple(index) {
-  //   this.activeInvoice.tax_rate = 0
-  //   this.multi_tax_index.splice(index, 1)
-  //   this.activeInvoice.taxList.splice(index, 1)
-  //   this.calculateInvoice(index)
-  //   //this.show_tax_input_list[index] = false
-  //   this.tempflagTaxList[index] = false
-  // }
-
-  // multiTaxButtonForAddInvoice(taxname, index) {
-  //   var status = true
-  //   for (var k = 0; k < this.multi_tax_index.length; k++) {
-  //     //console.log("in button",index,k,"..")
-  //     if (this.multi_tax_index[k] !== index) {
-  //       status = true
-  //     } else {
-  //       status = false
-  //       break
-  //     }
-  //   }
-
-  //   return status
-  // }
-
-  saveProduct(add_product_list) {
-    var d = new Date()
-    var deleteIndexArray = []
-    for (var i = 0; i < add_product_list.length; i++) {
-      var uniqueIdProduct = this.activeInvoice.listItems.findIndex(
-        item => item.unique_key_fk_product == add_product_list[i].unique_identifier
-      )
-
-      if (uniqueIdProduct !== -1) {
-        add_product_list[i].device_modified_on = d.getTime()
-        add_product_list[i].rate = this.activeInvoice.listItems[uniqueIdProduct].rate
-        add_product_list[i].unit = ""
-        add_product_list[i].discription = this.activeInvoice.listItems[uniqueIdProduct].description
-      } else {
-        deleteIndexArray.push(i)
-      }
-    }
-    for (var j = 0; j < deleteIndexArray.length; j++) {
-      add_product_list.splice(deleteIndexArray[j], 1)
-    }
-    this.productService.add(add_product_list).subscribe((result: any) => {
-      if (result.status === 200) {
-        var tempProAdded = {
-          "buyPrice": result.productList[0].buy_price,
-          "deviceCreatedDate": result.productList[0].device_modified_on,
-          "discription": result.productList[0].discription,
-          "enabled": result.productList[0].deleted_flag,
-          "inventoryEnabled": result.productList[0].inventory_enabled,
-          "modifiedDate": result.productList[0].epoch,
-          "openingStock": result.productList[0].opening_stock,
-          "prodLocalId": result.productList[0]._id,
-          "prodName": result.productList[0].prod_name,
-          "productCode": result.productList.productCode,
-          "rate": result.productList[0].rate,
-          "remainingStock": result.productList[0].remaining_stock,
-          "serverOrgId": result.productList[0].organization_id,
-          "serverUpdateTime": result.productList[0].serverUpdateTime,
-          "taxRate": result.productList[0].tax_rate,
-          "uniqueKeyProduct": result.productList[0].unique_identifier,
-          "unit": result.productList[0].unit
-        }
-        // DataStore.pushProductList(tempProAdded)
-      } else {
-        // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
-      }
-    })
   }
 
   updateSettings() {
@@ -1348,10 +1208,6 @@ export class AddComponent implements OnInit {
     }
   }
 
-  // assignClientId(client_id) {
-  //   this.invoice.client_id = client_id
-  // }
-
   addRow() {
     this.invoiceItems.push({
       "id": null,
@@ -1369,31 +1225,6 @@ export class AddComponent implements OnInit {
     })
   }
 
-  // calculateSum() {
-
-  //   var total = 0
-
-  //   for (var i = 0; i < this.invoiceItems.length; i++) {
-  //     var item = this.invoiceItems[i]
-  //     total += parseFloat(item.total, 10)
-  //   }
-  //   this.data.invoice.total = total
-  // }
-
-  goEdit(uniqueIdentity) {
-    // $('#editBtn').button('loading')
-    // $('#updateButton').button('loading')
-
-    //$location.path('/invoice/edit/' + this.invoice.unique_identifier)
-    $('#msgInv').removeClass("show")
-    $('#msgInv').addClass("hide")
-    $('#estMain').removeClass("show")
-    $('#estMain').addClass("hide")
-    $('#editEst').removeClass("hide")
-    $('#editEst').addClass('show')
-    // this.editTempInitializer(uniqueIdentity)
-  }
-
   goNew() {
     $('#msgInv').removeClass("hide")
     $('#msgInv').addClass("show")
@@ -1403,82 +1234,6 @@ export class AddComponent implements OnInit {
     $('#editEst').addClass('hide')
     this.resetCreateInvoice()
   }
-
-  // printODownloadInvoice(invoiceId, type) {
-
-  //   Data.get('invoice/get-pdf?invoiceId=' + invoiceId + '&type=' + type + '&timeZone=' + $rootScope.timeZone + '&accessToken=' + $rootScope.settings.dropbox_token, { responseType: 'arraybuffer' }).then(function (result) {
-  //     //console.log(result)
-
-  //     var a = window.document.createElement('a')
-
-  //     a.href = window.URL.createObjectURL(new Blob([result], {
-  //       type: 'application/pdf'
-  //     }))
-
-  //     // Append anchor to body.
-  //     document.body.appendChild(a)
-  //     a.download = this.getFileName(invoiceId)
-  //     a.click()
-  //   })
-
-  // }
-
-  // downloadInvoice(invoiceId, type, mode) {
-  //   if (mode == "download") {
-  //     $('#downloadBtn').button('loading')
-  //   }
-  //   else if (mode == "preview") {
-  //     $('#previewBtn').button('loading')
-  //   }
-
-  //   var id = this.data.invoice.unique_identifier
-  //   this.invoiceService.fetchPdf(id).subscribe((result: response) => {
-
-  //     var file = new Blob([result], { type: 'application/pdf' })
-  //     var fileURL = URL.createObjectURL(file)
-  //     this.content = fileURL
-  //     //console.log(this.content)
-  //     var a = window.document.createElement('a')
-
-  //     a.href = window.URL.createObjectURL(new Blob([result.data], {
-  //       type: 'application/pdf'
-  //     }))
-
-  //     // Append anchor to body.
-  //     document.body.appendChild(a)
-  //     if (mode == "download") {
-  //       a.download = this.getFileName(invoiceId)
-  //       a.click()
-  //       // $('#downloadBtn').button('reset')
-  //     }
-  //     else if (mode == "preview") {
-  //       window.open(a)
-  //       // $('#previewBtn').button('reset')
-  //     }
-  //   })
-
-  // }
-
-  // getFileName(invoiceId) {
-  //   var day = (new Date()).getDate() <= 9 ? '0' + (new Date()).getDate() : (new Date()).getDate()
-  //   var month = this.findMonth((new Date()).getMonth())
-  //   var year = (new Date()).getFullYear()
-  //   var time = getTime()
-
-  //   function getTime() {
-  //     var hour = (new Date()).getHours() < 13 ? (new Date()).getHours().toString() : ((new Date()).getHours() - 12).toString()
-  //     hour = parseInt(hour) < 10 ? '0' + hour.toString() : hour.toString()
-  //     var min = (new Date()).getMinutes() < 10 ? '0' + (new Date()).getMinutes() : (new Date()).getMinutes()
-  //     return hour + min
-  //   }
-
-  //   //console.log(time)
-
-  //   var ampm = (new Date()).getHours() < 12 ? 'AM' : 'PM'
-
-  //   // eg: INVPDF_INV_21_02Dec2015_1151AM
-  //   return 'ESTPDF_EST_' + this.data.invoice.invoice_number + '_' + day + month + year + '_' + time + ampm + '.pdf'
-  // }
 
   findMonth(expression) {
     switch (expression) {
@@ -1732,16 +1487,10 @@ export class AddComponent implements OnInit {
         $('a.taxbtn').addClass('disabledBtn')
       }
       if (settings.discount_on_item == 0) {
-        this.discount_on = 'onBill'
-        this.discounttext = "Discount (on Bill)"
         this.activeInvoice.discount_on_item = 0
       } else if (settings.discount_on_item == 1) {
         this.activeInvoice.discount_on_item = 2
-        this.discount_on = 'onItem'
-        this.discounttext = "Discount (on Item)"
       } else {
-        this.discount_on = 'disabled'
-        this.discounttext = "Discount (Disabled)"
         this.activeInvoice.discount_on_item = 2
         $('a.discountbtn').addClass('disabledBtn')
       }
@@ -1750,12 +1499,133 @@ export class AddComponent implements OnInit {
       this.activeInvoice.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
-      this.discount_on = 'disabled'
-      this.discounttext = "Discount (Disabled)"
       this.activeInvoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
   }
+
+  // compare(a, b) {
+  //   // Use toUpperCase() to ignore character casing
+  //   var genreA = a.value.toUpperCase()
+  //   var genreB = b.value.toUpperCase()
+  //   var comparison = 0
+  //   if (genreA > genreB) {
+  //     comparison = 1
+  //   } else if (genreA < genreB) {
+  //     comparison = -1
+  //   }
+  //   return comparison
+  // }
+
+  // showMeMultipleTax(index) {
+  //   //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
+  //   var tempIndex = this.activeInvoice.taxList.length
+  //   this.activeInvoice.taxList[tempIndex] = {}
+  //   this.activeInvoice.taxList[tempIndex].taxName = $rootScope.authenticated.setting.alstTaxName[index].taxName
+  //   this.activeInvoice.taxList[tempIndex].selected = true
+  //   this.multi_tax_index.push(index)
+  //   this.show_tax_input_list[index] = true
+  //   this.tempflagTaxList[index] = true
+  // }
+
+  // hideMeTaxMultiple(index) {
+  //   this.activeInvoice.tax_rate = 0
+  //   this.multi_tax_index.splice(index, 1)
+  //   this.activeInvoice.taxList.splice(index, 1)
+  //   this.calculateInvoice(index)
+  //   //this.show_tax_input_list[index] = false
+  //   this.tempflagTaxList[index] = false
+  // }
+
+  // multiTaxButtonForAddInvoice(taxname, index) {
+  //   var status = true
+  //   for (var k = 0; k < this.multi_tax_index.length; k++) {
+  //     //console.log("in button",index,k,"..")
+  //     if (this.multi_tax_index[k] !== index) {
+  //       status = true
+  //     } else {
+  //       status = false
+  //       break
+  //     }
+  //   }
+  //   return status
+  // }
+
+  // assignClientId(client_id) {
+  //   this.invoice.client_id = client_id
+  // }
+
+  // calculateSum() {
+  //   var total = 0
+  //   for (var i = 0; i < this.invoiceItems.length; i++) {
+  //     var item = this.invoiceItems[i]
+  //     total += parseFloat(item.total, 10)
+  //   }
+  //   this.data.invoice.total = total
+  // }
+
+  // printODownloadInvoice(invoiceId, type) {
+  //   Data.get('invoice/get-pdf?invoiceId=' + invoiceId + '&type=' + type + '&timeZone=' + $rootScope.timeZone + '&accessToken=' + $rootScope.settings.dropbox_token, { responseType: 'arraybuffer' }).then(function (result) {
+  //     //console.log(result)
+  //     var a = window.document.createElement('a')
+  //     a.href = window.URL.createObjectURL(new Blob([result], {
+  //       type: 'application/pdf'
+  //     }))
+  //     // Append anchor to body.
+  //     document.body.appendChild(a)
+  //     a.download = this.getFileName(invoiceId)
+  //     a.click()
+  //   })
+  // }
+
+  // downloadInvoice(invoiceId, type, mode) {
+  //   if (mode == "download") {
+  //     $('#downloadBtn').button('loading')
+  //   }
+  //   else if (mode == "preview") {
+  //     $('#previewBtn').button('loading')
+  //   }
+  //   var id = this.data.invoice.unique_identifier
+  //   this.invoiceService.fetchPdf(id).subscribe((result: response) => {
+  //     var file = new Blob([result], { type: 'application/pdf' })
+  //     var fileURL = URL.createObjectURL(file)
+  //     this.content = fileURL
+  //     //console.log(this.content)
+  //     var a = window.document.createElement('a')
+  //     a.href = window.URL.createObjectURL(new Blob([result.data], {
+  //       type: 'application/pdf'
+  //     }))
+  //     // Append anchor to body.
+  //     document.body.appendChild(a)
+  //     if (mode == "download") {
+  //       a.download = this.getFileName(invoiceId)
+  //       a.click()
+  //       // $('#downloadBtn').button('reset')
+  //     }
+  //     else if (mode == "preview") {
+  //       window.open(a)
+  //       // $('#previewBtn').button('reset')
+  //     }
+  //   })
+  // }
+
+  // getFileName(invoiceId) {
+  //   var day = (new Date()).getDate() <= 9 ? '0' + (new Date()).getDate() : (new Date()).getDate()
+  //   var month = this.findMonth((new Date()).getMonth())
+  //   var year = (new Date()).getFullYear()
+  //   var time = getTime()
+
+  //   function getTime() {
+  //     var hour = (new Date()).getHours() < 13 ? (new Date()).getHours().toString() : ((new Date()).getHours() - 12).toString()
+  //     hour = parseInt(hour) < 10 ? '0' + hour.toString() : hour.toString()
+  //     var min = (new Date()).getMinutes() < 10 ? '0' + (new Date()).getMinutes() : (new Date()).getMinutes()
+  //     return hour + min
+  //   }
+  //   //console.log(time)
+  //   var ampm = (new Date()).getHours() < 12 ? 'AM' : 'PM'
+  //   // eg: INVPDF_INV_21_02Dec2015_1151AM
+  //   return 'ESTPDF_EST_' + this.data.invoice.invoice_number + '_' + day + month + year + '_' + time + ampm + '.pdf'
+  // }
 
   // getInvoice(id, index) {
   //   if (id) {
@@ -1772,7 +1642,6 @@ export class AddComponent implements OnInit {
   //     this.tempItemList = []
   //     this.tempTermList = []
   //     this.customDate = true
-
   //     // this.clientList = DataStore.unSortedClient
   //     // this.invoices = DataStore.invoicesList;
   //     if (this.invoices) {
@@ -1784,10 +1653,8 @@ export class AddComponent implements OnInit {
   //       delete this.data.invoice.disp
   //       this.invoice.termsAndConditions = this.invoice.termsAndConditions
   //       this.invoice.payments = this.invoice.payments
-
   //       this.invoiceDate = this.datePipe.transform(this.invoice.created_date)
   //       this.dueDate = this.datePipe.transform(this.invoice.due_date)
-
   //       if (this.invoice.taxList) {
   //         if (this.invoice.taxList.length > 0) {
   //           this.showMultipleTax = true
@@ -1797,7 +1664,6 @@ export class AddComponent implements OnInit {
   //       } else {
   //         this.showMultipleTax = false
   //       }
-
   //       for (var j = 0; j < this.data.invoice.listItems.length; j++) {
   //         var temp = {
   //           'unique_identifier': this.data.invoice.listItems[j].uniqueKeyListItem,
@@ -1837,10 +1703,8 @@ export class AddComponent implements OnInit {
   //           this.tempTermList.push(temp1);
   //         }
   //       }
-
   //       this.data.invoice.listItems = this.tempItemList;
   //       this.data.invoice.termsAndConditions = this.tempTermList
-
   //       if (typeof this.data.invoice.payments !== 'undefined') {
   //         var paidAmountTemp = 0;
   //         for (var i = 0; i < this.data.invoice.payments.length; i++) {
@@ -1866,28 +1730,21 @@ export class AddComponent implements OnInit {
   //           this.itemDisabled = true
   //         }
   //       }
-
   //       this.data.invoice.payments = this.tempPaymentList
   //       this.setPaidAmountTotalView()
   //       this.initialPayment = { ...this.tempPaymentList }
-
   //       if (this.clientList) {
   //         var inv_index_client = this.clientList.findIndex(client => client.uniqueKeyClient == this.invoice.unique_key_fk_client)
   //         this.clientsLocal[0] = this.clientList[inv_index_client];
   //       }
-
   //       if (this.invoice.discount_on_item == 1) {
-  //         this.discounttext = "Discount (On Item)"
   //         this.discountLabel = true;
   //         this.show_discount = false;
   //       } else if (this.invoice.discount_on_item == 0) {
-  //         this.discounttext = "Discount (On Bill)"
   //         this.show_discount = true;
   //       } else {
   //         this.show_discount = false;
-  //         this.discounttext = "Discount (Disabled)"
   //       }
-
   //       if (this.invoice.tax_on_item == 0) {
   //         this.taxtext = "Tax (On Item)"
   //         this.taxLabel = true;
@@ -1899,7 +1756,6 @@ export class AddComponent implements OnInit {
   //         this.show_tax_input = false;
   //         this.taxtext = "Tax (Disabled)"
   //       }
-
   //       if (this.invoice.shipping_charges && this.invoice.shipping_charges >= 0)
   //         this.show_shipping_charge = true
   //       else
@@ -1924,5 +1780,39 @@ export class AddComponent implements OnInit {
   //     }
   //     this.routeParams.invId = this.invoice.unique_identifier;
   //   }
+  // }
+
+  // setPaidAmountTotalView() {
+  //   var temp = 0
+  //   if (typeof this.invoice.payments !== 'undefined') {
+  //     for (var i = 0; i < this.invoice.payments.length; i++) {
+  //       temp = temp + parseFloat(this.invoice.payments[i].paidAmount)
+  //     }
+  //   }
+  //   this.paid_amount = temp
+  // }
+
+  // dynamicOrder(invoice) {
+  //   var order = 0
+  //   switch (this.balance) {
+  //     case 'name':
+  //       order = invoice.orgName
+  //       break
+  //     case 'created_date':
+  //       {
+  //         var date = new Date(invoice.createDate)
+  //         order = date.getTime()
+  //         break
+  //       }
+  //     case 'invoice_number':
+  //       order = invoice.tempInvNo
+  //       break
+  //     case 'amount':
+  //       order = parseFloat(invoice.amount)
+  //       break
+  //     default:
+  //       order = invoice.deviceCreatedDate
+  //   }
+  //   return order
   // }
 }

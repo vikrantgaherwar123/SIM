@@ -45,7 +45,7 @@ export class ProductService {
   }
 
   changeKeysForApi(product) {
-    var tempProduct = {
+    return {
       prod_name: product.prodName,
       unit: product.unit,
       discription: product.discription,
@@ -54,21 +54,27 @@ export class ProductService {
       device_modified_on: product.modifiedDate,
       unique_identifier: product.productuniqueKeyProduct
     }
-
-    return tempProduct
   }
 
   changeKeysForStore(product) {
-    var tempProduct = {
-      prodName: product.prod_name,
-      unit: product.unit,
+    return {
+      buyPrice: product.buy_price,
+      deviceCreatedDate: product.device_modified_on,
       discription: product.discription,
-      rate: product.rate,
-      taxRate: product.tax_rate,
+      enabled: product.deleted_flag,
+      inventoryEnabled: product.inventory_enabled,
       modifiedDate: product.device_modified_on,
-      productuniqueKeyProduct: product.unique_identifier
+      openingStock: product.opening_stock,
+      prodLocalId: product._id,
+      prodName: product.prod_name,
+      productCode: product.productCode,
+      rate: product.rate,
+      remainingStock: product.remaining_stock,
+      serverOrgId: product.organization_id,
+      serverUpdateTime: product.serverUpdateTime,
+      taxRate: product.tax_rate,
+      uniqueKeyProduct: product.unique_identifier,
+      unit: product.unit
     }
-
-    return tempProduct
   }
 }
