@@ -17,6 +17,7 @@ import { productReducer } from './reducers/product.reducer'
 import { termsReducer } from './reducers/terms.reducer'
 import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
+import { settingReducer } from './reducers/setting.reducer'
 
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
@@ -65,7 +66,8 @@ import { ViewComponent } from './components/invoice/view/view.component'
       product: productReducer,
       terms: termsReducer,
       estimate: estimateReducer,
-      invoice: invoiceReducer
+      invoice: invoiceReducer,
+      setting: settingReducer
     })
   ],
   providers: [CookieService, CONSTANTS],

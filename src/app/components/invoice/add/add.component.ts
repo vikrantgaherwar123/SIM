@@ -382,166 +382,177 @@ export class AddComponent implements OnInit {
   }
 
   initializeSettings(invNoParam) {
-    var settings = this.authenticated.setting
-    this.settingService.fetch().subscribe((response: any) => {
-      // $rootScope.pro_bar_load = true
-      if (response.status === 200) {
-        var cookie = this.user
-        if (response.settings === null) {
-          this.authenticated.setting = <setting>{}
-          this.authenticated.setting.date_format = true
-          this.settings.date_format = 'dd-mm-yy'
-          // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-          // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-          // $rootScope.settings.alstTaxName = []
-        } else {
-          cookie.setting = response.settings.appSettings.androidSettings
-          this.settings = cookie.setting
-
-          // if (cookie.setting.numberFormat === "###,###,###.00") {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern1'
-          // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern2'
-          // } else if (cookie.setting.numberFormat === "###.###.###,00") {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern1'
-          // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern2'
-          // } else if (cookie.setting.numberFormat === "### ### ###,00") {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern1'
-          // } else {
-          //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-          //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-          //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-          //   $rootScope.settingscurrency_pattern = 'pattern1'
-          // }
-
-          if (cookie.setting.dateDDMMYY === false) {
-            // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
-            this.settings.date_format = 'mm-dd-yy'
-          } else if (cookie.setting.dateDDMMYY === true) {
-            // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-            this.settings.date_format = 'dd-mm-yy'
-          }
-
-          if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
-            // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
-          } else {
-            //$rootScope.authenticated.setting = {}
-            //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
-          }
-        }
-        this.cookie.set('user', JSON.stringify(cookie), null, '/')
-        if (invNoParam) {
-          if (settings.quotFormat)
-            this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
-          else if (typeof settings.quotFormat !== 'undefined')
-            this.activeInvoice.invoice_number = "Est_" + invNoParam
-          else
-            this.activeInvoice.invoice_number = invNoParam
-        } else {
-          if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
-            this.tempInvNo = parseInt(settings.quotNo) + 1
-            this.tempQuaNoOnAdd = this.tempInvNo
-          } else {
-            this.tempInvNo = 1
-            this.tempQuaNoOnAdd = this.tempInvNo
-          }
-          if (settings.quotFormat || settings.quotFormat === '') {
-            this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
-          } else if (typeof settings.quotFormat !== 'undefined') {
-            this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
-          } else {
-            this.activeInvoice.invoice_number = this.tempInvNo.toString()
-          }
-        }
+    // Fetch settings if not in store and init settings
+    this.store.select('setting').subscribe(sets => {
+      if(Object.keys(sets).length == 0) {
+        this.settingService.fetch().subscribe((response: any) => {
+          this.initSettings(response, invNoParam)
+        })
       } else {
-        if (invNoParam) {
-          this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
-        } else {
-          if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
-            this.tempInvNo = parseInt(settings.quotNo) + 1
-            this.tempQuaNoOnAdd = this.tempInvNo
-          } else {
-            this.tempInvNo = 1
-            this.tempQuaNoOnAdd = this.tempInvNo
-          }
-          if (settings.quotFormat) {
-            this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
-          } else {
-            this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
-          }
-        }
+        var response = {status: 200, settings: sets}
+        this.initSettings(response, invNoParam)
       }
     })
+  }
+
+  initSettings(response, invNoParam) {
+    var settings = this.authenticated.setting
+    if (response.status === 200) {
+      var cookie = this.user
+      if (response.settings === null) {
+        this.authenticated.setting = <setting>{}
+        this.authenticated.setting.date_format = true
+        this.settings.date_format = 'dd-mm-yy'
+        // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+        // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
+        // $rootScope.settings.alstTaxName = []
+      } else {
+        cookie.setting = response.settings.appSettings.androidSettings
+        this.settings = cookie.setting
+
+        // if (cookie.setting.numberFormat === "###,###,###.00") {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern1'
+        // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern2'
+        // } else if (cookie.setting.numberFormat === "###.###.###,00") {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern1'
+        // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern2'
+        // } else if (cookie.setting.numberFormat === "### ### ###,00") {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern1'
+        // } else {
+        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
+        //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+        //   $rootScope.settingscurrency_pattern = 'pattern1'
+        // }
+
+        if (cookie.setting.dateDDMMYY === false) {
+          // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
+          this.settings.date_format = 'mm-dd-yy'
+        } else if (cookie.setting.dateDDMMYY === true) {
+          // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+          this.settings.date_format = 'dd-mm-yy'
+        }
+
+        if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
+          // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
+        } else {
+          //$rootScope.authenticated.setting = {}
+          //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
+        }
+      }
+      this.cookie.set('user', JSON.stringify(cookie), null, '/')
+      if (invNoParam) {
+        if (settings.quotFormat)
+          this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
+        else if (typeof settings.quotFormat !== 'undefined')
+          this.activeInvoice.invoice_number = "Est_" + invNoParam
+        else
+          this.activeInvoice.invoice_number = invNoParam
+      } else {
+        if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+          this.tempInvNo = parseInt(settings.quotNo) + 1
+          this.tempQuaNoOnAdd = this.tempInvNo
+        } else {
+          this.tempInvNo = 1
+          this.tempQuaNoOnAdd = this.tempInvNo
+        }
+        if (settings.quotFormat || settings.quotFormat === '') {
+          this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
+        } else if (typeof settings.quotFormat !== 'undefined') {
+          this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
+        } else {
+          this.activeInvoice.invoice_number = this.tempInvNo.toString()
+        }
+      }        
+    } else {
+      if (invNoParam) {
+        this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
+      } else {
+        if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+          this.tempInvNo = parseInt(settings.quotNo) + 1
+          this.tempQuaNoOnAdd = this.tempInvNo
+        } else {
+          this.tempInvNo = 1
+          this.tempQuaNoOnAdd = this.tempInvNo
+        }
+        if (settings.quotFormat) {
+          this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
+        } else {
+          this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
+        }
+      }
+    }
   }
 
   // Client Functions
