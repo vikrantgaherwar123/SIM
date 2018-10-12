@@ -24,9 +24,9 @@
 
                         <div class="form-group pad-left-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1"
                           >
-                          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" (optionSelected)="selectedClientChange($event)">
+                          <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith" (optionSelected)="selectedClientChange($event)">
                             <mat-option *ngFor="let client of filteredClients | async" [value]="client">{{client.name}}</mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">Add Client {{billingTo.value}}</mat-option>
                           </mat-autocomplete>
@@ -155,15 +155,15 @@
                           >
                         </td>
                         <td width="18%">
-                          <input type="text" style="text-align: center" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100"
+                          <input type="text" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100 text-center"
                             name="quantity" disabled>
                         </td>
                         <td width="18%">
-                          <input type="text" style="text-align: center" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-left"
+                          <input type="text" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-center"
                             name="rate" disabled>
                         </td>
                         <td width="18%">
-                          <input type="text" style="text-align: center" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-right"
+                          <input type="text" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-center"
                             style="text-align:right;" name="amount" disabled>
                         </td>
                         <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
@@ -174,13 +174,52 @@
                     <tbody class="lineItems">
                       <tr class="row-item" *ngFor="let item of activeInvoice.listItems; let index = index; let last = last">
                         <td [class.no-border-last]="last">
+                          <div class="">
+                            <div class="form-group">
+                              <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                                {{item.product_name}}
+                              </div>
+                              <div class="text-left">
+                                {{item.description}}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last" style="vertical-align: initial;">
+                          <div class="text-right">
+                            {{item.quantity | number:'2.'}}
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last" style="vertical-align: initial;">
+                          <div class="text-right">
+                            {{item.rate | number:'2.'}}
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last" style="vertical-align: initial; position: unset !important;">
+                          <div class="text-right">
+                            {{item.total | number:'2.'}}
+                          </div>
+                        </td>
+                        <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
+                          [class.no-border-last]="last">
+                          <div style="padding-top:4px">
+                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;" (click)="removeItem(index)">
+                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <!-- Select Item for invoice input -->
+                      <tr class="row-item">
+                        <td [class.no-border-last]="last">
                           <div class="form-group">
                             <div class="custom-add-product selectize-wrap">
-                              <input type="text" name="product-name_{{index}}" class="form-control billing-input"
-                                placeholder="Type or Select Product" matInput [formControl]="productListFormControls[index]" [matAutocomplete]="auto"
+                              <input type="text" name="product-name" class="form-control billing-input"
+                                placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
                               >
                               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
-                                (optionSelected)="addItem(index, $event.option.value)"
+                                (optionSelected)="fillItemDetails()"
                               >
                                 <mat-option *ngFor="let product of (filteredProducts | async)" [value]="product">{{product.prodName}}</mat-option>
                               </mat-autocomplete>
@@ -188,58 +227,46 @@
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                                 style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
-                                [(ngModel)]="item.description"  placeholder="Description"
+                                [(ngModel)]="activeItem.description"  placeholder="Description"
                               ></textarea>
                             </div>
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="$last">
+                        <td style="vertical-align: initial;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" name="itemQty_{{index}}" id="qty{{$index}}" step="any" class="form-control text-right" min="0.01"
-                              [(ngModel)]="item.quantity" ng-change="calculateTotal($index)" select-on-click my-enter-in>
+                            <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0.01"
+                              [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" select-on-click my-enter-in>
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="$last">
+                        <td style="vertical-align: initial;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" name="itemRate_{{index}}" step="any" class="form-control text-right" name="itemRate.1" min="0.01"
-                              [(ngModel)]="item.rate" ng-change="calculateTotal($index)" select-on-click my-enter-in
+                            <input type="number" name="itemRate" step="any" class="form-control text-right" name="itemRate.1" min="0.01"
+                              [(ngModel)]="activeItem.rate" (change)="calculateTotal()" select-on-click my-enter-in
                             />
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="$last">
+                        <td style="vertical-align: initial; position: relative !important;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text-right" 
                               title="Amount is calculated automatically."
-                              name="itemTotal.1_{{index}}" [(ngModel)]="item.total" disabled convert-decimal
+                              name="itemTotal" [(ngModel)]="activeItem.total" disabled convert-decimal
                             />
                           </div>
+
+                          <button type="button" class="btnd add-line-item-button" (click)="addEditInvoiceItem()"
+                            style="position: absolute; right: 0; bottom: 5px;"
+                          >
+                            Add Item
+                          </button>
                         </td>
-      
-                        <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
-                          [class.no-border-last]="$last">
-                          <div style="padding-top:4px">
-                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;" (click)="removeItem(index)">
-                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
-                            </a>
-                          </div>
-                        </td>      
                       </tr>
                     </tbody>
                   </table>
 
                   <div class="row add-item-button">
-                    <div class="col-md-6 col-xs-6 col-sm-6">
-                      <button type="button" class="btnd add-line-item-button" (click)="addLineItem()">
-                        <img src="assets/images/add16.png" alt="logo"
-                          style="vertical-align: initial;height:10px; margin-right: 3px;"
-                        >
-                        Line Item
-                      </button>
-                    </div>
-
                     <!-- Taxes, adjustment, Discounts additions -->
                     <div class="col-md-6 col-xs-6 col-sm-6 discount-tax-pad font-custom-bold">
                       <div class="cursor-pointer" *ngIf="activeInvoice.discount == null && activeInvoice.percentage_flag==0">
