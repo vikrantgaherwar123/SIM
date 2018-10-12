@@ -119,6 +119,7 @@ export interface product {
   enabled: number
   inventoryEnabled: number
   modifiedDate: number
+  openingDate: string
   openingStock: number
   prodLocalId: number
   prodName: string
