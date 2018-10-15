@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
-import { DatePipe } from '@angular/common'
 
 import { response, client, invoice, terms, setting, product } from '../../../interface'
-import { generateUUID, changeInvoice, dateDifference } from '../../../globalFunctions'
+import { generateUUID } from '../../../globalFunctions'
 
 import { CookieService } from 'ngx-cookie-service'
 import { InvoiceService } from '../../../services/invoice.service'
@@ -25,8 +24,7 @@ import { AppState } from '../../../app.state'
 @Component({
   selector: 'app-invoice',
   templateUrl: './add.component.html',
-  styleUrls: ['./add.component.css'],
-  providers: [DatePipe]
+  styleUrls: ['./add.component.css']
 })
 export class AddComponent implements OnInit {
 
@@ -73,12 +71,9 @@ export class AddComponent implements OnInit {
 
   private invoiceList: Observable<invoice[]>
   private activeInvoice: invoice = {...this.emptyInvoice}
-  private invoiceItems = []
-  private invoiceTerms = []
-  private selectedInvoice = null
   private tempQuaNoOnAdd: number
-  private invoiceFilterTerm: string
   private invoiceDate
+  private dueDate = new FormControl()
   private paymentDate
   private tempInvNo: number
   private initialPayment
@@ -129,8 +124,6 @@ export class AddComponent implements OnInit {
   }
 
   private newItemCounter: number = 0
-  private customDate = true
-  private dueDate = ""
 
   private showMultipleTax: boolean
   private show_tax_input_list: any
@@ -175,14 +168,12 @@ export class AddComponent implements OnInit {
   }
 
   constructor(private router: Router,
-    private route: ActivatedRoute,
     private invoiceService: InvoiceService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
     private cookie: CookieService,
     private settingService: SettingService,
     private productService: ProductService,
-    private datePipe: DatePipe,
     private store: Store<AppState>
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
@@ -218,7 +209,6 @@ export class AddComponent implements OnInit {
     this.activeInvoice.balance = 0.00
 
     var settings = this.authenticated.setting
-
     this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
     this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
     this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : ''
@@ -258,7 +248,6 @@ export class AddComponent implements OnInit {
         this.showMultipleTax = false
       }
     }
-    var date = new Date()
 
     if (settings.dateDDMMYY === false) {
       this.settings.date_format = 'mm-dd-yy'
@@ -268,16 +257,20 @@ export class AddComponent implements OnInit {
       }
       this.settings.date_format = 'dd-mm-yy'
     }
-    if (this.settings.date_format === 'dd-mm-yy') {
-      this.invoiceDate = new FormControl(new Date())
-      this.paymentDate = new FormControl(new Date())
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    } else if (this.settings.date_format = 'mm-dd-yy') {
-      this.invoiceDate = new FormControl(new Date())
-      this.paymentDate = new FormControl(new Date())
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    }
-
+    var date = new Date()
+    this.invoiceDate = new FormControl(date)
+    this.activeInvoice.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+    this.invoiceDate.valueChanges.subscribe(value => {
+      this.activeInvoice.created_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+    })
+    this.dueDate.valueChanges.subscribe(value => {
+      if(value !== null) {
+        this.activeInvoice.due_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+      } else {
+        this.activeInvoice.due_date = ''
+      }
+    })
+    this.paymentDate = new FormControl(new Date())
     var self = this
 
     // Fetch Products if not in store
@@ -509,43 +502,36 @@ export class AddComponent implements OnInit {
       }
       this.cookie.set('user', JSON.stringify(cookie), null, '/')
       if (invNoParam) {
-        if (settings.quotFormat)
-          this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
-        else if (typeof settings.quotFormat !== 'undefined')
-          this.activeInvoice.invoice_number = "Est_" + invNoParam
-        else
-          this.activeInvoice.invoice_number = invNoParam
+        this.activeInvoice.invoice_number = settings.setInvoiceFormat + invNoParam
       } else {
-        if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+        if (!isNaN(parseInt(settings.invNo))) {
           this.tempInvNo = parseInt(settings.quotNo) + 1
-          this.tempQuaNoOnAdd = this.tempInvNo
+          invNoParam = this.tempInvNo
         } else {
           this.tempInvNo = 1
-          this.tempQuaNoOnAdd = this.tempInvNo
+          invNoParam = this.tempInvNo
         }
-        if (settings.quotFormat || settings.quotFormat === '') {
-          this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
-        } else if (typeof settings.quotFormat !== 'undefined') {
-          this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
+        if (settings.setInvoiceFormat) {
+          this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
         } else {
-          this.activeInvoice.invoice_number = this.tempInvNo.toString()
+          this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
         }
       }        
     } else {
       if (invNoParam) {
-        this.activeInvoice.invoice_number = settings.quotFormat + invNoParam
+        this.activeInvoice.invoice_number = settings.setInvoiceFormat + invNoParam
       } else {
-        if (settings.quotNo && !isNaN(parseInt(settings.quotNo))) {
+        if (!isNaN(parseInt(settings.invNo))) {
           this.tempInvNo = parseInt(settings.quotNo) + 1
           this.tempQuaNoOnAdd = this.tempInvNo
         } else {
           this.tempInvNo = 1
           this.tempQuaNoOnAdd = this.tempInvNo
         }
-        if (settings.quotFormat) {
-          this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
+        if (settings.setInvoiceFormat) {
+          this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
         } else {
-          this.activeInvoice.invoice_number = "Est_" + this.tempInvNo
+          this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
         }
       }
     }
@@ -752,6 +738,73 @@ export class AddComponent implements OnInit {
   }
 
   // Invoice Functions
+  changeDueDate(selectDueDate) {
+    this.selectDueDate = selectDueDate
+    var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+
+    switch (this.selectDueDate) {
+      case 'no_due_date':
+        this.dueDate.reset()
+        this.activeInvoice.due_date_flag = 0
+      break
+
+      case 'immediately':
+        this.dueDate.reset(new Date(y, (m - 1), d))
+        this.activeInvoice.due_date_flag = 1
+      break
+
+      case 'custom_date':
+        this.dueDate.reset(new Date(y, (m - 1), d))
+        this.activeInvoice.due_date_flag = 2
+      break
+
+      case '7_days':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 7))
+        this.activeInvoice.due_date_flag = 3
+      break
+
+      case '10_days':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 10))
+        this.activeInvoice.due_date_flag = 4
+      break
+
+      case '15_days':
+      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 15))
+      this.activeInvoice.due_date_flag = 5
+      break
+
+      case '30_days':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 30))
+        this.activeInvoice.due_date_flag = 6
+      break
+
+      case '45_days':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 45))
+        this.activeInvoice.due_date_flag = 7
+      break
+
+      case '60_days':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 60))
+        this.activeInvoice.due_date_flag = 8
+      break
+
+      case '90_days':
+      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 90))
+      this.activeInvoice.due_date_flag = 9
+      break
+
+      default:
+        this.dueDate.reset()
+      break
+    }
+  }
+
+  addDays (date, days) {
+    var [y, m, d] =  date.split('-').map(tmp => parseInt(tmp))
+    date = new Date(y, (m - 1), d).getTime()
+    return new Date(date+(days*24*60*60*1000))
+  }
+
   fillItemDetails(prod = null) {
     var product = (prod == null) ? this.addItem.value : prod
     // console.log(product)
@@ -767,13 +820,26 @@ export class AddComponent implements OnInit {
     this.calculateTotal()
   }
 
-  addEditInvoiceItem() {
+  editInvoiceItem(index) {
+    $('#edit-item').modal('show')
+    this.activeItem = {...this.activeInvoice.listItems[index]}
+  }
+
+  addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
-    // console.log(this.addItem)
+    // console.log(this.addItem, uid)
 
     if(this.activeItem.unique_identifier) {
-      this.activeInvoice.listItems.push(this.activeItem)
-      this.addItem.reset()
+      if(uid == null) {
+        // Add Item to invoice
+        this.activeInvoice.listItems.push(this.activeItem)
+      } else {
+        // Edit Item from Invoice
+        var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier = uid)
+        this.activeInvoice.listItems[index] = this.activeItem
+        $('#edit-item').modal('hide')
+      }
+      this.addItem.reset('')
       this.activeItem = {
         quantity: 1,
         rate: 0.00
@@ -783,7 +849,7 @@ export class AddComponent implements OnInit {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
-        this.addItem.reset()
+        this.addItem.reset('')
         this.activeItem = {
           quantity: 1,
           rate: 0.00
@@ -793,6 +859,14 @@ export class AddComponent implements OnInit {
     }
   }
 
+  closeItemModel() {
+    this.activeItem = {
+      quantity: 1,
+      rate: 0.00,
+      total: 0.00
+    }
+    $('#edit-item').modal('hide')
+  }
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {
       var rateParse = parseFloat(this.activeItem.rate)
@@ -894,6 +968,7 @@ export class AddComponent implements OnInit {
       alert('client not selected')
       return false
     }
+
     if (this.activeInvoice.listItems.length == 0 || !status) {
       // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
       alert('You haven\'t added item')
@@ -903,19 +978,6 @@ export class AddComponent implements OnInit {
     }
 
     $('#invSubmitBtn').attr('disabled', 'disabled')
-    var createdTime = new Date()
-    var dueDateTime = new Date()
-    if (this.activeInvoice.due_date && this.activeInvoice.due_date !== '') {
-      dueDateTime.setTime(parseInt(this.activeInvoice.due_date))
-      this.activeInvoice.due_date = dueDateTime.getFullYear() + '-' + ('0' + (dueDateTime.getMonth() + 1)).slice(-2) + '-' + ('0' + dueDateTime.getDate()).slice(-2);
-    } else {
-      this.activeInvoice.due_date
-    }
-
-    if (parseInt(this.activeInvoice.created_date)) {
-      createdTime.setTime(parseInt(this.activeInvoice.created_date))
-    }
-    this.activeInvoice.created_date = createdTime.getFullYear() + '-' + ('0' + (createdTime.getMonth() + 1)).slice(-2) + '-' + ('0' + createdTime.getDate()).slice(-2)
     this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
 
     // Add terms in invoice from terms array Invoice api compatible
@@ -952,13 +1014,10 @@ export class AddComponent implements OnInit {
       this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
     }
 
-    var update_status = 0;
-    var invoice_id = null;
-    var d = new Date();
-    this.activeInvoice.device_modified_on = d.getTime();
+    this.activeInvoice.device_modified_on = new Date().getTime()
 
     var self = this
-    this.invoiceService.add([this.activeInvoice]).subscribe(function (result: any) {
+    this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         alert('Couldnt save invoice')
         console.log(result)
@@ -971,7 +1030,9 @@ export class AddComponent implements OnInit {
       } else if (result.status === 200) {
         // Add Invoice to store
         self.store.dispatch(new invoiceActions.add(result.invoiceList))
-
+        self.invoiceList.subscribe(invoices => {
+          console.log(invoices)
+        })
         // Reset Create Invoice page for new invoice creation
         self.resetCreateInvoice()
         alert('Invoice saved successfully')
@@ -982,22 +1043,15 @@ export class AddComponent implements OnInit {
 
   resetCreateInvoice() {
     this.billingTo.setValue('')
-    this.addItem.reset()
+    this.addItem.reset('')
 
     this.activeInvoice = {...this.emptyInvoice}
     this.activeInvoice.listItems = []
     this.newItemCounter = 0
-    this.activeInvoice.listItems.push({
-      'quantity': 1,
-      'unique_identifier': 'new' + this.newItemCounter,
-      'rate': 0.00,
-      'total': 0.00
-    })
-    this.activeClient = {}
-    this.customDate = true
-    this.dueDate = ""
 
-    var d = new Date()
+    this.activeClient = {}
+    this.dueDate.reset()
+
     var settings = this.authenticated.setting
     this.activeInvoice.taxList = []
     this.activeInvoice.percentage_flag = 1
@@ -1022,10 +1076,10 @@ export class AddComponent implements OnInit {
       } else {
         this.tempInvNo = 1
       }
-      if (settings.quotFormat) {
-        this.activeInvoice.invoice_number = settings.quotFormat + this.tempInvNo
+      if (settings.setInvoiceFormat) {
+        this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
       } else {
-        this.activeInvoice.invoice_number = "Inv_" + this.tempInvNo
+        this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
       }
     }
 
@@ -1247,210 +1301,6 @@ export class AddComponent implements OnInit {
     })
   }
 
-  greaterThan(prop, val) {
-    return function (item) {
-      return item[prop] > val
-    }
-  }
-
-  addRow() {
-    this.invoiceItems.push({
-      "id": null,
-      "product_id": null,
-      "invoice_id": "",
-      "organization_id": 1,
-      "product_name": "",
-      "description": "",
-      "quantity": 0,
-      "rate": "",
-      "unit": 1,
-      "tax_rate": 0,
-      "total": 0,
-      "epoch": 0
-    })
-  }
-
-  goNew() {
-    $('#msgInv').removeClass("hide")
-    $('#msgInv').addClass("show")
-    $('#estMain').removeClass("show")
-    $('#estMain').addClass("hide")
-    $('#editEst').removeClass("show")
-    $('#editEst').addClass('hide')
-    this.resetCreateInvoice()
-  }
-
-  findMonth(expression) {
-    switch (expression) {
-      case 0:
-        return "Jan"
-
-      case 1:
-        return "Feb"
-
-      case 2:
-        return "Mar"
-
-      case 3:
-        return "Apr"
-
-      case 4:
-        return "May"
-
-      case 5:
-        return "Jun"
-
-      case 6:
-        return "Jul"
-
-      case 7:
-        return "Aug"
-
-      case 8:
-        return "Sep"
-
-      case 9:
-        return "Oct"
-
-      case 10:
-        return "Nov"
-
-      case 11:
-        return "Dec"
-    }
-  }
-
-  changeDueDate(selectDueDate) {
-    var date = new Date()
-    this.selectDueDate = selectDueDate
-    switch (this.selectDueDate) {
-      case 'no_due_date':
-        this.customDate = true
-        this.dueDate = ''
-        this.activeInvoice.due_date = ''
-        this.activeInvoice.due_date_flag = 0
-      break
-
-      case 'immediately':
-        this.customDate = false
-        date.setTime(parseInt(this.activeInvoice.created_date))
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.dueDate = ('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear()
-          this.activeInvoice.due_date = (new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0]))).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.dueDate = ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + '-' + date.getFullYear()
-          this.activeInvoice.due_date = new Date(this.dueDate).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 1
-      break
-
-      case 'custom_date':
-        this.customDate = false
-        this.activeInvoice.due_date_flag = 2
-      break
-
-      case '7_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 7)
-        this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[1]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[2])).getTime().toString()
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 3
-      break
-
-      case '10_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 10);
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 4
-      break
-
-      case '15_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 15)
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 5
-      break
-
-      case '30_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 30)
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 6
-      break
-
-      case '45_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 45)
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 7
-      break
-
-      case '60_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 60)
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 8
-      break
-
-      case '90_days':
-        this.customDate = false
-        this.dueDate = this.addDays(this.activeInvoice.created_date, 90)
-        if (this.settings.date_format === 'dd-mm-yy') {
-          this.activeInvoice.due_date = new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[1]) - 1, parseInt(this.dueDate.split('-')[0])).getTime().toString()
-        } else if (this.settings.date_format = 'mm-dd-yy') {
-          this.activeInvoice.due_date = new Date(new Date(parseInt(this.dueDate.split('-')[2]), parseInt(this.dueDate.split('-')[0]) - 1, parseInt(this.dueDate.split('-')[1]))).getTime().toString()
-        }
-        this.activeInvoice.due_date_flag = 9
-      break
-
-      default:
-        this.customDate = true
-        this.dueDate = ''
-        this.activeInvoice.due_date = ''
-      break
-    }
-  }
-
-  addDays (date, days) {
-    var temp_settings = this.authenticated.setting
-    var wholeDate = ''
-    var last = new Date(parseFloat(date)+(days*24*60*60*1000));
-    var day = last.getDate()
-    var month = last.getMonth()+1
-    var year = last.getFullYear()
-    if(temp_settings.dateDDMMYY === true){
-      wholeDate =   ('0' + day).slice(-2)+ '-' +('0' + month ).slice(-2)+ '-' + year
-    }else if(temp_settings.dateDDMMYY === false){
-      wholeDate =   ('0' + month ).slice(-2)+ '-' + ('0' + day).slice(-2)+ '-' + year
-    }
-
-    return wholeDate;
-  }
-
   // showMeMultipleTax(index) {
   //   //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
   //   var tempIndex = this.activeInvoice.taxList.length
@@ -1562,7 +1412,6 @@ export class AddComponent implements OnInit {
   //     this.tempPaymentList = []
   //     this.tempItemList = []
   //     this.tempTermList = []
-  //     this.customDate = true
   //     // this.clientList = DataStore.unSortedClient
   //     // this.invoices = DataStore.invoicesList;
   //     if (this.invoices) {
@@ -1574,8 +1423,6 @@ export class AddComponent implements OnInit {
   //       delete this.data.invoice.disp
   //       this.invoice.termsAndConditions = this.invoice.termsAndConditions
   //       this.invoice.payments = this.invoice.payments
-  //       this.invoiceDate = this.datePipe.transform(this.invoice.created_date)
-  //       this.dueDate = this.datePipe.transform(this.invoice.due_date)
   //       if (this.invoice.taxList) {
   //         if (this.invoice.taxList.length > 0) {
   //           this.showMultipleTax = true
@@ -1687,9 +1534,7 @@ export class AddComponent implements OnInit {
   //         this.selectDueDate = "no_due_date";
   //       } else if (this.invoice.due_date == this.invoice.created_date) {
   //         this.selectDueDate = "immediate";
-  //         this.customDate = false;
   //       } else if (this.invoice.due_date != this.invoice.created_date) {
-  //         this.customDate = false;
   //         var difference = dateDifference(this.invoice.created_date, this.invoice.due_date);
   //         if (this.dueDateDays.indexOf(difference) > -1) {
   //           var index = this.dueDateDays.indexOf(difference);
