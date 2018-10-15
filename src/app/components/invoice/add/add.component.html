@@ -85,8 +85,10 @@
                       <div class="col-6">
                         <div style="max-width: 100%;">
                           <div class="row mar0">
-                            <input type="text" class="form-control" [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly style="max-width: 110px;">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <input type="text" class="form-control" style="max-width: 110px;"
+                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly
+                            >
+                            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
                           </div>
                           <mat-datepicker #picker></mat-datepicker>
                         </div>
@@ -98,7 +100,7 @@
                     </div>
 
                     <div class="row">
-                      <div class="offset-md-2 col-md-4 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                      <div class="offset-md-2 col-md-4 col-6" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w100">Reference</span>
                       </div>
                       <div class="col-lg-6 col-6">
@@ -109,10 +111,10 @@
                     </div>
 
                     <div class="row">
-                      <div class="offset-md-2 col-md-4 col-lg-4 col-sm-6 col-xs-6" style="margin-top: 5px;">
+                      <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
                       </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 selectDueDate col-xs-6">
+                      <div class="col-6 selectDueDate">
                         <select name="selectDueDate" id="selectDueDate" [ngModel]="selectDueDate"
                           class="form-control padr0 selectDueDate " (ngModelChange)="changeDueDate($event)"
                         >
@@ -131,13 +133,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-12">
-                        <div style="float: right; margin-top: 3px;" *ngIf="selectDueDate !== 'no_due_date'">
+                      <div class="col-12 offset-md-6 col-md-6" *ngIf="selectDueDate !== 'no_due_date'">
+                        <div style="float: right; margin-top: 3px;" *ngIf="selectDueDate !== 'custom_date'">
                           <div class="row mar0">
-                            <input type="text" name="dueDate" class="form-control" [(ngModel)]="dueDate" matInput [matDatepicker]="picker" required readonly style="max-width: 110px;">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <input type="text" name="dueDate" class="form-control"
+                              [ngModel]="activeInvoice.due_date" required readonly
+                            >
                           </div>
-                          <mat-datepicker #picker></mat-datepicker>
+                          <mat-datepicker #picker1></mat-datepicker>
+                        </div>
+                        <div style="float: right; margin-top: 3px;" *ngIf="selectDueDate === 'custom_date'">
+                          <div class="row mar0">
+                            <input type="text" name="dueDate" class="form-control" style="max-width: 110px;"
+                              [formControl]="dueDate" matInput [matDatepicker]="picker1" required readonly
+                            >
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          </div>
+                          <mat-datepicker #picker1></mat-datepicker>
                         </div>
                       </div>
                     </div>
@@ -170,13 +182,13 @@
                       </tr>
                     </thead>
 
-                    <!-- itemDescription, Qty, Rate, Amount -->
                     <tbody class="lineItems">
+                      <!-- selected Items list -->
                       <tr class="row-item" *ngFor="let item of activeInvoice.listItems; let index = index; let last = last">
-                        <td [class.no-border-last]="last">
+                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
                           <div class="">
                             <div class="form-group">
-                              <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                              <div class="text-left product-color">
                                 {{item.product_name}}
                               </div>
                               <div class="text-left">
@@ -185,17 +197,18 @@
                             </div>
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="vertical-align: initial;">
+                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)"
+                        >
                           <div class="text-right">
                             {{item.quantity | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="vertical-align: initial;">
+                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
                           <div class="text-right">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="vertical-align: initial; position: unset !important;">
+                        <td [class.no-border-last]="last" style="position: unset !important;" (click)="editInvoiceItem(index)">
                           <div class="text-right">
                             {{item.total | number:'2.'}}
                           </div>
@@ -242,13 +255,15 @@
 
                         <td style="vertical-align: initial;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" name="itemRate" step="any" class="form-control text-right" name="itemRate.1" min="0.01"
+                            <input type="number" name="itemRate" step="any" class="form-control text-right" min="0.01"
                               [(ngModel)]="activeItem.rate" (change)="calculateTotal()" select-on-click my-enter-in
                             />
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial; position: relative !important;" [class.no-border-last]="last">
+                        <td style="vertical-align: initial; position: relative !important;" 
+                          [class.no-border-last]="last"
+                        >
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text-right" 
                               title="Amount is calculated automatically."
@@ -267,8 +282,8 @@
                   </table>
 
                   <div class="row add-item-button">
-                    <!-- Taxes, adjustment, Discounts additions -->
-                    <div class="col-md-6 col-xs-6 col-sm-6 discount-tax-pad font-custom-bold">
+                    <!-- Tax discount list -->
+                    <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
                       <div class="cursor-pointer" *ngIf="activeInvoice.discount == null && activeInvoice.percentage_flag==0">
                         <a class="inline" (click)="activeInvoice.percentage_flag=1;activeInvoice.percentage_value=0.00">
                           {{tempDisLabel}}+
@@ -324,10 +339,10 @@
                       <!-- Total -->
                       <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                         <div class="row mar0">
-                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                          <div class="col-6 text-left">
                             <span class="font-custom-bold">{{tempSubToLabel}}</span>
                           </div>
-                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                          <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeInvoice.gross_amount}}</span>
                           </div>
                         </div>
@@ -528,13 +543,13 @@
                       </div>
 
                       <!-- Grand Total -->
-                      <div class="col-12 col-lg-12 term-cond-label ">
+                      <div class="col-12 term-cond-label ">
                         <div class="row mar0">
-                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                          <div class="col-6 text-left">
                             <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
                           </div>
           
-                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                          <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeInvoice.amount|currency:number}}</span>      
                           </div>
                         </div>
@@ -664,6 +679,78 @@
           [disabled]="!clientform.valid" (click)="saveClient(clientform.valid)"
         >
           Add Client
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ITEM MODAL -->
+<div id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" 
+  aria-hidden="true" data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+          Edit Item
+        </h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeItemModel()">
+          <img src="assets/images/cross16.png" alt="logo">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal add-client-form" name="itemform" #itemform="ngForm">
+          <input type="hidden" name="uid" [ngModel]="activeItem.unique_identifier">
+          <div class="row">
+            <div class="col-12">
+              Name:
+              <input type="text" name="name" class="form-control add-client-input-custom"
+                [ngModel]="activeItem.product_name" placeholder="Name" required disabled
+              />
+            </div>
+
+            <div class="col-12">
+              Description:
+              <textarea [(ngModel)]="activeItem.description" name="description" class="form-control"
+                placeholder="Description" select-on-click style="max-height: 69px; height: 69px;"
+              ></textarea>
+            </div>
+
+            <div class="col-12">
+              Quantity:
+              <input type="number" name="quantity" class="form-control add-client-input-custom"
+                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()"
+                placeholder="Quantity" my-enter-in select-on-click
+              />
+            </div>
+
+            <div class="col-12">
+              Rate:
+              <input type="number" name="rate" class="form-control add-client-input-custom"
+                [(ngModel)]="activeItem.rate" (change)="calculateTotal()"
+                placeholder="Rate" my-enter-in select-on-click
+              />
+            </div>
+
+            <div class="col-12">
+              Total:
+              <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled
+                class="form-control add-client-input-custom"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
+          Close
+        </button>
+        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn"
+          [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)"
+        >
+          Edit Item
         </button>
       </div>
     </div>
