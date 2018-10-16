@@ -12,7 +12,7 @@ import { ViewComponent } from './components/invoice/view/view.component'
 import { EstimateComponent } from './components/estimate/estimate.component'
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
