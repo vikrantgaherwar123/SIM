@@ -10,8 +10,16 @@
           <div class="shadow back pad15">
             <div class="col-12 padt15">
               <div class="vtop text-right">
-                <span class="c-name" type="text" id="titleAdd" name="title" *ngIf="authenticated.setting.mTvInvoice">{{authenticated.setting.mTvInvoice}}</span>
-                <span class="c-name" type="text" id="titleAddelse" name="title" *ngIf="!authenticated.setting.mTvInvoice">{{'INV_LABEL' | translate}}</span>
+                <span class="c-name" type="text" id="titleAdd" name="title"
+                  *ngIf="authenticated.setting.mTvInvoice"
+                >
+                  {{authenticated.setting.mTvInvoice}}
+                </span>
+                <span class="c-name" type="text" id="titleAddelse" name="title"
+                  *ngIf="!authenticated.setting.mTvInvoice"
+                >
+                  {{'INV_LABEL' | translate}}
+                </span>
               </div>
       
               <div class="col-12 pad0" style="margin-bottom: 25px">
@@ -20,21 +28,31 @@
                     <div class="row">
                       <!-- Billing To -->
                       <div class="col-md-10 col-sm-10 col-xs-10">
-                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">{{tempBillLabel}}</span>
+                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                          {{tempBillLabel}}
+                        </span>
 
                         <div class="form-group pad-left-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1"
                           >
-                          <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith" (optionSelected)="selectedClientChange($event)">
-                            <mat-option *ngFor="let client of filteredClients | async" [value]="client">{{client.name}}</mat-option>
-                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">Add Client {{billingTo.value}}</mat-option>
+                          <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
+                            (optionSelected)="selectedClientChange($event)"
+                          >
+                            <mat-option *ngFor="let client of filteredClients | async" [value]="client">
+                              {{client.name}}
+                            </mat-option>
+                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                              Add Client {{billingTo.value}}
+                            </mat-option>
                           </mat-autocomplete>
                         </div>
                       </div>
 
                       <div class="col-md-2 col-sm-2 col-xs-2" style="padding-top: 30px;">
-                        <span><i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i></span>
+                        <span>
+                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
+                        </span>
                       </div>
 
                       <!-- Address and Shipping Address -->
@@ -68,8 +86,12 @@
                       </div>
                       <div class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
                         <form #invNumberForm="ngForm" name="invNumberForm">
-                          <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber ) && invNumberForm.invoiceNumber.$error.required">
-                            <input type="text" name="invoiceNumber" id="invoiceNumber" [(ngModel)]="activeInvoice.invoice_number" class="form-control pad-right-0" required/>
+                          <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
+                            && invNumberForm.invoiceNumber.$error.required"
+                          >
+                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pad-right-0"
+                              [(ngModel)]="activeInvoice.invoice_number"required
+                            />
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
                               <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
                             </div>
@@ -115,26 +137,26 @@
                         <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
                       </div>
                       <div class="col-6 selectDueDate">
-                        <select name="selectDueDate" id="selectDueDate" [ngModel]="selectDueDate"
-                          class="form-control padr0 selectDueDate " (ngModelChange)="changeDueDate($event)"
+                        <select name="selectDueDate" id="selectDueDate"
+                          class="form-control padr0 selectDueDate " (change)="changeDueDate($event.target.value)"
                         >
-                          <option value="no_due_date">No Due Date</option>
-                          <option value="immediately">Immediately</option>
-                          <option value="custom_date">Custom Date</option>
-                          <option value="7_days">7 Days</option>
-                          <option value="10_days">10 Days</option>
-                          <option value="15_days">15 Days</option>
-                          <option value="30_days">30 Days</option>
-                          <option value="45_days">45 Days</option>
-                          <option value="60_days">60 Days</option>
-                          <option value="90_days">90 Days</option>
+                          <option value="0">No Due Date</option>
+                          <option value="1">Immediately</option>
+                          <option value="2">Custom Date</option>
+                          <option value="3">7 Days</option>
+                          <option value="4">10 Days</option>
+                          <option value="5">15 Days</option>
+                          <option value="6">30 Days</option>
+                          <option value="7">45 Days</option>
+                          <option value="8">60 Days</option>
+                          <option value="9">90 Days</option>
                         </select>
                       </div>
                     </div>
 
                     <div class="row">
-                      <div class="col-12 offset-md-6 col-md-6" *ngIf="selectDueDate !== 'no_due_date'">
-                        <div style="float: right; margin-top: 3px;" *ngIf="selectDueDate !== 'custom_date'">
+                      <div class="col-12 offset-md-6 col-md-6" *ngIf="activeInvoice.due_date_flag !== 0">
+                        <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag !== 2">
                           <div class="row mar0">
                             <input type="text" name="dueDate" class="form-control"
                               [ngModel]="activeInvoice.due_date" required readonly
@@ -142,7 +164,7 @@
                           </div>
                           <mat-datepicker #picker1></mat-datepicker>
                         </div>
-                        <div style="float: right; margin-top: 3px;" *ngIf="selectDueDate === 'custom_date'">
+                        <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag === 2">
                           <div class="row mar0">
                             <input type="text" name="dueDate" class="form-control" style="max-width: 110px;"
                               [formControl]="dueDate" matInput [matDatepicker]="picker1" required readonly
@@ -168,7 +190,8 @@
                         </td>
                         <td width="18%">
                           <input type="text" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100 text-center"
-                            name="quantity" disabled>
+                            name="quantity" disabled
+                          />
                         </td>
                         <td width="18%">
                           <input type="text" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-center"
@@ -176,7 +199,8 @@
                         </td>
                         <td width="18%">
                           <input type="text" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-center"
-                            style="text-align:right;" name="amount" disabled>
+                            style="text-align:right;" name="amount" disabled
+                          />
                         </td>
                         <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
                       </tr>
@@ -208,7 +232,9 @@
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="position: unset !important;" (click)="editInvoiceItem(index)">
+                        <td [class.no-border-last]="last" style="position: unset !important;"
+                          (click)="editInvoiceItem(index)"
+                        >
                           <div class="text-right">
                             {{item.total | number:'2.'}}
                           </div>
@@ -216,8 +242,12 @@
                         <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
                           [class.no-border-last]="last">
                           <div style="padding-top:4px">
-                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;" (click)="removeItem(index)">
-                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                              (click)="removeItem(index)"
+                            >
+                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt=""
+                                style="height:16px;"
+                              >
                             </a>
                           </div>
                         </td>
@@ -311,7 +341,7 @@
                     <div class="col-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{tempTermLabel}}</span>
-                        <a (click)="addTerm(true)" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
+                        <a (click)="openAddTermModal()" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
                           data-original-title="Add " title="Add Term"
                         >
                           <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
@@ -543,21 +573,56 @@
                       </div>
 
                       <!-- Grand Total -->
-                      <div class="col-12 term-cond-label ">
+                      <div class="col-12 term-cond-label">
                         <div class="row mar0">
                           <div class="col-6 text-left">
                             <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
                           </div>
           
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeInvoice.amount|currency:number}}</span>      
+                            <span class="font-custom-bold">{{activeInvoice.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
                           </div>
                         </div>
                       </div>
-  
+
+                      <!-- Paid Amount -->
+                      <div class="col-12" style="padding: 10px">
+                        <div class="row mar0">
+                          <div class="col-6 text-left">
+                            <span
+                              class="font-custom">{{tempPaidLabel}}
+                            </span>
+                          </div>
+                          <div class="col-6 text-right">
+                            <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:'INR':'symbol':'1.2-2'}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Balance -->
+                      <div class="col-12 balance-row">
+                        <div class="row mar0">
+                          <div class="col-6 text-left">
+                            <span class="bld">{{tempBalLabel}}</span>
+                          </div>
+                          <div class="col-6 text-right">
+                            <span class="bld">{{activeInvoice.balance | currency:'INR':'symbol':'1.2-2'}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Payment and Save buttons -->
                       <div class="col-12 pad0 margin-top-20">
-                        <button id="invSubmitBtn" type="submit" class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
-                          [disabled]="activeInvoice.listItems.length == 0" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
+                        <button type="button" title="ADD PAYMENT"
+                          class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold" style="width: 134px;"
+                          (click)="openAddPaymentModal()"
+                        >
+                          Add Payment
+                        </button>
+
+                        <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems.length == 0"
+                          class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
+                          data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                         >
                           SAVE
                         </button>
@@ -757,7 +822,7 @@
   </div>
 </div>
 
-<!-- Add Terms Modal -->
+<!-- ADD TERMS MODAL -->
 <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" 
   aria-labelledby="gridSystemModalLabel" data-backdrop="static" data-keyboard="false"
 >
@@ -829,6 +894,115 @@
   </div>
 </div>
 
+<!-- PAYMENT MODAL -->
+<div class="modal fade" id="addPaymentAddInvoice" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
+  data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog add-payment-dialog" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel12">
+          Add Payment
+        </h4>
+        <a class="pull-right" (click)="closeAddPaymentModal()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 pad0 add-payment" style="margin-bottom: 10px;">
+          <div class="row">
+            <div class="col-4 col-md-5">
+              <form name="innerform1" #innerform1="ngForm">
+                <div class=" form-group payment-input">
+                  <div class="input-group" style="width: 100%">
+                    <input type="number" id="paymentAmount2" name="paymentAmount"
+                      class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
+                      [(ngModel)]="addPaymentModal.paid_amount" placeholder="Add Amount Paid"
+                    >
+                    <!-- <div class="form-error">
+                      <span *ngIf="innerform1.controls.paymentAmount.error.max">Should be Less than Balance</span>
+                    </div> -->
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="col-2 pad-left-0">
+              <button class="btn btn-info btn-circle" (click)="addPaymentInModalPaymentList()" 
+                [disabled]="addPaymentModal.paid_amount == 0 || addPaymentModal.paid_amount > addPaymentModal.balance"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+
+            <div class="col-6 col-md-5 pad-left-0">
+              <input type="text" name="paymentDate" id="addPaymentDate12" [(ngModel)]="addPaymentModal.date_of_payment"
+                class="form-control default-height padr0" change="watch()" required readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mar0" style="background: #e0dede !important;">
+          <div class="col-12">
+            <div class="font-custom-bold float-left">
+              Invoice
+            </div>
+            <div class="font-custom-bold float-right">
+              {{ addPaymentModal.amount | currency:'INR':'symbol':'1.2-2' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="row mar0" style="border-top: 1px solid #ddd;"
+          *ngFor="let payment of addPaymentModal.payments"
+        >
+          <div class="col-12">
+            <div class="font-custom-bold pull-left" style="border-top: none;">
+              {{payment.date_of_payment | date}}
+            </div>
+            <div class="font-custom-bold pull-right" style="border-top: none;">
+              {{payment.paid_amount | currency:'INR':'symbol':'1.2-2'}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row mar0" style="background: #e0dede !important; margin-top: 5px">
+          <div class="col-12">
+            <div class="font-custom-bold pull-left">
+              Balance Due :
+            </div>
+            <div class="font-custom-bold pull-right">
+              {{ addPaymentModal.balance | currency:'INR':'symbol':'1.2-2'}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-12 pad0">
+          <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15"
+            (click)="addPaymentModal.paid_amount = addPaymentModal.balance"
+            [disabled]="addPaymentModal.balance == 0 || max_balance_add_invoice == 0.00 || fullPayment"
+          >
+            Full Payment
+          </button>
+          <button type="button" (click)="addPaymentsInInvoice()"
+            class="btn btn-success btn-raised font-custom pull-right width20btn"
+          >
+            Done
+          </button>
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn pull-right"
+            (click)="closeAddPaymentModal()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT TERMS MODAL -->
 <div class="modal fade" id="add-terms-edit" aria-labelledby="gridSystemModalLabel"
   tabindex="-1" role="dialog"data-backdrop="static" data-keyboard="false"
 >
