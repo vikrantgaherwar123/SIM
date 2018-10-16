@@ -1104,8 +1104,6 @@ export class AddComponent implements OnInit {
 
   // Payment Functions
   openAddPaymentModal() {
-    console.log(this.activeInvoice);
-    
     this.addPaymentModal = {
       amount: this.activeInvoice.amount,
       balance: this.activeInvoice.amount,
