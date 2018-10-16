@@ -200,6 +200,9 @@ table td [ng-click] {
   box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
   -moz-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
 }
+.btn-circle{
+  border-radius: 50% !important;
+}
 .width25btn {
   width: 25%;
 }

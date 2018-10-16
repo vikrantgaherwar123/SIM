@@ -74,12 +74,11 @@ export class AddComponent implements OnInit {
   private tempQuaNoOnAdd: number
   private invoiceDate
   private dueDate = new FormControl()
-  private paymentDate
   private tempInvNo: number
-  private initialPayment
-  private paid_amount
-  private selectDueDate = 'no_due_date'
-  private balance
+  private showMultipleTax: boolean
+  private show_tax_input_list: any
+  private tempflagTaxList: any
+  private taxtext: string
 
   private clientList: Observable<client[]>
   private activeClient: any = {}
@@ -99,6 +98,8 @@ export class AddComponent implements OnInit {
 
   private termList: Observable<terms[]>
   private addTermModal: any = {}
+
+  private addPaymentModal: any = {}
 
   private tempQtyLabel: string
   private tempProLabel: string
@@ -125,41 +126,11 @@ export class AddComponent implements OnInit {
 
   private newItemCounter: number = 0
 
-  private showMultipleTax: boolean
-  private show_tax_input_list: any
-  private tempflagTaxList: any
-  private taxtext: string
-
   private settings: any
   private authenticated: {
     setting: any
   }
 
-  private config = {
-    valueField: 'uniqueKeyClient',
-    labelField: 'name',
-    searchField: ['name'],
-    sortField: 'name',
-    placeholder: 'Type or Select Client',
-    allowEmptyOption: false,
-    create: true
-  }
-  private configProduct = {
-    valueField: 'prodName',
-    labelField: 'prodName',
-    searchField: ['prodName'],
-    sortField: 'prodName',
-    persist: false,
-    create: true,
-    allowEmptyOption: false,
-    addPrecedence: false,
-    placeholder: 'Type or Select Product',
-    createOnBlur: true,
-    selectOnTab: true,
-    onType: function (str) {
-      //console.log('onType', str)
-    }
-  }
   private user: {
     user: {
       orgId: string
@@ -270,7 +241,6 @@ export class AddComponent implements OnInit {
         this.activeInvoice.due_date = ''
       }
     })
-    this.paymentDate = new FormControl(new Date())
     var self = this
 
     // Fetch Products if not in store
@@ -560,15 +530,6 @@ export class AddComponent implements OnInit {
     return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
   }
 
-  addClient(name) {
-    this.addClientModal = {}
-    this.addClientModal.name = name
-    $('#add-client').modal('show')
-    $('#add-client').on('shown.bs.modal', (e) => {
-      $('#add-client input[type="text"]')[1].focus()
-    })
-  }
-
   selectedClientChange(client) {
     var item
     this.clientList.subscribe(clients => {
@@ -584,18 +545,17 @@ export class AddComponent implements OnInit {
         this.activeClient = {}
       }
 
-      this.addClient(client.option.value)
+      this.openAddClientModal(client.option.value)
     }
   }
 
-  closeAddClientModal() {
-    //alert('closed!!')
-    $("#loadb").css("display", "none")
-    $('#add-client').modal('hide')
-
+  openAddClientModal(name) {
     this.addClientModal = {}
-    $('#refreshClient').addClass('rotator')
-    $("#loadb").css("display", "none")
+    this.addClientModal.name = name
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+      $('#add-client input[type="text"]')[1].focus()
+    })
   }
 
   saveClient(status) {
@@ -615,9 +575,6 @@ export class AddComponent implements OnInit {
             // console.log(clients);            
             this.activeClient = clients.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
             this.billingTo.setValue(this.activeClient)
-            // console.log(this.activeClient)
-            //$('#refreshClient').removeClass('rotator')
-            // $('#saveClientButton').button('reset')
           })
           $('#add-client').modal('hide')
           //this.data.invoice.unique_key_fk_client = this.activeClient.unique_identifier
@@ -627,6 +584,16 @@ export class AddComponent implements OnInit {
         }
       })
     }
+  }
+
+  closeAddClientModal() {
+    //alert('closed!!')
+    $("#loadb").css("display", "none")
+    $('#add-client').modal('hide')
+
+    this.addClientModal = {}
+    $('#refreshClient').addClass('rotator')
+    $("#loadb").css("display", "none")
   }
 
   // Product Functions
@@ -681,145 +648,6 @@ export class AddComponent implements OnInit {
     })
   }
 
-  // Term Functions
-  addTerm() {
-    this.addTermModal = {}
-    $('#add-terms').modal('show')
-  }
-
-  closeAddTermModal() {
-    $('#add-terms').modal('hide')
-  }
-
-  addRemoveTermsFromInvoice(term) {
-    // console.log(term)
-    var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
-    if(index == -1) {
-      this.activeInvoice.termsAndConditions.push(term)
-    } else {
-      this.activeInvoice.termsAndConditions.splice(index, 1)
-    }
-  }
-
-  isTermInInvoice(term) {
-    return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
-  }
-
-  saveTerm(status) {
-    $('#addtermbtn').attr('disabled', 'disabled')
-    if (status) {
-      this.addTermModal.orgId = this.user.user.orgId
-      this.addTermModal.uniqueKeyTerms = generateUUID(this.user.user.orgId)
-      this.addTermModal.deviceModifiedOn = new Date().getTime()
-
-      this.termConditionService.add([
-        this.termConditionService.changeKeysForApi(this.addTermModal)
-      ]).subscribe((response: any) => {
-        if (response.status === 200) {
-          var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
-          this.store.dispatch(new termActions.add([temp]))
-
-          this.addTermModal = {}
-
-          if (temp.setDefault === 'DEFAULT') {
-            this.activeInvoice.termsAndConditions.push(temp)
-          }
-
-          $('#addtermbtn').removeAttr('disabled')
-          // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
-          $('#add-terms').modal('hide')
-        } else {
-          $('#addtermbtn').removeAttr('disabled')
-          // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
-          alert(response.message)
-        }
-      })
-    }
-  }
-
-  // Invoice Functions
-  changeDueDate(selectDueDate) {
-    this.selectDueDate = selectDueDate
-    var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
-
-    switch (this.selectDueDate) {
-      case 'no_due_date':
-        this.dueDate.reset()
-        this.activeInvoice.due_date_flag = 0
-      break
-
-      case 'immediately':
-        this.dueDate.reset(new Date(y, (m - 1), d))
-        this.activeInvoice.due_date_flag = 1
-      break
-
-      case 'custom_date':
-        this.dueDate.reset(new Date(y, (m - 1), d))
-        this.activeInvoice.due_date_flag = 2
-      break
-
-      case '7_days':
-        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 7))
-        this.activeInvoice.due_date_flag = 3
-      break
-
-      case '10_days':
-        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 10))
-        this.activeInvoice.due_date_flag = 4
-      break
-
-      case '15_days':
-      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 15))
-      this.activeInvoice.due_date_flag = 5
-      break
-
-      case '30_days':
-        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 30))
-        this.activeInvoice.due_date_flag = 6
-      break
-
-      case '45_days':
-        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 45))
-        this.activeInvoice.due_date_flag = 7
-      break
-
-      case '60_days':
-        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 60))
-        this.activeInvoice.due_date_flag = 8
-      break
-
-      case '90_days':
-      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 90))
-      this.activeInvoice.due_date_flag = 9
-      break
-
-      default:
-        this.dueDate.reset()
-      break
-    }
-  }
-
-  addDays (date, days) {
-    var [y, m, d] =  date.split('-').map(tmp => parseInt(tmp))
-    date = new Date(y, (m - 1), d).getTime()
-    return new Date(date+(days*24*60*60*1000))
-  }
-
-  fillItemDetails(prod = null) {
-    var product = (prod == null) ? this.addItem.value : prod
-    // console.log(product)
-    this.activeItem = {
-      unique_identifier: product.uniqueKeyProduct,
-      description: product.discription == null ? '' : product.discription,
-      product_name: product.prodName,
-      quantity: product.quantity ? product.quantity : 1,
-      unit: product.unit,
-      rate: product.rate,
-      tax_rate: 0.00
-    }
-    this.calculateTotal()
-  }
-
   editInvoiceItem(index) {
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeInvoice.listItems[index]}
@@ -867,6 +695,145 @@ export class AddComponent implements OnInit {
     }
     $('#edit-item').modal('hide')
   }
+
+  // Term Functions
+  openAddTermModal() {
+    this.addTermModal = {}
+    $('#add-terms').modal('show')
+  }
+
+  saveTerm(status) {
+    $('#addtermbtn').attr('disabled', 'disabled')
+    if (status) {
+      this.addTermModal.orgId = this.user.user.orgId
+      this.addTermModal.uniqueKeyTerms = generateUUID(this.user.user.orgId)
+      this.addTermModal.deviceModifiedOn = new Date().getTime()
+
+      this.termConditionService.add([
+        this.termConditionService.changeKeysForApi(this.addTermModal)
+      ]).subscribe((response: any) => {
+        if (response.status === 200) {
+          var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
+          this.store.dispatch(new termActions.add([temp]))
+
+          this.addTermModal = {}
+
+          if (temp.setDefault === 'DEFAULT') {
+            this.activeInvoice.termsAndConditions.push(temp)
+          }
+
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
+          $('#add-terms').modal('hide')
+        } else {
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
+          alert(response.message)
+        }
+      })
+    }
+  }
+
+  closeAddTermModal() {
+    $('#add-terms').modal('hide')
+  }
+
+  addRemoveTermsFromInvoice(term) {
+    // console.log(term)
+    var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
+    if(index == -1) {
+      this.activeInvoice.termsAndConditions.push(term)
+    } else {
+      this.activeInvoice.termsAndConditions.splice(index, 1)
+    }
+  }
+
+  isTermInInvoice(term) {
+    return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
+  }
+
+  // Invoice Functions
+  changeDueDate(due_date_flag) {
+    var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+
+    switch (due_date_flag) {
+      case '0':
+        this.dueDate.reset()
+        this.activeInvoice.due_date_flag = 0
+      break
+
+      case '1':
+        this.dueDate.reset(new Date(y, (m - 1), d))
+        this.activeInvoice.due_date_flag = 1
+      break
+
+      case '2':
+        this.dueDate.reset(new Date(y, (m - 1), d))
+        this.activeInvoice.due_date_flag = 2
+      break
+
+      case '3':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 7))
+        this.activeInvoice.due_date_flag = 3
+      break
+
+      case '4':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 10))
+        this.activeInvoice.due_date_flag = 4
+      break
+
+      case '5':
+      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 15))
+      this.activeInvoice.due_date_flag = 5
+      break
+
+      case '6':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 30))
+        this.activeInvoice.due_date_flag = 6
+      break
+
+      case '7':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 45))
+        this.activeInvoice.due_date_flag = 7
+      break
+
+      case '8':
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 60))
+        this.activeInvoice.due_date_flag = 8
+      break
+
+      case '9':
+      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 90))
+      this.activeInvoice.due_date_flag = 9
+      break
+
+      default:
+        this.dueDate.reset()
+      break
+    }
+  }
+
+  addDays (date, days) {
+    var [y, m, d] =  date.split('-').map(tmp => parseInt(tmp))
+    date = new Date(y, (m - 1), d).getTime()
+    return new Date(date+(days*24*60*60*1000))
+  }
+
+  fillItemDetails(prod = null) {
+    var product = (prod == null) ? this.addItem.value : prod
+    // console.log(product)
+    this.activeItem = {
+      unique_identifier: product.uniqueKeyProduct,
+      description: product.discription == null ? '' : product.discription,
+      product_name: product.prodName,
+      quantity: product.quantity ? product.quantity : 1,
+      unit: product.unit,
+      rate: product.rate,
+      tax_rate: 0.00
+    }
+    this.calculateTotal()
+  }
+
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {
       var rateParse = parseFloat(this.activeItem.rate)
@@ -895,6 +862,7 @@ export class AddComponent implements OnInit {
     var discoutAmount = 0
     var tax_rate = 0
 
+    // Discount
     if (this.activeInvoice.percentage_flag == 1) {
       var discountPercent = this.activeInvoice.percentage_value / 100
       if (isNaN(discountPercent)) {
@@ -905,7 +873,6 @@ export class AddComponent implements OnInit {
       this.activeInvoice.discount = discoutAmount
       discountTotal = grossAmount - discoutAmount
     } else if (this.activeInvoice.percentage_flag == 0) {
-
       var invoiceDiscount = this.activeInvoice.discount
       if (isNaN(invoiceDiscount)) {
         invoiceDiscount = 0
@@ -918,6 +885,7 @@ export class AddComponent implements OnInit {
       this.activeInvoice.percentage_value = discountAmount
     }
 
+    // Tax
     if (this.activeInvoice.tax_on_item == 1) {
       tax_rate = (this.activeInvoice.tax_rate * discountTotal) / 100
       if (isNaN(tax_rate)) {
@@ -940,12 +908,14 @@ export class AddComponent implements OnInit {
       tax_rate = tax_rate + temp_tax_rate
     }
 
+    // Shipping
     shippingCharges = this.activeInvoice.shipping_charges
     if (isNaN(shippingCharges)) {
       shippingCharges = 0
     }
     totalAmount = discountTotal + shippingCharges + tax_rate
 
+    // Adjustment
     var adjustmentAmount = this.activeInvoice.adjustment
     if (isNaN(adjustmentAmount)) {
       adjustmentAmount = 0
@@ -955,6 +925,8 @@ export class AddComponent implements OnInit {
     if (isNaN(finalAmount)) {
       finalAmount = 0
     }
+
+    this.activeInvoice.balance = parseFloat(finalAmount.toFixed(2)) - this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0)
     this.activeInvoice.amount = parseFloat(finalAmount.toFixed(2))
   }
 
@@ -987,7 +959,7 @@ export class AddComponent implements OnInit {
     })
     this.activeInvoice.termsAndConditions = temp
     this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
-    this.activeInvoice.balance = this.balance
+    // this.activeInvoice.balance = this.balance
 
     for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
       this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
@@ -1128,6 +1100,47 @@ export class AddComponent implements OnInit {
       this.activeInvoice.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
+  }
+
+  // Payment Functions
+  openAddPaymentModal() {
+    console.log(this.activeInvoice);
+    
+    this.addPaymentModal = {
+      amount: this.activeInvoice.amount,
+      balance: this.activeInvoice.amount,
+      date_of_payment: this.activeInvoice.created_date,
+      paid_amount: 0.00,
+      payments: this.activeInvoice.payments,
+    }
+    this.addPaymentModal.balance -= this.addPaymentModal.payments.reduce((a, b) => a + b.paid_amount, 0)
+    $('#addPaymentAddInvoice').modal('show')
+  }
+
+  addPaymentInModalPaymentList() {
+    this.addPaymentModal.payments.push({
+      date_of_payment: this.addPaymentModal.date_of_payment,
+      organization_id: this.user.user.orgId,
+      paid_amount: this.addPaymentModal.paid_amount,
+      unique_identifier: generateUUID(this.user.user.orgId),
+      unique_key_fk_client: this.activeInvoice.unique_key_fk_client,
+      unique_key_fk_invoice: '',
+      unique_key_voucher_no: ''
+    })
+
+    this.addPaymentModal.balance -= this.addPaymentModal.paid_amount
+    this.addPaymentModal.paid_amount = 0.00
+  }
+
+  addPaymentsInInvoice() {
+    this.activeInvoice.payments = [...this.addPaymentModal.payments]
+    this.calculateInvoice(1)
+    this.closeAddPaymentModal()
+  }
+
+  closeAddPaymentModal() {
+    this.addPaymentModal = {}
+    $('#addPaymentAddInvoice').modal('hide')
   }
 
   multiTaxButton(taxname) {
