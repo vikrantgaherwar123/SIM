@@ -373,7 +373,7 @@
                             <span class="font-custom-bold">{{tempSubToLabel}}</span>
                           </div>
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeInvoice.gross_amount}}</span>
+                            <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
                           </div>
                         </div>
                       </div>
