@@ -11,6 +11,7 @@ export class InvoiceService {
 
   private fetchUrl = ''
   private fetchByIdUrl = ''
+  private fetchByQueryUrl = ''
   private addUrl = ''
   private fetchPdfUrl = ''
   private user: {
@@ -20,6 +21,7 @@ export class InvoiceService {
   constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
     this.fetchUrl = `${CONST.BASE_URL}invoice_data/pull/invoice`
     this.fetchByIdUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/byId`
+    this.fetchByQueryUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/cientId`
     this.addUrl = `${CONST.BASE_URL}invoice_data/add/invoice`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/invoice/`
 
@@ -47,6 +49,17 @@ export class InvoiceService {
     }
 
     return this.http.post(this.fetchByIdUrl, {"idList": idList}, headers)
+  }
+
+  fetchByQuery(query) {
+    const headers = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "accessToken": this.user.access_token
+      })
+    }
+
+    return this.http.post(this.fetchByQueryUrl, query, headers)
   }
 
   add(invoice) {

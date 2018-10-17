@@ -30,43 +30,62 @@ export class ViewComponent implements OnInit {
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private store: Store<AppState>, private cookie: CookieService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.invoiceList = store.select('invoice')
     this.clientList = store.select('client')
-    // console.log(JSON.parse(cookie.get('user')))
     this.setting = JSON.parse(cookie.get('user')).setting
   }
 
   ngOnInit() {
-    // Fetch invoices if not in store
-    this.invoiceList.subscribe(invoices => {
-      if(invoices.length < 1) {
-        this.invoiceService.fetch().subscribe((response: response) => {
-          if(response.status === 200) {
-            this.store.dispatch(new invoiceActions.add(response.records))
-          }
-          this.invListLoader = false
-          this.setActiveInv()
-        })
-      } else {
-        this.invListLoader = false
-        this.setActiveInv()
-      }
-    })
-
     // Fetch clients if not in store
     this.clientList.subscribe(clients => {
       if(clients.length < 1) {
         this.clientService.fetch().subscribe((response: response) => {
           this.store.dispatch(new clientActions.add(response.records))
+          this.init()
         })
+      } else {
+        this.init()
       }
     })
   }
 
-  loadMore() {
-    this.invDispLimit += 10
+  init() {
+    // Fetch invoices if not in store
+    this.route.params.subscribe(params => {
+      var query = params.query ? JSON.parse(params.query) : null
+
+      if(query) {
+        this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
+          if(response.status === 200) {
+            if(response.records !== null && response.records.length > 0) {
+              this.store.dispatch(new invoiceActions.reset(response.records))
+              this.setActiveInv()
+            } else {
+              alert('No records found for given search criteria!')
+            }
+          }
+          this.invListLoader = false
+        })
+      } else {
+        this.invoiceList.subscribe(invoices => {
+          if(invoices.length < 1) {
+            this.invoiceService.fetch().subscribe((response: response) => {
+              if(response.status === 200) {
+                this.store.dispatch(new invoiceActions.add(response.records))
+              }
+              this.invListLoader = false
+              this.setActiveInv()
+            })
+          } else {
+            this.invListLoader = false
+            this.setActiveInv()
+          }
+        })
+      }
+    })
   }
 
   setActiveInv(invId: string = '') {
@@ -80,15 +99,20 @@ export class ViewComponent implements OnInit {
     this.invoiceList.subscribe(invs => {
       this.activeInv = invs[this.activeInvIndex]
       this.setActiveClient()
-      // console.log(this.activeInv)
     })
   }
 
   setActiveClient() {
     this.clientList.subscribe(clients => {
-      this.activeClient = clients.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+      var client = clients.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+      if(client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
     })
   }
+
   paidAmount() {
     var temp = 0
     if(this.activeInv.payments) {
@@ -98,6 +122,10 @@ export class ViewComponent implements OnInit {
     }
 
     return temp
+  }
+
+  loadMore() {
+    this.invDispLimit += 10
   }
 
   goEdit(invId) {

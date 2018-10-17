@@ -69,7 +69,7 @@ export class AddComponent implements OnInit {
     _id: 0
   }
 
-  private invoiceList: Observable<invoice[]>
+  // private invoiceList: Observable<invoice[]>
   private activeInvoice: invoice = {...this.emptyInvoice}
   private tempQuaNoOnAdd: number
   private invoiceDate
@@ -79,6 +79,13 @@ export class AddComponent implements OnInit {
   private show_tax_input_list: any
   private tempflagTaxList: any
   private taxtext: string
+  private searchInvoiceModal = {
+    client: new FormControl(),
+    dateRange: {
+      start: new FormControl(),
+      end: new FormControl()
+    }
+  }
 
   private clientList: Observable<client[]>
   private activeClient: any = {}
@@ -151,7 +158,7 @@ export class AddComponent implements OnInit {
     this.authenticated = { setting: this.user.setting }
     this.clientList = store.select('client')
     this.productList = store.select('product')
-    this.invoiceList = store.select('invoice')
+    // this.invoiceList = store.select('invoice')
     this.termList = store.select('terms')
     // console.log(this.authenticated)
   }
@@ -296,16 +303,16 @@ export class AddComponent implements OnInit {
     })
 
     // Fetch invoices if not in store
-    this.invoiceList.subscribe(invoices => {
-      if(invoices.length < 1) {
-        this.invoiceService.fetch().subscribe((result: any) => {
-          // console.log('invoice', result)
-          if(result.status === 200) {
-            this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
-          }
-        })
-      }
-    })
+    // this.invoiceList.subscribe(invoices => {
+    //   if(invoices.length < 1) {
+    //     this.invoiceService.fetch().subscribe((result: any) => {
+    //       // console.log('invoice', result)
+    //       if(result.status === 200) {
+    //         this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
+    //       }
+    //     })
+    //   }
+    // })
 
     //console.log("settings",settings)
     if (settings) {
@@ -512,6 +519,12 @@ export class AddComponent implements OnInit {
     // Filter for client autocomplete
     this.clientList.subscribe(clients => {
       this.filteredClients = this.billingTo.valueChanges.pipe(
+        startWith<string | client>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterCli(name) : clients.slice())
+      )
+
+      this.filteredClients = this.searchInvoiceModal.client.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : clients.slice())
@@ -1002,9 +1015,7 @@ export class AddComponent implements OnInit {
       } else if (result.status === 200) {
         // Add Invoice to store
         self.store.dispatch(new invoiceActions.add(result.invoiceList))
-        self.invoiceList.subscribe(invoices => {
-          console.log(invoices)
-        })
+
         // Reset Create Invoice page for new invoice creation
         self.resetCreateInvoice()
         alert('Invoice saved successfully')
@@ -1140,6 +1151,40 @@ export class AddComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
+
+  // Search Invoice Functions
+  closeSearchInvoiceModal() {
+    $('#searchInvoice').modal('hide')
+  }
+
+  SearchInvoice(){
+    // console.log(this.searchInvoiceModal)
+    var query = {
+      clientIdList: [],
+      startTime: 0,
+      endTime: 0
+    }
+    if(this.searchInvoiceModal.client.value) {
+      query.clientIdList.push(this.searchInvoiceModal.client.value.uniqueKeyClient)
+    } else {
+      this.clientList.subscribe(clients => {
+        query.clientIdList = clients.map(cli => cli.uniqueKeyClient)
+      })
+    }
+    if(this.searchInvoiceModal.dateRange.start.value) {
+      query.startTime = this.searchInvoiceModal.dateRange.start.value.getTime()
+    }
+    if(this.searchInvoiceModal.dateRange.end.value) {
+      query.endTime = this.searchInvoiceModal.dateRange.end.value.getTime()
+    } else {
+      query.endTime = new Date().getTime()
+    }
+
+    this.closeSearchInvoiceModal()
+    this.router.navigate([`invoice/view/${JSON.stringify(query)}`])
+  }
+
+
 
   multiTaxButton(taxname) {
     var status = true

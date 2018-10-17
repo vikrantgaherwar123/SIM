@@ -74,7 +74,7 @@
               </div>
       
               <div class="no-data-messsage" *ngIf="(invoiceList | async).length < 1 && !invListLoader">
-                <h4>No Invoice to display, please create invoices</h4>
+                <h4>No Invoice to display</h4>
               </div>
               <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0" [class.list-shadow]="(invoiceList | async).length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="(invoiceList | async).length > invDispLimit || filterClient">

@@ -41,7 +41,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.settingStore.subscribe(settings => {
-      console.log(settings)
       if(Object.keys(settings).length == 0) {
         this.settingService.fetch().subscribe((response: response) => {
           if (response.status === 200) {

@@ -311,3 +311,7 @@ input:checked + .slider:before {
   height: 30px !important;
   top: -7px;
 }
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1050;
+}
