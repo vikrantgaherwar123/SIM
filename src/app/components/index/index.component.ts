@@ -9,8 +9,7 @@ export class AppComponent {
   public self = this
   private _toggleSidebar() {
     if (window.location.pathname !== '/login') {
-      $('#sidebar, #content').toggleClass('active');
-      // $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+      $('#sidebar, #content').toggleClass('active')
     }
   }
   title = 'simpleInvoiceManagerWeb';

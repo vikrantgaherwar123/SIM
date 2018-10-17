@@ -39,9 +39,8 @@ export class LoginComponent implements OnInit {
   }
 
   loggingIn: boolean = false
-  authenticated: Object
+  authenticated: any
   registerMessage: any
-  reloadEntire: Number
   pro_bar_load: Boolean = false
   status: String
   errorStatus: Boolean = false
@@ -75,10 +74,10 @@ export class LoginComponent implements OnInit {
     event.preventDefault()
     $("#login-btn").prop("disabled", true)
     this.loggingIn = true
+
     this.authService.login(this.user).subscribe((response: response) => {
       if (response.status === 200) {
         this.registerMessage = null
-        this.reloadEntire = 1
 
         const access = response.login_info.access_token
         const ids = parseInt(response.login_info.user.orgId)
@@ -128,7 +127,6 @@ export class LoginComponent implements OnInit {
         // Fetch basic app data and store
         this.fetchBasicData()
 
-        $('.user-logout').show()
         $('#logoutBtn').removeClass("hide")
         $('#logoutBtn').addClass("show")
       } else {
@@ -156,7 +154,8 @@ export class LoginComponent implements OnInit {
       this.store.dispatch(new settingActions.add(settingResponse.settings))
 
       this.setCookie(settingResponse.settings)
-
+      $('.user-logout').show()
+      $('.user-logout span').html(this.authenticated.registered_email)
       this.router.navigate(['/invoice/add'])
     })
   }
