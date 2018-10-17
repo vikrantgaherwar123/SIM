@@ -28,7 +28,7 @@ export class ClientService {
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        "accessToken": this.user.access_token,
+        "accessToken": this.user.access_token ? this.user.access_token : JSON.parse(this.cookie.get('user')).access_token,
         "lastEpoch": '0'
       })
     }
