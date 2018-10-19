@@ -3,11 +3,14 @@ import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
+import { map, startWith } from 'rxjs/operators'
+import { FormControl } from '@angular/forms'
+
 import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
 import { AppState } from '../../../app.state'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
 
 @Component({
@@ -17,14 +20,24 @@ import { CookieService } from 'ngx-cookie-service'
 })
 export class ViewComponent implements OnInit {
 
-  private invoiceList: Observable<invoice[]>
+  private invoiceList: invoice[]
   private activeInv: invoice
-  private activeInvIndex: number = 0
+  private activeInvId: string
   private invListLoader: boolean = true
   private invDispLimit: number = 20
 
-  private clientList: Observable<client[]>
+  private invoiceQueryForm = {
+    client: new FormControl({name: 'All'}),
+    dateRange: {
+      start: new FormControl(),
+      end: new FormControl(new Date())
+    }
+  }
+  private changingQuery: boolean = false
+
+  private clientList: client[]
   private activeClient: client
+  filteredClients: Observable<string[] | client[]>
 
   private setting: any
 
@@ -32,63 +45,86 @@ export class ViewComponent implements OnInit {
     private store: Store<AppState>, private cookie: CookieService,
     private router: Router
   ) {
-    this.invoiceList = store.select('invoice')
-    this.clientList = store.select('client')
-    // console.log(JSON.parse(cookie.get('user')))
+    store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
+    store.select('client').subscribe(clients => this.clientList = clients)
     this.setting = JSON.parse(cookie.get('user')).setting
   }
 
   ngOnInit() {
-    // Fetch invoices if not in store
-    this.invoiceList.subscribe(invoices => {
-      if(invoices.length < 1) {
-        this.invoiceService.fetch().subscribe((response: response) => {
-          if(response.status === 200) {
-            this.store.dispatch(new invoiceActions.add(response.records))
-          }
-          this.invListLoader = false
-          this.setActiveInv()
-        })
-      } else {
-        this.invListLoader = false
-        this.setActiveInv()
-      }
-    })
-
     // Fetch clients if not in store
-    this.clientList.subscribe(clients => {
-      if(clients.length < 1) {
-        this.clientService.fetch().subscribe((response: response) => {
-          this.store.dispatch(new clientActions.add(response.records))
-        })
-      }
-    })
+    if(this.clientList.length < 1) {
+      this.clientService.fetch().subscribe((response: response) => {
+        this.store.dispatch(new clientActions.add(response.records))
+        this.setClientFilter()
+        this.fetchInvoices()
+      })
+    } else {
+      this.setClientFilter()
+      this.fetchInvoices()
+    }
   }
 
-  loadMore() {
-    this.invDispLimit += 10
+  setClientFilter() {
+    this.filteredClients = this.invoiceQueryForm.client.valueChanges.pipe(
+      startWith<string | client>(''),
+      map(value => typeof value === 'string' ? value : value.name),
+      map(name => name ? this._filterCli(name) : this.clientList.slice())
+    )
+  }
+
+  private _filterCli(value: string): client[] {
+    const filterValue = value.toLowerCase()
+    return this.clientList.filter(cli => cli.name.toLowerCase().includes(filterValue))
+  }
+
+  displayWith(disp): string | undefined {
+    if (disp && disp.name) {
+      return disp.name
+    }
+    return undefined
+  }
+
+  fetchInvoices(query = null) {
+    // Fetch invoices with given query
+    if(query == null) {
+      query = {
+        clientIdList: null,
+        startTime: 0,
+        endTime: new Date().getTime()
+      }
+    }
+
+    this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
+      if(response.status === 200) {
+        this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
+        this.setActiveInv()
+      }
+      this.invListLoader = false
+    })
   }
 
   setActiveInv(invId: string = '') {
-    if(!invId) {
-      this.activeInvIndex = 0
+    this.activeInvId = invId
+    if(!this.activeInvId) {
+      this.activeInv = this.invoiceList[0]
     } else {
-      this.invoiceList.subscribe(invs => {
-        this.activeInvIndex = invs.findIndex(inv => inv.unique_identifier == invId)
-      })
+      this.activeInvId = invId
+      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == this.activeInvId)[0]
     }
-    this.invoiceList.subscribe(invs => {
-      this.activeInv = invs[this.activeInvIndex]
-      this.setActiveClient()
-      // console.log(this.activeInv)
-    })
+    this.setActiveClient()
   }
 
   setActiveClient() {
-    this.clientList.subscribe(clients => {
-      this.activeClient = clients.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
-    })
+    if(this.activeInv) {
+      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+      if(client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
+    }
   }
+
   paidAmount() {
     var temp = 0
     if(this.activeInv.payments) {
@@ -100,7 +136,36 @@ export class ViewComponent implements OnInit {
     return temp
   }
 
+  loadMore() {
+    this.invDispLimit += 10
+  }
+
   goEdit(invId) {
     this.router.navigate([`invoice/edit/${invId}`])
+  }
+
+  // Search Invoice Functions
+  SearchInvoice(){
+    // console.log(this.searchInvoiceModal)
+    var query = {
+      clientIdList: [],
+      startTime: 0,
+      endTime: 0
+    }
+    if(this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.uniqueKeyClient) {
+      query.clientIdList.push(this.invoiceQueryForm.client.value.uniqueKeyClient)
+    } else {
+      query.clientIdList = null
+    }
+    if(this.invoiceQueryForm.dateRange.start.value) {
+      query.startTime = this.invoiceQueryForm.dateRange.start.value.getTime()
+    }
+    if(this.invoiceQueryForm.dateRange.end.value) {
+      query.endTime = this.invoiceQueryForm.dateRange.end.value.getTime()
+    } else {
+      query.endTime = new Date().getTime()
+    }
+    this.fetchInvoices(query)
+    this.changingQuery = false
   }
 }

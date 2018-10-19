@@ -69,7 +69,7 @@ export class AddComponent implements OnInit {
     _id: 0
   }
 
-  private invoiceList: Observable<invoice[]>
+  // private invoiceList: Observable<invoice[]>
   private activeInvoice: invoice = {...this.emptyInvoice}
   private tempQuaNoOnAdd: number
   private invoiceDate
@@ -80,14 +80,14 @@ export class AddComponent implements OnInit {
   private tempflagTaxList: any
   private taxtext: string
 
-  private clientList: Observable<client[]>
+  private clientList: client[]
   private activeClient: any = {}
   private clientListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   private addClientModal: any = {}
 
-  private productList: Observable<product[]>
+  private productList: product[]
   activeItem: any = {
     quantity: 1,
     rate: 0.00,
@@ -149,9 +149,9 @@ export class AddComponent implements OnInit {
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
     this.authenticated = { setting: this.user.setting }
-    this.clientList = store.select('client')
-    this.productList = store.select('product')
-    this.invoiceList = store.select('invoice')
+    store.select('client').subscribe(clients => this.clientList = clients)
+    store.select('product').subscribe(products => this.productList = products)
+    // this.invoiceList = store.select('invoice')
     this.termList = store.select('terms')
     // console.log(this.authenticated)
   }
@@ -170,7 +170,6 @@ export class AddComponent implements OnInit {
   }
 
   init() {
-    this.clientListLoading = true
     this.initializeSettings(this.tempQuaNoOnAdd)
 
     this.activeInvoice.taxList = []
@@ -244,37 +243,35 @@ export class AddComponent implements OnInit {
     var self = this
 
     // Fetch Products if not in store
-    this.productList.subscribe(products => {
-      if(products.length < 1) {
-        this.productService.fetch().subscribe((response: response) => {
-          // console.log(response)
-          if (response.records != null) {
-            self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
-            this.setProductFilter()
-          } else {
-            this.setProductFilter()
-          }
-        })
-      } else {
-        this.setProductFilter()
-      }
-    })
+    if(this.productList.length < 1) {
+      this.productService.fetch().subscribe((response: response) => {
+        // console.log(response)
+        if (response.records != null) {
+          self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
+          this.setProductFilter()
+        } else {
+          this.setProductFilter()
+        }
+      })
+    } else {
+      this.setProductFilter()
+    }
 
     // Fetch Clients if not in store
-    this.clientList.subscribe(clients => {
-      if(clients.length < 1) {
-        this.clientService.fetch().subscribe((response: response) => {
-          if (response.records !== null) {
-            this.store.dispatch(new clientActions.add(response.records.filter(recs => recs.enabled == 0)))
-            this.setClientFilter()
-          } else {
-            this.setClientFilter()
-          }
-        })
-      } else {
-        this.setClientFilter()
-      }
-    })
+    if(this.clientList.length < 1) {
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        if (response.records !== null) {
+          this.store.dispatch(new clientActions.add(response.records.filter(recs => recs.enabled == 0)))
+          this.setClientFilter()
+        } else {
+          this.setClientFilter()
+        }
+        this.clientListLoading = false
+      })
+    } else {
+      this.setClientFilter()
+    }
 
     // Fetch Terms if not in store
     this.termList.subscribe(terms => {
@@ -296,16 +293,16 @@ export class AddComponent implements OnInit {
     })
 
     // Fetch invoices if not in store
-    this.invoiceList.subscribe(invoices => {
-      if(invoices.length < 1) {
-        this.invoiceService.fetch().subscribe((result: any) => {
-          // console.log('invoice', result)
-          if(result.status === 200) {
-            this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
-          }
-        })
-      }
-    })
+    // this.invoiceList.subscribe(invoices => {
+    //   if(invoices.length < 1) {
+    //     this.invoiceService.fetch().subscribe((result: any) => {
+    //       // console.log('invoice', result)
+    //       if(result.status === 200) {
+    //         this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
+    //       }
+    //     })
+    //   }
+    // })
 
     //console.log("settings",settings)
     if (settings) {
@@ -510,35 +507,24 @@ export class AddComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    this.clientList.subscribe(clients => {
-      this.filteredClients = this.billingTo.valueChanges.pipe(
-        startWith<string | client>(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(name => name ? this._filterCli(name) : clients.slice())
-      )
-    })
-    this.clientListLoading = false
+    this.filteredClients = this.billingTo.valueChanges.pipe(
+      startWith<string | client>(''),
+      map(value => typeof value === 'string' ? value : value.name),
+      map(name => name ? this._filterCli(name) : this.clientList.slice())
+    )
   }
 
-  private _filterCli(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    var client
-
-    this.clientList.subscribe(clients => {
-      client = clients
-    })
-    return client.filter(cli => cli.name.toLowerCase().includes(filterValue));
+  private _filterCli(value: string): client[] {
+    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
   }
 
   selectedClientChange(client) {
-    var item
-    this.clientList.subscribe(clients => {
-      item = clients.filter(cli => cli.name == client.option.value.name)[0]
-    })
+    var temp
+    temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
-    if (item !== undefined) {
-      this.activeClient = item
-      this.activeInvoice.unique_key_fk_client = item.uniqueKeyClient
+    if (temp !== undefined) {
+      this.activeClient = temp
+      this.activeInvoice.unique_key_fk_client = temp.uniqueKeyClient
     } else {
       //console.log("clients",this.clients)
       if(this.activeClient) {
@@ -571,11 +557,9 @@ export class AddComponent implements OnInit {
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-          this.clientList.subscribe(clients => {
-            // console.log(clients);            
-            this.activeClient = clients.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
-            this.billingTo.setValue(this.activeClient)
-          })
+          this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
+          this.billingTo.setValue(this.activeClient)
+
           $('#add-client').modal('hide')
           //this.data.invoice.unique_key_fk_client = this.activeClient.unique_identifier
         }
@@ -598,25 +582,15 @@ export class AddComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
-    // Filter for product autocomplete
-    this.productList.subscribe(products => {
-      this.filteredProducts = this.addItem.valueChanges.pipe(
-        startWith<string | product>(''),
-        map(value => typeof value === 'string' ? value : value.prodName),
-        map(name => name ? this._filterProd(name) : products.slice())
-      )
-    })
+    this.filteredProducts = this.addItem.valueChanges.pipe(
+      startWith<string | product>(''),
+      map(value => typeof value === 'string' ? value : value.prodName),
+      map(name => name ? this._filterProd(name) : this.productList.slice())
+    )
   }
 
-  private _filterProd(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    var product
-
-    this.productList.subscribe(products => {
-      product = products
-    })
-    
-    return product.filter(prod => prod.prodName.toLowerCase().includes(filterValue));
+  private _filterProd(value: string): product[] {
+    return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -977,10 +951,6 @@ export class AddComponent implements OnInit {
       }
     }
 
-    // if (this.addProductList.length > 0) {
-    //   this.saveProduct(this.addProductList)
-    // }
-
     for (var k = 0; k < this.activeInvoice.payments.length; k++) {
       this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
       this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
@@ -1002,9 +972,7 @@ export class AddComponent implements OnInit {
       } else if (result.status === 200) {
         // Add Invoice to store
         self.store.dispatch(new invoiceActions.add(result.invoiceList))
-        self.invoiceList.subscribe(invoices => {
-          console.log(invoices)
-        })
+
         // Reset Create Invoice page for new invoice creation
         self.resetCreateInvoice()
         alert('Invoice saved successfully')
@@ -1141,6 +1109,9 @@ export class AddComponent implements OnInit {
     $('#addPaymentAddInvoice').modal('hide')
   }
 
+
+
+  // CURRENTLY USELESS FUNCTIONS
   multiTaxButton(taxname) {
     var status = true
     if (this.activeInvoice.taxList)
@@ -1153,20 +1124,6 @@ export class AddComponent implements OnInit {
         }
       }
     return status
-  }
-
-  createFilterFor(query) {
-    var lowercaseQuery = query.toLowerCase()
-
-    return function filterFn(item) {
-      return (item.value.indexOf(lowercaseQuery) === 0) || (item.value.indexOf(lowercaseQuery) === 1)
-        || (item.value.indexOf(lowercaseQuery) === 2) || (item.value.indexOf(lowercaseQuery) === 3)
-        || (item.value.indexOf(lowercaseQuery) === 4) || (item.value.indexOf(lowercaseQuery) === 5)
-        || (item.value.indexOf(lowercaseQuery) === 6) || (item.value.indexOf(lowercaseQuery) === 7)
-        || (item.value.indexOf(lowercaseQuery) === 8) || (item.value.indexOf(lowercaseQuery) === 9)
-        || (item.value.indexOf(lowercaseQuery) === 10) || (item.value.indexOf(lowercaseQuery) === 11)
-    }
-
   }
 
   updateSettings() {

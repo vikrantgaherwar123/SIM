@@ -1,9 +1,86 @@
 <div class="row main-wrapper">
-  <div style="padding-top: 35px; width: 100%">
+  <!-- Invoice query bar -->
+  <div class="col-12 query-container">
+    <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
+      <div class="row mar0">
+        <div class="col-12 col-md-3">
+          <div class="form-group pad-left-0">
+            <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
+              matInput [formControl]="invoiceQueryForm.client" [matAutocomplete]="auto2"
+            >
+            <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayWith"
+              (optionSelected)="invoiceQueryForm.client.reset($event.option.value)"
+            >
+              <mat-option [value]="{name: 'All'}">
+                All
+              </mat-option>
+              <mat-option *ngFor="let client of filteredClients | async" [value]="client">
+                {{client.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-4">
+              <input placeholder="Start" required readonly style="max-width: 100%"
+                matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
+                (click)="picker3.open()"
+              >
+              <mat-datepicker #picker3></mat-datepicker>
+            </div>
+            <div class="col-4 pad-left-0">
+              <input placeholder="End" required readonly style="max-width: 100%"
+                matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
+                (click)="picker4.open()"
+              >
+              <mat-datepicker #picker4></mat-datepicker>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <button type="button" (click)="SearchInvoice()"
+            class="btn btn-success btn-raised font-custom pull-right width20btn"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="query-bar" *ngIf="!changingQuery">
+      <div class="row">
+        <div class="col-12 col-md-9">
+          Showing results for: Client: <span style="color: red">{{invoiceQueryForm.client.value.name}}</span>,
+          Date Range: <span style="color: red">{{invoiceQueryForm.dateRange.start.value ? 
+            invoiceQueryForm.dateRange.start.value.getDate() + '-' +
+            (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+            invoiceQueryForm.dateRange.start.value.getFullYear() : 0
+          }}</span> TO <span style="color: red">{{invoiceQueryForm.dateRange.end.value ?
+            invoiceQueryForm.dateRange.end.value.getDate() + '-' +
+            (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+            invoiceQueryForm.dateRange.end.value.getFullYear() : 0
+          }}</span>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <button type="button" (click)="changingQuery = true"
+            class="btn btn-success btn-raised font-custom pull-right width20btn"
+          >
+            Change
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding-top: 60px; width: 100%">
     <div class="row">
       <!-- Invoice List -->
       <div class="col-12 col-sm-3 item-list inv-list pad-right-0">
-          <div [class]="{'list-shadow':(invoiceList | async).length > invDispLimit ,'scroll-bar-shadow': true }">
+          <div [class]="{'list-shadow':invoiceList.length > invDispLimit ,'scroll-bar-shadow': true }">
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
               <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
                 <div class="row mar0">
@@ -51,7 +128,7 @@
               </div>
               <!-- [class.selected]="invoice.unique_identifier == routeParams.invId" -->
               <div class="item all-item row cursor-pointer"
-                *ngFor="let invoice of (invoiceList | async | orderBy: sortInvoices | filterBy:invoiceFilterTerm | slice:0:invDispLimit); index as key"
+                *ngFor="let invoice of (invoiceList | orderBy: sortInvoices | filterBy:invoiceFilterTerm | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2 list-date font-custom-bold fontsize13">
@@ -73,21 +150,21 @@
                 </div>
               </div>
       
-              <div class="no-data-messsage" *ngIf="(invoiceList | async).length < 1 && !invListLoader">
-                <h4>No Invoice to display, please create invoices</h4>
+              <div class="no-data-messsage" *ngIf="invoiceList.length < 1 && !invListLoader">
+                <h4>No Invoice to display</h4>
               </div>
-              <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0" [class.list-shadow]="(invoiceList | async).length > invDispLimit">
-                <a (click)="loadMore()" class="more btn" *ngIf="(invoiceList | async).length > invDispLimit || filterClient">
+              <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0" [class.list-shadow]="invoiceList.length > invDispLimit">
+                <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit || filterClient">
                   Click to view more >>
                 </a>
               </div>
             </div>
           </div>
       </div>
-    
+
       <!-- View Invoice -->
-      <div id="invMain" name="invMain" *ngIf="activeInv"
-        class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
+      <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
+        *ngIf="activeInv"
       >
         <form id="invoiceGenerator" name="invoiceGenerator" class="shadow pad15 back">
           <div class="row">

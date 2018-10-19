@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core'
 import { Action } from '@ngrx/store'
 
 export const ADD = 'ADD_INVOICE'
 export const EDIT = 'EDIT_INVOICE'
 export const REMOVE = 'REMOVE_INVOICE'
+export const RESET = 'RESET_INVOICE'
 
 export class add implements Action {
   readonly type = ADD
@@ -29,4 +29,12 @@ export class remove implements Action {
   }
 }
 
-export type Action = add | edit | remove
+export class reset implements Action {
+  readonly type = RESET
+
+  constructor(public payload: any) {
+    
+  }
+}
+
+export type Action = add | edit | remove | reset

@@ -1,9 +1,8 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-
       <!-- Create Invoice -->
-      <div id="msgInv" class="col-md-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
           class="create-invoice" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
         >
@@ -107,12 +106,12 @@
                       <div class="col-6">
                         <div style="max-width: 100%;">
                           <div class="row mar0">
-                            <input type="text" class="form-control" style="max-width: 110px;"
+                            <input type="text" class="form-control"
                               [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly
+                              (click)="picker.open()"
                             >
-                            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
                           </div>
-                          <mat-datepicker #picker></mat-datepicker>
                         </div>
                         <div class="form-error" *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched">
                           <span *ngIf="invoiceGeneratorAdd.error">Invoice date required</span>
@@ -162,16 +161,15 @@
                               [ngModel]="activeInvoice.due_date" required readonly
                             >
                           </div>
-                          <mat-datepicker #picker1></mat-datepicker>
                         </div>
                         <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag === 2">
                           <div class="row mar0">
-                            <input type="text" name="dueDate" class="form-control" style="max-width: 110px;"
+                            <input type="text" name="dueDate" class="form-control"
                               [formControl]="dueDate" matInput [matDatepicker]="picker1" required readonly
+                              (click)="picker1.open()"
                             >
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
                           </div>
-                          <mat-datepicker #picker1></mat-datepicker>
                         </div>
                       </div>
                     </div>
@@ -635,6 +633,13 @@
           </div>
         </form>
       </div>
+
+      <!-- Previous Invoices Button -->
+      <div class="col-12 col-md-3">
+        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
+          Show Previous Invoices
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -997,79 +1002,6 @@
             Cancel
           </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT TERMS MODAL -->
-<div class="modal fade" id="add-terms-edit" aria-labelledby="gridSystemModalLabel"
-  tabindex="-1" role="dialog"data-backdrop="static" data-keyboard="false"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header" ng-init="addButton = 0">
-        <a class="pull-right" (click)="closeEdit()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
-        </a>
-        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabelEdit">
-          Add Terms & Condition
-        </h4>
-      </div>
-      <div class="modal-body">
-        <form #termForm="ngForm" name="termForm">
-          <div class="col-12">
-            <div class="col-md-12 col-xs-12 col-sm-12">
-              <div class="form-group">
-                <!-- <textarea elastic [(ngModel)]="termCondition.terms" name="term" class="form-control" class="form-control"
-                  placeholder="Add term & Condition" style="width: 95%;height: 110px;" required
-                ></textarea> -->
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="col-md-12 col-xs-12 col-sm-12">
-              <div class="checkbox pull-left">
-                <!-- <input type="checkbox" [(ngModel)]="termCondition.set_default" name="set_default" id="addtermcheckEdit"
-                  ng-true-value="'DEFAULT'" ng-false-value="''" ng-checked="termCondition.set_default == 'DEFAULT'"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox"
-                > -->
-                <label class="inline" for="addtermcheck"></label>
-                <div class="inline">Default?</div>
-              </div>
-              <!-- <button type="button" class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
-                [disabled]="!termForm.valid" (click)="saveTermEdit(termCondition, termForm.valid)" title="save">SAVE
-              </button> -->
-            </div>
-          </div>
-        </form>
-
-        <div class="col-12" style="padding: 20px 24px 20px 15px">
-          <div class="col-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of terms_edit | filterBy:{ enabled : 0}" id="term1Edit{{$index}}"
-              ng-init="term.setDefault == 'DEFAULT' ? editdata.terms[$index] = true : editdata.terms[$index] = false "
-              [class.selected]="selectedTerm == $index"
-            >
-              <div class="col-12 pad0">
-                <div class="col-12 pad0 ">
-                  <div class="col-md-1 pad0">
-                    <!--ng-init="term.setDefault == 'DEFAULT' ? data.terms[$index] = term.uniqueKeyTerms : data.terms[$index] = '' "-->
-                    <input type="checkbox" id="termcheckEdit{{$index}}" ng-false-value="false"
-                      [(ngModel)]="editdata.terms[$index]" ng-true-value="true"  ng-change="setTermsListEdit(term)"
-                    />
-                    <label class="" for="termcheckEdit{{$index}}"></label>
-                  </div>
-                  <div class="col-md-10 pad-left-0">
-                    <span style="vertical-align: top;"> {{term.terms}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
       </div>
     </div>
   </div>
