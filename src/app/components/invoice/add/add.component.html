@@ -636,7 +636,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btnd add-line-item-button" data-toggle="modal" data-target="#searchInvoice">
+        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
           Show Previous Invoices
         </button>
       </div>
@@ -998,77 +998,6 @@
           </button>
           <button type="button" class="btn btn-raised btn-custom-1 width20btn pull-right"
             (click)="closeAddPaymentModal()"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SEARCH INVOICE MODAL -->
-<div class="modal fade" id="searchInvoice" role="dialog" aria-labelledby="gridSystemModalLabel">
-  <div class="modal-dialog add-payment-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header header-color font-custom-bold" id="searchInvoiceLabel">
-          Search Invoice
-        </h4>
-        <a class="pull-right" (click)="closeSearchInvoiceModal()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
-        </a>
-      </div>
-      <div class="modal-body">
-        <div class="col-12 pad0 add-payment" style="margin-bottom: 10px;">
-          <form name="searchform" #searchform="ngForm">
-            <div class="row">
-              <div class="col-12 col-md-6">
-                <div class="form-group pad-left-0">
-                  <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                    matInput [formControl]="searchInvoiceModal.client" [matAutocomplete]="auto2"
-                  >
-                  <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayWith"
-                    (optionSelected)="searchInvoiceModal.client.reset($event.option.value)"
-                  >
-                    <mat-option *ngFor="let client of filteredClients | async" [value]="client">
-                      {{client.name}}
-                    </mat-option>
-                  </mat-autocomplete>
-                </div>
-              </div>
-
-              <div class="col-12 col-md-6">
-                <div class="row">
-                  <div class="col-6">
-                    <input placeholder="Start" required readonly style="max-width: 100%"
-                      matInput [matDatepicker]="picker3" [formControl]="searchInvoiceModal.dateRange.start"
-                      (click)="picker3.open()"
-                    >
-                    <mat-datepicker #picker3></mat-datepicker>
-                  </div>
-                  <div class="col-6 pad-left-0">
-                    <input placeholder="End" required readonly style="max-width: 100%"
-                      matInput [matDatepicker]="picker4" [formControl]="searchInvoiceModal.dateRange.end"
-                      (click)="picker4.open()"
-                    >
-                    <mat-datepicker #picker4></mat-datepicker>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </form>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="col-12 pad0">
-          <button type="button" (click)="SearchInvoice()"
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
-            Search
-          </button>
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn pull-right"
-            (click)="closeSearchInvoiceModal()"
           >
             Cancel
           </button>
