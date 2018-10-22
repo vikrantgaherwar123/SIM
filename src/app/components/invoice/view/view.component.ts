@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms'
 import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
+import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
@@ -23,7 +24,7 @@ export class ViewComponent implements OnInit {
   private invoiceList: invoice[]
   private activeInv: invoice
   private activeInvId: string
-  private invListLoader: boolean = true
+  private invListLoader: boolean = false
   private invDispLimit: number = 20
 
   private invoiceQueryForm = {
@@ -47,6 +48,11 @@ export class ViewComponent implements OnInit {
   ) {
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
     store.select('client').subscribe(clients => this.clientList = clients)
+    store.select('globals').subscribe(globals => {
+      if (Object.keys(globals.invoiceQueryForm).length > 0) {
+        this.invoiceQueryForm = globals.invoiceQueryForm
+      }
+    })
     this.setting = JSON.parse(cookie.get('user')).setting
   }
 
@@ -56,11 +62,9 @@ export class ViewComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.store.dispatch(new clientActions.add(response.records))
         this.setClientFilter()
-        this.fetchInvoices()
       })
     } else {
       this.setClientFilter()
-      this.fetchInvoices()
     }
   }
 
@@ -94,6 +98,7 @@ export class ViewComponent implements OnInit {
       }
     }
 
+    this.invListLoader = true
     this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
       if(response.status === 200) {
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
@@ -165,6 +170,7 @@ export class ViewComponent implements OnInit {
     } else {
       query.endTime = new Date().getTime()
     }
+    this.store.dispatch(new globalActions.add({ invoiceQueryForm: this.invoiceQueryForm }))
     this.fetchInvoices(query)
     this.changingQuery = false
   }

@@ -53,7 +53,7 @@
     <div class="query-bar" *ngIf="!changingQuery">
       <div class="row">
         <div class="col-12 col-md-9">
-          Showing results for: Client: <span style="color: red">{{invoiceQueryForm.client.value.name}}</span>,
+          Showing results for: Client: <span style="color: red">{{invoiceQueryForm.client.value.name ? invoiceQueryForm.client.value.name : 'All'}}</span>,
           Date Range: <span style="color: red">{{invoiceQueryForm.dateRange.start.value ? 
             invoiceQueryForm.dateRange.start.value.getDate() + '-' +
             (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 

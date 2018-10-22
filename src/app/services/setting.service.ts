@@ -17,7 +17,7 @@ export class SettingService {
 
   constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
     this.fetchUrl = `${CONST.BASE_URL}settings/pull/settings`
-    this.addUrl = `${CONST.BASE_URL}client/add-clients`
+    this.addUrl = `${CONST.BASE_URL}settings/add`
 
     this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
   }

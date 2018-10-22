@@ -18,6 +18,7 @@ import { termsReducer } from './reducers/terms.reducer'
 import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
 import { settingReducer } from './reducers/setting.reducer'
+import { globalReducer } from './reducers/globals.reducer'
 
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
@@ -67,7 +68,8 @@ import { ViewComponent } from './components/invoice/view/view.component'
       terms: termsReducer,
       estimate: estimateReducer,
       invoice: invoiceReducer,
-      setting: settingReducer
+      setting: settingReducer,
+      globals: globalReducer
     })
   ],
   providers: [CookieService, CONSTANTS],

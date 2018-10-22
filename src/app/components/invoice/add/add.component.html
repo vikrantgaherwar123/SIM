@@ -10,12 +10,12 @@
             <div class="col-12 padt15">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title"
-                  *ngIf="authenticated.setting.mTvInvoice"
+                  *ngIf="settings.mTvInvoice"
                 >
-                  {{authenticated.setting.mTvInvoice}}
+                  {{settings.mTvInvoice}}
                 </span>
                 <span class="c-name" type="text" id="titleAddelse" name="title"
-                  *ngIf="!authenticated.setting.mTvInvoice"
+                  *ngIf="!settings.mTvInvoice"
                 >
                   {{'INV_LABEL' | translate}}
                 </span>
@@ -326,7 +326,7 @@
                       <div class="cursor-pointer" *ngIf="activeInvoice.adjustment == null">
                         <a class="inline" (click)="activeInvoice.adjustment = 0">{{tempAdjLabel}}+</a>
                       </div>
-                      <!-- <div class="inline" *ngFor="let tax of authenticated.setting.alstTaxName">
+                      <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
                         <div *ngIf="showMultipleTax && multiTaxButtonForAddInvoice(tax.taxName,$index)">
                           <a (click)="showMeMultipleTax($index);">{{tax.taxName}}+</a>
                         </div>
@@ -383,7 +383,7 @@
                             <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
                             <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom">({{currencySymbolTemp }})</div>
                             <div *ngIf="activeInvoice.percentage_flag == 1" class="inline font-custom">(%)</div>
-        
+
                             <div class="pad0" style="float: right; padding-right: 10px;">
                               <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -406,7 +406,7 @@
                               </ul>
                             </div>
                           </div>
-    
+
                           <div class="col-6 pad-right-0">
                             <form #form_discount="ngForm" name="form_discount">
                               <div class="input-group addon-input">
@@ -416,7 +416,7 @@
                                     [(ngModel)]="activeInvoice.percentage_value" (change)="calculateInvoice(1)"
                                   />
                                 </div>
-    
+
                                 <div *ngIf="activeInvoice.percentage_flag == 0">
                                   <input type="number" id="discount_input" name="discount_input" step="any"
                                     min="0.00" [max]="activeInvoice.gross_amount" class="form-control"
@@ -873,7 +873,7 @@
 
         <div class="col-12" style="padding: 20px 24px 20px 15px">
           <div class="col-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of termList | async; let index = index" id="term1{{index}}"
+            <div class="item termlist row product-list" *ngFor="let term of termList; let index = index" id="term1{{index}}"
               [class.selected]="selectedTerm == index"
             >
               <div class="col-12 pad0">
