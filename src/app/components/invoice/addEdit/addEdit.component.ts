@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
@@ -24,10 +24,10 @@ import { AppState } from '../../../app.state'
 
 @Component({
   selector: 'app-invoice',
-  templateUrl: './add.component.html',
-  styleUrls: ['./add.component.css']
+  templateUrl: './addEdit.component.html',
+  styleUrls: ['./addEdit.component.css']
 })
-export class AddComponent implements OnInit {
+export class AddEditComponent implements OnInit {
 
   private emptyInvoice = {
     adjustment: null,
@@ -73,13 +73,14 @@ export class AddComponent implements OnInit {
   // private invoiceList: Observable<invoice[]>
   private activeInvoice: invoice = {...this.emptyInvoice}
   private tempQuaNoOnAdd: number
-  private invoiceDate
+  private invoiceDate = new FormControl()
   private dueDate = new FormControl()
   private tempInvNo: number
   private showMultipleTax: boolean
   private show_tax_input_list: any
   private tempflagTaxList: any
   private taxtext: string
+  private edit: boolean = false
 
   private clientList: client[]
   private activeClient: any = {}
@@ -137,6 +138,7 @@ export class AddComponent implements OnInit {
   }
 
   constructor(private router: Router,
+    private route: ActivatedRoute,
     private invoiceService: InvoiceService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
@@ -153,10 +155,6 @@ export class AddComponent implements OnInit {
     store.select('terms').subscribe(terms => this.termList = terms)
   }
 
-  ngOnInit() {
-    this.init()
-  }
-
   displayWith(disp): string | undefined {
     if (disp && disp.name) {
       return disp.name
@@ -166,11 +164,117 @@ export class AddComponent implements OnInit {
     return undefined
   }
 
-  init() {
-    this.initSettings()
+  // Initialisation functions
+  ngOnInit() {
+    this.fetchCommonData()
+    this.route.params.subscribe(params => {
+      if (params && params.invId) {
+        this.edit = true
+        this.editInit(params.invId)
+      } else {
+        this.addInit()
+      }
+    })
+  }
+
+  addInit() {
+    this.commonSettingsInit()
 
     var settings = this.settings
+    var date = new Date()
+    this.invoiceDate.reset(date)
+    this.activeInvoice.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
 
+    // Invoice Number
+    if (!isNaN(parseInt(settings.invNo))) {
+      this.tempInvNo = parseInt(settings.invNo) + 1
+    } else {
+      this.tempInvNo = 1
+    }
+    if (settings.setInvoiceFormat) {
+      this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
+    } else {
+      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+    }
+  }
+
+  editInit(invId) {
+    // Fetch selected invoice
+    this.commonSettingsInit()
+
+    this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+      if(invoice.records !== null) {
+        this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+
+        // Change list item keys compatible
+        var temp = []
+        for(let i=0; i < this.activeInvoice.listItems.length; i++) {
+          temp.push({
+            description: this.activeInvoice.listItems[i].description,
+            product_name: this.activeInvoice.listItems[i].productName,
+            quantity: this.activeInvoice.listItems[i].qty,
+            rate: this.activeInvoice.listItems[i].rate,
+            tax_rate: this.activeInvoice.listItems[i].tax_rate,
+            total: this.activeInvoice.listItems[i].price,
+            unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+            unit: this.activeInvoice.listItems[i].unit
+          })
+        }
+        this.activeInvoice.listItems = temp
+
+        // Change payment keys compatible
+        if(this.activeInvoice.payments) {
+          var temp1 = []
+          for(let i=0; i < this.activeInvoice.payments.length; i++) {
+            temp1.push({
+              date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
+              organization_id: this.activeInvoice.payments[i].orgId,
+              paid_amount: this.activeInvoice.payments[i].paidAmount,
+              unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
+              unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
+              unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
+              unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
+            })
+          }
+          this.activeInvoice.payments = temp1
+        }
+        
+        // Set Dates
+        var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+        this.invoiceDate.reset(new Date(y, (m - 1), d))
+
+        this.changeDueDate(this.activeInvoice.due_date_flag)
+
+        // Wait for clients to be loaded before setting active client
+        var ref = setInterval(() => {
+          if (this.clientList.length > 0) {
+            this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == this.activeInvoice.unique_key_fk_client)[0]
+            this.billingTo.reset(this.activeClient)
+            clearInterval(ref)
+          }
+        }, 50)
+      } else {
+        alert('invalid invoice id!')
+        this.router.navigate(['/invoice/view'])
+      }
+      return false
+    })
+  }
+
+  commonSettingsInit() {
+    this.invoiceDate.valueChanges.subscribe(value => {
+      this.activeInvoice.created_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+    })
+
+    this.dueDate.valueChanges.subscribe(value => {
+      if(value !== null) {
+        this.activeInvoice.due_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+      } else {
+        this.activeInvoice.due_date = ''
+      }
+    })
+
+    var settings = this.settings
     // Set Labels
     this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
     this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
@@ -204,78 +308,21 @@ export class AddComponent implements OnInit {
       }
       this.settings.date_format = 'dd-mm-yy'
     }
-    var date = new Date()
-    this.invoiceDate = new FormControl(date)
-    this.activeInvoice.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
-    this.invoiceDate.valueChanges.subscribe(value => {
-      this.activeInvoice.created_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
-    })
-    this.dueDate.valueChanges.subscribe(value => {
-      if(value !== null) {
-        this.activeInvoice.due_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
-      } else {
-        this.activeInvoice.due_date = ''
-      }
-    })
-    var self = this
 
-    // Fetch Products if not in store
-    if(this.productList.length < 1) {
-      this.productService.fetch().subscribe((response: response) => {
-        // console.log(response)
-        if (response.records != null) {
-          self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
-          this.setProductFilter()
-        } else {
-          this.setProductFilter()
-        }
-      })
-    } else {
-      this.setProductFilter()
+    this.activeSettings = <setting>{}
+    this.activeSettings.date_format = 'dd-mm-yy'
+
+    if (this.settings.dateDDMMYY === false) {
+      this.activeSettings.date_format = 'mm-dd-yy'
+    } else if (this.settings.dateDDMMYY === true) {
+      this.activeSettings.date_format = 'dd-mm-yy'
     }
 
-    // Fetch Clients if not in store
-    if(this.clientList.length < 1) {
-      this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
-        if (response.records !== null) {
-          this.store.dispatch(new clientActions.add(response.records.filter(recs => recs.enabled == 0)))
-          this.setClientFilter()
-        } else {
-          this.setClientFilter()
-        }
-        this.clientListLoading = false
-      })
+    if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
     } else {
-      this.setClientFilter()
+
     }
 
-    // Fetch Terms if not in store
-    if(this.termList.length < 1) {
-      this.termConditionService.fetch().subscribe((response: response) => {
-        // console.log(response)
-        if (response.termsAndConditionList !== null) {
-          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-        }
-        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
-    } else {
-      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-    }
-
-    // Fetch invoices if not in store
-    // this.invoiceList.subscribe(invoices => {
-    //   if(invoices.length < 1) {
-    //     this.invoiceService.fetch().subscribe((result: any) => {
-    //       // console.log('invoice', result)
-    //       if(result.status === 200) {
-    //         this.store.dispatch(new invoiceActions.add(result.records.filter(inv => inv.deleted_flag == 0)))
-    //       }
-    //     })
-    //   }
-    // })
-
-    //console.log("settings",settings)
     if (settings) {
       this.activeInvoice.discount_on_item = settings.discount_on_item
       this.activeInvoice.tax_on_item = settings.tax_on_item
@@ -308,126 +355,51 @@ export class AddComponent implements OnInit {
     }
   }
 
-  initSettings() {
-    var settings = this.settings
+  fetchCommonData() {
+    var self = this
 
-    this.activeSettings = <setting>{}
-    this.activeSettings.date_format = 'dd-mm-yy'
-    // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-    // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-    // $rootScope.settings.alstTaxName = []
-
-    // if (cookie.setting.numberFormat === "###,###,###.00") {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern1'
-    // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern2'
-    // } else if (cookie.setting.numberFormat === "###.###.###,00") {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern1'
-    // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern2'
-    // } else if (cookie.setting.numberFormat === "### ### ###,00") {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern1'
-    // } else {
-    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-    //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-    //   $rootScope.settingscurrency_pattern = 'pattern1'
-    // }
-
-    if (this.settings.dateDDMMYY === false) {
-      // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
-      this.activeSettings.date_format = 'mm-dd-yy'
-    } else if (this.settings.dateDDMMYY === true) {
-      // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-      this.activeSettings.date_format = 'dd-mm-yy'
+    // Fetch Products if not in store
+    if(this.productList.length < 1) {
+      this.productService.fetch().subscribe((response: response) => {
+        // console.log(response)
+        if (response.records != null) {
+          self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
+          this.setProductFilter()
+        } else {
+          this.setProductFilter()
+        }
+      })
+    } else {
+      this.setProductFilter()
     }
 
-    if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
-      // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
+    // Fetch Clients if not in store
+    if(this.clientList.length < 1) {
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        if (response.records !== null) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.setClientFilter()
+        } else {
+          this.setClientFilter()
+        }
+        this.clientListLoading = false
+      })
     } else {
-      //$rootScope.authenticated.setting = {}
-      //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
+      this.setClientFilter()
     }
 
-    // Invoice Number
-    if (!isNaN(parseInt(settings.invNo))) {
-      this.tempInvNo = parseInt(settings.invNo) + 1
+    // Fetch Terms if not in store
+    if(this.termList.length < 1) {
+      this.termConditionService.fetch().subscribe((response: response) => {
+        // console.log(response)
+        if (response.termsAndConditionList !== null) {
+          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        }
+        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      })
     } else {
-      this.tempInvNo = 1
-    }
-    if (settings.setInvoiceFormat) {
-      this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-    } else {
-      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
     }
   }
 
@@ -442,7 +414,7 @@ export class AddComponent implements OnInit {
   }
 
   private _filterCli(value: string): client[] {
-    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
+    return this.clientList.filter(recs => recs.enabled == 0).filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   selectedClientChange(client) {
@@ -578,6 +550,7 @@ export class AddComponent implements OnInit {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
+        console.log(this.activeInvoice.listItems)
         this.addItem.reset('')
         this.activeItem = {
           quantity: 1,
@@ -859,9 +832,10 @@ export class AddComponent implements OnInit {
       temp.push(this.termConditionService.changeKeysForInvoiceApi(tnc))
     })
     this.activeInvoice.termsAndConditions = temp
-    this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
-    // this.activeInvoice.balance = this.balance
 
+    if (!this.edit) {
+      this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
+    }
     for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
       this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
       if (!this.activeInvoice.listItems[i - 1].product_name || this.activeInvoice.listItems[i - 1].product_name == '') {
@@ -892,14 +866,21 @@ export class AddComponent implements OnInit {
         console.log(result)
       } else if (result.status === 200) {
         // Add Invoice to store
-        self.store.dispatch(new invoiceActions.add(result.invoiceList))
+        if(this.edit) {
+          this.store.select('invoice').subscribe(invs => {
+            let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
+            self.store.dispatch(new invoiceActions.edit({index, value: result.invoiceList[0]}))
+          })
+        } else {
+          self.store.dispatch(new invoiceActions.add(result.invoiceList))
+        }
 
         // Update settings
         this.updateSettings()
 
         // Reset Create Invoice page for new invoice creation
         self.resetCreateInvoice()
-        self.init()
+        self.addInit()
         alert('Invoice saved successfully')
       }
       $('#invSubmitBtn').removeAttr('disabled')

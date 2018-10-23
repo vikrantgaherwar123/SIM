@@ -5,20 +5,6 @@
       <div class="row mar0">
         <div class="col-12 col-md-4">
           <div class="form-group pad-left-0">
-            <!-- <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-              matInput [formControl]="invoiceQueryForm.client" [matAutocomplete]="auto2"
-            >
-            <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayWith"
-              autoActiveFirstOption (optionSelected)="invoiceQueryForm.client.reset($event.option.value)"
-            >
-              <mat-option [value]="{name: 'All'}">
-                All
-              </mat-option>
-              <mat-option *ngFor="let client of filteredClients | async" [value]="client">
-                {{client.name}}
-              </mat-option>
-            </mat-autocomplete> -->
-
             <mat-select placeholder="Select client" class="client-select" multiple disableRipple
               [formControl]="invoiceQueryForm.client"
             >
@@ -30,6 +16,7 @@
                   )
                 </span>
               </mat-select-trigger>
+              <mat-option [value]="{name: 'All'}">All</mat-option>
               <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
             </mat-select>
           </div>
@@ -87,7 +74,7 @@
         </div>
 
         <div class="col-12 col-md-2">
-          <button type="button" (click)="changingQuery = true;"
+          <button type="button" (click)="changingQuery = true; invoiceQueryForm.client.reset([{name: 'All'}])"
             class="btn btn-success btn-raised font-custom pull-right width20btn"
           >
             Change

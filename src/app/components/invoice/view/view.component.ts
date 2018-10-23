@@ -3,7 +3,6 @@ import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
-import { map, startWith } from 'rxjs/operators'
 import { FormControl } from '@angular/forms'
 
 import { Store } from '@ngrx/store'
@@ -141,6 +140,10 @@ export class ViewComponent implements OnInit {
 
     if(this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
+      if (query.clientIdList[0] == null) {
+        query.clientIdList = null
+        this.invoiceQueryForm.client.reset([{name: 'All'}])
+      }
     } else {
       query.clientIdList = null
       this.invoiceQueryForm.client.reset([{name: 'All'}])

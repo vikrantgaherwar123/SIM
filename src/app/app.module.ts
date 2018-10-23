@@ -31,7 +31,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component'
 import { SidebarComponent } from './components/sidebar/sidebar.component'
 import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
-import { AddComponent } from './components/invoice/add/add.component'
+import { AddEditComponent } from './components/invoice/addEdit/addEdit.component'
 import { EstimateComponent } from './components/estimate/estimate.component'
 import { EditComponent } from './components/invoice/edit/edit.component'
 import { ViewComponent } from './components/invoice/view/view.component'
@@ -45,7 +45,7 @@ import { ViewComponent } from './components/invoice/view/view.component'
     SidebarComponent,
     ClientComponent,
     ProductComponent,
-    AddComponent,
+    AddEditComponent,
     EstimateComponent,
     EditComponent,
     ViewComponent
