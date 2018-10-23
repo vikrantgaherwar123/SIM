@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store'
 
-export const ADD = 'ADD_SETTING'
-export const EDIT = 'EDIT_SETTING'
-export const REMOVE = 'REMOVE_SETTING'
+export const ADD = 'ADD_GLOBALS'
+export const EDIT = 'EDIT_GLOBALS'
+export const REMOVE = 'REMOVE_GLOBALS'
 
 export class add implements Action {
   readonly type = ADD

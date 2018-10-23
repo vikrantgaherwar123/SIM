@@ -19,6 +19,7 @@ import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
+import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 
 @Component({
@@ -96,7 +97,7 @@ export class AddComponent implements OnInit {
   addItem = new FormControl()
   filteredProducts: Observable<string[] | product[]>
 
-  private termList: Observable<terms[]>
+  private termList: terms[]
   private addTermModal: any = {}
 
   private addPaymentModal: any = {}
@@ -127,10 +128,7 @@ export class AddComponent implements OnInit {
   private newItemCounter: number = 0
 
   private settings: any
-  private authenticated: {
-    setting: any
-  }
-
+  private activeSettings: any
   private user: {
     user: {
       orgId: string
@@ -148,12 +146,11 @@ export class AddComponent implements OnInit {
     private store: Store<AppState>
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
-    this.authenticated = { setting: this.user.setting }
     store.select('client').subscribe(clients => this.clientList = clients)
     store.select('product').subscribe(products => this.productList = products)
-    // this.invoiceList = store.select('invoice')
-    this.termList = store.select('terms')
-    // console.log(this.authenticated)
+    // store.select('setting').subscribe(settings => this.settings = settings)
+    this.settings = this.user.setting
+    store.select('terms').subscribe(terms => this.termList = terms)
   }
 
   ngOnInit() {
@@ -170,15 +167,11 @@ export class AddComponent implements OnInit {
   }
 
   init() {
-    this.initializeSettings(this.tempQuaNoOnAdd)
+    this.initSettings()
 
-    this.activeInvoice.taxList = []
-    this.show_tax_input_list = []
-    this.tempflagTaxList = []
-    this.activeInvoice.gross_amount = 0.00
-    this.activeInvoice.balance = 0.00
+    var settings = this.settings
 
-    var settings = this.authenticated.setting
+    // Set Labels
     this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
     this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
     this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : ''
@@ -194,22 +187,6 @@ export class AddComponent implements OnInit {
     this.tempPaidLabel = settings.paid ? settings.paid : ''
     this.tempTotalLabel = settings.total ? settings.total : ''
     this.tempBalLabel = settings.balance ? settings.balance : ''
-
-    // this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : $translate.instant('QTY_LABEL')
-    // this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : $translate.instant('PRO_LABEL')
-    // this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : $translate.instant('AMT_LABEL')
-    // this.tempRateLabel = settings.mTvAmount ? settings.mTvAmount : $translate.instant('RATE_LABEL')
-    // this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : $translate.instant('TERM_LABEL')
-    // this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : $translate.instant('BILL_TO_LABEL')
-    // this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : $translate.instant('SHIP_TO_LABEL')
-    // this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : $translate.instant('DUE_DATE_LABEL')
-    // this.tempDisLabel = settings.discount ? settings.discount : $translate.instant('DIS_LABEL')
-    // this.tempSubToLabel = settings.subtotal ? settings.subtotal : $translate.instant('SUB_TOT_LABEL')
-    // this.tempShippingLabel = settings.shipping ? settings.shipping : $translate.instant('SHIPPING_LABEL')
-    // this.tempAdjLabel = settings.adjustment ? settings.adjustment : $translate.instant('ADJ_LABEL')
-    // this.tempPaidLabel = settings.paid ? settings.paid : $translate.instant('PAID_LABEL')
-    // this.tempTotalLabel = settings.total ? settings.total : $translate.instant('TOTAL_LABEL')
-    // this.tempBalLabel = settings.balance ? settings.balance : $translate.instant('BAL_LABEL')
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
@@ -274,23 +251,17 @@ export class AddComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    this.termList.subscribe(terms => {
-      if(terms.length < 1) {
-        this.termConditionService.fetch().subscribe((response: response) => {
-          // console.log(response)
-          if (response.termsAndConditionList !== null) {
-            this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-          }
-          this.termList.subscribe(trms => {
-            self.activeInvoice.termsAndConditions = trms.filter(trm => trm.setDefault == 'DEFAULT')
-          })
-        })
-      } else {
-        this.termList.subscribe(trms => {
-          self.activeInvoice.termsAndConditions = trms.filter(trm => trm.setDefault == 'DEFAULT')
-        })
-      }
-    })
+    if(this.termList.length < 1) {
+      this.termConditionService.fetch().subscribe((response: response) => {
+        // console.log(response)
+        if (response.termsAndConditionList !== null) {
+          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        }
+        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      })
+    } else {
+      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+    }
 
     // Fetch invoices if not in store
     // this.invoiceList.subscribe(invoices => {
@@ -337,170 +308,126 @@ export class AddComponent implements OnInit {
     }
   }
 
-  initializeSettings(invNoParam) {
-    // Fetch settings if not in store and init settings
-    this.store.select('setting').subscribe(sets => {
-      if(Object.keys(sets).length == 0) {
-        this.settingService.fetch().subscribe((response: any) => {
-          this.initSettings(response, invNoParam)
-        })
-      } else {
-        var response = {status: 200, settings: sets}
-        this.initSettings(response, invNoParam)
-      }
-    })
-  }
+  initSettings() {
+    var settings = this.settings
 
-  initSettings(response, invNoParam) {
-    var settings = this.authenticated.setting
-    if (response.status === 200) {
-      var cookie = this.user
-      if (response.settings === null) {
-        this.authenticated.setting = <setting>{}
-        this.authenticated.setting.date_format = true
-        this.settings.date_format = 'dd-mm-yy'
-        // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-        // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-        // $rootScope.settings.alstTaxName = []
-      } else {
-        cookie.setting = response.settings.appSettings.androidSettings
-        this.settings = cookie.setting
+    this.activeSettings = <setting>{}
+    this.activeSettings.date_format = 'dd-mm-yy'
+    // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+    // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
+    // $rootScope.settings.alstTaxName = []
 
-        // if (cookie.setting.numberFormat === "###,###,###.00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern1'
-        // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern2'
-        // } else if (cookie.setting.numberFormat === "###.###.###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern1'
-        // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern2'
-        // } else if (cookie.setting.numberFormat === "### ### ###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern1'
-        // } else {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   $rootScope.settingscurrency_pattern = 'pattern1'
-        // }
+    // if (cookie.setting.numberFormat === "###,###,###.00") {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern1'
+    // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern2'
+    // } else if (cookie.setting.numberFormat === "###.###.###,00") {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern1'
+    // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern2'
+    // } else if (cookie.setting.numberFormat === "### ### ###,00") {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern1'
+    // } else {
+    //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
+    //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
+    //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
+    //   $rootScope.settingscurrency_pattern = 'pattern1'
+    // }
 
-        if (cookie.setting.dateDDMMYY === false) {
-          // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
-          this.settings.date_format = 'mm-dd-yy'
-        } else if (cookie.setting.dateDDMMYY === true) {
-          // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-          this.settings.date_format = 'dd-mm-yy'
-        }
+    if (this.settings.dateDDMMYY === false) {
+      // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
+      this.activeSettings.date_format = 'mm-dd-yy'
+    } else if (this.settings.dateDDMMYY === true) {
+      // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
+      this.activeSettings.date_format = 'dd-mm-yy'
+    }
 
-        if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
-          // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
-        } else {
-          //$rootScope.authenticated.setting = {}
-          //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
-        }
-      }
-      this.cookie.set('user', JSON.stringify(cookie), null, '/')
-      if (invNoParam) {
-        this.activeInvoice.invoice_number = settings.setInvoiceFormat + invNoParam
-      } else {
-        if (!isNaN(parseInt(settings.invNo))) {
-          this.tempInvNo = parseInt(settings.quotNo) + 1
-          invNoParam = this.tempInvNo
-        } else {
-          this.tempInvNo = 1
-          invNoParam = this.tempInvNo
-        }
-        if (settings.setInvoiceFormat) {
-          this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-        } else {
-          this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-        }
-      }        
+    if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
+      // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText)
     } else {
-      if (invNoParam) {
-        this.activeInvoice.invoice_number = settings.setInvoiceFormat + invNoParam
-      } else {
-        if (!isNaN(parseInt(settings.invNo))) {
-          this.tempInvNo = parseInt(settings.quotNo) + 1
-          this.tempQuaNoOnAdd = this.tempInvNo
-        } else {
-          this.tempInvNo = 1
-          this.tempQuaNoOnAdd = this.tempInvNo
-        }
-        if (settings.setInvoiceFormat) {
-          this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-        } else {
-          this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-        }
-      }
+      //$rootScope.authenticated.setting = {}
+      //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
+    }
+
+    // Invoice Number
+    if (!isNaN(parseInt(settings.invNo))) {
+      this.tempInvNo = parseInt(settings.invNo) + 1
+    } else {
+      this.tempInvNo = 1
+    }
+    if (settings.setInvoiceFormat) {
+      this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
+    } else {
+      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
     }
   }
 
@@ -637,7 +564,7 @@ export class AddComponent implements OnInit {
         this.activeInvoice.listItems.push(this.activeItem)
       } else {
         // Edit Item from Invoice
-        var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier = uid)
+        var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier == uid)
         this.activeInvoice.listItems[index] = this.activeItem
         $('#edit-item').modal('hide')
       }
@@ -963,18 +890,16 @@ export class AddComponent implements OnInit {
       if (result.status !== 200) {
         alert('Couldnt save invoice')
         console.log(result)
-        // $rootScope.pro_bar_load = true
-        // notifications.showError({
-        //   message: result.message + '\n' + '.. Reason: ' + result.error.invoice_number[0],
-        //   hideDelay: 1500,
-        //   hide: true
-        // })
       } else if (result.status === 200) {
         // Add Invoice to store
         self.store.dispatch(new invoiceActions.add(result.invoiceList))
 
+        // Update settings
+        this.updateSettings()
+
         // Reset Create Invoice page for new invoice creation
         self.resetCreateInvoice()
+        self.init()
         alert('Invoice saved successfully')
       }
       $('#invSubmitBtn').removeAttr('disabled')
@@ -986,13 +911,20 @@ export class AddComponent implements OnInit {
     this.addItem.reset('')
 
     this.activeInvoice = {...this.emptyInvoice}
+
     this.activeInvoice.listItems = []
+    this.activeInvoice.payments = []
     this.newItemCounter = 0
+    this.activeInvoice.taxList = []
+    this.show_tax_input_list = []
+    this.tempflagTaxList = []
+    this.activeInvoice.gross_amount = 0.00
+    this.activeInvoice.balance = 0.00
 
     this.activeClient = {}
     this.dueDate.reset()
 
-    var settings = this.authenticated.setting
+    var settings = this.settings
     this.activeInvoice.taxList = []
     this.activeInvoice.percentage_flag = 1
 
@@ -1004,70 +936,47 @@ export class AddComponent implements OnInit {
       }
     }
 
-    if (this.tempQuaNoOnAdd) {
-      if (typeof settings.quotFormat !== 'undefined')
-        this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
-      else
-        this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
-    } else {
-      if (!isNaN(settings.invNo)) {
-        this.tempInvNo = parseInt(settings.quotNo) + 1
-        this.tempQuaNoOnAdd = this.tempInvNo
-      } else {
-        this.tempInvNo = 1
-      }
-      if (settings.setInvoiceFormat) {
-        this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-      } else {
-        this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-      }
-    }
+    // if (this.tempQuaNoOnAdd) {
+    //   if (typeof settings.quotFormat !== 'undefined')
+    //     this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
+    //   else
+    //     this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
+    // } else {
+    //   if (!isNaN(settings.invNo)) {
+    //     this.tempInvNo = parseInt(settings.quotNo) + 1
+    //     this.tempQuaNoOnAdd = this.tempInvNo
+    //   } else {
+    //     this.tempInvNo = 1
+    //   }
+    //   if (settings.setInvoiceFormat) {
+    //     this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
+    //   } else {
+    //     this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+    //   }
+    // }
+  }
 
-    this.termList.subscribe(trms => {
-      this.activeInvoice.termsAndConditions = trms
+  updateSettings() {
+    var settings1 = {
+      androidSettings: this.user.setting,
+      android_donot_update_push_flag: 1
+    }
+    settings1.androidSettings.invNo = this.tempInvNo
+    var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+    
+    cookie.setting.invNo = this.tempInvNo
+    console.log(cookie)
+    this.cookie.set('user', JSON.stringify(cookie), null, '/')
+    this.user = JSON.parse(this.cookie.get('user'))
+    this.settings = this.user.setting
+
+    this.settingService.add(settings1).subscribe((response: any) => {
+      if (response.status == 200) {
+        // console.log(response)
+        this.store.dispatch(new settingActions.add(response.settings))
+      }
+      // $('#updateButton').button('reset')
     })
-
-    if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
-    } else if (settings.dateDDMMYY === true) {
-      this.settings.date_format = 'dd-mm-yy'
-    } else {
-      this.settings.date_format = 'dd-mm-yy'
-    }
-
-    if (this.settings.date_format === 'dd-mm-yy') {
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    } else if (this.settings.date_format = 'mm-dd-yy') {
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    }
-    if (settings) {
-      if (settings.tax_on_item == 1) {
-        this.taxtext = "Tax (on Bill)"
-        this.activeInvoice.tax_on_item = 1
-      } else if (settings.tax_on_item == 0) {
-        this.taxtext = "Tax (on Item)"
-        this.activeInvoice.tax_on_item = 2
-      } else {
-        this.taxtext = "Tax (Disabled)"
-        this.activeInvoice.tax_on_item = 2
-        $('a.taxbtn').addClass('disabledBtn')
-      }
-      if (settings.discount_on_item == 0) {
-        this.activeInvoice.discount_on_item = 0
-      } else if (settings.discount_on_item == 1) {
-        this.activeInvoice.discount_on_item = 2
-      } else {
-        this.activeInvoice.discount_on_item = 2
-        $('a.discountbtn').addClass('disabledBtn')
-      }
-    } else {
-      this.taxtext = "Tax (Disabled)"
-      this.activeInvoice.tax_on_item = 2
-      $('a.taxbtn').addClass('disabledBtn')
-
-      this.activeInvoice.discount_on_item = 2
-      $('a.discountbtn').addClass('disabledBtn')
-    }
   }
 
   // Payment Functions
@@ -1110,7 +1019,6 @@ export class AddComponent implements OnInit {
   }
 
 
-
   // CURRENTLY USELESS FUNCTIONS
   multiTaxButton(taxname) {
     var status = true
@@ -1124,149 +1032,6 @@ export class AddComponent implements OnInit {
         }
       }
     return status
-  }
-
-  updateSettings() {
-    this.settingService.fetch().subscribe((response: any) => {
-      if (response.status == 200) {
-        var settings1 = response.settings.appSettings
-        settings1.androidSettings.quotNo = this.tempQuaNoOnAdd - 1
-        this.settingService.add(settings1).subscribe((response: response) => {
-
-          if (response.status == 200) {
-            var settings = settings1
-
-            /****** locale code will go here ******/
-            // if (settings != null) {
-            //   $rootScope.settings = this.settings1.androidSettings
-
-            //   if (settings.numberFormat === "###,###,###.00") {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = settings.decimalSeperator
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = settings.commaSeperator
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern1'
-
-            //   } else if (settings.numberFormat === "##,##,##,###.00") {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = settings.decimalSeperator
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = settings.commaSeperator
-            //     //$locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-            //     //$locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern2'
-
-            //   } else if (settings.numberFormat === "###.###.###,00") {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = settings.decimalSeperator
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = settings.commaSeperator
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern1'
-
-            //   } else if (settings.numberFormat === "##.##.##.###,00") {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = settings.decimalSeperator
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = settings.commaSeperator
-            //     //$locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-            //     //$locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern2'
-
-            //   } else if (settings.numberFormat === "### ### ###,00") {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = settings.decimalSeperator
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = settings.commaSeperator
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern1'
-
-            //   } else {
-            //     $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-            //     $locale.NUMBER_FORMATS.GROUP_SEP = ","
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-            //     $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-            //     $rootScope.settings.currency_pattern = 'pattern1'
-            //   }
-            //   if (settings.dateDDMMYY === false) {
-            //     $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
-            //     $rootScope.settings.date_format = 'mm-dd-yy'
-            //   } else if (settings.dateDDMMYY === true) {
-            //     $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-            //     $rootScope.settings.date_format = 'dd-mm-yy'
-            //   }
-
-            //   if (settings.currencyInText != "" && typeof settings.currencyInText !== 'undefined') {
-            //     $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(settings.currencyInText)
-            //     $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-            //   } else {
-            //     $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-            //     //$rootScope.authenticated.setting = {}
-            //     //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
-            //   }
-            // } else {
-            //   $rootScope.authenticated.setting = {}
-            //   if ($rootScope.authenticated)
-            //     $rootScope.authenticated.setting.date_format = true
-            //   $rootScope.settings.date_format = 'dd-mm-yy'
-            //   $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
-            //   $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM
-            //   $rootScope.settings.alstTaxName = []
-            // }
-          }
-          else {
-
-          }
-          // $('#updateButton').button('reset')
-        })
-      }
-    })
   }
 
   // showMeMultipleTax(index) {

@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms'
 import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
+import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router } from '@angular/router'
 import { CookieService } from 'ngx-cookie-service'
@@ -23,11 +24,11 @@ export class ViewComponent implements OnInit {
   private invoiceList: invoice[]
   private activeInv: invoice
   private activeInvId: string
-  private invListLoader: boolean = true
+  private invListLoader: boolean = false
   private invDispLimit: number = 20
 
   private invoiceQueryForm = {
-    client: new FormControl({name: 'All'}),
+    client: new FormControl(),
     dateRange: {
       start: new FormControl(),
       end: new FormControl(new Date())
@@ -45,8 +46,12 @@ export class ViewComponent implements OnInit {
     private store: Store<AppState>, private cookie: CookieService,
     private router: Router
   ) {
-    store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
     store.select('client').subscribe(clients => this.clientList = clients)
+    store.select('globals').subscribe(globals => {
+      if (Object.keys(globals.invoiceQueryForm).length > 0) {
+        this.invoiceQueryForm = globals.invoiceQueryForm
+      }
+    })
     this.setting = JSON.parse(cookie.get('user')).setting
   }
 
@@ -55,33 +60,14 @@ export class ViewComponent implements OnInit {
     if(this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
         this.store.dispatch(new clientActions.add(response.records))
-        this.setClientFilter()
-        this.fetchInvoices()
       })
-    } else {
-      this.setClientFilter()
-      this.fetchInvoices()
     }
-  }
 
-  setClientFilter() {
-    this.filteredClients = this.invoiceQueryForm.client.valueChanges.pipe(
-      startWith<string | client>(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filterCli(name) : this.clientList.slice())
-    )
-  }
-
-  private _filterCli(value: string): client[] {
-    const filterValue = value.toLowerCase()
-    return this.clientList.filter(cli => cli.name.toLowerCase().includes(filterValue))
-  }
-
-  displayWith(disp): string | undefined {
-    if (disp && disp.name) {
-      return disp.name
-    }
-    return undefined
+    // Set Active invoice whenever invoice list changes
+    this.store.select('invoice').subscribe(invoices => {
+      this.invoiceList = invoices
+      this.setActiveInv()
+    })
   }
 
   fetchInvoices(query = null) {
@@ -94,6 +80,7 @@ export class ViewComponent implements OnInit {
       }
     }
 
+    this.invListLoader = true
     this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
       if(response.status === 200) {
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
@@ -146,16 +133,17 @@ export class ViewComponent implements OnInit {
 
   // Search Invoice Functions
   SearchInvoice(){
-    // console.log(this.searchInvoiceModal)
     var query = {
       clientIdList: [],
       startTime: 0,
       endTime: 0
     }
-    if(this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.uniqueKeyClient) {
-      query.clientIdList.push(this.invoiceQueryForm.client.value.uniqueKeyClient)
+
+    if(this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
+      query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
     } else {
       query.clientIdList = null
+      this.invoiceQueryForm.client.reset([{name: 'All'}])
     }
     if(this.invoiceQueryForm.dateRange.start.value) {
       query.startTime = this.invoiceQueryForm.dateRange.start.value.getTime()
@@ -165,7 +153,12 @@ export class ViewComponent implements OnInit {
     } else {
       query.endTime = new Date().getTime()
     }
+    this.store.dispatch(new globalActions.add({ invoiceQueryForm: this.invoiceQueryForm }))
     this.fetchInvoices(query)
     this.changingQuery = false
+  }
+
+  getNames() {
+    return this.invoiceQueryForm.client.value.reduce((a, b) => a + b.name + ', ', '')
   }
 }
