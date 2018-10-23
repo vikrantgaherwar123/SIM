@@ -15,3 +15,8 @@
   border-radius: 4px;
   padding-top: 8px;
 }
+
+.client-select {
+  padding: 2px;
+  border: 1px solid #CFCFCF;
+}

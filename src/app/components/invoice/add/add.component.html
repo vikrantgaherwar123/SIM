@@ -36,7 +36,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1"
                           >
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
-                            (optionSelected)="selectedClientChange($event)"
+                            autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
                             <mat-option *ngFor="let client of filteredClients | async" [value]="client">
                               {{client.name}}

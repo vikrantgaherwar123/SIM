@@ -3,13 +3,13 @@
   <div class="col-12 query-container">
     <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
       <div class="row mar0">
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-4">
           <div class="form-group pad-left-0">
-            <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
+            <!-- <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
               matInput [formControl]="invoiceQueryForm.client" [matAutocomplete]="auto2"
             >
             <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayWith"
-              (optionSelected)="invoiceQueryForm.client.reset($event.option.value)"
+              autoActiveFirstOption (optionSelected)="invoiceQueryForm.client.reset($event.option.value)"
             >
               <mat-option [value]="{name: 'All'}">
                 All
@@ -17,11 +17,25 @@
               <mat-option *ngFor="let client of filteredClients | async" [value]="client">
                 {{client.name}}
               </mat-option>
-            </mat-autocomplete>
+            </mat-autocomplete> -->
+
+            <mat-select placeholder="Select client" class="client-select" multiple disableRipple
+              [formControl]="invoiceQueryForm.client"
+            >
+              <mat-select-trigger>
+                {{invoiceQueryForm.client.value?.length > 0 ? invoiceQueryForm.client.value[0].name : ''}}
+                <span *ngIf="invoiceQueryForm.client.value?.length > 1" class="example-additional-selection">
+                  (+{{invoiceQueryForm.client.value.length - 1}}
+                    {{invoiceQueryForm.client.value?.length === 2 ? 'other' : 'others'}}
+                  )
+                </span>
+              </mat-select-trigger>
+              <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
+            </mat-select>
           </div>
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-5">
           <div class="row">
             <div class="col-4">
               <input placeholder="Start" required readonly style="max-width: 100%"
@@ -40,7 +54,7 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-2">
           <button type="button" (click)="SearchInvoice()"
             class="btn btn-success btn-raised font-custom pull-right width20btn"
           >
@@ -53,7 +67,14 @@
     <div class="query-bar" *ngIf="!changingQuery">
       <div class="row">
         <div class="col-12 col-md-9">
-          Showing results for: Client: <span style="color: red">{{invoiceQueryForm.client.value.name ? invoiceQueryForm.client.value.name : 'All'}}</span>,
+          Showing results for: Client: <span style="color: red">
+            {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
+            <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+              [title]="getNames()"
+            >
+              (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+            </span>,
+          </span>
           Date Range: <span style="color: red">{{invoiceQueryForm.dateRange.start.value ? 
             invoiceQueryForm.dateRange.start.value.getDate() + '-' +
             (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
@@ -65,8 +86,8 @@
           }}</span>
         </div>
 
-        <div class="col-12 col-md-3">
-          <button type="button" (click)="changingQuery = true"
+        <div class="col-12 col-md-2">
+          <button type="button" (click)="changingQuery = true;"
             class="btn btn-success btn-raised font-custom pull-right width20btn"
           >
             Change

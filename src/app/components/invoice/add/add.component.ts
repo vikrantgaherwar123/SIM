@@ -146,7 +146,6 @@ export class AddComponent implements OnInit {
     private store: Store<AppState>
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
-    // console.log(this.user)
     store.select('client').subscribe(clients => this.clientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     // store.select('setting').subscribe(settings => this.settings = settings)
@@ -169,12 +168,6 @@ export class AddComponent implements OnInit {
 
   init() {
     this.initSettings()
-
-    this.activeInvoice.taxList = []
-    this.show_tax_input_list = []
-    this.tempflagTaxList = []
-    this.activeInvoice.gross_amount = 0.00
-    this.activeInvoice.balance = 0.00
 
     var settings = this.settings
 
@@ -918,8 +911,15 @@ export class AddComponent implements OnInit {
     this.addItem.reset('')
 
     this.activeInvoice = {...this.emptyInvoice}
+
     this.activeInvoice.listItems = []
+    this.activeInvoice.payments = []
     this.newItemCounter = 0
+    this.activeInvoice.taxList = []
+    this.show_tax_input_list = []
+    this.tempflagTaxList = []
+    this.activeInvoice.gross_amount = 0.00
+    this.activeInvoice.balance = 0.00
 
     this.activeClient = {}
     this.dueDate.reset()
@@ -936,68 +936,47 @@ export class AddComponent implements OnInit {
       }
     }
 
-    if (this.tempQuaNoOnAdd) {
-      if (typeof settings.quotFormat !== 'undefined')
-        this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
-      else
-        this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
-    } else {
-      if (!isNaN(settings.invNo)) {
-        this.tempInvNo = parseInt(settings.quotNo) + 1
-        this.tempQuaNoOnAdd = this.tempInvNo
-      } else {
-        this.tempInvNo = 1
-      }
-      if (settings.setInvoiceFormat) {
-        this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-      } else {
-        this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-      }
-    }
+    // if (this.tempQuaNoOnAdd) {
+    //   if (typeof settings.quotFormat !== 'undefined')
+    //     this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
+    //   else
+    //     this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
+    // } else {
+    //   if (!isNaN(settings.invNo)) {
+    //     this.tempInvNo = parseInt(settings.quotNo) + 1
+    //     this.tempQuaNoOnAdd = this.tempInvNo
+    //   } else {
+    //     this.tempInvNo = 1
+    //   }
+    //   if (settings.setInvoiceFormat) {
+    //     this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
+    //   } else {
+    //     this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+    //   }
+    // }
+  }
 
-    this.activeInvoice.termsAndConditions = this.termList
-
-    if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
-    } else if (settings.dateDDMMYY === true) {
-      this.settings.date_format = 'dd-mm-yy'
-    } else {
-      this.settings.date_format = 'dd-mm-yy'
+  updateSettings() {
+    var settings1 = {
+      androidSettings: this.user.setting,
+      android_donot_update_push_flag: 1
     }
+    settings1.androidSettings.invNo = this.tempInvNo
+    var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+    
+    cookie.setting.invNo = this.tempInvNo
+    console.log(cookie)
+    this.cookie.set('user', JSON.stringify(cookie), null, '/')
+    this.user = JSON.parse(this.cookie.get('user'))
+    this.settings = this.user.setting
 
-    if (this.settings.date_format === 'dd-mm-yy') {
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    } else if (this.settings.date_format = 'mm-dd-yy') {
-      this.activeInvoice.created_date = this.invoiceDate.value.getTime()
-    }
-    if (settings) {
-      if (settings.tax_on_item == 1) {
-        this.taxtext = "Tax (on Bill)"
-        this.activeInvoice.tax_on_item = 1
-      } else if (settings.tax_on_item == 0) {
-        this.taxtext = "Tax (on Item)"
-        this.activeInvoice.tax_on_item = 2
-      } else {
-        this.taxtext = "Tax (Disabled)"
-        this.activeInvoice.tax_on_item = 2
-        $('a.taxbtn').addClass('disabledBtn')
+    this.settingService.add(settings1).subscribe((response: any) => {
+      if (response.status == 200) {
+        // console.log(response)
+        this.store.dispatch(new settingActions.add(response.settings))
       }
-      if (settings.discount_on_item == 0) {
-        this.activeInvoice.discount_on_item = 0
-      } else if (settings.discount_on_item == 1) {
-        this.activeInvoice.discount_on_item = 2
-      } else {
-        this.activeInvoice.discount_on_item = 2
-        $('a.discountbtn').addClass('disabledBtn')
-      }
-    } else {
-      this.taxtext = "Tax (Disabled)"
-      this.activeInvoice.tax_on_item = 2
-      $('a.taxbtn').addClass('disabledBtn')
-
-      this.activeInvoice.discount_on_item = 2
-      $('a.discountbtn').addClass('disabledBtn')
-    }
+      // $('#updateButton').button('reset')
+    })
   }
 
   // Payment Functions
@@ -1039,25 +1018,6 @@ export class AddComponent implements OnInit {
     $('#addPaymentAddInvoice').modal('hide')
   }
 
-  updateSettings() {
-    var settings1 = {
-      androidSettings: this.user.setting,
-      android_donot_update_push_flag: 1
-    }
-    settings1.androidSettings.invNo = this.tempInvNo
-    var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
-    cookie.invNo = this.tempInvNo
-    this.cookie.set('user', JSON.stringify(cookie), null, '/')
-    this.user = JSON.parse(this.cookie.get('user'))
-
-    this.settingService.add(settings1).subscribe((response: any) => {
-      if (response.status == 200) {
-        console.log(response)
-        this.store.dispatch(new settingActions.add(response.settings))
-      }
-      // $('#updateButton').button('reset')
-    })
-  }
 
   // CURRENTLY USELESS FUNCTIONS
   multiTaxButton(taxname) {
