@@ -136,7 +136,7 @@
                         <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
                       </div>
                       <div class="col-6 selectDueDate">
-                        <select name="selectDueDate" id="selectDueDate"
+                        <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag"
                           class="form-control padr0 selectDueDate" (change)="changeDueDate($event.target.value)"
                         >
                           <option value="0">No Due Date</option>
@@ -336,7 +336,7 @@
 
                   <div class="row mar0">
                     <!--Term and Condition -->
-                    <div class="col-6 pad-left-0">
+                    <div class="col-12 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{tempTermLabel}}</span>
                         <a (click)="openAddTermModal()" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
@@ -362,7 +362,7 @@
                         </div>
                       </div>
                     </div>
-        
+
                     <div class="col-12 col-md-6 pad-right-0">
                       <!-- Total -->
                       <div class="col-12 term-cond-label" style="margin-bottom: 5px;">

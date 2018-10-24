@@ -93,8 +93,10 @@ export class ViewComponent implements OnInit {
     this.activeInvId = invId
     if(!this.activeInvId) {
       this.activeInv = this.invoiceList[0]
+      if(this.activeInv) {
+        this.activeInvId = this.activeInv.unique_identifier
+      }
     } else {
-      this.activeInvId = invId
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == this.activeInvId)[0]
     }
     this.setActiveClient()

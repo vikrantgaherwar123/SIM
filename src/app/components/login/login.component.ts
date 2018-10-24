@@ -164,7 +164,7 @@ export class LoginComponent implements OnInit {
     var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
 
     // Add settings in cookie
-    cookie.setting = settings.appSettings.androidSettings;
+    cookie.setting = settings.appSettings.androidSettings
     if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
       // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText);
     } else {
