@@ -1,7 +1,6 @@
 @import '../../../../assets/css/listForm.css';
 
 .inv-generator {
-  min-height: 1100px;
   max-height: none;
 }
 .create-invoice {

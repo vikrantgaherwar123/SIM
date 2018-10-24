@@ -297,7 +297,7 @@ export class AddEditComponent implements OnInit {
     this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : ''
     this.tempDisLabel = settings.discount ? settings.discount : ''
     this.tempSubToLabel = settings.subtotal ? settings.subtotal : ''
-    this.tempShippingLabel = settings.shipping ? settings.shipping : ''
+    this.tempShippingLabel = settings.shipping ? settings.shipping : 'Shipping'
     this.tempAdjLabel = settings.adjustment ? settings.adjustment : ''
     this.tempPaidLabel = settings.paid ? settings.paid : ''
     this.tempTotalLabel = settings.total ? settings.total : ''
