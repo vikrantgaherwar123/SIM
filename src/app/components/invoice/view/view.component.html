@@ -89,15 +89,15 @@
       <!-- Invoice List -->
       <div class="col-12 col-sm-3 item-list inv-list pad-right-0">
           <div [class]="{'list-shadow':invoiceList.length > invDispLimit ,'scroll-bar-shadow': true }">
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
-              <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+            <div class="col-12 pad0 filter-box">
+              <div class="col-12">
                 <div class="row mar0">
-                  <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 pad-left-0" style="padding-top: 15px;">
+                  <div class="col-6 pad-left-0" style="padding-top: 15px;">
                     <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
                       <img src="/assets/images/list-icon/add-plus-button24.png">
                     </a>
                   </div>
-                  <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 pad0" ng-init="setSortInvoice('created_date');" style="padding-top: 15px;">
+                  <div class="col-6 pad0" style="padding-top: 15px;">
                     <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"><img
                         alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
@@ -130,7 +130,7 @@
               <img src="/assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
             </div>
       
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 mCustomScrollbar">
+            <div class="col-12 pad0 mCustomScrollbar">
               <div style="background-color: #fff;" *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div>
@@ -139,19 +139,19 @@
                 *ngFor="let invoice of (invoiceList | orderBy: sortInvoices | filterBy:invoiceFilterTerm | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
-                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2 list-date font-custom-bold fontsize13">
+                <div class="col-2 list-date font-custom-bold fontsize13">
                   {{ invoice.created_date | date: 'dd MMM' }}
                 </div>
       
-                <div class="col-md-10 col-sm-10 col-xs-10 col-lg-10">
+                <div class="col-10">
                   <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                    <div class="col-12">
                       <h5 class="font-custom-bold fontsize13">{{ invoice.orgName }}</h5>
                     </div>
-                    <div class="col-lg-5 col-md-5 col-xs-5 col-sm-5 font-custom-book fontsize13">
+                    <div class="col-5 font-custom-book fontsize13">
                       {{ invoice.invoice_number }}
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 text-right font-custom-bold fontsize12">
+                    <div class="col-6 text-right font-custom-bold fontsize12">
                       {{ invoice.amount | currency }}
                     </div>
                   </div>
@@ -161,7 +161,7 @@
               <div class="no-data-messsage" *ngIf="invoiceList.length < 1 && !invListLoader">
                 <h4>No Invoice to display</h4>
               </div>
-              <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0" [class.list-shadow]="invoiceList.length > invDispLimit">
+              <div class="col-12 pad0" [class.list-shadow]="invoiceList.length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit || filterClient">
                   Click to view more >>
                 </a>
@@ -200,7 +200,7 @@
               </button>
             </div>
       
-            <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <div class="col-12">
               <div class="vtop text-right margin-top-8">
                 <span class="c-name" type="text" id="title" name="title" *ngIf="setting.mTvInvoice">
                   {{setting.mTvInvoice}}
@@ -211,9 +211,9 @@
               </div>
       
               <div class="row" style="margin-bottom: 25px">
-                <div class="col-md-7 col-sm-7 col-xs-12" id="clientData" name="clientData">
+                <div class="col-12 col-sm-7" id="clientData" name="clientData">
                   <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12" style="width: 88%;">
+                    <div class="col-12" style="width: 88%;">
                       <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                         {{setting.mTvBillTo}}
                       </span>
@@ -246,7 +246,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-5 col-sm-5 col-xs-12" id="invData" name="invData">
+                <div class="col-12 col-sm-5" id="invData" name="invData">
                   <div class="row">
                     <div class="offset-md-2 col-md-4 col-sm-6 ">
                       <span class="font-custom-bold text-left w100">Invoice#</span>
@@ -266,7 +266,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="offset-md-2 col-md-4 col-sm-6">
+                    <div class="offset-md-2 col-sm-6 col-md-4">
                       <span class="font-custom-bold text-left w100">Reference</span>
                     </div>
                     <div class="col-sm-6">
@@ -275,7 +275,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="offset-md-2 col-md-4 col-xs-6">
+                    <div class="offset-md-2 col-xs-6 col-md-4">
                       <span class="font-custom-bold text-left w100">{{setting.mTvDueDate}}</span>
                     </div>
                     <div class="col-sm-6">
@@ -367,7 +367,7 @@
 
                   <div class="row">
                     <div class="col-6 term-row">
-                      <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                      <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{setting.mTvTermsAndConditions}}</span>
                       </div>
                       <div class="col-md-12 pad0 margin-top-8">
@@ -382,61 +382,58 @@
                       </div>
                     </div>
         
-                    <div class="col-md-6 col-xs-6 col-md-6">
+                    <div class="col-6">
                       <div class="row mar0 term-cond-label">
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                        <div class="col-6 text-left">
                           <span class="font-custom-bold" value="">{{setting.subtotal}}</span>
                         </div>
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right ">
+                        <div class="col-6 text-right ">
                           <span class="font-custom-bold">{{activeInv.gross_amount | currency}}</span>
                         </div>
                       </div>
         
-                      <div *ngIf="show_discount && (activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mar0">
-                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
-                          <div class="row">
-                            <span style="text-align: left;vertical-align: bottom;" class="inline">{{setting.discount}}</span>
-                            <div *ngIf="!isRate" class="inline font-custom">
-                              ({{currencySymbolTemp }})
-                            </div>
-                            <div *ngIf="isRate" class="inline font-custom">(%)</div>
+                      <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mar0">
+                        <div class="col-5 discount-tax-label">
+                          <span style="text-align: left;vertical-align: bottom;" class="inline">{{setting.discount}}</span>
+                          <div *ngIf="!isRate" class="inline font-custom">
+                            ({{currencySymbolTemp }})
                           </div>
+                          <div *ngIf="isRate" class="inline font-custom">(%)</div>
                         </div>
-
-                        <div class="col-md-8 col-sm-8 col-xs-8">
-                          <div class="text-right" ng-init="activeInv.assignDiscountFlag = 1">
+                        <div class="col-7">
+                          <div class="text-right">
                             <div *ngIf="!activeInv.discountFlag == 0">
-                              {{activeInv.percentageValue |  number:'2.'}}
+                              {{activeInv.percentageValue | number:'2.'}}
                             </div>
                             <div *ngIf="!activeInv.discountFlag == 1">
-                              {{activeInv.discount |  number:'2.'}}
+                              {{activeInv.discount | currency}}
                             </div>
                           </div>
                         </div>
                       </div>
         
                       <div *ngIf="show_tax_input" class="row mar0">
-                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                        <div class="col-4 discount-tax-label">
                           <div class="row">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                             <div class="inline font-custom">(%)</div>
                           </div>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8 ">
+                        <div class="col-8 ">
                           <div class="text-right">
-                            {{activeInv.taxrate |  number:'2.' }}
+                            {{activeInv.taxrate | number:'2.' }}
                           </div>
                         </div>
                       </div>
         
                       <div *ngFor="let tax of activeInv.taxList; index as index" class="row mar0">
-                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                        <div class="col-4 discount-tax-label">
                           <div class="row">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                             <div class="inline font-custom">(%)</div>
                           </div>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8 ">
+                        <div class="col-8 ">
                           <div class="text-right">
                             {{activeInv.taxList[index].percentage | number:'2.'}}
                           </div>
@@ -444,12 +441,12 @@
                       </div>
         
                       <div *ngIf="show_shipping_charge" class="row mar0">
-                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                        <div class="col-4 discount-tax-label">
                           <div class="row">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">{{setting.shipping}}</div>
                           </div>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8 ">
+                        <div class="col-8 ">
                           <div class="text-right">
                             {{activeInv.shippingCharges | number:'2.'}}
                           </div>
@@ -457,54 +454,54 @@
                       </div>
         
                       <div *ngIf="activeInv.adjustment != 0" class="row mar0">
-                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                        <div class="col-4 discount-tax-label">
                           <div class="inline" style="text-align: left; vertical-align: bottom;">
                             {{setting.adjustment}}
                           </div>
                         </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8">
+                        <div class="col-8">
                           <div class="text-right">
                             {{activeInv.adjustment | number:'2.'}}
                           </div>
                         </div>
                       </div>
-        
+
                       <div class="row mar0 term-cond-label">
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                        <div class="col-6 text-left">
                           <span class="font-custom-bold" value="">{{setting.total}}</span>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 text-right">
+                        <div class="col-6 text-right">
                           <span class="font-custom-bold">{{activeInv.amount | currency}}</span>
                         </div>
                       </div>
 
                       <div class="row mar0">
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                        <div class="col-6 text-left">
                           <span class="font-custom" value="">{{setting.paid}}</span>
                         </div>
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                        <div class="col-6 text-right">
                           <span class="font-custom">{{paidAmount()|currency}}</span>
                         </div>
                       </div>
 
                       <div class="row mar0 balance-row">
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                        <div class="col-6 text-left">
                           <span class="bld" value="">{{setting.balance}}</span>
                         </div>
-                        <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                        <div class="col-6 text-right">
                           <span class="bld">{{activeInv.balance|currency}}</span>
                         </div>
                       </div>
 
-                      <div class="row mar0">
-                        <button type="button" title="Add Payment" data-toggle="modal"ng-click="initializeMaxBalance();"
+                      <!-- <div class="row mar0">
+                        <button type="button" title="Add Payment" data-toggle="modal"
                           data-target="#addPayment"
                           class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold"
                           style="width: 134px;"
                         >
                           ADD PAYMENT
                         </button>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
