@@ -72,7 +72,6 @@ export class AddEditComponent implements OnInit {
 
   // private invoiceList: Observable<invoice[]>
   private activeInvoice: invoice = {...this.emptyInvoice}
-  private tempQuaNoOnAdd: number
   private invoiceDate = new FormControl()
   private dueDate = new FormControl()
   private tempInvNo: number
@@ -83,6 +82,7 @@ export class AddEditComponent implements OnInit {
   private edit: boolean = false
 
   private clientList: client[]
+  private allClientList: client[]
   private activeClient: any = {}
   private clientListLoading: boolean
   billingTo = new FormControl()
@@ -148,10 +148,10 @@ export class AddEditComponent implements OnInit {
     private store: Store<AppState>
   ) {
     this.user = JSON.parse(this.cookie.get('user'))
-    store.select('client').subscribe(clients => this.clientList = clients)
-    store.select('product').subscribe(products => this.productList = products)
-    // store.select('setting').subscribe(settings => this.settings = settings)
     this.settings = this.user.setting
+
+    store.select('client').subscribe(clients => this.allClientList = clients)
+    store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
   }
 
@@ -238,17 +238,28 @@ export class AddEditComponent implements OnInit {
           }
           this.activeInvoice.payments = temp1
         }
-        
+
         // Set Dates
         var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
         this.invoiceDate.reset(new Date(y, (m - 1), d))
 
-        this.changeDueDate(this.activeInvoice.due_date_flag)
+        // Tax and discounts show or hide
+        if(this.activeInvoice.discount == 0) {
+          this.activeInvoice.discount = null
+        }
+        if(this.activeInvoice.shipping_charges == 0) {
+          this.activeInvoice.shipping_charges = null
+        }
+        if(this.activeInvoice.adjustment == 0) {
+          this.activeInvoice.adjustment = null
+        }
 
+        this.changeDueDate(this.activeInvoice.due_date_flag.toString())
         // Wait for clients to be loaded before setting active client
         var ref = setInterval(() => {
-          if (this.clientList.length > 0) {
-            this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == this.activeInvoice.unique_key_fk_client)[0]
+          if (this.allClientList.length > 0) {
+            let uid = this.activeInvoice.unique_key_fk_client
+            this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
             this.billingTo.reset(this.activeClient)
             clearInterval(ref)
           }
@@ -374,18 +385,18 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Clients if not in store
-    if(this.clientList.length < 1) {
+    if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         if (response.records !== null) {
           this.store.dispatch(new clientActions.add(response.records))
-          this.setClientFilter()
-        } else {
-          this.setClientFilter()
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
+        this.setClientFilter()
         this.clientListLoading = false
       })
     } else {
+      this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
       this.setClientFilter()
     }
 
@@ -414,7 +425,7 @@ export class AddEditComponent implements OnInit {
   }
 
   private _filterCli(value: string): client[] {
-    return this.clientList.filter(recs => recs.enabled == 0).filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   selectedClientChange(client) {
@@ -657,8 +668,8 @@ export class AddEditComponent implements OnInit {
       break
 
       case '5':
-      this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 15))
-      this.activeInvoice.due_date_flag = 5
+        this.dueDate.reset(this.addDays(this.activeInvoice.created_date, 15))
+        this.activeInvoice.due_date_flag = 5
       break
 
       case '6':
@@ -863,25 +874,30 @@ export class AddEditComponent implements OnInit {
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         alert('Couldnt save invoice')
-        console.log(result)
       } else if (result.status === 200) {
         // Add Invoice to store
         if(this.edit) {
           this.store.select('invoice').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
-            self.store.dispatch(new invoiceActions.edit({index, value: result.invoiceList[0]}))
+            self.store.dispatch(new invoiceActions.edit({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
           })
         } else {
-          self.store.dispatch(new invoiceActions.add(result.invoiceList))
+          self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
 
         // Update settings
-        this.updateSettings()
+        if(!this.edit) {
+          this.updateSettings()
+        }
 
-        // Reset Create Invoice page for new invoice creation
-        self.resetCreateInvoice()
-        self.addInit()
         alert('Invoice saved successfully')
+        // Reset Create Invoice page for new invoice creation or redirect to view page if edited
+        if(this.edit) {
+          this.router.navigate(['/invoice/view'])
+        } else {
+          self.resetCreateInvoice()
+          self.addInit()
+        }
       }
       $('#invSubmitBtn').removeAttr('disabled')
     })
@@ -916,44 +932,24 @@ export class AddEditComponent implements OnInit {
         this.showMultipleTax = false
       }
     }
-
-    // if (this.tempQuaNoOnAdd) {
-    //   if (typeof settings.quotFormat !== 'undefined')
-    //     this.activeInvoice.invoice_number = settings.quotFormat + this.tempQuaNoOnAdd
-    //   else
-    //     this.activeInvoice.invoice_number = this.tempQuaNoOnAdd.toString()
-    // } else {
-    //   if (!isNaN(settings.invNo)) {
-    //     this.tempInvNo = parseInt(settings.quotNo) + 1
-    //     this.tempQuaNoOnAdd = this.tempInvNo
-    //   } else {
-    //     this.tempInvNo = 1
-    //   }
-    //   if (settings.setInvoiceFormat) {
-    //     this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-    //   } else {
-    //     this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-    //   }
-    // }
   }
 
   updateSettings() {
-    var settings1 = {
-      androidSettings: this.user.setting,
-      android_donot_update_push_flag: 1
-    }
-    settings1.androidSettings.invNo = this.tempInvNo
     var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
-    
+
     cookie.setting.invNo = this.tempInvNo
-    console.log(cookie)
     this.cookie.set('user', JSON.stringify(cookie), null, '/')
     this.user = JSON.parse(this.cookie.get('user'))
     this.settings = this.user.setting
 
+    var settings1 = {
+      androidSettings: cookie.setting,
+      android_donot_update_push_flag: 1
+    }
+    settings1.androidSettings.invNo = this.tempInvNo
+
     this.settingService.add(settings1).subscribe((response: any) => {
       if (response.status == 200) {
-        // console.log(response)
         this.store.dispatch(new settingActions.add(response.settings))
       }
       // $('#updateButton').button('reset')
@@ -1014,285 +1010,4 @@ export class AddEditComponent implements OnInit {
       }
     return status
   }
-
-  // showMeMultipleTax(index) {
-  //   //console.log("showmultiple",this.data.invoice.taxList[index],$rootScope.authenticated.setting.alstTaxName[index])
-  //   var tempIndex = this.activeInvoice.taxList.length
-  //   this.activeInvoice.taxList[tempIndex] = {}
-  //   this.activeInvoice.taxList[tempIndex].taxName = $rootScope.authenticated.setting.alstTaxName[index].taxName
-  //   this.activeInvoice.taxList[tempIndex].selected = true
-  //   this.multi_tax_index.push(index)
-  //   this.show_tax_input_list[index] = true
-  //   this.tempflagTaxList[index] = true
-  // }
-
-  // hideMeTaxMultiple(index) {
-  //   this.activeInvoice.tax_rate = 0
-  //   this.multi_tax_index.splice(index, 1)
-  //   this.activeInvoice.taxList.splice(index, 1)
-  //   this.calculateInvoice(index)
-  //   //this.show_tax_input_list[index] = false
-  //   this.tempflagTaxList[index] = false
-  // }
-
-  // multiTaxButtonForAddInvoice(taxname, index) {
-  //   var status = true
-  //   for (var k = 0; k < this.multi_tax_index.length; k++) {
-  //     //console.log("in button",index,k,"..")
-  //     if (this.multi_tax_index[k] !== index) {
-  //       status = true
-  //     } else {
-  //       status = false
-  //       break
-  //     }
-  //   }
-  //   return status
-  // }
-
-  // printODownloadInvoice(invoiceId, type) {
-  //   Data.get('invoice/get-pdf?invoiceId=' + invoiceId + '&type=' + type + '&timeZone=' + $rootScope.timeZone + '&accessToken=' + $rootScope.settings.dropbox_token, { responseType: 'arraybuffer' }).then(function (result) {
-  //     //console.log(result)
-  //     var a = window.document.createElement('a')
-  //     a.href = window.URL.createObjectURL(new Blob([result], {
-  //       type: 'application/pdf'
-  //     }))
-  //     // Append anchor to body.
-  //     document.body.appendChild(a)
-  //     a.download = this.getFileName(invoiceId)
-  //     a.click()
-  //   })
-  // }
-
-  // downloadInvoice(invoiceId, type, mode) {
-  //   if (mode == "download") {
-  //     $('#downloadBtn').button('loading')
-  //   }
-  //   else if (mode == "preview") {
-  //     $('#previewBtn').button('loading')
-  //   }
-  //   var id = this.data.invoice.unique_identifier
-  //   this.invoiceService.fetchPdf(id).subscribe((result: response) => {
-  //     var file = new Blob([result], { type: 'application/pdf' })
-  //     var fileURL = URL.createObjectURL(file)
-  //     this.content = fileURL
-  //     //console.log(this.content)
-  //     var a = window.document.createElement('a')
-  //     a.href = window.URL.createObjectURL(new Blob([result.data], {
-  //       type: 'application/pdf'
-  //     }))
-  //     // Append anchor to body.
-  //     document.body.appendChild(a)
-  //     if (mode == "download") {
-  //       a.download = this.getFileName(invoiceId)
-  //       a.click()
-  //       // $('#downloadBtn').button('reset')
-  //     }
-  //     else if (mode == "preview") {
-  //       window.open(a)
-  //       // $('#previewBtn').button('reset')
-  //     }
-  //   })
-  // }
-
-  // getFileName(invoiceId) {
-  //   var day = (new Date()).getDate() <= 9 ? '0' + (new Date()).getDate() : (new Date()).getDate()
-  //   var month = this.findMonth((new Date()).getMonth())
-  //   var year = (new Date()).getFullYear()
-  //   var time = getTime()
-
-  //   function getTime() {
-  //     var hour = (new Date()).getHours() < 13 ? (new Date()).getHours().toString() : ((new Date()).getHours() - 12).toString()
-  //     hour = parseInt(hour) < 10 ? '0' + hour.toString() : hour.toString()
-  //     var min = (new Date()).getMinutes() < 10 ? '0' + (new Date()).getMinutes() : (new Date()).getMinutes()
-  //     return hour + min
-  //   }
-  //   //console.log(time)
-  //   var ampm = (new Date()).getHours() < 12 ? 'AM' : 'PM'
-  //   // eg: INVPDF_INV_21_02Dec2015_1151AM
-  //   return 'ESTPDF_EST_' + this.data.invoice.invoice_number + '_' + day + month + year + '_' + time + ampm + '.pdf'
-  // }
-
-  // getInvoice(id, index) {
-  //   if (id) {
-  //     $('#msgInv').removeClass("show")
-  //     $('#msgInv').addClass("hide")
-  //     $('#invMain').removeClass("hide")
-  //     $('#invMain').addClass("show")
-  //     $('#editInv').removeClass("show")
-  //     $('#editInv').addClass('hide')
-  //     // this.data.invoice = {}
-  //     // this.invoice = {}
-  //     this.data.invoice.payments = []
-  //     this.tempPaymentList = []
-  //     this.tempItemList = []
-  //     this.tempTermList = []
-  //     // this.clientList = DataStore.unSortedClient
-  //     // this.invoices = DataStore.invoicesList;
-  //     if (this.invoices) {
-  //       var inv_index = this.invoices.findIndex(inv => inv.unique_identifier == id)
-  //       this.invoice = this.invoices[inv_index]
-  //       this.data.invoice = Object.assign({}, this.invoice)
-  //       delete this.data.invoice.orgName
-  //       delete this.data.invoice.tempInvNo
-  //       delete this.data.invoice.disp
-  //       this.invoice.termsAndConditions = this.invoice.termsAndConditions
-  //       this.invoice.payments = this.invoice.payments
-  //       if (this.invoice.taxList) {
-  //         if (this.invoice.taxList.length > 0) {
-  //           this.showMultipleTax = true
-  //         } else {
-  //           this.showMultipleTax = false
-  //         }
-  //       } else {
-  //         this.showMultipleTax = false
-  //       }
-  //       for (var j = 0; j < this.data.invoice.listItems.length; j++) {
-  //         var temp = {
-  //           'unique_identifier': this.data.invoice.listItems[j].uniqueKeyListItem,
-  //           'product_name': this.data.invoice.listItems[j].productName,
-  //           'description': this.data.invoice.listItems[j].description == null ? '' : this.data.invoice.listItems[j].description,
-  //           'quantity': this.data.invoice.listItems[j].qty,
-  //           /*'inventory_enabled':this.productList[index].inventoryEnabled,*/
-  //           'unit': this.data.invoice.listItems[j].unit,
-  //           'rate': this.data.invoice.listItems[j].rate,
-  //           'discount': this.data.invoice.listItems[j].discountRate,
-  //           'tax_rate': this.data.invoice.listItems[j].tax_rate,
-  //           'total': this.data.invoice.listItems[j].price,
-  //           'tax_amount': this.data.invoice.listItems[j].taxAmount,
-  //           'discount_amount': this.data.invoice.listItems[j].discountAmount,
-  //           'unique_key_fk_product': this.data.invoice.listItems[j].uniqueKeyFKProduct,
-  //           '_id': this.data.invoice.listItems[j].listItemId,
-  //           'local_prod_id': this.data.invoice.listItems[j].prodId,
-  //           'organization_id': this.data.invoice.listItems[j].org_id,
-  //           'invoiceProductCode': this.data.invoice.listItems[j].invoiceProductCode,
-  //           'unique_key_fk_invoice': this.data.invoice.listItems[j].uniqueKeyFKInvoice
-  //         }
-  //         this.tempItemList.push(temp);
-  //       }
-  //       if (!isNaN(this.data.invoice.termsAndConditions && !this.data.invoice.termsAndConditions == null
-  //         && this.data.invoice.termsAndConditions.isEmpty())
-  //       ) {
-  //         for (var i = 0; i < this.data.invoice.termsAndConditions.length; i++) {
-  //           var temp1 = {
-  //             "terms_condition": this.data.invoice.termsAndConditions[i].terms,
-  //             "_id": this.data.invoice.termsAndConditions[i].localId,
-  //             "local_invoiceId": this.data.invoice.termsAndConditions[i].invoiceId,
-  //             "invoice_id": this.data.invoice.termsAndConditions[i].serverInvoiceId,
-  //             "organization_id": this.data.invoice.termsAndConditions[i].serverOrgId,
-  //             "unique_identifier": this.data.invoice.termsAndConditions[i].uniqueInvoiceTerms,
-  //             "unique_key_fk_invoice": this.data.invoice.termsAndConditions[i].uniqueKeyFKInvoice
-  //           }
-  //           this.tempTermList.push(temp1);
-  //         }
-  //       }
-  //       this.data.invoice.listItems = this.tempItemList;
-  //       this.data.invoice.termsAndConditions = this.tempTermList
-  //       if (typeof this.data.invoice.payments !== 'undefined') {
-  //         var paidAmountTemp = 0;
-  //         for (var i = 0; i < this.data.invoice.payments.length; i++) {
-  //           var temp = {
-  //             "date_of_payment": this.data.invoice.payments[i].dateOfPayment,
-  //             "paid_amount": this.data.invoice.payments[i].paidAmount,
-  //             "organization_id": this.data.invoice.payments[i].orgId,
-  //             "unique_identifier": this.data.invoice.payments[i].uniqueKeyInvoicePayment,
-  //             "unique_key_fk_client": this.data.invoice.payments[i].uniqueKeyFKClient,
-  //             "unique_key_fk_invoice": this.data.invoice.payments[i].uniqueKeyFKInvoice,
-  //             "deleted_flag": this.data.invoice.payments[i].enabled,
-  //             "unique_key_voucher_no": this.data.invoice.payments[i].uniqueKeyVoucherNo,
-  //             "voucher_no": this.data.invoice.payments[i].voucherNo,
-  //             "_id": this.data.invoice.payments[i].invPayId,
-  //             "local_invoice_id": this.data.invoice.payments[i].invoiceId,
-  //             "local_client_id": this.data.invoice.payments[i].clientId,
-  //             "paymentNote": this.data.invoice.payments[i].paymentNote
-  //           }
-  //           this.tempPaymentList.push(temp)
-  //           paidAmountTemp = paidAmountTemp + this.data.invoice.payments[i].paidAmount
-  //         }
-  //         if (paidAmountTemp > 0) {
-  //           this.itemDisabled = true
-  //         }
-  //       }
-  //       this.data.invoice.payments = this.tempPaymentList
-  //       this.setPaidAmountTotalView()
-  //       this.initialPayment = { ...this.tempPaymentList }
-  //       if (this.clientList) {
-  //         var inv_index_client = this.clientList.findIndex(client => client.uniqueKeyClient == this.invoice.unique_key_fk_client)
-  //         this.clientsLocal[0] = this.clientList[inv_index_client];
-  //       }
-  //       if (this.invoice.discount_on_item == 1) {
-  //         this.discountLabel = true;
-  //         this.show_discount = false;
-  //       } else if (this.invoice.discount_on_item == 0) {
-  //         this.show_discount = true;
-  //       } else {
-  //         this.show_discount = false;
-  //       }
-  //       if (this.invoice.tax_on_item == 0) {
-  //         this.taxtext = "Tax (On Item)"
-  //         this.taxLabel = true;
-  //         this.show_tax_input = false;
-  //       } else if (this.invoice.tax_on_item == 1 && this.invoice.tax_rate > 0) {
-  //         this.taxtext = "Tax (On Bill)"
-  //         this.show_tax_input = true;
-  //       } else {
-  //         this.show_tax_input = false;
-  //         this.taxtext = "Tax (Disabled)"
-  //       }
-  //       if (this.invoice.shipping_charges && this.invoice.shipping_charges >= 0)
-  //         this.show_shipping_charge = true
-  //       else
-  //         this.show_shipping_charge = false
-  //       if (this.invoice.percentage_flag && this.invoice.percentage_flag == 1)
-  //       else
-  //       if (this.invoice.due_date == null || this.invoice.due_date === '') {
-  //         this.selectDueDate = "no_due_date";
-  //       } else if (this.invoice.due_date == this.invoice.created_date) {
-  //         this.selectDueDate = "immediate";
-  //       } else if (this.invoice.due_date != this.invoice.created_date) {
-  //         var difference = dateDifference(this.invoice.created_date, this.invoice.due_date);
-  //         if (this.dueDateDays.indexOf(difference) > -1) {
-  //           var index = this.dueDateDays.indexOf(difference);
-  //           this.selectDueDate = ''
-  //         } else {
-  //           this.selectDueDate = "custom_date";
-  //         }
-  //       }
-  //     }
-  //     this.routeParams.invId = this.invoice.unique_identifier;
-  //   }
-  // }
-
-  // setPaidAmountTotalView() {
-  //   var temp = 0
-  //   if (typeof this.invoice.payments !== 'undefined') {
-  //     for (var i = 0; i < this.invoice.payments.length; i++) {
-  //       temp = temp + parseFloat(this.invoice.payments[i].paidAmount)
-  //     }
-  //   }
-  //   this.paid_amount = temp
-  // }
-
-  // dynamicOrder(invoice) {
-  //   var order = 0
-  //   switch (this.balance) {
-  //     case 'name':
-  //       order = invoice.orgName
-  //       break
-  //     case 'created_date':
-  //       {
-  //         var date = new Date(invoice.createDate)
-  //         order = date.getTime()
-  //         break
-  //       }
-  //     case 'invoice_number':
-  //       order = invoice.tempInvNo
-  //       break
-  //     case 'amount':
-  //       order = parseFloat(invoice.amount)
-  //       break
-  //     default:
-  //       order = invoice.deviceCreatedDate
-  //   }
-  //   return order
-  // }
 }
