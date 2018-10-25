@@ -57,22 +57,6 @@ export class ClientComponent implements OnInit {
   private tempClient = null
   private tempIndex = null
 
-  private classes = [
-    "red",
-    "blue",
-    "yellow",
-    "green",
-    "orange",
-    "fineblue",
-    "purple"
-  ];
-  private filterClient: {name: string} = {name: ''}
-  private isNone: boolean
-  private isByClient: boolean
-  private isByDate: boolean
-  private order: {
-    sortClient: string
-  } = {sortClient: 'name'}
   private clientListLoader: boolean
 
   constructor(public clientService: ClientService, private cookie: CookieService,
@@ -105,43 +89,6 @@ export class ClientComponent implements OnInit {
 
   isStatus(client) {
     return (client.enabled == 0);
-  }
-
-  setSortClients(searchfield) {
-    this.filterClient = {name: ''}
-    if (searchfield == 'id') {
-      this.isNone = true;
-      this.isByClient = false;
-      this.isByDate = false;
-    } else if (searchfield == 'name') {
-      this.isNone = false;
-      this.isByClient = true;
-      this.isByDate = false;
-    } else if (searchfield == 'contactPersonName') {
-      this.isNone = false;
-      this.isByClient = false;
-      this.isByDate = true;
-    }
-    this.order.sortClient = searchfield;
-    this.selectedClient = null
-  }
-
-  dynamicOrder(client) {
-    var order = 0;
-    switch (this.order.sortClient) {
-      case 'name':
-        order = client.name
-      break
-
-      case 'contactPersonName':
-        order = client.contactPersonName
-      break
-
-      default:
-        order = -(parseInt(client.deviceCreatedDate))
-    }
-
-    return order;
   }
 
   compare(a, b) {
@@ -277,8 +224,6 @@ export class ClientComponent implements OnInit {
   }
 
   addNew() {
-    this.filterClient = {name: ''}
-
     this.rightDivBtns = false
     this.activeClient.name = ""
     this.activeClient.contactPersonName = ""
@@ -312,14 +257,11 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
-    this.filterClient = {name: ''}
-
     this.activeClient.deleted_flag = 1
     this.save(true, null)
   }
 
   editThis() {
-    this.filterClient = {name: ''}
     this.inputReadonly = false;
     this.isEditBtn = true;
     this.rightDivBtns = false;
@@ -331,7 +273,6 @@ export class ClientComponent implements OnInit {
       index = clients.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
     })
     
-    this.filterClient = {name: ''}
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error');
     }

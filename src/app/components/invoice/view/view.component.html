@@ -103,17 +103,17 @@
                         alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
-                      <li [class.active]="isByDate">
-                        <a (click)="setSortInvoice('created_date')">By Date</a>
+                      <li [class.active]="invSortTerm=='created_date'">
+                        <a (click)="invSortTerm='created_date'">By Date</a>
                       </li>
-                      <li [class.active]="isInvNo">
-                        <a (click)="setSortInvoice('invoice_number')">By Inv No.</a>
+                      <li [class.active]="invSortTerm=='invoice_number'">
+                        <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
                       </li>
-                      <li [class.active]="isAmount">
-                        <a (click)="setSortInvoice('amount')">By Balance</a>
+                      <li [class.active]="invSortTerm=='balance'">
+                        <a (click)="invSortTerm='balance'">By Balance</a>
                       </li>
-                      <li [class.active]="isAmount">
-                        <a (click)="setSortInvoice('amount')">By Amount</a>
+                      <li [class.active]="invSortTerm=='amount'">
+                        <a (click)="invSortTerm='amount'">By Amount</a>
                       </li>
                     </ul>
                   </div>
@@ -121,7 +121,7 @@
               </div>
               <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
                 <div class="form-group label-floating">
-                  <input class="form-control" [(ngModel)]="invoiceFilterTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
+                  <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
                 </div>
               </div>
             </div>
@@ -129,14 +129,14 @@
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
               <img src="/assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
             </div>
-      
+
             <div class="col-12 pad0 mCustomScrollbar">
               <div style="background-color: #fff;" *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div>
               <!-- [class.selected]="invoice.unique_identifier == routeParams.invId" -->
               <div class="item all-item row cursor-pointer"
-                *ngFor="let invoice of (invoiceList | orderBy: sortInvoices | filterBy:invoiceFilterTerm | slice:0:invDispLimit); index as key"
+                *ngFor="let invoice of (invoiceList | orderBy: invSortTerm | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-2 list-date font-custom-bold fontsize13">

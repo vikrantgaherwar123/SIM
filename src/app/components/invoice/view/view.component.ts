@@ -69,50 +69,6 @@ export class ViewComponent implements OnInit {
     })
   }
 
-  fetchInvoices(query = null) {
-    // Fetch invoices with given query
-    if(query == null) {
-      query = {
-        clientIdList: null,
-        startTime: 0,
-        endTime: new Date().getTime()
-      }
-    }
-
-    this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
-      if(response.status === 200) {
-        this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
-        this.setActiveInv()
-      }
-      this.invListLoader = false
-    })
-  }
-
-  setActiveInv(invId: string = '') {
-    this.activeInvId = invId
-    if(!this.activeInvId) {
-      this.activeInv = this.invoiceList[0]
-      if(this.activeInv) {
-        this.activeInvId = this.activeInv.unique_identifier
-      }
-    } else {
-      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == this.activeInvId)[0]
-    }
-    this.setActiveClient()
-  }
-
-  setActiveClient() {
-    if(this.activeInv) {
-      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
-      if(client) {
-        this.activeClient = client
-      } else {
-        this.activeClient = null
-      }
-    }
-  }
-
   paidAmount() {
     var temp = 0
     if(this.activeInv.payments) {
@@ -165,5 +121,49 @@ export class ViewComponent implements OnInit {
 
   getNames() {
     return this.invoiceQueryForm.client.value.reduce((a, b) => a + b.name + ', ', '')
+  }
+
+  fetchInvoices(query = null) {
+    // Fetch invoices with given query
+    if(query == null) {
+      query = {
+        clientIdList: null,
+        startTime: 0,
+        endTime: new Date().getTime()
+      }
+    }
+
+    this.invListLoader = true
+    this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
+      if(response.status === 200) {
+        this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
+        // this.setActiveInv()
+      }
+      this.invListLoader = false
+    })
+  }
+
+  setActiveInv(invId: string = '') {
+    this.activeInvId = invId
+    if(!this.activeInvId) {
+      this.activeInv = this.invoiceList[0]
+      if(this.activeInv) {
+        this.activeInvId = this.activeInv.unique_identifier
+      }
+    } else {
+      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == this.activeInvId)[0]
+    }
+    this.setActiveClient()
+  }
+
+  setActiveClient() {
+    if(this.activeInv) {
+      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+      if(client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
+    }
   }
 }

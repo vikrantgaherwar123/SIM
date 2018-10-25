@@ -1,67 +1,67 @@
 <div class="row main-wrapper">
-  <div class="col-md-12 col-sm-12 col-xs-12" id="main">
+  <div class="col-12" id="main">
     <div class="row">
       <!-- Client List -->
-      <div class="col-md-3 col-sm-3 col-xs-12 item-list cli-list pad-right-0">
+      <div class="col-12 col-sm-3 item-list cli-list pad-right-0">
         <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
-          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
-            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+          <div class="col-12 pad0 filter-box">
+            <div class="col-12">
               <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="padding-top: 15px;">
+                <div class="col-6" style="padding-top: 15px;">
                   <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
                     <img src="assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
+                <div class="col-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="pull-right list-btn cus-img"
                   >
                     <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li [class.active]="isByClient">
-                      <a (click)="setSortClients('name')">By Org. Name</a>
+                    <li [class.active]="sortTerm=='name'">
+                      <a (click)="sortTerm='name'">By Org. Name</a>
                     </li>
-                    <li [class.active]="isByDate">
-                      <a (click)="setSortClients('contactPersonName')">By Client Name</a>
+                    <li [class.active]="sortTerm=='contactPersonName'">
+                      <a (click)="sortTerm='contactPersonName'">By Client Name</a>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+            <div class="col-12 search-box">
               <div class="form-group label-floating">
                 <!--<label class="control-label fontsize13">Search, Filter Clients</label>-->
-                <input class="form-control" [(ngModel)]="filterClient.name" ng-change="selectedClient = -1;" placeholder="Search Clients" />
+                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Clients" />
               </div>
             </div>
           </div>
 
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit</div>
-          <div class="col-md-12 col-sm-12 col-xs-12 pad0 mCustomScrollbar">
+          <div class="col-12 pad0 mCustomScrollbar">
             <!-- <div align="center" style="background-color: #fff;">
               <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
                 md-diameter="25px">
               </md-progress-circular>
             </div> -->
             <div class="clientname" 
-              *ngFor="let client of (clientList | async | orderBy: order.sortClient | filterBy: filterClient | slice:0:clientDisplayLimit); index as index "
+              *ngFor="let client of (clientList | async | orderBy: sortTerm | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index "
               id="prod{{index}}" [class.selected]="selectedClient == index"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
-                <div class="col-md-2 col-sm-2 col-xs-2">
+                <div class="col-2">
                   <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
                 </div>
-                <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(client)">
-                  <h5 class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-bold fontsize13">
+                <div class="col-8 pad0" (click)="viewThis(client)">
+                  <h5 class="col-10 pad-right-0 font-custom-bold fontsize13">
                     <div class="ellipsis">{{ client.name }}</div>
                   </h5>
-                  <span class="col-md-10 col-sm-10 col-xs-10  pad-right-0 font-custom-book fontsize12">
+                  <span class="col-10 pad-right-0 font-custom-book fontsize12">
                     <div class="ellipsis">{{client.contactPersonName}}</div>
                   </span>
                 </div>
-                <div class="col-md-1 col-sm-1 col-xs-1" [class.selected1]="selectedClient == $index">
+                <div class="col-1" [class.selected1]="selectedClient == $index">
                   <img src="/assets/images/next12.png">
                 </div>
               </div>
@@ -70,7 +70,7 @@
             <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListsLoader ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-md-12 col-sm-12 col-xs-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
+            <div class="col-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
               <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit || filterClient">
                 Click to view more >>
               </a>
@@ -80,19 +80,19 @@
       </div>
 
       <!-- Client Add, Edit and Delete Form -->
-      <div class="col-md-9 col-sm-9 col-xs-12 item-form ">
+      <div class="col-12 col-sm-9 item-form ">
         <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
               <div class="row mar0">
-                <div class="col-md-8 col-sm-7 col-xs-7 editBtnShow">
+                <div class="col-7 col-md-8 editBtnShow">
                   <h4 class="form-header text-right client-header" *ngIf="!isCreate" style="margin-left: 61%;">Create a new client </h4>
                   <!--style="display: flex;justify-content: flex-end;"-->
                   <!--<div class="form-header" style="width: 100%;word-break: break-all;" *ngIf="isEdit">Client : {{activeClient.name}}</div>-->
                   <h4 class="form-header text-right client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: calc(44px + 25vw);">Edit client </h4>
                   <h4 class="form-header text-center client-header" *ngIf="!isEditBtn"> View Client </h4>
                 </div>
-                <div class="col-md-4 col-sm-5 col-xs-5 pull-right pad0 font-custom-bold">
+                <div class="col-5 col-md-4 pull-right pad0 font-custom-bold">
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     (click)="editThis(client, $index)" *ngIf="!isEditBtn"
                   >
@@ -138,7 +138,7 @@
 
               <div class="client-form">
                 <div class="row">
-                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isEditBtn">
+                  <div class="col-12 margin-top-20" *ngIf="isEditBtn">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
@@ -234,97 +234,97 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="!isEditBtn">
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                  <div class="col-12 margin-top-20" *ngIf="!isEditBtn">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_org_name.png">
                           Organization name:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.name}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_contact_person.png">
                           Contact person:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.contactPersonName}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_email_id.png">
                           Email:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.email}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_contact_no.png">
                           Number:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.number}}
                         </div>
                       </div>  
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_address_line.png">
                           Address line:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.addressLine1}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_address_line.png">
                           Shipping address:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.shippingAddress}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_org_name.png">
                           Business Id:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.business_id}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/client-icon/ic_normal_business_detail.png">
                           Business detail:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.business_detail}}
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-12 col-sm-12 col-xs-12 align-self-end">
+                  <div class="col-12 align-self-end">
                     <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                       (click)="editThis(client, $index)" *ngIf="!isEditBtn"
                     >
