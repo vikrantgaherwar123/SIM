@@ -55,24 +55,6 @@ export class ProductComponent implements OnInit {
   private inputDisabled: boolean
   private inputReadonly: boolean
 
-  private isNone: boolean
-  private isByClient: boolean
-  private isByDate: boolean
-  private filterProduct: {prodName: string} = {prodName: ''}
-  private order: {
-    sortProduct: string
-  } = {sortProduct: 'prodName'}
-
-  private classes = [
-    "red",
-    "blue",
-    "yellow",
-    "green",
-    "orange",
-    "fineblue",
-    "purple"
-  ]
-
   constructor(private productService: ProductService, private cookie: CookieService,
     private router: Router, private store : Store<AppState>
   ) {
@@ -99,43 +81,6 @@ export class ProductComponent implements OnInit {
 
   toggle() {
     this.checked = !this.checked
-  }
-
-  setSortProducts(searchfield) {
-    this.filterProduct = {prodName: ''}
-    if (searchfield == 'id') {
-      this.isNone = true
-      this.isByClient = false
-      this.isByDate = false
-    } else if (searchfield == 'prodName') {
-      this.isNone = false
-      this.isByClient = true
-      this.isByDate = false
-    } else if (searchfield == 'rate') {
-      this.isNone = false
-      this.isByClient = false
-      this.isByDate = true
-    }
-    this.order.sortProduct = searchfield
-    this.selectedProduct = -1
-  }
-
-  dynamicOrder(product) {
-    var order = 0
-    switch (this.order.sortProduct) {
-      case 'prodName':
-        order = product.prodName.trim()
-        break
-
-      case 'rate':
-        order = -(parseFloat(product.rate))
-        break
-
-      default:
-        order = -(parseInt(product.deviceCreatedDate))
-    }
-
-    return order
   }
 
   // init() {
@@ -445,7 +390,6 @@ export class ProductComponent implements OnInit {
 
   addNew() {
     this.isBatchBtn = false
-    this.filterProduct = {prodName: ''}
     this.activeProduct.unique_identifier = "",
     this.activeProduct.rate = 0.01,
     this.activeProduct.tax_rate = 0
@@ -482,7 +426,6 @@ export class ProductComponent implements OnInit {
   // }
 
   editThis(product) {
-    this.filterProduct = {prodName: ''}
     this.isBatchBtn = false
     this.inputReadonly = false
     this.isEditBtn = true

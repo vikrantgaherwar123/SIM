@@ -1,79 +1,76 @@
 <div class="row main-wrapper">
-  <div class="col-md-12 col-sm-12 col-xs-12" id="main">
+  <div class="col-12" id="main">
     <div class="row">
       <!-- Product List -->
-      <div class="col-md-3 col-sm-3 col-xs-12 item-list prod-list pad-right-0">
-        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0 filter-box">
-          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+      <div class="col-12 col-sm-3 item-list prod-list pad-right-0">
+        <div class="col-12 pad0 filter-box">
+          <div class="col-12">
             <div class="row">
-              <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-top: 15px;">
+              <div class="col-3" style="padding-top: 15px;">
                 <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img"><img src="/assets/images/list-icon/add-plus-button24.png"></a>
               </div>
-              <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 text-center pad0" style="padding-top: 15px;">
+              <div class="col-6 text-center pad0" style="padding-top: 15px;">
                 <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">Batch
                   Upload
                 </button>
               </div>
-              <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-top: 15px;" ng-init="sortProduct = 'id';setSortProducts('id');">
+              <div class="col-3" style="padding-top: 15px;" ng-init="sortProduct = 'id';setSortProducts('id');">
                 <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                 >
                   <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li [class.active]="isByClient">
-                    <a (click)="setSortProducts('name')">By Name</a>
+                  <li [class.active]="sortTerm=='name'">
+                    <a (click)="sortTerm='name'">By Name</a>
                   </li>
-                  <li [class.active]="isByDate">
-                    <a (click)="setSortProducts('rate')">By Rate</a>
+                  <li [class.active]="sortTerm=='rate'">
+                    <a (click)="sortTerm='rate'">By Rate</a>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+          <div class="col-12 search-box">
             <div class="form-group label-floating">
-              <!--<label class="control-label fontsize13">Search, Filter Clients</label>-->
-              <input class="form-control" [(ngModel)]="filterProduct.prodName" ng-change="selectedProduct = -1;" placeholder="Search Product" />
+              <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Product" />
             </div>
           </div>
         </div>
 
-        <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+        <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
           Select Product to view or edit
         </div>
-        <div class="col-md-12 col-sm-12 col-xs-12 pad0 scroll mCustomScrollbar" scroll-bar>
+        <div class="col-12 pad0 scroll mCustomScrollbar" scroll-bar>
           <div style="background-color: #fff;" *ngIf="productListLoading">
-            <mat-spinner style="color: #1A73CC" class="loader"
-            ></mat-spinner>
+            <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
           </div>
-          <div *ngFor="let product of (productList | async | orderBy:order.sortProduct | filterBy:filterProduct | slice:0:productDisplayLimit); index as index"
+          <div *ngFor="let product of (productList | async | orderBy:sortTerm | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
             class="prodname" id="prod{{index}}" [class.selected]="selectedProduct == index"
           >
             <div class="row item product-list">
-              <div class="col-md-2 col-sm-2 col-xs-2 padl5">
+              <div class="col-2 padl5">
                 <img src="../assets/images/list-icon/pro.png" style="vertical-align: middle;width: 36px; height: 36px;">
-                <!--<div class="circle" ng-random-color-class ng-classes="classes"><img src="../assets/images/product.png"  > </div>-->
               </div>
   
-              <div class="col-md-8 col-sm-8 col-xs-8 pad0" (click)="viewThis(product, $index)">
+              <div class="col-8 pad0" (click)="viewThis(product, $index)">
                 <div class="row mar0">
-                  <span class="col-md-8 col-sm-8 col-xs-8 pad0 font-custom-bold fontsize13">
+                  <span class="col-8 pad0 font-custom-bold fontsize13">
                     <div class="ellipsis"> {{ product.prodName }}</div>
                   </span>
-                  <span class="col-md-4 col-sm-4 col-xs-4 pad0 text-right total-color font-custom-book">
+                  <span class="col-4 pad0 text-right total-color font-custom-book">
                     Tax: {{ product.taxRate }}%
                   </span>
-                  <span class="col-md-8 col-sm-8 col-xs-8 pad0 font-custom-book fontsize12">
+                  <span class="col-8 pad0 font-custom-book fontsize12">
                     <div class="ellipsis">{{product.discription}}</div>
                   </span>
-                  <span class="col-md-4 col-sm-4 col-xs-4 txtr pad-right-0 font-custom-bold fontsize12">
+                  <span class="col-4 txtr pad-right-0 font-custom-bold fontsize12">
                     {{ product.rate | currency:number:2}}
                   </span>
                 </div>
               </div>
   
-              <div class="col-md-1 col-sm-1 col-xs-1" [class.selected1]="selectedProduct == $index">
+              <div class="col-1" [class.selected1]="selectedProduct == $index">
                 <img src="/assets/images/next12.png">
               </div>
             </div>
@@ -81,7 +78,7 @@
           <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
             <h4>No Product to display, please create a product</h4>
           </div>
-          <div class="col-md-12 col-sm-12 col-xs-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
+          <div class="col-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
             <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
               Click to view more >>
             </a>
@@ -90,19 +87,19 @@
       </div>
 
       <!-- Product CRUD operations -->
-      <div class="col-md-9 col-sm-9 col-xs-12 item-form">
+      <div class="col-12 col-sm-9 item-form">
         <form class="form-horizontal" #f="ngForm" name="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
               <div class="row mar0">
-                <div class="col-md-8 col-sm-7 col-xs-7 ">
+                <div class="col-7 col-md-8">
                   <h4 class="form-header client-header" *ngIf="!isCreate" style="margin-left: 59%">Create a new product
                   </h4>
                   <h4 class="form-header client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: 66%"> Edit
                     product </h4>
                   <h4 class="form-header client-header" *ngIf="!isEditBtn"> View Product </h4>
                 </div>
-                <div class="col-md-4 col-sm-5 col-xs-5 pad0 pull-right">
+                <div class="col-5 col-md-4 pad0 pull-right">
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right margin-left-15 width10btn"
                     (click)="editThis(product)" *ngIf="!isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit</button>
@@ -135,7 +132,7 @@
 
               <div class="product-form">
                 <div class="row">
-                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isEditBtn && !isBatchBtn">
+                  <div class="col-12 margin-top-20" *ngIf="isEditBtn && !isBatchBtn">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group " [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
@@ -210,75 +207,75 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="!isEditBtn && !isBatchBtn">
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                  <div class="col-12 margin-top-20" *ngIf="!isEditBtn && !isBatchBtn">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_prod_name.png">
                           Product name:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.prodName}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class=" col-md-6 col-sm-6 col-xs-6 client-view-label ">
+                        <div class=" col-6 client-view-label ">
                           <img src="/assets/images/product-icon/ic_product_code_grey.png">
                           HSN code:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.productCode}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_unit.png">
                           Unit:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.unit}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_description.png">
                           Description:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.discription}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_rate.png">
                           Rate:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.rate}}
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12 col-xs-12 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-label">
+                        <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
                           Tax Rate:
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 client-view-body font-custom-bold">
+                        <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.taxRate}}
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-12 col-xs-12 col-sm-12 margin-top-20" *ngIf="isBatchBtn">
+                  <div class="col-12 margin-top-20" *ngIf="isBatchBtn">
                     <div id="drop" style="width: 60%;margin: 0px auto 10px auto;">Drop a spreadsheet file here to see
                       sheet data</div>
                     <br>
@@ -289,7 +286,7 @@
                     <br />
                     <div id="example" class="hot" style="margin-left: 13vw;"></div>
                   </div>
-                  <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                  <div class="col-12 pull-right">
                     <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn"
                       (click)="editThis(product)" *ngIf="!isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"

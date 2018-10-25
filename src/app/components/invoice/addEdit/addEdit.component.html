@@ -33,8 +33,9 @@
 
                         <div class="form-group pad-left-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
                           >
+                          <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
