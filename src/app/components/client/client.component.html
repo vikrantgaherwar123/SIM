@@ -3,7 +3,7 @@
     <div class="row">
       <!-- Client List -->
       <div class="col-12 col-sm-3 item-list cli-list pad-right-0">
-        <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
+        <div [ngClass]="{'list-shadow':(clientList|async)?.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
           <div class="col-12 pad0 filter-box">
             <div class="col-12">
               <div class="row">
@@ -67,11 +67,11 @@
               </div>
 
             </div>
-            <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListsLoader ">
+            <div class="no-data-messsage" *ngIf="(clientList|async).length == 0 && !clientListsLoader ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
-              <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit || filterClient">
+            <div class="col-12 pad0" [class.list-shadow]="(clientList|async).length > clientDisplayLimit">
+              <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="(clientList|async).length > clientDisplayLimit">
                 Click to view more >>
               </a>
             </div>

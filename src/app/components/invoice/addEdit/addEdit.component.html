@@ -988,7 +988,7 @@
         <div class="col-12 pad0">
           <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15"
             (click)="addPaymentModal.paid_amount = addPaymentModal.balance"
-            [disabled]="addPaymentModal.balance == 0 || max_balance_add_invoice == 0.00 || fullPayment"
+            [disabled]="addPaymentModal.balance == 0"
           >
             Full Payment
           </button>

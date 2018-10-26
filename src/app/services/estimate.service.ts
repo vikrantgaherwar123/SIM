@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { CookieService } from 'ngx-cookie-service'
 
 import { CONSTANTS } from '../constants'
 
@@ -17,13 +16,13 @@ export class EstimateService {
     access_token: string
   }
 
-  constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) {
+  constructor(private http: HttpClient, private CONST: CONSTANTS) {
     this.fetchUrl = `${CONST.BASE_URL}estimate/pull/quotation`
     this.fetchByIdUrl = `${CONST.BASE_URL}estimate/pull/estimate/byId`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/estimate/`
     this.addUrl = `${CONST.BASE_URL}estimate/add-estimate`
     
-    this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
 
   fetch() {

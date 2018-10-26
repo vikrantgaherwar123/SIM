@@ -11,7 +11,6 @@ import { ProductService } from '../../services/product.service'
 import { TermConditionService } from '../../services/term-condition.service'
 import { SettingService } from '../../services/setting.service'
 import { generateUUID, changeEstimate } from '../../globalFunctions'
-import { CookieService } from 'ngx-cookie-service'
 
 @Component({
   selector: 'app-estimate',
@@ -20,7 +19,7 @@ import { CookieService } from 'ngx-cookie-service'
 })
 export class EstimateComponent implements OnInit {
 
-  private data = {
+  data = {
     item: {},
     estimate: {
       taxList: []
@@ -50,21 +49,21 @@ export class EstimateComponent implements OnInit {
       unique_key_fk_client: 0
     }
   }
-  private estimates = []
+  estimates = []
   private estimate = []
   private estimateItems = []
   private estimateViewLoader: boolean
-  private estimateListLoader: boolean
+  estimateListLoader: boolean
   private selectedEstimate = null
   private tempQuaNoOnAdd: number
-  private estimateFilterTerm: string
-  private estimateDate
+  estimateFilterTerm: string
+  estimateDate
   private tempEstNo: number
   private createEstimate: boolean = true
-  private viewEstimate: boolean = false
-  private editEstimate: boolean = false
+  viewEstimate: boolean = false
+  editEstimate: boolean = false
 
-  private client = {
+  client = {
     client: {
       email: '',
       number: '',
@@ -75,7 +74,7 @@ export class EstimateComponent implements OnInit {
   }
   private clientList = []
   private clients = []
-  private clientDisplayLimit = 10
+  clientDisplayLimit = 10
   private clientListLoader: boolean
   private clientFocus: boolean
   private clientsLocal = []
@@ -95,32 +94,32 @@ export class EstimateComponent implements OnInit {
   private show_tax_input_list: any
   private tempflagTaxList: any
 
-  private tax_on: string
+  tax_on: string
   private taxtext: string
-  private discount_on: string
+  discount_on: string
   private discounttext: string
 
   private customersSelect
   private settings: any
-  private terms
-  private termList
+  terms
+  termList
 
-  private tempQtyLabel: string
-  private tempProLabel: string
-  private tempAmtLabel: string
-  private tempRateLabel: string
-  private tempTermLabel: string
-  private tempBillLabel: string
-  private tempShipLabel: string
-  private tempDueLabel: string
-  private tempDisLabel: string
-  private tempSubToLabel: string
-  private tempShippingLabel: string
-  private tempAdjLabel: string
-  private tempPaidLabel: string
-  private tempTotalLabel: string
-  private tempBalLabel: string
-  private routeParams: {
+  tempQtyLabel: string
+  tempProLabel: string
+  tempAmtLabel: string
+  tempRateLabel: string
+  tempTermLabel: string
+  tempBillLabel: string
+  tempShipLabel: string
+  tempDueLabel: string
+  tempDisLabel: string
+  tempSubToLabel: string
+  tempShippingLabel: string
+  tempAdjLabel: string
+  tempPaidLabel: string
+  tempTotalLabel: string
+  tempBalLabel: string
+  routeParams: {
     estId: string,
     invId: string
   }
@@ -130,19 +129,19 @@ export class EstimateComponent implements OnInit {
   
   private checked = false
   private customDate = true
-  private isRate = true
+  isRate = true
   private dueDate = ""
 
   private searchText: string = ''
   private isNone: boolean
   private isByClient: boolean
-  private isByDate: boolean
-  private isInvNo: boolean
-  private sortEstimates: string
-  private isAmount: boolean
+  isByDate: boolean
+  isInvNo: boolean
+  sortEstimates: string
+  isAmount: boolean
   
   private showMultipleTax: boolean
-  private authenticated: {
+  authenticated: {
     setting: any
   }
 
@@ -184,10 +183,9 @@ export class EstimateComponent implements OnInit {
     private estimateService: EstimateService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
-    private cookie: CookieService,
     private settingService: SettingService,
     private productService: ProductService) {
-      this.user = JSON.parse(this.cookie.get('user'))
+      this.user = JSON.parse(localStorage.getItem('user'))
       this.authenticated = {setting: this.user.setting}
       // console.log(this.authenticated)
     }
@@ -628,7 +626,7 @@ export class EstimateComponent implements OnInit {
             //$rootScope.authenticated.setting.currency_symbol = $locale.NUMBER_FORMATS.CURRENCY_SYM
           }
         }
-        this.cookie.set('user', JSON.stringify(cookie), null, '/')
+        localStorage.setItem('user', JSON.stringify(cookie))
         if (invNoParam) {
           if (settings.quotFormat)
             this.data.add_estimate.estimate_number = settings.quotFormat + invNoParam

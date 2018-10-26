@@ -65,7 +65,7 @@
 	margin: 8px 0 11px 0;
 }
 .filter-box input {
-	background: #ffffff url(/src/assets/images/list-icon/search16.png) no-repeat 10px;
+	background: #ffffff url(/assets/images/list-icon/search16.png) no-repeat 10px;
 	padding-left: 35px;
 	height: 36px;
 }

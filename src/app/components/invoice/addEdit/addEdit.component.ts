@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
-import { map, startWith } from 'rxjs/operators'
+import { map, startWith, last } from 'rxjs/operators'
 
 import { response, client, invoice, terms, setting, product } from '../../../interface'
 import { generateUUID } from '../../../globalFunctions'
 
-import { CookieService } from 'ngx-cookie-service'
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
@@ -71,23 +70,25 @@ export class AddEditComponent implements OnInit {
   }
 
   // private invoiceList: Observable<invoice[]>
-  private activeInvoice: invoice = {...this.emptyInvoice}
-  private invoiceDate = new FormControl()
+  activeInvoice: invoice = {...this.emptyInvoice}
+  invoiceDate = new FormControl()
   private dueDate = new FormControl()
   private tempInvNo: number
   private showMultipleTax: boolean
   private show_tax_input_list: any
   private tempflagTaxList: any
   private taxtext: string
-  private edit: boolean = false
+  edit: boolean = false
+  last
+  index
 
   private clientList: client[]
   private allClientList: client[]
-  private activeClient: any = {}
-  private clientListLoading: boolean
+  activeClient: any = {}
+  clientListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
-  private addClientModal: any = {}
+  addClientModal: any = {}
 
   private productList: product[]
   activeItem: any = {
@@ -98,37 +99,37 @@ export class AddEditComponent implements OnInit {
   addItem = new FormControl()
   filteredProducts: Observable<string[] | product[]>
 
-  private termList: terms[]
-  private addTermModal: any = {}
+  termList: terms[]
+  addTermModal: any = {}
 
-  private addPaymentModal: any = {}
+  addPaymentModal: any = {}
 
-  private tempQtyLabel: string
-  private tempProLabel: string
-  private tempAmtLabel: string
-  private tempRateLabel: string
-  private tempTermLabel: string
-  private tempBillLabel: string
-  private tempShipLabel: string
-  private tempDueLabel: string
-  private tempDisLabel: string
-  private tempSubToLabel: string
-  private tempShippingLabel: string
-  private tempAdjLabel: string
-  private tempPaidLabel: string
-  private tempTotalLabel: string
-  private tempBalLabel: string
-  private tempInv12: any
-  private tempPaymentList
-  private tempItemList
-  private tempTermList
-  private routeParams: {
+  tempQtyLabel: string
+  tempProLabel: string
+  tempAmtLabel: string
+  tempRateLabel: string
+  tempTermLabel: string
+  tempBillLabel: string
+  tempShipLabel: string
+  tempDueLabel: string
+  tempDisLabel: string
+  tempSubToLabel: string
+  tempShippingLabel: string
+  tempAdjLabel: string
+  tempPaidLabel: string
+  tempTotalLabel: string
+  tempBalLabel: string
+  tempInv12: any
+  tempPaymentList
+  tempItemList
+  tempTermList
+  routeParams: {
     invId: string
   }
 
   private newItemCounter: number = 0
 
-  private settings: any
+  settings: any
   private activeSettings: any
   private user: {
     user: {
@@ -137,17 +138,16 @@ export class AddEditComponent implements OnInit {
     setting: setting
   }
 
-  constructor(private router: Router,
+  constructor(public router: Router,
     private route: ActivatedRoute,
     private invoiceService: InvoiceService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
-    private cookie: CookieService,
     private settingService: SettingService,
     private productService: ProductService,
     private store: Store<AppState>
   ) {
-    this.user = JSON.parse(this.cookie.get('user'))
+    this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
     store.select('client').subscribe(clients => this.allClientList = clients)
@@ -935,11 +935,11 @@ export class AddEditComponent implements OnInit {
   }
 
   updateSettings() {
-    var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+    var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     cookie.setting.invNo = this.tempInvNo
-    this.cookie.set('user', JSON.stringify(cookie), null, '/')
-    this.user = JSON.parse(this.cookie.get('user'))
+    localStorage.setItem('user', JSON.stringify(cookie))
+    this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
     var settings1 = {

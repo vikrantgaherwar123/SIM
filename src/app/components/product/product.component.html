@@ -75,11 +75,11 @@
               </div>
             </div>
           </div>
-          <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
+          <div class="no-data-messsage" *ngIf="(productList|async).length == 0 && !productListLoading">
             <h4>No Product to display, please create a product</h4>
           </div>
-          <div class="col-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
-            <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
+          <div class="col-12 pad0" [class.list-shadow]="(productList|async).length > productDisplayLimit">
+            <a (click)="loadMore()" class="btn more" *ngIf="(productList|async).length > productDisplayLimit">
               Click to view more >>
             </a>
           </div>

@@ -11,7 +11,6 @@ import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router } from '@angular/router'
-import { CookieService } from 'ngx-cookie-service'
 
 @Component({
   selector: 'app-view',
@@ -20,11 +19,13 @@ import { CookieService } from 'ngx-cookie-service'
 })
 export class ViewComponent implements OnInit {
 
-  private invoiceList: invoice[]
-  private activeInv: invoice
+  invoiceList: invoice[]
+  activeInv: invoice
   private activeInvId: string
-  private invListLoader: boolean = false
-  private invDispLimit: number = 20
+  invListLoader: boolean = false
+  invDispLimit: number = 20
+  invSortTerm: string
+  invSearchTerm: string
 
   private invoiceQueryForm = {
     client: new FormControl(),
@@ -33,7 +34,7 @@ export class ViewComponent implements OnInit {
       end: new FormControl(new Date())
     }
   }
-  private changingQuery: boolean = false
+  changingQuery: boolean = false
 
   private clientList: client[]
   private activeClient: client
@@ -42,8 +43,8 @@ export class ViewComponent implements OnInit {
   private setting: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
-    private store: Store<AppState>, private cookie: CookieService,
-    private router: Router
+    private store: Store<AppState>,
+    public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
     store.select('globals').subscribe(globals => {
@@ -51,7 +52,7 @@ export class ViewComponent implements OnInit {
         this.invoiceQueryForm = globals.invoiceQueryForm
       }
     })
-    this.setting = JSON.parse(cookie.get('user')).setting
+    this.setting = JSON.parse(localStorage.getItem('user')).setting
   }
 
   ngOnInit() {

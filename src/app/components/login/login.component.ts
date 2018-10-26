@@ -3,7 +3,6 @@ import { Router } from "@angular/router"
 
 import { response as apiRespo } from '../../interface'
 
-import { CookieService } from 'ngx-cookie-service'
 import { AuthService } from '../../services/auth.service'
 import { ClientService } from '../../services/client.service'
 import { ProductService } from '../../services/product.service'
@@ -33,7 +32,7 @@ interface response {
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  user: Object = {
+  public user: any = {
     userName: '',
     password: ''
   }
@@ -48,7 +47,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private cookie: CookieService,
     private clientService: ClientService,
     private productService: ProductService,
     private termsService: TermConditionService,
@@ -58,7 +56,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     $('.user-logout').hide()
-    var user: response = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+    var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
     $('#sidebar, #content').addClass('active')
@@ -121,7 +119,8 @@ export class LoginComponent implements OnInit {
         }
         response.login_info.user = {}
         response.login_info.user.orgId = tempOrgId
-        this.cookie.set('user', JSON.stringify(response.login_info), null, '/')
+        localStorage.setItem('user', JSON.stringify(response.login_info))
+
         this.authenticated = response.login_info
 
         // Fetch basic app data and store
@@ -133,7 +132,7 @@ export class LoginComponent implements OnInit {
         $("#login-btn").prop("disabled", false)
         this.pro_bar_load = true
         this.status = response.message
-        this.cookie.delete('user')
+        localStorage.clear()
         this.authenticated = false
         this.loggingIn = false
         this.router.navigate(['/login'])
@@ -161,7 +160,7 @@ export class LoginComponent implements OnInit {
   }
 
   setCookie(settings) {
-    var cookie = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+    var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Add settings in cookie
     cookie.setting = settings.appSettings.androidSettings
@@ -171,6 +170,6 @@ export class LoginComponent implements OnInit {
       console.log("else in dashboard");
     }
 
-    this.cookie.set('user', JSON.stringify(cookie), null, '/')
+    localStorage.setItem('user', JSON.stringify(cookie))
   }
 }

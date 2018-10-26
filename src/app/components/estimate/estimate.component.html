@@ -8,7 +8,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
               <div class="row mar0">
                 <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 pad-left-0" style="padding-top: 15px;">
-                  <a (click)="goNew();$parent.checked = false;" title="Add New" class="pull-left list-btn cus-img">
+                  <!-- goNew();$parent.checked = false; -->
+                  <a title="Add New" class="pull-left list-btn cus-img">
                     <img src="/assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
@@ -75,7 +76,7 @@
               <h4>No Estimate to display, please create estimates</h4>
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 pad0" [class.list-shadow]="estimates.length > clientDisplayLimit">
-              <a (click)="loadMore()" class="more btn" *ngIf="estimates.length > clientDisplayLimit || filterClient">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimates.length > clientDisplayLimit">
                 Click to view more >>
               </a>
             </div>
@@ -150,7 +151,7 @@
                           <div class="col-md-6 col-sm-6 col-xs-6 pad-left-0">
                             <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
                             <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                            <div class="address-render">{{client.client.address_line1}}<br /></div>
+                            <div class="address-render">{{client.client.addressLine1}}<br /></div>
                             <div *ngIf="!isEmpty11()">
                               Email: {{client.client.email}}
                             </div>
@@ -304,10 +305,11 @@
                     </div>
       
                     <div class="col-md-6 col-xs-6 col-sm-6 discount-tax-pad font-custom-bold">
-                      <div class="cursor-pointer"><a class="inline" *ngIf="!tempflag" (click)="showMe();data.add_estimate.discount_on_item = 0; discount_on = 'onBill'; ">{{tempDisLabel}}+</a></div>
+                      <!-- <div class="cursor-pointer"><a class="inline" *ngIf="!tempflag" (click)="showMe();data.add_estimate.discount_on_item = 0; discount_on = 'onBill'; ">{{tempDisLabel}}+</a></div>
                       <div class="cursor-pointer"><a class="inline" *ngIf="!tempflagShipping" (click)="showMeShipping();">{{tempShippingLabel}}+</a></div>
                       <div class="cursor-pointer"><a class="inline" *ngIf="!tempflagTax" (click)="showMeTax();data.add_estimate.tax_on_item = 1; tax_on = 'taxOnBill'; selectTax();">Tax+</a></div>
-                      <div class="cursor-pointer"><a class="inline" *ngIf="!show_adjustment" (click)="showMeAdjustment();">{{tempAdjLabel}}+</a></div>
+                      <div class="cursor-pointer"><a class="inline" *ngIf="!show_adjustment" (click)="showMeAdjustment();">{{tempAdjLabel}}+</a></div> -->
+
                       <!-- <div class="inline" *ngFor="let tax of authenticated.setting.alstTaxName">
                         <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,$index)">
                           <a (click)="showMeMultipleTax($index);">{{tax.taxName}}+</a>
@@ -320,7 +322,8 @@
                     <div class="col-md-6 col-xs-6 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{tempTermLabel}}</span>
-                        <a (click)="addTerm(true)" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
+                        <!-- addTerm(true) -->
+                        <a class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
                           data-original-title="Add " title="Add Term"
                         >
                           <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
@@ -343,7 +346,7 @@
                         </div>
                       </div>
                     </div>
-        
+
                     <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6 pad-right-0">
                       <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 term-cond-label " style="margin-bottom: 5px;">
                         <div class="row mar0">
@@ -355,14 +358,14 @@
                           </div>
                         </div>
                       </div>
-        
-                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" *ngIf="show">
+
+                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px">
                         <div class="row">                        
                           <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
                             <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                            <div *ngIf="!isRate" class="inline font-custom">({{currencySymbolTemp }})</div>
+                            <div *ngIf="!isRate" class="inline font-custom">($)</div>
                             <div *ngIf="isRate" class="inline font-custom">(%)</div>
-        
+
                             <div class="pad0" style="float: right; padding-right: 10px;">
                               <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -374,7 +377,7 @@
                               <ul class="dropdown-menu dropdown-menu-right">
                                 <li [class.active]="!isRate">
                                   <a href="#" (click)="isRate=false;$event.preventDefault();calculateEstimate(1);data.add_estimate.percentage_flag = 0;">Flat
-                                    ({{currencySymbolTemp}})
+                                    ($)
                                   </a>
                                 </li>
                                 <li [class.active]="isRate">
@@ -389,7 +392,7 @@
                           <div class="col-md-8 col-sm-8 col-xs-8">
                             <form #form_discount="ngForm" name="form_discount">
                               <div class="input-group addon-input pad-right-0" ng-init="data.add_estimate.percentage_flag = 1">
-                                <div *ngIf="!data.add_estimate.percentage_flag == 0">
+                                <div *ngIf="data.add_estimate.percentage_flag !== 0">
                                   <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="percentage_input"
                                     type="number" min="0.00" id="percentage_input" step="any" max="100" autocomplete="off"
                                     tabindex="1005" ng-required="ngRequired" maxlength="data.add_estimate.gross_amount"
@@ -398,7 +401,7 @@
                                   />
                                 </div>
     
-                                <div *ngIf="!data.add_estimate.percentage_flag == 1">
+                                <div *ngIf="data.add_estimate.percentage_flag !== 1">
                                   <input type="number" name="discount_input" id="discount_input" step="any" min="0.00"
                                     class="form-control ng-pristine ng-valid ng-valid-required ng-touched" tabindex="1005"
                                     ng-maxlength="data.add_estimate.gross_amount" autocomplete="off" ng-required="ngRequired" [(ngModel)]="data.add_estimate.discount"
@@ -408,14 +411,14 @@
                                 <!-- <div class="input-group-addon addon-right " *ngIf="isRate">%</div>-->
           
                                 <div class="input-group-addon pad-right-0 remove-button">
-                                  <div class="addon selectorpad-right-0" (click)="hideMe();data.add_estimate.discount_on_item = 2; discount_on = 'disabled';">
+                                  <!-- <div class="addon selectorpad-right-0" (click)="hideMe();data.add_estimate.discount_on_item = 2; discount_on = 'disabled';">
                                     <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                  </div>
+                                  </div> -->
                                 </div>
                               </div>
                             </form>
     
-                            <div class="form-error" *ngIf="!data.add_estimate.percentage_flag == 0 ">
+                            <div class="form-error" *ngIf="data.add_estimate.percentage_flag !== 0">
                               <span *ngIf="form_discount.percentage_input.$error.max">Not more than 100</span>
                             </div>
                             <!-- <div class="form-error">
@@ -424,8 +427,8 @@
                           </div>
                         </div>
                       </div>
-
-                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" *ngIf="show_tax_input">
+<!-- *ngIf="show_tax_input" -->
+                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" >
                         <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
                           <div class="row">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
@@ -442,9 +445,9 @@
                               />
                               <!-- <div class="input-group-addon addon-right">%</div>-->
                               <div class="input-group-addon pad-right-0 remove-button">
-                                <div class="addon selectorpadr0" (click)="hideMeTax();data.add_estimate.tax_on_item = 2; tax_on = 'taxDisabled';">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeTax();data.add_estimate.tax_on_item = 2; tax_on = 'taxDisabled';">
                                   <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                           </form>
@@ -486,8 +489,8 @@
                           </div>
                         </div>
                       </div>
-        
-                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" *ngIf="show_shipping_charge">
+<!-- *ngIf="show_shipping_charge" -->
+                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px">
                         <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
                           <div class="row">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
@@ -503,9 +506,9 @@
                                 select-on-click disable-enter
                               />
                               <div class="input-group-addon pad-right-0 remove-button">
-                                <div class="addon selectorpadr0" (click)="hideMeShipping();">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeShipping();">
                                   <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                           </form>
@@ -515,8 +518,8 @@
                           </div>
                         </div>
                       </div>
-  
-                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px" *ngIf="show_adjustment">
+<!-- *ngIf="show_adjustment" -->
+                      <div class="col-md-12 col-sm-12 col-xs-12 pad-right-0 margin-bottom-5px">
                         <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
                           <div class="row">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
@@ -532,9 +535,9 @@
                               />
                               <!-- <div class="input-group-addon set-color">%</div>-->
                               <div class="input-group-addon pad-right-0 remove-button">
-                                <div class="addon selectorpadr0" (click)="hideMeAdjustment();">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeAdjustment();">
                                   <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                           </form>
@@ -548,7 +551,7 @@
                           </div>
           
                           <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
-                            <span class="font-custom-bold">{{data.add_estimate.amount|currency:number}}</span>      
+                            <span class="font-custom-bold">{{data.add_estimate.amount}}</span>      
                           </div>
                         </div>
                       </div>
@@ -783,8 +786,8 @@
                     <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
                       <div class="row">
                         <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                        <div *ngIf="!isRate" class="inline font-custom">({{
-                          currencySymbolTemp }})
+                        <div *ngIf="!isRate" class="inline font-custom">
+                          ($)
                         </div>
                         <div *ngIf="isRate" class="inline font-custom">(%)</div>
                       </div>
@@ -1200,7 +1203,7 @@
                   <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
                     <div class="row">
                       <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                      <div *ngIf="!isRateEdit" class="inline font-custom">({{currencySymbolTemp }})</div>
+                      <div *ngIf="!isRateEdit" class="inline font-custom">($)</div>
                       <div *ngIf="isRateEdit" class="inline font-custom">(%)</div>
 
                       <!--Discount<input type="number" placeholder="0.00%" style="text-align: right;"><i class="glyphicon glyphicon-remove" (click)="hideMe();"></i>-->
@@ -1213,7 +1216,7 @@
                         <ul class="dropdown-menu dropdown-menu-right">
                           <li [class.active]="!isRateEdit">
                             <a href="#" (click)="isRateEdit=false;$event.preventDefault();calculateEstimateEdit(1);editdata.estimate.percentage_flag = 0;">Flat
-                              ({{currencySymbolTemp}})</a>
+                              ($)</a>
                           </li>
                           <li [class.active]="isRateEdit">
                             <a href="#" (click)="isRate=true;$event.preventDefault();calculateEstimateEdit(1);editdata.estimate.percentage_flag = 1;">Percent
@@ -1385,7 +1388,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header" ng-init="addButton = 0">
-        <a class="pull-right" (click)="close()" style="margin-top: 6px;">
+        <!-- close() -->
+        <a class="pull-right" style="margin-top: 6px;">
           <img src="assets/images/cross16.png" alt="logo">
         </a>
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
@@ -1414,9 +1418,9 @@
                 <label class="inline" for="addtermcheck"></label>
                 <div class="inline">Default?</div>
               </div>
-              <button type="button" id="addtermbtn" name="addtermbtn" class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+              <!-- <button type="button" id="addtermbtn" name="addtermbtn" class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
                 [disabled]="!termForm.valid" (click)="saveTerm(termCondition, termForm.valid)" title="save">SAVE
-              </button>
+              </button> -->
             </div>
           </div>
         </form>
@@ -1455,9 +1459,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <a class="pull-right" (click)="closeClient()" style="margin-top: 6px;">
+        <!-- <a class="pull-right" (click)="closeClient()" style="margin-top: 6px;">
           <img src="assets/images/cross16.png" alt="logo">
-        </a>
+        </a> -->
         <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
           Add New Client
         </h4>
@@ -1540,14 +1544,14 @@
 
       <div class="modal-footer">
         <div class="col-md-12 col-sm-12 col-xs-12">
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeClient()">
+          <!-- <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeClient()">
             Close
-          </button>
-          <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
+          </button> -->
+          <!-- <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
             [disabled]="!clientform.valid" (click)="saveClient(client, clientform.valid)"
           >
             Add Client
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -1560,9 +1564,9 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header" ng-init="addButton = 0">
-        <a class="pull-right" (click)="closeEdit()" style="margin-top: 6px;">
+        <!-- <a class="pull-right" (click)="closeEdit()" style="margin-top: 6px;">
           <img src="assets/images/cross16.png" alt="logo">
-        </a>
+        </a> -->
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabelEdit">
           Add Terms & Condition
         </h4>
@@ -1598,14 +1602,14 @@
 
         <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 20px 24px 20px 15px">
           <div class="col-md-12 col-sm-12 col-xs-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of terms_edit | filterBy:{ enabled : 0}" id="term1Edit{{$index}}"
+            <!-- <div class="item termlist row product-list" *ngFor="let term of terms_edit | filterBy:{ enabled : 0}" id="term1Edit{{$index}}"
               ng-init="term.setDefault == 'DEFAULT' ? editdata.terms[$index] = true : editdata.terms[$index] = false "
               [class.selected]="selectedTerm == $index"
             >
               <div class="col-md-12 col-sm-12 col-xs-12 pad0">
                 <div class="col-md-12 col-sm-12 col-xs-12 pad0 ">
                   <div class="col-md-1 pad0">
-                    <!--ng-init="term.setDefault == 'DEFAULT' ? data.terms[$index] = term.uniqueKeyTerms : data.terms[$index] = '' "-->
+                    ng-init="term.setDefault == 'DEFAULT' ? data.terms[$index] = term.uniqueKeyTerms : data.terms[$index] = '' "
                     <input type="checkbox" id="termcheckEdit{{$index}}" ng-false-value="false"
                       [(ngModel)]="editdata.terms[$index]" ng-true-value="true"  ng-change="setTermsListEdit(term)"
                     />
@@ -1616,7 +1620,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
