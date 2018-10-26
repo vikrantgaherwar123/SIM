@@ -640,7 +640,17 @@
         <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
           Show Previous Invoices
         </button>
+
+        <!-- Delete Invoices Button -->
+        <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"
+          [swal]="{ title: 'Are you sure want to delete Invoice?', type: 'warning', showCancelButton: true,
+            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
+          "
+        >
+          Delete Invoices
+        </button>
       </div>
+
     </div>
   </div>
 </div>

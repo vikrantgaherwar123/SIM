@@ -879,7 +879,11 @@ export class AddEditComponent implements OnInit {
         if(this.edit) {
           this.store.select('invoice').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
-            self.store.dispatch(new invoiceActions.edit({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
+            if (result.invoiceList[0].deleted_flag == 1) {
+              self.store.dispatch(new invoiceActions.remove(index))
+            } else {
+              self.store.dispatch(new invoiceActions.edit({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
+            }
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
@@ -901,6 +905,12 @@ export class AddEditComponent implements OnInit {
       }
       $('#invSubmitBtn').removeAttr('disabled')
     })
+  }
+
+  deleteInvoice() {
+    console.log('asdfwe ')
+    this.activeInvoice.deleted_flag = 1
+    this.save(true)
   }
 
   resetCreateInvoice() {

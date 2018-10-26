@@ -135,9 +135,9 @@ export class ViewComponent implements OnInit {
     }
 
     this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).subscribe((response: response) => {
+    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
       if(response.status === 200) {
-        this.store.dispatch(new invoiceActions.reset(response.records ? response.records : []))
+        this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
         // this.setActiveInv()
       }
       this.invListLoader = false
