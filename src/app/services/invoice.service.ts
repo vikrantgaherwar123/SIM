@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { CookieService } from 'ngx-cookie-service'
 
 import { CONSTANTS } from '../constants'
 
@@ -18,14 +17,14 @@ export class InvoiceService {
     access_token: string
   }
 
-  constructor(private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService) { 
+  constructor(private http: HttpClient, private CONST: CONSTANTS) { 
     this.fetchUrl = `${CONST.BASE_URL}invoice_data/pull/invoice`
     this.fetchByIdUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/byId`
     this.fetchByQueryUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/cientId`
     this.addUrl = `${CONST.BASE_URL}invoice_data/add/invoice`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/invoice/`
 
-    this.user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : {}
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
 
   fetch() {

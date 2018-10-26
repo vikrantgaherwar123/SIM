@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core'
-import { CookieService } from 'ngx-cookie-service'
 import { Router } from "@angular/router"
 import { CONSTANTS } from '../../constants'
 
@@ -11,10 +10,10 @@ import { CONSTANTS } from '../../constants'
 export class HeaderComponent implements OnInit {
 
   @Input() instance
-  private email
+  email
 
-  constructor(private cookie: CookieService, private router: Router, private CONST: CONSTANTS) {
-    var user = this.cookie.get('user') ? JSON.parse(this.cookie.get('user')) : this.cookie.get('user')
+  constructor(private router: Router, private CONST: CONSTANTS) {
+    var user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
     this.email = (user && user.registered_email) ? user.registered_email : 'user'
   }
 
@@ -26,7 +25,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.cookie.deleteAll('/')
+    localStorage.clear()
     this.router.navigate(['/login'])
   }
 }

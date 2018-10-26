@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { catchError } from 'rxjs/operators'
 import { Observable, of } from 'rxjs'
-import { CookieService } from 'ngx-cookie-service'
 
 import { CONSTANTS } from '../constants'
 import { MD5 } from '../globalFunctions'
@@ -15,14 +14,14 @@ export class AuthService {
   private loginUrl = ''
   private validateTokenUrl = ''
 
-  constructor( private http: HttpClient, private CONST: CONSTANTS, private cookie: CookieService ) {
+  constructor( private http: HttpClient, private CONST: CONSTANTS) {
     this.loginUrl = `${CONST.BASE_URL}login`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
   }
   
   // Check if user logged in
   isLoggedIn() {
-    if(this.cookie.get('user')) {
+    if(localStorage.getItem('user')) {
       return true
     } else {
       return false

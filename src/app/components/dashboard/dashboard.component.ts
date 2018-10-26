@@ -2,13 +2,10 @@ import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable } from 'rxjs'
 
-import { response as apiRespo, setting } from '../../interface'
-
-import { CookieService } from 'ngx-cookie-service'
+import { setting } from '../../interface'
 import { SettingService } from '../../services/setting.service'
 
 import { Store } from '@ngrx/store'
-import * as settingActions from '../../actions/setting.action'
 import { AppState } from '../../app.state'
 
 interface response {
@@ -33,7 +30,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(private router: Router,
     private settingService: SettingService,
-    private cookies: CookieService,
     private store: Store<AppState>
   ) {
     this.settingStore = store.select('setting')
@@ -44,7 +40,7 @@ export class DashboardComponent implements OnInit {
       if(Object.keys(settings).length == 0) {
         this.settingService.fetch().subscribe((response: response) => {
           if (response.status === 200) {
-            var cookie = this.cookies.get('user') ? JSON.parse(this.cookies.get('user')) : this.cookies.get('user')
+            var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
             if (response.settings === null) {
               // $rootScope.authenticated.setting = {};
               // $rootScope.authenticated.setting.date_format = true;
@@ -166,8 +162,8 @@ export class DashboardComponent implements OnInit {
               }
               // $rootScope.authenticated.setting = cookie.setting;
             }
-            this.cookies.set('user', JSON.stringify(cookie), null, '/')
-            // switch (cookie.setting.languageCode) {
+            localStorage.setItem('user', JSON.stringify(cookie))
+            // switch (localStorage.getItem('user').setting.languageCode) {
             //   case 1: {
             //     $translate.use('en');
             //     break;

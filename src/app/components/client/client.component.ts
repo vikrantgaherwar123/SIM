@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { ClientService } from '../../services/client.service'
-import { CookieService } from 'ngx-cookie-service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
 
@@ -22,7 +21,7 @@ export class ClientComponent implements OnInit {
       orgId: string
     }
   }
-  private clientList: Observable<client[]>
+  clientList: Observable<client[]>
   private activeClient = {
     addressLine1: "",
     businessDetail: "",
@@ -40,30 +39,31 @@ export class ClientComponent implements OnInit {
   }
   private activeClientIndex
   private errors: object = {}
-  private clientListsLoader: boolean
-
+  clientListsLoader: boolean
   private selectedClient = null
-  private clientDisplayLimit = 12
-  
+  clientDisplayLimit = 12
+  sortTerm: string
+  searchTerm: string
+
   private checked: boolean = false
   private isEdit: boolean = false
-  private isCreate: boolean
+  isCreate: boolean
   private clearBtn: boolean
   private inputDisabled: boolean
-  private rightDivBtns: boolean = false
-  private isEditBtn: boolean = true
-  private cancle: boolean = true
+  rightDivBtns: boolean = false
+  isEditBtn: boolean = true
+  cancle: boolean = true
   private inputReadonly: boolean
   private tempClient = null
   private tempIndex = null
 
   private clientListLoader: boolean
 
-  constructor(public clientService: ClientService, private cookie: CookieService,
+  constructor(public clientService: ClientService,
     private router: Router, private store: Store<AppState>
   ) {
     this.clientList = store.select('client')
-    this.user = JSON.parse(this.cookie.get('user'))
+    this.user = JSON.parse(localStorage.getItem('user'))
   }
 
   ngOnInit() {

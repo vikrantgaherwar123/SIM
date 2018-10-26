@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core'
 import { TranslateModule } from '@ngx-translate/core'
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { CookieService } from 'ngx-cookie-service'
 import * as $ from 'jquery'
 import * as bootstrap from 'bootstrap'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -33,7 +32,6 @@ import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
 import { AddEditComponent } from './components/invoice/addEdit/addEdit.component'
 import { EstimateComponent } from './components/estimate/estimate.component'
-import { EditComponent } from './components/invoice/edit/edit.component'
 import { ViewComponent } from './components/invoice/view/view.component'
 
 @NgModule({
@@ -47,7 +45,6 @@ import { ViewComponent } from './components/invoice/view/view.component'
     ProductComponent,
     AddEditComponent,
     EstimateComponent,
-    EditComponent,
     ViewComponent
   ],
   imports: [
@@ -72,7 +69,7 @@ import { ViewComponent } from './components/invoice/view/view.component'
       globals: globalReducer
     })
   ],
-  providers: [CookieService, CONSTANTS],
+  providers: [CONSTANTS],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

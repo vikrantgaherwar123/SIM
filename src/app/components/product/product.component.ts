@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { ProductService } from '../../services/product.service'
-import { CookieService } from 'ngx-cookie-service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
 
@@ -22,7 +21,7 @@ export class ProductComponent implements OnInit {
       orgId: string
     }
   }
-  private productList: Observable<product[]>
+  productList: Observable<product[]>
   private activeProduct = {
     "prod_name": "",
     "unit": "",
@@ -32,34 +31,35 @@ export class ProductComponent implements OnInit {
     "device_modified_on": 112,
     "unique_identifier": ""
   }
+  productListLoading: boolean = false
   private openingDate: string = ""
+  sortTerm: string
+  searchTerm: string
 
   private checked: boolean = false
   private selectedProduct = null
-  private isCreate: boolean
+  isCreate: boolean
   private clearBtn: boolean
   private isEdit: boolean = false
-  private rightDivBtns: boolean = false
-  private isEditBtn: boolean = true
-  private cancle: boolean = true
-  private deleteBtn: boolean = true
-  private isBatchBtn: boolean = false
-
-  private productListLoading: boolean = false
+  rightDivBtns: boolean = false
+  isEditBtn: boolean = true
+  cancle: boolean = true
+  deleteBtn: boolean = true
+  isBatchBtn: boolean = false
 
   private tempProduct = null
   private tempIndex = null
 
-  private productDisplayLimit = 12
+  productDisplayLimit = 12
 
   private inputDisabled: boolean
   private inputReadonly: boolean
 
-  constructor(private productService: ProductService, private cookie: CookieService,
+  constructor(private productService: ProductService,
     private router: Router, private store : Store<AppState>
   ) {
     this.productList = store.select('product')
-    this.user = JSON.parse(this.cookie.get('user'))
+    this.user = JSON.parse(localStorage.getItem('user'))
   }
 
   ngOnInit() {

@@ -94,13 +94,14 @@
                 <div class="row mar0">
                   <div class="col-6 pad-left-0" style="padding-top: 15px;">
                     <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
-                      <img src="/assets/images/list-icon/add-plus-button24.png">
+                      <img src="assets/images/list-icon/add-plus-button24.png">
                     </a>
                   </div>
                   <div class="col-6 pad0" style="padding-top: 15px;">
                     <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"><img
-                        alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                      aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                    >
+                      <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
                       <li [class.active]="invSortTerm=='created_date'">
@@ -127,7 +128,7 @@
             </div>
       
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-              <img src="/assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
+              <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
             </div>
 
             <div class="col-12 pad0 mCustomScrollbar">
@@ -162,7 +163,7 @@
                 <h4>No Invoice to display</h4>
               </div>
               <div class="col-12 pad0" [class.list-shadow]="invoiceList.length > invDispLimit">
-                <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit || filterClient">
+                <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
                   Click to view more >>
                 </a>
               </div>
@@ -181,21 +182,21 @@
                 [disabled]="!activeInv.unique_identifier" class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
                 title="Edit"
               >
-                <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadInvoice(invoice.id, 1, 'download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
                 [disabled]="!activeInv.unique_identifier" class="btn btnd btn-custom-1 no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
                 title="Download"
               >
-                <img src="/assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
+                <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
               <button id="previewBtn" type="button" (click)="downloadInvoice(invoice.id, 1, 'preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
                 [disabled]="!activeInv.unique_identifier" class="btn btnd btn-custom-2 no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
                 title="Preview"
               >
-                <img src="/assets/images/buttons-icon/view16.png">
+                <img src="assets/images/buttons-icon/view16.png">
                 Preview
               </button>
             </div>
