@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /Data
+/simple-invoice-manager-web-darwin-x64
+/simple-invoice-manager-web-win32-x64
 
 # dependencies
 /node_modules

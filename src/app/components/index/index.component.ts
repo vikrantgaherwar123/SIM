@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public self = this
   private _toggleSidebar() {
-    if (window.location.pathname !== '/login') {
+    if (!(window.location.pathname).includes('/login')) {
       $('#sidebar, #content').toggleClass('active')
     }
   }
