@@ -206,7 +206,7 @@ export class ProductComponent implements OnInit {
 
   deleteProduct() {
     this.activeProduct.enabled = 1
-    this.save(true)
+    this.save(true, null)
   }
 
   editThis() {
