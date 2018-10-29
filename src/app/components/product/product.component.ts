@@ -48,7 +48,6 @@ export class ProductComponent implements OnInit {
   searchTerm: string
 
   private checked: boolean = false
-  private selectedProduct = null
   isCreate: boolean
   private clearBtn: boolean
   private isEdit: boolean = false
@@ -158,7 +157,6 @@ export class ProductComponent implements OnInit {
 
           // notifications.showSuccess({ message: result.data.message, hideDelay: 1500, hide: true })
           // this.form.$setUntouched()
-          self.selectedProduct = null
           self.isEditBtn = true
           self.isCreate = false
           self.isEdit = false
@@ -167,7 +165,6 @@ export class ProductComponent implements OnInit {
           self.rightDivBtns = false
           self.deleteBtn = true
         } else if (response.status != 200) {
-          this.selectedProduct = 'none'
           // notifications.showError({ message: result.error, hideDelay: 1500, hide: true })
         }
         // $('#saveProBtn').button('reset')
@@ -192,7 +189,6 @@ export class ProductComponent implements OnInit {
     this.activeProduct = {...this.emptyProduct}
 
     this.isEdit = false
-    this.selectedProduct = null
     this.inputDisabled = false
     this.isEditBtn = true
     this.isCreate = false
@@ -223,7 +219,6 @@ export class ProductComponent implements OnInit {
     if (!cancelFlag) {
       this.activeProduct = {...product}
     }
-    this.selectedProduct = index
 
     if (!cancelFlag) {
       this.tempProduct = {
