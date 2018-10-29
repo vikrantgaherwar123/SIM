@@ -45,13 +45,18 @@ export class ProductService {
 
   changeKeysForApi(product) {
     return {
-      prod_name: product.prodName,
-      unit: product.unit,
+      buy_price: product.buyPrice,
+      deleted_flag: product.enabled,
+      device_modified_on: product.modifiedDate,
       discription: product.discription,
+      inventory_enabled: product.inventoryEnabled,
+      opening_stock: product.openingStock,
+      organization_id: product.serverOrgId,
+      prod_name: product.prodName,
       rate: product.rate,
       tax_rate: product.taxRate,
-      device_modified_on: product.modifiedDate,
-      unique_identifier: product.productuniqueKeyProduct
+      unique_identifier: product.uniqueKeyProduct,
+      unit: product.unit
     }
   }
 
@@ -63,6 +68,7 @@ export class ProductService {
       enabled: product.deleted_flag,
       inventoryEnabled: product.inventory_enabled,
       modifiedDate: product.device_modified_on,
+      openingDate: product.opening_date,
       openingStock: product.opening_stock,
       prodLocalId: product._id,
       prodName: product.prod_name,

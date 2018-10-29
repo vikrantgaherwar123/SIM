@@ -107,14 +107,14 @@
                     DELETE
                   </button>
                   <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 2)"
+                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
                       data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
                       [disabled]="!f.valid || inputReadonly == true"
                     >
                       UPDATE
                     </button>
-                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 1)"
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
                       data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
                       [disabled]="!f.valid || inputReadonly == true"
@@ -331,20 +331,22 @@
                     </button>
   
                     <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning'}"
+                      [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
+                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                      "
                       (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!f.valid || inputReadonly == false"
                     >
                       DELETE
                     </button>
                     <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                      <button id="updateClientBtn" type="button" (click)="save(f.valid, 2)"
+                      <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)"
                         class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
                         data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
                         [disabled]="!f.valid || inputReadonly == true"
                       >
                         UPDATE
                       </button>
-                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 1)"
+                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 0)"
                         class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
                         data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
                         [disabled]="!f.valid || inputReadonly == true"

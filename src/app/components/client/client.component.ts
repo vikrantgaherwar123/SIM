@@ -21,7 +21,7 @@ export class ClientComponent implements OnInit {
     }
   }
   clientList: client[]
-  private activeClient = {
+  private emptyClient = {
     addressLine1: "",
     businessDetail: "",
     businessId: "",
@@ -36,7 +36,7 @@ export class ClientComponent implements OnInit {
     organizationId: "",
     uniqueKeyClient: ""
   }
-  private activeClientIndex
+  private activeClient = {...this.emptyClient}
   private errors: object = {}
   clientListLoading: boolean = false
   private selectedClient = null
@@ -105,32 +105,21 @@ export class ClientComponent implements OnInit {
     // $('#saveClientBtn1').button('loading')
     // $('#saveClientBtn').button('loading')
     var proStatus = true
-    // edit = 1 ==> add, edit = 2 ==> edit
-    if (edit == 1) {
-      // $('#updateClientBtn1').button('loading')
-      // $('#updateClientBtn').button('loading')
 
-      var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
-      //console.log("temp pro name" , tempProName)
-      var tempCompare = ''
-
-      if (this.clientList.length > 0) {
-        for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
-          if (tempCompare === tempClientName) {
-            proStatus = false
-            break
-          }
-        }
-      }
-    } else if (edit == 2) {
+    // If adding or editing client, make sure client with same name doesnt already exist
+    if (!this.activeClient.enabled) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
-            if (this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient) {
+            if(edit == 1) {
+              if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient) {
+                proStatus = false
+                break
+              }
+            } else {
               proStatus = false
               break
             }
@@ -179,16 +168,7 @@ export class ClientComponent implements OnInit {
           }
           self.errors = {}
 
-          self.activeClient.name = "",
-          self.activeClient.contactPersonName = "",
-          self.activeClient.email = "",
-          self.activeClient.number = "",
-          self.activeClient.addressLine1 = "",
-          self.activeClient.shippingAddress = "",
-          self.activeClient.businessDetail = "",
-          self.activeClient.businessId = "",
-          self.activeClient.uniqueKeyClient = "",
-          self.activeClient.enabled = 0
+          self.activeClient = {...this.emptyClient}
 
           self.selectedClient = null
           self.isEditBtn = true
@@ -209,6 +189,9 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
+      if(!proStatus) {
+        alert('Client with this name already exists!')
+      }
       // $('#updateClientBtn').button('reset');
       // $('#saveClientBtn').button('reset');
       // $('#updateClientBtn1').button('reset');
@@ -220,15 +203,8 @@ export class ClientComponent implements OnInit {
 
   addNew() {
     this.rightDivBtns = false
-    this.activeClient.name = ""
-    this.activeClient.contactPersonName = ""
-    this.activeClient.email = ""
-    this.activeClient.number = ""
-    this.activeClient.addressLine1 = ""
-    this.activeClient.shippingAddress = ""
-    this.activeClient.businessDetail = ""
-    this.activeClient.businessId = ""
-    this.activeClient.enabled = 0
+    
+    this.activeClient = {...this.emptyClient}
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -253,7 +229,7 @@ export class ClientComponent implements OnInit {
 
   deleteClient() {
     this.activeClient.enabled = 1
-    this.save(true, null)
+    this.save(true)
   }
 
   editThis() {
