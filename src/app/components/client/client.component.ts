@@ -4,7 +4,6 @@ import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
 
 import { client, response } from '../../interface'
-import { Observable } from 'rxjs'
 import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
@@ -21,13 +20,13 @@ export class ClientComponent implements OnInit {
       orgId: string
     }
   }
-  clientList: Observable<client[]>
+  clientList: client[]
   private activeClient = {
     addressLine1: "",
     businessDetail: "",
     businessId: "",
     contactPersonName: "",
-    deleted_flag: 0,
+    enabled: 0,
     device_modified_on: 0,
     email: "",
     localClientid: 0,
@@ -39,7 +38,7 @@ export class ClientComponent implements OnInit {
   }
   private activeClientIndex
   private errors: object = {}
-  clientListsLoader: boolean
+  clientListLoading: boolean = false
   private selectedClient = null
   clientDisplayLimit = 12
   sortTerm: string
@@ -57,30 +56,27 @@ export class ClientComponent implements OnInit {
   private tempClient = null
   private tempIndex = null
 
-  private clientListLoader: boolean
-
   constructor(public clientService: ClientService,
     private router: Router, private store: Store<AppState>
   ) {
-    this.clientList = store.select('client')
+    store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
   }
 
   ngOnInit() {
-    this.clientListLoader = false
+    this.clientListLoading = true
 
-    this.clientList.subscribe(clients => {
-      if(clients.length < 1) {
-        this.clientService.fetch().subscribe((response: response) => {
-          if (response.status === 200) {
-            this.clientListLoader = true
-            this.store.dispatch(new clientActions.add(response.records.filter(client => client.enabled == 0)))
-          }
-        })
-      } else {
-        this.clientListLoader = true
-      }
-    })
+    if(this.clientList.length < 1) {
+      this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        if (response.status === 200) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.clientList = response.records.filter(cli => cli.enabled == 0)
+        }
+      })
+    } else {
+      this.clientListLoading = false
+    }
   }
 
   toggle() {
@@ -118,40 +114,31 @@ export class ClientComponent implements OnInit {
       //console.log("temp pro name" , tempProName)
       var tempCompare = ''
 
-      this.clientList.subscribe(clients => {
-        if (clients.length) {
-          for (var p = 0; p < clients.length; p++) {
-            tempCompare = clients[p].name.toLowerCase().replace(/ /g, '')
-            if (tempCompare === tempClientName) {
+      if (this.clientList.length > 0) {
+        for (var p = 0; p < this.clientList.length; p++) {
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          if (tempCompare === tempClientName) {
+            proStatus = false
+            break
+          }
+        }
+      }
+    } else if (edit == 2) {
+      var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+      var tempCompare = ''
+      if (this.clientList.length > 0) {
+        for (var p = 0; p < this.clientList.length; p++) {
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          if (tempCompare === tempClientName) {
+            if (this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient) {
               proStatus = false
               break
             }
           }
-        } else {
-          proStatus = true;
         }
-      }) 
-    } else if (edit == 2) {
-      var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
-      var tempCompare = ''
-      this.clientList.subscribe(clients => {
-        if (this.clientList) {
-          for (var p = 0; p < clients.length; p++) {
-            tempCompare = clients[p].name.toLowerCase().replace(/ /g, '')
-            if (tempCompare === tempClientName) {
-              if (this.activeClient.uniqueKeyClient !== clients[p].uniqueKeyClient) {
-                proStatus = false;
-                break
-              }
-            }
-          }
-        } else {
-          proStatus = true
-        }
-      })
-    } else {
-      proStatus = true
+      }
     }
+
     if (status && proStatus) {
       this.activeClient.organizationId = this.user.user.orgId
       var d = new Date()
@@ -159,8 +146,9 @@ export class ClientComponent implements OnInit {
         this.activeClient.uniqueKeyClient = generateUUID(this.user.user.orgId);
       }
       this.activeClient.device_modified_on = d.getTime();
-      this.clientListLoader = false
+      this.clientListLoading = true
       var self = this
+
       this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: any) => {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
@@ -168,18 +156,25 @@ export class ClientComponent implements OnInit {
         // $('#saveClientBtn1').button('reset');
 
         if (response.status === 200) {
-          self.clientListLoader = true
-          let index
-          self.clientList.subscribe(clients => {
-            index = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          self.clientListLoading = false
+
+          // Update store and client list
+          let index, storeIndex
+          index = self.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          self.store.select('client').subscribe(clients => {
+            storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           })
+
           if (index == -1) {  // add
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
+            this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
           } else {
-            if (self.activeClient.deleted_flag) {   // delete
-              self.store.dispatch(new clientActions.remove(index))
+            if (self.activeClient.enabled) {   // delete
+              self.store.dispatch(new clientActions.remove(storeIndex))
+              this.clientList.splice(index, 1)
             } else {    //edit
-              self.store.dispatch(new clientActions.edit({index, value: self.clientService.changeKeysForStore(response.clientList[0])}))
+              self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
+              this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
             }
           }
           self.errors = {}
@@ -193,7 +188,7 @@ export class ClientComponent implements OnInit {
           self.activeClient.businessDetail = "",
           self.activeClient.businessId = "",
           self.activeClient.uniqueKeyClient = "",
-          self.activeClient.deleted_flag = 0
+          self.activeClient.enabled = 0
 
           self.selectedClient = null
           self.isEditBtn = true
@@ -233,7 +228,7 @@ export class ClientComponent implements OnInit {
     this.activeClient.shippingAddress = ""
     this.activeClient.businessDetail = ""
     this.activeClient.businessId = ""
-    this.activeClient.deleted_flag = 0
+    this.activeClient.enabled = 0
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -257,7 +252,7 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
-    this.activeClient.deleted_flag = 1
+    this.activeClient.enabled = 1
     this.save(true, null)
   }
 
@@ -268,44 +263,41 @@ export class ClientComponent implements OnInit {
   }
 
   viewThis(client, cancelFlag) {
-    var index
-    this.clientList.subscribe(clients => {
-      index = clients.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
-    })
-    
+    var index = this.clientList.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
+
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error');
     }
     $('#emailLabel').addClass('is-empty');
     if (!cancelFlag) {
-      this.activeClient.uniqueKeyClient = client.uniqueKeyClient,
-      this.activeClient.localClientid = client.localClientid,
-      this.activeClient.name = client.name,
-      this.activeClient.contactPersonName = client.contactPersonName,
-      this.activeClient.email = client.email,
-      this.activeClient.number = client.number,
-      this.activeClient.organizationId = client.organizationId,
       this.activeClient.addressLine1 = client.addressLine1,
-      this.activeClient.shippingAddress = client.shippingAddress,
       this.activeClient.businessDetail = client.businessDetail,
       this.activeClient.businessId = client.businessId,
-      this.activeClient.deleted_flag = client.enabled
+      this.activeClient.contactPersonName = client.contactPersonName,
+      this.activeClient.email = client.email,
+      this.activeClient.enabled = client.enabled,
+      this.activeClient.localClientid = client.localClientid,
+      this.activeClient.name = client.name,
+      this.activeClient.number = client.number,
+      this.activeClient.organizationId = client.organizationId,
+      this.activeClient.shippingAddress = client.shippingAddress
+      this.activeClient.uniqueKeyClient = client.uniqueKeyClient
     }
     this.selectedClient = index
     if (!cancelFlag) {
       this.tempClient = {
-        "uniqueKeyClient": client.uniqueKeyClient,
-        "localClientid": client.localClientid,
-        "name": client.name,
-        "contactPersonName": client.contactPersonName,
-        "email": client.email,
-        "organizationId": client.organizationId,
-        "number": client.number,
         "addressLine1": client.addressLine1,
-        "shippingAddress": client.shippingAddress,
         "businessDetail": client.businessDetail,
         "businessId": client.businessId,
-        "deleted_flag": client.enabled
+        "contactPersonName": client.contactPersonName,
+        "deleted_flag": client.enabled,
+        "email": client.email,
+        "localClientid": client.localClientid,
+        "name": client.name,
+        "number": client.number,
+        "organizationId": client.organizationId,
+        "shippingAddress": client.shippingAddress,
+        "uniqueKeyClient": client.uniqueKeyClient
       }
       this.tempClient = this.activeClient
     } else {
@@ -324,8 +316,6 @@ export class ClientComponent implements OnInit {
   }
 
   cancelThis() {
-    //activeClient = tempClient ;
-
     this.isEditBtn = false
     this.inputReadonly = true
     this.rightDivBtns = true
@@ -345,7 +335,7 @@ export class ClientComponent implements OnInit {
     this.activeClient.shippingAddress = ""
     this.activeClient.businessDetail = ""
     this.activeClient.businessId = ""
-    this.activeClient.deleted_flag = 0
+    this.activeClient.enabled = 0
     // form.$setUntouched()
     // form.email.$touched = false
     if ($('#emailLabel').hasClass('has-error')) {

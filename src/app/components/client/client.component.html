@@ -3,7 +3,7 @@
     <div class="row">
       <!-- Client List -->
       <div class="col-12 col-sm-3 item-list cli-list pad-right-0">
-        <div [ngClass]="{'list-shadow':(clientList|async)?.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
+        <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
           <div class="col-12 pad0 filter-box">
             <div class="col-12">
               <div class="row">
@@ -45,9 +45,9 @@
                 md-diameter="25px">
               </md-progress-circular>
             </div> -->
-            <div class="clientname" 
-              *ngFor="let client of (clientList | async | orderBy: sortTerm | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index "
-              id="prod{{index}}" [class.selected]="selectedClient == index"
+            <div id="prod{{index}}" class="clientname" 
+              *ngFor="let client of (clientList | orderBy: sortTerm | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index"
+              [class.selected]="selectedClient == index"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-2">
@@ -65,13 +65,12 @@
                   <img src="/assets/images/next12.png">
                 </div>
               </div>
-
             </div>
-            <div class="no-data-messsage" *ngIf="(clientList|async).length == 0 && !clientListsLoader ">
+            <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListLoading ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-12 pad0" [class.list-shadow]="(clientList|async).length > clientDisplayLimit">
-              <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="(clientList|async).length > clientDisplayLimit">
+            <div class="col-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
+              <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit">
                 Click to view more >>
               </a>
             </div>
@@ -146,7 +145,7 @@
                             <img src="/assets/images/client-icon/ic_normal_org_name.png">
                           </span>
                           <input type="text" name="name" id="name" class="form-control" placeholder="Organization name"
-                            [(ngModel)]="activeClient.name" ng-readonly="inputReadonly" required
+                            [(ngModel)]="activeClient.name" [readonly]="inputReadonly" required
                           />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || errors.name">
@@ -160,7 +159,7 @@
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_person.png"></span>
                           <input type="text" [(ngModel)]="activeClient.contactPersonName" name="contactPersonName" id="contactPersonName"
-                            class="form-control" ng-readonly="inputReadonly" placeholder="Contact person" />
+                            class="form-control" [readonly]="inputReadonly" placeholder="Contact person" />
                           <!--<div class="form-error" *ngIf="f.submitted || form.contactPersonName.$touched || errors.contactPersonName">-->
                           <!--<span *ngIf="form.contactPersonName.$error.required">Required</span>-->
                           <!--<span *ngIf="errors.contactPersonName">{{ errors.contactPersonName[0] }}</span>-->
@@ -174,7 +173,7 @@
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
                           <input type="text" [(ngModel)]="activeClient.email" name="email" id="email" class="form-control"
-                            ng-readonly="inputReadonly" placeholder="Email address" />
+                            [readonly]="inputReadonly" placeholder="Email address" />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.email.$touched || errors.email">-->
                           <!--<span *ngIf="form.email.$error.required">Required</span>-->
                           <!--<span *ngIf="form.email.$error.email"><span *ngIf="form.email.$error.required">,</span> must be valid email address</span>-->
@@ -190,7 +189,7 @@
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
                           <input type="text" [(ngModel)]="activeClient.number" name="cont_number" id="cont_number" class="form-control"
-                            ng-readonly="inputReadonly" placeholder="Contact number" />
+                            [readonly]="inputReadonly" placeholder="Contact number" />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.cont_number.$touched || errors.number">-->
                           <!--<span *ngIf="form.cont_number.$error.required">Required</span>-->
                           <!--<span *ngIf="form.cont_number.$error.maxlength">Must be of 10 characters</span>-->
@@ -203,7 +202,7 @@
   
                       <div class="form-group">
                         <textarea elastic type="text" [(ngModel)]="activeClient.addressLine1" name="addressLine1" id="addressLine1"
-                          class="form-control" ng-readonly="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
+                          class="form-control" [readonly]="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
                         <!--<div class="form-error" *ngIf="form.$submitted || form.addressLine1.$touched || errors.addressLine1">-->
                         <!--<span *ngIf="form.addressLine1.$error.required">Required</span>-->
                         <!--<span *ngIf="errors.addressLine1">{{ errors.addressLine1[0] }}</span>-->
@@ -214,7 +213,7 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <textarea elastic type="text" [(ngModel)]="activeClient.shippingAddress" name="shippingAddress" id="shippingAddress"
-                          class="form-control" ng-readonly="inputReadonly" placeholder="Shipping Address" style="height: 47px;"></textarea>
+                          class="form-control" [readonly]="inputReadonly" placeholder="Shipping Address" style="height: 47px;"></textarea>
                       </div>
                     </div>
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
@@ -222,7 +221,7 @@
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
                           <input type="text" [(ngModel)]="activeClient.business_id" name="business_id" id="business_id" class="form-control"
-                            ng-readonly="inputReadonly" placeholder="Business Id" />
+                            [readonly]="inputReadonly" placeholder="Business Id" />
                         </div>
   
                       </div>
@@ -230,7 +229,7 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <textarea elastic type="text" [(ngModel)]="activeClient.business_detail" name="business_detail" id="business_detail"
-                          class="form-control" ng-readonly="inputReadonly" placeholder="Business Details" style="height: 47px;"></textarea>
+                          class="form-control" [readonly]="inputReadonly" placeholder="Business Details" style="height: 47px;"></textarea>
                       </div>
                     </div>
                   </div>
@@ -333,7 +332,7 @@
   
                     <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                       [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning'}"
-                      (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!form.$valid || inputReadonly == false"
+                      (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!f.valid || inputReadonly == false"
                     >
                       DELETE
                     </button>
