@@ -58,39 +58,40 @@ export class ClientService {
   }
 
   changeKeysForApi(client) {
-    var tempClient = {
-      name: client.name,
-      contact_person_name: client.contactPersonName,
-      email: client.email,
-      number: client.number,
+    return {
       address_line1: client.addressLine1,
-      shipping_address: client.shippingAddress,
       business_detail: client.businessDetail,
       business_id: client.businessId,
+      contact_person_name: client.contactPersonName,
+      deleted_flag: client.enabled,
+      device_modified_on: client.device_modified_on,
+      email: client.email,
+      name: client.name,
+      number: client.number,
+      shipping_address: client.shippingAddress,
       unique_identifier: client.uniqueKeyClient,
-      deleted_flag: client.enabled
     }
-
-    return tempClient
   }
 
   changeKeysForStore(client) {
-    var temp = {
+    return {
       addressLine1: client.address_line1,
       addressLine2: client.addressLine2,
       addressLine3: client.addressLine3,
       businessDetail: client.business_detail,
       businessId: client.business_id,
       contactPersonName: client.contact_person_name,
+      deviceCreatedDate: 0,
       email: client.email,
       enabled: client.deleted_flag,
+      localClientid: client._id,
+      modifiedDate: client.device_modified_on,
       name: client.name,
       number: client.number,
       organizationId: client.organization_id,
+      serverUpdateTime: client.serverUpdateTime,
       shippingAddress: client.shipping_address,
       uniqueKeyClient: client.unique_identifier
     }
-
-    return temp
   }
 }
