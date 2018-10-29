@@ -47,7 +47,7 @@
             </div> -->
             <div id="prod{{index}}" class="clientname" 
               *ngFor="let client of (clientList | orderBy: sortTerm | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index"
-              [class.selected]="selectedClient == index"
+              [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-2">
@@ -61,7 +61,7 @@
                     <div class="ellipsis">{{client.contactPersonName}}</div>
                   </span>
                 </div>
-                <div class="col-1" [class.selected1]="selectedClient == $index">
+                <div class="col-1" [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
                   <img src="/assets/images/next12.png">
                 </div>
               </div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-5 col-md-4 pull-right pad0 font-custom-bold">
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    (click)="editThis(client, $index)" *ngIf="!isEditBtn"
+                    (click)="editThis()" *ngIf="!isEditBtn"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
@@ -325,7 +325,7 @@
                   </div>
                   <div class="col-12 align-self-end">
                     <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      (click)="editThis(client, $index)" *ngIf="!isEditBtn"
+                      (click)="editThis()" *ngIf="!isEditBtn"
                     >
                       <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit 
                     </button>

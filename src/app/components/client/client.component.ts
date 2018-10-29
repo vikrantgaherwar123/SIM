@@ -39,7 +39,6 @@ export class ClientComponent implements OnInit {
   private activeClient = {...this.emptyClient}
   private errors: object = {}
   clientListLoading: boolean = false
-  private selectedClient = null
   clientDisplayLimit = 12
   sortTerm: string
   searchTerm: string
@@ -170,7 +169,6 @@ export class ClientComponent implements OnInit {
 
           self.activeClient = {...this.emptyClient}
 
-          self.selectedClient = null
           self.isEditBtn = true
           self.isCreate = false
           self.isEdit = false
@@ -215,7 +213,7 @@ export class ClientComponent implements OnInit {
     $('#name').select()
     this.clearBtn = false
     this.isEdit = false
-    this.selectedClient = null
+
     this.inputDisabled = false
     this.isEditBtn = true
     this.isCreate = false
@@ -238,7 +236,7 @@ export class ClientComponent implements OnInit {
     this.rightDivBtns = false;
   }
 
-  viewThis(client, cancelFlag) {
+  viewThis(client, cancelFlag=false) {
     var index = this.clientList.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
 
     if ($('#emailLabel').hasClass('has-error')) {
@@ -259,7 +257,7 @@ export class ClientComponent implements OnInit {
       this.activeClient.shippingAddress = client.shippingAddress
       this.activeClient.uniqueKeyClient = client.uniqueKeyClient
     }
-    this.selectedClient = index
+
     if (!cancelFlag) {
       this.tempClient = {
         "addressLine1": client.addressLine1,
