@@ -7,22 +7,24 @@
           <div class="col-12">
             <div class="row">
               <div class="col-3" style="padding-top: 15px;">
-                <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img"><img src="/assets/images/list-icon/add-plus-button24.png"></a>
+                <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                  <img src="/assets/images/list-icon/add-plus-button24.png">
+                </a>
               </div>
               <div class="col-6 text-center pad0" style="padding-top: 15px;">
-                <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">Batch
-                  Upload
-                </button>
+                <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
+                  Batch Upload
+                </button> -->
               </div>
-              <div class="col-3" style="padding-top: 15px;" ng-init="sortProduct = 'id';setSortProducts('id');">
+              <div class="col-3" style="padding-top: 15px;">
                 <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                 >
                   <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li [class.active]="sortTerm=='name'">
-                    <a (click)="sortTerm='name'">By Name</a>
+                  <li [class.active]="sortTerm=='prodName'">
+                    <a (click)="sortTerm='prodName'">By Name</a>
                   </li>
                   <li [class.active]="sortTerm=='rate'">
                     <a (click)="sortTerm='rate'">By Rate</a>
@@ -41,19 +43,23 @@
         <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
           Select Product to view or edit
         </div>
+
+        <!-- Product List -->
         <div class="col-12 pad0 scroll mCustomScrollbar" scroll-bar>
           <div style="background-color: #fff;" *ngIf="productListLoading">
             <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
           </div>
-          <div *ngFor="let product of (productList | async | orderBy:sortTerm | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
-            class="prodname" id="prod{{index}}" [class.selected]="selectedProduct == index"
+          <div id="prod{{index}}" class="prodname" [class.selected]="selectedProduct == index"
+            *ngFor="let product of (productList | orderBy:sortTerm | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
           >
             <div class="row item product-list">
               <div class="col-2 padl5">
-                <img src="../assets/images/list-icon/pro.png" style="vertical-align: middle;width: 36px; height: 36px;">
+                <img src="../assets/images/list-icon/pro.png"
+                  style="vertical-align: middle;width: 36px; height: 36px;"
+                >
               </div>
   
-              <div class="col-8 pad0" (click)="viewThis(product, $index)">
+              <div class="col-8 pad0" (click)="viewThis(product, index)">
                 <div class="row mar0">
                   <span class="col-8 pad0 font-custom-bold fontsize13">
                     <div class="ellipsis"> {{ product.prodName }}</div>
@@ -65,7 +71,7 @@
                     <div class="ellipsis">{{product.discription}}</div>
                   </span>
                   <span class="col-4 txtr pad-right-0 font-custom-bold fontsize12">
-                    {{ product.rate | currency:number:2}}
+                    {{ product.rate | currency:'INR':'symbol':'1.2-2' }}
                   </span>
                 </div>
               </div>
@@ -75,11 +81,11 @@
               </div>
             </div>
           </div>
-          <div class="no-data-messsage" *ngIf="(productList|async).length == 0 && !productListLoading">
+          <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
             <h4>No Product to display, please create a product</h4>
           </div>
-          <div class="col-12 pad0" [class.list-shadow]="(productList|async).length > productDisplayLimit">
-            <a (click)="loadMore()" class="btn more" *ngIf="(productList|async).length > productDisplayLimit">
+          <div class="col-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
+            <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
               Click to view more >>
             </a>
           </div>
@@ -93,36 +99,53 @@
             <div class="form-group back" style="padding: 18px;">
               <div class="row mar0">
                 <div class="col-7 col-md-8">
-                  <h4 class="form-header client-header" *ngIf="!isCreate" style="margin-left: 59%">Create a new product
+                  <h4 class="form-header client-header" *ngIf="!isCreate" style="margin-left: 59%">
+                    Create a new product
                   </h4>
-                  <h4 class="form-header client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: 66%"> Edit
-                    product </h4>
-                  <h4 class="form-header client-header" *ngIf="!isEditBtn"> View Product </h4>
+                  <h4 class="form-header client-header" style="margin-left: 66%" *ngIf="!(rightDivBtns || cancle)">
+                    Edit product
+                  </h4>
+                  <h4 class="form-header client-header" *ngIf="!isEditBtn">View Product</h4>
                 </div>
                 <div class="col-5 col-md-4 pad0 pull-right">
-                  <button type="button" class="btn btn-success btn-raised no-border-radius pull-right margin-left-15 width10btn"
-                    (click)="editThis(product)" *ngIf="!isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
-                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit</button>
-                  <button type="button" (click)="deleteProduct(activeProduct)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                    *ngIf="!deleteBtn" title="Delete Product" [disabled]="!f.valid ||inputReadonly == false">DELETE</button>
+                  <button type="button" *ngIf="!isEditBtn" (click)="editThis(product)"
+                    class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                  >
+                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
+                    >
+                    Edit
+                  </button>
+                  <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                    [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
+                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                    "
+                    (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
+                  >
+                    DELETE
+                  </button>
                   <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                    <button id="updateProBtn" type="button" (click)="save(data, f.valid,1)" class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true "
+                    <button type="button" id="updateProBtn" (click)="save(f.valid, 0)"
+                      class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
+                      *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true"
                     >
                       SAVE
                     </button>
-                    <button id="saveProBtn" type="button" (click)="save(data, f.valid,2)" class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle" [disabled]="!f.valid || inputReadonly == true "
+                    <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
+                      class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
+                      *ngIf="!cancle" [disabled]="!f.valid || inputReadonly == true"
                     >
                       UPDATE
                     </button>
-                    <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      (click)="cancelThis()" *ngIf="!cancle" [disabled]="inputReadonly == true"
+                    <button type="button" id="cancleProBtn" (click)="cancelThis()"
+                      class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
+                      *ngIf="!cancle" [disabled]="inputReadonly == true"
                     >
                       CANCEL
                     </button>
-                    <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      (click)="clearThis()" *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                    <button type="button" id="clearProBtn" (click)="clearThis()"
+                      class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
+                      *ngIf="!clearBtn" [disabled]="inputReadonly == true"
                     >
                       CLEAR
                     </button>
@@ -130,15 +153,20 @@
                 </div>
               </div>
 
+              <!-- Create View Edit form -->
               <div class="product-form">
                 <div class="row">
                   <div class="col-12 margin-top-20" *ngIf="isEditBtn && !isBatchBtn">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group " [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
+                      <div class="form-group" [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
-                          <span class="input-group-addon"><img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png"></span>
-                          <input type="text" ng-maxlength="45" [(ngModel)]="activeProduct.prodName" name="prodName" id="prodName"
-                            class="form-control" ng-readonly="inputReadonly" placeholder="Product Name" required />
+                          <span class="input-group-addon">
+                            <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
+                          </span>
+                          <input type="text" id="prodName" name="prodName" placeholder="Product Name"
+                            class="form-control" maxlength="45" [readonly]="inputReadonly" required
+                            [(ngModel)]="activeProduct.prodName" 
+                          />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
                           <span *ngIf="f.value.prodName == ''">Product name required</span>
@@ -150,38 +178,13 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group">
-                          <span class="input-group-addon"><img src="/assets/images/product-icon/ic_product_code_grey.png"></span>
-                          <input type="text" [(ngModel)]="activeProduct.productCode" name="productCode" id="productCode"
-                            class="form-control" ng-readonly="inputReadonly" placeholder="HSN Code" />
-                        </div>
-
-                      </div>
-                    </div>
-
-                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group">
-                        <div class="input-group">
-                          <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_unit.png"></span>
-                          <input type="text" [(ngModel)]="activeProduct.unit" name="unit" id="unit" class="form-control"
-                            ng-readonly="inputReadonly" placeholder="Unit" />
-                        </div>
-
-                      </div>
-                    </div>
-                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group">
-                        <textarea elastic [(ngModel)]="activeProduct.discription" name="discription" id="discription" class="form-control"
-                          ng-readonly="inputReadonly" placeholder="Description" style="max-height: 72px; height: 72px;"></textarea>
-                      </div>
-                    </div>
-
-                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
-                      <div class="form-group">
-                        <div class="input-group">
-                          <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_rate.png"></span>
-                          <input type="number" step="any" [(ngModel)]="activeProduct.rate" name="rate" class="form-control"
-                            ng-readonly="inputReadonly" convert_decimal select-on-click required />
-                          <!--min="0.01"-->
+                          <span class="input-group-addon">
+                            <img src="/assets/images/product-icon/ic_product_code_grey.png">
+                          </span>
+                          <input type="text" name="productCode" id="productCode"
+                            class="form-control" placeholder="HSN Code"
+                            [(ngModel)]="activeProduct.productCode" [readonly]="inputReadonly"
+                          />
                         </div>
                       </div>
                     </div>
@@ -189,9 +192,47 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group">
-                          <span class="input-group-addon"><img src="/assets/images/product-icon/ic_normal_tax_rate.png"></span>
-                          <input type="number" step="any" min="0" [(ngModel)]="activeProduct.taxRate" name="taxRate" class="form-control"
-                            ng-readonly="inputReadonly" convert_decimal select-on-click />
+                          <span class="input-group-addon">
+                            <img src="/assets/images/product-icon/ic_normal_unit.png">
+                          </span>
+                          <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit"
+                            [(ngModel)]="activeProduct.unit" [readonly]="inputReadonly"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <textarea elastic name="discription" id="discription" class="form-control"
+                          placeholder="Description" style="max-height: 72px; height: 72px;"
+                          [(ngModel)]="activeProduct.discription" [readonly]="inputReadonly"
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="/assets/images/product-icon/ic_normal_rate.png">
+                          </span>
+                          <input type="number" step="any" name="rate" class="form-control"
+                            [(ngModel)]="activeProduct.rate" [readonly]="inputReadonly" required
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
+                          </span>
+                          <input type="number" name="taxRate" class="form-control" step="any" min="0"
+                            [(ngModel)]="activeProduct.taxRate" [readonly]="inputReadonly"
+                          />
                         </div>
                       </div>
                     </div>
@@ -200,7 +241,9 @@
                         <span class="font-custom-bold"> Manage Inventory</span>
                         <span style="padding-left: 20px">
                           <label class="switch">
-                            <input type="checkbox" [(ngModel)]="activeProduct.inventory_enabled" name="inventory">
+                            <input type="checkbox" name="inventory"
+                              [(ngModel)]="activeProduct.inventoryEnabled"
+                            >
                             <span class="slider round"></span>
                           </label>
                         </span>
@@ -276,46 +319,56 @@
                     </div>
                   </div>
                   <div class="col-12 margin-top-20" *ngIf="isBatchBtn">
-                    <div id="drop" style="width: 60%;margin: 0px auto 10px auto;">Drop a spreadsheet file here to see
-                      sheet data</div>
+                    <div id="drop" style="width: 60%;margin: 0px auto 10px auto;">
+                      Drop a spreadsheet file here to see sheet data
+                    </div>
                     <br>
                     <div style="margin: 0px auto 10px auto; width: 60%">
-                      <input type="file" name="xlfile" id="xlf" style="display: inline;width: 44%;" /> ... or click here
-                      to select a file
+                      <input type="file" name="xlfile" id="xlf" style="display: inline;width: 44%;"/>
+                      ... or click here to select a file
                     </div>
                     <br />
                     <div id="example" class="hot" style="margin-left: 13vw;"></div>
                   </div>
                   <div class="col-12 pull-right">
-                    <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn"
-                      (click)="editThis(product)" *ngIf="!isEditBtn"><img src="/assets/images/buttons-icon/pencil-edit-button16.png"
-                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
+                    <button type="button" (click)="editThis(product)" *ngIf="!isEditBtn"
+                      class="btn btn-success btn-raised no-border-radius pull-right width10btn"
                     >
+                      <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                        style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
+                      >
                       Edit
                     </button>
-                    <button type="button" (click)="deleteProduct(activeProduct)" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                      *ngIf="!deleteBtn" title="Delete Product" [disabled]="!f.valid ||inputReadonly == false"
+                    <button type="button" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                      [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
+                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                      "
+                      (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
                     >
                       DELETE
                     </button>
                     <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                      <button id="updateProBtn1" type="button" (click)="save(data, f.valid,1)" class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
-                        data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true "
+                      <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="cancle"
+                        class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                        [disabled]="!f.valid || inputReadonly == true"
                       >
                         SAVE
                       </button>
-                      <button id="saveProBtn1" type="button" (click)="save(data, f.valid,2)" class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
-                        data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle" [disabled]="!f.valid || inputReadonly == true "
+                      <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="!cancle"
+                        class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                        [disabled]="!f.valid || inputReadonly == true"
                       >
                         UPDATE
                       </button>
-                      <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                        (click)="cancelThis()" *ngIf="!cancle" [disabled]="inputReadonly == true"
+                      <button type="button" (click)="cancelThis()" *ngIf="!cancle"
+                        class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                        [disabled]="inputReadonly == true"
                       >
                         CANCEL
                       </button>
-                      <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                        (click)="clearThis()" *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                      <button type="button" (click)="clearThis()" *ngIf="!clearBtn"
+                        class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                        [disabled]="inputReadonly == true"
                       >
                         CLEAR
                       </button>
