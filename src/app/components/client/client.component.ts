@@ -229,7 +229,7 @@ export class ClientComponent implements OnInit {
 
   deleteClient() {
     this.activeClient.enabled = 1
-    this.save(true)
+    this.save(true, null)
   }
 
   editThis() {
