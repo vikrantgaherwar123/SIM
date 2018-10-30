@@ -9,6 +9,7 @@ import { ProductComponent } from './components/product/product.component'
 import { AddEditComponent } from './components/invoice/addEdit/addEdit.component'
 import { ViewComponent } from './components/invoice/view/view.component'
 import { EstimateComponent } from './components/estimate/estimate.component'
+import { PrimaryComponent } from './components/setting/primary/primary.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },
   // { path: 'estimate', redirectTo: '/estimate/view/:id', pathMatch: 'full' },
   // { path: 'estimate/view/:estId', component: EstimateComponent, canActivate: [AuthGuard] },
+  { path: 'setting/primary', component: PrimaryComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

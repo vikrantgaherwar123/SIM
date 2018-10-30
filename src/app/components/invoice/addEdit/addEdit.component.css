@@ -17,7 +17,7 @@ input, textarea {
 .hd td, .hd td input {
   background-color: #666;
 }
-hd td {
+.hd td {
   border-bottom: 1px solid #ddd;
 }
 .column td {
@@ -93,9 +93,6 @@ button.add-line-item-button {
 .bld, .terms {
   font-weight: 700;
   font-size: 14px;
-}
-a, a:hover, a:focus {
-  color: #2196f3 !important;
 }
 .mat-form-field-infix {
   border-top: 0 !important;

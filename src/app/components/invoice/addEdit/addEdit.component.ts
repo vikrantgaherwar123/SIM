@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
-import { map, startWith, last } from 'rxjs/operators'
+import { map, startWith } from 'rxjs/operators'
 
 import { response, client, invoice, terms, setting, product } from '../../../interface'
 import { generateUUID } from '../../../globalFunctions'

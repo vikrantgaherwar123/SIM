@@ -1,0 +1,274 @@
+<div class="row main-wrapper">
+  <div class="col-12" id="main">
+    <div *ngIf="activeSettings">
+      <form class="form-horizontal back" #addTaxesForm="ngForm" enctype="multipart/form-data">
+        <div class="row mar0">
+          <div class="col-12 margin-top-20 ">
+            <div class="col-9 pull-left fontsize18">
+              <h4 class="form-header inline font-custom-bold" style="margin-top: 0px;">
+                <i class="fa fa-gear"></i> Primary settings
+              </h4>
+            </div>
+  
+            <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
+              class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold fontsize13 margin-right-15"
+              [disabled]="!addTaxesForm.valid"
+            >
+              UPDATE
+            </button>
+          </div>
+        </div>
+
+        <div class="row mar0">
+          <div class="col-12 back margin-top-15 edit-setting">
+            <div class="width85">
+              <!-- Tax -->
+              <div class="form-group padtop20">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18">Tax</label>
+                  <div class="col-12 col-md-9 taxradio">
+                    <input type="radio" id="taxonItem" name="taxon"
+                      (click)="activeSettings.taxFlagLevel=0" [checked]="activeSettings.taxFlagLevel==0"
+                    >
+                    <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
+                      TAX ON ITEM
+                    </label>
+
+                    <input type="radio" id="taxonBill" name="taxon"
+                      (click)="activeSettings.taxFlagLevel=1" [checked]="activeSettings.taxFlagLevel==1"
+                    >
+                    <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                      TAX ON BILL
+                    </label>
+
+                    <input type="radio" id="taxdisabled" name="taxon"
+                      (click)="activeSettings.taxFlagLevel=2" [checked]="activeSettings.taxFlagLevel==2"
+                    >
+                    <label for="taxdisabled" class="disabled fontsize13 border-left-none font-custom-bold">
+                      DISABLED
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Discount -->
+              <div class="form-group padtop20">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18">Discount</label>
+                  <div class="col-12 col-md-9 discountradio">
+                    <input type="radio" id="discountonitem" name="discounton"
+                      (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
+                    >
+                    <label for="discountonitem"
+                      class="discountonitem fontsize13 border-right-none font-custom-bold"
+                    >
+                      DISCOUNT ON ITEM
+                    </label>
+    
+                    <input type="radio" id="discountonBill" name="discounton"
+                      (click)="activeSettings.discountFlagLevel=0" [checked]="activeSettings.discountFlagLevel==0"
+                    >
+                    <label for="discountonBill"
+                      class="discountonbill fontsize13 border-left-right-none font-custom-bold"
+                    >
+                      DISCOUNT ON BILL
+                    </label>
+    
+                    <input type="radio" id="discountdisabled" name="discounton"
+                      (click)="activeSettings.discountFlagLevel=2" [checked]="activeSettings.discountFlagLevel==2"
+                    >
+                    <label for="discountdisabled"
+                      class="discountdisabled fontsize13 border-left-none font-custom-bold"
+                    >
+                      DISABLED
+                    </label>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Date Format -->
+              <div class="form-group padtop20 date-format">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18">Date Format</label>
+                  <div class="col-12 col-md-9">
+                    <div class="row">
+                      <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
+                        <input type="radio" id="ddMMyyyy" name="dateFormat"
+                          [checked]="activeSettings.dateDDMMYY" (click)="setDateFormat('dd-mm-yy')"
+                        />
+                        <label for="ddMMyyyy">DD-MM-YYYY</label>
+                      </div>
+                      <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
+                        <input type="radio" id="MMddyyyy" name="dateFormat"
+                          [checked]="activeSettings.dateMMDDYY" (click)="setDateFormat('mm-dd-yy')"
+                        />
+                        <label for="MMddyyyy">MM-DD-YYYY</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Currency Pattern -->
+              <div class="form-group padtop20">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18">Currency Pattern </label>
+                  <div class="col-12 col-md-3 dropdown">
+                    <div type="button" id="dropdownMenuButton" class="btn dropdown-toggle"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    >
+                      Pattern
+                    </div>
+                    <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
+                      <a class="dropdown-item" (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</a>
+                      <a class="dropdown-item" (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</a>
+                      <a class="dropdown-item" (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</a>
+                      <a class="dropdown-item" (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Currency Symbol -->
+              <div class="form-group padtop20">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18" style="margin-top: 22px;">
+                    Currency Symbol
+                  </label>
+                  <div class="col-12 col-md-3">
+                    <span style="font-size: 11px;color: #2e2e2e;">Select Country</span>
+                    <div class="form-group" *ngIf="countries?.length>0">
+                      <select name="country-symbol" class="form-control" style="width:171px; height:31px; border-radius:4px;"
+                        [ngModel]='activeSettings.countryIndex' (change)="setCountry($event.target.value)"
+                      >
+                        <option [value]="country.id" *ngFor="let country of countries; let index = index">
+                          {{country.countryName + '-' + country.currencyCode}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-5 country-code country-radio ">
+                    <div class="row">
+                      <div class="col-5 col-md-4 text-center">
+                        <div style="font-size: 10px;color: #2e2e2e;">Select Currency Symbol</div>
+                        <input type="radio" id="currencySymbol" name="currenySymbol" [checked]="activeSettings.currencySymbol"
+                          (click)="setCurrencySymbol('symbol')"
+                        >
+                        <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
+                      </div>
+                      <div class="col-2 col-md-1 text-center" style="font-size: 24px">or</div>
+                      <div class="col-5 col-md-4 text-center">
+                        <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
+                        <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
+                          (click)="setCurrencySymbol('text')"
+                        >
+                        <label for="currencyName" class="taxonbill">{{activeCountry.currencyName}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Taxes -->
+              <div class="padtop20">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-custom-bold fontsize18 margin-top-8" style="text-align: left;">
+                    <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
+                  </label>
+                  <div class="col-9 pad0">
+                    <div class="row mar0">
+                      <div class="col-12 col-md-4" id="additionalTax{{index}}"
+                        *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
+                      >
+                        <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}:"
+                          [(ngModel)]="taxNames.taxName" required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Additional Tax Modal -->
+<div class="modal fade discountModal" id="addTaxName" role="dialog" aria-labelledby="discountLabel"
+  aria-hidden="true" data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog" *ngIf="activeSettings">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header font-custom-bold header-color" id="addPaymentLabel1">
+          Add Payment
+        </h4>
+        <a class="pull-right" (click)="close()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+      </div>
+
+      <div class="modal-body">
+        <form class="" name="addTaxes">
+          <div class="form-group font-custom-bold fontsize18">
+            <div class="row">
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="disable"
+                  [checked]="!activeSettings.alstTaxName || activeSettings.alstTaxName.length == 0" (click)="setAdditionalTaxes(0)"
+                >
+                <label for="disable"></label>
+                <span style="vertical-align: top; margin-left: 11px;">Disable</span>
+              </div>
+
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="oneTax"
+                [checked]="activeSettings.alstTaxName?.length == 1" (click)="setAdditionalTaxes(1)"
+                >
+                <label for="oneTax"></label>
+                <span style="vertical-align:  top;  margin-left: 11px;">One</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="twoTax"
+                  [checked]="activeSettings.alstTaxName?.length == 2" (click)="setAdditionalTaxes(2)"
+                >
+                <label for="twoTax"></label>
+                <span style="vertical-align: top; margin-left: 8px;">Two</span>
+              </div>
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="threeTax"
+                  [checked]="activeSettings.alstTaxName?.length == 3" (click)="setAdditionalTaxes(3)"
+                >
+                <label for="threeTax"></label><span style="vertical-align:  top;  margin-left: 8px;"> Three</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="fourTax"
+                  [checked]="activeSettings.alstTaxName?.length == 4" (click)="setAdditionalTaxes(4)"
+                >
+                <label for="fourTax"></label>
+                <span style="vertical-align:  top;  margin-left: 13px;">Four</span>
+              </div>
+              <div class="col-6 radio radio-primary">
+                <input type="radio" name="optionsRadios" id="fiveTax"
+                  [checked]="activeSettings.alstTaxName?.length == 5" (click)="setAdditionalTaxes(5)"
+                >
+                <label for="fiveTax"></label>
+                <span style="vertical-align: top; margin-left: 13px;" class="">Five</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

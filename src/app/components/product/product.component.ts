@@ -3,7 +3,7 @@ import { ProductService } from '../../services/product.service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
 
-import { product, response } from '../../interface'
+import { product } from '../../interface'
 import { Store } from '@ngrx/store'
 import * as productActions from '../../actions/product.action'
 import { AppState } from '../../app.state'
