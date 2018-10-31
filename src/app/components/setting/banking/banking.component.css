@@ -1,0 +1,5 @@
+@import '../../../../assets/css/listForm.css';
+
+.custom-field-form .form-group {
+  width: 300px !important;
+}

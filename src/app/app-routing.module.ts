@@ -12,6 +12,7 @@ import { EstimateComponent } from './components/estimate/estimate.component'
 import { PrimaryComponent } from './components/setting/primary/primary.component'
 import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
+import { BankingComponent } from './components/setting/banking/banking.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'setting/primary', component: PrimaryComponent, canActivate: [AuthGuard] },
   { path: 'setting/tnc', component: TncComponent, canActivate: [AuthGuard] },
   { path: 'setting/customField', component: CustomFieldComponent, canActivate: [AuthGuard] },
+  { path: 'setting/banking', component: BankingComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

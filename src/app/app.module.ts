@@ -36,6 +36,7 @@ import { ViewComponent } from './components/invoice/view/view.component'
 import { PrimaryComponent } from './components/setting/primary/primary.component'
 import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
+import { BankingComponent } from './components/setting/banking/banking.component'
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { CustomFieldComponent } from './components/setting/custom-field/custom-f
     ViewComponent,
     PrimaryComponent,
     TncComponent,
-    CustomFieldComponent
+    CustomFieldComponent,
+    BankingComponent
   ],
   imports: [
     BrowserModule,
