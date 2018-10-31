@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Router } from "@angular/router"
 
 import { response as apiRespo } from '../../interface'
+import { setStorage } from '../../globalFunctions'
 
 import { AuthService } from '../../services/auth.service'
 import { ClientService } from '../../services/client.service'
@@ -152,24 +153,10 @@ export class LoginComponent implements OnInit {
       this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
       this.store.dispatch(new settingActions.add(settingResponse.settings))
 
-      this.setCookie(settingResponse.settings)
+      setStorage(settingResponse.settings)
       $('.user-logout').show()
       $('.user-logout span').html(this.authenticated.registered_email)
       this.router.navigate(['/invoice/add'])
     })
-  }
-
-  setCookie(settings) {
-    var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
-
-    // Add settings in cookie
-    cookie.setting = settings.appSettings.androidSettings
-    if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
-      // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText);
-    } else {
-      console.log("else in dashboard");
-    }
-
-    localStorage.setItem('user', JSON.stringify(cookie))
   }
 }

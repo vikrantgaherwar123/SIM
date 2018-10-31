@@ -281,6 +281,14 @@ export function changeEstimate(data) {
   return tempEstimate;
 }
 
+export function setStorage(settings) {
+  var data = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
+
+  // Add settings in local Storage
+  data.setting = settings.appSettings.androidSettings
+  localStorage.setItem('user', JSON.stringify(data))
+}
+
 export function dateDifference (date1: any, date2: any){
   var date1: any = new Date(date1)
   var date2: any = new Date(date2)
