@@ -1,0 +1,13 @@
+@import '../../../../assets/css/listForm.css';
+
+.blue {
+  background:#176cc1;
+  height:120px;
+  margin: -9px -20px 0px -20px;
+  box-shadow: 0 -1px 3px 0 #666
+}
+
+.term-list-show {
+  padding: 8px 0;
+  border-bottom: #ccc solid 1px;
+}

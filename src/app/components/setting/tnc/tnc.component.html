@@ -1,0 +1,104 @@
+<div class="row main-wrapper">
+  <div class="col-12" id="main" style="padding-top:0">
+    <div class="blue"></div>
+    <div style="margin: 0px auto; max-width:1000px;">
+      <div class="col-12 item-list back padtop20 form-horizontal"
+        style="margin-top: -82px; height: auto;padding-right: 30px;padding-right: 30px;padding-bottom: 30px;"
+      >
+        <!-- HEADER -->
+        <div class="col-12 pad0" style="padding-bottom: 20px;padding-top: 10px;">
+          <div class="row">
+            <div class="col-7 font-custom-bold">
+              <h3 class="pad0 margin-top0"> Terms & Conditions</h3>
+            </div>
+            <div class="col-12 col-md-5">
+              <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
+                class="btn btnd btn-success no-border-radius pull-right font-weight-bold"
+                (click)="add()"
+              >
+                Add Terms & Conditions
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms And Conditions List -->
+        <div class="col-12 margin-bottom-5px">
+          <div align="center" style="background-color: #fff;"></div>
+
+          <div class="row term-list-show" *ngFor="let term of tncs; let index = index; let last = last" id="term{{index}}">
+            <div class="col-1">
+              <!-- <md-switch [(ngModel)]="data.terms[index]" disabled aria-label="Switch 1" style="display:inline; margin: 0px 0px 0px 24px;"></md-switch> -->
+              <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'" disabled>
+            </div>
+            <div class="col-9" style="left: -2%;">
+              <span class="ellipsisterm"> {{term.terms}}</span>
+            </div>
+            <div class="col-2 text-right">
+              <span [swal]="{ title: 'Are you sure want to delete?', type: 'warning',
+                  showCancelButton: true, confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'
+                }"
+                (confirm)="delete(index)"
+              >
+                <img style="width: 16px; height: 16px;" src="/assets/images/cross64.png">
+              </span>
+              <span (click)="edit(index)">
+                <img style="width: 16px; height: 16px;margin-left: 10px;" src="/assets/images/edit64.png">
+              </span>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="no-data-messsage" *ngIf="tncs.length == 0 && !tncLoading ">
+              <h4>No Terms to display, please create tncs</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EDIT TNC MODAL -->
+<div class="modal fade" id="addEditTnc" tabindex="-1" role="dialog"
+  aria-labelledby="gridSystemModalLabel" data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel1">
+          Add Terms & Condition
+        </h4>
+        <a class="pull-right" (click)="close()" style="margin-top: 6px;">
+          <img src="assets/images/cross16.png" alt="logo">
+        </a>
+      </div>
+      <div class="modal-body">
+        <form name="addtermpopup" #addtermpopup="ngForm">
+          <div class="col-12">
+            <div class="form-group">
+              <textarea elastic name="term" class="form-control" placeholder="Add term & Condition"
+                [(ngModel)]="activeTnc.terms" style="height: 110px;" required
+              ></textarea>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="checkbox pull-left">
+              <input type="checkbox" name="set_default" id="set_default"
+                [checked]="activeTnc.setDefault"
+                (click)="activeTnc.setDefault = $event.target.checked"
+              >
+              <label for="addtermcheck">Default?</label>
+            </div>
+            <button type="submit" id="addtermButton" title="save"
+              class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+              (click)="save(addtermpopup.valid );" [disabled]="!addtermpopup.valid"
+            >
+              {{activeTnc.uniqueKeyTerms ? 'Update' : 'Save'}}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

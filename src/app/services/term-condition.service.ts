@@ -55,21 +55,22 @@ export class TermConditionService {
 
   changeKeysForApi(terms) {
     return {
-      unique_identifier: terms.uniqueKeyTerms,
+      deleted_flag: terms.enabled == 1 ? 1 : undefined,
+      device_modified_on: terms.modifiedOn,
       organization_id: terms.orgId,
+      set_default: terms.setDefault ? 'DEFAULT' : undefined,
       terms: terms.terms,
-      device_modified_on: terms.deviceModifiedOn,
-      set_default: terms.setDefault ? 'DEFAULT' : undefined
+      unique_identifier: terms.uniqueKeyTerms
     }
   }
 
   changeKeysForStore(terms) {
     return {
       createDate: terms.created_on,
-      enabled: terms.deleted_flag,
       deviceCreateDate: terms.device_modified_on,
-      modifiedOn: terms.modified_on,
+      enabled: terms.deleted_flag,
       modifiedDate: terms.modified_on,
+      modifiedOn: terms.modified_on,
       orgId: terms.organization_id,
       serverTermCondId: terms._id,
       serverUpdateTime: terms.serverUpdateTime,

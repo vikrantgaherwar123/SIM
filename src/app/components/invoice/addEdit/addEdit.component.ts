@@ -592,7 +592,7 @@ export class AddEditComponent implements OnInit {
     if (status) {
       this.addTermModal.orgId = this.user.user.orgId
       this.addTermModal.uniqueKeyTerms = generateUUID(this.user.user.orgId)
-      this.addTermModal.deviceModifiedOn = new Date().getTime()
+      this.addTermModal.modifiedOn = new Date().getTime()
 
       this.termConditionService.add([
         this.termConditionService.changeKeysForApi(this.addTermModal)
