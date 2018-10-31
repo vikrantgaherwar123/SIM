@@ -289,8 +289,8 @@ export class AddEditComponent implements OnInit {
     // Set Labels
     this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
     this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
-    this.tempAmtLabel = settings.mTvRate ? settings.mTvRate : ''
-    this.tempRateLabel = settings.mTvAmount ? settings.mTvAmount : ''
+    this.tempAmtLabel = settings.mTvAmount ? settings.mTvAmount : ''
+    this.tempRateLabel = settings.mTvRate ? settings.mTvRate : ''
     this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : ''
     this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : ''
     this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : ''

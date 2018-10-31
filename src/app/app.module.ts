@@ -35,6 +35,7 @@ import { EstimateComponent } from './components/estimate/estimate.component'
 import { ViewComponent } from './components/invoice/view/view.component'
 import { PrimaryComponent } from './components/setting/primary/primary.component'
 import { TncComponent } from './components/setting/tnc/tnc.component'
+import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { TncComponent } from './components/setting/tnc/tnc.component'
     EstimateComponent,
     ViewComponent,
     PrimaryComponent,
-    TncComponent
+    TncComponent,
+    CustomFieldComponent
   ],
   imports: [
     BrowserModule,

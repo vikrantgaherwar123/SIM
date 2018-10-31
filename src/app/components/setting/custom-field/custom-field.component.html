@@ -1,0 +1,230 @@
+<div class="row main-wrapper">
+  <div class="col-12" id="main">
+    <div style="margin: 20px auto 0px auto; max-width:1000px;">
+      <form class="form-horizontal back" name="userForm" #form="ngForm" style="min-height: 1106px;">
+        <div class=" custom-field-form ">
+          <div style="padding-top: 25px;">
+            <div align="center">
+              <div class="col-12" style="margin-bottom: 20px;">
+                <span class="font-custom-bold" style="font-size: 15px;">Custom Field Name</span>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <span style="font-size: 11px;" class="font-weight-bold">
+                  Customize field name as they appear on your PDF
+                </span>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
+                    class="form-control" placeholder="Invoice"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvEstimate" name="mTvEstimate"
+                    class="form-control" placeholder="Estimate"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvProducts" name="mTvProducts"
+                    class="form-control" placeholder="Product"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvQty" name="mTvQty"
+                    class="form-control" placeholder="Qty"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvRate" name="mTvRate"
+                    class="form-control" placeholder="Rate"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvAmount" name="mTvAmount"
+                    class="form-control" placeholder="Amount"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.signature" name="signature"
+                    class="form-control" placeholder="Signature"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.receiptLable" name="receiptLable"
+                    class="form-control" placeholder="Receipt"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvTermsAndConditions" name="mTvTermsAndConditions"
+                    class="form-control" placeholder="Terms and Conditions"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvBillTo" name="mTvBillTo"
+                    class="form-control" placeholder="Bill To"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvShipTo" name="mTvShipTo"
+                    class="form-control" placeholder="Ship To"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.mTvDueDate" name="mTvDueDate"
+                    class="form-control" placeholder="Due Date:"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.discount" name="discount"
+                    class="form-control" placeholder="Discount"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.baseAmount" name="baseAmount"
+                    class="form-control" placeholder="Base Amount"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.subtotal" name="subtotal"
+                    class="form-control" placeholder="SubTotal"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.shipping" name="shipping"
+                    class="form-control"
+                    placeholder="Shipping" />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.adjustment" name="adjustment"
+                    class="form-control" placeholder="Adjustment"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.paid" name="paid"
+                    class="form-control" placeholder="Paid"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.balance" name="balance"
+                    class="form-control" placeholder="Balance"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.payableTo" name="payableTo"
+                    class="form-control" placeholder="Payable To"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.bankingDetails" name="bankingDetails"
+                    class="form-control" placeholder="Banking Details"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.otherDetails" name="otherDetails"
+                    class="form-control" placeholder="Others Details"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.total" name="total"
+                    class="form-control" placeholder="Total"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" [(ngModel)]="activeSetting.productCode" name="productCode"
+                    class="form-control" placeholder="Product Code"
+                  />
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-bottom: 10px;">
+                <div style="width: 300px;">
+                  <button type="button" (click)="cancel();"
+                    class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
+                  >
+                    CANCEL
+                  </button>
+                  <button type="submit" id="customSubmit" (click)="save(form.valid)"
+                    class="btn btn-success btn-raised width10btn no-border-radius font-custom-bold pull-right"
+                  >
+                    SAVE
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
