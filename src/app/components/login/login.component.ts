@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
     ).done((clientResponse: apiRespo, productResponse: apiRespo, termResponse: apiRespo, settingResponse: any) => {
       this.store.dispatch(new clientActions.add(clientResponse.records))
       this.store.dispatch(new productActions.add(productResponse.records))
-      this.store.dispatch(new termActions.add(termResponse.termsAndConditionList))
+      this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
       this.store.dispatch(new settingActions.add(settingResponse.settings))
 
       this.setCookie(settingResponse.settings)
