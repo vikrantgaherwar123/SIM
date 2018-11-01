@@ -1,0 +1,40 @@
+@import '../../../../assets/css/listForm.css';
+
+.user-profile .form-group {
+  width: 300px !important;
+}
+
+.image-upload {
+  width: 112px;
+  height: 96px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.user-profile img {
+  padding: 0px 8px 0px 12px;
+  width: 44px;
+  height: auto;
+}
+
+.user-profile input {
+  height: 38px;
+  margin-bottom: 0px !important;
+}
+
+.input-group span{
+  padding: 4px !important;
+}
+
+.input-group span img{
+  padding: 0 !important;
+  width: 25px;
+}
+
+.img-back {
+  background-size: 100%;
+  width: 100px;
+  height: 100px;
+  background-repeat: no-repeat;
+}

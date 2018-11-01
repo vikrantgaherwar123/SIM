@@ -1,0 +1,151 @@
+
+<div class="row main-wrapper">
+  <div class="col-12" id="main">
+    <div style="margin: 0px auto; max-width:1000px;">
+      <form class="shadow form-horizontal back" name="userForm" #userForm="ngForm">
+        <div class="user-profile">
+          <div align="center">
+
+            <!-- Logo and Sign Images -->
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="row form-group">
+                <div class="col-12 col-md-6 btn-file padr0">
+                  <form id="logoImgForm" name="logoImgForm" #logoImgForm="ngForm">
+                    <div id="logoImgCont" name="logoImgCont" class="img-back"
+                      [style]="logoStyle"
+                    >
+                      <input type="file" id="logoInput" (change)="uploadImage(1, $event.target.files[0])"
+                        style="width: 100px; height: 100px; opacity: 0;"
+                      />
+                    </div>
+  
+                    <div class="font-custom-bold text-center margin-top-8">
+                      Upload logo
+                    </div>
+                  </form>
+                </div>
+  
+                <div class="col-12 col-md-6 btn-file padl0">
+                  <form id="signImgForm" name="signImgForm" #signImgForm="ngForm">
+                    <div id="signImgCont" name="signImgCont" class="img-back"
+                      [style]="signStyle"
+                    >
+                      <input type="file" id="signInput" (change)="uploadImage(2, $event.target.files[0])"
+                        style="width: 100px; height: 100px; opacity: 0;"
+                      />
+                    </div>
+  
+                    <div class="font-custom-bold margin-top-8 text-left">
+                      Upload Signature
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                  </span>
+                  <input type="text" name="company_name" id="company_name" class="form-control"
+                    [(ngModel)]="org.org_name" placeholder="Company Name"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_contact_person.png">
+                  </span>
+                  <input type="text" name="person_name" id="person_name" class="form-control"
+                    [(ngModel)]="org.contact_person_name" placeholder="Person Name"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <textarea type="text" name="address" class="form-control" style="height: auto;"
+                  [(ngModel)]="org.org_address_1" placeholder="Address"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_business_id.png">
+                  </span>
+                  <input type="text" name="business_id" class="form-control"
+                    [(ngModel)]="org.business_id" placeholder="Business Id"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_email_id.png">
+                  </span>
+                  <input type="text" name="display_email" class="form-control"
+                    [(ngModel)]="org.display_email" placeholder="Email Id"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_contact_no.png">
+                  </span>
+                  <input type="text" name="contact_no" class="form-control" 
+                    [(ngModel)]="org.org_phone_no" placeholder="Contact No."
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_language_gry.png">
+                  </span>
+                  <input type="text" name="web_link" class="form-control"
+                    [(ngModel)]="org.website_link" placeholder="Website Link"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" style="margin-bottom: 10px; min-height: 50px;">
+              <div class="form-group">
+                <button type="button" (click)="cancel()"
+                  class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
+                >
+                  CANCEL
+                </button>
+                <button type="button" id="profileSubmitBtn" (click)="save(userForm.valid)"
+                  class="btn btn-success btn-raised width10btn no-border-radius font-custom-bold pull-right"
+                >
+                  SAVE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ export class OrganisationService {
 
   private fetchUrl = ''
   private addUrl = ''
+  private imgUploadUrl = ''
   private user: {
     access_token: string
   }
@@ -17,6 +18,7 @@ export class OrganisationService {
   constructor(private http: HttpClient, private CONST: CONSTANTS) { 
     this.fetchUrl = `${CONST.BASE_URL}pull/organization`
     this.addUrl = `${CONST.BASE_URL}add/org`
+    this.imgUploadUrl = `${CONST.BASE_URL}images/upload/`
 
     this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
@@ -43,6 +45,16 @@ export class OrganisationService {
     }
 
     return this.http.post(this.addUrl, org, headers)
+  }
+
+  imgUpload(type, formData) {
+    const headers = {
+      headers: new HttpHeaders({
+        "accessToken": this.user.access_token
+      })
+    }
+
+    return this.http.post(`${this.imgUploadUrl}${type}`, formData, headers)
   }
 
 }

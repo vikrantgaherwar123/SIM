@@ -14,6 +14,7 @@ import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
 import { BankingComponent } from './components/setting/banking/banking.component'
 import { PasswordComponent } from './components/setting/password/password.component'
+import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'setting/customField', component: CustomFieldComponent, canActivate: [AuthGuard] },
   { path: 'setting/banking', component: BankingComponent, canActivate: [AuthGuard] },
   { path: 'setting/password', component: PasswordComponent, canActivate: [AuthGuard] },
+  { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 
