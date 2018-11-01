@@ -13,10 +13,17 @@ export class AuthService {
 
   private loginUrl = ''
   private validateTokenUrl = ''
+  private changePasswordUrl = ''
+  private user: {
+    access_token: string
+  }
 
   constructor( private http: HttpClient, private CONST: CONSTANTS) {
     this.loginUrl = `${CONST.BASE_URL}login`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
+    this.changePasswordUrl = `${CONST.BASE_URL}changePassword`
+
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
   
   // Check if user logged in
@@ -54,6 +61,21 @@ export class AuthService {
     };
 
     return this.http.get(`${this.validateTokenUrl}${id}`, headers).pipe(
+      catchError(this.handleError('validateToken', {}))
+    )
+  }
+
+  // Change Password api
+  changePassword(currentPass, newPass) {
+    const headers = {
+      headers: new HttpHeaders({
+        "currentPass": currentPass,
+        "accessToken": this.user.access_token,
+        "newPass": newPass
+      })
+    }
+
+    return this.http.get(this.changePasswordUrl, headers).pipe(
       catchError(this.handleError('validateToken', {}))
     )
   }

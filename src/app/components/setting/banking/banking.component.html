@@ -1,9 +1,9 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
-    <div style="margin: 20px auto 0px auto; max-width:1000px;">
-      <form class="shadow  back" name="userForm" #form="ngForm" style="min-height: 421px;">
-        <div align="center" class="custom-field-form ">
-          <div class="col-12" style="margin-bottom: 10px; padding-top: 20px">
+    <div style="margin: 0px auto; max-width:1000px;" class="back">
+      <form class="shadow" name="userForm" #form="ngForm">
+        <div align="center" class="custom-field-form" style="padding: 15px">
+          <div class="col-12" style="margin-bottom: 10px;">
             <h5 class=" form-header font-custom-bold" style="margin-top: 0px;">
               Banking details & PayPal.Me
             </h5>
@@ -68,9 +68,9 @@
             >
           </div>
 
-          <div class="" style="margin: 0 auto; max-width: 300px">
+          <div style="margin: 0 auto; max-width: 300px">
             <button type="submit" id="bankingDetailSubmit" style="width: 300px;"
-              class="btn btn-success btn-raised no-border-radius font-custom-bold pull-right"
+              class="btn btn-success btn-raised no-border-radius font-custom-bold"
               (click)="save(form.valid)"
             >
               SAVE

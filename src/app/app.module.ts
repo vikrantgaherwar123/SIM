@@ -37,6 +37,7 @@ import { PrimaryComponent } from './components/setting/primary/primary.component
 import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
 import { BankingComponent } from './components/setting/banking/banking.component'
+import { PasswordComponent } from './components/setting/password/password.component'
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { BankingComponent } from './components/setting/banking/banking.component
     PrimaryComponent,
     TncComponent,
     CustomFieldComponent,
-    BankingComponent
+    BankingComponent,
+    PasswordComponent
   ],
   imports: [
     BrowserModule,
