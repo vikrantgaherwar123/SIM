@@ -185,14 +185,14 @@
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
-              <button id="downloadBtn" type="button" (click)="downloadInvoice(invoice.id, 1, 'download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
+              <button id="downloadBtn" type="button" (click)="downloadInvoice('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
                 [disabled]="!activeInv.unique_identifier" class="btn btnd btn-custom-1 no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
                 title="Download"
               >
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
-              <button id="previewBtn" type="button" (click)="downloadInvoice(invoice.id, 1, 'preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+              <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
                 [disabled]="!activeInv.unique_identifier" class="btn btnd btn-custom-2 no-border-radius pull-right margin-left-15 width12perbtn font-weight-bold"
                 title="Preview"
               >
