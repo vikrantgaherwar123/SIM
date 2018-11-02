@@ -745,8 +745,6 @@ export class EstimateComponent implements OnInit {
       //   this.isRate = false
 
     }
-
-    this.routeParams.estId = this.estimate[0].unique_identifier
   }
 
   isEmpty1() {

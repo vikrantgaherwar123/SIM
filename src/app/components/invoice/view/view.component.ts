@@ -57,7 +57,7 @@ export class ViewComponent implements OnInit {
 
   ngOnInit() {
     // Fetch clients if not in store
-    if(this.clientList.length < 1) {
+    if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
         this.store.dispatch(new clientActions.add(response.records))
       })
@@ -72,7 +72,7 @@ export class ViewComponent implements OnInit {
 
   paidAmount() {
     var temp = 0
-    if(this.activeInv.payments) {
+    if (this.activeInv.payments) {
       this.activeInv.payments.forEach((payment: any) => {
         temp += parseFloat(payment.paidAmount)
       })
@@ -90,27 +90,27 @@ export class ViewComponent implements OnInit {
   }
 
   // Search Invoice Functions
-  SearchInvoice(){
+  SearchInvoice() {
     var query = {
       clientIdList: [],
       startTime: 0,
       endTime: 0
     }
 
-    if(this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
+    if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {
         query.clientIdList = null
-        this.invoiceQueryForm.client.reset([{name: 'All'}])
+        this.invoiceQueryForm.client.reset([{ name: 'All' }])
       }
     } else {
       query.clientIdList = null
-      this.invoiceQueryForm.client.reset([{name: 'All'}])
+      this.invoiceQueryForm.client.reset([{ name: 'All' }])
     }
-    if(this.invoiceQueryForm.dateRange.start.value) {
+    if (this.invoiceQueryForm.dateRange.start.value) {
       query.startTime = this.invoiceQueryForm.dateRange.start.value.getTime()
     }
-    if(this.invoiceQueryForm.dateRange.end.value) {
+    if (this.invoiceQueryForm.dateRange.end.value) {
       query.endTime = this.invoiceQueryForm.dateRange.end.value.getTime()
     } else {
       query.endTime = new Date().getTime()
@@ -126,7 +126,7 @@ export class ViewComponent implements OnInit {
 
   fetchInvoices(query = null) {
     // Fetch invoices with given query
-    if(query == null) {
+    if (query == null) {
       query = {
         clientIdList: null,
         startTime: 0,
@@ -136,7 +136,7 @@ export class ViewComponent implements OnInit {
 
     this.invListLoader = true
     this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
-      if(response.status === 200) {
+      if (response.status === 200) {
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
         // this.setActiveInv()
       }
@@ -146,9 +146,9 @@ export class ViewComponent implements OnInit {
 
   setActiveInv(invId: string = '') {
     this.activeInvId = invId
-    if(!this.activeInvId) {
+    if (!this.activeInvId) {
       this.activeInv = this.invoiceList[0]
-      if(this.activeInv) {
+      if (this.activeInv) {
         this.activeInvId = this.activeInv.unique_identifier
       }
     } else {
@@ -158,13 +158,59 @@ export class ViewComponent implements OnInit {
   }
 
   setActiveClient() {
-    if(this.activeInv) {
+    if (this.activeInv) {
       var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
-      if(client) {
+      if (client) {
         this.activeClient = client
       } else {
         this.activeClient = null
       }
     }
+  }
+
+  downloadInvoice(type) {
+    if (type == "download") {
+      $('#download').attr('disabled', 'disabled')
+    } else if (type == "preview") {
+      $('#preview').attr('disabled', 'disabled')
+    }
+
+    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).subscribe((response: any) => {
+      var file = new Blob([response], { type: 'application/pdf' })
+
+      var a = window.document.createElement('a')
+      a.href = window.URL.createObjectURL(file)
+
+      document.body.appendChild(a)
+      if (type == "download") {
+        a.download = this.getFileName()
+        a.click()
+        $('#download').removeAttr('disabled')
+      } else if (type == "preview") {
+        window.open(a.toString())
+        $('#preview').removeAttr('disabled')
+      }
+    })
+  }
+
+  getFileName() {
+    var d = new Date()
+
+    var day = d.getDate() <= 9 ? '0' + d.getDate() : d.getDate()
+    var month = d.toString().split(' ')[1]
+    var year = d.getFullYear()
+    var time = getTime()
+
+    function getTime() {
+      var hour = d.getHours() < 13 ? d.getHours().toString() : (d.getHours() - 12).toString()
+      hour = parseInt(hour) < 10 ? '0' + hour : hour
+      var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+      return hour + min
+    }
+
+    var ampm = d.getHours() < 12 ? 'AM' : 'PM';
+
+    var invoiceNumber = this.activeInv.invoice_number.replace('/', '')
+    return 'INVPDF_' + invoiceNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
   }
 }

@@ -908,7 +908,6 @@ export class AddEditComponent implements OnInit {
   }
 
   deleteInvoice() {
-    console.log('asdfwe ')
     this.activeInvoice.deleted_flag = 1
     this.save(true)
   }

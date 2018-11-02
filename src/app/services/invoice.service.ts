@@ -75,8 +75,9 @@ export class InvoiceService {
   fetchPdf(id) {
     const headers = {
       headers: new HttpHeaders({
-        "accessToken": this.user.access_token
-      })
+        "accessToken": this.user.access_token,
+      }),
+      responseType: "arraybuffer" as "json"
     }
 
     return this.http.get(`${this.fetchPdfUrl}${id}`, headers)
