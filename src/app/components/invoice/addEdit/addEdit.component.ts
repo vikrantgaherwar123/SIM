@@ -69,7 +69,6 @@ export class AddEditComponent implements OnInit {
     _id: 0
   }
 
-  // private invoiceList: Observable<invoice[]>
   activeInvoice: invoice = {...this.emptyInvoice}
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
@@ -130,7 +129,7 @@ export class AddEditComponent implements OnInit {
   private newItemCounter: number = 0
 
   settings: any
-  private activeSettings: any
+  private activeSettings: setting
   private user: {
     user: {
       orgId: string
@@ -561,7 +560,6 @@ export class AddEditComponent implements OnInit {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
-        console.log(this.activeInvoice.listItems)
         this.addItem.reset('')
         this.activeItem = {
           quantity: 1,

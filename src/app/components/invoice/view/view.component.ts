@@ -170,9 +170,9 @@ export class ViewComponent implements OnInit {
 
   downloadInvoice(type) {
     if (type == "download") {
-      $('#download').attr('disabled', 'disabled')
+      $('#downloadBtn').attr('disabled', 'disabled')
     } else if (type == "preview") {
-      $('#preview').attr('disabled', 'disabled')
+      $('#previewBtn').attr('disabled', 'disabled')
     }
 
     this.invoiceService.fetchPdf(this.activeInv.unique_identifier).subscribe((response: any) => {
@@ -185,10 +185,10 @@ export class ViewComponent implements OnInit {
       if (type == "download") {
         a.download = this.getFileName()
         a.click()
-        $('#download').removeAttr('disabled')
+        $('#downloadBtn').removeAttr('disabled')
       } else if (type == "preview") {
         window.open(a.toString())
-        $('#preview').removeAttr('disabled')
+        $('#previewBtn').removeAttr('disabled')
       }
     })
   }

@@ -1,0 +1,579 @@
+<div class="row main-wrapper">
+  <div class="col-12" id="main">
+    <div class="row">
+
+      <!-- Estimate List -->
+      <div class="col-3 item-list inv-list pad-right-0">
+        <div [class]="{'list-shadow':estimates.length > clientDisplayLimit ,'scroll-bar-shadow': true }">
+          <div class="col-12 pad0 filter-box">
+            <div class="col-12">
+              <div class="row mar0">
+                <div class="col-6 pad-left-0" style="padding-top: 15px;">
+                  <!-- goNew();parent.checked = false; -->
+                  <a title="Add New" class="pull-left list-btn cus-img">
+                    <img src="/assets/images/list-icon/add-plus-button24.png">
+                  </a>
+                </div>
+                <div class="col-6 pad0" style="padding-top: 15px;">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                  >
+                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li [class.active]="isByDate">
+                      <a (click)="setSortEstimate('created_date')">By Date</a>
+                    </li>
+                    <li [class.active]="isInvNo">
+                      <a (click)="setSortEstimate('estimate_number')">By Estimate No.</a>
+                    </li>
+                    <li [class.active]="isAmount">
+                      <a (click)="setSortEstimate('amount')">By Amount</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="estimateFilterTerm" name="estimateFilterTerm" placeholder="Search estimates" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="/assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Estimate
+          </div>
+
+          <div class="col-12 pad0 mCustomScrollbar">
+            <div style="background-color: #fff;" *ngIf="!estimateListLoader">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div>
+            <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
+            <div class="item all-item row cursor-pointer"
+              *ngFor="let estimate of (estimates | orderBy: sortEstimates | filterBy:estimateFilterTerm | slice:0:clientDisplayLimit); index as key"
+              (click)="getEstimate(estimate.unique_identifier, index)"
+            >
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ estimate.createDate | date: 'dd MMM' }}
+              </div>
+
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="font-custom-bold fontsize13">{{ estimate.orgName }}</h5>
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    <span>#</span>{{ estimate.quetationNo }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ estimate.amount | currency }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="no-data-messsage" *ngIf="estimates.length < 1 && !estimateListLoader">
+              <h4>No Estimate to display, please create estimates</h4>
+            </div>
+            <div class="col-12 pad0" [class.list-shadow]="estimates.length > clientDisplayLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimates.length > clientDisplayLimit">
+                Click to view more >>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Estimate -->
+      <div class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen" id="msgInv">
+        <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
+          class="create-estimate" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
+        >
+          <div class="shadow back pad15">
+            <div class="col-12 padt15">
+              <div class="vtop text-right">
+                <span class="c-name" type="text" id="titleAdd" name="title" *ngIf="authenticated.setting.mTvEstimate">{{authenticated.setting.mTvEstimate}}</span>
+                <span class="c-name" type="text" id="titleAddelse" name="title" *ngIf="!authenticated.setting.mTvEstimate">{{'EST_LABEL' | translate}}</span>
+              </div>
+      
+              <div class="col-12 pad0" style="margin-bottom: 25px">
+                <div class="row mar0">
+                  <div class="col-12 col-sm-7 pad0" id="clientDataAdd" name="clientData">
+                    <div class="row">
+                      <div class="col-10">
+                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">{{tempBillLabel}}</span>
+                        <br />
+      
+                        <div class="form-group pad-left-0">
+                          <div>
+                            <!-- <input type="text" [formControl]="billingTo"> -->
+                            <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
+                              matInput [formControl]="billingTo" [matAutocomplete]="auto"
+                            >
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedClientChange($event)">
+                              <mat-option *ngFor="let client of filteredRepos | async" [value]="client.name">{{client.name}}</mat-option>
+                            </mat-autocomplete>
+                            <!-- <md-content class="md-padding font-custom" style="background-color: #ffffff ;    padding: 2px 2px 2px 2px;">
+                                    <form name="autocompleteForm">
+                                      <md-autocomplete md-dropdown-position="down" [disabled]="false" md-selected-item="selectedItem"
+                                        md-no-cache="true" md-search-text-change="searchTextChange(searchText)" md-search-text="searchText"
+                                        md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)"
+                                        md-item-text="item.name" md-min-length="0" placeholder="Search & Select Client"
+                                        md-input-name="autocomplete" ng-invalid="error" required my-enter custom-mouse>
+                                        <md-item-template>
+                                          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
+                                        </md-item-template>
+                                        <div *ngIf="showClientError">
+                                          <div ng-message="required">This field is required</div>
+                                        </div>
+          
+                                        <md-not-found>
+                                          <div (click)="newState(searchText)">
+                                            <i class="material-icons" style="vertical-align: middle;" (click)="">&#xE146;</i>
+                                            Add this client {{searchText}}..
+                                          </div>
+                                        </md-not-found>
+                                      </md-autocomplete>
+                                      <br />
+                                    </form>          
+                                  </md-content> -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <!-- <md-progress-circular *ngIf="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
+                                md-diameter="25px"></md-progress-circular> -->
+                      </div>
+      
+                      <!--{{selectedItem}}-->
+                      <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
+                        <div class="row mar0">
+                          <div class="col-6 pad-left-0">
+                            <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
+                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                            <div class="address-render">{{client.client.addressLine1}}<br /></div>
+                            <div *ngIf="!isEmpty11()">
+                              Email: {{client.client.email}}
+                            </div>
+                            <div *ngIf="!isEmpty12()">
+                              Contact No: {{client.client.number}}
+                            </div>
+                          </div>
+                          <div class="col-6 pad-right-0">
+                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">Shipping
+                              Address</span><br />
+                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                            <div class="address-render">{{client.client.shippingAddress}}<br /></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-sm-5 pad-right-0" id="invDataAdd">
+                    <div class="row">
+                      <div class="offset-md-2 col-6 col-md-4" style="margin-top: 5px;">
+                        <span class="font-custom-bold text-left w100">Estimate No.</span>
+                      </div>
+      
+                      <div class="col-6">
+                        <form #invNumberForm="ngForm" name="invNumberForm">
+                          <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.estimateNumber ) && invNumberForm.estimateNumber.error.required">
+                            <input type="text" [(ngModel)]="data.add_estimate.estimate_number" name="estimateNumber" id="estimateNumber"
+                              value="{{ data.add_estimate.estimate_number }}" class="form-control pad-right-0" required
+                            />
+                            <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.estimateNumber">
+                              <span *ngIf="invNumberForm.estimateNumber.error.required">Estimate No. required</span>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="offset-md-2 col-6 col-md-4 col-lg-2" style="margin-top: 5px;">
+                        <span class="font-custom-bold text-left w100">Estimate Date</span>
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field style="max-width: 100%;">
+                          <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker" required readonly>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <div class="form-error" *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched">
+                          <span *ngIf="invoiceGeneratorAdd.error">Estimate date required</span>
+                        </div>
+                        <input type="hidden" [(ngModel)]="data.add_estimate.created_date" name="createdDate"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--Div Content title INVOICE and Company's Name & Address-etc- end-->
+                <div class="lineItemDiv">
+                  <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+                    <!--table head content itemDescription , Qty , Rate ,Amount start -->
+                    <thead>
+                      <tr class="hd font-custom-bold">
+                        <td width="48%">
+                          <input type="text" [value]="tempProLabel" id="itemDescLabelAdd"
+                            class="bld w-100" style="text-align:left;" disabled
+                          >
+                        </td>
+                        <td width="18%">
+                          <input type="text" style="text-align: center" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100"
+                            name="quantity" disabled>
+                        </td>
+                        <td width="18%">
+                          <input type="text" style="text-align: center" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-left"
+                            name="rate" disabled>
+                        </td>
+                        <td width="18%">
+                          <input type="text" style="text-align: center" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-right"
+                            style="text-align:right;" name="amount" disabled>
+                        </td>
+                        <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
+                      </tr>
+                    </thead>
+
+                    <!--table Body content itemDescription , Qty , Rate ,Amount start-->
+                    <tbody class="lineItems">
+                      <tr class="row-item" *ngFor="let item of data.add_estimate.listItems; let index = index; let last = last">
+                        <td [class.no-border-last]="last">
+                          <div class="form-group">
+                            <div class="custom-add-product selectize-wrap">
+                              <input type="text" name="product-name_{{index}}" class="form-control" placeholder="Type or Select Product"
+                                [matAutocomplete]="auto" [(ngModel)]="item.product_name"
+                              >
+                              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem(index, $event.option.value)">
+                                <mat-option *ngFor="let product of productList" [value]="product">{{product.prodName}}</mat-option>
+                              </mat-autocomplete>
+                            </div>
+                            <div class="custom-description">
+                              <textarea id="descId" name="description_{{index}}" elastic style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
+                                [(ngModel)]="item.description" class="form-control" placeholder="Description"
+                              ></textarea>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                          <div class="form-group">
+                            <input type="number" name="itemQty_{{index}}" id="qty{{index}}" step="any" class="form-control text-right" min="0.01"
+                              [(ngModel)]="item.quantity" (change)="calculateTotal(index)" select-on-click my-enter-in>
+                          </div>
+                        </td>
+
+                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                          <div class="form-group">
+                            <input type="number" name="itemRate_{{index}}" step="any" class="form-control text-right" name="itemRate.1" min="0.01"
+                              [(ngModel)]="item.rate" (change)="calculateTotal(index)" select-on-click my-enter-in
+                            />
+                          </div>
+                        </td>
+
+                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                          <div class="form-group">
+                            <input type="number" step="any" class="form-control text-right" 
+                              title="Amount is calculated automatically."
+                              name="itemTotal.1_{{index}}" [(ngModel)]="item.total" disabled convert-decimal
+                            />
+                          </div>
+                        </td>
+      
+                        <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
+                          [class.no-border-last]="last">
+                          <div style="padding-top:4px">
+                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;" (click)="removeItem(index)">
+                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt="" style="height:16px;">
+                            </a>
+                          </div>
+                        </td>      
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <!--Term and Condition and Sub-Total in table body start -->
+                  <div class="row add-item-button">
+                    <div class="col-6">
+                      <button type="button" class="btnd add-line-item-button" (click)="addLineItem()">
+                        <img src="assets/images/add16.png" alt="logo"
+                          style="vertical-align: initial;height:10px; margin-right: 3px;"
+                        >
+                        Line Item
+                      </button>
+                    </div>
+      
+                    <div class="col-6 discount-tax-pad font-custom-bold">
+                      <!-- <div class="cursor-pointer"><a class="inline" *ngIf="!tempflag" (click)="showMe();data.add_estimate.discount_on_item = 0; discount_on = 'onBill'; ">{{tempDisLabel}}+</a></div>
+                      <div class="cursor-pointer"><a class="inline" *ngIf="!tempflagShipping" (click)="showMeShipping();">{{tempShippingLabel}}+</a></div>
+                      <div class="cursor-pointer"><a class="inline" *ngIf="!tempflagTax" (click)="showMeTax();data.add_estimate.tax_on_item = 1; tax_on = 'taxOnBill'; selectTax();">Tax+</a></div>
+                      <div class="cursor-pointer"><a class="inline" *ngIf="!show_adjustment" (click)="showMeAdjustment();">{{tempAdjLabel}}+</a></div> -->
+
+                      <!-- <div class="inline" *ngFor="let tax of authenticated.setting.alstTaxName">
+                        <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,index)">
+                          <a (click)="showMeMultipleTax(index);">{{tax.taxName}}+</a>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+
+                  <div class="row mar0">
+                    <div class="col-6 pad-left-0">
+                      <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                        <span class="bld">{{tempTermLabel}}</span>
+                        <!-- addTerm(true) -->
+                        <a class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
+                          data-original-title="Add " title="Add Term"
+                        >
+                          <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
+                          Add Terms
+                        </a>
+                      </div>
+        
+                      <div class="col-md-12 col-xs-12 col-md-12 pad0">
+                        <div class="form-group">
+                          <div *ngFor="let term of termList; index as index" class="row mar0">
+                            <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
+                              {{term.terms_condition}}
+                            </div>
+                            <div class="col-md-2 ml-auto" (click)="setTermsListDelete(index)" style="cursor:pointer;">
+                              <a class="closeicon show float-right">
+                                <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 col-xs-12 col-sm-12 col-lg-6 pad-right-0">
+                      <div class="col-12 term-cond-label " style="margin-bottom: 5px;">
+                        <div class="row mar0">
+                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                            <span class="font-custom-bold" value="">{{tempSubToLabel}}</span>
+                          </div>
+                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right ">
+                            <span class="font-custom-bold">{{data.add_estimate.gross_amount}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12 pad-right-0 margin-bottom-5px">
+                        <div class="row">                        
+                          <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label pad-right-0">
+                            <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
+                            <div *ngIf="!isRate" class="inline font-custom">($)</div>
+                            <div *ngIf="isRate" class="inline font-custom">(%)</div>
+
+                            <div class="pad0" style="float: right; padding-right: 10px;">
+                              <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                              >
+                                <span class="glyphicon glyphicon-menu-down"
+                                  style="font-size: 14px;vertical-align: middle;" title="Discount"
+                                ></span>
+                              </div>
+                              <ul class="dropdown-menu dropdown-menu-right">
+                                <li [class.active]="!isRate">
+                                  <a href="#" (click)="isRate=false;$event.preventDefault();calculateEstimate(1);data.add_estimate.percentage_flag = 0;">Flat
+                                    ($)
+                                  </a>
+                                </li>
+                                <li [class.active]="isRate">
+                                  <a href="#" (click)="isRate=true;$event.preventDefault();calculateEstimate(1);data.add_estimate.percentage_flag = 1;">Percent
+                                    (%)
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+    
+                          <div class="col-md-8 col-sm-8 col-xs-8">
+                            <form #form_discount="ngForm" name="form_discount">
+                              <div class="input-group addon-input pad-right-0">
+                                <div *ngIf="data.add_estimate.percentage_flag !== 0">
+                                  <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="percentage_input"
+                                    type="number" min="0.00" id="percentage_input" step="any" max="100" autocomplete="off"
+                                    tabindex="1005" (required)="ngRequired" maxlength="data.add_estimate.gross_amount"
+                                    [(ngModel)]="data.add_estimate.percentage_value" (change)="calculateEstimate(1)"
+                                    convert-decimal select-on-click my-enter-in disable-enter
+                                  />
+                                </div>
+    
+                                <div *ngIf="data.add_estimate.percentage_flag !== 1">
+                                  <input type="number" name="discount_input" id="discount_input" step="any" min="0.00"
+                                    class="form-control ng-pristine ng-valid ng-valid-required ng-touched" tabindex="1005"
+                                    ng-maxlength="data.add_estimate.gross_amount" autocomplete="off" (required)="ngRequired" [(ngModel)]="data.add_estimate.discount"
+                                    (change)="calculateEstimate(1)" select-on-click my-enter-in disable-enter
+                                  />
+                                </div>
+                                <!-- <div class="input-group-addon addon-right " *ngIf="isRate">%</div>-->
+          
+                                <div class="input-group-addon pad-right-0 remove-button">
+                                  <!-- <div class="addon selectorpad-right-0" (click)="hideMe();data.add_estimate.discount_on_item = 2; discount_on = 'disabled';">
+                                    <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                                  </div> -->
+                                </div>
+                              </div>
+                            </form>
+    
+                            <div class="form-error" *ngIf="data.add_estimate.percentage_flag !== 0">
+                              <span *ngIf="form_discount.error">Not more than 100</span>
+                            </div>
+                            <!-- <div class="form-error">
+                              <span *ngIf="form_discount.discount_input.error.ngMaxlength">Not more than Total</span>
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+<!-- *ngIf="show_tax_input" -->
+                      <div class="col-12 pad-right-0 margin-bottom-5px" >
+                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                          <div class="row">
+                            <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                            <div class="inline font-custom">(%)</div>
+                          </div>
+                        </div>
+        
+                        <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                          <form #form_tax_input="ngForm" name="form_tax_input">
+                            <div class="input-group pad-right-0">
+                              <input class="form-control" name="tax_input" id="tax_input" min="0.00" type="number" step="any"
+                                max="100" tabindex="1005" (required)="ngRequired" [(ngModel)]="data.add_estimate.tax_rate"
+                                [value]="0.00" (change)="calculateEstimate(1, form_tax_input)"
+                              />
+                              <!-- <div class="input-group-addon addon-right">%</div>-->
+                              <div class="input-group-addon pad-right-0 remove-button">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeTax();data.add_estimate.tax_on_item = 2; tax_on = 'taxDisabled';">
+                                  <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                                </div> -->
+                              </div>
+                            </div>
+                          </form>
+  
+                          <div class="form-error">
+                            <span *ngIf="form_tax_input.error">Not more than 100</span>
+                          </div>      
+                        </div>
+                      </div>
+
+                      <div *ngFor="let tax of data.add_estimate.taxList" class="col-12 pad-right-0 margin-bottom-5px">
+                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                          <div class="row">
+                            <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                            <div class="inline font-custom">(%)</div>
+                          </div>
+                        </div>
+        
+                        <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                          <form #form_tax_input="ngForm" name="form_tax_input">
+                            <div class="input-group pad-right-0">
+                              <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
+                                max="100" tabindex="1005" (required)="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
+                                (change)="calculateEstimate(1)" select-on-click my-enter-in disable-enter
+                              />
+        
+                              <!--<div class="input-group-addon ">%</div>-->
+                              <div class="input-group-addon pad-right-0 remove-button">
+                                <div class="addon selectorpadr0" (click)="hideMeTaxMultiple(index);">
+                                  <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                                </div>
+                              </div>
+                            </div>
+                            <!--<input type="text" [(ngModel)]="data.invoice.taxList[index].taxName" [value]="{{tax.taxName}}"/>-->
+                          </form>
+  
+                          <div class="form-error">
+                            <span *ngIf="form_tax_input.error">Not more than 100</span>
+                          </div>
+                        </div>
+                      </div>
+<!-- *ngIf="show_shipping_charge" -->
+                      <div class="col-12 pad-right-0 margin-bottom-5px">
+                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                          <div class="row">
+                            <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
+                          </div>
+                        </div>
+  
+                        <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                          <form #form_shipping_input="ngForm" name="form_shipping_input">
+                            <div class="input-group pad-right-0">
+                              <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="shipping_input"
+                                type="number" step="any" max="data.add_estimate.gross_amount" autocomplete="off" tabindex="1005"
+                                (required)="ngRequired" [(ngModel)]="data.add_estimate.shipping_charges" (change)="calculateEstimate(1)"
+                                select-on-click disable-enter
+                              />
+                              <div class="input-group-addon pad-right-0 remove-button">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeShipping();">
+                                  <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                                </div> -->
+                              </div>
+                            </div>
+                          </form>
+  
+                          <div class="form-error">
+                            <span *ngIf="form_shipping_input.error">Not more than 100</span>
+                          </div>
+                        </div>
+                      </div>
+<!-- *ngIf="show_adjustment" -->
+                      <div class="col-12 pad-right-0 margin-bottom-5px">
+                        <div class="col-md-4 col-sm-4 col-xs-4 discount-tax-label">
+                          <div class="row">
+                            <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
+                          </div>
+                        </div>
+  
+                        <div class="col-md-8 col-sm-8 col-xs-8 pad-right-0">
+                          <form #form_tax_input="ngForm" name="form_tax_input">
+                            <div class="input-group pad-right-0">
+                              <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched " name="tax_input"
+                                type="number" step="any" autocomplete="off" tabindex="1005" (required)="ngRequired"
+                                [(ngModel)]="data.add_estimate.adjustment" (change)="calculateEstimate(1)" select-on-click
+                              />
+                              <!-- <div class="input-group-addon set-color">%</div>-->
+                              <div class="input-group-addon pad-right-0 remove-button">
+                                <!-- <div class="addon selectorpadr0" (click)="hideMeAdjustment();">
+                                  <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                                </div> -->
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+  
+                      <div class="col-12 term-cond-label ">
+                        <div class="row mar0">
+                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-left">
+                            <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                          </div>
+          
+                          <div class="col-md-6 col-xs-6 col-lg-6 col-sm-6 text-right">
+                            <span class="font-custom-bold">{{data.add_estimate.amount}}</span>      
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="col-12 pad0 margin-top-20">
+                        <button id="estSubmitBtn" type="submit" class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
+                          [disabled]="data.add_estimate.listItems.length == 0" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
+                        >
+                          SAVE
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

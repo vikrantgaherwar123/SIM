@@ -8,7 +8,8 @@ import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
 import { AddEditComponent } from './components/invoice/addEdit/addEdit.component'
 import { ViewComponent } from './components/invoice/view/view.component'
-import { EstimateComponent } from './components/estimate/estimate.component'
+import { AddEditEstComponent } from './components/estimate/addEdit/addEditEst.component'
+import { ViewEstComponent } from './components/estimate/view/viewEst.component'
 import { PrimaryComponent } from './components/setting/primary/primary.component'
 import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
@@ -26,8 +27,9 @@ const routes: Routes = [
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },
-  { path: 'estimate', redirectTo: '/estimate/view/:estId', pathMatch: 'full' },
-  { path: 'estimate/view/:estId', component: EstimateComponent, canActivate: [AuthGuard] },
+  { path: 'estimate/add', component: AddEditEstComponent, canActivate: [AuthGuard] },
+  { path: 'estimate/edit/:estId', component: AddEditEstComponent, canActivate: [AuthGuard] },
+  { path: 'estimate/view', component: ViewEstComponent, canActivate: [AuthGuard] },
   { path: 'setting/primary', component: PrimaryComponent, canActivate: [AuthGuard] },
   { path: 'setting/tnc', component: TncComponent, canActivate: [AuthGuard] },
   { path: 'setting/customField', component: CustomFieldComponent, canActivate: [AuthGuard] },
