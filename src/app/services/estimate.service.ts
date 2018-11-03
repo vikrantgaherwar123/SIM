@@ -7,7 +7,6 @@ import { CONSTANTS } from '../constants'
   providedIn: 'root'
 })
 export class EstimateService {
-
   private fetchUrl = ''
   private addUrl = ''
   private fetchByIdUrl = ''

@@ -1,23 +1,20 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-      <!-- Create Invoice -->
-      <div id="msgInv" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
+
+      <!-- Create Estimate -->
+      <div class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen" id="msgInv">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
-          class="create-invoice" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
+          class="create-estimate" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
         >
           <div class="shadow back pad15">
             <div class="col-12 padt15">
               <div class="vtop text-right">
-                <span class="c-name" type="text" id="titleAdd" name="title"
-                  *ngIf="settings.mTvInvoice"
-                >
-                  {{settings.mTvInvoice}}
+                <span class="c-name" type="text" id="titleAdd" name="title" *ngIf="settings.mTvEstimate">
+                  {{settings.mTvEstimate}}
                 </span>
-                <span class="c-name" type="text" id="titleAddelse" name="title"
-                  *ngIf="!settings.mTvInvoice"
-                >
-                  {{'INV_LABEL' | translate}}
+                <span class="c-name" type="text" id="titleAddelse" name="title" *ngIf="!settings.mTvEstimate">
+                  {{'EST_LABEL' | translate}}
                 </span>
               </div>
       
@@ -25,12 +22,12 @@
                 <div class="row mar0">
                   <div class="col-12 col-sm-7 pad0" id="clientDataAdd" name="clientData">
                     <div class="row">
-                      <!-- Billing To -->
                       <div class="col-10">
                         <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
                           {{tempBillLabel}}
                         </span>
-
+                        <br />
+      
                         <div class="form-group pad-left-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
@@ -49,51 +46,56 @@
                         </div>
                       </div>
 
-                      <div class="col-2" style="padding-top: 30px;">
-                        <span>
-                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
-                        </span>
+                      <div class="col-2">
+                        <!-- <md-progress-circular *ngIf="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
+                                md-diameter="25px"></md-progress-circular> -->
                       </div>
+      
 
-                      <!-- Address and Shipping Address -->
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
                         <div class="row mar0">
                           <div class="col-6 pad-left-0">
-                            <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
-                            <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
-                            <div *ngIf="activeClient && activeClient.email">
+                            <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">
+                              Address
+                            </span>
+                            <br />
+                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                            <div class="address-render">{{activeClient.addressLine1}}<br /></div>
+                            <div *ngIf="activeClient.email">
                               Email: {{activeClient.email}}
                             </div>
-                            <div *ngIf="activeClient && activeClient.number">
+                            <div *ngIf="activeClient.number">
                               Contact No: {{activeClient.number}}
                             </div>
                           </div>
                           <div class="col-6 pad-right-0">
-                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">Shipping
-                              Address</span><br />
-                            <div class="address-render" *ngIf="activeClient">{{activeClient.shippingAddress}}<br /></div>
+                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                              Shipping Address
+                            </span>
+                            <br />
+                            <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
+                            <div class="address-render">{{activeClient.shippingAddress}}<br /></div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Invoice Number and Dates -->
                   <div class="col-12 col-sm-5 pad-right-0" id="invDataAdd">
-                    <div class="row" style="margin-top: 5px;">
-                      <div class="col-6 offset-md-2 col-md-4">
-                        <span class="font-custom-bold text-left w100">Invoice#</span>
+                    <div class="row">
+                      <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
+                        <span class="font-custom-bold text-left w100">Estimate No.</span>
                       </div>
                       <div class="col-6">
                         <form #invNumberForm="ngForm" name="invNumberForm">
-                          <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
-                            && invNumberForm.invoiceNumber.$error.required"
+                          <div class="form-group"
+                            [class.has-error]="(invNumberForm.submitted || invNumberForm.estimateNumber ) && invNumberForm.estimateNumber.error.required"
                           >
-                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pad-right-0"
-                              [(ngModel)]="activeInvoice.invoice_number"required
+                            <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pad-right-0"
+                              [(ngModel)]="activeEstimate.estimate_number" required
                             />
-                            <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
-                              <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
+                            <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.estimateNumber">
+                              <span *ngIf="invNumberForm.estimateNumber.error.required">Estimate No. required</span>
                             </div>
                           </div>
                         </form>
@@ -102,83 +104,26 @@
 
                     <div class="row" style="margin-top: 5px;">
                       <div class="col-6 offset-md-2 col-md-4">
-                        <span class="font-custom-bold text-left w100">Invoice Date</span>
+                        <span class="font-custom-bold text-left w100">Estimate Date</span>
                       </div>
                       <div class="col-6">
-                        <div style="max-width: 100%;">
-                          <div class="row mar0">
-                            <input type="text" class="form-control"
-                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly
-                              (click)="picker.open()"
-                            >
-                            <mat-datepicker #picker></mat-datepicker>
-                          </div>
-                        </div>
-                        <div class="form-error" *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched">
-                          <span *ngIf="invoiceGeneratorAdd.error">Invoice date required</span>
-                        </div>
-                        <input type="hidden" [(ngModel)]="activeInvoice.created_date" name="createdDate"/>
-                      </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 5px;">
-                      <div class="offset-md-2 col-md-4 col-6">
-                        <span class="font-custom-bold text-left w100">Reference</span>
-                      </div>
-                      <div class="col-6">
-                        <input type="text" name="invoiceNumber" id="referenceid"
-                          [(ngModel)]="activeInvoice.reference" class="form-control pad-right-0"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 5px;">
-                      <div class="col-6 offset-md-2 col-md-4">
-                        <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
-                      </div>
-                      <div class="col-6 selectDueDate">
-                        <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag"
-                          class="form-control padr0 selectDueDate" (change)="changeDueDate($event.target.value)"
+                        <input type="text" class="form-control"
+                          [formControl]="estimateDate" matInput [matDatepicker]="picker" required readonly
+                          (click)="picker.open()"
                         >
-                          <option value="0">No Due Date</option>
-                          <option value="1">Immediately</option>
-                          <option value="2">Custom Date</option>
-                          <option value="3">7 Days</option>
-                          <option value="4">10 Days</option>
-                          <option value="5">15 Days</option>
-                          <option value="6">30 Days</option>
-                          <option value="7">45 Days</option>
-                          <option value="8">60 Days</option>
-                          <option value="9">90 Days</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-12 offset-md-6 col-md-6" *ngIf="activeInvoice.due_date_flag !== 0">
-                        <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag !== 2">
-                          <div class="row mar0">
-                            <input type="text" name="dueDate" class="form-control"
-                              [ngModel]="activeInvoice.due_date" required readonly
-                            >
-                          </div>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <div class="form-error"
+                          *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched"
+                        >
+                          <span *ngIf="invoiceGeneratorAdd.error">Estimate date required</span>
                         </div>
-                        <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag === 2">
-                          <div class="row mar0">
-                            <input type="text" name="dueDate" class="form-control"
-                              [formControl]="dueDate" matInput [matDatepicker]="picker1" required readonly
-                              (click)="picker1.open()"
-                            >
-                            <mat-datepicker #picker1></mat-datepicker>
-                          </div>
-                        </div>
+                        <input type="hidden" [(ngModel)]="activeEstimate.created_date" name="createdDate"/>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="lineItemDiv">
-                  <!-- Selected Items table -->
                   <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
                     <thead>
                       <tr class="hd font-custom-bold">
@@ -207,8 +152,8 @@
 
                     <tbody class="lineItems">
                       <!-- selected Items list -->
-                      <tr class="row-item" *ngFor="let item of activeInvoice.listItems; let index = index; let last = last">
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
+                      <tr class="row-item" *ngFor="let item of activeEstimate.listItems; let index = index; let last = last">
+                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
                           <div class="">
                             <div class="form-group">
                               <div class="text-left product-color">
@@ -220,19 +165,18 @@
                             </div>
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)"
-                        >
+                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
                           <div class="text-right">
                             {{item.quantity | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
+                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
                           <div class="text-right">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="position: unset !important;"
-                          (click)="editInvoiceItem(index)"
+                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)"
+                          style="position: unset !important;"
                         >
                           <div class="text-right">
                             {{item.total | number:'2.'}}
@@ -300,8 +244,8 @@
                             />
                           </div>
 
-                          <button type="button" class="btnd add-line-item-button" (click)="addEditInvoiceItem()"
-                            style="position: absolute; right: 0; bottom: 5px;"
+                          <button type="button" class="btnd add-line-item-button" (click)="addEditEstimateItem()"
+                            style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0"
                           >
                             Add Item
                           </button>
@@ -313,19 +257,19 @@
                   <div class="row add-item-button">
                     <!-- Tax discount list -->
                     <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
-                      <div class="cursor-pointer" *ngIf="activeInvoice.discount == null && activeInvoice.percentage_flag==0">
-                        <a class="inline" (click)="activeInvoice.percentage_flag=1;activeInvoice.percentage_value=0.00">
+                      <div class="cursor-pointer" *ngIf="activeEstimate.percentage_flag==null">
+                        <a class="inline" (click)="activeEstimate.percentage_flag=0;activeEstimate.discount=0.00">
                           {{tempDisLabel}}+
                         </a>
                       </div>
-                      <div class="cursor-pointer" *ngIf="activeInvoice.shipping_charges == null">
-                        <a class="inline" (click)="activeInvoice.shipping_charges = 0">{{tempShippingLabel}}+</a>
+                      <div class="cursor-pointer" *ngIf="activeEstimate.shipping_charges == null">
+                        <a class="inline" (click)="activeEstimate.shipping_charges = 0">{{tempShippingLabel}}+</a>
                       </div>
-                      <div class="cursor-pointer" *ngIf="activeInvoice.tax_on_item == 2">
-                        <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
+                      <div class="cursor-pointer" *ngIf="activeEstimate.tax_rate == null">
+                        <a class="inline" (click)="activeEstimate.tax_rate=0; activeEstimate.tax_amount = 0">Tax+</a>
                       </div>
-                      <div class="cursor-pointer" *ngIf="activeInvoice.adjustment == null">
-                        <a class="inline" (click)="activeInvoice.adjustment = 0">{{tempAdjLabel}}+</a>
+                      <div class="cursor-pointer" *ngIf="activeEstimate.adjustment == null">
+                        <a class="inline" (click)="activeEstimate.adjustment = 0">{{tempAdjLabel}}+</a>
                       </div>
                       <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
                         <div *ngIf="showMultipleTax && multiTaxButtonForAddInvoice(tax.taxName,$index)">
@@ -341,7 +285,7 @@
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{tempTermLabel}}</span>
                         <a (click)="openAddTermModal()" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
-                          data-original-title="Add " title="Add Term"
+                          data-original-title="Add" title="Add Term"
                         >
                           <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
                           Add Terms
@@ -350,11 +294,11 @@
         
                       <div class="col-md-12 col-xs-12 col-md-12 pad0">
                         <div class="form-group">
-                          <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mar0">
+                          <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mar0">
                             <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
                               {{term.terms}}
                             </div>
-                            <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
+                            <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
                               <a class="closeicon show float-right">
                                 <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
                               </a>
@@ -372,20 +316,20 @@
                             <span class="font-custom-bold">{{tempSubToLabel}}</span>
                           </div>
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
+                            <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
                           </div>
                         </div>
                       </div>
 
                       <!-- Discounts -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.discount !== null || activeInvoice.percentage_flag == 1">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.percentage_flag != null">
                         <div class="row">                        
                           <div class="col-5 discount-tax-label pad-right-0">
                             <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                            <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom">({{currencySymbolTemp }})</div>
-                            <div *ngIf="activeInvoice.percentage_flag == 1" class="inline font-custom">(%)</div>
+                            <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">({{currencySymbolTemp }})</div>
+                            <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
 
-                            <div class="pad0" style="float: right; padding-right: 10px;">
+                            <div class="pad0" style="float: right;">
                               <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                               >
@@ -394,13 +338,21 @@
                                 ></span>
                               </div>
                               <ul class="dropdown-menu dropdown-menu-right">
-                                <li [class.active]="activeInvoice.percentage_flag == 0">
-                                  <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice(1)">
+                                <li [class.active]="activeEstimate.percentage_flag == 0">
+                                  <a (click)="activeEstimate.percentage_flag = 0;
+                                      activeEstimate.discount=0.00;
+                                      calculateEstimate(false)
+                                    "
+                                  >
                                     Flat ({{currencySymbolTemp}})
                                   </a>
                                 </li>
-                                <li [class.active]="activeInvoice.percentage_flag == 1">
-                                  <a (click)="activeInvoice.discount=null;activeInvoice.percentage_flag=1;calculateInvoice(1)">
+                                <li [class.active]="activeEstimate.percentage_flag == 1">
+                                  <a (click)="activeEstimate.discount=0.00;
+                                      activeEstimate.percentage_flag=1;
+                                      calculateEstimate(false)
+                                    "
+                                  >
                                     Percent (%)
                                   </a>
                                 </li>
@@ -411,24 +363,24 @@
                           <div class="col-6 pad-right-0">
                             <form #form_discount="ngForm" name="form_discount">
                               <div class="input-group addon-input">
-                                <div *ngIf="activeInvoice.percentage_flag == 1">
+                                <div *ngIf="activeEstimate.percentage_flag == 1">
                                   <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
                                     step="any" class="form-control"
-                                    [(ngModel)]="activeInvoice.percentage_value" (change)="calculateInvoice(1)"
+                                    [(ngModel)]="activeEstimate.percentage_value" (change)="calculateEstimate(false)"
                                   />
                                 </div>
 
-                                <div *ngIf="activeInvoice.percentage_flag == 0">
+                                <div *ngIf="activeEstimate.percentage_flag == 0">
                                   <input type="number" id="discount_input" name="discount_input" step="any"
-                                    min="0.00" [max]="activeInvoice.gross_amount" class="form-control"
-                                    required [(ngModel)]="activeInvoice.discount"
-                                    (change)="calculateInvoice(1)"
+                                    min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
+                                    required [(ngModel)]="activeEstimate.discount"
+                                    (change)="calculateEstimate(false)"
                                   />
                                 </div>
                               </div>
                             </form>
     
-                            <!-- <div class="form-error" *ngIf="!activeInvoice.percentage_flag == 0 ">
+                            <!-- <div class="form-error" *ngIf="!activeEstimate.percentage_flag == 0 ">
                               <span *ngIf="form_discount.controls.percentage_input">Not more than 100</span>
                             </div>
                             <div class="form-error">
@@ -439,10 +391,10 @@
                           <div class="col-1 pad0">
                             <div class="remove-button">
                               <div class="addon selectorpad-right-0"
-                                (click)="activeInvoice.discount=null;
-                                  activeInvoice.percentage_flag=0;
-                                  activeInvoice.percentage_value=0;
-                                  calculateInvoice()
+                                (click)="activeEstimate.discount=0.00;
+                                  activeEstimate.percentage_value=0;
+                                  activeEstimate.percentage_flag=null;
+                                  calculateEstimate(false)
                                 "
                               >
                                 <img src="assets/images/delete16.png" alt="" style="height:16px;">
@@ -453,7 +405,7 @@
                       </div>
 
                       <!-- Tax -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.tax_on_item != 2">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.tax_rate != null">
                         <div class="row">
                           <div class="col-4 discount-tax-label pad-right-0">
                             <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
@@ -465,11 +417,11 @@
                               <div class="input-group pad-right-0">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control"
                                   step="any"min="0.00" max="100" required
-                                  [(ngModel)]="activeInvoice.tax_rate" (change)="calculateInvoice(1)"
+                                  [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate(false)"
                                 />
                                 <!-- <div class="input-group-addon addon-right">%</div>-->
                                 <div class="input-group-addon pad-right-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeInvoice.tax_on_item = 2;calculateInvoice()">
+                                  <div class="addon selectorpadr0" (click)="activeEstimate.tax_rate = null; activeEstimate.tax_amount=0;calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" style="height:16px;">
                                   </div>
                                 </div>
@@ -484,7 +436,7 @@
                       </div>
   
                       <!-- Tax List -->
-                      <div *ngFor="let tax of activeInvoice.taxList" class="col-12 pad-right-0 margin-bottom-5px">
+                      <div *ngFor="let tax of activeEstimate.taxList" class="col-12 pad-right-0 margin-bottom-5px">
                         <div class="col-4 discount-tax-label">
                           <div class="row">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
@@ -497,7 +449,7 @@
                             <div class="input-group pad-right-0">
                               <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
                                 max="100" tabindex="1005" ng-required="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
-                                ng-change="calculateInvoice(1)" select-on-click my-enter-in disable-enter
+                                ng-change="calculateEstimate(false)" select-on-click my-enter-in disable-enter
                               />
         
                               <!--<div class="input-group-addon ">%</div>-->
@@ -517,7 +469,7 @@
                       </div>
 
                       <!-- Shipping -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.shipping_charges !== null">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== null">
                         <div class="row">
                           <div class="col-5 discount-tax-label">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
@@ -527,11 +479,11 @@
                             <form #form_shipping_input="ngForm" name="form_shipping_input">
                               <div class="input-group pad-right-0">
                                 <input type="number" name="shipping_input" class="form-control"
-                                  step="any" min="0.00" [max]="activeInvoice.gross_amount" required
-                                  [(ngModel)]="activeInvoice.shipping_charges" (change)="calculateInvoice(1)"
+                                  step="any" min="0.00" [max]="activeEstimate.gross_amount" required
+                                  [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate(false)"
                                 />
                                 <div class="pad-right-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeInvoice.shipping_charges = null;calculateInvoice()">
+                                  <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = null;calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" alt="" style="height:16px;">
                                   </div>
                                 </div>
@@ -546,7 +498,7 @@
                       </div>
 
                       <!-- Adjustment -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.adjustment != null">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.adjustment != null">
                         <div class="row">
                           <div class="col-4 discount-tax-label pad-right-0">
                             <div style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
@@ -557,11 +509,10 @@
                               <div class="input-group pad-right-0">
                                 <input type="number" name="tax_input" class="form-control"
                                   step="any" required
-                                  [(ngModel)]="activeInvoice.adjustment" (change)="calculateInvoice(1)"
+                                  [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate(false)"
                                 />
-                                <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pad-right-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeInvoice.adjustment = null; calculateInvoice()">
+                                  <div class="addon selectorpadr0" (click)="activeEstimate.adjustment = null; calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" style="height:16px;">
                                   </div>
                                 </div>
@@ -579,47 +530,14 @@
                           </div>
           
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeInvoice.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
+                            <span class="font-custom-bold">{{activeEstimate.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
                           </div>
                         </div>
                       </div>
 
-                      <!-- Paid Amount -->
-                      <div class="col-12" style="padding: 10px">
-                        <div class="row mar0">
-                          <div class="col-6 text-left">
-                            <span
-                              class="font-custom">{{tempPaidLabel}}
-                            </span>
-                          </div>
-                          <div class="col-6 text-right">
-                            <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:'INR':'symbol':'1.2-2'}}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Balance -->
-                      <div class="col-12 balance-row">
-                        <div class="row mar0">
-                          <div class="col-6 text-left">
-                            <span class="bld">{{tempBalLabel}}</span>
-                          </div>
-                          <div class="col-6 text-right">
-                            <span class="bld">{{activeInvoice.balance | currency:'INR':'symbol':'1.2-2'}}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Payment and Save buttons -->
+                      <!-- Save -->
                       <div class="col-12 pad0 margin-top-20">
-                        <button type="button" title="ADD PAYMENT"
-                          class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold" style="width: 134px;"
-                          (click)="openAddPaymentModal()"
-                        >
-                          Add Payment
-                        </button>
-
-                        <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
+                        <button type="submit" id="invSubmitBtn" [disabled]="activeEstimate.listItems?.length == 0"
                           class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                           data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                         >
@@ -634,23 +552,6 @@
           </div>
         </form>
       </div>
-
-      <!-- Previous Invoices Button -->
-      <div class="col-12 col-md-3">
-        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
-          Show Previous Invoices
-        </button>
-
-        <!-- Delete Invoices Button -->
-        <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"
-          [swal]="{ title: 'Are you sure want to delete Invoice?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
-          "
-        >
-          Delete Invoices
-        </button>
-      </div>
-
     </div>
   </div>
 </div>
@@ -776,7 +677,7 @@
         <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
           Edit Item
         </h4>
-        <button type="button" class="close" aria-label="Close" (click)="closeItemModel()">
+        <button type="button" class="close" aria-label="Close" (click)="closeEditItemModal()">
           <img src="assets/images/cross16.png" alt="logo">
         </button>
       </div>
@@ -825,11 +726,11 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEditItemModal()">
           Close
         </button>
         <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn"
-          [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)"
+          [disabled]="!itemform.valid" (click)="addEditEstimateItem(itemform.controls.uid.value)"
         >
           Edit Item
         </button>
@@ -891,8 +792,8 @@
                 <div class="row">
                   <div class="col-md-1 pad0">
                     <input type="checkbox" id="termcheck{{index}}" name="term"
-                      (change)="addRemoveTermsFromInvoice(term)"
-                      [checked]="isTermInInvoice(term)"
+                      (change)="addRemoveTermsFromEstimate(term)"
+                      [checked]="isTermInEstimate(term)"
                     />
                     <!-- <label class="" for="termcheck{{$index}}"></label> -->
                   </div>
@@ -906,114 +807,6 @@
         </div>
       </div>
       <div class="modal-footer"></div>
-    </div>
-  </div>
-</div>
-
-<!-- PAYMENT MODAL -->
-<div class="modal fade" id="addPaymentAddInvoice" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
-  data-backdrop="static" data-keyboard="false"
->
-  <div class="modal-dialog add-payment-dialog" role="document" >
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel12">
-          Add Payment
-        </h4>
-        <a class="pull-right" (click)="closeAddPaymentModal()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
-        </a>
-      </div>
-      <div class="modal-body">
-        <div class="col-12 pad0 add-payment" style="margin-bottom: 10px;">
-          <div class="row">
-            <div class="col-4 col-md-5">
-              <form name="innerform1" #innerform1="ngForm">
-                <div class=" form-group payment-input">
-                  <div class="input-group" style="width: 100%">
-                    <input type="number" id="paymentAmount2" name="paymentAmount"
-                      class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
-                      [(ngModel)]="addPaymentModal.paid_amount" placeholder="Add Amount Paid"
-                    >
-                    <!-- <div class="form-error">
-                      <span *ngIf="innerform1.controls.paymentAmount.error.max">Should be Less than Balance</span>
-                    </div> -->
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <div class="col-2 pad-left-0">
-              <button class="btn btn-info btn-circle" (click)="addPaymentInModalPaymentList()" 
-                [disabled]="addPaymentModal.paid_amount == 0 || addPaymentModal.paid_amount > addPaymentModal.balance"
-              >
-                <i class="fa fa-plus"></i>
-              </button>
-            </div>
-
-            <div class="col-6 col-md-5 pad-left-0">
-              <input type="text" name="paymentDate" id="addPaymentDate12" [(ngModel)]="addPaymentModal.date_of_payment"
-                class="form-control default-height padr0" change="watch()" required readonly
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="row mar0" style="background: #e0dede !important;">
-          <div class="col-12">
-            <div class="font-custom-bold float-left">
-              Invoice
-            </div>
-            <div class="font-custom-bold float-right">
-              {{ addPaymentModal.amount | currency:'INR':'symbol':'1.2-2' }}
-            </div>
-          </div>
-        </div>
-
-        <div class="row mar0" style="border-top: 1px solid #ddd;"
-          *ngFor="let payment of addPaymentModal.payments"
-        >
-          <div class="col-12">
-            <div class="font-custom-bold pull-left" style="border-top: none;">
-              {{payment.date_of_payment | date}}
-            </div>
-            <div class="font-custom-bold pull-right" style="border-top: none;">
-              {{payment.paid_amount | currency:'INR':'symbol':'1.2-2'}}
-            </div>
-          </div>
-        </div>
-
-        <div class="row mar0" style="background: #e0dede !important; margin-top: 5px">
-          <div class="col-12">
-            <div class="font-custom-bold pull-left">
-              Balance Due :
-            </div>
-            <div class="font-custom-bold pull-right">
-              {{ addPaymentModal.balance | currency:'INR':'symbol':'1.2-2'}}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="col-12 pad0">
-          <button type="button" class="btn btn-raised btn-custom-2 pull-left margin-right--15"
-            (click)="addPaymentModal.paid_amount = addPaymentModal.balance"
-            [disabled]="addPaymentModal.balance == 0"
-          >
-            Full Payment
-          </button>
-          <button type="button" (click)="addPaymentsInInvoice()"
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
-            Done
-          </button>
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn pull-right"
-            (click)="closeAddPaymentModal()"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>

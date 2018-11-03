@@ -31,8 +31,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component'
 import { ClientComponent } from './components/client/client.component'
 import { ProductComponent } from './components/product/product.component'
 import { AddEditComponent } from './components/invoice/addEdit/addEdit.component'
-import { EstimateComponent } from './components/estimate/estimate.component'
 import { ViewComponent } from './components/invoice/view/view.component'
+import { AddEditEstComponent } from './components/estimate/addEdit/addEditEst.component'
+import { ViewEstComponent } from './components/estimate/view/viewEst.component'
 import { PrimaryComponent } from './components/setting/primary/primary.component'
 import { TncComponent } from './components/setting/tnc/tnc.component'
 import { CustomFieldComponent } from './components/setting/custom-field/custom-field.component'
@@ -50,8 +51,9 @@ import { UserProfileComponent } from './components/setting/user-profile/user-pro
     ClientComponent,
     ProductComponent,
     AddEditComponent,
-    EstimateComponent,
     ViewComponent,
+    AddEditEstComponent,
+    ViewEstComponent,
     PrimaryComponent,
     TncComponent,
     CustomFieldComponent,
