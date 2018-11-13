@@ -219,3 +219,28 @@ export interface estimate {
   unique_key_fk_client: string
   version: number
 }
+
+export interface addEditEstimate {
+  adjustment: number
+  amount: number
+  created_date: string
+  deleted_flag: number
+  device_modified_on: number
+  discount: number
+  discount_on_item: number
+  estimate_number: string
+  gross_amount: number
+  listItems: Array<any>
+  organization_id: number
+  percentage_flag: number
+  percentage_value: number
+  shipping_address: string
+  shipping_charges: number
+  taxList: Array<any>
+  tax_amount: number
+  tax_on_item: number
+  tax_rate: number
+  termsAndConditions: Array<any>
+  unique_identifier: string
+  unique_key_fk_client: string
+}

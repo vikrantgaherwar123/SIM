@@ -4,8 +4,8 @@ import { FormControl } from '@angular/forms'
 import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
 
-import { response, client, terms, setting, product } from '../../../interface'
-import { generateUUID, changeEstimate } from '../../../globalFunctions'
+import { response, addEditEstimate, client, terms, setting, product } from '../../../interface'
+import { generateUUID } from '../../../globalFunctions'
 
 import { EstimateService } from '../../../services/estimate.service'
 import { ClientService } from '../../../services/client.service'
@@ -28,52 +28,17 @@ import { AppState } from '../../../app.state'
 })
 export class AddEditEstComponent implements OnInit {
 
-  private emptyEstimate = {
-    adjustment: null,
-    amount: 0,
-    created_date: '',
-    device_modified_on:0,
-    discount: 0,
-    discount_on_item: 2,
-    estimate_number: "",
-    gross_amount: 0,
-    listItems: [],
-    organization_id: 0,
-    percentage_flag: null,
-    percentage_value: 0,
-    shipping_address: "",
-    shipping_charges: null,
-    taxList: [],
-    tax_amount: 0,
-    tax_on_item: 2,
-    tax_rate: null,
-    termsAndConditions: [],
-    unique_identifier: "",
-    unique_key_fk_client: ""
-  }
-  private activeEstimate: any = {...this.emptyEstimate}
+  private activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
+  estimateFilterTerm: string
   edit: boolean = false
   last
   index
 
-  private estimateItems = []
-  private estimateViewLoader: boolean
-  estimateListLoader: boolean
-  private selectedEstimate = null
-  private tempQuaNoOnAdd: number
-  estimateFilterTerm: string
-  
-  
-  private createEstimate: boolean = true
-  viewEstimate: boolean = false
-  editEstimate: boolean = false
-  private dueDate = new FormControl()
-
   private clientList: client[]
   private allClientList: client[]
-  activeClient: any = {}
+  activeClient: client = <client>{}
   clientListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
@@ -110,15 +75,12 @@ export class AddEditEstComponent implements OnInit {
   tempPaidLabel: string
   tempTotalLabel: string
   tempBalLabel: string
-  routeParams: {
-    estId: string,
-    invId: string
-  }
 
   private activeSettings: setting
-  private taxtext: string
-  private discounttext: string
-  private showMultipleTax: boolean
+
+  showMultipleTax
+  taxtext
+  discounttext
 
   private user: {
     user: {
@@ -144,11 +106,12 @@ export class AddEditEstComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activeEstimate = <addEditEstimate>{}
     this.fetchCommonData()
     this.route.params.subscribe(params => {
-      if (params && params.invId) {
+      if (params && params.estId) {
         this.edit = true
-        // this.editInit(params.invId)
+        this.editInit(params.estId)
       } else {
         this.addInit()
       }
@@ -185,13 +148,13 @@ export class AddEditEstComponent implements OnInit {
     }
   }
 
-  editInit(invId) {
-    // Fetch selected invoice
+  editInit(estId) {
+    // Fetch selected estimate
     this.commonSettingsInit()
 
-    this.estimateService.fetchById([invId]).subscribe((invoice: any) => {
-      if(invoice.records !== null) {
-        this.activeEstimate = {...this.activeEstimate, ...invoice.records[0]}
+    this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
+      if(estimate.records !== null) {
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
 
         // Change list item keys compatible
         var temp = []
@@ -203,11 +166,23 @@ export class AddEditEstComponent implements OnInit {
             rate: this.activeEstimate.listItems[i].rate,
             tax_rate: this.activeEstimate.listItems[i].tax_rate,
             total: this.activeEstimate.listItems[i].price,
-            unique_identifier: this.activeEstimate.listItems[i].uniqueKeyListItem,
+            unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
             unit: this.activeEstimate.listItems[i].unit
           })
         }
         this.activeEstimate.listItems = temp
+
+        // Change TnC keys compatible
+        temp = []
+        for(let i=0; i < this.activeEstimate.termsAndConditions.length; i++) {
+          temp.push({
+            orgId: this.activeEstimate.termsAndConditions[i].orgId,
+            terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+            uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+            _id: this.activeEstimate.termsAndConditions[i]._id
+          })
+        }
+        this.activeEstimate.termsAndConditions = temp
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
@@ -215,13 +190,16 @@ export class AddEditEstComponent implements OnInit {
 
         // Tax and discounts show or hide
         if(this.activeEstimate.discount == 0) {
-          this.activeEstimate.discount = null
+          this.activeEstimate.percentage_flag = null
         }
-        if(this.activeEstimate.shippingCharges == 0) {
-          this.activeEstimate.shippingCharges = null
+        if(this.activeEstimate.shipping_charges == 0) {
+          this.activeEstimate.shipping_charges = undefined
         }
         if(this.activeEstimate.adjustment == 0) {
-          this.activeEstimate.adjustment = null
+          this.activeEstimate.adjustment = undefined
+        }
+        if(this.activeEstimate.tax_amount == 0) {
+          this.activeEstimate.tax_rate = null
         }
 
         // Wait for clients to be loaded before setting active client
@@ -234,10 +212,9 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       } else {
-        alert('invalid invoice id!')
-        this.router.navigate(['/invoice/view'])
+        alert('invalid estimate id!')
+        this.router.navigate(['/estimate/view'])
       }
-      return false
     })
   }
 
@@ -339,14 +316,11 @@ export class AddEditEstComponent implements OnInit {
   }
 
   fetchCommonData() {
-    var self = this
-
     // Fetch Products if not in store
     if(this.productList.length < 1) {
       this.productService.fetch().subscribe((response: response) => {
-        // console.log(response)
         if (response.records != null) {
-          self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
+          this.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
           this.setProductFilter()
         } else {
           this.setProductFilter()
@@ -375,11 +349,10 @@ export class AddEditEstComponent implements OnInit {
     // Fetch Terms if not in store
     if(this.termList.length < 1) {
       this.termConditionService.fetch().subscribe((response: response) => {
-        // console.log(response)
         if (response.termsAndConditionList !== null) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        self.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       })
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
@@ -408,11 +381,9 @@ export class AddEditEstComponent implements OnInit {
       this.activeClient = temp
       this.activeEstimate.unique_key_fk_client = temp.uniqueKeyClient
     } else {
-      //console.log("clients",this.clients)
       if(this.activeClient) {
-        this.activeClient = {}
+        this.activeClient = <client>{}
       }
-
       this.openAddClientModal(client.option.value)
     }
   }
@@ -448,9 +419,12 @@ export class AddEditEstComponent implements OnInit {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
 
-    if(this.activeItem.unique_key_fk_product) {
+    if(this.activeItem.unique_identifier) {
       if(uid == null) {
         // Add Item to Estimate
+        if(!this.activeEstimate.listItems) {
+          this.activeEstimate.listItems = []
+        }
         this.activeEstimate.listItems.push(this.activeItem)
       } else {
         // Edit Item from Estimate
@@ -533,7 +507,11 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
+    if(this.activeEstimate.termsAndConditions) {
+      return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
+    } else {
+      return false
+    }
   }
 
   // Estimate Functions
@@ -553,7 +531,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   save(status) {
-    if(this.activeEstimate.unique_key_fk_client == '') {
+    if(!this.activeEstimate.unique_key_fk_client) {
       alert('client not selected')
       return false
     }
@@ -562,16 +540,16 @@ export class AddEditEstComponent implements OnInit {
       // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
       alert('You haven\'t added item')
       // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
-      // $('#invoiceSavebtn').button('reset');
+      // $('#estimateSavebtn').button('reset');
       return false
     }
 
-    $('#invSubmitBtn').attr('disabled', 'disabled')
+    $('#estSubmitBtn').attr('disabled', 'disabled')
     this.activeEstimate.organization_id = parseInt(this.user.user.orgId)
 
     var temp = []
     this.activeEstimate.termsAndConditions.forEach(tnc => {
-      temp.push(this.termConditionService.changeKeysForInvoiceApi(tnc))
+      temp.push({...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier})
     })
     this.activeEstimate.termsAndConditions = temp
 
@@ -584,13 +562,11 @@ export class AddEditEstComponent implements OnInit {
       }
     }
 
-    for (var j = 0; j < this.activeEstimate.termsAndConditions.length; j++) {
-      this.activeEstimate.termsAndConditions[j].unique_key_fk_quotation = this.activeEstimate.unique_identifier
-    }
-
-    for (var t = 0; t < this.activeEstimate.taxList.length; t++) {
-      if (this.activeEstimate.taxList[t] == null) {
-        this.activeEstimate.taxList.splice(t, 1)
+    if(this.activeEstimate.taxList) {
+      for (var t = 0; t < this.activeEstimate.taxList.length; t++) {
+        if (this.activeEstimate.taxList[t] == null) {
+          this.activeEstimate.taxList.splice(t, 1)
+        }
       }
     }
 
@@ -603,12 +579,12 @@ export class AddEditEstComponent implements OnInit {
       } else if (response.status === 200) {
         // Add Estimate to store
         if(this.edit) {
-          this.store.select('estimate').subscribe(invs => {
-            let index = invs.findIndex(inv => inv.unique_identifier == response.quotationList[0].unique_identifier)
+          this.store.select('estimate').subscribe(ests => {
+            let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
             } else {
-              // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.invoiceList[0])}))
+              // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
             }
           })
         } else {
@@ -620,17 +596,23 @@ export class AddEditEstComponent implements OnInit {
           this.updateSettings()
         }
 
-        alert('Estimate saved successfully')
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if(this.edit) {
+          alert('Estimate updated successfully')
           this.router.navigate(['/estimate/view'])
         } else {
-          self.resetCreateEstimate()
-          self.addInit()
+          alert('Estimate saved successfully')
+          self.resetFormControls()
+          self.ngOnInit()
         }
       }
-      $('#invSubmitBtn').removeAttr('disabled')
+      $('#estSubmitBtn').removeAttr('disabled')
     })
+  }
+
+  deleteEstimate() {
+    this.activeEstimate.deleted_flag = 1
+    this.save(true)
   }
 
   calculateTotal() {
@@ -649,14 +631,16 @@ export class AddEditEstComponent implements OnInit {
     var deductions = 0
     var additions = 0
 
-    for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
-      gross_amount += parseFloat(this.activeEstimate.listItems[i].total)
+    if(this.activeEstimate.listItems) {
+      for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
+        gross_amount += parseFloat(this.activeEstimate.listItems[i].total)
+      }
     }
     this.activeEstimate.gross_amount = gross_amount
 
     // Discount
     if (this.activeEstimate.percentage_flag == 1) {
-      let discountFactor = this.activeEstimate.percentage_value / 100
+      var discountFactor = this.activeEstimate.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
       }
@@ -681,30 +665,34 @@ export class AddEditEstComponent implements OnInit {
     }
 
     if (indexTaxMultiple) {
-      // var temp_tax_amount = 0
-      // for (var i = 0; i < this.activeEstimate.taxList.length; i++) {
-      //   if (this.activeEstimate.taxList[i]) {
-      //     if (isNaN(parseFloat(this.activeEstimate.taxList[i].percentage)))
-      //       this.activeEstimate.taxList[i].percentage = 0
-      //     this.activeEstimate.taxList[i].calculateValue = (parseFloat(this.activeEstimate.taxList[i].percentage) * discountTotal) / 100
-      //     this.activeEstimate.taxList[i].selected = true
-      //     temp_tax_amount = temp_tax_amount + (parseFloat(this.activeEstimate.taxList[i].percentage) * discountTotal) / 100
-      //   }
-      // }
-      // this.activeEstimate.tax_amount = this.activeEstimate.tax_amount + temp_tax_amount
+      var temp_tax_amount = 0
+      for (var i = 0; i < this.activeEstimate.taxList.length; i++) {
+        if (this.activeEstimate.taxList[i]) {
+          if (isNaN(parseFloat(this.activeEstimate.taxList[i].percentage))) {
+            this.activeEstimate.taxList[i].percentage = 0
+          }
+          this.activeEstimate.taxList[i].calculateValue = (parseFloat(this.activeEstimate.taxList[i].percentage) * (this.activeEstimate.gross_amount - this.activeEstimate.discount)) / 100
+          this.activeEstimate.taxList[i].selected = true
+          temp_tax_amount = temp_tax_amount + (parseFloat(this.activeEstimate.taxList[i].percentage) * (this.activeEstimate.gross_amount - this.activeEstimate.discount)) / 100
+        }
+      }
+      this.activeEstimate.tax_amount = this.activeEstimate.tax_amount + temp_tax_amount
+      additions += this.activeEstimate.tax_amount
     }
 
     // Shipping
     if (isNaN(this.activeEstimate.shipping_charges)) {
-      this.activeClient.shipping_charges = 0
+      this.activeEstimate.shipping_charges = undefined
+    } else {
+      additions += this.activeEstimate.shipping_charges
     }
-    additions += this.activeEstimate.shipping_charges
 
     // Adjustment
     if (isNaN(this.activeEstimate.adjustment)) {
-      this.activeEstimate.adjustment = 0
+      this.activeEstimate.adjustment = undefined
+    } else {
+      deductions += this.activeEstimate.adjustment
     }
-    deductions += this.activeEstimate.adjustment
 
     this.activeEstimate.amount = parseFloat((this.activeEstimate.gross_amount - deductions + additions).toFixed(2))
   }
@@ -714,41 +702,17 @@ export class AddEditEstComponent implements OnInit {
     this.calculateEstimate(false)
   }
 
-  resetCreateEstimate() {
+  resetFormControls() {
     this.billingTo.setValue('')
     this.addItem.reset('')
 
-    this.activeEstimate = {...this.emptyEstimate}
-
-    this.activeEstimate.listItems = []
-    this.activeEstimate.payments = []
-    this.activeEstimate = 0
-    this.activeEstimate.taxList = []
-    this.activeEstimate = []
-    this.activeEstimate = []
-    this.activeEstimate.gross_amount = 0.00
-    this.activeEstimate.balance = 0.00
-
-    this.activeClient = {}
-    this.dueDate.reset()
-
-    var settings = this.settings
-    this.activeEstimate.taxList = []
-    this.activeEstimate.percentage_flag = 1
-
-    if (settings.alstTaxName) {
-      if (settings.alstTaxName.length > 0) {
-        this.showMultipleTax = true
-      } else {
-        this.showMultipleTax = false
-      }
-    }
+    this.activeClient = <client>{}
   }
 
   updateSettings() {
     var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
-    cookie.setting.invNo = this.tempEstNo
+    cookie.setting.quotNo = this.tempEstNo
     localStorage.setItem('user', JSON.stringify(cookie))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -757,7 +721,7 @@ export class AddEditEstComponent implements OnInit {
       androidSettings: cookie.setting,
       android_donot_update_push_flag: 1
     }
-    settings1.androidSettings.invNo = this.tempEstNo
+    settings1.androidSettings.estNo = this.tempEstNo
 
     this.settingService.add(settings1).subscribe((response: any) => {
       if (response.status == 200) {
