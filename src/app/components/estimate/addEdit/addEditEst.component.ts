@@ -28,7 +28,7 @@ import { AppState } from '../../../app.state'
 })
 export class AddEditEstComponent implements OnInit {
 
-  private activeEstimate: addEditEstimate
+  activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
   estimateFilterTerm: string
@@ -58,7 +58,7 @@ export class AddEditEstComponent implements OnInit {
 
   tax_on: string
   discount_on: string
-  private settings: any
+  settings: any
 
   tempQtyLabel: string
   tempProLabel: string
