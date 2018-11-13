@@ -9,9 +9,9 @@ import { AuthService } from '../../../services/auth.service'
 })
 export class PasswordComponent implements OnInit {
 
-  private currentPass: string = ""
-  private newPass: string = ""
-  private confirmPass: string = ""
+  currentPass: string = ""
+  newPass: string = ""
+  confirmPass: string = ""
 
   constructor(private authService: AuthService) { }
 
