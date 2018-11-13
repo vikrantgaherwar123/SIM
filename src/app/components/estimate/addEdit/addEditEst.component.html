@@ -4,8 +4,8 @@
 
       <!-- Create Estimate -->
       <div class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen" id="msgInv">
-        <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
-          class="create-estimate" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
+        <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator"
+          class="create-estimate" (ngSubmit)="save(estimateGeneratorAdd.valid)"
         >
           <div class="shadow back pad15">
             <div class="col-12 padt15">
@@ -46,11 +46,11 @@
                         </div>
                       </div>
 
-                      <div class="col-2">
-                        <!-- <md-progress-circular *ngIf="clientListLoader && clientFocus" style="color: #1A73CC" class="md-hue-2 text-center"
-                                md-diameter="25px"></md-progress-circular> -->
+                      <div class="col-2" style="padding-top: 30px;">
+                        <span>
+                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
+                        </span>
                       </div>
-      
 
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
                         <div class="row mar0">
@@ -81,21 +81,21 @@
                     </div>
                   </div>
 
-                  <div class="col-12 col-sm-5 pad-right-0" id="invDataAdd">
+                  <div class="col-12 col-sm-5 pad-right-0" id="estDataAdd">
                     <div class="row">
                       <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w100">Estimate No.</span>
                       </div>
                       <div class="col-6">
-                        <form #invNumberForm="ngForm" name="invNumberForm">
+                        <form #estNumberForm="ngForm" name="estNumberForm">
                           <div class="form-group"
-                            [class.has-error]="(invNumberForm.submitted || invNumberForm.estimateNumber ) && invNumberForm.estimateNumber.error.required"
+                            [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required"
                           >
                             <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pad-right-0"
                               [(ngModel)]="activeEstimate.estimate_number" required
                             />
-                            <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.estimateNumber">
-                              <span *ngIf="invNumberForm.estimateNumber.error.required">Estimate No. required</span>
+                            <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
+                              <span *ngIf="estNumberForm.estimateNumber.error.required">Estimate No. required</span>
                             </div>
                           </div>
                         </form>
@@ -113,9 +113,9 @@
                         >
                         <mat-datepicker #picker></mat-datepicker>
                         <div class="form-error"
-                          *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched"
+                          *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched"
                         >
-                          <span *ngIf="invoiceGeneratorAdd.error">Estimate date required</span>
+                          <span *ngIf="estimateGeneratorAdd.error">Estimate date required</span>
                         </div>
                         <input type="hidden" [(ngModel)]="activeEstimate.created_date" name="createdDate"/>
                       </div>
@@ -196,7 +196,7 @@
                         </td>
                       </tr>
 
-                      <!-- Select Item for invoice input -->
+                      <!-- Select Item for estimate input -->
                       <tr class="row-item">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
@@ -272,7 +272,7 @@
                         <a class="inline" (click)="activeEstimate.adjustment = 0">{{tempAdjLabel}}+</a>
                       </div>
                       <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
-                        <div *ngIf="showMultipleTax && multiTaxButtonForAddInvoice(tax.taxName,$index)">
+                        <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,$index)">
                           <a (click)="showMeMultipleTax($index);">{{tax.taxName}}+</a>
                         </div>
                       </div> -->
@@ -413,7 +413,7 @@
                           </div>
   
                           <div class="col-8 pad-left-0">
-                            <form #form_tax_input="ngForm" name="form_tax_input">
+                            <form #tax_input="ngForm" name="tax_input">
                               <div class="input-group pad-right-0">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control"
                                   step="any"min="0.00" max="100" required
@@ -427,49 +427,56 @@
                                 </div>
                               </div>
                             </form>
-  
+
                             <!-- <div class="form-error">
-                              <span *ngIf="form_tax_input.tax_input.$error.max">Not more than 100</span>
+                              <span *ngIf="tax_input.tax_input.$error.max">Not more than 100</span>
                             </div>      -->
                           </div>
                         </div>
                       </div>
-  
+
                       <!-- Tax List -->
-                      <div *ngFor="let tax of activeEstimate.taxList" class="col-12 pad-right-0 margin-bottom-5px">
-                        <div class="col-4 discount-tax-label">
-                          <div class="row">
+                      <div class="col-12 pad-right-0 margin-bottom-5px"
+                        *ngFor="let tax of activeEstimate.taxList; let index = index"
+                      >
+                        <div class="row">
+                          <div class="col-5 discount-tax-label pad-right-0">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                             <div class="inline font-custom">(%)</div>
                           </div>
-                        </div>
-        
-                        <div class="col-8 pad-right-0">
-                          <form #form_tax_input="ngForm" name="form_tax_input">
-                            <div class="input-group pad-right-0">
-                              <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
-                                max="100" tabindex="1005" ng-required="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
-                                ng-change="calculateEstimate(false)" select-on-click my-enter-in disable-enter
-                              />
-        
-                              <!--<div class="input-group-addon ">%</div>-->
-                              <div class="input-group-addon pad-right-0 remove-button">
-                                <div class="addon selectorpadr0" (click)="hideMeTaxMultiple($index);">
-                                  <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                </div>
+
+                          <div class="col-6 pad-right-0">
+                            <form #tax_list_input="ngForm" name="tax_list_input">
+                              <div class="input-group pad-right-0">
+                                <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
+                                  max="100" tabindex="1005" [required]="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
+                                  (change)="calculateEstimate(true)" select-on-click my-enter-in disable-enter
+                                />
+                              </div>
+                              <!--<input type="text" [(ngModel)]="data.estimate.taxList[$index].taxName" [value]="{{tax.taxName}}"/>-->
+                            </form>
+
+                            <div class="form-error">
+                              <span *ngIf="tax_list_input.tax_input">Not more than 100</span>
+                            </div>
+                          </div>
+
+                          <div class="col-1 pad0">
+                            <div class="remove-button">
+                              <div class="addon selectorpad-right-0"
+                                (click)="activeEstimate.taxList.splice(index, 1);
+                                  calculateEstimate(true);
+                                "
+                              >
+                                <img src="assets/images/delete16.png" alt="" style="height:16px;">
                               </div>
                             </div>
-                            <!--<input type="text" [(ngModel)]="data.invoice.taxList[$index].taxName" [value]="{{tax.taxName}}"/>-->
-                          </form>
-  
-                          <div class="form-error">
-                            <span *ngIf="form_tax_input.tax_input.$error.max">Not more than 100</span>
                           </div>
                         </div>
                       </div>
 
                       <!-- Shipping -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== null">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== undefined">
                         <div class="row">
                           <div class="col-5 discount-tax-label">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
@@ -483,7 +490,7 @@
                                   [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate(false)"
                                 />
                                 <div class="pad-right-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = null;calculateEstimate(false)">
+                                  <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" alt="" style="height:16px;">
                                   </div>
                                 </div>
@@ -503,9 +510,9 @@
                           <div class="col-4 discount-tax-label pad-right-0">
                             <div style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
                           </div>
-    
+
                           <div class="col-8 pad-left-0">
-                            <form #form_tax_input="ngForm" name="form_tax_input">
+                            <form #adjst_input="ngForm" name="adjst_input">
                               <div class="input-group pad-right-0">
                                 <input type="number" name="tax_input" class="form-control"
                                   step="any" required
@@ -528,7 +535,7 @@
                           <div class="col-6 text-left">
                             <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
                           </div>
-          
+
                           <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeEstimate.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
                           </div>
@@ -537,7 +544,7 @@
 
                       <!-- Save -->
                       <div class="col-12 pad0 margin-top-20">
-                        <button type="submit" id="invSubmitBtn" [disabled]="activeEstimate.listItems?.length == 0"
+                        <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
                           class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                           data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                         >
@@ -551,6 +558,22 @@
             </div>
           </div>
         </form>
+      </div>
+
+      <!-- Previous Estimates Button -->
+      <div class="col-12 col-md-3">
+        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/estimate/view'])">
+          Show Previous Estimates
+        </button>
+
+        <!-- Delete Estimates Button -->
+        <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
+          [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
+            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
+          "
+        >
+          Delete Estimates
+        </button>
       </div>
     </div>
   </div>
@@ -580,12 +603,12 @@
                     [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
                   />
                   <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
-                    <span *ngIf="clientform.name.$error.required">Required</span>
+                    <span *ngIf="clientform.name">Required</span>
                     <span *ngIf="errors">{{ errors.name[0] }}</span>
                   </div>
                 </div>
               </div>
-  
+
               <div class="col-6" style="padding-left: 23px;">
                 <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" name="contactPersonName" class="form-control add-client-input-custom"
@@ -785,8 +808,8 @@
 
         <div class="col-12" style="padding: 20px 24px 20px 15px">
           <div class="col-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of termList; let index = index" id="term1{{index}}"
-              [class.selected]="selectedTerm == index"
+            <div class="item termlist row product-list" id="term1{{index}}"
+              *ngFor="let term of termList; let index = index" [class.selected]="selectedTerm == index"
             >
               <div class="col-12 pad0">
                 <div class="row">

@@ -135,7 +135,7 @@
               <div style="background-color: #fff;" *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div>
-              <!-- [class.selected]="invoice.unique_identifier == routeParams.invId" -->
+
               <div class="item all-item row cursor-pointer"
                 *ngFor="let invoice of (invoiceList | orderBy: invSortTerm | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
@@ -415,10 +415,8 @@
         
                       <div *ngIf="show_tax_input" class="row mar0">
                         <div class="col-4 discount-tax-label">
-                          <div class="row">
-                            <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                            <div class="inline font-custom">(%)</div>
-                          </div>
+                          <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                          <div class="inline font-custom">(%)</div>
                         </div>
                         <div class="col-8 ">
                           <div class="text-right">
