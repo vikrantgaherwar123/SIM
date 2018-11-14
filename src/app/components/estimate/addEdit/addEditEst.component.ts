@@ -374,8 +374,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   selectedClientChange(client) {
-    var temp
-    temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
+    var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
     if (temp !== undefined) {
       this.activeClient = temp
@@ -395,6 +394,31 @@ export class AddEditEstComponent implements OnInit {
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()
     })
+  }
+
+  saveClient(status) {
+    $('#saveClientButton').attr("disabled", 'disabled')
+
+    if (status) {
+      this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
+      var d = new Date()
+      this.addClientModal.device_modified_on = d.getTime()
+      this.addClientModal.organizationId = this.user.user.orgId
+
+      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
+        if (response.status === 200) {
+          this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+          this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
+          this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
+          this.billingTo.setValue(this.activeClient)
+
+          $('#add-client').modal('hide')
+        }
+        else {
+          //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
+        }
+      })
+    }
   }
 
   // Product Functions
@@ -494,6 +518,38 @@ export class AddEditEstComponent implements OnInit {
   openAddTermModal() {
     this.addTermModal = {}
     $('#add-terms').modal('show')
+  }
+
+  saveTerm(status) {
+    $('#addtermbtn').attr('disabled', 'disabled')
+    if (status) {
+      this.addTermModal.orgId = this.user.user.orgId
+      this.addTermModal.uniqueKeyTerms = generateUUID(this.user.user.orgId)
+      this.addTermModal.modifiedOn = new Date().getTime()
+
+      this.termConditionService.add([
+        this.termConditionService.changeKeysForApi(this.addTermModal)
+      ]).subscribe((response: any) => {
+        if (response.status === 200) {
+          var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
+          this.store.dispatch(new termActions.add([temp]))
+
+          this.addTermModal = {}
+
+          if (temp.setDefault === 'DEFAULT') {
+            this.activeEstimate.termsAndConditions.push(temp)
+          }
+
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
+          $('#add-terms').modal('hide')
+        } else {
+          $('#addtermbtn').removeAttr('disabled')
+          // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
+          alert(response.message)
+        }
+      })
+    }
   }
 
   addRemoveTermsFromEstimate(term) {
