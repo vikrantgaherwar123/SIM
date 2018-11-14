@@ -21,27 +21,7 @@ export class ProductComponent implements OnInit {
     }
   }
   productList: product[]
-  private emptyProduct = {
-    buyPrice: 0,
-    deviceCreatedDate: 0,
-    discription: "",
-    enabled: 0,
-    inventoryEnabled: 0,
-    modifiedDate: 0,
-    openingDate: '',
-    openingStock: 0,
-    prodLocalId: 0,
-    prodName: "",
-    productCode: '',
-    rate: 0.01,
-    remainingStock: 0,
-    serverOrgId: 0,
-    serverUpdateTime: 0,
-    taxRate: 0,
-    uniqueKeyProduct: '',
-    unit: ""
-  }
-  private activeProduct = {...this.emptyProduct}
+  private activeProduct = <product>{}
   productListLoading: boolean = false
   private openingDate: string = ""
   sortTerm: string
@@ -153,7 +133,7 @@ export class ProductComponent implements OnInit {
             }
           }
 
-          self.activeProduct = {...this.emptyProduct}
+          self.activeProduct = <product>{}
 
           // notifications.showSuccess({ message: result.data.message, hideDelay: 1500, hide: true })
           // this.form.$setUntouched()
@@ -186,7 +166,7 @@ export class ProductComponent implements OnInit {
 
   addNew() {
     this.isBatchBtn = false
-    this.activeProduct = {...this.emptyProduct}
+    this.activeProduct = <product>{}
 
     this.isEdit = false
     this.inputDisabled = false
@@ -259,20 +239,9 @@ export class ProductComponent implements OnInit {
     // this.viewThis(this.tempProduct, this.tempIndex, true)
   }
 
-  // clearThis() {
-  //   this.activeProduct.prod_name = ""
-  //   this.activeProduct.productCode = ""
-  //   this.activeProduct.unit = ""
-  //   this.activeProduct.discription = ""
-  //   this.activeProduct.rate = 0.01
-  //   this.activeProduct.tax_rate = 0
-  //   this.activeProduct.inventory_enabled = 0
-  //   this.activeProduct.opening_stock = 0
-  //   this.activeProduct.opening_date = 0
-  //   this.activeProduct.buy_price = 0
-
-  //   $('#prod_name').val("")
-  // }
+  clearThis() {
+    this.activeProduct = <product>{}
+  }
 
   batchUpload() {
     this.router.navigate(['/product/batch/'])
