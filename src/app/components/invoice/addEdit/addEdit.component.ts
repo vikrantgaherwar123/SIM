@@ -470,7 +470,6 @@ export class AddEditComponent implements OnInit {
           this.billingTo.setValue(this.activeClient)
 
           $('#add-client').modal('hide')
-          //this.data.invoice.unique_key_fk_client = this.activeClient.unique_identifier
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
