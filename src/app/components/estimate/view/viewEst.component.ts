@@ -20,7 +20,6 @@ export class ViewEstComponent implements OnInit {
 
   estimateList: estimate[]
   activeEst: estimate
-  private activeEstId: string
   estListLoader: boolean = false
   estDispLimit: number = 20
   estSortTerm: string
@@ -144,14 +143,10 @@ export class ViewEstComponent implements OnInit {
   // }
 
   setActiveEst(estId: string = '') {
-    this.activeEstId = estId
-    if (!this.activeEstId) {
+    if (!estId) {
       this.activeEst = this.estimateList[0]
-      if (this.activeEst) {
-        this.activeEstId = this.activeEst.unique_identifier
-      }
     } else {
-      this.activeEst = this.estimateList.filter(est => est.unique_identifier == this.activeEstId)[0]
+      this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
     this.setActiveClient()
   }

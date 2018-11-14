@@ -21,7 +21,6 @@ export class ViewComponent implements OnInit {
 
   invoiceList: invoice[]
   activeInv: invoice
-  private activeInvId: string
   invListLoader: boolean = false
   invDispLimit: number = 20
   invSortTerm: string
@@ -145,14 +144,10 @@ export class ViewComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    this.activeInvId = invId
-    if (!this.activeInvId) {
+    if (!invId) {
       this.activeInv = this.invoiceList[0]
-      if (this.activeInv) {
-        this.activeInvId = this.activeInv.unique_identifier
-      }
     } else {
-      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == this.activeInvId)[0]
+      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()
   }
