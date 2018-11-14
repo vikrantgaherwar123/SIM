@@ -28,48 +28,7 @@ import { AppState } from '../../../app.state'
 })
 export class AddEditComponent implements OnInit {
 
-  private emptyInvoice = {
-    adjustment: null,
-    amount: 0.00,
-    balance: 0.00,
-    client_id: 0,
-    created_date: '',
-    deletedItems: [],
-    deletedPayments: [],
-    deletedTerms: [],
-    deleted_flag: 0,
-    device_modified_on: 0,
-    discount: null,
-    discount_on_item: 0,
-    due_date: '',
-    due_date_flag: 0,
-    epoch: 0,
-    gross_amount: 0.00,
-    id: 0,
-    invoiceNote: '',
-    invoice_number: '',
-    listItems: [],
-    organization_id: 0,
-    payments: [],
-    percentage_flag: 0,
-    percentage_value: 0,
-    push_flag: 0,
-    reference: '',
-    serverUpdateTime: 0,
-    shipping_address: '',
-    shipping_charges: null,
-    taxList: [],
-    tax_amount: 0,
-    tax_on_item: 0,
-    tax_rate: 0,
-    termsAndConditions: [],
-    unique_identifier: '',
-    unique_key_fk_client: '',
-    version: 0,
-    _id: 0
-  }
-
-  activeInvoice: invoice = {...this.emptyInvoice}
+  activeInvoice: invoice = <invoice>{}
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
   private tempInvNo: number
@@ -776,7 +735,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.tax_amount = tax_rate
     }
 
-    if (indexTaxMultiple) {
+    if (indexTaxMultiple && this.activeInvoice.taxList) {
       var temp_tax_rate = 0
       for (var i = 0; i < this.activeInvoice.taxList.length; i++) {
         if (this.activeInvoice.taxList[i]) {
@@ -854,9 +813,11 @@ export class AddEditComponent implements OnInit {
     for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
       this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
     }
-    for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
-      if (this.activeInvoice.taxList[t] == null) {
-        this.activeInvoice.taxList.splice(t, 1)
+    if(this.activeInvoice.taxList) {
+      for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
+        if (this.activeInvoice.taxList[t] == null) {
+          this.activeInvoice.taxList.splice(t, 1)
+        }
       }
     }
 
@@ -913,7 +874,7 @@ export class AddEditComponent implements OnInit {
     this.billingTo.setValue('')
     this.addItem.reset('')
 
-    this.activeInvoice = {...this.emptyInvoice}
+    this.activeInvoice = <invoice>{}
 
     this.activeInvoice.listItems = []
     this.activeInvoice.payments = []

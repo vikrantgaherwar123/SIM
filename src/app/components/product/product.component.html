@@ -118,7 +118,7 @@
                   </button>
                   <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
-                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
                     "
                     (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
                   >
@@ -341,7 +341,7 @@
                     </button>
                     <button type="button" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
                       [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
-                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!', closeOnConfirm: true, closeOnCancel: true }
+                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
                       "
                       (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
                     >

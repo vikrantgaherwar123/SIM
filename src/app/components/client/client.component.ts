@@ -21,22 +21,8 @@ export class ClientComponent implements OnInit {
     }
   }
   clientList: client[]
-  private emptyClient = {
-    addressLine1: "",
-    businessDetail: "",
-    businessId: "",
-    contactPersonName: "",
-    enabled: 0,
-    device_modified_on: 0,
-    email: "",
-    localClientid: 0,
-    name: "",
-    number: "",
-    shippingAddress: "",
-    organizationId: "",
-    uniqueKeyClient: ""
-  }
-  private activeClient = {...this.emptyClient}
+
+  private activeClient = <client>{}
   private errors: object = {}
   clientListLoading: boolean = false
   clientDisplayLimit = 12
@@ -128,16 +114,16 @@ export class ClientComponent implements OnInit {
     }
 
     if (status && proStatus) {
-      this.activeClient.organizationId = this.user.user.orgId
+      this.activeClient.organizationId = parseInt(this.user.user.orgId)
       var d = new Date()
       if (this.activeClient.uniqueKeyClient == "" || typeof this.activeClient.uniqueKeyClient == 'undefined') {
         this.activeClient.uniqueKeyClient = generateUUID(this.user.user.orgId);
       }
-      this.activeClient.device_modified_on = d.getTime();
+      var data = {...this.activeClient, device_modified_on: d.getTime()}
       this.clientListLoading = true
       var self = this
 
-      this.clientService.add([this.clientService.changeKeysForApi(this.activeClient)]).subscribe((response: any) => {
+      this.clientService.add([this.clientService.changeKeysForApi(data)]).subscribe((response: any) => {
         // $('#updateClientBtn').button('reset');
         // $('#saveClientBtn').button('reset');
         // $('#updateClientBtn1').button('reset');
@@ -167,7 +153,7 @@ export class ClientComponent implements OnInit {
           }
           self.errors = {}
 
-          self.activeClient = {...this.emptyClient}
+          self.activeClient = <client>{}
 
           self.isEditBtn = true
           self.isCreate = false
@@ -177,7 +163,6 @@ export class ClientComponent implements OnInit {
           self.rightDivBtns = false
 
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
-          console.log(response.message)
         }
         else {
           self.errors = [response.error]
@@ -202,7 +187,7 @@ export class ClientComponent implements OnInit {
   addNew() {
     this.rightDivBtns = false
     
-    this.activeClient = {...this.emptyClient}
+    this.activeClient = <client>{}
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -301,17 +286,7 @@ export class ClientComponent implements OnInit {
   }
 
   clearThis() {
-    this.activeClient.name = ""
-    this.activeClient.contactPersonName = ""
-    this.activeClient.email = ""
-    this.activeClient.number = ""
-    this.activeClient.addressLine1 = ""
-    this.activeClient.shippingAddress = ""
-    this.activeClient.businessDetail = ""
-    this.activeClient.businessId = ""
-    this.activeClient.enabled = 0
-    // form.$setUntouched()
-    // form.email.$touched = false
+    this.activeClient = <client>{}
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error')
     }
