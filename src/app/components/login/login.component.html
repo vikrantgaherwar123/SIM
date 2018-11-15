@@ -3,8 +3,9 @@
     <div class="info-container text-center">
       <img src="assets/images/login/lh.png" class="">
       <p>
-        readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
-        distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+        readable content of a page when looking at its layout. The point of using
+        Lorem Ipsum is that it has a more-or-less normal distribution of letters,
+        as opposed to using 'Content here, content here', making it look like readable English.
         Many desktop publishing packages and web page edito
       </p>
     </div>
@@ -13,28 +14,33 @@
     <div class="login-form-container">
       <img src="assets/images/login/lg.png" class="lock-image img-fluid">
 
-      <div class="login-form">
+      <div class="login-form" *ngIf="!forgetFlag">
         <form name="form" (ngSubmit)="loginUser($event)">
           <div class="form-group" style="margin-bottom: 8px;">
             <i class="fa fa-envelope"></i>
-            <input type="text" class="login-input" name="email" [(ngModel)]="user.userName" autocomplete="off" placeholder="Email">
+            <input type="text" class="login-input" name="email"
+              [(ngModel)]="user.userName" autocomplete="off" placeholder="Email"
+            >
           </div>
           <div style="min-height: 15px;">
-            <span *ngIf="errorStatus" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
+            <span *ngIf="errorMessage" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
               <img src="assets/images/exclamation16.png" style="width: 12px;margin-top: -3px;">
-              {{registerMessage}}
+              {{errorMessage}}
             </span>
           </div>
           <div class="form-group">
             <i class="fa fa-key"></i>
-            <input type="password" class="login-input" name="password" [(ngModel)]="user.password" placeholder="Password" required autocomplete="off" style="margin-top: -6px;">
+            <input type="password" class="login-input" name="password" style="margin-top: -6px;"
+              [(ngModel)]="user.password" placeholder="Password" required autocomplete="off"
+            >
           </div>
           <div id="rem-for">
             <div class="padl0 pull-left">
-              <input type="checkbox" id="remember"><label class="font-custom-bold fontsize12" style="vertical-align: text-top;"
-                for="remember"></label>Remember me
+              <input type="checkbox" id="remember">
+                <label class="font-custom-bold fontsize12" style="vertical-align: text-top;" for="remember"></label>
+                Remember me
             </div>
-            <a class="pull-right" ng-click="forgetPassword();">Forgot Password?</a>
+            <a class="pull-right" (click)="forgetFlag=true">Forgot Password?</a>
           </div>
   
           <div class="clearfix">&nbsp;</div>
@@ -61,32 +67,30 @@
           </a>
         </div>
       </div>
-    </div>
-  </div>
-  <!-- <div class="col-md-4" id="login-right-outer1" ng-show="forgetFlag">
-    <div class="col-md-12" id="login-right-inner1">
-      <div class="col-md-12">
-        <img src="assets/images/login/lg.png" id="login-lock1">
-        <div class="font-custom-book" style="margin-top: 42.5px;font-weight: 900; font-size: 11px"> enter your email id
-          to reset password
-        </div>
 
-        <form name="forgetForm" ng-submit="verifyEmail(forget,true)">
-          <div class="form-group input--with-icon">
-            <i class="fa fa-envelope input-icons"></i>
-            <input type="email" class="login-input" name="email" ng-model="forget.email" required autocomplete="off" placeholder="Email">
+      <div class="login-form" *ngIf="forgetFlag">
+        <div class="col-md-12">
+          <div class="font-custom-book" style="margin-top:42.5px;font-weight: 900;font-size: 11px;text-align:center">
+            enter your email id to reset password
           </div>
-          <div style="min-height: 15px;" class="margin-bottom-5px">
-            <span ng-show="forgetResponseStatus" class="font-custom-bold" style="color: #ff8000; font-size: 11px"></span>
-          </div>
-          <div class="form-group">
-            <button type="submit" id="login-btn1" name="login-btn" ng-disabled="!forgetForm.$valid">Reset</button>
-          </div>
-        </form>
+
+          <form name="forgetForm" #forgetForm="ngForm" (ngSubmit)="forgetPassword(forgetForm)">
+            <div class="form-group input--with-icon">
+              <i class="fa fa-envelope input-icons"></i>
+              <input type="email" class="login-input" name="email" [(ngModel)]="forgetMail" required autocomplete="off" placeholder="Email">
+            </div>
+            <div style="text-align: center" class="margin-bottom-5px" *ngIf="errorMessage">
+              <span class="font-custom-bold" style="color: #ff8000; font-size: 11px">{{errorMessage}}</span>
+            </div>
+            <div class="form-group">
+              <button type="submit" id="login-btn1" name="login-btn" [disabled]="!forgetForm.valid">Reset</button>
+            </div>
+          </form>
+        </div>
+        <div class="forget-back text-center">
+          <span (click)="forgetFlag = false;errorMessage='';">Go Back</span>
+        </div>
       </div>
     </div>
-    <div class="forget-back text-center">
-      <span href="#" ng-click="forgetFlag = false;forgetResponseStatus = false;"> Go Back</span>
-    </div>
-  </div> -->
+  </div>
 </div>

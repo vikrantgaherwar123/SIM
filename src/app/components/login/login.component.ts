@@ -42,9 +42,9 @@ export class LoginComponent implements OnInit {
 
   loggingIn: boolean = false
   authenticated: any
-  registerMessage: any
-  status: String
-  errorStatus: Boolean = false
+  errorMessage: string = ''
+  forgetFlag: boolean = false
+  forgetMail: string = ''
 
   constructor(
     private authService: AuthService,
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.user).subscribe((response: response) => {
       if (response.status === 200) {
-        this.registerMessage = null
+        this.errorMessage = ''
 
         const access = response.login_info.access_token
         const ids = parseInt(response.login_info.user.orgId)
@@ -95,8 +95,7 @@ export class LoginComponent implements OnInit {
           $("#login-btn1").prop("disabled", false)
           $("#login-btn").prop("disabled", false)
 
-          this.errorStatus = true
-          this.registerMessage = response.message
+          this.errorMessage = response.message
           this.loggingIn = false
         }
       }
@@ -156,11 +155,22 @@ export class LoginComponent implements OnInit {
         $('#logoutBtn').addClass("show")
       } else {
         $("#login-btn").prop("disabled", false)
-        this.status = response.message
+        this.errorMessage = response.message
         localStorage.clear()
         this.authenticated = false
         this.loggingIn = false
         this.router.navigate(['/login'])
+      }
+    })
+  }
+
+  forgetPassword() {
+    this.authService.forgetPassword(this.forgetMail).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.errorMessage = 'Please check  your email to reset password!'
+        this.forgetMail = ''
+      }else {
+        this.errorMessage = "This email address is not registered with us."
       }
     })
   }
