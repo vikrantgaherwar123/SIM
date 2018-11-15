@@ -49,10 +49,14 @@
           <div id="h2-div"><span>Or</span></div>
         </div>
         <div class="social-login-container text-center">
-          <a fb-login type="button" id="fbbtn" name="fbbtn" style="cursor: pointer">
+          <a type="button" id="fbbtn" name="fbbtn" style="cursor: pointer"
+            (click)="socialSignIn('facebook')"
+          >
             <img src="assets/images/login/fb.png">
           </a>
-          <a g-login type="button" id="googlebtn" name="googlebtn" style="cursor: pointer">
+          <a type="button" id="googlebtn" name="googlebtn" style="cursor: pointer"
+            (click)="socialSignIn('google')"
+          >
             <img src="assets/images/login/gplus.png">
           </a>
         </div>

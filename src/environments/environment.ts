@@ -3,8 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
-};
+  production: false,
+  FB_APP_ID: "1316825368444193",
+  G_APP_ID: "851831748812-gp8ud9ctaq221eft61374ii3utr29vps.apps.googleusercontent.com"
+}
 
 /*
  * In development mode, for easier debugging, you can ignore zone related error
