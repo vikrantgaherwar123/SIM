@@ -10,6 +10,10 @@ import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
 
+import { SocialLoginModule, AuthServiceConfig,
+  GoogleLoginProvider, FacebookLoginProvider
+} from "angular-6-social-login"
+
 import { StoreModule } from '@ngrx/store'
 import { clientReducer } from './reducers/client.reducer'
 import { productReducer } from './reducers/product.reducer'
@@ -41,6 +45,25 @@ import { BankingComponent } from './components/setting/banking/banking.component
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 
+// Social login configs
+import { environment } from '../environments/environment'
+
+export function getAuthServiceConfigs() {
+  const FB_APP_ID = environment.FB_APP_ID
+  const G_APP_ID = environment.G_APP_ID
+
+  return new AuthServiceConfig([
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(FB_APP_ID)
+    },
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(G_APP_ID)
+    }
+  ])
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +86,7 @@ import { UserProfileComponent } from './components/setting/user-profile/user-pro
   ],
   imports: [
     BrowserModule,
+    SocialLoginModule,
     AppRoutingModule,
     TranslateModule.forRoot(),
     HttpClientModule,
@@ -83,7 +107,13 @@ import { UserProfileComponent } from './components/setting/user-profile/user-pro
       globals: globalReducer
     })
   ],
-  providers: [CONSTANTS],
+  providers: [
+    CONSTANTS,
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

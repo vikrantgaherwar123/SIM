@@ -17,6 +17,8 @@ import * as termActions from '../../actions/terms.action'
 import * as settingActions from '../../actions/setting.action'
 import { AppState } from '../../app.state'
 
+import { AuthService as socialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angular-6-social-login'
+
 interface response {
   status: number
   access_token: string
@@ -41,7 +43,6 @@ export class LoginComponent implements OnInit {
   loggingIn: boolean = false
   authenticated: any
   registerMessage: any
-  pro_bar_load: Boolean = false
   status: String
   errorStatus: Boolean = false
 
@@ -52,7 +53,8 @@ export class LoginComponent implements OnInit {
     private productService: ProductService,
     private termsService: TermConditionService,
     private settingService: SettingService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private socialAuthService: socialAuthService
   ) { }
 
   ngOnInit() {
@@ -84,7 +86,6 @@ export class LoginComponent implements OnInit {
         // Validate token
         this.validateToken(access, ids, response)
       } else {
-        this.pro_bar_load = true
         if (response.status == 410) {
           console.log('purchase error');
         } else {
@@ -99,6 +100,30 @@ export class LoginComponent implements OnInit {
           this.loggingIn = false
         }
       }
+    })
+  }
+
+  socialSignIn(socialPlatform : string) {
+    let socialPlatformProvider
+    if(socialPlatform == "facebook"){
+      socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID
+    }else if(socialPlatform == "google"){
+      socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID
+    }
+
+    this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
+      var creds = {access_token: userData.token, provider: userData.provider}
+      this.authService.socialLogin(creds).subscribe((response: any) => {
+        if(response.status == 410) {
+          console.log(response.message)
+        } else if(response.status == 200) {
+          const access = response.login_info.access_token
+          const ids = parseInt(response.login_info.user.orgId)
+
+          // Validate token
+          this.validateToken(access, ids, response)
+        }
+      })
     })
   }
 
@@ -131,7 +156,6 @@ export class LoginComponent implements OnInit {
         $('#logoutBtn').addClass("show")
       } else {
         $("#login-btn").prop("disabled", false)
-        this.pro_bar_load = true
         this.status = response.message
         localStorage.clear()
         this.authenticated = false

@@ -12,6 +12,7 @@ import { MD5 } from '../globalFunctions'
 export class AuthService {
 
   private loginUrl = ''
+  private socialLoginUrl = ''
   private validateTokenUrl = ''
   private changePasswordUrl = ''
   private user: {
@@ -20,6 +21,7 @@ export class AuthService {
 
   constructor( private http: HttpClient, private CONST: CONSTANTS) {
     this.loginUrl = `${CONST.BASE_URL}login`
+    this.socialLoginUrl = `${CONST.BASE_URL}social-login`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
     this.changePasswordUrl = `${CONST.BASE_URL}changePassword`
 
@@ -48,6 +50,21 @@ export class AuthService {
     };
 
     return this.http.post(this.loginUrl, {}, headers).pipe(
+      catchError(this.handleError('login', {}))
+    )
+  }
+
+  // Social Login api
+  socialLogin(creds) {
+    const headers = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Device-Id": MD5(navigator.userAgent),
+        "Device-Type": '3'
+      })
+    };
+
+    return this.http.post(this.socialLoginUrl, creds, headers).pipe(
       catchError(this.handleError('login', {}))
     )
   }
