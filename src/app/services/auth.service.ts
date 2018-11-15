@@ -15,6 +15,7 @@ export class AuthService {
   private socialLoginUrl = ''
   private validateTokenUrl = ''
   private changePasswordUrl = ''
+  private forgetPasswordUrl = ''
   private user: {
     access_token: string
   }
@@ -24,6 +25,7 @@ export class AuthService {
     this.socialLoginUrl = `${CONST.BASE_URL}social-login`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
     this.changePasswordUrl = `${CONST.BASE_URL}changePassword`
+    this.forgetPasswordUrl = `${CONST.BASE_URL}forgotPassword`
 
     this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
@@ -47,7 +49,7 @@ export class AuthService {
         "Device-Id": MD5(navigator.userAgent),
         "Device-Type": '3'
       })
-    };
+    }
 
     return this.http.post(this.loginUrl, {}, headers).pipe(
       catchError(this.handleError('login', {}))
@@ -97,7 +99,21 @@ export class AuthService {
     )
   }
 
-  //Error Handler
+  // Forget Password api
+  forgetPassword(email) {
+    const headers = {
+      headers: new HttpHeaders({
+        "Device-Id": MD5(navigator.userAgent),
+        "email": email
+      })
+    }
+
+    return this.http.get(this.forgetPasswordUrl, headers).pipe(
+      catchError(this.handleError('forget Pawwsord', {}))
+    )
+  }
+
+  // Error Handler
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
  
