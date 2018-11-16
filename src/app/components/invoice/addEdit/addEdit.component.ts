@@ -62,31 +62,6 @@ export class AddEditComponent implements OnInit {
 
   addPaymentModal: any = {}
 
-  tempQtyLabel: string
-  tempProLabel: string
-  tempAmtLabel: string
-  tempRateLabel: string
-  tempTermLabel: string
-  tempBillLabel: string
-  tempShipLabel: string
-  tempDueLabel: string
-  tempDisLabel: string
-  tempSubToLabel: string
-  tempShippingLabel: string
-  tempAdjLabel: string
-  tempPaidLabel: string
-  tempTotalLabel: string
-  tempBalLabel: string
-  tempInv12: any
-  tempPaymentList
-  tempItemList
-  tempTermList
-  routeParams: {
-    invId: string
-  }
-
-  private newItemCounter: number = 0
-
   settings: any
   private activeSettings: setting
   private user: {
@@ -157,9 +132,9 @@ export class AddEditComponent implements OnInit {
   }
 
   editInit(invId) {
-    // Fetch selected invoice
     this.commonSettingsInit()
 
+    // Fetch selected invoice
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       if(invoice.records !== null) {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
@@ -244,22 +219,6 @@ export class AddEditComponent implements OnInit {
     })
 
     var settings = this.settings
-    // Set Labels
-    this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
-    this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
-    this.tempAmtLabel = settings.mTvAmount ? settings.mTvAmount : ''
-    this.tempRateLabel = settings.mTvRate ? settings.mTvRate : ''
-    this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : ''
-    this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : ''
-    this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : ''
-    this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : ''
-    this.tempDisLabel = settings.discount ? settings.discount : ''
-    this.tempSubToLabel = settings.subtotal ? settings.subtotal : ''
-    this.tempShippingLabel = settings.shipping ? settings.shipping : 'Shipping'
-    this.tempAdjLabel = settings.adjustment ? settings.adjustment : ''
-    this.tempPaidLabel = settings.paid ? settings.paid : ''
-    this.tempTotalLabel = settings.total ? settings.total : ''
-    this.tempBalLabel = settings.balance ? settings.balance : ''
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
@@ -689,9 +648,11 @@ export class AddEditComponent implements OnInit {
   calculateInvoice(indexTaxMultiple) {
     var total = 0
 
-    for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
-      var item = this.activeInvoice.listItems[i]
-      total += parseFloat(item.total)
+    if (this.activeInvoice.listItems) {
+      for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+        var item = this.activeInvoice.listItems[i]
+        total += parseFloat(item.total)
+      }
     }
     this.activeInvoice.gross_amount = total
 
@@ -767,7 +728,7 @@ export class AddEditComponent implements OnInit {
       finalAmount = 0
     }
 
-    this.activeInvoice.balance = parseFloat(finalAmount.toFixed(2)) - this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0)
+    this.activeInvoice.balance = parseFloat(finalAmount.toFixed(2)) - (this.activeInvoice.payments ? this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0) : 0)
     this.activeInvoice.amount = parseFloat(finalAmount.toFixed(2))
   }
 
@@ -878,7 +839,6 @@ export class AddEditComponent implements OnInit {
 
     this.activeInvoice.listItems = []
     this.activeInvoice.payments = []
-    this.newItemCounter = 0
     this.activeInvoice.taxList = []
     this.show_tax_input_list = []
     this.tempflagTaxList = []

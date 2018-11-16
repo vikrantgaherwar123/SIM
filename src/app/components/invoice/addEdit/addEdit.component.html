@@ -9,18 +9,11 @@
           <div class="shadow back pad15">
             <div class="col-12 padt15">
               <div class="vtop text-right">
-                <span class="c-name" type="text" id="titleAdd" name="title"
-                  *ngIf="settings.mTvInvoice"
-                >
-                  {{settings.mTvInvoice}}
-                </span>
-                <span class="c-name" type="text" id="titleAddelse" name="title"
-                  *ngIf="!settings.mTvInvoice"
-                >
-                  {{'INV_LABEL' | translate}}
+                <span class="c-name" type="text" id="titleAdd" name="title">
+                  {{settings.mTvInvoice ? settings.mTvInvoice : 'INV_LABEL' | translate}}
                 </span>
               </div>
-      
+
               <div class="col-12 pad0" style="margin-bottom: 25px">
                 <div class="row mar0">
                   <div class="col-12 col-sm-7 pad0" id="clientDataAdd" name="clientData">
@@ -28,7 +21,7 @@
                       <!-- Billing To -->
                       <div class="col-10">
                         <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                          {{tempBillLabel}}
+                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
 
                         <div class="form-group pad-left-0">
@@ -134,7 +127,9 @@
 
                     <div class="row" style="margin-top: 5px;">
                       <div class="col-6 offset-md-2 col-md-4">
-                        <span class="font-custom-bold text-left w100">{{tempDueLabel}}</span>
+                        <span class="font-custom-bold text-left w100">
+                          {{settings.mTvDueDate ? settings.mTvDueDate : 'DUE_DATE_LABEL' | translate}}
+                        </span>
                       </div>
                       <div class="col-6 selectDueDate">
                         <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag"
@@ -183,22 +178,23 @@
                     <thead>
                       <tr class="hd font-custom-bold">
                         <td width="48%">
-                          <input type="text" [value]="tempProLabel" id="itemDescLabelAdd"
-                            class="bld w-100" style="text-align:left;" disabled
-                          >
-                        </td>
-                        <td width="18%">
-                          <input type="text" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100 text-center"
-                            name="quantity" disabled
+                          <input type="text" id="itemDescLabelAdd" class="bld w-100" style="text-align:left;" disabled
+                            value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                           />
                         </td>
                         <td width="18%">
-                          <input type="text" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-center"
-                            name="rate" disabled>
+                          <input type="text" id="itemQtyLabelAdd" class="bld w100 text-center" name="quantity" disabled
+                            value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
+                          />
                         </td>
                         <td width="18%">
-                          <input type="text" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-center"
-                            style="text-align:right;" name="amount" disabled
+                          <input type="text" id="itemRateLabelAdd" class="bld w100 text-center" name="rate" disabled
+                            value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
+                          />
+                        </td>
+                        <td width="18%">
+                          <input type="text" id="itemAmtLabelAdd" class="bld w100 text-center" name="amount" disabled
+                            value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
                         <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
@@ -313,19 +309,23 @@
                   <div class="row add-item-button">
                     <!-- Tax discount list -->
                     <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
-                      <div class="cursor-pointer" *ngIf="activeInvoice.discount == null && activeInvoice.percentage_flag==0">
-                        <a class="inline" (click)="activeInvoice.percentage_flag=1;activeInvoice.percentage_value=0.00">
-                          {{tempDisLabel}}+
+                      <div class="cursor-pointer" *ngIf="activeInvoice.discount == undefined">
+                        <a class="inline" (click)="activeInvoice.percentage_flag=1;activeInvoice.percentage_value=0.00;activeInvoice.discount=0">
+                          {{settings.discount ? settings.discount : 'Discount'}}+
                         </a>
                       </div>
-                      <div class="cursor-pointer" *ngIf="activeInvoice.shipping_charges == null">
-                        <a class="inline" (click)="activeInvoice.shipping_charges = 0">{{tempShippingLabel}}+</a>
+                      <div class="cursor-pointer" *ngIf="activeInvoice.shipping_charges == undefined">
+                        <a class="inline" (click)="activeInvoice.shipping_charges = 0">
+                          {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                        </a>
                       </div>
                       <div class="cursor-pointer" *ngIf="activeInvoice.tax_on_item == 2">
                         <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                       </div>
                       <div class="cursor-pointer" *ngIf="activeInvoice.adjustment == null">
-                        <a class="inline" (click)="activeInvoice.adjustment = 0">{{tempAdjLabel}}+</a>
+                        <a class="inline" (click)="activeInvoice.adjustment = 0">
+                          {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL'}}+
+                        </a>
                       </div>
                       <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
                         <div *ngIf="showMultipleTax && multiTaxButtonForAddInvoice(tax.taxName,$index)">
@@ -339,15 +339,17 @@
                     <!--Term and Condition -->
                     <div class="col-12 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
-                        <span class="bld">{{tempTermLabel}}</span>
-                        <a (click)="openAddTermModal()" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
-                          data-original-title="Add " title="Add Term"
-                        >
-                          <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
+                        <span class="bld">
+                          {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                        </span>
+                        <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
+                          <img src="assets/images/add16.png" alt="logo"
+                            style="vertical-align: initial;height:10px; margin-right: 3px;"
+                          />
                           Add Terms
                         </a>
                       </div>
-        
+
                       <div class="col-md-12 col-xs-12 col-md-12 pad0">
                         <div class="form-group">
                           <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mar0">
@@ -369,7 +371,7 @@
                       <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span class="font-custom-bold">{{tempSubToLabel}}</span>
+                            <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
                           </div>
                           <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
@@ -378,11 +380,15 @@
                       </div>
 
                       <!-- Discounts -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.discount !== null || activeInvoice.percentage_flag == 1">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.discount > -1 || activeInvoice.percentage_flag == 1">
                         <div class="row">                        
                           <div class="col-5 discount-tax-label pad-right-0">
-                            <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                            <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom">({{currencySymbolTemp }})</div>
+                            <span style="text-align: left;vertical-align: bottom;" class="inline">
+                              {{settings.discount ? settings.discount : 'Discount'}}
+                            </span>
+                            <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom">
+                              ({{settings.currencyInText}})
+                            </div>
                             <div *ngIf="activeInvoice.percentage_flag == 1" class="inline font-custom">(%)</div>
 
                             <div class="pad0" style="float: right; padding-right: 10px;">
@@ -396,7 +402,7 @@
                               <ul class="dropdown-menu dropdown-menu-right">
                                 <li [class.active]="activeInvoice.percentage_flag == 0">
                                   <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice(1)">
-                                    Flat ({{currencySymbolTemp}})
+                                    Flat ({{settings.currencyInText}})
                                   </a>
                                 </li>
                                 <li [class.active]="activeInvoice.percentage_flag == 1">
@@ -439,10 +445,8 @@
                           <div class="col-1 pad0">
                             <div class="remove-button">
                               <div class="addon selectorpad-right-0"
-                                (click)="activeInvoice.discount=null;
-                                  activeInvoice.percentage_flag=0;
-                                  activeInvoice.percentage_value=0;
-                                  calculateInvoice()
+                                (click)="activeInvoice.discount=undefined;activeInvoice.percentage_flag=0;
+                                  activeInvoice.percentage_value=0;calculateInvoice()
                                 "
                               >
                                 <img src="assets/images/delete16.png" alt="" style="height:16px;">
@@ -517,12 +521,14 @@
                       </div>
 
                       <!-- Shipping -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.shipping_charges !== null">
+                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.shipping_charges > -1">
                         <div class="row">
                           <div class="col-5 discount-tax-label">
-                            <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
+                            <div class="inline" style="text-align: left;vertical-align: bottom;">
+                              {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                            </div>
                           </div>
-    
+
                           <div class="col-7">
                             <form #form_shipping_input="ngForm" name="form_shipping_input">
                               <div class="input-group pad-right-0">
@@ -531,13 +537,13 @@
                                   [(ngModel)]="activeInvoice.shipping_charges" (change)="calculateInvoice(1)"
                                 />
                                 <div class="pad-right-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeInvoice.shipping_charges = null;calculateInvoice()">
+                                  <div class="addon selectorpadr0" (click)="activeInvoice.shipping_charges = undefined;calculateInvoice()">
                                     <img src="assets/images/delete16.png" alt="" style="height:16px;">
                                   </div>
                                 </div>
                               </div>
                             </form>
-    
+
                             <!-- <div class="form-error">
                               <span *ngIf="form_shipping_input.shipping_input.$error.max">Not more than 100</span>
                             </div> -->
@@ -549,9 +555,11 @@
                       <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeInvoice.adjustment != null">
                         <div class="row">
                           <div class="col-4 discount-tax-label pad-right-0">
-                            <div style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
+                            <div style="text-align: left;vertical-align: bottom;">
+                              {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
+                            </div>
                           </div>
-    
+
                           <div class="col-8 pad-left-0">
                             <form #form_tax_input="ngForm" name="form_tax_input">
                               <div class="input-group pad-right-0">
@@ -575,9 +583,11 @@
                       <div class="col-12 term-cond-label">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                            <span class="font-custom-bold" value="">
+                              {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                            </span>
                           </div>
-          
+
                           <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeInvoice.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
                           </div>
@@ -588,9 +598,7 @@
                       <div class="col-12" style="padding: 10px">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span
-                              class="font-custom">{{tempPaidLabel}}
-                            </span>
+                            <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                           </div>
                           <div class="col-6 text-right">
                             <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:'INR':'symbol':'1.2-2'}}</span>
@@ -602,7 +610,7 @@
                       <div class="col-12 balance-row">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span class="bld">{{tempBalLabel}}</span>
+                            <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                           </div>
                           <div class="col-6 text-right">
                             <span class="bld">{{activeInvoice.balance | currency:'INR':'symbol':'1.2-2'}}</span>
@@ -650,7 +658,6 @@
           Delete Invoices
         </button>
       </div>
-
     </div>
   </div>
 </div>
@@ -684,7 +691,7 @@
                   </div>
                 </div>
               </div>
-  
+
               <div class="col-6" style="padding-left: 23px;">
                 <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" name="contactPersonName" class="form-control add-client-input-custom"

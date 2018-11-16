@@ -9,7 +9,7 @@
                 <i class="fa fa-gear"></i> Primary settings
               </h4>
             </div>
-  
+
             <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
               class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold fontsize13 margin-right-15"
               [disabled]="!addTaxesForm.valid"
@@ -64,7 +64,7 @@
                     >
                       DISCOUNT ON ITEM
                     </label>
-    
+
                     <input type="radio" id="discountonBill" name="discounton"
                       (click)="activeSettings.discountFlagLevel=0" [checked]="activeSettings.discountFlagLevel==0"
                     >
@@ -73,7 +73,7 @@
                     >
                       DISCOUNT ON BILL
                     </label>
-    
+
                     <input type="radio" id="discountdisabled" name="discounton"
                       (click)="activeSettings.discountFlagLevel=2" [checked]="activeSettings.discountFlagLevel==2"
                     >
@@ -85,7 +85,7 @@
                   </div>
                 </div>
               </div>
-  
+
               <!-- Date Format -->
               <div class="form-group padtop20 date-format">
                 <div class="row">
@@ -163,7 +163,7 @@
                         <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
                         <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
                           (click)="setCurrencySymbol('text')"
-                        >
+                        />
                         <label for="currencyName" class="taxonbill">{{activeCountry.currencyName}}</label>
                       </div>
                     </div>

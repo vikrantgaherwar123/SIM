@@ -11,23 +11,20 @@
             <div class="col-12 padt15">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title" *ngIf="settings.mTvEstimate">
-                  {{settings.mTvEstimate}}
-                </span>
-                <span class="c-name" type="text" id="titleAddelse" name="title" *ngIf="!settings.mTvEstimate">
-                  {{'EST_LABEL' | translate}}
+                  {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
                 </span>
               </div>
-      
+
               <div class="col-12 pad0" style="margin-bottom: 25px">
                 <div class="row mar0">
                   <div class="col-12 col-sm-7 pad0" id="clientDataAdd" name="clientData">
                     <div class="row">
                       <div class="col-10">
                         <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                          {{tempBillLabel}}
+                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
                         <br />
-      
+
                         <div class="form-group pad-left-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
@@ -128,22 +125,23 @@
                     <thead>
                       <tr class="hd font-custom-bold">
                         <td width="48%">
-                          <input type="text" [value]="tempProLabel" id="itemDescLabelAdd"
-                            class="bld w-100" style="text-align:left;" disabled
-                          >
-                        </td>
-                        <td width="18%">
-                          <input type="text" [value]="tempQtyLabel" id="itemQtyLabelAdd" class="bld w100 text-center"
-                            name="quantity" disabled
+                          <input type="text" id="itemDescLabelAdd" class="bld w-100" style="text-align:left;" disabled
+                            value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                           />
                         </td>
                         <td width="18%">
-                          <input type="text" [value]="tempRateLabel" id="itemRateLabelAdd" class="bld w100 text-center"
-                            name="rate" disabled>
+                          <input type="text" id="itemQtyLabelAdd" class="bld w100 text-center" name="quantity" disabled
+                            value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
+                          />
                         </td>
                         <td width="18%">
-                          <input type="text" [value]="tempAmtLabel" id="itemAmtLabelAdd" class="bld w100 text-center"
-                            style="text-align:right;" name="amount" disabled
+                          <input type="text" id="itemRateLabelAdd" class="bld w100 text-center" name="rate" disabled
+                            value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
+                          />
+                        </td>
+                        <td width="18%">
+                          <input type="text" id="itemAmtLabelAdd" class="bld w100 text-center" name="amount" disabled
+                            value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
                         <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
@@ -259,17 +257,21 @@
                     <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
                       <div class="cursor-pointer" *ngIf="activeEstimate.percentage_flag==null">
                         <a class="inline" (click)="activeEstimate.percentage_flag=0;activeEstimate.discount=0.00">
-                          {{tempDisLabel}}+
+                          {{settings.discount ? settings.discount : 'Discount'}}+
                         </a>
                       </div>
                       <div class="cursor-pointer" *ngIf="activeEstimate.shipping_charges == null">
-                        <a class="inline" (click)="activeEstimate.shipping_charges = 0">{{tempShippingLabel}}+</a>
+                        <a class="inline" (click)="activeEstimate.shipping_charges = 0">
+                          {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                        </a>
                       </div>
                       <div class="cursor-pointer" *ngIf="activeEstimate.tax_rate == null">
                         <a class="inline" (click)="activeEstimate.tax_rate=0; activeEstimate.tax_amount = 0">Tax+</a>
                       </div>
                       <div class="cursor-pointer" *ngIf="activeEstimate.adjustment == null">
-                        <a class="inline" (click)="activeEstimate.adjustment = 0">{{tempAdjLabel}}+</a>
+                        <a class="inline" (click)="activeEstimate.adjustment = 0">
+                          {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL'}}+
+                        </a>
                       </div>
                       <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
                         <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,$index)">
@@ -283,8 +285,10 @@
                     <!--Term and Condition -->
                     <div class="col-12 col-md-6 pad-left-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
-                        <span class="bld">{{tempTermLabel}}</span>
-                        <a (click)="openAddTermModal()" class="pull-right" title="add term" data-toggle="tooltip" data-placement="top"
+                        <span class="bld">
+                          {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                        </span>
+                        <a (click)="openAddTermModal()" class="pull-right" title="add term"
                           data-original-title="Add" title="Add Term"
                         >
                           <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
@@ -313,7 +317,7 @@
                       <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span class="font-custom-bold">{{tempSubToLabel}}</span>
+                            <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
                           </div>
                           <div class="col-6 text-right">
                             <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
@@ -325,8 +329,12 @@
                       <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.percentage_flag != null">
                         <div class="row">                        
                           <div class="col-5 discount-tax-label pad-right-0">
-                            <span style="text-align: left;vertical-align: bottom;" class="inline">{{tempDisLabel}}</span>
-                            <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">({{currencySymbolTemp }})</div>
+                            <span style="text-align: left;vertical-align: bottom;" class="inline">
+                              {{settings.discount ? settings.discount : 'Discount'}}
+                            </span>
+                            <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
+                              ({{settings.currencyInText}})
+                            </div>
                             <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
 
                             <div class="pad0" style="float: right;">
@@ -344,7 +352,7 @@
                                       calculateEstimate(false)
                                     "
                                   >
-                                    Flat ({{currencySymbolTemp}})
+                                    Flat ({{settings.currencyInText}})
                                   </a>
                                 </li>
                                 <li [class.active]="activeEstimate.percentage_flag == 1">
@@ -479,7 +487,9 @@
                       <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== undefined">
                         <div class="row">
                           <div class="col-5 discount-tax-label">
-                            <div class="inline" style="text-align: left;vertical-align: bottom;">{{tempShippingLabel}} (+)</div>
+                            <div class="inline" style="text-align: left;vertical-align: bottom;">
+                              {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                            </div>
                           </div>
     
                           <div class="col-7">
@@ -508,7 +518,9 @@
                       <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.adjustment != null">
                         <div class="row">
                           <div class="col-4 discount-tax-label pad-right-0">
-                            <div style="text-align: left;vertical-align: bottom;">{{tempAdjLabel}} (-)</div>
+                            <div style="text-align: left;vertical-align: bottom;">
+                              {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
+                            </div>
                           </div>
 
                           <div class="col-8 pad-left-0">
@@ -533,7 +545,9 @@
                       <div class="col-12 term-cond-label">
                         <div class="row mar0">
                           <div class="col-6 text-left">
-                            <span class="font-custom-bold" value="">{{tempTotalLabel}}</span>
+                            <span class="font-custom-bold">
+                              {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                            </span>
                           </div>
 
                           <div class="col-6 text-right">
