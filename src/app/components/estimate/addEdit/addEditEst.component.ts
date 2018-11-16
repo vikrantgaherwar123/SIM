@@ -60,22 +60,6 @@ export class AddEditEstComponent implements OnInit {
   discount_on: string
   settings: any
 
-  tempQtyLabel: string
-  tempProLabel: string
-  tempAmtLabel: string
-  tempRateLabel: string
-  tempTermLabel: string
-  tempBillLabel: string
-  tempShipLabel: string
-  tempDueLabel: string
-  tempDisLabel: string
-  tempSubToLabel: string
-  tempShippingLabel: string
-  tempAdjLabel: string
-  tempPaidLabel: string
-  tempTotalLabel: string
-  tempBalLabel: string
-
   private activeSettings: setting
 
   showMultipleTax
@@ -224,22 +208,6 @@ export class AddEditEstComponent implements OnInit {
     })
 
     var settings = this.settings
-    // Set Labels
-    this.tempQtyLabel = settings.mTvQty ? settings.mTvQty : ''
-    this.tempProLabel = settings.mTvProducts ? settings.mTvProducts : ''
-    this.tempAmtLabel = settings.mTvAmount ? settings.mTvAmount : ''
-    this.tempRateLabel = settings.mTvRate ? settings.mTvRate : ''
-    this.tempTermLabel = settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : ''
-    this.tempBillLabel = settings.mTvBillTo ? settings.mTvBillTo : ''
-    this.tempShipLabel = settings.mTvShipTo ? settings.mTvShipTo : ''
-    this.tempDueLabel = settings.mTvDueDate ? settings.mTvDueDate : ''
-    this.tempDisLabel = settings.discount ? settings.discount : ''
-    this.tempSubToLabel = settings.subtotal ? settings.subtotal : ''
-    this.tempShippingLabel = settings.shipping ? settings.shipping : 'Shipping'
-    this.tempAdjLabel = settings.adjustment ? settings.adjustment : ''
-    this.tempPaidLabel = settings.paid ? settings.paid : ''
-    this.tempTotalLabel = settings.total ? settings.total : ''
-    this.tempBalLabel = settings.balance ? settings.balance : ''
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {
