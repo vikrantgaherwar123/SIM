@@ -1,4 +1,4 @@
-@import '../../../../assets/css/listForm.css';
+@import '../../../../assets/css/form.css';
 
 .inv-generator {
   max-height: none;
@@ -14,28 +14,12 @@
 input, textarea {
   margin-bottom: 2px;
 }
-.hd td, .hd td input {
-  background-color: #666;
-}
-.hd td {
-  border-bottom: 1px solid #ddd;
-}
 .column td {
   padding: 4px 2px;
   vertical-align: middle;
 }
-.hd td input {
-  text-align: right;
-  border: 1px solid #666;
-  color: #fff;
-}
 .bld {
   margin: 2px 0;
-}
-.row-item td {
-  border-bottom: 1px solid #e3e3e3;
-  padding-bottom: 7px;
-  padding-top: 7px;
 }
 .column td {
   padding: 4px 2px;
@@ -81,11 +65,6 @@ button.add-line-item-button {
 }
 .discount-tax-pad {
   padding-top: 15px;
-}
-.term-cond-label {
-  background: #e0dede;
-  border: 1px solid #e3e3e3;
-  padding: 10px;
 }
 .bld {
   margin: 2px 0;

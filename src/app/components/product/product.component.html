@@ -2,8 +2,8 @@
   <div class="col-12" id="main">
     <div class="row">
       <!-- Product List -->
-      <div class="col-12 col-sm-3 item-list prod-list pad-right-0">
-        <div class="col-12 pad0 filter-box">
+      <div class="col-12 col-sm-3 item-list prod-list pr-0">
+        <div class="col-12 px-0 filter-box">
           <div class="col-12">
             <div class="row">
               <div class="col-3" style="padding-top: 15px;">
@@ -11,7 +11,7 @@
                   <img src="/assets/images/list-icon/add-plus-button24.png">
                 </a>
               </div>
-              <div class="col-6 text-center pad0" style="padding-top: 15px;">
+              <div class="col-6 text-center px-0" style="padding-top: 15px;">
                 <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
                   Batch Upload
                 </button> -->
@@ -45,7 +45,7 @@
         </div>
 
         <!-- Product List -->
-        <div class="col-12 pad0 scroll mCustomScrollbar" scroll-bar>
+        <div class="col-12 px-0 scroll mCustomScrollbar" scroll-bar>
           <div style="background-color: #fff;" *ngIf="productListLoading">
             <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
           </div>
@@ -59,18 +59,18 @@
                 >
               </div>
   
-              <div class="col-8 pad0" (click)="viewThis(product, index)">
+              <div class="col-8 px-0" (click)="viewThis(product, index)">
                 <div class="row mar0">
-                  <span class="col-8 pad0 font-custom-bold fontsize13">
+                  <span class="col-8 px-0 font-custom-bold fontsize13">
                     <div class="ellipsis"> {{ product.prodName }}</div>
                   </span>
-                  <span class="col-4 pad0 text-right total-color font-custom-book">
+                  <span class="col-4 px-0 text-right total-color font-custom-book">
                     Tax: {{ product.taxRate }}%
                   </span>
-                  <span class="col-8 pad0 font-custom-book fontsize12">
+                  <span class="col-8 px-0 font-custom-book fontsize12">
                     <div class="ellipsis">{{product.discription}}</div>
                   </span>
-                  <span class="col-4 txtr pad-right-0 font-custom-bold fontsize12">
+                  <span class="col-4 txtr pr-0 font-custom-bold fontsize12">
                     {{ product.rate | currency:'INR':'symbol':'1.2-2' }}
                   </span>
                 </div>
@@ -84,7 +84,7 @@
           <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
             <h4>No Product to display, please create a product</h4>
           </div>
-          <div class="col-12 pad0" [class.list-shadow]="productList.length > productDisplayLimit">
+          <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
             <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
               Click to view more >>
             </a>
@@ -107,7 +107,7 @@
                   </h4>
                   <h4 class="form-header client-header" *ngIf="!isEditBtn">View Product</h4>
                 </div>
-                <div class="col-5 col-md-4 pad0 pull-right">
+                <div class="col-5 col-md-4 px-0 pull-right">
                   <button type="button" *ngIf="!isEditBtn" (click)="editThis(product)"
                     class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                   >

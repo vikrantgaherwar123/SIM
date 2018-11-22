@@ -15,9 +15,9 @@
                 </span>
               </div>
 
-              <div class="col-12 pad0" style="margin-bottom: 25px">
+              <div class="col-12 px-0" style="margin-bottom: 25px">
                 <div class="row mar0">
-                  <div class="col-12 col-sm-7 pad0" id="clientDataAdd" name="clientData">
+                  <div class="col-12 col-sm-7 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
                       <div class="col-10">
                         <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
@@ -25,7 +25,7 @@
                         </span>
                         <br />
 
-                        <div class="form-group pad-left-0">
+                        <div class="form-group pl-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
                           >
@@ -51,7 +51,7 @@
 
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
                         <div class="row mar0">
-                          <div class="col-6 pad-left-0">
+                          <div class="col-6 pl-0">
                             <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">
                               Address
                             </span>
@@ -65,7 +65,7 @@
                               Contact No: {{activeClient.number}}
                             </div>
                           </div>
-                          <div class="col-6 pad-right-0">
+                          <div class="col-6 pr-0">
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               Shipping Address
                             </span>
@@ -78,17 +78,17 @@
                     </div>
                   </div>
 
-                  <div class="col-12 col-sm-5 pad-right-0" id="estDataAdd">
+                  <div class="col-12 col-sm-5 pr-0" id="estDataAdd">
                     <div class="row">
                       <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
-                        <span class="font-custom-bold text-left w100">Estimate No.</span>
+                        <span class="font-custom-bold text-left w-100">Estimate No.</span>
                       </div>
                       <div class="col-6">
                         <form #estNumberForm="ngForm" name="estNumberForm">
                           <div class="form-group"
                             [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required"
                           >
-                            <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pad-right-0"
+                            <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
                               [(ngModel)]="activeEstimate.estimate_number" required
                             />
                             <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
@@ -101,7 +101,7 @@
 
                     <div class="row" style="margin-top: 5px;">
                       <div class="col-6 offset-md-2 col-md-4">
-                        <span class="font-custom-bold text-left w100">Estimate Date</span>
+                        <span class="font-custom-bold text-left w-100">Estimate Date</span>
                       </div>
                       <div class="col-6">
                         <input type="text" class="form-control"
@@ -130,17 +130,17 @@
                           />
                         </td>
                         <td width="18%">
-                          <input type="text" id="itemQtyLabelAdd" class="bld w100 text-center" name="quantity" disabled
+                          <input type="text" id="itemQtyLabelAdd" class="bld w-100 text-center" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                           />
                         </td>
                         <td width="18%">
-                          <input type="text" id="itemRateLabelAdd" class="bld w100 text-center" name="rate" disabled
+                          <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
                         <td width="18%">
-                          <input type="text" id="itemAmtLabelAdd" class="bld w100 text-center" name="amount" disabled
+                          <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
@@ -198,16 +198,14 @@
                       <tr class="row-item">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
-                            <div class="custom-add-product selectize-wrap">
-                              <input type="text" name="product-name" class="form-control billing-input"
-                                placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
-                              >
-                              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
-                                (optionSelected)="fillItemDetails()"
-                              >
-                                <mat-option *ngFor="let product of (filteredProducts | async)" [value]="product">{{product.prodName}}</mat-option>
-                              </mat-autocomplete>
-                            </div>
+                            <input type="text" name="product-name" class="form-control billing-input"
+                              placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
+                            >
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
+                              (optionSelected)="fillItemDetails()"
+                            >
+                              <mat-option *ngFor="let product of (filteredProducts | async)" [value]="product">{{product.prodName}}</mat-option>
+                            </mat-autocomplete>
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                                 style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
@@ -283,7 +281,7 @@
 
                   <div class="row mar0">
                     <!--Term and Condition -->
-                    <div class="col-12 col-md-6 pad-left-0">
+                    <div class="col-12 col-md-6 pl-0">
                       <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">
                           {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
@@ -296,10 +294,10 @@
                         </a>
                       </div>
         
-                      <div class="col-md-12 col-xs-12 col-md-12 pad0">
+                      <div class="col-md-12 col-xs-12 col-md-12 px-0">
                         <div class="form-group">
                           <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mar0">
-                            <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pad-right-0">
+                            <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pr-0">
                               {{term.terms}}
                             </div>
                             <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
@@ -312,7 +310,7 @@
                       </div>
                     </div>
 
-                    <div class="col-12 col-md-6 pad-right-0">
+                    <div class="col-12 col-md-6 pr-0">
                       <!-- Total -->
                       <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                         <div class="row mar0">
@@ -326,9 +324,9 @@
                       </div>
 
                       <!-- Discounts -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.percentage_flag != null">
+                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.percentage_flag != null">
                         <div class="row">                        
-                          <div class="col-5 discount-tax-label pad-right-0">
+                          <div class="col-5 discount-tax-label pr-0">
                             <span style="text-align: left;vertical-align: bottom;" class="inline">
                               {{settings.discount ? settings.discount : 'Discount'}}
                             </span>
@@ -337,7 +335,7 @@
                             </div>
                             <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
 
-                            <div class="pad0" style="float: right;">
+                            <div class="px-0" style="float: right;">
                               <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                               >
@@ -368,7 +366,7 @@
                             </div>
                           </div>
 
-                          <div class="col-6 pad-right-0">
+                          <div class="col-6 pr-0">
                             <form #form_discount="ngForm" name="form_discount">
                               <div class="input-group addon-input">
                                 <div *ngIf="activeEstimate.percentage_flag == 1">
@@ -396,9 +394,9 @@
                             </div> -->
                           </div>
 
-                          <div class="col-1 pad0">
+                          <div class="col-1 px-0">
                             <div class="remove-button">
-                              <div class="addon selectorpad-right-0"
+                              <div class="addon selectorpr-0"
                                 (click)="activeEstimate.discount=0.00;
                                   activeEstimate.percentage_value=0;
                                   activeEstimate.percentage_flag=null;
@@ -413,22 +411,22 @@
                       </div>
 
                       <!-- Tax -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.tax_rate != null">
+                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.tax_rate != null">
                         <div class="row">
-                          <div class="col-4 discount-tax-label pad-right-0">
+                          <div class="col-4 discount-tax-label pr-0">
                             <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                             <div class="d-inline font-custom">(%)</div>
                           </div>
   
-                          <div class="col-8 pad-left-0">
+                          <div class="col-8 pl-0">
                             <form #tax_input="ngForm" name="tax_input">
-                              <div class="input-group pad-right-0">
+                              <div class="input-group pr-0">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control"
                                   step="any"min="0.00" max="100" required
                                   [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate(false)"
                                 />
                                 <!-- <div class="input-group-addon addon-right">%</div>-->
-                                <div class="input-group-addon pad-right-0 remove-button">
+                                <div class="input-group-addon pr-0 remove-button">
                                   <div class="addon selectorpadr0" (click)="activeEstimate.tax_rate = null; activeEstimate.tax_amount=0;calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" style="height:16px;">
                                   </div>
@@ -444,18 +442,18 @@
                       </div>
 
                       <!-- Tax List -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px"
+                      <div class="col-12 pr-0 margin-bottom-5px"
                         *ngFor="let tax of activeEstimate.taxList; let index = index"
                       >
                         <div class="row">
-                          <div class="col-5 discount-tax-label pad-right-0">
+                          <div class="col-5 discount-tax-label pr-0">
                             <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                             <div class="inline font-custom">(%)</div>
                           </div>
 
-                          <div class="col-6 pad-right-0">
+                          <div class="col-6 pr-0">
                             <form #tax_list_input="ngForm" name="tax_list_input">
-                              <div class="input-group pad-right-0">
+                              <div class="input-group pr-0">
                                 <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
                                   max="100" tabindex="1005" [required]="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
                                   (change)="calculateEstimate(true)" select-on-click my-enter-in disable-enter
@@ -469,9 +467,9 @@
                             </div>
                           </div>
 
-                          <div class="col-1 pad0">
+                          <div class="col-1 px-0">
                             <div class="remove-button">
-                              <div class="addon selectorpad-right-0"
+                              <div class="addon selectorpr-0"
                                 (click)="activeEstimate.taxList.splice(index, 1);
                                   calculateEstimate(true);
                                 "
@@ -484,7 +482,7 @@
                       </div>
 
                       <!-- Shipping -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== undefined">
+                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== undefined">
                         <div class="row">
                           <div class="col-5 discount-tax-label">
                             <div class="inline" style="text-align: left;vertical-align: bottom;">
@@ -494,12 +492,12 @@
     
                           <div class="col-7">
                             <form #form_shipping_input="ngForm" name="form_shipping_input">
-                              <div class="input-group pad-right-0">
+                              <div class="input-group pr-0">
                                 <input type="number" name="shipping_input" class="form-control"
                                   step="any" min="0.00" [max]="activeEstimate.gross_amount" required
                                   [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate(false)"
                                 />
-                                <div class="pad-right-0 remove-button">
+                                <div class="pr-0 remove-button">
                                   <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" alt="" style="height:16px;">
                                   </div>
@@ -515,22 +513,22 @@
                       </div>
 
                       <!-- Adjustment -->
-                      <div class="col-12 pad-right-0 margin-bottom-5px" *ngIf="activeEstimate.adjustment != null">
+                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.adjustment != null">
                         <div class="row">
-                          <div class="col-4 discount-tax-label pad-right-0">
+                          <div class="col-4 discount-tax-label pr-0">
                             <div style="text-align: left;vertical-align: bottom;">
                               {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
                             </div>
                           </div>
 
-                          <div class="col-8 pad-left-0">
+                          <div class="col-8 pl-0">
                             <form #adjst_input="ngForm" name="adjst_input">
-                              <div class="input-group pad-right-0">
+                              <div class="input-group pr-0">
                                 <input type="number" name="tax_input" class="form-control"
                                   step="any" required
                                   [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate(false)"
                                 />
-                                <div class="input-group-addon pad-right-0 remove-button">
+                                <div class="input-group-addon pr-0 remove-button">
                                   <div class="addon selectorpadr0" (click)="activeEstimate.adjustment = null; calculateEstimate(false)">
                                     <img src="assets/images/delete16.png" style="height:16px;">
                                   </div>
@@ -557,7 +555,7 @@
                       </div>
 
                       <!-- Save -->
-                      <div class="col-12 pad0 margin-top-20">
+                      <div class="col-12 px-0 margin-top-20">
                         <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
                           class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                           data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
@@ -825,16 +823,16 @@
             <div class="item termlist row product-list" id="term1{{index}}"
               *ngFor="let term of termList; let index = index" [class.selected]="selectedTerm == index"
             >
-              <div class="col-12 pad0">
+              <div class="col-12 px-0">
                 <div class="row">
-                  <div class="col-md-1 pad0">
+                  <div class="col-md-1 px-0">
                     <input type="checkbox" id="termcheck{{index}}" name="term"
                       (change)="addRemoveTermsFromEstimate(term)"
                       [checked]="isTermInEstimate(term)"
                     />
                     <!-- <label class="" for="termcheck{{$index}}"></label> -->
                   </div>
-                  <div class="col-md-9 pad-left-0">
+                  <div class="col-md-9 pl-0">
                     <span style="vertical-align: top;"> {{term.terms}}</span>
                   </div>
                 </div>

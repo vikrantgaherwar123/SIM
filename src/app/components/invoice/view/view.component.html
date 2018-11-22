@@ -4,7 +4,7 @@
     <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
       <div class="row mar0">
         <div class="col-12 col-md-4">
-          <div class="form-group pad-left-0">
+          <div class="form-group pl-0">
             <mat-select placeholder="Select client" class="client-select" multiple disableRipple
               [formControl]="invoiceQueryForm.client"
             >
@@ -31,7 +31,7 @@
               >
               <mat-datepicker #picker3></mat-datepicker>
             </div>
-            <div class="col-4 pad-left-0">
+            <div class="col-4 pl-0">
               <input placeholder="End" required readonly style="max-width: 100%"
                 matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
                 (click)="picker4.open()"
@@ -87,17 +87,17 @@
   <div style="padding-top: 60px; width: 100%">
     <div class="row">
       <!-- Invoice List -->
-      <div class="col-12 col-sm-3 item-list inv-list pad-right-0">
+      <div class="col-12 col-sm-3 item-list inv-list pr-0">
           <div [class]="{'list-shadow':invoiceList.length > invDispLimit ,'scroll-bar-shadow': true }">
-            <div class="col-12 pad0 filter-box">
+            <div class="col-12 px-0 filter-box">
               <div class="col-12">
                 <div class="row mar0">
-                  <div class="col-6 pad-left-0" style="padding-top: 15px;">
+                  <div class="col-6 pl-0" style="padding-top: 15px;">
                     <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
                       <img src="assets/images/list-icon/add-plus-button24.png">
                     </a>
                   </div>
-                  <div class="col-6 pad0" style="padding-top: 15px;">
+                  <div class="col-6 px-0" style="padding-top: 15px;">
                     <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                     >
@@ -131,7 +131,7 @@
               <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
             </div>
 
-            <div class="col-12 pad0 mCustomScrollbar">
+            <div class="col-12 px-0 mCustomScrollbar">
               <div style="background-color: #fff;" *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div>
@@ -162,7 +162,7 @@
               <div class="no-data-messsage" *ngIf="invoiceList.length < 1 && !invListLoader">
                 <h4>No Invoice to display</h4>
               </div>
-              <div class="col-12 pad0" [class.list-shadow]="invoiceList.length > invDispLimit">
+              <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
                   Click to view more >>
                 </a>
@@ -250,7 +250,7 @@
                 <div class="col-12 col-sm-5" id="invData" name="invData">
                   <div class="row">
                     <div class="offset-md-2 col-md-4 col-sm-6 ">
-                      <span class="font-custom-bold text-left w100">Invoice#</span>
+                      <span class="font-custom-bold text-left w-100">Invoice#</span>
                     </div>
                     <div class="col-sm-6">
                       {{ activeInv.invoice_number  }}
@@ -259,7 +259,7 @@
 
                   <div class="row">
                     <div class="offset-md-2 col-md-4 col-sm-6 ">
-                      <span class="font-custom-bold text-left w100">Invoice Date</span>
+                      <span class="font-custom-bold text-left w-100">Invoice Date</span>
                     </div>
                     <div class="col-sm-6">
                       {{activeInv.created_date}}
@@ -268,7 +268,7 @@
 
                   <div class="row">
                     <div class="offset-md-2 col-sm-6 col-md-4">
-                      <span class="font-custom-bold text-left w100">Reference</span>
+                      <span class="font-custom-bold text-left w-100">Reference</span>
                     </div>
                     <div class="col-sm-6">
                       {{activeInv.reference}}
@@ -277,7 +277,7 @@
 
                   <div class="row">
                     <div class="offset-md-2 col-xs-6 col-md-4">
-                      <span class="font-custom-bold text-left w100">{{setting.mTvDueDate}}</span>
+                      <span class="font-custom-bold text-left w-100">{{setting.mTvDueDate}}</span>
                     </div>
                     <div class="col-sm-6">
                       {{activeInv.due_date}}
@@ -293,29 +293,29 @@
                       <tr class="hd font-custom-bold">
                         <td width="48%">
                           <input type="text" id="itemDescLabel" [value]="setting.mTvProducts" style="text-align:left;"
-                            class="bld w100" disabled
+                            class="bld w-100" disabled
                           >
                         </td>
                         <td width="17%">
                           <input type="text" id="itemQtyLabel"  [value]="setting.mTvQty" name="quantity" 
-                            class="bld w100" disabled
+                            class="bld w-100" disabled
                           >
                         </td>
                         <td width="17%">
                           <input type="text" id="itemRateLabel" [value]="setting.mTvAmount" name="rate"
-                            class="bld w100" disabled
+                            class="bld w-100" disabled
                           >
                         </td>
                         <td width="17%" *ngIf="activeInv.assignTaxFlag == 0">
-                          <input type="text" value="Tax" id="taxLabel" class="bld w100" name="rate" disabled>
+                          <input type="text" value="Tax" id="taxLabel" class="bld w-100" name="rate" disabled>
                         </td>
                         <td width="17%" *ngIf="activeInv.assignDiscountFlag == 1">
-                          <input type="text" id="discountLabel" name="rate" class="bld w100" value="Discount"
+                          <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount"
                             disabled
                           >
                         </td>
                         <td width="18%">
-                          <input type="text" id="itemAmtLabel" name="amount" [value]="setting.mTvRate" class="bld w100 text-right"
+                          <input type="text" id="itemAmtLabel" name="amount" [value]="setting.mTvRate" class="bld w-100 text-right"
                             style="text-align:right;" disabled
                           >
                         </td>
@@ -371,7 +371,7 @@
                       <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
                         <span class="bld">{{setting.mTvTermsAndConditions}}</span>
                       </div>
-                      <div class="col-md-12 pad0 margin-top-8">
+                      <div class="col-md-12 px-0 margin-top-8">
                         <ul class=" col-sm-12 list-unstyled" *ngFor="let term of activeInv.termsAndConditions">
                           <li class="row">
                             <div class="col-md-12 margin-bottom-5px">{{term.terms}}<br /></div>

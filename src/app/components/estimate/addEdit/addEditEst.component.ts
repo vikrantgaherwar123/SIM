@@ -688,7 +688,7 @@ export class AddEditEstComponent implements OnInit {
       additions += this.activeEstimate.tax_amount
     }
 
-    if (indexTaxMultiple) {
+    if (indexTaxMultiple && this.activeEstimate.taxList) {
       var temp_tax_amount = 0
       for (var i = 0; i < this.activeEstimate.taxList.length; i++) {
         if (this.activeEstimate.taxList[i]) {

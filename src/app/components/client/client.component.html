@@ -2,9 +2,9 @@
   <div class="col-12" id="main">
     <div class="row">
       <!-- Client List -->
-      <div class="col-12 col-sm-3 item-list cli-list pad-right-0">
+      <div class="col-12 col-sm-3 item-list cli-list pr-0">
         <div [ngClass]="{'list-shadow':clientList.length > clientDisplayLimit, 'scroll-bar-shadow': true}" style="width: 100%;">
-          <div class="col-12 pad0 filter-box">
+          <div class="col-12 px-0 filter-box">
             <div class="col-12">
               <div class="row">
                 <div class="col-6" style="padding-top: 15px;">
@@ -39,7 +39,7 @@
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit</div>
-          <div class="col-12 pad0 mCustomScrollbar">
+          <div class="col-12 px-0 mCustomScrollbar">
             <!-- <div align="center" style="background-color: #fff;">
               <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
                 md-diameter="25px">
@@ -53,11 +53,11 @@
                 <div class="col-2">
                   <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
                 </div>
-                <div class="col-8 pad0" (click)="viewThis(client)">
-                  <h5 class="col-10 pad-right-0 font-custom-bold fontsize13">
+                <div class="col-8 px-0" (click)="viewThis(client)">
+                  <h5 class="col-10 pr-0 font-custom-bold fontsize13">
                     <div class="ellipsis">{{ client.name }}</div>
                   </h5>
-                  <span class="col-10 pad-right-0 font-custom-book fontsize12">
+                  <span class="col-10 pr-0 font-custom-book fontsize12">
                     <div class="ellipsis">{{client.contactPersonName}}</div>
                   </span>
                 </div>
@@ -69,7 +69,7 @@
             <div class="no-data-messsage" *ngIf="clientList.length == 0 && !clientListLoading ">
               <h4>No Client to display, please create a client</h4>
             </div>
-            <div class="col-12 pad0" [class.list-shadow]="clientList.length > clientDisplayLimit">
+            <div class="col-12 px-0" [class.list-shadow]="clientList.length > clientDisplayLimit">
               <a href="javascript:void(0)" (click)="loadMore()" class="btn more" *ngIf="clientList.length > clientDisplayLimit">
                 Click to view more >>
               </a>
@@ -91,7 +91,7 @@
                   <h4 class="form-header text-right client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: calc(44px + 25vw);">Edit client </h4>
                   <h4 class="form-header text-center client-header" *ngIf="!isEditBtn"> View Client </h4>
                 </div>
-                <div class="col-5 col-md-4 pull-right pad0 font-custom-bold">
+                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold">
                   <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     (click)="editThis()" *ngIf="!isEditBtn"
                   >
