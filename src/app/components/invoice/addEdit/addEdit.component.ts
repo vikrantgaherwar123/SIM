@@ -116,7 +116,10 @@ export class AddEditComponent implements OnInit {
     var settings = this.settings
     var date = new Date()
     this.invoiceDate.reset(date)
-    this.activeInvoice.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+    this.activeInvoice.created_date = (date.getFullYear() + '-' +
+      ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+      ('0' + date.getDate()).slice(-2)
+    )
 
     // Invoice Number
     if (!isNaN(parseInt(settings.invNo))) {
@@ -207,12 +210,18 @@ export class AddEditComponent implements OnInit {
 
   commonSettingsInit() {
     this.invoiceDate.valueChanges.subscribe(value => {
-      this.activeInvoice.created_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+      this.activeInvoice.created_date = (value.getFullYear() + '-' +
+        ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + value.getDate()).slice(-2)
+      )
     })
 
     this.dueDate.valueChanges.subscribe(value => {
       if(value !== null) {
-        this.activeInvoice.due_date = value.getFullYear() + '-' + ('0' + (value.getMonth() + 1)).slice(-2) + '-' + ('0' + value.getDate()).slice(-2)
+        this.activeInvoice.due_date = (value.getFullYear() + '-' +
+          ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
+          ('0' + value.getDate()).slice(-2)
+        )
       } else {
         this.activeInvoice.due_date = ''
       }
@@ -291,7 +300,9 @@ export class AddEditComponent implements OnInit {
       this.productService.fetch().subscribe((response: response) => {
         // console.log(response)
         if (response.records != null) {
-          self.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
+          self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
+            (prod.enabled == 0 && prod.prodName !== undefined)
+          )))
           this.setProductFilter()
         } else {
           this.setProductFilter()
@@ -460,6 +471,9 @@ export class AddEditComponent implements OnInit {
     if(this.activeItem.unique_identifier) {
       if(uid == null) {
         // Add Item to invoice
+        if(!this.activeInvoice.listItems) {
+          this.activeInvoice.listItems = []
+        }
         this.activeInvoice.listItems.push(this.activeItem)
       } else {
         // Edit Item from Invoice
@@ -646,90 +660,83 @@ export class AddEditComponent implements OnInit {
   }
 
   calculateInvoice(indexTaxMultiple) {
-    var total = 0
+    var gross_amount = 0
+    var deductions = 0
+    var additions = 0
 
     if (this.activeInvoice.listItems) {
       for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
-        var item = this.activeInvoice.listItems[i]
-        total += parseFloat(item.total)
+        gross_amount += parseFloat(this.activeInvoice.listItems[i].total)
       }
     }
-    this.activeInvoice.gross_amount = total
-
-    var grossAmount = total
-    var discountTotal = 0
-    var finalAmount = 0
-    var shippingCharges = 0
-    var totalAmount = 0
-    var discoutAmount = 0
-    var tax_rate = 0
+    this.activeInvoice.gross_amount = gross_amount
 
     // Discount
     if (this.activeInvoice.percentage_flag == 1) {
-      var discountPercent = this.activeInvoice.percentage_value / 100
-      if (isNaN(discountPercent)) {
-        discountPercent = 0
+      var discountFactor = this.activeInvoice.percentage_value / 100
+      if (isNaN(discountFactor)) {
+        discountFactor = 0
       }
 
-      discoutAmount = discountPercent * grossAmount
-      this.activeInvoice.discount = discoutAmount
-      discountTotal = grossAmount - discoutAmount
-    } else if (this.activeInvoice.percentage_flag == 0) {
-      var invoiceDiscount = this.activeInvoice.discount
-      if (isNaN(invoiceDiscount)) {
-        invoiceDiscount = 0
+      this.activeInvoice.discount = gross_amount * discountFactor
+      deductions += this.activeInvoice.discount
+    } else {
+      if(isNaN(this.activeInvoice.discount)) {
+        this.activeInvoice.discount = 0
       }
-      discountTotal = grossAmount - invoiceDiscount
-      var discountAmount = (this.activeInvoice.discount / grossAmount) * 100
-      if (isNaN(discountAmount)) {
-        discountAmount = 0
-      }
-      this.activeInvoice.percentage_value = discountAmount
+      deductions += this.activeInvoice.discount
+      this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
     }
 
     // Tax
-    if (this.activeInvoice.tax_on_item == 1) {
-      tax_rate = (this.activeInvoice.tax_rate * discountTotal) / 100
-      if (isNaN(tax_rate)) {
-        tax_rate = 0
+    if (this.activeInvoice.tax_rate != null) {
+      if(isNaN(this.activeInvoice.tax_rate)) {
+        this.activeInvoice.tax_rate = 0
       }
-      this.activeInvoice.tax_amount = tax_rate
+      this.activeInvoice.tax_amount = (this.activeInvoice.gross_amount - this.activeInvoice.discount) * (
+        this.activeInvoice.tax_rate / 100
+      )
+      additions += this.activeInvoice.tax_amount
     }
 
     if (indexTaxMultiple && this.activeInvoice.taxList) {
-      var temp_tax_rate = 0
+      var temp_tax_amount = 0
       for (var i = 0; i < this.activeInvoice.taxList.length; i++) {
         if (this.activeInvoice.taxList[i]) {
-          if (isNaN(parseFloat(this.activeInvoice.taxList[i].percentage)))
+          if (isNaN(parseFloat(this.activeInvoice.taxList[i].percentage))) {
             this.activeInvoice.taxList[i].percentage = 0
-          this.activeInvoice.taxList[i].calculateValue = (parseFloat(this.activeInvoice.taxList[i].percentage) * discountTotal) / 100
+          }
+          this.activeInvoice.taxList[i].calculateValue = ((parseFloat(this.activeInvoice.taxList[i].percentage) *
+            (this.activeInvoice.gross_amount - this.activeInvoice.discount)) / 100
+          )
           this.activeInvoice.taxList[i].selected = true
-          temp_tax_rate = temp_tax_rate + (parseFloat(this.activeInvoice.taxList[i].percentage) * discountTotal) / 100
+          temp_tax_amount = temp_tax_amount + ((parseFloat(this.activeInvoice.taxList[i].percentage) *
+            (this.activeInvoice.gross_amount - this.activeInvoice.discount)) / 100
+          )
         }
       }
-      tax_rate = tax_rate + temp_tax_rate
+      this.activeInvoice.tax_amount = this.activeInvoice.tax_amount + temp_tax_amount
+      additions += this.activeInvoice.tax_amount
     }
 
     // Shipping
-    shippingCharges = this.activeInvoice.shipping_charges
-    if (isNaN(shippingCharges)) {
-      shippingCharges = 0
+    if (isNaN(this.activeInvoice.shipping_charges)) {
+      this.activeInvoice.shipping_charges = undefined
+    } else {
+      additions += this.activeInvoice.shipping_charges
     }
-    totalAmount = discountTotal + shippingCharges + tax_rate
 
     // Adjustment
-    var adjustmentAmount = this.activeInvoice.adjustment
-    if (isNaN(adjustmentAmount)) {
-      adjustmentAmount = 0
-    }
-    finalAmount = totalAmount - adjustmentAmount
-
-    if (isNaN(finalAmount)) {
-      finalAmount = 0
+    if (isNaN(this.activeInvoice.adjustment)) {
+      this.activeInvoice.adjustment = undefined
+    } else {
+      deductions += this.activeInvoice.adjustment
     }
 
-    this.activeInvoice.balance = parseFloat(finalAmount.toFixed(2)) - (this.activeInvoice.payments ? this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0) : 0)
-    this.activeInvoice.amount = parseFloat(finalAmount.toFixed(2))
+    this.activeInvoice.amount = parseFloat((this.activeInvoice.gross_amount - deductions + additions).toFixed(2))
+    this.activeInvoice.balance = parseFloat(this.activeInvoice.amount.toFixed(2)) - (
+      this.activeInvoice.payments ? this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0) : 0
+    )
   }
 
   removeItem(index) {
@@ -890,7 +897,7 @@ export class AddEditComponent implements OnInit {
       balance: this.activeInvoice.amount,
       date_of_payment: this.activeInvoice.created_date,
       paid_amount: 0.00,
-      payments: this.activeInvoice.payments,
+      payments: this.activeInvoice.payments || [],
     }
     this.addPaymentModal.balance -= this.addPaymentModal.payments.reduce((a, b) => a + b.paid_amount, 0)
     $('#addPaymentAddInvoice').modal('show')
