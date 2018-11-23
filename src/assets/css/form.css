@@ -5,7 +5,6 @@
   height: 100%;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
   text-rendering: optimizeLegibility !important;
-  padding-top: 80px;
   -webkit-font-smoothing: antialiased !important;
 }
 /* Deprecated */
@@ -33,7 +32,8 @@
 }
 .item-list {
 	padding-left: 30px;
-	height: 100%;
+	max-height: 525px;
+	overflow: hidden;
 }
 .scroll-bar-shadow {
 	box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
@@ -92,7 +92,7 @@ a, a:hover, a:focus {
 .mCustomScrollbar {
 	-ms-touch-action: pinch-zoom;
 	touch-action: pinch-zoom;
-	max-height: 425px;
+	max-height: 380px;
 	overflow-y: scroll;
 }
 .mCustomScrollBox {

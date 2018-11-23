@@ -13,7 +13,7 @@
                 </span>
               </div>
 
-              <div class="col-12 px-0" style="margin-bottom: 25px">
+              <div class="col-12 px-0 mb-1">
                 <!-- Invoice Details Header -->
                 <div class="row mx-0">
                   <div class="col-12 col-sm-7 px-0" id="clientDataAdd" name="clientData">
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="row" style="margin-top: 5px;">
-                      <div class="col-6 offset-md-2 col-md-4">
+                      <div class="col-6 offset-md-2 col-md-4 pr-0">
                         <span class="font-custom-bold text-left w-100">Invoice Date</span>
                       </div>
                       <div class="col-6">
@@ -335,10 +335,10 @@
                 </div>
 
                 <!-- Bottom -->
-                <div class="row mx-0">
+                <div class="row">
                   <!--Term and Condition -->
-                  <div class="col-12 col-md-6 pl-0">
-                    <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                  <div class="col-12 col-md-6">
+                    <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
                       <span class="bld">
                         {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                       </span>
@@ -350,10 +350,10 @@
                       </a>
                     </div>
 
-                    <div class="col-md-12 col-xs-12 col-md-12 px-0">
+                    <div class="col-12 px-0">
                       <div class="form-group">
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
-                          <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pr-0">
+                          <div class="term-text-align col-8 col-md-10 pr-0">
                             {{term.terms}}
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
@@ -367,7 +367,7 @@
                   </div>
 
                   <!-- Calculations -->
-                  <div class="col-12 col-md-6 pr-0">
+                  <div class="col-12 col-md-6">
                     <!-- Total -->
                     <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                       <div class="row mx-0">
@@ -375,7 +375,7 @@
                           <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
+                          <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>
@@ -590,7 +590,9 @@
                         </div>
 
                         <div class="col-6 text-right">
-                          <span class="font-custom-bold">{{activeInvoice.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
+                          <span class="font-custom-bold">
+                            {{activeInvoice.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -602,7 +604,7 @@
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:'INR':'symbol':'1.2-2'}}</span>
+                          <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>
@@ -614,7 +616,7 @@
                           <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="bld">{{activeInvoice.balance | currency:'INR':'symbol':'1.2-2'}}</span>
+                          <span class="bld">{{activeInvoice.balance | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>
@@ -652,7 +654,7 @@
         <!-- Delete Invoices Button -->
         <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"
           [swal]="{ title: 'Are you sure want to delete Invoice?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
+            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
           "
         >
           Delete Invoices
@@ -972,7 +974,7 @@
               Invoice
             </div>
             <div class="font-custom-bold float-right">
-              {{ addPaymentModal.amount | currency:'INR':'symbol':'1.2-2' }}
+              {{ addPaymentModal.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
             </div>
           </div>
         </div>
@@ -985,7 +987,7 @@
               {{payment.date_of_payment | date}}
             </div>
             <div class="font-custom-bold pull-right" style="border-top: none;">
-              {{payment.paid_amount | currency:'INR':'symbol':'1.2-2'}}
+              {{payment.paid_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}
             </div>
           </div>
         </div>
@@ -996,7 +998,7 @@
               Balance Due :
             </div>
             <div class="font-custom-bold pull-right">
-              {{ addPaymentModal.balance | currency:'INR':'symbol':'1.2-2'}}
+              {{ addPaymentModal.balance | currency:settings.currencyInText:'symbol':'1.2-2'}}
             </div>
           </div>
         </div>
