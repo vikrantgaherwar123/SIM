@@ -39,7 +39,7 @@ export class ViewComponent implements OnInit {
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
-  private setting: any
+  private settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private store: Store<AppState>,
@@ -51,7 +51,7 @@ export class ViewComponent implements OnInit {
         this.invoiceQueryForm = globals.invoiceQueryForm
       }
     })
-    this.setting = JSON.parse(localStorage.getItem('user')).setting
+    this.settings = JSON.parse(localStorage.getItem('user')).setting
   }
 
   ngOnInit() {
@@ -207,5 +207,9 @@ export class ViewComponent implements OnInit {
 
     var invoiceNumber = this.activeInv.invoice_number.replace('/', '')
     return 'INVPDF_' + invoiceNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
+  }
+
+  getClientName(id) {
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
   }
 }

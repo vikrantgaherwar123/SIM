@@ -13,6 +13,10 @@
 .wrapper {
   display: flex;
   width: 100%;
+  position: fixed;
+  top: 75px;
+  height: 90vh;
+  overflow: auto;
 }
 #sidebar {
   width: 250px;
@@ -60,9 +64,6 @@ a[data-toggle="collapse"] {
   }
   #content {
     width: 100%;
-  }
-  #content.active {
-    width: calc(100% - 250px);
   }
   #sidebarCollapse span {
     display: none;

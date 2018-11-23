@@ -38,7 +38,7 @@ export class ViewEstComponent implements OnInit {
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
-  private setting: any
+  private settings: any
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private store: Store<AppState>,
@@ -50,7 +50,7 @@ export class ViewEstComponent implements OnInit {
     //     this.estimateQueryForm = globals.estimateQueryForm
     //   }
     // })
-    this.setting = JSON.parse(localStorage.getItem('user')).setting
+    this.settings = JSON.parse(localStorage.getItem('user')).setting
   }
 
   ngOnInit() {
@@ -120,6 +120,10 @@ export class ViewEstComponent implements OnInit {
 
   getNames() {
     return this.estimateQueryForm.client.value.reduce((a, b) => a + b.name + ', ', '')
+  }
+
+  getClientName(id) {
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
   }
 
   // fetchEstimates(query = null) {

@@ -1,17 +1,15 @@
-<div>
-  <!-- Header -->
-  <div class="header-container">
-    <app-header [instance]="self" ></app-header>
-  </div>
+<!-- Header -->
+<div class="header-container">
+  <app-header [instance]="self" ></app-header>
+</div>
 
-  <!-- Content -->
-  <div class="wrapper">
-    <nav id="sidebar active">
-      <app-sidebar></app-sidebar>
-    </nav>
+<!-- Body -->
+<div class="wrapper">
+  <nav id="sidebar active">
+    <app-sidebar></app-sidebar>
+  </nav>
 
-    <div id="content" class="container-fluid app-container active">
-      <router-outlet></router-outlet>
-    </div>
+  <div id="content" class="container-fluid app-container active">
+    <router-outlet></router-outlet>
   </div>
 </div>

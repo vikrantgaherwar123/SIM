@@ -1,9 +1,22 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@font-face {
+  font-family: quicksand_regular;
+  src: url('./assets/fonts/Quicksand-Regular.otf')
+}
+@font-face {
+  font-family: quicksand_book;
+  src: url('./assets/fonts/Quicksand_Dash.otf')
+}
+@font-face {
+  font-family: quicksand_bold;
+  src: url('./assets/fonts/Quicksand-Bold.otf')
+}
 b, body, p, button {
   font-family: quicksand_regular !important;
-  font-size: 13.5px;
+  font-size: 13.5px !important;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 800 !important;
 }
 .pad15 {
   padding: 15px
@@ -23,9 +36,13 @@ input[type=text], input[type=password] {
   font-style: normal;
   font-weight: 800 !important;
 }
-.font-custom-bold, .font-custom-book {
+.font-custom-bold {
   font-family: quicksand_bold !important;
   font-weight: normal !important;
+}
+.font-custom-book {
+  font-family: quicksand_book !important;
+  font-weight: lighter;
 }
 .ng-sidebar {
   z-index: 1000 !important;

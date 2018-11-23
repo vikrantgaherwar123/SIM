@@ -318,7 +318,7 @@
                             <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
                           </div>
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:'INR':'symbol':'1.2-2'}}</span>
+                            <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                           </div>
                         </div>
                       </div>
@@ -549,7 +549,7 @@
                           </div>
 
                           <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeEstimate.amount | currency:'INR':'symbol':'1.2-2'}}</span>      
+                            <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                           </div>
                         </div>
                       </div>

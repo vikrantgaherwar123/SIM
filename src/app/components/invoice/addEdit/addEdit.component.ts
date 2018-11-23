@@ -681,11 +681,10 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.discount = gross_amount * discountFactor
       deductions += this.activeInvoice.discount
     } else {
-      if(isNaN(this.activeInvoice.discount)) {
-        this.activeInvoice.discount = 0
+      if(!isNaN(this.activeInvoice.discount)) {
+        deductions += this.activeInvoice.discount
+        this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
-      deductions += this.activeInvoice.discount
-      this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
     }
 
     // Tax
