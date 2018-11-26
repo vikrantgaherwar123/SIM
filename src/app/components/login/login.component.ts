@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    $('.user-logout').hide()
+    $('#userLogout').hide()
     var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
@@ -188,8 +188,7 @@ export class LoginComponent implements OnInit {
       this.store.dispatch(new settingActions.add(settingResponse.settings))
 
       setStorage(settingResponse.settings)
-      $('.user-logout').show()
-      $('.user-logout span').html(this.authenticated.registered_email)
+      $('#userLogout').show()
       this.router.navigate(['/invoice/add'])
     })
   }

@@ -1,6 +1,6 @@
 <div class="row main-wrapper">
   <div class="col-12 col-md-10" id="main">
-    <form class="form-horizontal back" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
+    <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
       <div class="row mar0">
         <div class="col-12 margin-top-20 ">
           <div class="col-9 pull-left fontsize18">
@@ -18,11 +18,11 @@
         </div>
       </div>
 
-      <div class="row mar0">
+      <div class="row mx-0 pb-5">
         <div class="col-12 back margin-top-15 edit-setting">
           <div class="width85">
             <!-- Tax -->
-            <div class="form-group padtop20">
+            <div class="form-group pt-2">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18">Tax</label>
                 <div class="col-12 col-md-9 taxradio">
@@ -51,7 +51,7 @@
             </div>
 
             <!-- Discount -->
-            <div class="form-group padtop20">
+            <div class="form-group pt-2">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18">Discount</label>
                 <div class="col-12 col-md-9 discountradio">
@@ -86,7 +86,7 @@
             </div>
 
             <!-- Date Format -->
-            <div class="form-group padtop20 date-format">
+            <div class="form-group pt-2 date-format">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18">Date Format</label>
                 <div class="col-12 col-md-9">
@@ -95,13 +95,13 @@
                       <input type="radio" id="ddMMyyyy" name="dateFormat"
                         [checked]="activeSettings.dateDDMMYY" (click)="setDateFormat('dd-mm-yy')"
                       />
-                      <label for="ddMMyyyy">DD-MM-YYYY</label>
+                      <label for="ddMMyyyy"></label>DD-MM-YYYY
                     </div>
                     <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
                       <input type="radio" id="MMddyyyy" name="dateFormat"
                         [checked]="activeSettings.dateMMDDYY" (click)="setDateFormat('mm-dd-yy')"
                       />
-                      <label for="MMddyyyy">MM-DD-YYYY</label>
+                      <label for="MMddyyyy"></label>MM-DD-YYYY
                     </div>
                   </div>
                 </div>
@@ -109,14 +109,12 @@
             </div>
 
             <!-- Currency Pattern -->
-            <div class="form-group padtop20">
+            <div class="form-group pt-2">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18">Currency Pattern </label>
                 <div class="col-12 col-md-3 dropdown">
-                  <div type="button" id="dropdownMenuButton" class="btn dropdown-toggle"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                  >
-                    Pattern
+                  <div id="dropdownMenuButton" class="dropbtn" data-toggle="dropdown">
+                    Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
                   </div>
                   <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
@@ -130,7 +128,7 @@
             </div>
 
             <!-- Currency Symbol -->
-            <div class="form-group padtop20">
+            <div class="form-group pt-2">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18" style="margin-top: 22px;">
                   Currency Symbol
@@ -150,15 +148,15 @@
 
                 <div class="col-12 col-md-5 country-code country-radio ">
                   <div class="row">
-                    <div class="col-5 col-md-4 text-center">
+                    <div class="col-5 text-center px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Symbol</div>
                       <input type="radio" id="currencySymbol" name="currenySymbol" [checked]="activeSettings.currencySymbol"
                         (click)="setCurrencySymbol('symbol')"
                       >
                       <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
                     </div>
-                    <div class="col-2 col-md-1 text-center" style="font-size: 24px">or</div>
-                    <div class="col-5 col-md-4 text-center">
+                    <div class="col-1 mt-3 px-0 text-center">or</div>
+                    <div class="col-5 text-center px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
                       <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
                         (click)="setCurrencySymbol('text')"
@@ -171,20 +169,18 @@
             </div>
 
             <!-- Additional Taxes -->
-            <div class="padtop20">
-              <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18 margin-top-8" style="text-align: left;">
-                  <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
-                </label>
-                <div class="col-9 px-0">
-                  <div class="row mar0">
-                    <div class="col-12 col-md-4" id="additionalTax{{index}}"
-                      *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
-                    >
-                      <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}:"
-                        [(ngModel)]="taxNames.taxName" required
-                      />
-                    </div>
+            <div class="row pt-2">
+              <label class="col-12 col-md-3 font-custom-bold fontsize18 margin-top-8" style="text-align: left;">
+                <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
+              </label>
+              <div class="col-9 px-0">
+                <div class="row mar0">
+                  <div class="col-12 col-md-4" id="additionalTax{{index}}"
+                    *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
+                  >
+                    <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}:"
+                      [(ngModel)]="taxNames.taxName" required
+                    />
                   </div>
                 </div>
               </div>
