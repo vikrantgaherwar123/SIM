@@ -38,15 +38,15 @@
           </div>
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            Select client to view or edit</div>
+            Select client to view or edit
+          </div>
           <div class="col-12 px-0 mCustomScrollbar">
-            <!-- <div align="center" style="background-color: #fff;">
-              <md-progress-circular *ngIf="!clientListsLoader" style="color: #1A73CC" class="md-hue-2 text-center"
-                md-diameter="25px">
-              </md-progress-circular>
-            </div> -->
+            <div style="background-color: #fff;" *ngIf="clientListLoading">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div>
+
             <div id="prod{{index}}" class="clientname" 
-              *ngFor="let client of (clientList | orderBy: sortTerm | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index"
+              *ngFor="let client of (clientList | orderBy:sortTerm:false:true | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index"
               [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient"
             >
               <div class="row item product-list" *ngIf="client.enabled == 0">
@@ -83,7 +83,7 @@
         <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
-              <div class="row mar0">
+              <div class="row mx-0">
                 <div class="col-7 col-md-8 editBtnShow">
                   <h4 class="form-header text-right client-header" *ngIf="!isCreate" style="margin-left: 61%;">Create a new client </h4>
                   <!--style="display: flex;justify-content: flex-end;"-->
@@ -116,8 +116,7 @@
                     </button>
                     <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
-                      data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
-                      [disabled]="!f.valid || inputReadonly == true"
+                      *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true"
                     >
                       SAVE
                     </button>
@@ -135,6 +134,7 @@
                 </div>
               </div>
 
+              <!-- Add Edit -->
               <div class="client-form">
                 <div class="row">
                   <div class="col-12 margin-top-20" *ngIf="isEditBtn">
@@ -153,7 +153,7 @@
                         </div>
                       </div>
                     </div>
-  
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
@@ -165,9 +165,9 @@
                           <!--<span *ngIf="errors.contactPersonName">{{ errors.contactPersonName[0] }}</span>-->
                           <!--</div>-->
                         </div>
-  
                       </div>
                     </div>
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" id="emailLabel" name="emailLabel">
                         <div class="input-group client-input">
@@ -183,7 +183,7 @@
   
                       </div>
                     </div>
-  
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
@@ -195,11 +195,10 @@
                           <!--<span *ngIf="form.cont_number.$error.maxlength">Must be of 10 characters</span>-->
                           <!--</div>-->
                         </div>
-  
                       </div>
                     </div>
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
-  
                       <div class="form-group">
                         <textarea elastic type="text" [(ngModel)]="activeClient.addressLine1" name="addressLine1" id="addressLine1"
                           class="form-control" [readonly]="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
@@ -208,8 +207,8 @@
                         <!--<span *ngIf="errors.addressLine1">{{ errors.addressLine1[0] }}</span>-->
                         <!--</div>-->
                       </div>
-  
                     </div>
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <textarea elastic type="text" [(ngModel)]="activeClient.shippingAddress" name="shippingAddress" id="shippingAddress"
@@ -220,19 +219,23 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
-                          <input type="text" [(ngModel)]="activeClient.business_id" name="business_id" id="business_id" class="form-control"
-                            [readonly]="inputReadonly" placeholder="Business Id" />
+                          <input type="text" id="business_id" name="business_id" class="form-control"
+                            [(ngModel)]="activeClient.businessId" [readonly]="inputReadonly" placeholder="Business Id"
+                          />
                         </div>
-  
                       </div>
                     </div>
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="activeClient.business_detail" name="business_detail" id="business_detail"
-                          class="form-control" [readonly]="inputReadonly" placeholder="Business Details" style="height: 47px;"></textarea>
+                        <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control" style="height: 47px;"
+                          [(ngModel)]="activeClient.businessDetail" [readonly]="inputReadonly" placeholder="Business Details"
+                        ></textarea>
                       </div>
                     </div>
                   </div>
+
+                  <!-- View -->
                   <div class="col-12 margin-top-20" *ngIf="!isEditBtn">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
@@ -307,7 +310,7 @@
                           Business Id:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
-                          {{activeClient.business_id}}
+                          {{activeClient.businessId}}
                         </div>
                       </div>
                     </div>
@@ -318,11 +321,13 @@
                           Business detail:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
-                          {{activeClient.business_detail}}
+                          {{activeClient.businessDetail}}
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  <!-- Bottom Buttons -->
                   <div class="col-12 align-self-end">
                     <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                       (click)="editThis()" *ngIf="!isEditBtn"

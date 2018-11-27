@@ -30,7 +30,6 @@ export class ClientComponent implements OnInit {
   searchTerm: string
 
   private checked: boolean = false
-  private isEdit: boolean = false
   isCreate: boolean
   private clearBtn: boolean
   private inputDisabled: boolean
@@ -64,10 +63,6 @@ export class ClientComponent implements OnInit {
     }
   }
 
-  toggle() {
-    this.checked = !this.checked
-  }
-
   isStatus(client) {
     return (client.enabled == 0);
   }
@@ -94,6 +89,14 @@ export class ClientComponent implements OnInit {
     // If adding or editing client, make sure client with same name doesnt already exist
     if (!this.activeClient.enabled) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+
+      // If empty spaces
+      if(!tempClientName) {
+        this.activeClient.name = ''
+        alert('Organisation name required!')
+        return false
+      }
+
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
@@ -146,18 +149,16 @@ export class ClientComponent implements OnInit {
             if (self.activeClient.enabled) {   // delete
               self.store.dispatch(new clientActions.remove(storeIndex))
               this.clientList.splice(index, 1)
+              self.inputReadonly = false              
             } else {    //edit
               self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
             }
           }
           self.errors = {}
-
           self.activeClient = <client>{}
-
           self.isEditBtn = true
           self.isCreate = false
-          self.isEdit = false
           self.cancle = true
           self.clearBtn = false
           self.rightDivBtns = false
@@ -197,7 +198,6 @@ export class ClientComponent implements OnInit {
 
     $('#name').select()
     this.clearBtn = false
-    this.isEdit = false
 
     this.inputDisabled = false
     this.isEditBtn = true
@@ -266,7 +266,6 @@ export class ClientComponent implements OnInit {
     this.tempIndex = index
     this.isEditBtn = false
     this.inputReadonly = true
-    this.isEdit = true
     this.isCreate = true
     this.cancle = false
     this.clearBtn = true
