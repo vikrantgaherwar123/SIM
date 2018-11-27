@@ -99,13 +99,13 @@
             <div class="form-group back" style="padding: 18px;">
               <div class="row mar0">
                 <div class="col-7 col-md-8">
-                  <h4 class="form-header client-header" *ngIf="!isCreate" style="margin-left: 59%">
+                  <h4 class="form-header product-header" *ngIf="!isCreate" style="margin-left: 59%">
                     Create a new product
                   </h4>
-                  <h4 class="form-header client-header" style="margin-left: 66%" *ngIf="!(rightDivBtns || cancle)">
+                  <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="!(rightDivBtns || cancle)">
                     Edit product
                   </h4>
-                  <h4 class="form-header client-header" *ngIf="!isEditBtn">View Product</h4>
+                  <h4 class="form-header product-header" *ngIf="!isEditBtn">View Product</h4>
                 </div>
                 <div class="col-5 col-md-4 px-0 pull-right">
                   <button type="button" *ngIf="!isEditBtn" (click)="editThis(product)"

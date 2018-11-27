@@ -1,5 +1,15 @@
 @import '../../../assets/css/form.css';
 
+@font-face {
+  font-family: quicksand_bold;
+  src: url('../../../assets/fonts/Quicksand-Bold.otf')
+}
+
+.product-header {
+  font-size: 18px !important;
+  font-family: quicksand_bold !important;
+  color: #272727 !important;
+}
 .product-form input{
   height: 34px;
   margin-bottom: 0px !important;
