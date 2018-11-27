@@ -1,1 +1,89 @@
 @import '../../../../assets/css/form.css';
+
+.edit-setting .taxradio label,.edit-setting .discountradio label{
+  text-align: center !important;
+}
+.edit-setting .taxradio input[type=radio], .edit-setting .discountradio input[type=radio],
+.date-format input[type=radio], .country-radio input[type=radio]{
+  display:none;
+}
+.edit-setting input[type=radio]:checked + label {
+  outline: 0;
+  color:#fff;
+  background-color: #2196f3;
+}
+.edit-setting input[type=radio] + label {
+  display: inline-block;
+  margin: -2px;
+  padding: 5px 12px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  color: #2196f3;
+  text-align: center;
+  font-size: 14px;
+  width:159px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #2196f3;
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+
+}
+.edit-setting .taxradio label.taxonitem,.edit-setting .discountradio label.discountonitem{
+  border-top-left-radius:3px;
+  border-bottom-left-radius:3px;
+}
+.edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
+  border-top-right-radius:3px;
+  border-bottom-right-radius:3px;
+  border-left:0
+}
+.date-format input[type=radio] + label {
+  display:inline-block !important;
+  padding: 0 0 0 0px !important;
+  background:url("/assets/images/unchecked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+.date-format input[type=radio]:checked + label {
+  background:url("/assets/images/checked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  display:inline-block !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+.dropbtn {
+  width: 150px;
+  color: #1a73cc;
+  padding: 6px;
+  background: #d0e4f7;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+.edit-setting .country-code input[type=radio] + label {
+  min-height: 32px;
+  display: inline-block;
+  margin: 0px !important;
+  padding: 5px 12px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  color: #2196f3;
+  text-align: center;
+  font-size: 14px;
+  width: 150px;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #D0E4F7;
+  transition: box-shadow .2s;
+  border-radius: 5px;
+  font-family: quicksand_bold;
+}
+.edit-setting .country-code input[type=radio]:checked + label{
+  background-color: #d0e4f7;
+}

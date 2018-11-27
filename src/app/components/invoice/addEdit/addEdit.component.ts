@@ -147,6 +147,7 @@ export class AddEditComponent implements OnInit {
         for(let i=0; i < this.activeInvoice.listItems.length; i++) {
           temp.push({
             description: this.activeInvoice.listItems[i].description,
+            discount: this.activeInvoice.listItems[i].discountRate,
             product_name: this.activeInvoice.listItems[i].productName,
             quantity: this.activeInvoice.listItems[i].qty,
             rate: this.activeInvoice.listItems[i].rate,
@@ -184,7 +185,7 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.discount = null
         }
         if(this.activeInvoice.shipping_charges == 0) {
-          this.activeInvoice.shipping_charges = null
+          this.activeInvoice.shipping_charges = undefined
         }
         if(this.activeInvoice.adjustment == 0) {
           this.activeInvoice.adjustment = null
@@ -256,39 +257,41 @@ export class AddEditComponent implements OnInit {
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
-    } else {
-
     }
 
     if (settings) {
-      this.activeInvoice.discount_on_item = settings.discount_on_item
-      this.activeInvoice.tax_on_item = settings.tax_on_item
-      if (settings.tax_on_item == 1) {
-        this.taxtext = "Tax (on Bill)"
-        this.activeInvoice.tax_on_item = 1
-      } else if (settings.tax_on_item == 0) {
+      this.activeInvoice.tax_on_item = 2
+      this.activeInvoice.discount_on_item = 2
+
+      if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeInvoice.tax_on_item = 2
-      } else {
-        this.taxtext = "Tax (Disabled)"
-        this.activeInvoice.tax_on_item = 2
-        $('a.taxbtn').addClass('disabledBtn')
+        this.activeInvoice.tax_on_item = 0
       }
-      if (settings.discount_on_item == 0) {
-        this.activeInvoice.discount_on_item = 0
-      } else if (settings.discount_on_item == 1) {
-        this.activeInvoice.discount_on_item = 2
-      } else {
-        this.activeInvoice.discount_on_item = 2
-        $('a.discountbtn').addClass('disabledBtn')
+      if (settings.discountFlagLevel == 1) {
+        this.activeInvoice.discount_on_item = 1
       }
+      // if (settings.taxFlagLevel == 1) {
+      //   this.taxtext = "Tax (on Bill)"
+      //   this.activeInvoice.tax_on_item = 1
+      // } else if (settings.taxFlagLevel == 0) {
+      //   this.taxtext = "Tax (on Item)"
+      //   this.activeInvoice.tax_on_item = 0
+      // } else {
+      //   this.taxtext = "Tax (Disabled)"
+      //   this.activeInvoice.tax_on_item = 2
+      // }
+
+      // if (settings.discountFlagLevel == 0) {
+      //   this.activeInvoice.discount_on_item = 0
+      // } else if (settings.discountFlagLevel == 1) {
+      //   this.activeInvoice.discount_on_item = 1
+      // } else {
+      //   this.activeInvoice.discount_on_item = 2
+      // }
     } else {
       this.taxtext = "Tax (Disabled)"
       this.activeInvoice.tax_on_item = 2
-      $('a.taxbtn').addClass('disabledBtn')
-
       this.activeInvoice.discount_on_item = 2
-      $('a.discountbtn').addClass('disabledBtn')
     }
   }
 
@@ -464,6 +467,22 @@ export class AddEditComponent implements OnInit {
     this.activeItem = {...this.activeInvoice.listItems[index]}
   }
 
+  fillItemDetails(prod = null) {
+    var product = (prod == null) ? this.addItem.value : prod
+    // console.log(product)
+    this.activeItem = {
+      unique_identifier: product.uniqueKeyProduct,
+      description: product.discription == null ? '' : product.discription,
+      product_name: product.prodName,
+      quantity: product.quantity ? product.quantity : 1,
+      unit: product.unit,
+      rate: product.rate,
+      tax_rate: 0.00,
+      discount: 0.00
+    }
+    this.calculateTotal()
+  }
+
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
@@ -508,6 +527,22 @@ export class AddEditComponent implements OnInit {
       total: 0.00
     }
     $('#edit-item').modal('hide')
+  }
+
+  calculateTotal() {
+    if (Object.keys(this.activeItem).length > 0) {
+      var rateParse = parseFloat(this.activeItem.rate)
+      if (isNaN(rateParse)) {
+        rateParse = 0
+      }
+      var amount = (this.activeItem.quantity * rateParse)
+
+      var additions = (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) ? 0 :
+        ((this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity)
+      var deductions = (isNaN(this.activeItem.discount) || this.activeItem.discount_rate == 0) ? 0 :
+        ((this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity)
+      this.activeItem.total = amount + (additions) - (deductions)
+    }
   }
 
   // Term Functions
@@ -563,7 +598,11 @@ export class AddEditComponent implements OnInit {
   }
 
   isTermInInvoice(term) {
-    return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
+    if(this.activeInvoice.termsAndConditions) {
+      return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
+    } else {
+      return false
+    }
   }
 
   // Invoice Functions
@@ -631,32 +670,6 @@ export class AddEditComponent implements OnInit {
     var [y, m, d] =  date.split('-').map(tmp => parseInt(tmp))
     date = new Date(y, (m - 1), d).getTime()
     return new Date(date+(days*24*60*60*1000))
-  }
-
-  fillItemDetails(prod = null) {
-    var product = (prod == null) ? this.addItem.value : prod
-    // console.log(product)
-    this.activeItem = {
-      unique_identifier: product.uniqueKeyProduct,
-      description: product.discription == null ? '' : product.discription,
-      product_name: product.prodName,
-      quantity: product.quantity ? product.quantity : 1,
-      unit: product.unit,
-      rate: product.rate,
-      tax_rate: 0.00
-    }
-    this.calculateTotal()
-  }
-
-  calculateTotal() {
-    if (Object.keys(this.activeItem).length > 0) {
-      var rateParse = parseFloat(this.activeItem.rate)
-      if (isNaN(rateParse)) {
-        rateParse = 0
-      }
-      var productRate = (this.activeItem.quantity * rateParse)
-      this.activeItem.total = productRate
-    }
   }
 
   calculateInvoice(indexTaxMultiple) {
@@ -788,9 +801,11 @@ export class AddEditComponent implements OnInit {
       }
     }
 
-    for (var k = 0; k < this.activeInvoice.payments.length; k++) {
-      this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
-      this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
+    if(this.activeInvoice.payments) {
+      for (var k = 0; k < this.activeInvoice.payments.length; k++) {
+        this.activeInvoice.payments[k].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+        this.activeInvoice.payments[k].unique_key_fk_client = this.activeInvoice.unique_key_fk_client
+      }
     }
 
     this.activeInvoice.device_modified_on = new Date().getTime()
@@ -843,20 +858,13 @@ export class AddEditComponent implements OnInit {
 
     this.activeInvoice = <invoice>{}
 
-    this.activeInvoice.listItems = []
-    this.activeInvoice.payments = []
-    this.activeInvoice.taxList = []
     this.show_tax_input_list = []
     this.tempflagTaxList = []
-    this.activeInvoice.gross_amount = 0.00
-    this.activeInvoice.balance = 0.00
 
     this.activeClient = {}
     this.dueDate.reset()
 
     var settings = this.settings
-    this.activeInvoice.taxList = []
-    this.activeInvoice.percentage_flag = 1
 
     if (settings.alstTaxName) {
       if (settings.alstTaxName.length > 0) {

@@ -296,30 +296,30 @@
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" style="text-align:left;" class="bld w-100" disabled
+                      <input type="text" id="itemDescLabel" class="bld w-100 text-left" disabled
                         value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                       >
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-center" disabled
                         value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                       >
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-center" disabled
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
-                    <td width="17%" *ngIf="activeInv.assignDiscountFlag == 1">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount"
+                    <td width="17%" *ngIf="activeInv.tax_on_item == 0">
+                      <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
+                    </td>
+                    <td width="17%" *ngIf="activeInv.discount_on_item == 1">
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="Discount (%)"
                         disabled
                       >
                     </td>
-                    <td width="17%" *ngIf="activeInv.assignTaxFlag == 0">
-                      <input type="text" value="Tax" id="taxLabel" class="bld w-100" name="rate" disabled>
-                    </td>
                     <td width="18%">
-                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right"
+                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-center"
                         style="text-align:right;" disabled value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                       >
                     </td>
@@ -342,27 +342,27 @@
                     </td>
 
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.qty | number:'2.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td *ngIf="activeInv.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
-                        {{item.taxRate | number:'2.'}}
+                    <td *ngIf="activeInv.tax_on_item == 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div class="text-center">
+                        {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td *ngIf="activeInv.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                    <td *ngIf="activeInv.discount_on_item == 1" [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div class="text-center">
                         {{item.discountRate | number:'2.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.price | number:'2.'}}
                       </div>
                     </td>
