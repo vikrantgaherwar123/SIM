@@ -189,6 +189,7 @@ export class LoginComponent implements OnInit {
 
       setStorage(settingResponse.settings)
       $('#userLogout').show()
+      $('#userLogout span').html(this.authenticated.registered_email)
       this.router.navigate(['/invoice/add'])
     })
   }
