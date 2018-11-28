@@ -44,7 +44,6 @@
           Select Product to view or edit
         </div>
 
-        <!-- Product List -->
         <div class="col-12 px-0 scroll mCustomScrollbar" scroll-bar>
           <div style="background-color: #fff;" *ngIf="productListLoading">
             <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
@@ -71,7 +70,7 @@
                     <div class="ellipsis">{{product.discription}}</div>
                   </span>
                   <span class="col-4 txtr pr-0 font-custom-bold fontsize12">
-                    {{ product.rate | currency:'INR':'symbol':'1.2-2' }}
+                    {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
                   </span>
                 </div>
               </div>
@@ -165,7 +164,7 @@
                           </span>
                           <input type="text" id="prodName" name="prodName" placeholder="Product Name"
                             class="form-control" maxlength="45" [readonly]="inputReadonly" required
-                            [(ngModel)]="activeProduct.prodName" 
+                            [(ngModel)]="activeProduct.prodName"
                           />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
@@ -195,7 +194,7 @@
                           <span class="input-group-addon">
                             <img src="/assets/images/product-icon/ic_normal_unit.png">
                           </span>
-                          <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit"
+                          <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
                             [(ngModel)]="activeProduct.unit" [readonly]="inputReadonly"
                           />
                         </div>
@@ -217,7 +216,7 @@
                           <span class="input-group-addon">
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
-                          <input type="number" step="any" name="rate" class="form-control"
+                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="Rate"
                             [(ngModel)]="activeProduct.rate" [readonly]="inputReadonly" required
                           />
                         </div>
@@ -230,13 +229,14 @@
                           <span class="input-group-addon">
                             <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
                           </span>
-                          <input type="number" name="taxRate" class="form-control" step="any" min="0"
+                          <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
                             [(ngModel)]="activeProduct.taxRate" [readonly]="inputReadonly"
                           />
                         </div>
                       </div>
                     </div>
-                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+
+                    <!-- <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <span class="font-custom-bold"> Manage Inventory</span>
                         <span style="padding-left: 20px">
@@ -248,8 +248,9 @@
                           </label>
                         </span>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
+
                   <div class="col-12 margin-top-20" *ngIf="!isEditBtn && !isBatchBtn">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">

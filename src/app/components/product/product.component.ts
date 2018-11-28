@@ -18,16 +18,16 @@ export class ProductComponent implements OnInit {
   private user: {
     user: {
       orgId: string
-    }
+    },
+    setting: any
   }
   productList: product[]
   private activeProduct = <product>{}
   productListLoading: boolean = false
-  private openingDate: string = ""
   sortTerm: string
   searchTerm: string
+  codeOrSym: string
 
-  private checked: boolean = false
   isCreate: boolean
   private clearBtn: boolean
   private isEdit: boolean = false
@@ -38,7 +38,6 @@ export class ProductComponent implements OnInit {
   isBatchBtn: boolean = false
 
   private tempProduct = null
-  private tempIndex = null
 
   productDisplayLimit = 12
 
@@ -50,6 +49,7 @@ export class ProductComponent implements OnInit {
   ) {
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.codeOrSym = this.user.setting.currencyText ? 'code' : 'symbol'
   }
 
   ngOnInit() {
@@ -66,10 +66,6 @@ export class ProductComponent implements OnInit {
     } else {
       this.productListLoading = false
     }
-  }
-
-  toggle() {
-    this.checked = !this.checked
   }
 
   save(status, edit) {
@@ -220,7 +216,7 @@ export class ProductComponent implements OnInit {
     } else {
       this.activeProduct = this.tempProduct
     }
-    this.tempIndex = index
+
     this.isEditBtn = false
     this.inputReadonly = true
     this.isEdit = true
