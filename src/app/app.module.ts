@@ -4,6 +4,7 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
 import { HttpClientModule, HttpClient } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
 import * as $ from 'jquery'
 import * as bootstrap from 'bootstrap'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -103,6 +104,7 @@ export function getAuthServiceConfigs() {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    LoadingBarHttpClientModule,
     SweetAlert2Module.forRoot(),
     FilterPipeModule,
     OrderModule,
