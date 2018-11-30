@@ -129,9 +129,6 @@ a, a:hover, a:focus {
 .item span {
 	height: 20px;
 }
-.cursor-pointer:hover {
-	cursor: pointer;
-}
 .product-list h5, .productInventoryList h5 {
 	margin: 0;
 }
@@ -271,17 +268,17 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   width: 82%;
 }
 .hd td {
-  border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
 }
 .hd td, .hd td input {
 	background-color: #666;
 	border: none;
 	font-weight: bold;
+	color: #fff;
 }
 .hd td input {
 	text-align: right;
 	border: 1px solid #666;
-  color: #fff;
 }
 .row-item td {
   border-bottom: 1px solid #e3e3e3;
@@ -294,7 +291,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 }
 .column td {
   padding: 3px 2px;
-  vertical-align: middle;
+  vertical-align: unset;
 }
 .create-invoice .column tbody tr td:nth-last-child(1), .create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
   position: absolute !important;
@@ -313,7 +310,8 @@ button.add-line-item-button {
   text-transform: none;
   margin-left: 1px;
   color: #2196f3 !important;
-  border: none !important;
+	border: none !important;
+	cursor: pointer;
 }
 .remove-button {
 	border: none !important;

@@ -22,7 +22,7 @@ export class AuthService {
 
   constructor( private http: HttpClient, private CONST: CONSTANTS) {
     this.loginUrl = `${CONST.BASE_URL}login`
-    this.socialLoginUrl = `${CONST.BASE_URL}social-login`
+    this.socialLoginUrl = `${CONST.BASE_URL}social-login-free`
     this.validateTokenUrl = `${CONST.BASE_URL}validate/token?id=`
     this.changePasswordUrl = `${CONST.BASE_URL}changePassword`
     this.forgetPasswordUrl = `${CONST.BASE_URL}forgotPassword`

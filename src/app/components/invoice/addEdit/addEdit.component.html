@@ -26,7 +26,7 @@
 
                         <div class="form-group pl-0">
                           <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" onClick="this.select()"
                           >
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
@@ -62,8 +62,9 @@
                             </div>
                           </div>
                           <div class="col-6 pr-0">
-                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">Shipping
-                              Address</span><br />
+                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                              Shipping Address
+                            </span>
                             <div class="address-render" *ngIf="activeClient">{{activeClient.shippingAddress}}<br /></div>
                           </div>
                         </div>
@@ -74,7 +75,7 @@
                   <!-- Invoice Number and Dates -->
                   <div class="col-12 col-sm-5 pr-0" id="invDataAdd">
                     <div class="row" style="margin-top: 5px;">
-                      <div class="col-6 offset-md-2 col-md-4">
+                      <div class="col-6 offset-md-2 col-md-4 pr-0">
                         <span class="font-custom-bold text-left w-100">Invoice#</span>
                       </div>
                       <div class="col-6">
@@ -83,7 +84,7 @@
                             && invNumberForm.invoiceNumber.$error.required"
                           >
                             <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
-                              [(ngModel)]="activeInvoice.invoice_number"required
+                              [(ngModel)]="activeInvoice.invoice_number" required onClick="this.select()"
                             />
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
                               <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
@@ -100,8 +101,8 @@
                       <div class="col-6">
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
-                            <input type="text" class="form-control"
-                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" required readonly
+                            <input type="text" class="form-control" placeholder="mm/dd/yyyy" required readonly
+                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" onclick="this.select()"
                               (click)="picker.open()"
                             >
                             <mat-datepicker #picker></mat-datepicker>
@@ -115,25 +116,25 @@
                     </div>
 
                     <div class="row" style="margin-top: 5px;">
-                      <div class="offset-md-2 col-md-4 col-6">
+                      <div class="offset-md-2 col-md-4 col-6 pr-0">
                         <span class="font-custom-bold text-left w-100">Reference</span>
                       </div>
                       <div class="col-6">
-                        <input type="text" name="invoiceNumber" id="referenceid"
-                          [(ngModel)]="activeInvoice.reference" class="form-control pr-0"
+                        <input type="text" id="referenceid" name="invoiceNumber" class="form-control pr-0"
+                          [(ngModel)]="activeInvoice.reference" onClick="this.select()"
                         />
                       </div>
                     </div>
 
                     <div class="row" style="margin-top: 5px;">
-                      <div class="col-6 offset-md-2 col-md-4">
+                      <div class="col-6 offset-md-2 col-md-4 pr-0">
                         <span class="font-custom-bold text-left w-100">
                           {{settings.mTvDueDate ? settings.mTvDueDate : 'DUE_DATE_LABEL' | translate}}
                         </span>
                       </div>
                       <div class="col-6 selectDueDate">
                         <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag || 0"
-                          class="form-control padr0 selectDueDate" (change)="changeDueDate($event.target.value)"
+                          class="form-control pr-0 selectDueDate" (change)="changeDueDate($event.target.value)" style="cursor: pointer"
                         >
                           <option value="0">No Due Date</option>
                           <option value="1">Immediately</option>
@@ -154,7 +155,7 @@
                         <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag !== 2">
                           <div class="row mx-0">
                             <input type="text" name="dueDate" class="form-control"
-                              [ngModel]="activeInvoice.due_date" required readonly
+                              [value]="activeInvoice.due_date | date: 'MM/dd/yyyy'" required readonly
                             >
                           </div>
                         </div>
@@ -177,86 +178,93 @@
                   <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
                     <thead>
                       <tr class="hd font-custom-bold">
-                        <td width="48%">
+                        <td width="34%">
                           <input type="text" id="itemLable" class="bld w-100 text-left" disabled
                             value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemQtyLabel" class="bld w-100 text-center" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemRateLabel" class="bld w-100 text-center" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%" *ngIf="settings.taxFlagLevel === 0">
+                        <td width="12%" *ngIf="settings.taxFlagLevel === 0">
                           <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled
                             value="Tax (%)"
                           />
                         </td>
-                        <td width="18%" *ngIf="settings.discountFlagLevel === 1">
+                        <td width="12%" *ngIf="settings.discountFlagLevel === 1">
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
                             value="Discount (%)"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
-                        <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
+                        <td width="3%" class="text-center">E</td>
+                        <td width="3%" class="text-center">D</td>
                       </tr>
                     </thead>
 
                     <tbody class="lineItems">
                       <!-- selected Items list -->
                       <tr class="row-item" *ngFor="let item of activeInvoice.listItems; let index = index; let last = last">
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
+                        <td [class.no-border-last]="last">
                           <div class="">
                             <div class="form-group">
                               <div class="text-left product-color">
                                 {{item.product_name}}
                               </div>
-                              <div class="text-left">
+                              <div class="text-left" style="font-size: 11px; color: #a4a4a4;">
                                 {{item.description}}
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
+                        <td [class.no-border-last]="last">
                           <div class="text-center">
                             {{item.quantity | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)">
+                        <td [class.no-border-last]="last">
                           <div class="text-center">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)" *ngIf="settings.taxFlagLevel === 0">
+                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                           <div class="text-center">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="editInvoiceItem(index)" *ngIf="settings.discountFlagLevel === 1">
+                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
                           <div class="text-center">
                             {{item.discount | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="position: unset !important;"
-                          (click)="editInvoiceItem(index)"
-                        >
+                        <td [class.no-border-last]="last" style="position: unset !important;">
                           <div class="text-center">
                             {{item.total | number:'2.'}}
                           </div>
                         </td>
-                        <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
-                          [class.no-border-last]="last">
-                          <div style="padding-top:4px">
-                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                        <td [class.no-border-last]="last">
+                          <div>
+                            <a class="closeicon show" title="Edit Row" (click)="editInvoiceItem(index)">
+                              <img src="assets/images/edit64.png" class="del pull-left set-color" alt=""
+                                style="height:16px;"
+                              >
+                            </a>
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last">
+                          <div>
+                            <a class="closeicon show" title="Delete Row"
                               (click)="removeItem(index)"
                             >
                               <img src="assets/images/delete16.png" class="del pull-left set-color" alt=""
@@ -271,7 +279,7 @@
                       <tr class="row-item">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="text" name="product-name" class="form-control billing-input"
+                            <input type="text" name="product-name" class="form-control billing-input" onclick="this.select()"
                               placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
                             >
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
@@ -288,14 +296,14 @@
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                        <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0"
                               [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" >
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                        <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" class="form-control text-right" min=0
                               [(ngModel)]="activeItem.rate" (change)="calculateTotal()"
@@ -303,23 +311,31 @@
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                          <div class="form-group">
+                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                          <div class="input-group">
                             <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()"
                             />
+                            <div class="input-group-append">
+                              <span class="input-group-text p-0">%</span>
+                            </div>
                           </div>
+                          <div class="text-right">{{activeItem.tax_rate*activeItem.rate*activeItem.quantity/100 || 0}}</div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                          <div class="form-group">
+                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                          <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
                               [(ngModel)]="activeItem.discount" (change)="calculateTotal()"
                             />
+                            <div class="input-group-append">
+                              <span class="input-group-text p-0">%</span>
+                            </div>
                           </div>
+                          <div class="text-right">{{activeItem.discount*activeItem.rate*activeItem.quantity/100 || 0}}</div>
                         </td>
 
-                        <td style="vertical-align: initial; position: relative !important;" 
+                        <td style="vertical-align: top; position: relative !important;" 
                           [class.no-border-last]="last"
                         >
                           <div class="form-group">
@@ -330,7 +346,7 @@
                           </div>
 
                           <button type="button" class="btnd add-line-item-button" (click)="addEditInvoiceItem()"
-                            style="position: absolute; right: 0; bottom: 5px;"
+                            style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value || !activeItem.quantity || !activeItem.rate"
                           >
                             Add Item
                           </button>
@@ -481,7 +497,7 @@
                         <div class="col-1 px-0">
                           <div class="remove-button">
                             <div class="addon selectorpr-0"
-                              (click)="activeInvoice.discount=undefined;activeInvoice.percentage_flag=0;
+                              (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
                                 activeInvoice.percentage_value=0;calculateInvoice()
                               "
                             >
