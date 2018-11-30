@@ -78,55 +78,62 @@
         </div>
       </div>
 
-      <!-- Client Add, Edit and Delete Form -->
+      <!-- Body -->
       <div class="col-12 col-sm-9 item-form ">
         <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
               <div class="row mx-0">
+                <!-- Heading -->
                 <div class="col-7 col-md-8 editBtnShow">
-                  <h4 class="form-header text-right client-header" *ngIf="!isCreate" style="margin-left: 61%;">Create a new client </h4>
-                  <!--style="display: flex;justify-content: flex-end;"-->
-                  <!--<div class="form-header" style="width: 100%;word-break: break-all;" *ngIf="isEdit">Client : {{activeClient.name}}</div>-->
-                  <h4 class="form-header text-right client-header" *ngIf="!(rightDivBtns || cancle)" style="margin-left: calc(44px + 25vw);">Edit client </h4>
-                  <h4 class="form-header text-center client-header" *ngIf="!isEditBtn"> View Client </h4>
+                  <h4 class="form-header text-right client-header" *ngIf="createMode" style="margin-left: 61%;">
+                    Create a new client
+                  </h4>
+                  <h4 class="form-header text-right client-header" *ngIf="editMode" style="margin-left: calc(44px + 25vw);">
+                    Edit client
+                  </h4>
+                  <h4 class="form-header text-center client-header" *ngIf="viewMode">
+                    View Client
+                  </h4>
                 </div>
+
+                <!-- Top Buttons -->
                 <div class="col-5 col-md-4 pull-right px-0 font-custom-bold">
-                  <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                    (click)="editThis()" *ngIf="!isEditBtn"
+                  <button type="button" (click)="editThis()" *ngIf="viewMode"
+                    class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
-                  <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                  <button type="button" *ngIf="viewMode"
+                    class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
                       confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
                     "
-                    (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!f.valid || inputReadonly == false"
+                    (confirm)="deleteClient()" [disabled]="!f.valid"
                   >
                     DELETE
                   </button>
-                  <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)"
+                  <div class="rightDivBtns">
+                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)" *ngIf="editMode"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
-                      data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
-                      [disabled]="!f.valid || inputReadonly == true"
+                      [disabled]="!f.valid"
                     >
                       UPDATE
                     </button>
                     <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right margin-left-15 font-custom-bold"
-                      *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true"
+                      *ngIf="createMode" [disabled]="!f.valid"
                     >
                       SAVE
                     </button>
-                    <button type="button" (click)="cancelThis()" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      *ngIf="!cancle" [disabled]="inputReadonly == true"
+                    <button type="button" (click)="cancelThis()" *ngIf="editMode"
+                      class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     >
                       CANCEL
                     </button>
-                    <button type="button" (click)="clearThis()" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                    <button type="button" (click)="clearThis()" *ngIf="createMode"
+                      class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                     >
                       CLEAR
                     </button>
@@ -134,10 +141,10 @@
                 </div>
               </div>
 
-              <!-- Add Edit -->
               <div class="client-form">
                 <div class="row">
-                  <div class="col-12 margin-top-20" *ngIf="isEditBtn">
+                  <!-- Create / Edit -->
+                  <div class="col-12 margin-top-20" *ngIf="createMode || editMode">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
@@ -145,7 +152,7 @@
                             <img src="/assets/images/client-icon/ic_normal_org_name.png">
                           </span>
                           <input type="text" name="name" id="name" class="form-control" placeholder="Organization name"
-                            [(ngModel)]="activeClient.name" [readonly]="inputReadonly" required
+                            [(ngModel)]="activeClient.name" required
                           />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || errors.name">
@@ -157,13 +164,12 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
-                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_person.png"></span>
-                          <input type="text" [(ngModel)]="activeClient.contactPersonName" name="contactPersonName" id="contactPersonName"
-                            class="form-control" [readonly]="inputReadonly" placeholder="Contact person" />
-                          <!--<div class="form-error" *ngIf="f.submitted || form.contactPersonName.$touched || errors.contactPersonName">-->
-                          <!--<span *ngIf="form.contactPersonName.$error.required">Required</span>-->
-                          <!--<span *ngIf="errors.contactPersonName">{{ errors.contactPersonName[0] }}</span>-->
-                          <!--</div>-->
+                          <span class="input-group-addon">
+                            <img src="/assets/images/client-icon/ic_normal_contact_person.png">
+                          </span>
+                          <input type="text" name="contactPersonName" id="contactPersonName" class="form-control"
+                            [(ngModel)]="activeClient.contactPersonName" placeholder="Contact person"
+                          />
                         </div>
                       </div>
                     </div>
@@ -172,15 +178,10 @@
                       <div class="form-group" id="emailLabel" name="emailLabel">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
-                          <input type="text" [(ngModel)]="activeClient.email" name="email" id="email" class="form-control"
-                            [readonly]="inputReadonly" placeholder="Email address" />
-                          <!--<div class="form-error" *ngIf="form.$submitted || form.email.$touched || errors.email">-->
-                          <!--<span *ngIf="form.email.$error.required">Required</span>-->
-                          <!--<span *ngIf="form.email.$error.email"><span *ngIf="form.email.$error.required">,</span> must be valid email address</span>-->
-                          <!--<span *ngIf="errors.email">{{ errors.email[0] }}</span>-->
-                          <!--</div>-->
+                          <input type="text" id="email" name="email" class="form-control"
+                            [(ngModel)]="activeClient.email" placeholder="Email address"
+                          />
                         </div>
-  
                       </div>
                     </div>
 
@@ -188,8 +189,9 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
-                          <input type="text" [(ngModel)]="activeClient.number" name="cont_number" id="cont_number" class="form-control"
-                            [readonly]="inputReadonly" placeholder="Contact number" />
+                          <input type="text" id="cont_number" name="cont_number" class="form-control"
+                            [(ngModel)]="activeClient.number" placeholder="Contact number"
+                          />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.cont_number.$touched || errors.number">-->
                           <!--<span *ngIf="form.cont_number.$error.required">Required</span>-->
                           <!--<span *ngIf="form.cont_number.$error.maxlength">Must be of 10 characters</span>-->
@@ -200,27 +202,26 @@
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="activeClient.addressLine1" name="addressLine1" id="addressLine1"
-                          class="form-control" [readonly]="inputReadonly" placeholder="Address Line" style="height: 47px;"></textarea>
-                        <!--<div class="form-error" *ngIf="form.$submitted || form.addressLine1.$touched || errors.addressLine1">-->
-                        <!--<span *ngIf="form.addressLine1.$error.required">Required</span>-->
-                        <!--<span *ngIf="errors.addressLine1">{{ errors.addressLine1[0] }}</span>-->
-                        <!--</div>-->
+                        <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control"
+                          [(ngModel)]="activeClient.addressLine1" placeholder="Address Line" style="height: 47px;"
+                        ></textarea>
                       </div>
                     </div>
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" [(ngModel)]="activeClient.shippingAddress" name="shippingAddress" id="shippingAddress"
-                          class="form-control" [readonly]="inputReadonly" placeholder="Shipping Address" style="height: 47px;"></textarea>
+                        <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px;"
+                          [(ngModel)]="activeClient.shippingAddress" class="form-control" placeholder="Shipping Address"
+                        ></textarea>
                       </div>
                     </div>
+
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
                           <input type="text" id="business_id" name="business_id" class="form-control"
-                            [(ngModel)]="activeClient.businessId" [readonly]="inputReadonly" placeholder="Business Id"
+                            [(ngModel)]="activeClient.businessId" placeholder="Business Id"
                           />
                         </div>
                       </div>
@@ -229,14 +230,14 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control" style="height: 47px;"
-                          [(ngModel)]="activeClient.businessDetail" [readonly]="inputReadonly" placeholder="Business Details"
+                          [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
                         ></textarea>
                       </div>
                     </div>
                   </div>
 
                   <!-- View -->
-                  <div class="col-12 margin-top-20" *ngIf="!isEditBtn">
+                  <div class="col-12 margin-top-20" *ngIf="viewMode">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
@@ -326,49 +327,51 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  <!-- Bottom Buttons -->
-                  <div class="col-12 align-self-end">
-                    <button type="button" class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      (click)="editThis()" *ngIf="!isEditBtn"
+              <!-- Bottom Buttons -->
+              <div class="row">
+                <div class="col-12 align-self-end">
+                  <button type="button" (click)="editThis()" *ngIf="viewMode"
+                    class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                  >
+                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                    Edit 
+                  </button>
+                  <button type="button" *ngIf="viewMode"
+                    class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                    [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
+                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
+                    "
+                    (confirm)="deleteClient()" [disabled]="!f.valid"
+                  >
+                    DELETE
+                  </button>
+                  <div class="rightDivBtns">
+                    <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)"
+                      class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
+                      *ngIf="editMode" [disabled]="!f.valid"
                     >
-                      <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"> Edit 
+                      UPDATE
                     </button>
-  
-                    <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                      [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
-                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
-                      "
-                      (confirm)="deleteClient()" *ngIf="!isEditBtn" [disabled]="!f.valid || inputReadonly == false"
+                    <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 0)"
+                      class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
+                      data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>"
+                      *ngIf="createMode" [disabled]="!f.valid"
                     >
-                      DELETE
+                      SAVE
                     </button>
-                    <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                      <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)"
-                        class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
-                        data-loading-text="Updating <i class='fa fa-spinner fa-spin '></i>" *ngIf="!cancle"
-                        [disabled]="!f.valid || inputReadonly == true"
-                      >
-                        UPDATE
-                      </button>
-                      <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 0)"
-                        class="btn btn-success btn-raised margin-left-15 width10btn no-border-radius pull-right font-custom-bold"
-                        data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="cancle"
-                        [disabled]="!f.valid || inputReadonly == true"
-                      >
-                        SAVE
-                      </button>
-                      <button type="button" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                        (click)="cancelThis()" *ngIf="!cancle" [disabled]="inputReadonly == true"
-                      >
-                        CANCEL
-                      </button>
-                      <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
-                        (click)="clearThis()" *ngIf="!clearBtn" [disabled]="inputReadonly == true"
-                      >
-                        CLEAR
-                      </button>
-                    </div>
+                    <button type="button" (click)="cancelThis()" *ngIf="editMode"
+                      class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                    >
+                      CANCEL
+                    </button>
+                    <button type="button" (click)="clearThis()" *ngIf="createMode"
+                      class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
+                    >
+                      CLEAR
+                    </button>
                   </div>
                 </div>
               </div>

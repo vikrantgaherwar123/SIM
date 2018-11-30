@@ -27,22 +27,13 @@ export class ProductComponent implements OnInit {
   sortTerm: string
   searchTerm: string
   codeOrSym: string
+  repeatativeProductName: string = ''
 
-  isCreate: boolean
-  private clearBtn: boolean
-  private isEdit: boolean = false
-  rightDivBtns: boolean = false
-  isEditBtn: boolean = true
-  cancle: boolean = true
-  deleteBtn: boolean = true
-  isBatchBtn: boolean = false
-
-  private tempProduct = null
+  createMode: boolean = true
+  editMode: boolean = false
+  viewMode: boolean = false
 
   productDisplayLimit = 12
-
-  private inputDisabled: boolean
-  private inputReadonly: boolean
 
   constructor(private productService: ProductService,
     private router: Router, private store : Store<AppState>
@@ -82,7 +73,7 @@ export class ProductComponent implements OnInit {
           // Case 1: Edit mode -> diff uniqueKey
           // Case 2: Add mode
           if(edit == 1) {
-            if(this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct) {
+            if(this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct && tempProName !== this.repeatativeProductName) {
               proStatus = false
               break
             }
@@ -92,6 +83,7 @@ export class ProductComponent implements OnInit {
           }
         }
       }
+      this.repeatativeProductName = ''
     }
 
     if (status && proStatus) {
@@ -119,27 +111,19 @@ export class ProductComponent implements OnInit {
           if (index == -1) {  // add
             self.store.dispatch(new productActions.add([self.productService.changeKeysForStore(response.productList[0])]))
             this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
+            this.viewThis(self.productService.changeKeysForStore(response.productList[0]), false)
           } else {
             if (self.activeProduct.enabled) {   // delete
               self.store.dispatch(new productActions.remove(storeIndex))
               this.productList.splice(index, 1)
+              this.activeProduct = this.productList[0]
+              this.addNew()
             } else {    //edit
               self.store.dispatch(new productActions.edit({storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
+              this.viewThis(this.productList[index], false)
             }
           }
-
-          self.activeProduct = <product>{}
-
-          // notifications.showSuccess({ message: result.data.message, hideDelay: 1500, hide: true })
-          // this.form.$setUntouched()
-          self.isEditBtn = true
-          self.isCreate = false
-          self.isEdit = false
-          self.cancle = true
-          self.clearBtn = false
-          self.rightDivBtns = false
-          self.deleteBtn = true
         } else if (response.status != 200) {
           // notifications.showError({ message: result.error, hideDelay: 1500, hide: true })
         }
@@ -161,18 +145,10 @@ export class ProductComponent implements OnInit {
   }
 
   addNew() {
-    this.isBatchBtn = false
     this.activeProduct = <product>{}
-
-    this.isEdit = false
-    this.inputDisabled = false
-    this.isEditBtn = true
-    this.isCreate = false
-    this.inputReadonly = false
-    this.cancle = true
-    this.clearBtn = false
-    this.rightDivBtns = false
-    this.deleteBtn = true
+    this.createMode = true
+    this.editMode = false
+    this.viewMode = false
     $('#prod_name').select()
   }
 
@@ -182,57 +158,31 @@ export class ProductComponent implements OnInit {
   }
 
   editThis() {
-    this.isBatchBtn = false
-    this.inputReadonly = false
-    this.isEditBtn = true
-    this.rightDivBtns = false
-    this.deleteBtn = true
+    if(this.productList.filter((prod => prod.prodName === this.activeProduct.prodName)).length > 1) {
+      this.repeatativeProductName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
+    }
+
+    this.createMode = false
+    this.editMode = true
+    this.viewMode = false
   }
 
-  viewThis(product, index, cancelFlag) {
-    this.isBatchBtn = false
-
+  viewThis(product, cancelFlag) {
     if (!cancelFlag) {
       this.activeProduct = {...product}
     }
 
-    if (!cancelFlag) {
-      this.tempProduct = {
-        "id": product.id,
-        "prod_name": product.prodName,
-        "unit": product.unit,
-        "discription": product.discription,
-        "rate": product.rate,
-        "tax_rate": product.tax_rate,
-        "organization_id": product.serverOrgId,
-        "inventory_enabled": product.inventoryEnabled,
-        "opening_stock": product.openingStock,
-        "opening_date": product.openingDate,
-        "buy_price": product.buyPrice,
-        "productCode": product.productCode,
-        "unique_identifier": product.uniqueKeyProduct
-      }
-      this.tempProduct = this.activeProduct
-    } else {
-      this.activeProduct = this.tempProduct
-    }
-
-    this.isEditBtn = false
-    this.inputReadonly = true
-    this.isEdit = true
-    this.isCreate = true
-    this.cancle = false
-    this.clearBtn = true
-    this.rightDivBtns = true
-    this.deleteBtn = false
+    this.createMode = false
+    this.editMode = false
+    this.viewMode = true
   }
 
   cancelThis() {
-    this.isEditBtn = false
-    this.inputReadonly = true
-    this.rightDivBtns = true
-    this.deleteBtn = false
-    // this.viewThis(this.tempProduct, this.tempIndex, true)
+    this.activeProduct = {...this.productList.filter(prod => prod.uniqueKeyProduct == this.activeProduct.uniqueKeyProduct)[0]}
+
+    this.createMode = false
+    this.editMode = false
+    this.viewMode = true
   }
 
   clearThis() {
@@ -245,19 +195,6 @@ export class ProductComponent implements OnInit {
 
   loadMore() {
     this.productDisplayLimit += 10
-  }
-
-  openBatch() {
-    this.isBatchBtn = true
-    this.isEdit = false
-    this.inputDisabled = false
-    this.isEditBtn = true
-    this.isCreate = true
-    this.inputReadonly = false
-    this.cancle = true
-    this.clearBtn = true
-    this.rightDivBtns = true
-    this.deleteBtn = true
   }
 
   closeBatch() {

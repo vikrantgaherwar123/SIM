@@ -137,7 +137,7 @@
             </div>
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div class="item all-item row cursor-pointer"
-              *ngFor="let estimate of (estimateList | orderBy: estSortTerm | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
+              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false:true | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)"
             >
               <div class="col-2 list-date font-custom-bold fontsize13">

@@ -136,9 +136,8 @@
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div>
 
-              <div class="item all-item row cursor-pointer"
-                *ngFor="let invoice of (invoiceList | orderBy: invSortTerm | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
-                (click)="setActiveInv(invoice.unique_identifier)"
+              <div class="item all-item row cursor-pointer" (click)="setActiveInv(invoice.unique_identifier)"
+                *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:false:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
               >
                 <div class="col-2 list-date font-custom-bold fontsize13">
                   {{ invoice.created_date | date: 'dd MMM' }}

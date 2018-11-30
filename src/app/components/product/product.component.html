@@ -49,7 +49,7 @@
             <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
           </div>
           <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
-            *ngFor="let product of (productList | orderBy:sortTerm | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
+            *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
           >
             <div class="row item product-list">
               <div class="col-2 padl5">
@@ -58,13 +58,13 @@
                 >
               </div>
   
-              <div class="col-8 px-0" (click)="viewThis(product, index)">
+              <div class="col-8 px-0" (click)="viewThis(product)">
                 <div class="row mar0">
-                  <span class="col-8 px-0 font-custom-bold fontsize13">
+                  <span class="col-7 px-0 font-custom-bold fontsize13">
                     <div class="ellipsis"> {{ product.prodName }}</div>
                   </span>
-                  <span class="col-4 px-0 text-right total-color font-custom-book">
-                    Tax: {{ product.taxRate }}%
+                  <span class="col-5 px-0 text-right total-color font-custom-book">
+                    Tax: {{ product.taxRate | number:'1.1-2' }}%
                   </span>
                   <span class="col-8 px-0 font-custom-book fontsize12">
                     <div class="ellipsis">{{product.discription}}</div>
@@ -91,23 +91,26 @@
         </div>
       </div>
 
-      <!-- Product CRUD operations -->
+      <!-- Body -->
       <div class="col-12 col-sm-9 item-form">
         <form class="form-horizontal" #f="ngForm" name="form">
           <div class="shadow">
             <div class="form-group back" style="padding: 18px;">
               <div class="row mar0">
+                <!-- Heading -->
                 <div class="col-7 col-md-8">
-                  <h4 class="form-header product-header" *ngIf="!isCreate" style="margin-left: 59%">
+                  <h4 class="form-header product-header" style="margin-left: 59%" *ngIf="createMode">
                     Create a new product
                   </h4>
-                  <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="!(rightDivBtns || cancle)">
+                  <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="editMode">
                     Edit product
                   </h4>
-                  <h4 class="form-header product-header" *ngIf="!isEditBtn">View Product</h4>
+                  <h4 class="form-header product-header" *ngIf="viewMode">View Product</h4>
                 </div>
+
+                <!-- Top Buttons -->
                 <div class="col-5 col-md-4 px-0 pull-right">
-                  <button type="button" *ngIf="!isEditBtn" (click)="editThis(product)"
+                  <button type="button" *ngIf="viewMode" (click)="editThis(product)"
                     class="btn btn-success btn-raised no-border-radius pull-right width10btn margin-left-15 font-custom-bold"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
@@ -119,32 +122,32 @@
                     [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
                       confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
                     "
-                    (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
+                    (confirm)="deleteProduct(activeProduct)" *ngIf="viewMode" [disabled]="!f.valid"
                   >
                     DELETE
                   </button>
-                  <div class="rightDivBtns" *ngIf="!rightDivBtns">
+                  <div class="rightDivBtns">
                     <button type="button" id="updateProBtn" (click)="save(f.valid, 0)"
                       class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      *ngIf="cancle" [disabled]="!f.valid || inputReadonly == true"
+                      *ngIf="createMode" [disabled]="!f.valid"
                     >
                       SAVE
                     </button>
                     <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
                       class="btn btn-raised btn-success no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      *ngIf="!cancle" [disabled]="!f.valid || inputReadonly == true"
+                      *ngIf="editMode" [disabled]="!f.valid"
                     >
                       UPDATE
                     </button>
                     <button type="button" id="cancleProBtn" (click)="cancelThis()"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      *ngIf="!cancle" [disabled]="inputReadonly == true"
+                      *ngIf="editMode"
                     >
                       CANCEL
                     </button>
                     <button type="button" id="clearProBtn" (click)="clearThis()"
                       class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-left-15 width10btn font-custom-bold"
-                      *ngIf="!clearBtn" [disabled]="inputReadonly == true"
+                      *ngIf="createMode"
                     >
                       CLEAR
                     </button>
@@ -152,10 +155,10 @@
                 </div>
               </div>
 
-              <!-- Create View Edit form -->
               <div class="product-form">
                 <div class="row">
-                  <div class="col-12 margin-top-20" *ngIf="isEditBtn && !isBatchBtn">
+                  <!-- Create / Edit -->
+                  <div class="col-12 margin-top-20" *ngIf="createMode || editMode">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
@@ -163,7 +166,7 @@
                             <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
                           <input type="text" id="prodName" name="prodName" placeholder="Product Name"
-                            class="form-control" maxlength="45" [readonly]="inputReadonly" required
+                            class="form-control" maxlength="45" required
                             [(ngModel)]="activeProduct.prodName"
                           />
                         </div>
@@ -181,8 +184,8 @@
                             <img src="/assets/images/product-icon/ic_product_code_grey.png">
                           </span>
                           <input type="text" name="productCode" id="productCode"
-                            class="form-control" placeholder="HSN Code"
-                            [(ngModel)]="activeProduct.productCode" [readonly]="inputReadonly"
+                            class="form-control" placeholder="Product Code"
+                            [(ngModel)]="activeProduct.productCode"
                           />
                         </div>
                       </div>
@@ -195,7 +198,7 @@
                             <img src="/assets/images/product-icon/ic_normal_unit.png">
                           </span>
                           <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
-                            [(ngModel)]="activeProduct.unit" [readonly]="inputReadonly"
+                            [(ngModel)]="activeProduct.unit"
                           />
                         </div>
                       </div>
@@ -205,7 +208,7 @@
                       <div class="form-group">
                         <textarea elastic name="discription" id="discription" class="form-control"
                           placeholder="Description" style="max-height: 72px; height: 72px;"
-                          [(ngModel)]="activeProduct.discription" [readonly]="inputReadonly"
+                          [(ngModel)]="activeProduct.discription"
                         ></textarea>
                       </div>
                     </div>
@@ -217,7 +220,7 @@
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
                           <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="Rate"
-                            [(ngModel)]="activeProduct.rate" [readonly]="inputReadonly" required
+                            [(ngModel)]="activeProduct.rate" required
                           />
                         </div>
                       </div>
@@ -230,7 +233,7 @@
                             <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
                           </span>
                           <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
-                            [(ngModel)]="activeProduct.taxRate" [readonly]="inputReadonly"
+                            [(ngModel)]="activeProduct.taxRate"
                           />
                         </div>
                       </div>
@@ -251,7 +254,8 @@
                     </div> -->
                   </div>
 
-                  <div class="col-12 margin-top-20" *ngIf="!isEditBtn && !isBatchBtn">
+                  <!-- View -->
+                  <div class="col-12 margin-top-20" *ngIf="viewMode">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
@@ -267,7 +271,7 @@
                       <div class="row">
                         <div class=" col-6 client-view-label ">
                           <img src="/assets/images/product-icon/ic_product_code_grey.png">
-                          HSN code:
+                          Product code:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.productCode}}
@@ -319,61 +323,51 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-12 margin-top-20" *ngIf="isBatchBtn">
-                    <div id="drop" style="width: 60%;margin: 0px auto 10px auto;">
-                      Drop a spreadsheet file here to see sheet data
-                    </div>
-                    <br>
-                    <div style="margin: 0px auto 10px auto; width: 60%">
-                      <input type="file" name="xlfile" id="xlf" style="display: inline;width: 44%;"/>
-                      ... or click here to select a file
-                    </div>
-                    <br />
-                    <div id="example" class="hot" style="margin-left: 13vw;"></div>
-                  </div>
-                  <div class="col-12 pull-right">
-                    <button type="button" (click)="editThis(product)" *ngIf="!isEditBtn"
-                      class="btn btn-success btn-raised no-border-radius pull-right width10btn"
+                </div>
+              </div>
+
+              <!-- Bottom Buttons -->
+              <div class="row">
+                <div class="col-12 pull-right">
+                  <button type="button" (click)="editThis(product)" *ngIf="viewMode"
+                    class="btn btn-success btn-raised no-border-radius pull-right width10btn"
+                  >
+                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
-                      <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
-                        style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
-                      >
-                      Edit
-                    </button>
-                    <button type="button" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                      [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
-                        confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
-                      "
-                      (confirm)="deleteProduct(activeProduct)" *ngIf="!deleteBtn" [disabled]="!f.valid ||inputReadonly == false"
+                    Edit
+                  </button>
+                  <button type="button" class="btn btn-raised btn-custom-1 no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                    [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
+                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
+                    "
+                    (confirm)="deleteProduct(activeProduct)" *ngIf="viewMode" [disabled]="!f.valid"
+                  >
+                    DELETE
+                  </button>
+                  <div class="rightDivBtns">
+                    <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="createMode"
+                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      [disabled]="!f.valid"
                     >
-                      DELETE
+                      SAVE
                     </button>
-                    <div class="rightDivBtns" *ngIf="!rightDivBtns">
-                      <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="cancle"
-                        class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
-                        [disabled]="!f.valid || inputReadonly == true"
-                      >
-                        SAVE
-                      </button>
-                      <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="!cancle"
-                        class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
-                        [disabled]="!f.valid || inputReadonly == true"
-                      >
-                        UPDATE
-                      </button>
-                      <button type="button" (click)="cancelThis()" *ngIf="!cancle"
-                        class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                        [disabled]="inputReadonly == true"
-                      >
-                        CANCEL
-                      </button>
-                      <button type="button" (click)="clearThis()" *ngIf="!clearBtn"
-                        class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
-                        [disabled]="inputReadonly == true"
-                      >
-                        CLEAR
-                      </button>
-                    </div>
+                    <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="editMode"
+                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      [disabled]="!f.valid"
+                    >
+                      UPDATE
+                    </button>
+                    <button type="button" (click)="cancelThis()" *ngIf="editMode"
+                      class="btn btn-custom-2 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                    >
+                      CANCEL
+                    </button>
+                    <button type="button" (click)="clearThis()" *ngIf="createMode"
+                      class="btn btn-custom-1 btn-raised no-border-radius pull-right margin-right-15 width10btn font-custom-bold"
+                    >
+                      CLEAR
+                    </button>
                   </div>
                 </div>
               </div>
