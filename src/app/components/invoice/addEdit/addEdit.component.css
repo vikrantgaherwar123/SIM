@@ -14,16 +14,8 @@
 input, textarea {
   margin-bottom: 2px;
 }
-.column td {
-  padding: 4px 2px;
-  vertical-align: middle;
-}
 .bld {
   margin: 2px 0;
-}
-.column td {
-  padding: 4px 2px;
-  vertical-align: middle;
 }
 .no-border-last {
   border-bottom: none !important;
@@ -35,16 +27,12 @@ select {
   font-weight: 800 !important;
   padding: 3px 12px !important;
 }
-.create-invoice .column tbody tr td:nth-last-child(1), .create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
-  position: absolute !important;
-}
 .set-color {
   color: #2196f3 !important;
 }
 .add, .del {
   height: 21px;
   margin-top: 2px;
-  margin-bottom: 12px;
 }
 .del {
   background-position: -404px -214px;
@@ -53,15 +41,6 @@ select {
 .add-item-button {
   margin-bottom: 10px;
   margin-top: 3px;
-}
-button.add-line-item-button {
-  background: #d1e5f8 !important;
-  padding: 4px;
-  padding-right: 4px;
-  text-transform: none;
-  margin-left: 1px;
-  color: #2196f3 !important;
-  border: none !important;
 }
 .discount-tax-pad {
   padding-top: 15px;
@@ -81,4 +60,7 @@ button.add-line-item-button {
   padding: 0px 10px;
   height: 40px;
   margin-bottom: 2px;
+}
+a:hover {
+  cursor: pointer;
 }

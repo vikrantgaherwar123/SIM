@@ -31,7 +31,7 @@ b, body, p, button {
   margin-bottom: 5px;
 }
 input[type=text], input[type=password] {
-  font-family: quicksand_book !important;
+  font-family: quicksand_regular !important;
   font-size: 14px !important;
   font-style: normal;
   font-weight: 800 !important;
@@ -210,6 +210,12 @@ input:checked + .slider:before {
   width: 30px !important;
   height: 30px !important;
 }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+/* Material CSS override */
 .mat-progress-spinner svg {
   width: 30px !important;
   height: 30px !important;
@@ -219,7 +225,17 @@ input:checked + .slider:before {
   height: 30px !important;
   top: -7px;
 }
-/* .cdk-overlay-container {
-  position: fixed;
-  z-index: 1050;
-} */
+.mat-option {
+  font-family: quicksand_regular;
+  font-size: 14px;
+  color: rgba(0,0,0,.87);
+  border-bottom: 1px solid #c8c8c8;
+}
+.mat-option:hover {
+  background-color: #e8e8e8 !important;
+}
+.mat-calendar-previous-button::after, .mat-calendar-next-button::after {
+  width: 10px;
+  height: 10px;
+  margin: 10px !important;
+}

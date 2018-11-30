@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-      var creds = {access_token: userData.token, provider: userData.provider}
+      var creds = {access_token: userData.idToken, provider: userData.provider}
       this.authService.socialLogin(creds).subscribe((response: any) => {
         if(response.status == 410) {
           console.log(response.message)
