@@ -53,6 +53,7 @@ export class ProductService {
       opening_stock: product.openingStock,
       organization_id: product.serverOrgId,
       prod_name: product.prodName,
+      productCode: product.productCode,
       rate: product.rate,
       tax_rate: product.taxRate,
       unique_identifier: product.uniqueKeyProduct,

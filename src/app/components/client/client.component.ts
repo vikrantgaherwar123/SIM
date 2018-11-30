@@ -28,17 +28,11 @@ export class ClientComponent implements OnInit {
   clientDisplayLimit = 12
   sortTerm: string
   searchTerm: string
+  repeatativeClientName: string = ''
 
-  private checked: boolean = false
-  isCreate: boolean
-  private clearBtn: boolean
-  private inputDisabled: boolean
-  rightDivBtns: boolean = false
-  isEditBtn: boolean = true
-  cancle: boolean = true
-  private inputReadonly: boolean
-  private tempClient = null
-  private tempIndex = null
+  createMode: boolean = true
+  editMode: boolean = false
+  viewMode: boolean = false
 
   constructor(public clientService: ClientService,
     private router: Router, private store: Store<AppState>
@@ -61,10 +55,6 @@ export class ClientComponent implements OnInit {
     } else {
       this.clientListLoading = false
     }
-  }
-
-  isStatus(client) {
-    return (client.enabled == 0);
   }
 
   compare(a, b) {
@@ -103,7 +93,7 @@ export class ClientComponent implements OnInit {
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
-              if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient) {
+              if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
                 proStatus = false
                 break
               }
@@ -114,6 +104,7 @@ export class ClientComponent implements OnInit {
           }
         }
       }
+      this.repeatativeClientName = ''
     }
 
     if (status && proStatus) {
@@ -149,19 +140,17 @@ export class ClientComponent implements OnInit {
             if (self.activeClient.enabled) {   // delete
               self.store.dispatch(new clientActions.remove(storeIndex))
               this.clientList.splice(index, 1)
-              self.inputReadonly = false              
             } else {    //edit
               self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
             }
           }
           self.errors = {}
-          self.activeClient = <client>{}
-          self.isEditBtn = true
-          self.isCreate = false
-          self.cancle = true
-          self.clearBtn = false
-          self.rightDivBtns = false
+          // self.activeClient = <client>{}
+
+          self.createMode = false
+          self.editMode = false
+          self.viewMode = true
 
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
         }
@@ -176,18 +165,10 @@ export class ClientComponent implements OnInit {
       if(!proStatus) {
         alert('Client with this name already exists!')
       }
-      // $('#updateClientBtn').button('reset');
-      // $('#saveClientBtn').button('reset');
-      // $('#updateClientBtn1').button('reset');
-      // $('#saveClientBtn1').button('reset');
-      // notifications.showError({ message: 'Unable to Save, Client already exist.', hideDelay: 5000, hide: true });
-      console.log('Unable to Save, Client already exist.')
     }
   }
 
   addNew() {
-    this.rightDivBtns = false
-    
     this.activeClient = <client>{}
 
     // form.$setUntouched();
@@ -197,13 +178,9 @@ export class ClientComponent implements OnInit {
     $('#emailLabel').addClass('is-empty')
 
     $('#name').select()
-    this.clearBtn = false
-
-    this.inputDisabled = false
-    this.isEditBtn = true
-    this.isCreate = false
-    this.inputReadonly = false
-    this.cancle = true
+    this.createMode = true
+    this.editMode = false
+    this.viewMode = false
   }
 
   batchUpload() {
@@ -216,72 +193,36 @@ export class ClientComponent implements OnInit {
   }
 
   editThis() {
-    this.inputReadonly = false;
-    this.isEditBtn = true;
-    this.rightDivBtns = false;
+    // If there are clients with same name in db, Allow them to make changes
+    if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {
+      this.repeatativeClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+    }
+
+    this.createMode = false
+    this.editMode = true
+    this.viewMode = false
   }
 
   viewThis(client, cancelFlag=false) {
-    var index = this.clientList.findIndex(cli => cli.uniqueKeyClient == client.uniqueKeyClient)
-
     if ($('#emailLabel').hasClass('has-error')) {
       $('#emailLabel').removeClass('has-error');
     }
     $('#emailLabel').addClass('is-empty');
     if (!cancelFlag) {
-      this.activeClient.addressLine1 = client.addressLine1,
-      this.activeClient.businessDetail = client.businessDetail,
-      this.activeClient.businessId = client.businessId,
-      this.activeClient.contactPersonName = client.contactPersonName,
-      this.activeClient.email = client.email,
-      this.activeClient.enabled = client.enabled,
-      this.activeClient.localClientid = client.localClientid,
-      this.activeClient.name = client.name,
-      this.activeClient.number = client.number,
-      this.activeClient.organizationId = client.organizationId,
-      this.activeClient.shippingAddress = client.shippingAddress
-      this.activeClient.uniqueKeyClient = client.uniqueKeyClient
+      this.activeClient = {...client}
     }
 
-    if (!cancelFlag) {
-      this.tempClient = {
-        "addressLine1": client.addressLine1,
-        "businessDetail": client.businessDetail,
-        "businessId": client.businessId,
-        "contactPersonName": client.contactPersonName,
-        "deleted_flag": client.enabled,
-        "email": client.email,
-        "localClientid": client.localClientid,
-        "name": client.name,
-        "number": client.number,
-        "organizationId": client.organizationId,
-        "shippingAddress": client.shippingAddress,
-        "uniqueKeyClient": client.uniqueKeyClient
-      }
-      this.tempClient = this.activeClient
-    } else {
-      this.activeClient = this.tempClient
-    }
-
-    this.tempIndex = index
-    this.isEditBtn = false
-    this.inputReadonly = true
-    this.isCreate = true
-    this.cancle = false
-    this.clearBtn = true
-    this.rightDivBtns = true
-    // $('readonly')
+    this.createMode = false
+    this.editMode = false
+    this.viewMode = true
   }
 
   cancelThis() {
-    this.isEditBtn = false
-    this.inputReadonly = true
-    this.rightDivBtns = true
-    this.viewThis(this.tempClient, true)
-    if ($('#emailLabel').hasClass('has-error')) {
-      $('#emailLabel').removeClass('has-error')
-    }
-    $('#emailLabel').addClass('is-empty');
+    this.activeClient = {...this.clientList.filter(cli => cli.uniqueKeyClient == this.activeClient.uniqueKeyClient)[0]}
+
+    this.createMode = false
+    this.editMode = false
+    this.viewMode = true
   }
 
   clearThis() {
