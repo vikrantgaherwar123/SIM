@@ -24,15 +24,19 @@
                           {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
 
-                        <div class="form-group pl-0">
-                          <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" onClick="this.select()"
+                        <div class="input-group pl-0">
+                          <input type="text" id="bill-to-input" class="form-control billing-input" placeholder="Search & Select Client"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
                           >
+                          <div class="input-group-append">
+                            <span *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</span>
+                          </div>
+
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
-                            <mat-option *ngFor="let client of filteredClients | async" [value]="client">
+                            <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -736,7 +740,7 @@
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" name="name" class="form-control add-client-input-custom"
-                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
+                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required (change)="log(clientform)"
                   />
                   <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
                     <span *ngIf="clientform.name.$error.required">Required</span>
@@ -813,7 +817,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" data-dismiss="modal">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
           Close
         </button>
         <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"

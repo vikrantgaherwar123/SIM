@@ -1,5 +1,6 @@
 .app-container {
   background-color: #ededed;
+  margin-top: 75px;
 }
 .header-container {
   position: fixed;
@@ -9,13 +10,6 @@
 }
 .content {
   margin-top: 75px;
-}
-.wrapper {
-  width: 100%;
-  position: absolute;
-  top: 75px;
-  height: 88vh;
-  overflow: auto;
 }
 #sidebar {
   width: 250px;
