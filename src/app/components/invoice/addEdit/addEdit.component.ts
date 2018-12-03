@@ -884,7 +884,7 @@ export class AddEditComponent implements OnInit {
   updateSettings() {
     var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
-    cookie.setting.invNo = this.tempInvNo
+    cookie.setting.invNo = this.activeInvoice.invoice_number.split(cookie.setting.setInvoiceFormat)[1] || this.tempInvNo
     localStorage.setItem('user', JSON.stringify(cookie))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
