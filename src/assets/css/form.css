@@ -293,7 +293,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   padding: 3px 2px;
   vertical-align: unset;
 }
-.create-invoice .column tbody tr td:nth-last-child(1), .create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
+.create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
   position: absolute !important;
 }
 .add-item-button {

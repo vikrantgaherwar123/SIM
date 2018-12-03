@@ -33,7 +33,6 @@ export class AddEditComponent implements OnInit {
   private dueDate = new FormControl()
   private tempInvNo: number
   private showMultipleTax: boolean
-  private show_tax_input_list: any
   private tempflagTaxList: any
   private taxtext: string
   edit: boolean = false
@@ -374,6 +373,7 @@ export class AddEditComponent implements OnInit {
 
       this.openAddClientModal(client.option.value)
     }
+    $('#invoiceNumber').select()
   }
 
   openAddClientModal(name) {
@@ -386,8 +386,11 @@ export class AddEditComponent implements OnInit {
   }
 
   saveClient(status) {
-    $('#saveClientButton').attr("disabled", 'true');
-    // console.log(data)
+    // If empty spaces
+    if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
+      alert('Organisation name required!')
+      return false
+    }
 
     if (status) {
       this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
@@ -395,10 +398,13 @@ export class AddEditComponent implements OnInit {
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
 
+      $('#saveClientButton').attr("disabled", 'true')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
-          this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-          this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
+          let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
+          this.store.dispatch(new clientActions.add([tempClient]))
+          this.clientList.push(tempClient)
+          this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
 
           $('#add-client').modal('hide')
@@ -411,13 +417,11 @@ export class AddEditComponent implements OnInit {
   }
 
   closeAddClientModal() {
-    //alert('closed!!')
-    $("#loadb").css("display", "none")
     $('#add-client').modal('hide')
-
     this.addClientModal = {}
-    $('#refreshClient').addClass('rotator')
-    $("#loadb").css("display", "none")
+    this.activeClient = {}
+    this.activeInvoice.unique_key_fk_client = null
+    this.billingTo.reset('')
   }
 
   // Product Functions
@@ -757,8 +761,9 @@ export class AddEditComponent implements OnInit {
   }
 
   save(status) {
-    if(this.activeInvoice.unique_key_fk_client == '') {
+    if(!this.activeInvoice.unique_key_fk_client) {
       alert('client not selected')
+      $('#bill-to-input').select()
       return false
     }
 
@@ -793,6 +798,7 @@ export class AddEditComponent implements OnInit {
     for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
       this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
     }
+
     if(this.activeInvoice.taxList) {
       for (var t = 0; t < this.activeInvoice.taxList.length; t++) {
         if (this.activeInvoice.taxList[t] == null) {
@@ -857,8 +863,8 @@ export class AddEditComponent implements OnInit {
     this.addItem.reset('')
 
     this.activeInvoice = <invoice>{}
+    this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
 
-    this.show_tax_input_list = []
     this.tempflagTaxList = []
 
     this.activeClient = {}
@@ -950,5 +956,9 @@ export class AddEditComponent implements OnInit {
         }
       }
     return status
+  }
+
+  log(a) {
+    console.log(a)
   }
 }
