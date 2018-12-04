@@ -7,10 +7,6 @@
   background: #fff;
   box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
 }
-.vtop {
-  vertical-align: top;
-  /* margin-bottom: 17px; */
-}
 input, textarea {
   margin-bottom: 2px;
 }
@@ -54,13 +50,4 @@ select {
 }
 .mat-form-field-infix {
   border-top: 0 !important;
-}
-.billing-input {
-  border: 1px solid #ccc;
-  padding: 0px 10px;
-  height: 40px;
-  margin-top: 0px;
-}
-a:hover {
-  cursor: pointer;
 }

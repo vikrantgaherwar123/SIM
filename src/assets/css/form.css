@@ -1,5 +1,4 @@
 /* Assets form CSS */
-/* Deprecated */
 .main-wrapper {
   overflow-x: hidden;
   height: 100%;
@@ -7,7 +6,6 @@
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
 }
-/* Deprecated */
 #main {
   position: relative;
   background-color: #ededed;
@@ -74,17 +72,9 @@
 	padding-left: 35px;
 	height: 36px;
 }
-.form-control {
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
-	-webkit-border-radius: 0px;
-	-moz-border-radius: 0px;
-	border-radius: 0px;
-	height: 29px;
-	color: inherit;
-}
 a, a:hover, a:focus {
-  color: #2196f3 !important;
+	color: #2196f3 !important;
+	cursor: pointer;
 }
 .list-header-col {
 	color: #272727 !important;
@@ -113,6 +103,12 @@ a, a:hover, a:focus {
 	overflow: hidden;
 	width: auto;
 	height: auto;
+}
+.billing-input {
+  border: 1px solid #ccc;
+  padding: 0px 10px;
+  height: 40px !important;
+  margin-top: 0px;
 }
 .product-list {
 	border-bottom: 1px solid #d2d2d2;
@@ -293,7 +289,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   padding: 3px 2px;
   vertical-align: unset;
 }
-.create-estimate .column tbody tr td:nth-last-child(1), .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
+.edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
   position: absolute !important;
 }
 .add-item-button {

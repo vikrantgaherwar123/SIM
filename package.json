@@ -1,5 +1,6 @@
 {
   "name": "simple-invoice-manager-web",
+  "author": "Satish Logade, JS Stack Dev",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

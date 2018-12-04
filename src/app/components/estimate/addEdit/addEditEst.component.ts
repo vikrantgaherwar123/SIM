@@ -238,37 +238,46 @@ export class AddEditEstComponent implements OnInit {
     }
 
     if (settings) {
-      this.activeEstimate.discount = settings.discount_on_item
-      // this.activeEstimate.tax_on_item = settings.tax_on_item
-      if (settings.tax_on_item == 1) {
-        this.tax_on = 'taxOnBill'
-        this.taxtext = "Tax (on Bill)"
-        // this.activeEstimate.tax_on_item = 1
-      } else if (settings.tax_on_item == 0) {
-        this.tax_on = 'taxOnItem'
+      this.activeEstimate.tax_on_item = 2
+      this.activeEstimate.discount_on_item = 2
+
+      if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        // this.activeEstimate.tax_on_item = 2
-      } else {
-        this.tax_on = 'taxDisabled'
-        this.taxtext = "Tax (Disabled)"
-        // this.activeEstimate.tax_on_item = 2
-        $('a.taxbtn').addClass('disabledBtn')
+        this.activeEstimate.tax_on_item = 0
+      }
+      if (settings.discountFlagLevel == 1) {
+        this.activeEstimate.discount_on_item = 1
       }
 
-      if (settings.discount_on_item == 0) {
-        this.discount_on = 'onBill'
-        this.discounttext = "Discount (on Bill)"
-        // this.activeEstimate.discount_on_item = 0
-      } else if (settings.discount_on_item == 1) {
-        // this.activeEstimate.discount_on_item = 2
-        this.discount_on = 'onItem'
-        this.discounttext = "Discount (on Item)"
-      } else {
-        this.discount_on = 'disabled'
-        this.discounttext = "Discount (Disabled)"
-        // this.activeEstimate.discount_on_item = 2
-        $('a.discountbtn').addClass('disabledBtn')
-      }
+      // if (settings.tax_on_item == 1) {
+      //   this.tax_on = 'taxOnBill'
+      //   this.taxtext = "Tax (on Bill)"
+      //   this.activeEstimate.tax_on_item = 1
+      // } else if (settings.tax_on_item == 0) {
+      //   this.tax_on = 'taxOnItem'
+      //   this.taxtext = "Tax (on Item)"
+      //   this.activeEstimate.tax_on_item = 2
+      // } else {
+      //   this.tax_on = 'taxDisabled'
+      //   this.taxtext = "Tax (Disabled)"
+      //   this.activeEstimate.tax_on_item = 2
+      //   $('a.taxbtn').addClass('disabledBtn')
+      // }
+
+      // if (settings.discount_on_item == 0) {
+      //   this.discount_on = 'onBill'
+      //   this.discounttext = "Discount (on Bill)"
+      //   this.activeEstimate.discount_on_item = 0
+      // } else if (settings.discount_on_item == 1) {
+      //   this.activeEstimate.discount_on_item = 2
+      //   this.discount_on = 'onItem'
+      //   this.discounttext = "Discount (on Item)"
+      // } else {
+      //   this.discount_on = 'disabled'
+      //   this.discounttext = "Discount (Disabled)"
+      //   this.activeEstimate.discount_on_item = 2
+      //   $('a.discountbtn').addClass('disabledBtn')
+      // }
     } else {
       //console.log("2")
       this.tax_on = 'taxDisabled'
@@ -353,6 +362,7 @@ export class AddEditEstComponent implements OnInit {
       }
       this.openAddClientModal(client.option.value)
     }
+    $('#estimateNumber').select()
   }
 
   openAddClientModal(name) {
@@ -364,8 +374,20 @@ export class AddEditEstComponent implements OnInit {
     })
   }
 
+  closeAddClientModal() {
+    $('#add-client').modal('hide')
+    this.addClientModal = {}
+    this.activeClient = <client>{}
+    this.activeEstimate.unique_key_fk_client = null
+    this.billingTo.reset('')
+  }
+
   saveClient(status) {
-    $('#saveClientButton').attr("disabled", 'disabled')
+    // If empty spaces
+    if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
+      alert('Organisation name required!')
+      return false
+    }
 
     if (status) {
       this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
@@ -373,6 +395,7 @@ export class AddEditEstComponent implements OnInit {
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
 
+      $('#saveClientButton').attr("disabled", 'disabled')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
@@ -402,7 +425,7 @@ export class AddEditEstComponent implements OnInit {
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
-  openEditEstimateItemModal(index) {
+  editEstimateItem(index) {
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeEstimate.listItems[index]}
   }
@@ -482,6 +505,27 @@ export class AddEditEstComponent implements OnInit {
     $('#edit-item').modal('hide')
   }
 
+  removeItem(index) {
+    this.activeEstimate.listItems.splice(index, 1)
+    this.calculateEstimate(false)
+  }
+
+  calculateTotal() {
+    if (Object.keys(this.activeItem).length > 0) {
+      let rateParse = parseFloat(this.activeItem.rate)
+      if (isNaN(rateParse)) {
+        rateParse = 0
+      }
+      let amount = (this.activeItem.quantity * rateParse)
+
+      let additions = (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) ? 0 :
+        ((this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity)
+      let deductions = (isNaN(this.activeItem.discount) || this.activeItem.discount_rate == 0) ? 0 :
+        ((this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity)
+      this.activeItem.total = amount + (additions) - (deductions)
+    }
+  }
+
   // Terms Functions
   openAddTermModal() {
     this.addTermModal = {}
@@ -557,6 +601,7 @@ export class AddEditEstComponent implements OnInit {
   save(status) {
     if(!this.activeEstimate.unique_key_fk_client) {
       alert('client not selected')
+      $('#bill-to-input').select()
       return false
     }
 
@@ -639,17 +684,6 @@ export class AddEditEstComponent implements OnInit {
     this.save(true)
   }
 
-  calculateTotal() {
-    if (Object.keys(this.activeItem).length > 0) {
-      var rateParse = parseFloat(this.activeItem.rate)
-      if (isNaN(rateParse)) {
-        rateParse = 0
-      }
-      var productRate = (this.activeItem.quantity * rateParse)
-      this.activeItem.total = productRate
-    }
-  }
-
   calculateEstimate(indexTaxMultiple) {
     var gross_amount = 0
     var deductions = 0
@@ -721,16 +755,12 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.amount = parseFloat((this.activeEstimate.gross_amount - deductions + additions).toFixed(2))
   }
 
-  removeItem(index) {
-    this.activeEstimate.listItems.splice(index, 1)
-    this.calculateEstimate(false)
-  }
-
   resetFormControls() {
     this.billingTo.setValue('')
     this.addItem.reset('')
 
     this.activeClient = <client>{}
+    this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
   }
 
   updateSettings() {
