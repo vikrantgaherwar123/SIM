@@ -29,7 +29,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
                           >
                           <div class="input-group-append">
-                            <span *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</span>
+                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
                           </div>
 
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
@@ -258,7 +258,7 @@
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
-                          <div>
+                          <div class="text-center">
                             <a class="closeicon show" title="Edit Row" (click)="editInvoiceItem(index)">
                               <img src="assets/images/edit64.png" class="del pull-left set-color" alt=""
                                 style="height:16px;"
@@ -267,7 +267,7 @@
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
-                          <div>
+                          <div class="text-center">
                             <a class="closeicon show" title="Delete Row"
                               (click)="removeItem(index)"
                             >
@@ -740,7 +740,7 @@
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" name="name" class="form-control add-client-input-custom"
-                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required (change)="log(clientform)"
+                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
                   />
                   <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
                     <span *ngIf="clientform.name.$error.required">Required</span>

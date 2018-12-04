@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     if(this.authService.isLoggedIn()) {
-      var langCode = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).setting.languageCode : 0
+      let langCode = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).setting.languageCode : 0
       this.translate.use(this.languages[langCode])
       return true
     } else {

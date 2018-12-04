@@ -16,24 +16,30 @@
               </div>
 
               <div class="col-12 px-0" style="margin-bottom: 25px">
+                <!-- Estimate Details Header -->
                 <div class="row mar0">
                   <div class="col-12 col-sm-7 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
+                      <!-- Billing To -->
                       <div class="col-10">
                         <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
                           {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
                         <br />
 
-                        <div class="form-group pl-0">
-                          <input type="text" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
+                        <div class="input-group pl-0">
+                          <input type="text" id="bill-to-input" class="form-control billing-input" placeholder="Search & Select Client"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
                           >
+                          <div class="input-group-append">
+                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
+                          </div>
+
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
-                            <mat-option *ngFor="let client of filteredClients | async" [value]="client">
+                            <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -80,6 +86,7 @@
 
                   <div class="col-12 col-sm-5 pr-0" id="estDataAdd">
                     <div class="row">
+                      <!-- Estimate Number and Dates -->
                       <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
                         <span class="font-custom-bold text-left w-100">Estimate No.</span>
                       </div>
@@ -89,7 +96,7 @@
                             [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required"
                           >
                             <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
-                              [(ngModel)]="activeEstimate.estimate_number" required
+                              [(ngModel)]="activeEstimate.estimate_number" required onclick="this.select()"
                             />
                             <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
                               <span *ngIf="estNumberForm.estimateNumber.error.required">Estimate No. required</span>
@@ -120,75 +127,79 @@
                   </div>
                 </div>
 
+                <!-- Items table -->
                 <div class="lineItemDiv">
                   <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
                     <thead>
                       <tr class="hd font-custom-bold">
-                        <td width="48%">
+                        <td width="34%">
                           <input type="text" id="itemDescLabelAdd" class="bld w-100" style="text-align:left;" disabled
                             value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemQtyLabelAdd" class="bld w-100 text-center" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="18%">
+                        <td width="12%">
                           <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
-                        <td style="border-bottom:none;background:#666666;border-top:none" width="3%" class="dele-icon">&nbsp;</td>
+                        <td width="3%" class="text-center">E</td>
+                        <td width="3%" class="text-center">D</td>
                       </tr>
                     </thead>
 
                     <tbody class="lineItems">
                       <!-- selected Items list -->
                       <tr class="row-item" *ngFor="let item of activeEstimate.listItems; let index = index; let last = last">
-                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
+                        <td [class.no-border-last]="last">
                           <div class="">
                             <div class="form-group">
                               <div class="text-left product-color">
                                 {{item.product_name}}
                               </div>
-                              <div class="text-left">
+                              <div class="text-left" style="font-size: 11px; color: #a4a4a4">
                                 {{item.description}}
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
-                          <div class="text-right">
+                        <td [class.no-border-last]="last">
+                          <div class="text-center">
                             {{item.quantity | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)">
-                          <div class="text-right">
+                        <td [class.no-border-last]="last">
+                          <div class="text-center">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" (click)="openEditEstimateItemModal(index)"
-                          style="position: unset !important;"
-                        >
-                          <div class="text-right">
+                        <td [class.no-border-last]="last" style="position: unset !important;">
+                          <div class="text-center">
                             {{item.total | number:'2.'}}
                           </div>
                         </td>
-                        <td style="border-bottom:none;background:none;border-top:none" class="dele-icon"
-                          [class.no-border-last]="last">
-                          <div style="padding-top:4px">
-                            <a class="closeicon show" title="Delete Row" style="cursor:pointer;"
+                        <td [class.no-border-last]="last">
+                          <div class="text-center">
+                            <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index)">
+                              <img src="assets/images/edit64.png" class="del set-color" style="height:16px;">
+                            </a>
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last">
+                          <div class="text-center">
+                            <a class="closeicon show" title="Delete Row"
                               (click)="removeItem(index)"
                             >
-                              <img src="assets/images/delete16.png" class="del pull-left set-color" alt=""
-                                style="height:16px;"
-                              >
+                              <img src="assets/images/delete16.png" class="del set-color" style="height:16px;">
                             </a>
                           </div>
                         </td>
@@ -215,14 +226,14 @@
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                        <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0.01"
                               [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" select-on-click my-enter-in>
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial;" [class.no-border-last]="last">
+                        <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" class="form-control text-right" min="0.01"
                               [(ngModel)]="activeItem.rate" (change)="calculateTotal()" select-on-click my-enter-in
@@ -230,7 +241,7 @@
                           </div>
                         </td>
 
-                        <td style="vertical-align: initial; position: relative !important;" 
+                        <td style="vertical-align: top; position: relative !important;" 
                           [class.no-border-last]="last"
                         >
                           <div class="form-group">
@@ -689,7 +700,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" data-dismiss="modal">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
           Close
         </button>
         <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"

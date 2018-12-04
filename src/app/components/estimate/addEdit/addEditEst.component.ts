@@ -353,6 +353,7 @@ export class AddEditEstComponent implements OnInit {
       }
       this.openAddClientModal(client.option.value)
     }
+    $('#estimateNumber').select()
   }
 
   openAddClientModal(name) {
@@ -364,8 +365,20 @@ export class AddEditEstComponent implements OnInit {
     })
   }
 
+  closeAddClientModal() {
+    $('#add-client').modal('hide')
+    this.addClientModal = {}
+    this.activeClient = <client>{}
+    this.activeEstimate.unique_key_fk_client = null
+    this.billingTo.reset('')
+  }
+
   saveClient(status) {
-    $('#saveClientButton').attr("disabled", 'disabled')
+    // If empty spaces
+    if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
+      alert('Organisation name required!')
+      return false
+    }
 
     if (status) {
       this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
@@ -373,6 +386,7 @@ export class AddEditEstComponent implements OnInit {
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
 
+      $('#saveClientButton').attr("disabled", 'disabled')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
@@ -402,7 +416,7 @@ export class AddEditEstComponent implements OnInit {
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
-  openEditEstimateItemModal(index) {
+  editEstimateItem(index) {
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeEstimate.listItems[index]}
   }
@@ -482,6 +496,11 @@ export class AddEditEstComponent implements OnInit {
     $('#edit-item').modal('hide')
   }
 
+  removeItem(index) {
+    this.activeEstimate.listItems.splice(index, 1)
+    this.calculateEstimate(false)
+  }
+
   // Terms Functions
   openAddTermModal() {
     this.addTermModal = {}
@@ -557,6 +576,7 @@ export class AddEditEstComponent implements OnInit {
   save(status) {
     if(!this.activeEstimate.unique_key_fk_client) {
       alert('client not selected')
+      $('#bill-to-input').select()
       return false
     }
 
@@ -721,16 +741,12 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.amount = parseFloat((this.activeEstimate.gross_amount - deductions + additions).toFixed(2))
   }
 
-  removeItem(index) {
-    this.activeEstimate.listItems.splice(index, 1)
-    this.calculateEstimate(false)
-  }
-
   resetFormControls() {
     this.billingTo.setValue('')
     this.addItem.reset('')
 
     this.activeClient = <client>{}
+    this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
   }
 
   updateSettings() {
