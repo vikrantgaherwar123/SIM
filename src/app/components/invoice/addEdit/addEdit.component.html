@@ -406,7 +406,7 @@
                     <div class="col-12 px-0">
                       <div class="form-group">
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
-                          <div class="term-text-align col-8 col-md-10 pr-0">
+                          <div class="col-8 col-md-10 pr-0 mb-1">
                             {{term.terms}}
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
@@ -675,7 +675,7 @@
                     </div>
 
                     <!-- Payment and Save buttons -->
-                    <div class="col-12 px-0 margin-top-20">
+                    <div class="col-12 px-0 mt-2">
                       <button type="button" title="ADD PAYMENT"
                         class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold" style="width: 134px;"
                         (click)="openAddPaymentModal()"
