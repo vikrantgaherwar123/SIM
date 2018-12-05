@@ -210,6 +210,6 @@ export class ViewComponent implements OnInit {
   }
 
   getClientName(id) {
-    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0] ? this.clientList.filter(client => client.uniqueKeyClient == id)[0].name : ''
   }
 }

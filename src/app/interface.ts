@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs'
-
 export interface response {
   status: number,
   records: client[],
@@ -223,6 +221,7 @@ export interface estimate {
 export interface addEditEstimate {
   adjustment: number
   amount: number
+  balance: number
   created_date: string
   deleted_flag: number
   device_modified_on: number

@@ -1,23 +1,21 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-
-      <!-- Create Estimate -->
-      <div class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen" id="msgInv">
+      <div id="msgInv" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
         <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator"
           class="create-estimate" (ngSubmit)="save(estimateGeneratorAdd.valid)"
         >
           <div class="shadow back pad15">
             <div class="col-12 padt15">
               <div class="vtop text-right">
-                <span class="c-name" type="text" id="titleAdd" name="title" *ngIf="settings.mTvEstimate">
+                <span class="c-name" type="text" id="titleAdd" name="title">
                   {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
                 </span>
               </div>
 
-              <div class="col-12 px-0" style="margin-bottom: 25px">
+              <div class="col-12 px-0 mb-1">
                 <!-- Estimate Details Header -->
-                <div class="row mar0">
+                <div class="row">
                   <div class="col-12 col-sm-7 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
                       <!-- Billing To -->
@@ -56,7 +54,7 @@
                       </div>
 
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px">
-                        <div class="row mar0">
+                        <div class="row">
                           <div class="col-6 pl-0">
                             <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">
                               Address
@@ -235,7 +233,7 @@
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               (optionSelected)="fillItemDetails()"
                             >
-                              <mat-option *ngFor="let product of (filteredProducts | async)" [value]="product">{{product.prodName}}</mat-option>
+                              <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
@@ -271,7 +269,7 @@
                               <span class="input-group-text p-0">%</span>
                             </div>
                           </div>
-                          <div class="text-right">{{activeItem.tax_rate*activeItem.rate*activeItem.quantity/100 || 0}}</div>
+                          <div class="text-right">{{activeItem.tax_amount}}</div>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
@@ -283,7 +281,7 @@
                               <span class="input-group-text p-0">%</span>
                             </div>
                           </div>
-                          <div class="text-right">{{activeItem.discount*activeItem.rate*activeItem.quantity/100 || 0}}</div>
+                          <div class="text-right">{{activeItem.discount_amount}}</div>
                         </td>
 
                         <td style="vertical-align: top; position: relative !important;" 
@@ -305,320 +303,325 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
 
-                  <div class="row add-item-button">
-                    <!-- Tax discount list -->
-                    <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
-                      <div class="cursor-pointer" *ngIf="settings.discountFlagLevel === 0 && activeEstimate.discount_on_item === 2">
-                        <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag=0;activeEstimate.discount=0.00">
-                          {{settings.discount ? settings.discount : 'Discount'}}+
-                        </a>
+                <!-- Tax discount list -->
+                <div class="row">
+                  <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
+                    <div *ngIf="settings.discountFlagLevel === 0 && activeEstimate.discount_on_item === 2">
+                      <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag=0;activeEstimate.discount=0.00">
+                        {{settings.discount ? settings.discount : 'Discount'}}+
+                      </a>
+                    </div>
+                    <div *ngIf="activeEstimate.shipping_charges == null">
+                      <a class="inline" (click)="activeEstimate.shipping_charges = 0">
+                        {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                      </a>
+                    </div>
+                    <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
+                      <a class="inline" (click)="activeEstimate.tax_rate=0; activeEstimate.tax_amount = 0">Tax+</a>
+                    </div>
+                    <div *ngIf="activeEstimate.adjustment == null">
+                      <a class="inline" (click)="activeEstimate.adjustment = 0">
+                        {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
+                      </a>
+                    </div>
+                    <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
+                      <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,$index)">
+                        <a (click)="showMeMultipleTax($index);">{{tax.taxName}}+</a>
                       </div>
-                      <div class="cursor-pointer" *ngIf="activeEstimate.shipping_charges == null">
-                        <a class="inline" (click)="activeEstimate.shipping_charges = 0">
-                          {{settings.shipping ? settings.shipping : 'Shipping'}}+
-                        </a>
-                      </div>
-                      <div class="cursor-pointer" *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
-                        <a class="inline" (click)="activeEstimate.tax_rate=0; activeEstimate.tax_amount = 0">Tax+</a>
-                      </div>
-                      <div class="cursor-pointer" *ngIf="activeEstimate.adjustment == null">
-                        <a class="inline" (click)="activeEstimate.adjustment = 0">
-                          {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL'}}+
-                        </a>
-                      </div>
-                      <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
-                        <div *ngIf="showMultipleTax && multiTaxButtonForAddEstimate(tax.taxName,$index)">
-                          <a (click)="showMeMultipleTax($index);">{{tax.taxName}}+</a>
+                    </div> -->
+                  </div>
+                </div>
+
+                <!-- Bottom -->
+                <div class="row">
+                  <!--Term and Condition -->
+                  <div class="col-12 col-md-6 pl-0">
+                    <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                      <span class="bld">
+                        {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                      </span>
+                      <a (click)="openAddTermModal()" class="pull-right" title="add term"
+                        data-original-title="Add" title="Add Term"
+                      >
+                        <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
+                        Add Terms
+                      </a>
+                    </div>
+      
+                    <div class="col-md-12 col-xs-12 col-md-12 px-0">
+                      <div class="form-group">
+                        <div *ngFor="let term of activeEstimate.termsAndConditions" class="row">
+                          <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pr-0">
+                            {{term.terms}}
+                          </div>
+                          <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
+                            <a class="closeicon show float-right">
+                              <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
+                            </a>
+                          </div>
                         </div>
-                      </div> -->
+                      </div>
                     </div>
                   </div>
 
-                  <div class="row mar0">
-                    <!--Term and Condition -->
-                    <div class="col-12 col-md-6 pl-0">
-                      <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
-                        <span class="bld">
-                          {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
-                        </span>
-                        <a (click)="openAddTermModal()" class="pull-right" title="add term"
-                          data-original-title="Add" title="Add Term"
-                        >
-                          <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;">
-                          Add Terms
-                        </a>
+                  <div class="col-12 col-md-6 pr-0">
+                    <!-- Total -->
+                    <div class="row term-cond-label mb-1">
+                      <div class="col-6 text-left">
+                        <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                       </div>
-        
-                      <div class="col-md-12 col-xs-12 col-md-12 px-0">
-                        <div class="form-group">
-                          <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mar0">
-                            <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pr-0">
-                              {{term.terms}}
+                      <div class="col-6 text-right">
+                        <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                      </div>
+                    </div>
+
+                    <!-- Discounts -->
+                    <div class="col-12 pr-0 mb-1" *ngIf="activeEstimate.percentage_flag != null">
+                      <div class="row">
+                        <div class="col-5 discount-tax-label pr-0">
+                          <span style="text-align: left;vertical-align: bottom;" class="inline">
+                            {{settings.discount ? settings.discount : 'Discount'}}
+                          </span>
+                          <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
+                            ({{settings.currencyInText}})
+                          </div>
+                          <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
+
+                          <div class="px-0" style="float: right;">
+                            <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            >
+                              <span class="glyphicon glyphicon-menu-down"
+                                style="font-size: 14px;vertical-align: middle;" title="Discount"
+                              ></span>
                             </div>
-                            <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
-                              <a class="closeicon show float-right">
-                                <img src="assets/images/delete16.png" class="del set-color" alt="" style="height:16px;">
-                              </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                              <li [class.active]="activeEstimate.percentage_flag == 0">
+                                <a (click)="activeEstimate.percentage_flag = 0;
+                                    activeEstimate.discount=0.00;
+                                    calculateEstimate(false)
+                                  "
+                                >
+                                  Flat ({{settings.currencyInText}})
+                                </a>
+                              </li>
+                              <li [class.active]="activeEstimate.percentage_flag == 1">
+                                <a (click)="activeEstimate.discount=0.00;
+                                    activeEstimate.percentage_flag=1;
+                                    calculateEstimate(false)
+                                  "
+                                >
+                                  Percent (%)
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-6 pr-0">
+                          <form #form_discount="ngForm" name="form_discount">
+                            <div class="input-group addon-input">
+                              <div *ngIf="activeEstimate.percentage_flag == 1">
+                                <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
+                                  step="any" class="form-control"
+                                  [(ngModel)]="activeEstimate.percentage_value" (change)="calculateEstimate(false)"
+                                />
+                              </div>
+
+                              <div *ngIf="activeEstimate.percentage_flag == 0">
+                                <input type="number" id="discount_input" name="discount_input" step="any"
+                                  min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
+                                  required [(ngModel)]="activeEstimate.discount"
+                                  (change)="calculateEstimate(false)"
+                                />
+                              </div>
+                            </div>
+                          </form>
+  
+                          <!-- <div class="form-error" *ngIf="!activeEstimate.percentage_flag == 0 ">
+                            <span *ngIf="form_discount.controls.percentage_input">Not more than 100</span>
+                          </div>
+                          <div class="form-error">
+                            <span *ngIf="form_discount.controls.discount_input">Not more than Total</span>
+                          </div> -->
+                        </div>
+
+                        <div class="col-1 px-0">
+                          <div class="remove-button">
+                            <div class="addon selectorpr-0"
+                              (click)="activeEstimate.discount=0.00;
+                                activeEstimate.percentage_value=0;
+                                activeEstimate.percentage_flag=null;
+                                calculateEstimate(false)
+                              "
+                            >
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div class="col-12 col-md-6 pr-0">
-                      <!-- Total -->
-                      <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
-                        <div class="row mar0">
-                          <div class="col-6 text-left">
-                            <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
+                    <!-- Tax -->
+                    <div class="col-12 pr-0 mb-1" *ngIf="activeEstimate.tax_rate != null">
+                      <div class="row">
+                        <div class="col-4 discount-tax-label pr-0">
+                          <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                          <div class="d-inline font-custom">(%)</div>
+                        </div>
+
+                        <div class="col-8 pl-0">
+                          <form #tax_input="ngForm" name="tax_input">
+                            <div class="input-group pr-0">
+                              <input type="number" id="tax_input" name="tax_input" class="form-control"
+                                step="any"min="0.00" max="100" required
+                                [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate(false)"
+                              />
+                              <!-- <div class="input-group-addon addon-right">%</div>-->
+                              <div class="input-group-addon pr-0 remove-button">
+                                <div class="addon selectorpadr0" (click)="activeEstimate.tax_rate = null; activeEstimate.tax_amount=0;calculateEstimate(false)">
+                                  <img src="assets/images/delete16.png" style="height:16px;">
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+
+                          <!-- <div class="form-error">
+                            <span *ngIf="tax_input.tax_input.$error.max">Not more than 100</span>
+                          </div>      -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Tax List -->
+                    <div class="col-12 pr-0 mb-1"
+                      *ngFor="let tax of activeEstimate.taxList; let index = index"
+                    >
+                      <div class="row">
+                        <div class="col-5 discount-tax-label pr-0">
+                          <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                          <div class="inline font-custom">(%)</div>
+                        </div>
+
+                        <div class="col-6 pr-0">
+                          <form #tax_list_input="ngForm" name="tax_list_input">
+                            <div class="input-group pr-0">
+                              <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
+                                max="100" tabindex="1005" [required]="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
+                                (change)="calculateEstimate(true)" select-on-click my-enter-in disable-enter
+                              />
+                            </div>
+                            <!--<input type="text" [(ngModel)]="data.estimate.taxList[$index].taxName" [value]="{{tax.taxName}}"/>-->
+                          </form>
+
+                          <div class="form-error">
+                            <span *ngIf="tax_list_input.tax_input">Not more than 100</span>
                           </div>
-                          <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                        </div>
+
+                        <div class="col-1 px-0">
+                          <div class="remove-button">
+                            <div class="addon selectorpr-0"
+                              (click)="activeEstimate.taxList.splice(index, 1);
+                                calculateEstimate(true);
+                              "
+                            >
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      <!-- Discounts -->
-                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.percentage_flag != null">
-                        <div class="row">                        
-                          <div class="col-5 discount-tax-label pr-0">
-                            <span style="text-align: left;vertical-align: bottom;" class="inline">
-                              {{settings.discount ? settings.discount : 'Discount'}}
-                            </span>
-                            <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
-                              ({{settings.currencyInText}})
-                            </div>
-                            <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
+                    <!-- Shipping -->
+                    <div class="row" *ngIf="activeEstimate.shipping_charges !== undefined">
+                      <div class="col-5 discount-tax-label">
+                        <div class="inline" style="text-align: left;vertical-align: bottom;">
+                          {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                        </div>
+                      </div>
 
-                            <div class="px-0" style="float: right;">
-                              <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                              >
-                                <span class="glyphicon glyphicon-menu-down"
-                                  style="font-size: 14px;vertical-align: middle;" title="Discount"
-                                ></span>
-                              </div>
-                              <ul class="dropdown-menu dropdown-menu-right">
-                                <li [class.active]="activeEstimate.percentage_flag == 0">
-                                  <a (click)="activeEstimate.percentage_flag = 0;
-                                      activeEstimate.discount=0.00;
-                                      calculateEstimate(false)
-                                    "
-                                  >
-                                    Flat ({{settings.currencyInText}})
-                                  </a>
-                                </li>
-                                <li [class.active]="activeEstimate.percentage_flag == 1">
-                                  <a (click)="activeEstimate.discount=0.00;
-                                      activeEstimate.percentage_flag=1;
-                                      calculateEstimate(false)
-                                    "
-                                  >
-                                    Percent (%)
-                                  </a>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-
-                          <div class="col-6 pr-0">
-                            <form #form_discount="ngForm" name="form_discount">
-                              <div class="input-group addon-input">
-                                <div *ngIf="activeEstimate.percentage_flag == 1">
-                                  <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
-                                    step="any" class="form-control"
-                                    [(ngModel)]="activeEstimate.percentage_value" (change)="calculateEstimate(false)"
-                                  />
-                                </div>
-
-                                <div *ngIf="activeEstimate.percentage_flag == 0">
-                                  <input type="number" id="discount_input" name="discount_input" step="any"
-                                    min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
-                                    required [(ngModel)]="activeEstimate.discount"
-                                    (change)="calculateEstimate(false)"
-                                  />
-                                </div>
-                              </div>
-                            </form>
-    
-                            <!-- <div class="form-error" *ngIf="!activeEstimate.percentage_flag == 0 ">
-                              <span *ngIf="form_discount.controls.percentage_input">Not more than 100</span>
-                            </div>
-                            <div class="form-error">
-                              <span *ngIf="form_discount.controls.discount_input">Not more than Total</span>
-                            </div> -->
-                          </div>
-
-                          <div class="col-1 px-0">
-                            <div class="remove-button">
-                              <div class="addon selectorpr-0"
-                                (click)="activeEstimate.discount=0.00;
-                                  activeEstimate.percentage_value=0;
-                                  activeEstimate.percentage_flag=null;
-                                  calculateEstimate(false)
-                                "
-                              >
+                      <div class="col-7">
+                        <form #form_shipping_input="ngForm" name="form_shipping_input">
+                          <div class="input-group pr-0">
+                            <input type="number" name="shipping_input" class="form-control"
+                              step="any" min="0.00" [max]="activeEstimate.gross_amount" required
+                              [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate(false)"
+                            />
+                            <div class="pr-0 remove-button">
+                              <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate(false)">
                                 <img src="assets/images/delete16.png" alt="" style="height:16px;">
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        </form>
 
-                      <!-- Tax -->
-                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.tax_rate != null">
-                        <div class="row">
-                          <div class="col-4 discount-tax-label pr-0">
-                            <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                            <div class="d-inline font-custom">(%)</div>
+                        <!-- <div class="form-error">
+                          <span *ngIf="form_shipping_input.shipping_input.$error.max">Not more than 100</span>
+                        </div> -->
+                      </div>
+                    </div>
+
+                    <!-- Adjustment -->
+                    <div class="col-12 pr-0 mb-1" *ngIf="activeEstimate.adjustment != null">
+                      <div class="row">
+                        <div class="col-5 discount-tax-label">
+                          <div style="text-align: left;vertical-align: bottom;">
+                            {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
                           </div>
-  
-                          <div class="col-8 pl-0">
-                            <form #tax_input="ngForm" name="tax_input">
-                              <div class="input-group pr-0">
-                                <input type="number" id="tax_input" name="tax_input" class="form-control"
-                                  step="any"min="0.00" max="100" required
-                                  [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate(false)"
-                                />
-                                <!-- <div class="input-group-addon addon-right">%</div>-->
-                                <div class="input-group-addon pr-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeEstimate.tax_rate = null; activeEstimate.tax_amount=0;calculateEstimate(false)">
-                                    <img src="assets/images/delete16.png" style="height:16px;">
-                                  </div>
+                        </div>
+
+                        <div class="col-7">
+                          <form #adjst_input="ngForm" name="adjst_input">
+                            <div class="input-group pr-0">
+                              <input type="number" name="tax_input" class="form-control"
+                                step="any" required
+                                [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate(false)"
+                              />
+                              <div class="pr-0 remove-button">
+                                <div class="addon selectorpadr0" (click)="activeEstimate.adjustment = null; calculateEstimate(false)">
+                                  <img src="assets/images/delete16.png" style="height:16px;">
                                 </div>
                               </div>
-                            </form>
-
-                            <!-- <div class="form-error">
-                              <span *ngIf="tax_input.tax_input.$error.max">Not more than 100</span>
-                            </div>      -->
-                          </div>
+                            </div>
+                          </form>
                         </div>
                       </div>
+                    </div>
 
-                      <!-- Tax List -->
-                      <div class="col-12 pr-0 margin-bottom-5px"
-                        *ngFor="let tax of activeEstimate.taxList; let index = index"
+                    <!-- Grand Total -->
+                    <div class="row term-cond-label">
+                      <div class="col-6 text-left">
+                        <span class="font-custom-bold">
+                          {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                        </span>
+                      </div>
+
+                      <div class="col-6 text-right">
+                        <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                      </div>
+                    </div>
+
+                    <!-- Balance -->
+                    <div class="row balance-row">
+                      <div class="col-6 text-left">
+                        <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
+                      </div>
+                      <div class="col-6 text-right">
+                        <span class="bld">{{activeEstimate.balance | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                      </div>
+                    </div>
+
+                    <!-- Save -->
+                    <div class="col-12 px-0 margin-top-20">
+                      <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
+                        class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
+                        data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
-                        <div class="row">
-                          <div class="col-5 discount-tax-label pr-0">
-                            <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                            <div class="inline font-custom">(%)</div>
-                          </div>
-
-                          <div class="col-6 pr-0">
-                            <form #tax_list_input="ngForm" name="tax_list_input">
-                              <div class="input-group pr-0">
-                                <input class="form-control" name="tax_input" id="tax_input_list" min="0.00" type="number" step="any"
-                                  max="100" tabindex="1005" [required]="ngRequired" [(ngModel)]="tax.percentage" [value]="tax.percentage"
-                                  (change)="calculateEstimate(true)" select-on-click my-enter-in disable-enter
-                                />
-                              </div>
-                              <!--<input type="text" [(ngModel)]="data.estimate.taxList[$index].taxName" [value]="{{tax.taxName}}"/>-->
-                            </form>
-
-                            <div class="form-error">
-                              <span *ngIf="tax_list_input.tax_input">Not more than 100</span>
-                            </div>
-                          </div>
-
-                          <div class="col-1 px-0">
-                            <div class="remove-button">
-                              <div class="addon selectorpr-0"
-                                (click)="activeEstimate.taxList.splice(index, 1);
-                                  calculateEstimate(true);
-                                "
-                              >
-                                <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Shipping -->
-                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.shipping_charges !== undefined">
-                        <div class="row">
-                          <div class="col-5 discount-tax-label">
-                            <div class="inline" style="text-align: left;vertical-align: bottom;">
-                              {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
-                            </div>
-                          </div>
-    
-                          <div class="col-7">
-                            <form #form_shipping_input="ngForm" name="form_shipping_input">
-                              <div class="input-group pr-0">
-                                <input type="number" name="shipping_input" class="form-control"
-                                  step="any" min="0.00" [max]="activeEstimate.gross_amount" required
-                                  [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate(false)"
-                                />
-                                <div class="pr-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate(false)">
-                                    <img src="assets/images/delete16.png" alt="" style="height:16px;">
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-    
-                            <!-- <div class="form-error">
-                              <span *ngIf="form_shipping_input.shipping_input.$error.max">Not more than 100</span>
-                            </div> -->
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Adjustment -->
-                      <div class="col-12 pr-0 margin-bottom-5px" *ngIf="activeEstimate.adjustment != null">
-                        <div class="row">
-                          <div class="col-4 discount-tax-label pr-0">
-                            <div style="text-align: left;vertical-align: bottom;">
-                              {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
-                            </div>
-                          </div>
-
-                          <div class="col-8 pl-0">
-                            <form #adjst_input="ngForm" name="adjst_input">
-                              <div class="input-group pr-0">
-                                <input type="number" name="tax_input" class="form-control"
-                                  step="any" required
-                                  [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate(false)"
-                                />
-                                <div class="input-group-addon pr-0 remove-button">
-                                  <div class="addon selectorpadr0" (click)="activeEstimate.adjustment = null; calculateEstimate(false)">
-                                    <img src="assets/images/delete16.png" style="height:16px;">
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Grand Total -->
-                      <div class="col-12 term-cond-label">
-                        <div class="row mar0">
-                          <div class="col-6 text-left">
-                            <span class="font-custom-bold">
-                              {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
-                            </span>
-                          </div>
-
-                          <div class="col-6 text-right">
-                            <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Save -->
-                      <div class="col-12 px-0 margin-top-20">
-                        <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
-                          class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
-                          data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
-                        >
-                          SAVE
-                        </button>
-                      </div>
+                        SAVE
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -793,16 +796,28 @@
             <div class="col-12">
               Quantity:
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()"
-                placeholder="Quantity" my-enter-in select-on-click
+                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" placeholder="Quantity"
               />
             </div>
 
             <div class="col-12">
               Rate:
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (change)="calculateTotal()"
-                placeholder="Rate" my-enter-in select-on-click
+                [(ngModel)]="activeItem.rate" (change)="calculateTotal()" placeholder="Rate"
+              />
+            </div>
+
+            <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
+              Tax:
+              <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
+                [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" placeholder="Rate"
+              />
+            </div>
+
+            <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
+              Discount:
+              <input type="number" name="discount" class="form-control add-client-input-custom"
+                [(ngModel)]="activeItem.discount" (change)="calculateTotal()" placeholder="Rate"
               />
             </div>
 

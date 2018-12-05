@@ -60,6 +60,7 @@ export class AddEditComponent implements OnInit {
   addTermModal: any = {}
 
   addPaymentModal: any = {}
+  paymentDate = new FormControl()
 
   settings: any
   private activeSettings: setting
@@ -539,13 +540,23 @@ export class AddEditComponent implements OnInit {
       if (isNaN(rateParse)) {
         rateParse = 0
       }
-      var amount = (this.activeItem.quantity * rateParse)
+      this.activeItem.total = (this.activeItem.quantity * rateParse)
 
-      var additions = (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) ? 0 :
-        ((this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity)
-      var deductions = (isNaN(this.activeItem.discount) || this.activeItem.discount_rate == 0) ? 0 :
-        ((this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity)
-      this.activeItem.total = amount + (additions) - (deductions)
+      // Discounts
+      if(isNaN(this.activeItem.discount) || this.activeItem.discount == 0) {
+        this.activeItem.discount = 0
+      } else {
+        this.activeItem.discount_amount = (this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity
+        this.activeItem.total -= this.activeItem.discount_amount
+      }
+
+      // Tax
+      if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
+        this.activeItem.tax_rate = 0
+      } else {
+        this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
+        this.activeItem.total += this.activeItem.tax_amount
+      }
     }
   }
 
@@ -556,6 +567,11 @@ export class AddEditComponent implements OnInit {
   }
 
   saveTerm(status) {
+    if(this.addTermModal.terms.replace(/ /g, '') == '') {
+      alert('Term text is mandatory!')
+      return false
+    }
+
     $('#addtermbtn').attr('disabled', 'disabled')
     if (status) {
       this.addTermModal.orgId = this.user.user.orgId
@@ -715,6 +731,7 @@ export class AddEditComponent implements OnInit {
       additions += this.activeInvoice.tax_amount
     }
 
+    // Multiple Taxes
     if (indexTaxMultiple && this.activeInvoice.taxList) {
       var temp_tax_amount = 0
       for (var i = 0; i < this.activeInvoice.taxList.length; i++) {
@@ -768,10 +785,15 @@ export class AddEditComponent implements OnInit {
     }
 
     if (this.activeInvoice.listItems.length == 0 || !status) {
-      // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
       alert('You haven\'t added item')
-      // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
-      // $('#invoiceSavebtn').button('reset');
+      return false
+    }
+
+    if(this.activeInvoice.balance < 0) {
+      if(confirm('It seems like you have invoice with negative balance, should we adjust it for you?')) {
+        this.activeInvoice.adjustment = this.activeInvoice.balance
+        this.calculateInvoice(false)
+      }
       return false
     }
 
@@ -817,6 +839,8 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.device_modified_on = new Date().getTime()
 
     var self = this
+    // console.log(this.activeInvoice);
+    // return false
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         alert('Couldnt save invoice')
@@ -905,13 +929,23 @@ export class AddEditComponent implements OnInit {
 
   // Payment Functions
   openAddPaymentModal() {
+    if(!this.activeInvoice.amount || this.activeInvoice.amount == 0 || this.activeInvoice.balance == 0) {
+      return false
+    }
     this.addPaymentModal = {
       amount: this.activeInvoice.amount,
       balance: this.activeInvoice.amount,
       date_of_payment: this.activeInvoice.created_date,
       paid_amount: 0.00,
-      payments: this.activeInvoice.payments || [],
+      payments: (this.activeInvoice.payments ? [...this.activeInvoice.payments] : []),
     }
+    this.paymentDate.reset(this.invoiceDate.value)
+    this.paymentDate.valueChanges.subscribe(value => {
+      this.addPaymentModal.date_of_payment = (value.getFullYear() + '-' +
+        ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + value.getDate()).slice(-2)
+      )
+    })
     this.addPaymentModal.balance -= this.addPaymentModal.payments.reduce((a, b) => a + b.paid_amount, 0)
     $('#addPaymentAddInvoice').modal('show')
   }
