@@ -57,20 +57,6 @@ export class ClientComponent implements OnInit {
     }
   }
 
-  compare(a, b) {
-    // Use toUpperCase() to ignore character casing
-    var genreA = a.value.toUpperCase();
-    var genreB = b.value.toUpperCase();
-
-    var comparison = 0;
-    if (genreA > genreB) {
-      comparison = 1;
-    } else if (genreA < genreB) {
-      comparison = -1;
-    }
-    return comparison;
-  }
-
   save(status, edit) {
     // $('#saveClientBtn1').button('loading')
     // $('#saveClientBtn').button('loading')

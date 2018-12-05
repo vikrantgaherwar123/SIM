@@ -338,7 +338,7 @@
                 <div class="row">
                   <!--Term and Condition -->
                   <div class="col-12 col-md-6 pl-0">
-                    <div class="col-md-12 col-xs-12 col-md-12 term-cond-label font-custom-bold" style="text-align: left">
+                    <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
                       <span class="bld">
                         {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                       </span>
@@ -350,10 +350,10 @@
                       </a>
                     </div>
       
-                    <div class="col-md-12 col-xs-12 col-md-12 px-0">
+                    <div class="col-12 px-0">
                       <div class="form-group">
                         <div *ngFor="let term of activeEstimate.termsAndConditions" class="row">
-                          <div class="term-text-align col-md-10 col-xs-8 col-sm-8 pr-0">
+                          <div class="col-md-10 pr-0 mb-1">
                             {{term.terms}}
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
@@ -615,7 +615,7 @@
                     </div>
 
                     <!-- Save -->
-                    <div class="col-12 px-0 margin-top-20">
+                    <div class="col-12 px-0 mt-2">
                       <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
                         class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
