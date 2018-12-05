@@ -292,10 +292,6 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 .edit-invoice .column tbody tr td:nth-last-child(1), .edit-estimate .column tbody tr td:nth-last-child(1) {
   position: absolute !important;
 }
-.add-item-button {
-  margin-bottom: 10px;
-  margin-top: 3px;
-}
 .discount-tax-pad {
   padding-top: 15px;
 }
@@ -350,14 +346,6 @@ button.add-line-item-button {
   background: #e0dede;
   border: 1px solid #e3e3e3;
   padding: 10px;
-}
-input[type=checkbox] + label {
-	display: inline-block;
-	padding: 0 0 0 0px;
-	background: url(/assets/images/unchecked24.png) no-repeat;
-	height: 20px;
-	width: 20px;
-	background-size: 100%;
 }
 .width85 {
 	width: 85%;

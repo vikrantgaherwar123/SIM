@@ -1,10 +1,10 @@
 <div class="row main-wrapper">
   <div class="col-12 col-md-10" id="main">
     <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
-      <div class="row mar0">
-        <div class="col-12 margin-top-20 ">
+      <div class="row mx-0">
+        <div class="col-12 mt-2">
           <div class="col-9 pull-left fontsize18">
-            <h4 class="form-header inline font-custom-bold" style="margin-top: 0px;">
+            <h4 class="form-header inline font-custom-bold mt-1">
               <i class="fa fa-gear"></i> Primary settings
             </h4>
           </div>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="row mx-0 pb-5">
-        <div class="col-12 back margin-top-15 edit-setting">
+        <div class="col-12 back mt-1 edit-setting">
           <div class="width85">
             <!-- Tax -->
             <div class="form-group pt-2">
@@ -130,7 +130,7 @@
             <!-- Currency Symbol -->
             <div class="form-group pt-2">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18" style="margin-top: 22px;">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2">
                   Currency Symbol
                 </label>
                 <div class="col-12 col-md-3">
@@ -170,11 +170,11 @@
 
             <!-- Additional Taxes -->
             <div class="row pt-2">
-              <label class="col-12 col-md-3 font-custom-bold fontsize18 margin-top-8" style="text-align: left;">
+              <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2 text-left">
                 <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
               </label>
               <div class="col-9 px-0">
-                <div class="row mar0">
+                <div class="row mx-0">
                   <div class="col-12 col-md-4" id="additionalTax{{index}}"
                     *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
                   >
@@ -202,7 +202,7 @@
         <h4 class="modal-title form-header font-custom-bold header-color" id="addPaymentLabel1">
           Add Payment
         </h4>
-        <a class="pull-right" (click)="close()" style="margin-top: 6px;">
+        <a class="pull-right mt-1" (click)="close()">
           <img src="assets/images/cross16.png" alt="logo">
         </a>
       </div>

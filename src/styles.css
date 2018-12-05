@@ -27,9 +27,6 @@ b, body, p, button {
 .padt15 {
   padding-top: 15px;
 }
-.margin-bottom-5px {
-  margin-bottom: 5px;
-}
 input[type=text], input[type=password] {
   font-family: quicksand_regular !important;
   font-size: 14px !important;
@@ -78,8 +75,7 @@ table td [ng-click] {
   cursor: pointer;
 }
 .term-text-align {
-  width: 85%;
-  word-break: break-all;
+  margin-bottom: 10px;
 }
 .btn-custom-1 {
   color: #217ed9 !important;
@@ -113,10 +109,6 @@ table td [ng-click] {
 }
 .width25btn {
   width: 25%;
-}
-.mar0 {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
 }
 .margin-left-15 {
   margin-left: 15px;
@@ -213,6 +205,10 @@ input:checked + .slider:before {
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none;
+  appearance: none;
+}
+input[type=number] { 
+  -moz-appearance: textfield;
 }
 
 /* Material CSS override */
@@ -238,4 +234,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 10px;
   height: 10px;
   margin: 10px !important;
+}
+.cdk-overlay-container {
+  z-index: 1051;
 }

@@ -516,13 +516,23 @@ export class AddEditEstComponent implements OnInit {
       if (isNaN(rateParse)) {
         rateParse = 0
       }
-      let amount = (this.activeItem.quantity * rateParse)
+      this.activeItem.total = (this.activeItem.quantity * rateParse)
 
-      let additions = (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) ? 0 :
-        ((this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity)
-      let deductions = (isNaN(this.activeItem.discount) || this.activeItem.discount_rate == 0) ? 0 :
-        ((this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity)
-      this.activeItem.total = amount + (additions) - (deductions)
+      // Discounts
+      if(isNaN(this.activeItem.discount) || this.activeItem.discount == 0) {
+        this.activeItem.discount = 0
+      } else {
+        this.activeItem.discount_amount = (this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity
+        this.activeItem.total -= this.activeItem.discount_amount
+      }
+
+      // Tax
+      if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
+        this.activeItem.tax_rate = 0
+      } else {
+        this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
+        this.activeItem.total += this.activeItem.tax_amount
+      }
     }
   }
 
@@ -533,6 +543,11 @@ export class AddEditEstComponent implements OnInit {
   }
 
   saveTerm(status) {
+    if(this.addTermModal.terms.replace(/ /g, '') == '') {
+      alert('Term text is mandatory!')
+      return false
+    }
+
     $('#addtermbtn').attr('disabled', 'disabled')
     if (status) {
       this.addTermModal.orgId = this.user.user.orgId
@@ -606,10 +621,15 @@ export class AddEditEstComponent implements OnInit {
     }
 
     if (this.activeEstimate.listItems.length == 0 || !status) {
-      // notifications.showError({ message: 'Select your client!', hideDelay: 1500, hide: true });
       alert('You haven\'t added item')
-      // notifications.showError({ message: 'You haven\'t added any item.', hideDelay: 1500, hide: true });
-      // $('#estimateSavebtn').button('reset');
+      return false
+    }
+
+    if(this.activeEstimate.balance < 0) {
+      if(confirm('It seems like you have estimate with negative balance, should we adjust it for you?')) {
+        this.activeEstimate.adjustment += this.activeEstimate.balance
+        this.calculateEstimate(false)
+      }
       return false
     }
 
@@ -753,6 +773,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.amount = parseFloat((this.activeEstimate.gross_amount - deductions + additions).toFixed(2))
+    this.activeEstimate.balance = parseFloat(this.activeEstimate.amount.toFixed(2))
   }
 
   resetFormControls() {

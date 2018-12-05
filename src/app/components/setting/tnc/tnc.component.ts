@@ -19,7 +19,6 @@ export class TncComponent implements OnInit {
   tncs: Array<terms> = []
   activeTnc: terms = <terms>{}
   tncLoading: boolean = false
-  tncDisplayLimit = 20
 
   operation: string = ''
 
@@ -38,6 +37,7 @@ export class TncComponent implements OnInit {
 
   ngOnInit() {
     this.tncLoading = false
+    this.store.dispatch(new tncActions.reset())
 
     this.tncService.fetch().subscribe((response: any) => {
       this.tncLoading = true
@@ -83,7 +83,7 @@ export class TncComponent implements OnInit {
               break
             default:
           }
-
+          
           this.activeTnc = <terms>{}
           this.close()
         } else {
@@ -106,6 +106,14 @@ export class TncComponent implements OnInit {
     $('#addEditTnc').modal('show')
   }
 
+  setUnsetDefault() {
+    if(this.activeTnc.setDefault == 'DEFAULT') {
+      this.activeTnc.setDefault = null
+    } else {
+      this.activeTnc.setDefault = 'DEFAULT'
+    }
+  }
+
   delete(index) {
     this.operation = 'delete'
     this.activeTnc = this.tncs[index]
@@ -115,9 +123,5 @@ export class TncComponent implements OnInit {
 
   close() {
     $('#addEditTnc').modal('hide')
-  }
-
-  loadMore() {
-    this.tncDisplayLimit += 10
   }
 }

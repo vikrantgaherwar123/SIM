@@ -23,9 +23,7 @@
         </div>
 
         <!-- Terms And Conditions List -->
-        <div class="col-12 margin-bottom-5px">
-          <div align="center" style="background-color: #fff;"></div>
-
+        <div class="col-12 mb-1" style="height: 60vh; overflow-y: auto">
           <div class="row term-list-show" *ngFor="let term of tncs; let index = index; let last = last" id="term{{index}}">
             <div class="col-1">
               <!-- <md-switch [(ngModel)]="data.terms[index]" disabled aria-label="Switch 1" style="display:inline; margin: 0px 0px 0px 24px;"></md-switch> -->
@@ -84,11 +82,10 @@
           </div>
           <div class="col-12">
             <div class="checkbox pull-left">
-              <input type="checkbox" name="set_default" id="set_default"
-                [checked]="activeTnc.setDefault"
-                (click)="activeTnc.setDefault = $event.target.checked"
+              <input type="checkbox" id="set_default" [checked]="activeTnc.setDefault == 'DEFAULT'"
+                (click)="setUnsetDefault()"
               >
-              <label for="addtermcheck">Default?</label>
+              <label for="set_default">Default?</label>
             </div>
             <button type="submit" id="addtermButton" title="save"
               class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"

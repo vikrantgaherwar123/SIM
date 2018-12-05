@@ -198,12 +198,12 @@
                           />
                         </td>
                         <td width="12%" *ngIf="settings.taxFlagLevel === 0">
-                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled
+                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
                             value="Tax (%)"
                           />
                         </td>
                         <td width="12%" *ngIf="settings.discountFlagLevel === 1">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
+                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
                             value="Discount (%)"
                           />
                         </td>
@@ -226,9 +226,7 @@
                               <div class="text-left product-color">
                                 {{item.product_name}}
                               </div>
-                              <div class="text-left" style="font-size: 11px; color: #a4a4a4;">
-                                {{item.description}}
-                              </div>
+                              <pre class="text-left" style="font-size: 11px; color: #a4a4a4;">{{item.description}}</pre>
                             </div>
                           </div>
                         </td>
@@ -289,7 +287,7 @@
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               (optionSelected)="fillItemDetails()"
                             >
-                              <mat-option *ngFor="let product of (filteredProducts | async)" [value]="product">{{product.prodName}}</mat-option>
+                              <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
@@ -324,7 +322,7 @@
                               <span class="input-group-text p-0">%</span>
                             </div>
                           </div>
-                          <div class="text-right">{{activeItem.tax_rate*activeItem.rate*activeItem.quantity/100 || 0}}</div>
+                          <div class="text-right">{{activeItem.tax_amount}}</div>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
@@ -336,7 +334,7 @@
                               <span class="input-group-text p-0">%</span>
                             </div>
                           </div>
-                          <div class="text-right">{{activeItem.discount*activeItem.rate*activeItem.quantity/100 || 0}}</div>
+                          <div class="text-right">{{activeItem.discount_amount}}</div>
                         </td>
 
                         <td style="vertical-align: top; position: relative !important;" 
@@ -378,7 +376,7 @@
                     </div>
                     <div class="cursor-pointer" *ngIf="activeInvoice.adjustment == null">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">
-                        {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL'}}+
+                        {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
                     </div>
                     <!-- <div class="inline" *ngFor="let tax of activeSetting.alstTaxName">
@@ -427,7 +425,7 @@
                     <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
                       <div class="row mx-0">
                         <div class="col-6 text-left">
-                          <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : ''}}</span>
+                          <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
                           <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
@@ -873,8 +871,21 @@
             <div class="col-12">
               Rate:
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (change)="calculateTotal()"
-                placeholder="Rate" my-enter-in select-on-click
+                [(ngModel)]="activeItem.rate" (change)="calculateTotal()" placeholder="Rate"
+              />
+            </div>
+
+            <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
+              Tax:
+              <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
+                [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" placeholder="Rate"
+              />
+            </div>
+
+            <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
+              Discount:
+              <input type="number" name="discount" class="form-control add-client-input-custom"
+                [(ngModel)]="activeItem.discount" (change)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
@@ -995,7 +1006,7 @@
               <form name="innerform1" #innerform1="ngForm">
                 <div class=" form-group payment-input">
                   <div class="input-group" style="width: 100%">
-                    <input type="number" id="paymentAmount2" name="paymentAmount"
+                    <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
                       class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
                       [(ngModel)]="addPaymentModal.paid_amount" placeholder="Add Amount Paid"
                     >
@@ -1016,9 +1027,11 @@
             </div>
 
             <div class="col-6 col-md-5 pl-0">
-              <input type="text" name="paymentDate" id="addPaymentDate12" [(ngModel)]="addPaymentModal.date_of_payment"
-                class="form-control default-height padr0" change="watch()" required readonly
-              />
+              <input type="text" id="addPaymentDate12" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
+                [formControl]="paymentDate" matInput [matDatepicker]="picker2"
+                (click)="picker2.open()" required readonly
+              >
+              <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
             </div>
           </div>
         </div>
