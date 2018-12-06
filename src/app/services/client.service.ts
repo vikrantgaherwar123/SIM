@@ -12,7 +12,10 @@ export class ClientService {
   private fetchByIdUrl = ''
   private addUrl = ''
   private user: {
-    access_token: string
+    access_token: string,
+    user: {
+      orgId: number
+    }
   }
 
   constructor(private http: HttpClient, private CONST: CONSTANTS) { 
@@ -64,9 +67,10 @@ export class ClientService {
       business_id: client.businessId,
       contact_person_name: client.contactPersonName,
       deleted_flag: client.enabled,
-      device_modified_on: client.device_modified_on,
+      device_modified_on: client.modifiedDate,
       email: client.email,
       name: client.name,
+      organization_id: client.organizationId,
       number: client.number,
       shipping_address: client.shippingAddress,
       unique_identifier: client.uniqueKeyClient,

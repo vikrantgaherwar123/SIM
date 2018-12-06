@@ -88,93 +88,93 @@
     <div class="row">
       <!-- Invoice List -->
       <div class="col-12 col-sm-3 item-list inv-list pr-0">
-          <div [class]="{'list-shadow':invoiceList.length > invDispLimit ,'scroll-bar-shadow': true }">
-            <div class="col-12 px-0 filter-box">
-              <div class="col-12">
-                <div class="row mx-0">
-                  <div class="col-6 pl-0" style="padding-top: 15px;">
-                    <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
-                      <img src="assets/images/list-icon/add-plus-button24.png">
-                    </a>
-                  </div>
-                  <div class="col-6 px-0" style="padding-top: 15px;">
-                    <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
-                    >
-                      <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                      <li [class.active]="invSortTerm=='created_date'">
-                        <a (click)="invSortTerm='created_date'">By Date</a>
-                      </li>
-                      <li [class.active]="invSortTerm=='invoice_number'">
-                        <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
-                      </li>
-                      <li [class.active]="invSortTerm=='balance'">
-                        <a (click)="invSortTerm='balance'">By Balance</a>
-                      </li>
-                      <li [class.active]="invSortTerm=='amount'">
-                        <a (click)="invSortTerm='amount'">By Amount</a>
-                      </li>
-                    </ul>
-                  </div>
+        <div class="list-shadow scroll-bar-shadow">
+          <div class="col-12 px-0 filter-box">
+            <div class="col-12">
+              <div class="row mx-0">
+                <div class="col-6 pl-0" style="padding-top: 15px;">
+                  <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
+                    <img src="assets/images/list-icon/add-plus-button24.png">
+                  </a>
                 </div>
-              </div>
-              <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
-                <div class="form-group label-floating">
-                  <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
+                <div class="col-6 px-0" style="padding-top: 15px;">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                  >
+                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li [class.active]="invSortTerm=='created_date'">
+                      <a (click)="invSortTerm='created_date'">By Date</a>
+                    </li>
+                    <li [class.active]="invSortTerm=='invoice_number'">
+                      <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
+                    </li>
+                    <li [class.active]="invSortTerm=='balance'">
+                      <a (click)="invSortTerm='balance'">By Balance</a>
+                    </li>
+                    <li [class.active]="invSortTerm=='amount'">
+                      <a (click)="invSortTerm='amount'">By Amount</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-      
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-              <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
-            </div>
-
-            <div class="col-12 px-0 mCustomScrollbar">
-              <div style="background-color: #fff;" *ngIf="invListLoader">
-                <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-              </div>
-
-              <div class="item all-item row cursor-pointer" (click)="setActiveInv(invoice.unique_identifier)"
-                *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:false:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
-              >
-                <div class="col-2 list-date font-custom-bold fontsize13">
-                  {{ invoice.created_date | date: 'dd MMM' }}
-                </div>
-      
-                <div class="col-10">
-                  <div class="row">
-                    <div class="col-12">
-                      <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
-                    </div>
-                    <div class="col-5 font-custom-book fontsize13">
-                      {{ invoice.invoice_number }}
-                    </div>
-                    <div class="col-6 text-right font-custom-bold fontsize12">
-                      {{ invoice.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-      
-              <div class="no-data-messsage" *ngIf="invoiceList.length < 1 && !invListLoader">
-                <h4>No Invoice to display</h4>
-              </div>
-              <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
-                <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
-                  Click to view more >>
-                </a>
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
               </div>
             </div>
           </div>
+    
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
+          </div>
+
+          <div class="col-12 px-0 mCustomScrollbar">
+            <div style="background-color: #fff;" *ngIf="invListLoader">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div>
+
+            <div class="item all-item row cursor-pointer" (click)="setActiveInv(invoice.unique_identifier)"
+              *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:false:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
+            >
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ invoice.created_date | date: 'dd MMM' }}
+              </div>
+    
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    {{ invoice.invoice_number }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ invoice.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="no-data-messsage" *ngIf="invoiceList.length < 1 && !invListLoader">
+              <h4>No Invoice to display</h4>
+            </div>
+            <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
+                Click to view more >>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- View Invoice -->
       <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
         *ngIf="activeInv"
       >
-        <form id="invoiceGenerator" name="invoiceGenerator" class="shadow pad15 back">
+        <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">

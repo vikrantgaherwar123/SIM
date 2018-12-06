@@ -52,13 +52,13 @@
             *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
           >
             <div class="row item product-list">
-              <div class="col-2 padl5">
+              <div class="col-2 pl-1">
                 <img src="../assets/images/list-icon/pro.png"
                   style="vertical-align: middle;width: 36px; height: 36px;"
                 >
               </div>
   
-              <div class="col-8 px-0" (click)="viewThis(product)">
+              <div class="col-9 px-0" (click)="viewThis(product)">
                 <div class="row mx-0">
                   <span class="col-7 px-0 font-custom-bold fontsize13">
                     <div class="ellipsis"> {{ product.prodName }}</div>
@@ -66,16 +66,16 @@
                   <span class="col-5 px-0 text-right total-color font-custom-book">
                     Tax: {{ product.taxRate | number:'1.1-2' }}%
                   </span>
-                  <span class="col-8 px-0 font-custom-book fontsize12">
+                  <span class="col-8 px-0 font-custom-book">
                     <div class="ellipsis">{{product.discription}}</div>
                   </span>
-                  <span class="col-4 txtr pr-0 font-custom-bold fontsize12">
+                  <span class="col-4 pr-0 font-custom-bold text-truncate">
                     {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
                   </span>
                 </div>
               </div>
 
-              <div class="col-1" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
+              <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
                 <img src="/assets/images/next12.png">
               </div>
             </div>

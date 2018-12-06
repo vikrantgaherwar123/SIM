@@ -96,10 +96,14 @@ export class ClientComponent implements OnInit {
     if (status && proStatus) {
       this.activeClient.organizationId = parseInt(this.user.user.orgId)
       var d = new Date()
-      if (this.activeClient.uniqueKeyClient == "" || typeof this.activeClient.uniqueKeyClient == 'undefined') {
+      if (!this.activeClient.uniqueKeyClient) {
         this.activeClient.uniqueKeyClient = generateUUID(this.user.user.orgId);
       }
-      var data = {...this.activeClient, device_modified_on: d.getTime()}
+      if(!this.activeClient.deviceCreatedDate) {
+        this.activeClient.deviceCreatedDate = d.getTime()
+      }
+      this.activeClient.modifiedDate = d.getTime()
+      var data = {...this.activeClient}
       this.clientListLoading = true
       var self = this
 
