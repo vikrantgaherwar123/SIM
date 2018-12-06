@@ -22,7 +22,7 @@ export class ViewEstComponent implements OnInit {
   activeEst: estimate
   estListLoader: boolean = false
   estDispLimit: number = 20
-  estSortTerm: string
+  estSortTerm: string = 'createdDate'
   estSearchTerm: string
 
   private estimateQueryForm = {
