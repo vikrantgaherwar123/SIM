@@ -14,6 +14,9 @@ export class SidebarComponent implements OnInit {
   }
 
   toggle(location) {
+    if (!(window.location.pathname).includes('/login')) {
+      $('#sidebar, #content').toggleClass('active')
+    }
     this.router.navigate([location])
   }
 }

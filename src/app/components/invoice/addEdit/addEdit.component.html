@@ -5,8 +5,8 @@
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
           class="create-invoice" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
         >
-          <div class="shadow back pad15">
-            <div class="col-12 padt15">
+          <div class="shadow back p-2">
+            <div class="col-12">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
                   {{settings.mTvInvoice ? settings.mTvInvoice : 'INV_LABEL' | translate}}

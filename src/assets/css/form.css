@@ -117,13 +117,13 @@ a, a:hover, a:focus {
 }
 .item {
 	margin: 0;
-	background-color: #fff;
 	border-bottom: 1px solid #d2d2d2;
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
 .item span {
 	height: 20px;
+	font-size: 12px;
 }
 .product-list h5, .productInventoryList h5 {
 	margin: 0;
@@ -353,4 +353,7 @@ button.add-line-item-button {
 }
 .fontsize18 {
 	font-size: 18px !important;
+}
+.selected {
+	background-color: #C5DCEF;
 }

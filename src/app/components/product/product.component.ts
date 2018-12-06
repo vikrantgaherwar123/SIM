@@ -88,7 +88,7 @@ export class ProductComponent implements OnInit {
 
     if (status && proStatus) {
       var d = new Date()
-      if (this.activeProduct.uniqueKeyProduct == "") {
+      if (!this.activeProduct.uniqueKeyProduct) {
         this.activeProduct.uniqueKeyProduct = generateUUID(this.user.user.orgId)
       }
       this.activeProduct.modifiedDate = d.getTime()
@@ -97,7 +97,8 @@ export class ProductComponent implements OnInit {
       this.productListLoading = true
 
       var self = this
-      this.productService.add([self.productService.changeKeysForApi(this.activeProduct)]).subscribe((response: any) => {
+
+      this.productService.add([this.productService.changeKeysForApi(this.activeProduct)]).subscribe((response: any) => {
         self.productListLoading = false
 
         if (response.status === 200) {
