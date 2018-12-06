@@ -2,91 +2,93 @@
   <div class="col-12" id="main">
     <div class="row">
       <!-- Product List -->
-      <div class="col-12 col-sm-3 item-list prod-list pr-0">
-        <div class="col-12 px-0 filter-box">
-          <div class="col-12">
-            <div class="row">
-              <div class="col-3" style="padding-top: 15px;">
-                <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                  <img src="/assets/images/list-icon/add-plus-button24.png">
-                </a>
-              </div>
-              <div class="col-6 text-center px-0" style="padding-top: 15px;">
-                <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
-                  Batch Upload
-                </button> -->
-              </div>
-              <div class="col-3" style="padding-top: 15px;">
-                <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
-                >
-                  <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                  <li [class.active]="sortTerm=='prodName'">
-                    <a (click)="sortTerm='prodName'">By Name</a>
-                  </li>
-                  <li [class.active]="sortTerm=='rate'">
-                    <a (click)="sortTerm='rate'">By Rate</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 search-box">
-            <div class="form-group label-floating">
-              <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Product" />
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-          Select Product to view or edit
-        </div>
-
-        <div class="col-12 px-0 scroll mCustomScrollbar" scroll-bar>
-          <div style="background-color: #fff;" *ngIf="productListLoading">
-            <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-          </div>
-          <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
-            *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
-          >
-            <div class="row item product-list">
-              <div class="col-2 pl-1">
-                <img src="../assets/images/list-icon/pro.png"
-                  style="vertical-align: middle;width: 36px; height: 36px;"
-                >
-              </div>
-  
-              <div class="col-9 px-0" (click)="viewThis(product)">
-                <div class="row mx-0">
-                  <span class="col-7 px-0 font-custom-bold fontsize13">
-                    <div class="ellipsis"> {{ product.prodName }}</div>
-                  </span>
-                  <span class="col-5 px-0 text-right total-color font-custom-book">
-                    Tax: {{ product.taxRate | number:'1.1-2' }}%
-                  </span>
-                  <span class="col-8 px-0 font-custom-book">
-                    <div class="ellipsis">{{product.discription}}</div>
-                  </span>
-                  <span class="col-4 pr-0 font-custom-bold text-truncate">
-                    {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
-                  </span>
+      <div class="col-12 col-sm-3 pr-0">
+        <div class="back list-shadow w-100">
+          <div class="col-12 px-0 filter-box">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-3" style="padding-top: 15px;">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                    <img src="/assets/images/list-icon/add-plus-button24.png">
+                  </a>
+                </div>
+                <div class="col-6 text-center px-0" style="padding-top: 15px;">
+                  <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
+                    Batch Upload
+                  </button> -->
+                </div>
+                <div class="col-3" style="padding-top: 15px;">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                  >
+                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li [class.active]="sortTerm=='prodName'">
+                      <a (click)="sortTerm='prodName'">By Name</a>
+                    </li>
+                    <li [class.active]="sortTerm=='rate'">
+                      <a (click)="sortTerm='rate'">By Rate</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
-
-              <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
-                <img src="/assets/images/next12.png">
+            </div>
+            <div class="col-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Product" />
               </div>
             </div>
           </div>
-          <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
-            <h4>No Product to display, please create a product</h4>
+  
+          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
+            Select Product to view or edit
           </div>
-          <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
-            <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
-              Click to view more >>
-            </a>
+  
+          <div class="col-12 px-0 scroll mCustomScrollbar">
+            <div style="background-color: #fff;" *ngIf="productListLoading">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div>
+            <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
+              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
+            >
+              <div class="row item product-list">
+                <div class="col-2 pl-1">
+                  <img src="../assets/images/list-icon/pro.png"
+                    style="vertical-align: middle;width: 36px; height: 36px;"
+                  >
+                </div>
+    
+                <div class="col-9 px-0" (click)="viewThis(product)">
+                  <div class="row mx-0">
+                    <span class="col-7 px-0 font-custom-bold fontsize13">
+                      <div class="ellipsis"> {{ product.prodName }}</div>
+                    </span>
+                    <span class="col-5 px-0 text-right total-color font-custom-book">
+                      Tax: {{ product.taxRate | number:'1.1-2' }}%
+                    </span>
+                    <span class="col-8 px-0 font-custom-book">
+                      <div class="ellipsis">{{product.discription}}</div>
+                    </span>
+                    <span class="col-4 pr-0 font-custom-bold text-truncate">
+                      {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+  
+                <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
+                  <img src="/assets/images/next12.png">
+                </div>
+              </div>
+            </div>
+            <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
+              <h4>No Product to display, please create a product</h4>
+            </div>
+            <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
+              <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
+                Click to view more >>
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ export class ViewComponent implements OnInit {
   activeInv: invoice
   invListLoader: boolean = false
   invDispLimit: number = 20
-  invSortTerm: string
+  invSortTerm: string = 'created_date'
   invSearchTerm: string
 
   private invoiceQueryForm = {

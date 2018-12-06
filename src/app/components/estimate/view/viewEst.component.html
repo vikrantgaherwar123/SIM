@@ -85,10 +85,10 @@
   </div> -->
 
   <div class="py-3 w-100">
-    <div class="row">
+    <div class="row mx-0">
       <!-- Estimate List -->
-      <div class="col-12 col-sm-3 item-list inv-list pr-0">
-        <div [class]="{'list-shadow':estimateList?.length > estDispLimit ,'scroll-bar-shadow': true }">
+      <div class="col-12 col-sm-3 pr-0">
+        <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
             <div class="col-12">
               <div class="row mx-0">
@@ -136,7 +136,7 @@
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
-            <div class="item all-item row cursor-pointer"
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
               *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false:true | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)"
             >
@@ -172,9 +172,7 @@
       </div>
 
       <!-- View Estimate -->
-      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
-        *ngIf="activeEst"
-      >
+      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form" *ngIf="activeEst">
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
           <!-- Buttons -->
           <div class="row">
@@ -274,29 +272,29 @@
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" [value]="settings.mTvProducts" style="text-align:left;"
-                        class="bld w-100" disabled
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;"
+                        value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                       >
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemQtyLabel"  [value]="settings.mTvQty" name="quantity"
-                        class="bld w-100" disabled
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled
+                        value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                       >
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemRateLabel" [value]="settings.mTvAmount" name="rate"
-                        class="bld w-100" disabled
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled
+                        value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
                     <td width="17%" *ngIf="activeEst.assignTaxFlag == 0">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax" disabled>
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
                     <td width="17%" *ngIf="activeEst.assignDiscountFlag == 1">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount" disabled>
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount (%)" disabled>
                     </td>
                     <td width="18%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
-                        [value]="settings.mTvRate" disabled
+                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled
                       >
                     </td>
                   </tr>

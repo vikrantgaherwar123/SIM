@@ -84,23 +84,21 @@
     </div>
   </div>
 
-  <div style="padding-top: 60px; width: 100%">
-    <div class="row">
+  <div class="w-100" style="padding-top: 60px">
+    <div class="row mx-0">
       <!-- Invoice List -->
-      <div class="col-12 col-sm-3 item-list inv-list pr-0">
-        <div class="list-shadow scroll-bar-shadow">
+      <div class="col-12 col-sm-3 pr-0">
+        <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
             <div class="col-12">
               <div class="row mx-0">
                 <div class="col-6 pl-0" style="padding-top: 15px;">
-                  <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn cus-img">
+                  <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn">
                     <img src="assets/images/list-icon/add-plus-button24.png">
                   </a>
                 </div>
                 <div class="col-6 px-0" style="padding-top: 15px;">
-                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
-                  >
+                  <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="pull-right list-btn back">
                     <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
@@ -131,12 +129,13 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Invoice
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar">
-            <div style="background-color: #fff;" *ngIf="invListLoader">
+          <div class="col-12 px-0 back mCustomScrollbar">
+            <div *ngIf="invListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
 
-            <div class="item all-item row cursor-pointer" (click)="setActiveInv(invoice.unique_identifier)"
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
+              (click)="setActiveInv(invoice.unique_identifier)"
               *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:false:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
             >
               <div class="col-2 list-date font-custom-bold fontsize13">
@@ -318,8 +317,8 @@
                       >
                     </td>
                     <td width="18%">
-                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-center"
-                        style="text-align:right;" disabled value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
+                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-center" style="text-align:right;" disabled
+                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                       >
                     </td>
                   </tr>
