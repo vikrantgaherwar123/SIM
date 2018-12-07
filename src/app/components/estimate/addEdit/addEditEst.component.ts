@@ -5,7 +5,7 @@ import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
 
 import { response, addEditEstimate, client, terms, setting, product } from '../../../interface'
-import { generateUUID } from '../../../globalFunctions'
+import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { EstimateService } from '../../../services/estimate.service'
 import { ClientService } from '../../../services/client.service'
@@ -18,7 +18,6 @@ import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
-import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 
 @Component({
@@ -32,6 +31,7 @@ export class AddEditEstComponent implements OnInit {
   estimateDate = new FormControl()
   private tempEstNo: number
   estimateFilterTerm: string
+  balance: number
   edit: boolean = false
   last
   index
@@ -59,8 +59,6 @@ export class AddEditEstComponent implements OnInit {
   tax_on: string
   discount_on: string
   settings: any
-
-  private activeSettings: setting
 
   showMultipleTax
   taxtext
@@ -113,23 +111,9 @@ export class AddEditEstComponent implements OnInit {
 
   addInit() {
     this.commonSettingsInit()
-
-    var settings = this.settings
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
-
-    // Estimate Number
-    if (!isNaN(parseInt(settings.quotNo))) {
-      this.tempEstNo = parseInt(settings.quotNo) + 1
-    } else {
-      this.tempEstNo = 1
-    }
-    if (settings.quotFormat || settings.quotFormat == '') {
-      this.activeEstimate.estimate_number = settings.quotFormat + this.tempEstNo
-    } else {
-      this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
-    }
   }
 
   editInit(estId) {
@@ -209,12 +193,9 @@ export class AddEditEstComponent implements OnInit {
 
     var settings = this.settings
 
-    if (settings.alstTaxName) {
-      if (settings.alstTaxName.length > 0) {
-        this.showMultipleTax = true
-      } else {
-        this.showMultipleTax = false
-      }
+    // Multiple Tax
+    if (settings.alstTaxName && settings.alstTaxName.length > 0) {
+      this.activeEstimate.taxList = []
     }
 
     if (settings.dateDDMMYY === false) {
@@ -225,9 +206,6 @@ export class AddEditEstComponent implements OnInit {
       }
       this.settings.date_format = 'dd-mm-yy'
     }
-
-    this.activeSettings = <setting>{}
-    this.activeSettings.date_format = 'dd-mm-yy'
 
     if (this.settings.date_format === 'dd-mm-yy') {
       this.estimateDate.reset(new Date())
@@ -334,6 +312,27 @@ export class AddEditEstComponent implements OnInit {
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
     }
+
+    //Fetch Settings every time
+    this.settingService.fetch().subscribe((response: any) => {
+      if (response.settings !== null) {
+        setStorage(response.settings)
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.settings = this.user.setting
+      }
+
+      // Estimate Number
+      if (!isNaN(parseInt(this.settings.quotNo))) {
+        this.tempEstNo = parseInt(this.settings.quotNo) + 1
+      } else {
+        this.tempEstNo = 1
+      }
+      if (this.settings.quotFormat || this.settings.quotFormat == '') {
+        this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
+      } else {
+        this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
+      }
+    })
   }
 
   // Client Functions
@@ -452,7 +451,7 @@ export class AddEditEstComponent implements OnInit {
         quantity: 1,
         rate: 0.00
       }
-      this.calculateEstimate(false)
+      this.calculateEstimate()
     } else {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
@@ -462,7 +461,7 @@ export class AddEditEstComponent implements OnInit {
           quantity: 1,
           rate: 0.00
         }
-        this.calculateEstimate(false)
+        this.calculateEstimate()
       })
     }
   }
@@ -507,7 +506,7 @@ export class AddEditEstComponent implements OnInit {
 
   removeItem(index) {
     this.activeEstimate.listItems.splice(index, 1)
-    this.calculateEstimate(false)
+    this.calculateEstimate()
   }
 
   calculateTotal() {
@@ -625,10 +624,10 @@ export class AddEditEstComponent implements OnInit {
       return false
     }
 
-    if(this.activeEstimate.balance < 0) {
+    if(this.balance < 0) {
       if(confirm('It seems like you have estimate with negative balance, should we adjust it for you?')) {
-        this.activeEstimate.adjustment += this.activeEstimate.balance
-        this.calculateEstimate(false)
+        this.activeEstimate.adjustment += this.balance
+        this.calculateEstimate()
       }
       return false
     }
@@ -704,7 +703,7 @@ export class AddEditEstComponent implements OnInit {
     this.save(true)
   }
 
-  calculateEstimate(indexTaxMultiple) {
+  calculateEstimate() {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
@@ -738,25 +737,24 @@ export class AddEditEstComponent implements OnInit {
       if(isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
       }
-      this.activeEstimate.tax_amount = (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
-      additions += this.activeEstimate.tax_amount
+      additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }
 
-    if (indexTaxMultiple && this.activeEstimate.taxList) {
+    if (this.activeEstimate.taxList && this.activeEstimate.taxList.length > 0) {
       var temp_tax_amount = 0
       for (var i = 0; i < this.activeEstimate.taxList.length; i++) {
         if (this.activeEstimate.taxList[i]) {
-          if (isNaN(parseFloat(this.activeEstimate.taxList[i].percentage))) {
+          this.activeEstimate.taxList[i].selected = true
+          if (isNaN(this.activeEstimate.taxList[i].percentage)) {
             this.activeEstimate.taxList[i].percentage = 0
           }
-          this.activeEstimate.taxList[i].calculateValue = (parseFloat(this.activeEstimate.taxList[i].percentage) * (this.activeEstimate.gross_amount - this.activeEstimate.discount)) / 100
-          this.activeEstimate.taxList[i].selected = true
-          temp_tax_amount = temp_tax_amount + (parseFloat(this.activeEstimate.taxList[i].percentage) * (this.activeEstimate.gross_amount - this.activeEstimate.discount)) / 100
+          this.activeEstimate.taxList[i].calculateValue = (this.activeEstimate.gross_amount - deductions) / 100 * this.activeEstimate.taxList[i].percentage          
+          temp_tax_amount += this.activeEstimate.taxList[i].calculateValue
         }
       }
-      this.activeEstimate.tax_amount = this.activeEstimate.tax_amount + temp_tax_amount
-      additions += this.activeEstimate.tax_amount
+      additions += temp_tax_amount
     }
+    this.activeEstimate.tax_amount = additions
 
     // Shipping
     if (isNaN(this.activeEstimate.shipping_charges)) {
@@ -773,7 +771,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.amount = parseFloat((this.activeEstimate.gross_amount - deductions + additions).toFixed(2))
-    this.activeEstimate.balance = parseFloat(this.activeEstimate.amount.toFixed(2))
+    this.balance = parseFloat(this.activeEstimate.amount.toFixed(2))
   }
 
   resetFormControls() {
@@ -781,28 +779,42 @@ export class AddEditEstComponent implements OnInit {
     this.addItem.reset('')
 
     this.activeClient = <client>{}
+    // Estimate Number
+    if (!isNaN(parseInt(this.settings.quotNo))) {
+      this.tempEstNo = parseInt(this.settings.quotNo) + 1
+    } else {
+      this.tempEstNo = 1
+    }
+    if (this.settings.quotFormat || this.settings.quotFormat == '') {
+      this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
+    } else {
+      this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
+    }
     this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
   }
 
   updateSettings() {
-    var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
+    var user = JSON.parse(localStorage.getItem('user'))
 
-    cookie.setting.quotNo = this.tempEstNo
-    localStorage.setItem('user', JSON.stringify(cookie))
+    let matches = this.activeEstimate.estimate_number.match(/\d+$/)
+    if (matches) {
+      user.setting.quotNo = matches[0]
+      user.setting.quotFormat = this.activeEstimate.estimate_number.split(user.setting.quotNo)[0]
+    } else {
+      user.setting.quotNo = 0
+      user.setting.setInvoiceFormat = this.activeEstimate.estimate_number
+    }
+
+    localStorage.setItem('user', JSON.stringify(user))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
     var settings1 = {
-      androidSettings: cookie.setting,
+      androidSettings: user.setting,
       android_donot_update_push_flag: 1
     }
     settings1.androidSettings.estNo = this.tempEstNo
 
-    this.settingService.add(settings1).subscribe((response: any) => {
-      if (response.status == 200) {
-        this.store.dispatch(new settingActions.add(response.settings))
-      }
-      // $('#updateButton').button('reset')
-    })
+    this.settingService.add(settings1).subscribe((response: any) => {})
   }
 }

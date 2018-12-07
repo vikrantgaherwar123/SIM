@@ -14,7 +14,6 @@ import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import * as productActions from '../../actions/product.action'
 import * as termActions from '../../actions/terms.action'
-import * as settingActions from '../../actions/setting.action'
 import { AppState } from '../../app.state'
 
 import { AuthService as socialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angular-6-social-login'
@@ -185,7 +184,6 @@ export class LoginComponent implements OnInit {
       this.store.dispatch(new clientActions.add(clientResponse.records))
       this.store.dispatch(new productActions.add(productResponse.records))
       this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-      this.store.dispatch(new settingActions.add(settingResponse.settings))
 
       setStorage(settingResponse.settings)
       $('#userLogout').show()
