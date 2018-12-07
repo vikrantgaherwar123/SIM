@@ -6,7 +6,6 @@ import { setting } from '../../../interface'
 import { SettingService } from '../../../services/setting.service'
 
 import { Store } from '@ngrx/store'
-import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 
 @Component({
@@ -178,13 +177,10 @@ export class PrimaryComponent implements OnInit {
           // $locale.NUMBER_FORMATS.CURRENCY_SYM = this.currencySymbol(this.activeSettings.currencyInText)
         } else {
           console.log("else in settings")
-          //this.authenticated.setting = {}
-          //this.authenticated.setting.currencyInText = locale.NUMBER_FORMATS.CURRENCY_SYM
         }
 
-        // Update store and local storage
+        // Update local storage
         cookie.setting = this.activeSettings
-        this.store.dispatch(new settingActions.add(cookie))
         localStorage.setItem('user', JSON.stringify(cookie))
 
         alert (response.message)

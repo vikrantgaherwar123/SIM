@@ -8,9 +8,7 @@ import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
 
 import { Store } from '@ngrx/store'
-import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
-import { setStorage } from 'src/app/globalFunctions'
 
 @Component({
   selector: 'app-user-profile',

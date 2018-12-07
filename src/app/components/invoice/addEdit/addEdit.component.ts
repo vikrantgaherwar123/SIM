@@ -5,7 +5,7 @@ import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
 
 import { response, client, invoice, terms, setting, product } from '../../../interface'
-import { generateUUID } from '../../../globalFunctions'
+import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
@@ -18,7 +18,6 @@ import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
-import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 
 @Component({
@@ -63,7 +62,6 @@ export class AddEditComponent implements OnInit {
   paymentDate = new FormControl()
 
   settings: any
-  private activeSettings: setting
   private user: {
     user: {
       orgId: string
@@ -112,26 +110,12 @@ export class AddEditComponent implements OnInit {
 
   addInit() {
     this.commonSettingsInit()
-
-    var settings = this.settings
     var date = new Date()
     this.invoiceDate.reset(date)
     this.activeInvoice.created_date = (date.getFullYear() + '-' +
       ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
       ('0' + date.getDate()).slice(-2)
     )
-
-    // Invoice Number
-    if (!isNaN(parseInt(settings.invNo))) {
-      this.tempInvNo = parseInt(settings.invNo) + 1
-    } else {
-      this.tempInvNo = 1
-    }
-    if (settings.setInvoiceFormat) {
-      this.activeInvoice.invoice_number = settings.setInvoiceFormat + this.tempInvNo
-    } else {
-      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
-    }
   }
 
   editInit(invId) {
@@ -230,12 +214,9 @@ export class AddEditComponent implements OnInit {
 
     var settings = this.settings
 
-    if (settings.alstTaxName) {
-      if (settings.alstTaxName.length > 0) {
-        this.showMultipleTax = true
-      } else {
-        this.showMultipleTax = false
-      }
+    // Multiple Tax
+    if (settings.alstTaxName && settings.alstTaxName.length > 0) {
+      this.activeInvoice.taxList = []
     }
 
     if (settings.dateDDMMYY === false) {
@@ -245,15 +226,6 @@ export class AddEditComponent implements OnInit {
         this.settings = { date_format: '' }
       }
       this.settings.date_format = 'dd-mm-yy'
-    }
-
-    this.activeSettings = <setting>{}
-    this.activeSettings.date_format = 'dd-mm-yy'
-
-    if (this.settings.dateDDMMYY === false) {
-      this.activeSettings.date_format = 'mm-dd-yy'
-    } else if (this.settings.dateDDMMYY === true) {
-      this.activeSettings.date_format = 'dd-mm-yy'
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
@@ -270,24 +242,6 @@ export class AddEditComponent implements OnInit {
       if (settings.discountFlagLevel == 1) {
         this.activeInvoice.discount_on_item = 1
       }
-      // if (settings.taxFlagLevel == 1) {
-      //   this.taxtext = "Tax (on Bill)"
-      //   this.activeInvoice.tax_on_item = 1
-      // } else if (settings.taxFlagLevel == 0) {
-      //   this.taxtext = "Tax (on Item)"
-      //   this.activeInvoice.tax_on_item = 0
-      // } else {
-      //   this.taxtext = "Tax (Disabled)"
-      //   this.activeInvoice.tax_on_item = 2
-      // }
-
-      // if (settings.discountFlagLevel == 0) {
-      //   this.activeInvoice.discount_on_item = 0
-      // } else if (settings.discountFlagLevel == 1) {
-      //   this.activeInvoice.discount_on_item = 1
-      // } else {
-      //   this.activeInvoice.discount_on_item = 2
-      // }
     } else {
       this.taxtext = "Tax (Disabled)"
       this.activeInvoice.tax_on_item = 2
@@ -343,6 +297,27 @@ export class AddEditComponent implements OnInit {
     } else {
       this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
     }
+
+    // Fetch Settings every time
+    this.settingService.fetch().subscribe((response: any) => {
+      if (response.settings !== null) {
+        setStorage(response.settings)
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.settings = this.user.setting
+      }
+
+      // Invoice Number
+      if (!isNaN(parseInt(this.settings.invNo))) {
+        this.tempInvNo = parseInt(this.settings.invNo) + 1
+      } else {
+        this.tempInvNo = 1
+      }
+      if (this.settings.setInvoiceFormat) {
+        this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+      } else {
+        this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+      }
+    })
   }
 
   // Client Functions
@@ -510,7 +485,7 @@ export class AddEditComponent implements OnInit {
         quantity: 1,
         rate: 0.00
       }
-      this.calculateInvoice(1)
+      this.calculateInvoice()
     } else {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
@@ -520,7 +495,7 @@ export class AddEditComponent implements OnInit {
           quantity: 1,
           rate: 0.00
         }
-        this.calculateInvoice(1)
+        this.calculateInvoice()
       })
     }
   }
@@ -692,7 +667,7 @@ export class AddEditComponent implements OnInit {
     return new Date(date+(days*24*60*60*1000))
   }
 
-  calculateInvoice(indexTaxMultiple) {
+  calculateInvoice() {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
@@ -725,32 +700,27 @@ export class AddEditComponent implements OnInit {
       if(isNaN(this.activeInvoice.tax_rate)) {
         this.activeInvoice.tax_rate = 0
       }
-      this.activeInvoice.tax_amount = (this.activeInvoice.gross_amount - this.activeInvoice.discount) * (
+      additions += (this.activeInvoice.gross_amount - deductions) * (
         this.activeInvoice.tax_rate / 100
       )
-      additions += this.activeInvoice.tax_amount
     }
 
     // Multiple Taxes
-    if (indexTaxMultiple && this.activeInvoice.taxList) {
+    if (this.activeInvoice.taxList && this.activeInvoice.taxList.length > 0) {
       var temp_tax_amount = 0
       for (var i = 0; i < this.activeInvoice.taxList.length; i++) {
         if (this.activeInvoice.taxList[i]) {
-          if (isNaN(parseFloat(this.activeInvoice.taxList[i].percentage))) {
+          this.activeInvoice.taxList[i].selected = true
+          if (isNaN(this.activeInvoice.taxList[i].percentage)) {
             this.activeInvoice.taxList[i].percentage = 0
           }
-          this.activeInvoice.taxList[i].calculateValue = ((parseFloat(this.activeInvoice.taxList[i].percentage) *
-            (this.activeInvoice.gross_amount - this.activeInvoice.discount)) / 100
-          )
-          this.activeInvoice.taxList[i].selected = true
-          temp_tax_amount = temp_tax_amount + ((parseFloat(this.activeInvoice.taxList[i].percentage) *
-            (this.activeInvoice.gross_amount - this.activeInvoice.discount)) / 100
-          )
-        }
+          this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions) / 100 * this.activeInvoice.taxList[i].percentage
+          temp_tax_amount += this.activeInvoice.taxList[i].calculateValue
+        } 
       }
-      this.activeInvoice.tax_amount = this.activeInvoice.tax_amount + temp_tax_amount
-      additions += this.activeInvoice.tax_amount
+      additions += temp_tax_amount
     }
+    this.activeInvoice.tax_amount = additions
 
     // Shipping
     if (isNaN(this.activeInvoice.shipping_charges)) {
@@ -774,7 +744,7 @@ export class AddEditComponent implements OnInit {
 
   removeItem(index) {
     this.activeInvoice.listItems.splice(index, 1)
-    this.calculateInvoice(1)
+    this.calculateInvoice()
   }
 
   save(status) {
@@ -792,7 +762,7 @@ export class AddEditComponent implements OnInit {
     if(this.activeInvoice.balance < 0) {
       if(confirm('It seems like you have invoice with negative balance, should we adjust it for you?')) {
         this.activeInvoice.adjustment = this.activeInvoice.balance
-        this.calculateInvoice(false)
+        this.calculateInvoice()
       }
       return false
     }
@@ -845,7 +815,7 @@ export class AddEditComponent implements OnInit {
       if (result.status !== 200) {
         alert('Couldnt save invoice')
       } else if (result.status === 200) {
-        // Add Invoice to store
+        // Update store
         if(this.edit) {
           this.store.select('invoice').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
@@ -883,48 +853,57 @@ export class AddEditComponent implements OnInit {
   }
 
   resetCreateInvoice() {
-    this.billingTo.setValue('')
+    this.billingTo.reset('')
     this.addItem.reset('')
-
-    this.activeInvoice = <invoice>{}
-    this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
-
-    this.tempflagTaxList = []
-
-    this.activeClient = {}
     this.dueDate.reset()
+    this.activeInvoice = <invoice>{}
 
-    var settings = this.settings
+    // Invoice Number
+    if (!isNaN(parseInt(this.settings.invNo))) {
+      this.tempInvNo = parseInt(this.settings.invNo) + 1
+    } else {
+      this.tempInvNo = 1
+    }
+    if (this.settings.setInvoiceFormat) {
+      this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+    } else {
+      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+    }
 
-    if (settings.alstTaxName) {
-      if (settings.alstTaxName.length > 0) {
-        this.showMultipleTax = true
-      } else {
-        this.showMultipleTax = false
-      }
+    this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
+    this.tempflagTaxList = []
+    this.activeClient = {}
+
+    if (this.settings.alstTaxName && this.settings.alstTaxName.length > 0) {
+      this.showMultipleTax = true
+    } else {
+      this.showMultipleTax = false
     }
   }
 
-  updateSettings() {
-    var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
+  updateSettings() {    
+    var user = JSON.parse(localStorage.getItem('user'))
 
-    cookie.setting.invNo = this.activeInvoice.invoice_number.split(cookie.setting.setInvoiceFormat)[1] || this.tempInvNo
-    localStorage.setItem('user', JSON.stringify(cookie))
+    let matches = this.activeInvoice.invoice_number.match(/\d+$/)
+    if (matches) {
+      user.setting.invNo = matches[0]
+      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number.split(user.setting.invNo)[0]
+    } else {
+      user.setting.invNo = 0
+      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number
+    }
+
+    localStorage.setItem('user', JSON.stringify(user))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
     var settings1 = {
-      androidSettings: cookie.setting,
+      androidSettings: user.setting,
       android_donot_update_push_flag: 1
     }
     settings1.androidSettings.invNo = this.tempInvNo
 
-    this.settingService.add(settings1).subscribe((response: any) => {
-      if (response.status == 200) {
-        this.store.dispatch(new settingActions.add(response.settings))
-      }
-      // $('#updateButton').button('reset')
-    })
+    this.settingService.add(settings1).subscribe((response: any) => {})
   }
 
   // Payment Functions
@@ -967,7 +946,7 @@ export class AddEditComponent implements OnInit {
 
   addPaymentsInInvoice() {
     this.activeInvoice.payments = [...this.addPaymentModal.payments]
-    this.calculateInvoice(1)
+    this.calculateInvoice()
     this.closeAddPaymentModal()
   }
 
@@ -978,20 +957,6 @@ export class AddEditComponent implements OnInit {
 
 
   // CURRENTLY USELESS FUNCTIONS
-  multiTaxButton(taxname) {
-    var status = true
-    if (this.activeInvoice.taxList)
-      for (var k = 0; k < this.activeInvoice.taxList.length; k++) {
-        if (this.activeInvoice.taxList[k].taxName !== taxname) {
-          status = true
-        } else {
-          status = false
-          break
-        }
-      }
-    return status
-  }
-
   log(a) {
     console.log(a)
   }

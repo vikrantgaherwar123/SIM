@@ -372,9 +372,12 @@
 
           <!-- Bottom  -->
           <div class="row">
+            <!-- Terms And Conditions -->
             <div class="col-6 term-row">
               <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
-                <span class="bld">{{settings.mTvTermsAndConditions}}</span>
+                <span class="bld">
+                  {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                </span>
               </div>
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class=" col-sm-12 list-unstyled">
@@ -382,22 +385,25 @@
                     <div class="col-md-12 margin-bottom-5px">{{term.terms}}<br /></div>
                   </li>
                 </ul>
-                <div class="col-md-12" *ngIf="activeInv.termsAndConditions.length < 1">
+                <div class="col-md-12" *ngIf="activeInv.termsAndConditions?.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
             </div>
 
+            <!-- Calculations -->
             <div class="col-6">
+              <!-- Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold" value="">{{settings.subtotal}}</span>
+                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right ">
                   <span class="font-custom-bold">{{activeInv.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                 </div>
               </div>
 
+              <!-- Discount -->
               <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
@@ -418,6 +424,7 @@
                 </div>
               </div>
 
+              <!-- Tax -->
               <div *ngIf="show_tax_input" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
@@ -430,6 +437,7 @@
                 </div>
               </div>
 
+              <!-- TaxList -->
               <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="row">
@@ -444,6 +452,7 @@
                 </div>
               </div>
 
+              <!-- Shipping -->
               <div *ngIf="show_shipping_charge" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="row">
@@ -457,6 +466,7 @@
                 </div>
               </div>
 
+              <!-- Adjustment -->
               <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
@@ -470,42 +480,37 @@
                 </div>
               </div>
 
+              <!-- Gross Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold" value="">{{settings.total}}</span>
+                  <span class="font-custom-bold">
+                    {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                  </span>
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold">{{activeInv.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                 </div>
               </div>
 
+              <!-- Paid -->
               <div class="row mx-0">
                 <div class="col-6 text-left">
-                  <span class="font-custom" value="">{{settings.paid}}</span>
+                  <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom">{{paidAmount()|currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                 </div>
               </div>
 
+              <!-- Balance -->
               <div class="row mx-0 balance-row">
                 <div class="col-6 text-left">
-                  <span class="bld" value="">{{settings.balance}}</span>
+                  <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span class="bld">{{activeInv.balance|currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
                 </div>
               </div>
-
-              <!-- <div class="row mx-0">
-                <button type="button" title="Add Payment" data-toggle="modal"
-                  data-target="#addPayment"
-                  class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold"
-                  style="width: 134px;"
-                >
-                  ADD PAYMENT
-                </button>
-              </div> -->
             </div>
           </div>
         </form>
