@@ -346,7 +346,9 @@
             <!-- TnC -->
             <div class="col-6 term-row">
               <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
-                <span class="bld">{{settings.mTvTermsAndConditions}}</span>
+                <span class="bld">
+                  {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                </span>
               </div>
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class="list-unstyled">
@@ -365,7 +367,7 @@
               <!-- Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold">{{settings.subtotal}}</span>
+                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold">{{activeEst.grossAmount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
@@ -373,7 +375,7 @@
               </div>
 
               <!-- Discount -->
-              <div *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)" class="row mx-0">
+              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
@@ -395,7 +397,7 @@
               </div>
 
               <!-- Tax -->
-              <div *ngIf="activeEst.taxrate > 0" class="row mx-0">
+              <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                   <div class="inline font-custom">(%)</div>
@@ -408,7 +410,7 @@
               </div>
 
               <!-- Tax List -->
-              <div *ngFor="let tax of activeEst.taxList; index as index" class="row mx-0">
+              <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                   <div class="inline font-custom">(%)</div>
@@ -421,7 +423,7 @@
               </div>
 
               <!-- Shipping Charges -->
-              <div *ngIf="activeEst.shippingCharges > 0" class="row mx-0">
+              <div class="row mx-0" *ngIf="activeEst.shippingCharges > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
                 </div>
@@ -433,7 +435,7 @@
               </div>
 
               <!-- Adjustment -->
-              <div *ngIf="activeEst.adjustment != 0" class="row mx-0">
+              <div class="row mx-0" *ngIf="activeEst.adjustment != 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
                     {{settings.adjustment}}
@@ -446,10 +448,10 @@
                 </div>
               </div>
 
-              <!-- Gross -->
+              <!-- Gross Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold" value="">{{settings.total}}</span>
+                  <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold">{{activeEst.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>

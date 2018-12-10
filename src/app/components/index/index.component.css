@@ -31,9 +31,7 @@ a[data-toggle="collapse"] {
 /* ---------------------------------------------------
   CONTENT STYLE
 ----------------------------------------------------- */
-
 #content {
-  min-height: 100vh;
   transition: all 0.3s;
   position: absolute;
   left: 250px;

@@ -25,16 +25,16 @@
   height: auto;
   position: absolute;
   top: 2%;
-  left: 38%
+  left: 40%
 }
 .login-form {
   background-color: #ffffff;
-  padding: 12px 20px;
+  padding: 12px 20px
 }
 .social-login-container a {
   width: 66%;
   max-height: 30px;
-  margin-bottom: 5%;
+  margin-bottom: 5%
 }
 .social-login-container a img {
   max-width: 100%;
@@ -43,11 +43,11 @@
   width: 100%;
   min-height: 40px;
   padding-left: 40px;
-  border: 1px solid #9f978e;
+  border: 1px solid #9f978e
 }
 .login-input::placeholder {
   font-weight: 600;
-  color: #000;
+  color: #000
 }
 .form-group i {
   position: relative;
