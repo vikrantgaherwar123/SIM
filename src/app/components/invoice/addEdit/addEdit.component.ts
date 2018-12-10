@@ -116,6 +116,9 @@ export class AddEditComponent implements OnInit {
       ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
       ('0' + date.getDate()).slice(-2)
     )
+    if(!this.activeInvoice.listItems) {
+      this.activeInvoice.listItems = []
+    }
   }
 
   editInit(invId) {
@@ -470,9 +473,6 @@ export class AddEditComponent implements OnInit {
     if(this.activeItem.unique_identifier) {
       if(uid == null) {
         // Add Item to invoice
-        if(!this.activeInvoice.listItems) {
-          this.activeInvoice.listItems = []
-        }
         this.activeInvoice.listItems.push(this.activeItem)
       } else {
         // Edit Item from Invoice

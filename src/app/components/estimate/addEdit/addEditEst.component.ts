@@ -114,6 +114,9 @@ export class AddEditEstComponent implements OnInit {
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+    if(!this.activeEstimate.listItems) {
+      this.activeEstimate.listItems = []
+    }
   }
 
   editInit(estId) {
@@ -436,9 +439,6 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeItem.unique_identifier) {
       if(uid == null) {
         // Add Item to Estimate
-        if(!this.activeEstimate.listItems) {
-          this.activeEstimate.listItems = []
-        }
         this.activeEstimate.listItems.push(this.activeItem)
       } else {
         // Edit Item from Estimate
