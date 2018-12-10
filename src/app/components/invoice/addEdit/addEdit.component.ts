@@ -193,7 +193,7 @@ export class AddEditComponent implements OnInit {
           }
         }, 50)
       } else {
-        alert('invalid invoice id!')
+        this.toasterService.pop('failure', 'Invalid invoice id!');
         this.router.navigate(['/invoice/view'])
       }
       return false
@@ -371,7 +371,7 @@ export class AddEditComponent implements OnInit {
   saveClient(status) {
     // If empty spaces
     if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
-      alert('Organisation name required!')
+      this.toasterService.pop('failure', 'Organisation name required!');
       return false
     }
 
@@ -442,7 +442,7 @@ export class AddEditComponent implements OnInit {
         if(callback !== null) {
           callback(temp)
         }
-        alert('Product had been added!')
+        this.toasterService.pop('success', 'Product had been added!');
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -547,7 +547,7 @@ export class AddEditComponent implements OnInit {
 
   saveTerm(status) {
     if(this.addTermModal.terms.replace(/ /g, '') == '') {
-      alert('Term text is mandatory!')
+      this.toasterService.pop('failure', 'Term text is mandatory!');
       return false
     }
 
@@ -576,7 +576,8 @@ export class AddEditComponent implements OnInit {
         } else {
           $('#addtermbtn').removeAttr('disabled')
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
-          alert(response.message)
+          //alert(response.message)
+          this.toasterService.pop('failure', 'Network error');
         }
       })
     }
@@ -759,7 +760,7 @@ export class AddEditComponent implements OnInit {
     }
 
     if (this.activeInvoice.listItems.length == 0 || !status) {
-      alert('You haven\'t added item')
+      this.toasterService.pop('failure', 'You haven\'t added item');
       return false
     }
 
@@ -818,7 +819,7 @@ export class AddEditComponent implements OnInit {
     // return false
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
-        alert('Couldnt save invoice')
+        this.toasterService.pop('failure', 'Couldnt save invoice');
       } else if (result.status === 200) {
         // Update store
         if(this.edit) {
@@ -839,7 +840,6 @@ export class AddEditComponent implements OnInit {
           this.updateSettings()
         }
           this.toasterService.pop('success', 'Invoice saved successfully');
-          
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.router.navigate(['/invoice/view'])

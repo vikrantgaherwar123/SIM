@@ -186,7 +186,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       } else {
-          alert('invalid estimate id!')
+        this.toasterService.pop('failure', 'Invalid estimate id');
         this.router.navigate(['/estimate/view'])
       }
     })
@@ -390,7 +390,7 @@ export class AddEditEstComponent implements OnInit {
   saveClient(status) {
     // If empty spaces
     if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
-      alert('Organisation name required!')
+      this.toasterService.pop('failure', 'Organization name required');
       return false
     }
 
@@ -491,10 +491,8 @@ export class AddEditEstComponent implements OnInit {
         if(callback !== null) {
           callback(temp)
         }
-        alert('Product had been added!')
         this.toasterService.pop('success','Product has been added')
       } else {
-        
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
     })
@@ -548,7 +546,7 @@ export class AddEditEstComponent implements OnInit {
 
   saveTerm(status) {
     if(this.addTermModal.terms.replace(/ /g, '') == '') {
-      alert('Term text is mandatory!')
+      this.toasterService.pop('failure', 'Term text is mandatory');
       return false
     }
 
@@ -577,7 +575,7 @@ export class AddEditEstComponent implements OnInit {
         } else {
           $('#addtermbtn').removeAttr('disabled')
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
-          alert(response.message)
+          this.toasterService.pop('failure', 'Error occured');
         }
       })
     }
@@ -619,7 +617,7 @@ export class AddEditEstComponent implements OnInit {
 
   save(status) {
     if(!this.activeEstimate.unique_key_fk_client) {
-      alert('client not selected')
+      this.toasterService.pop('failure', 'Client not selected');
       $('#bill-to-input').select()
       return false
     }
@@ -645,7 +643,7 @@ export class AddEditEstComponent implements OnInit {
       temp.push({...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier})
       
     })
-    this.toasterService.pop('failure','Network Error occured,please try again later')
+
     this.activeEstimate.termsAndConditions = temp
 
     if (!this.edit) {
@@ -694,10 +692,10 @@ export class AddEditEstComponent implements OnInit {
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if(this.edit) {
-          alert('Estimate updated successfully')
+          this.toasterService.pop('success', 'Estimate updated successfully');
           this.router.navigate(['/estimate/view'])
         } else {
-          alert('Estimate saved successfully')
+          this.toasterService.pop('success', 'Estimate saved successfully');
           self.resetFormControls()
           self.ngOnInit()
         }
