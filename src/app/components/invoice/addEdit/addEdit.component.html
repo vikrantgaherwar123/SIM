@@ -551,8 +551,8 @@
                       <div class="col-7 pr-0">
                         <form #form_shipping_input="ngForm" name="form_shipping_input">
                           <div class="input-group pr-0">
-                            <input type="number" name="shipping_input" class="form-control"
-                              step="any" min="0.00" [max]="activeInvoice.gross_amount" required
+                            <input type="number" name="shipping_input" class="form-control" min="0.00" step="any"
+                              [max]="activeInvoice.gross_amount" required onclick="this.select()"
                               [(ngModel)]="activeInvoice.shipping_charges" (change)="calculateInvoice()"
                             />
 
@@ -578,7 +578,7 @@
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
                             <input type="number" name="tax_input" class="form-control"
-                              step="any" required
+                              step="any" required onclick="this.select()"
                               [(ngModel)]="activeInvoice.adjustment" (change)="calculateInvoice()"
                             />
                             <!-- <div class="input-group-addon set-color">%</div>-->
@@ -642,7 +642,7 @@
                         Add Payment
                       </button>
 
-                      <button type="submit" (click)="popToast()" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
+                      <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
                         class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
