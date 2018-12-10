@@ -88,7 +88,7 @@
                             && invNumberForm.invoiceNumber.$error.required"
                           >
                             <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
-                              [(ngModel)]="activeInvoice.invoice_number" required onClick="this.select()"
+                              [(ngModel)]="activeInvoice.invoice_number" required onclick="this.select()"
                             />
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
                               <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
@@ -125,7 +125,7 @@
                       </div>
                       <div class="col-6">
                         <input type="text" id="referenceid" name="invoiceNumber" class="form-control pr-0"
-                          [(ngModel)]="activeInvoice.reference" onClick="this.select()"
+                          [(ngModel)]="activeInvoice.reference" onclick="this.select()"
                         />
                       </div>
                     </div>
@@ -295,14 +295,15 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0"
-                              [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" >
+                              [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" onclick="this.select()"
+                            />
                           </div>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" class="form-control text-right" min=0
-                              [(ngModel)]="activeItem.rate" (change)="calculateTotal()"
+                              [(ngModel)]="activeItem.rate" (change)="calculateTotal()" onclick="this.select()"
                             />
                           </div>
                         </td>
@@ -310,7 +311,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
-                              [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()"
+                              [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" onclick="this.select()"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text p-0">%</span>
@@ -322,7 +323,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
-                              [(ngModel)]="activeItem.discount" (change)="calculateTotal()"
+                              [(ngModel)]="activeItem.discount" (change)="calculateTotal()" onclick="this.select()"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text p-0">%</span>
@@ -337,7 +338,7 @@
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text-right" 
                               title="Amount is calculated automatically."
-                              name="itemTotal" [(ngModel)]="activeItem.total" disabled convert-decimal
+                              name="itemTotal" [(ngModel)]="activeItem.total" disabled
                             />
                           </div>
 
@@ -550,8 +551,8 @@
                       <div class="col-7 pr-0">
                         <form #form_shipping_input="ngForm" name="form_shipping_input">
                           <div class="input-group pr-0">
-                            <input type="number" name="shipping_input" class="form-control"
-                              step="any" min="0.00" [max]="activeInvoice.gross_amount" required
+                            <input type="number" name="shipping_input" class="form-control" min="0.00" step="any"
+                              [max]="activeInvoice.gross_amount" required onclick="this.select()"
                               [(ngModel)]="activeInvoice.shipping_charges" (change)="calculateInvoice()"
                             />
 
@@ -577,7 +578,7 @@
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
                             <input type="number" name="tax_input" class="form-control"
-                              step="any" required
+                              step="any" required onclick="this.select()"
                               [(ngModel)]="activeInvoice.adjustment" (change)="calculateInvoice()"
                             />
                             <!-- <div class="input-group-addon set-color">%</div>-->
