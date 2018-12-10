@@ -13,9 +13,6 @@ input, textarea {
 .bld {
   margin: 2px 0;
 }
-.no-border-last {
-  border-bottom: none !important;
-}
 select {
   font-family: quicksand_book !important;
   font-size: 14px !important;

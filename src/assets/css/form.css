@@ -1,29 +1,9 @@
 /* Assets form CSS */
-.main-wrapper {
-  overflow-x: hidden;
-  height: 100%;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
-  text-rendering: optimizeLegibility !important;
-  -webkit-font-smoothing: antialiased !important;
-}
 #main {
   position: relative;
   background-color: #ededed;
   padding-top: 35px;
   padding-bottom: 10px;
-}
-#main .back-1.padt0.client-form .form-group, #main .back-1.padt0.product-form .form-group {
-  margin-top: 20px;
-}
-#main .back-1.padt0.client-form .form-group .control-label,
-#main .back-1.padt0.product-form .form-group .control-label{
-  font-size: 14px;
-  margin: 12px 0 0 0;
-}
-#main .back-1.padt0.client-form .form-group .control-label::after,
-#main .back-1.padt0.product-form .form-group .control-label::after{
-  content: ':';
-  float: right;
 }
 .shadow {
 	box-shadow: 0 .2rem 0.5rem rgba(0,0,0,.15)!important;
@@ -79,29 +59,8 @@ a, a:hover, a:focus {
 	color: #272727 !important;
 }
 .mCustomScrollbar {
-	-ms-touch-action: pinch-zoom;
-	touch-action: pinch-zoom;
 	max-height: 380px;
 	overflow-y: scroll;
-}
-.mCustomScrollBox {
-	position: relative;
-	overflow: hidden;
-	height: 100%;
-	max-width: 100%;
-	outline: 0;
-	direction: ltr;
-}
-.mCSB_inside>.mCSB_container {
-	margin-right: 30px;
-}
-.mCSB_inside>.mCSB_container {
-	margin-right: 0px !important;
-}
-.mCSB_container {
-	overflow: hidden;
-	width: auto;
-	height: auto;
 }
 .billing-input {
   border: 1px solid #ccc;
@@ -139,8 +98,8 @@ a, a:hover, a:focus {
 	padding: 10px;
 	background: #ffffff;
 }
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
-	display: none !important;
+.no-border-last {
+  border-bottom: none !important;
 }
 a.more {
 	text-align: right;
@@ -148,7 +107,6 @@ a.more {
 	width: 100%;
 	font-size: 15px;
 	font-family: quicksand_bold_oblique;
-	/* text-transform: capitalize; */
 	padding: 10px;
 	background: #ffffff !important;
 	color: #0c82df !important;
@@ -177,7 +135,6 @@ a.more {
 	display: inline-block;
 }
 .btn.btn-raised {
-	/* padding: 6px 12px !important; */
 	border-radius: 2px;
 }
 .form-group .input-group .input-group-addon, .input-group .input-group-addon {
@@ -188,7 +145,6 @@ a.more {
 	padding: 6px 12px;
 	text-align: center;
 	background: #ffffff !important;
-	/* border: 1px solid #c8c8c8; */
 	border: 1px solid #ccc;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
