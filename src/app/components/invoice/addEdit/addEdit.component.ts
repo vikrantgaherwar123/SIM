@@ -206,6 +206,9 @@ export class AddEditComponent implements OnInit {
         ('0' + (value.getMonth() + 1)).slice(-2) + '-' +
         ('0' + value.getDate()).slice(-2)
       )
+      if(this.activeInvoice.due_date_flag) {
+        this.changeDueDate(this.activeInvoice.due_date_flag.toString())
+      }
     })
 
     this.dueDate.valueChanges.subscribe(value => {
