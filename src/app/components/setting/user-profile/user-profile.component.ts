@@ -7,10 +7,6 @@ import { setting } from '../../../interface'
 import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
 
-import { Store } from '@ngrx/store'
-import * as settingActions from '../../../actions/setting.action'
-import { AppState } from '../../../app.state'
-import { setStorage } from 'src/app/globalFunctions'
 import { ToasterService } from 'angular2-toaster'
 
 
@@ -37,7 +33,6 @@ export class UserProfileComponent implements OnInit {
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
     private orgService: OrganisationService,
-    private store: Store<AppState>,
     private sanitizer: DomSanitizer
   ) {
     this.toasterService = toasterService

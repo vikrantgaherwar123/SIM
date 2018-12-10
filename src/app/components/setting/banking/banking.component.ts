@@ -6,7 +6,6 @@ import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
 
 import { Store } from '@ngrx/store'
-import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
@@ -60,13 +59,11 @@ export class BankingComponent implements OnInit {
     if(valid) {
       $('#bankingDetailSubmit').attr('disable', 'disable')
       var setting = this.appSettings
-
       setting.androidSettings = this.activeSetting
 
       this.settingService.add(setting).subscribe((response: any) => {
         if (response.status == 200) {
-          // update store, local storage, variables in here
-          this.store.dispatch(new settingActions.add(response.settings))
+          // update local storage, variables
           setStorage(response.settings)
           this.appSettings = response.settings.appSettings
         } else {

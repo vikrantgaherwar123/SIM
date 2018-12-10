@@ -22,7 +22,6 @@ import { productReducer } from './reducers/product.reducer'
 import { termsReducer } from './reducers/terms.reducer'
 import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
-import { settingReducer } from './reducers/setting.reducer'
 import { globalReducer } from './reducers/globals.reducer'
 
 import { CONSTANTS } from './constants'
@@ -119,9 +118,7 @@ export function getAuthServiceConfigs() {
       terms: termsReducer,
       estimate: estimateReducer,
       invoice: invoiceReducer,
-      setting: settingReducer,
-      globals: globalReducer,
-      
+      globals: globalReducer
     })
   ],
   providers: [
