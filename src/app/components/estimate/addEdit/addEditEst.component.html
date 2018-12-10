@@ -477,12 +477,12 @@
                 </div>
 
                 <!-- Tax List -->
-                <div class="row mx-0" *ngIf="tax">
-                  <div class="col-5 discount-tax-label pr-0">
+                <div class="row mx-0" *ngFor="let tax of activeEstimate.taxList; let taxIndex = index">
+                  <div class="col-5 discount-tax-label pr-0" *ngIf="tax">
                     <div class="d-inline font-custom">{{tax.taxName}} (%)</div>
                   </div>
 
-                  <div class="col-7 pr-0">
+                  <div class="col-7 pr-0" *ngIf="tax">
                     <form #tax_list_input="ngForm" name="tax_list_input">
                       <div class="input-group pr-0">
                         <input type="number" name="tax_input" id="tax_input_list{{taxIndex}}"
