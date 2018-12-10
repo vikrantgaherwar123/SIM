@@ -73,7 +73,7 @@ export class ClientComponent implements OnInit {
       // If empty spaces
       if(!tempClientName) {
         this.activeClient.name = ''
-        alert('Organisation name required!')
+        this.toasterService.pop('failure', 'Organization name required');
         return false
       }
 
@@ -144,7 +144,6 @@ export class ClientComponent implements OnInit {
           }
           self.errors = {}
           // self.activeClient = <client>{}
-
           self.createMode = false
           self.editMode = false
           self.viewMode = true
@@ -154,8 +153,8 @@ export class ClientComponent implements OnInit {
         else {
           self.errors = [response.error]
           // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-          console.log(response.error)
-          // alert('Some error occurred, please try again!');
+          //console.log(response.error)
+          this.toasterService.pop('failure', 'Some error occurred, please try again!');
         }
       })
     } else {
