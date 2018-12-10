@@ -5,9 +5,6 @@ import { setting } from '../../../interface'
 
 import { SettingService } from '../../../services/setting.service'
 
-import { Store } from '@ngrx/store'
-import { AppState } from '../../../app.state'
-
 @Component({
   selector: 'app-primary',
   templateUrl: './primary.component.html',
@@ -27,7 +24,6 @@ export class PrimaryComponent implements OnInit {
 
   constructor(private CONST: CONSTANTS,
     private settingService: SettingService,
-    private store: Store<AppState>
   ) {
 
   }
