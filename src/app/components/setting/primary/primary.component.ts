@@ -8,6 +8,7 @@ import { SettingService } from '../../../services/setting.service'
 import { Store } from '@ngrx/store'
 import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
+import {ToasterService} from 'angular2-toaster'
 
 @Component({
   selector: 'app-primary',
@@ -27,9 +28,11 @@ export class PrimaryComponent implements OnInit {
   activeCountry: any
 
   constructor(private CONST: CONSTANTS,
+    public toasterService : ToasterService,
     private settingService: SettingService,
     private store: Store<AppState>
   ) {
+    this.toasterService = toasterService
 
   }
 
@@ -187,7 +190,7 @@ export class PrimaryComponent implements OnInit {
         this.store.dispatch(new settingActions.add(cookie))
         localStorage.setItem('user', JSON.stringify(cookie))
 
-        alert (response.message)
+        this.toasterService.pop('success','Updated Successfully')
         this.ngOnInit()
       } else {
         alert (response.message)

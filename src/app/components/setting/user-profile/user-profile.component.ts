@@ -11,6 +11,8 @@ import { Store } from '@ngrx/store'
 import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
+import { ToasterService } from 'angular2-toaster'
+
 
 @Component({
   selector: 'app-user-profile',
@@ -33,10 +35,12 @@ export class UserProfileComponent implements OnInit {
   signStyle: SafeStyle
 
   constructor(private settingService: SettingService,
+    public toasterService : ToasterService,
     private orgService: OrganisationService,
     private store: Store<AppState>,
     private sanitizer: DomSanitizer
   ) {
+    this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.logoImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "logo.jpg"
     this.signImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "sign.jpg"
@@ -92,7 +96,8 @@ export class UserProfileComponent implements OnInit {
       $('#profileSubmitBtn').attr('disabled', 'disabled')
 
       this.orgService.add(this.org).subscribe((response: any) => {
-        alert(response.message)
+        this.toasterService.pop('success','Saved Successfully')
+        //alert(response.message)
         $('#profileSubmitBtn').removeAttr('disabled')
       }, (err) => {
         console.log('errrr', err)

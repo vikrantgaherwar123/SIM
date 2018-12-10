@@ -47,6 +47,8 @@ import { BankingComponent } from './components/setting/banking/banking.component
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { environment } from '../environments/environment'
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,7 +90,7 @@ export function getAuthServiceConfigs() {
     CustomFieldComponent,
     BankingComponent,
     PasswordComponent,
-    UserProfileComponent
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -109,6 +111,7 @@ export function getAuthServiceConfigs() {
     FilterPipeModule,
     OrderModule,
     BrowserAnimationsModule,
+    ToasterModule.forRoot(),
     MaterialModule,
     StoreModule.forRoot({
       client: clientReducer,
@@ -117,7 +120,8 @@ export function getAuthServiceConfigs() {
       estimate: estimateReducer,
       invoice: invoiceReducer,
       setting: settingReducer,
-      globals: globalReducer
+      globals: globalReducer,
+      
     })
   ],
   providers: [

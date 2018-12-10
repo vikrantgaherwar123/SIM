@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store'
 import * as settingActions from '../../../actions/setting.action'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
+import {ToasterService} from 'angular2-toaster'
 
 @Component({
   selector: 'app-custom-field',
@@ -25,7 +26,9 @@ export class CustomFieldComponent implements OnInit {
   appSettings: {androidSettings: setting}
   activeSetting: setting = <setting>{}
 
-  constructor(private settingService: SettingService, private store: Store<AppState>) { }
+  constructor(private settingService: SettingService,public toasterService : ToasterService, private store: Store<AppState>) {
+    this.toasterService = toasterService
+   }
 
   ngOnInit() {
     $('input').on('focus', () => {
@@ -64,7 +67,7 @@ export class CustomFieldComponent implements OnInit {
           setStorage(response.settings)
           this.appSettings = response.settings.appSettings
 
-          alert('Custom Fields had been updated successfully!')
+          this.toasterService.pop('success','Custom Field Added Successfully')
         } else {
           alert (response.message)
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })

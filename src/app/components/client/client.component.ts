@@ -7,6 +7,8 @@ import { client, response } from '../../interface'
 import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
+import {ToasterService} from 'angular2-toaster';
+
 
 @Component({
   selector: 'app-client',
@@ -35,8 +37,10 @@ export class ClientComponent implements OnInit {
   viewMode: boolean = false
 
   constructor(public clientService: ClientService,
+    public toasterService: ToasterService,
     private router: Router, private store: Store<AppState>
   ) {
+    this.toasterService = toasterService; 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
   }
@@ -126,13 +130,16 @@ export class ClientComponent implements OnInit {
           if (index == -1) {  // add
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
+            this.toasterService.pop('success', 'Client Saved Successfully !!!');
           } else {
             if (self.activeClient.enabled) {   // delete
               self.store.dispatch(new clientActions.remove(storeIndex))
               this.clientList.splice(index, 1)
+              this.toasterService.pop('success', 'Client Deleted Successfully !!!');
             } else {    //edit
               self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
+              this.toasterService.pop('success', 'Details Edited Successfully !!!');
             }
           }
           self.errors = {}
@@ -152,10 +159,12 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
-      if(!proStatus) {
-        alert('Client with this name already exists!')
+      if(!proStatus) 
+      {
+        this.toasterService.pop('failure', 'Client name already exists.');
       }
-    }
+      
+          }
   }
 
   addNew() {

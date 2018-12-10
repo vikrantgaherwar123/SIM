@@ -119,6 +119,7 @@
                       class="btn btn-success btn-raised width10btn no-border-radius pull-right ml-2 font-custom-bold"
                       [disabled]="!f.valid"
                     >
+                    
                       UPDATE
                     </button>
                     <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)"
@@ -127,6 +128,7 @@
                     >
                       SAVE
                     </button>
+                    
                     <button type="button" (click)="cancelThis()" *ngIf="editMode"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
                     >
@@ -372,6 +374,7 @@
                     >
                       CLEAR
                     </button>
+                    
                   </div>
                 </div>
               </div>
