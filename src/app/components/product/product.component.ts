@@ -7,6 +7,7 @@ import { product } from '../../interface'
 import { Store } from '@ngrx/store'
 import * as productActions from '../../actions/product.action'
 import { AppState } from '../../app.state'
+import {ToasterService} from 'angular2-toaster';
 
 @Component({
   selector: 'app-product',
@@ -36,8 +37,10 @@ export class ProductComponent implements OnInit {
   productDisplayLimit = 12
 
   constructor(private productService: ProductService,
+    public toasterService : ToasterService,
     private router: Router, private store : Store<AppState>
   ) {
+    this.toasterService = toasterService;
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.codeOrSym = this.user.setting.currencyText ? 'code' : 'symbol'
@@ -113,16 +116,19 @@ export class ProductComponent implements OnInit {
             self.store.dispatch(new productActions.add([self.productService.changeKeysForStore(response.productList[0])]))
             this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
             this.viewThis(self.productService.changeKeysForStore(response.productList[0]), false)
+            this.toasterService.pop('success', 'Product added successfully !!!');
           } else {
             if (self.activeProduct.enabled) {   // delete
               self.store.dispatch(new productActions.remove(storeIndex))
               this.productList.splice(index, 1)
               this.activeProduct = this.productList[0]
               this.addNew()
+              this.toasterService.pop('success','Product deleted successfully !');
             } else {    //edit
               self.store.dispatch(new productActions.edit({storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
               this.viewThis(this.productList[index], false)
+              this.toasterService.pop('success','Product Edited Successfully !!!');
             }
           }
         } else if (response.status != 200) {
@@ -135,7 +141,7 @@ export class ProductComponent implements OnInit {
       })
     } else {
       if(!proStatus) {
-        alert('Product with this name already exist!')
+        this.toasterService.pop('failure','Product with this name already exists');
       }
       // $('#saveProBtn').button('reset')
       // $('#saveProBtn1').button('reset')

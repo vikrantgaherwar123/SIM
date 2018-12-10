@@ -642,7 +642,7 @@
                         Add Payment
                       </button>
 
-                      <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
+                      <button type="submit" (click)="popToast()" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
                         class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
@@ -912,6 +912,7 @@
               >
                 SAVE
               </button>
+              
             </div>
           </div>
         </form>
@@ -1048,6 +1049,7 @@
           >
             Cancel
           </button>
+          
         </div>
       </div>
     </div>
