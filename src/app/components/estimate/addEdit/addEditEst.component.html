@@ -259,7 +259,7 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                       <div class="input-group">
                         <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
-                          [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()"
+                          [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" onclick="this.select()"
                         />
                         <div class="input-group-append">
                           <span class="input-group-text p-0">%</span>
@@ -271,7 +271,7 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
                       <div class="input-group">
                         <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
-                          [(ngModel)]="activeItem.discount" (change)="calculateTotal()"
+                          [(ngModel)]="activeItem.discount" (change)="calculateTotal()" onclick="this.select()"
                         />
                         <div class="input-group-append">
                           <span class="input-group-text p-0">%</span>
@@ -421,13 +421,13 @@
                     <form #form_discount="ngForm" name="form_discount">
                       <div class="input-group addon-input">
                         <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
-                          *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control"
+                          *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control" onclick="this.select()"
                           [(ngModel)]="activeEstimate.percentage_value" (change)="calculateEstimate()"
                         />
 
                         <input type="number" id="discount_input" name="discount_input" step="any"
                           min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
-                          *ngIf="activeEstimate.percentage_flag == 0" required
+                          *ngIf="activeEstimate.percentage_flag == 0" required onclick="this.select()"
                           [(ngModel)]="activeEstimate.discount" (change)="calculateEstimate()"
                         />
 
@@ -456,7 +456,7 @@
                     <form #tax_input="ngForm" name="tax_input">
                       <div class="input-group pr-0">
                         <input type="number" id="tax_input" name="tax_input" class="form-control"
-                          step="any"min="0.00" max="100" required
+                          step="any"min="0.00" max="100" required onclick="this.select()"
                           [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate()"
                         />
                         <!-- <div class="input-group-addon addon-right">%</div>-->
@@ -484,7 +484,7 @@
                     <form #tax_list_input="ngForm" name="tax_list_input">
                       <div class="input-group pr-0">
                         <input type="number" name="tax_input" id="tax_input_list{{taxIndex}}"
-                          min="0.00" max="100" step="any" class="form-control"
+                          min="0.00" max="100" step="any" class="form-control" onclick="this.select()"
                           [(ngModel)]="tax.percentage" (change)="calculateEstimate()"
                         />
 
@@ -510,7 +510,7 @@
                     <form #form_shipping_input="ngForm" name="form_shipping_input">
                       <div class="input-group pr-0">
                         <input type="number" name="shipping_input" class="form-control"
-                          step="any" min="0.00" required
+                          step="any" min="0.00" required onclick="this.select()"
                           [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate()"
                         />
                         <div class="input-group-addon pr-0 remove-button">
@@ -535,7 +535,7 @@
                     <form #adjst_input="ngForm" name="adjst_input">
                       <div class="input-group pr-0">
                         <input type="number" name="tax_input" class="form-control"
-                          step="any" required
+                          step="any" required onclick="this.select()"
                           [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate()"
                         />
                         <div class="pr-0 remove-button">
@@ -650,14 +650,14 @@
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
-                    placeholder="Email" my-enter-in select-on-click
+                    placeholder="Email" onclick="this.select()"
                   />
                 </div>
               </div>
               <div class="col-6" style="padding-left: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
-                    placeholder="Number" my-enter-in select-on-click
+                    placeholder="Number" onclick="this.select()"
                   />
                 </div>
               </div>
@@ -669,7 +669,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
-                class="form-control" placeholder="Address" select-on-click style="max-height: 69px; height: 69px;"
+                class="form-control" placeholder="Address" style="max-height: 69px; height: 69px;"
               ></textarea>
             </div>
           </div>
@@ -679,7 +679,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
-                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;"
+                placeholder="Shipping Address" style="max-height: 69px; height: 69px;" onclick="this.select()"
               ></textarea>
             </div>
           </div>
@@ -687,7 +687,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
-                placeholder="Business Id " select-on-click
+                placeholder="Business Id " onclick="this.select()"
               />
             </div>
           </div>
@@ -695,7 +695,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
-                placeholder="Business Detail" my-enter-in select-on-click
+                placeholder="Business Detail" onclick="this.select()"
               />
             </div>
           </div>
