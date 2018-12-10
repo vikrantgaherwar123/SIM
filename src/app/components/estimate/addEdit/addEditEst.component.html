@@ -309,7 +309,7 @@
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
                 </div>
-                <div *ngIf="activeEstimate.shipping_charges == null">
+                <div *ngIf="activeEstimate.shipping_charges === undefined">
                   <a class="inline" (click)="activeEstimate.shipping_charges = 0">
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
@@ -317,7 +317,7 @@
                 <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
-                <div *ngIf="activeEstimate.adjustment == null">
+                <div *ngIf="activeEstimate.adjustment === undefined">
                   <a class="inline" (click)="activeEstimate.adjustment = 0">
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                   </a>
@@ -510,7 +510,7 @@
                     <form #form_shipping_input="ngForm" name="form_shipping_input">
                       <div class="input-group pr-0">
                         <input type="number" name="shipping_input" class="form-control"
-                          step="any" min="0.00" [max]="activeEstimate.gross_amount" required
+                          step="any" min="0.00" required
                           [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate()"
                         />
                         <div class="input-group-addon pr-0 remove-button">
@@ -524,7 +524,7 @@
                 </div>
 
                 <!-- Adjustment -->
-                <div class="row mx-0" *ngIf="activeEstimate.adjustment != null">
+                <div class="row mx-0" *ngIf="activeEstimate.adjustment !== undefined">
                   <div class="col-5 discount-tax-label pr-0">
                     <div style="text-align: left;vertical-align: bottom;">
                       {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
@@ -539,7 +539,7 @@
                           [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate()"
                         />
                         <div class="pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.adjustment = null; calculateEstimate()">
+                          <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
                             <img src="assets/images/delete16.png" style="height:16px;">
                           </div>
                         </div>

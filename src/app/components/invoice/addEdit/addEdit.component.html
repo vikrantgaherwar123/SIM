@@ -360,7 +360,7 @@
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
                     </div>
-                    <div *ngIf="activeInvoice.shipping_charges == undefined">
+                    <div *ngIf="activeInvoice.shipping_charges === undefined">
                       <a class="inline" (click)="activeInvoice.shipping_charges = 0">
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
@@ -368,7 +368,7 @@
                     <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
-                    <div *ngIf="activeInvoice.adjustment == null">
+                    <div *ngIf="activeInvoice.adjustment === undefined">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
@@ -540,7 +540,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div class="row mx-0" *ngIf="activeInvoice.shipping_charges > -1">
+                    <div class="row mx-0" *ngIf="activeInvoice.shipping_charges !== undefined">
                       <div class="col-5 discount-tax-label">
                         <div class="inline" style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
@@ -566,7 +566,7 @@
                     </div>
 
                     <!-- Adjustment -->
-                    <div class="row mx-0" *ngIf="activeInvoice.adjustment != null">
+                    <div class="row mx-0" *ngIf="activeInvoice.adjustment !== undefined">
                       <div class="col-5 discount-tax-label pr-0">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
@@ -582,7 +582,7 @@
                             />
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeInvoice.adjustment = null; calculateInvoice()">
+                              <div class="addon selector" (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
                                 <img src="assets/images/delete16.png" style="height:16px;">
                               </div>
                             </div>
@@ -978,7 +978,7 @@
 
             <div class="col-2 pl-0">
               <button class="btn btn-info btn-circle" (click)="addPaymentInModalPaymentList()" 
-                [disabled]="addPaymentModal.paid_amount == 0 || addPaymentModal.paid_amount > addPaymentModal.balance"
+                [disabled]="!addPaymentModal.paid_amount || addPaymentModal.paid_amount > addPaymentModal.balance"
               >
                 <i class="fa fa-plus"></i>
               </button>
