@@ -8,6 +8,7 @@ import { TermConditionService } from '../../../services/term-condition.service'
 import { Store } from '@ngrx/store'
 import * as tncActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
+import { ToasterService } from 'angular2-toaster';
 
 @Component({
   selector: 'app-tnc',
@@ -30,8 +31,10 @@ export class TncComponent implements OnInit {
   }
 
   constructor(private tncService: TermConditionService,
+    public toasterService : ToasterService,
     private store: Store<AppState>
   ) {
+    this.toasterService = toasterService,
     this.user = JSON.parse(localStorage.getItem('user'))
   }
 
@@ -67,17 +70,19 @@ export class TncComponent implements OnInit {
           // alert, update store, update current var
           switch(this.operation) {
             case 'add':
-              alert('Term added successfully!')
+              this.toasterService.pop('success','Term added successfully')
+              //alert('Term added successfully!')
               this.tncs.push(changedTnc)
               this.store.dispatch(new tncActions.add([changedTnc]))
               break
             case 'edit':
-              alert('Term edited successfully!')
+              this.toasterService.pop('success','Term edited successfully')
+              //alert('Term edited successfully!')
               this.tncs[index] = changedTnc
               this.store.dispatch(new tncActions.edit({index, value: changedTnc}))
               break
             case 'delete':
-              alert('Term had been deleted!')
+              this.toasterService.pop('success','Term deleted successfully')
               this.tncs.splice(index, 1)
               this.store.dispatch(new tncActions.remove(index))
               break

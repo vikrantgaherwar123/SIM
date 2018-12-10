@@ -4,6 +4,7 @@ import { CONSTANTS } from '../../../constants'
 import { setting } from '../../../interface'
 
 import { SettingService } from '../../../services/setting.service'
+import {ToasterService} from 'angular2-toaster'
 
 @Component({
   selector: 'app-primary',
@@ -23,8 +24,10 @@ export class PrimaryComponent implements OnInit {
   activeCountry: any
 
   constructor(private CONST: CONSTANTS,
+    public toasterService : ToasterService,
     private settingService: SettingService,
   ) {
+    this.toasterService = toasterService
 
   }
 
@@ -179,7 +182,7 @@ export class PrimaryComponent implements OnInit {
         cookie.setting = this.activeSettings
         localStorage.setItem('user', JSON.stringify(cookie))
 
-        alert (response.message)
+        this.toasterService.pop('success','Updated Successfully')
         this.ngOnInit()
       } else {
         alert (response.message)

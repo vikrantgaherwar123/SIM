@@ -19,11 +19,13 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
+import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 @Component({
   selector: 'app-invoice',
   templateUrl: './addEdit.component.html',
-  styleUrls: ['./addEdit.component.css']
+  styleUrls: ['./addEdit.component.css'],
+  
 })
 export class AddEditComponent implements OnInit {
 
@@ -68,9 +70,10 @@ export class AddEditComponent implements OnInit {
     },
     setting: setting
   }
-
+  
   constructor(public router: Router,
     private route: ActivatedRoute,
+    public toasterService: ToasterService,
     private invoiceService: InvoiceService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
@@ -78,6 +81,7 @@ export class AddEditComponent implements OnInit {
     private productService: ProductService,
     private store: Store<AppState>
   ) {
+    this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
@@ -85,7 +89,7 @@ export class AddEditComponent implements OnInit {
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
   }
-
+  
   displayWith(disp): string | undefined {
     if (disp && disp.name) {
       return disp.name
@@ -749,7 +753,7 @@ export class AddEditComponent implements OnInit {
 
   save(status) {
     if(!this.activeInvoice.unique_key_fk_client) {
-      alert('client not selected')
+      this.toasterService.pop('Failure', 'Client Not Selected');
       $('#bill-to-input').select()
       return false
     }
@@ -769,6 +773,7 @@ export class AddEditComponent implements OnInit {
 
     $('#invSubmitBtn').attr('disabled', 'disabled')
     this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
+    
 
     // Add terms in invoice from terms array Invoice api compatible
     var temp = []
@@ -833,8 +838,8 @@ export class AddEditComponent implements OnInit {
         if(!this.edit) {
           this.updateSettings()
         }
-
-        alert('Invoice saved successfully')
+          this.toasterService.pop('success', 'Invoice saved successfully');
+          
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.router.navigate(['/invoice/view'])

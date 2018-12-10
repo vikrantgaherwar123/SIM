@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 
 import { AuthService } from '../../../services/auth.service'
-
+import {ToasterService} from 'angular2-toaster'
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
@@ -13,7 +13,9 @@ export class PasswordComponent implements OnInit {
   newPass: string = ""
   confirmPass: string = ""
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,public toasterService : ToasterService) {
+    this.toasterService = toasterService
+   }
 
   ngOnInit() {
   }
@@ -28,9 +30,11 @@ export class PasswordComponent implements OnInit {
 
         alert(response.message)
         $('#bsave').removeAttr('disabled')
+        this.toasterService.pop('success','Password Changed Successfully')
       })
     } else {
-      alert('Invalid password!')
+      //alert('Invalid password!')
+      this.toasterService.pop('failure','Invalid Password')
     }
   }
 }

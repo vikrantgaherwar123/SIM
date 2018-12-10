@@ -19,6 +19,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
+import {ToasterService} from 'angular2-toaster'
 
 @Component({
   selector: 'app-estimate',
@@ -71,6 +72,7 @@ export class AddEditEstComponent implements OnInit {
     setting: setting
   }
   constructor(public router: Router,
+    public toasterService : ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
     private clientService: ClientService,
@@ -79,6 +81,7 @@ export class AddEditEstComponent implements OnInit {
     private productService: ProductService,
     private store: Store<AppState>
   ) {
+    this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
@@ -183,7 +186,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       } else {
-        alert('invalid estimate id!')
+          alert('invalid estimate id!')
         this.router.navigate(['/estimate/view'])
       }
     })
@@ -489,7 +492,9 @@ export class AddEditEstComponent implements OnInit {
           callback(temp)
         }
         alert('Product had been added!')
+        this.toasterService.pop('success','Product has been added')
       } else {
+        
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
     })
@@ -638,7 +643,9 @@ export class AddEditEstComponent implements OnInit {
     var temp = []
     this.activeEstimate.termsAndConditions.forEach(tnc => {
       temp.push({...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier})
+      
     })
+    this.toasterService.pop('failure','Network Error occured,please try again later')
     this.activeEstimate.termsAndConditions = temp
 
     if (!this.edit) {
@@ -663,7 +670,8 @@ export class AddEditEstComponent implements OnInit {
     var self = this
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
-        alert('Couldnt save Estimate')
+        //alert('Couldnt save Estimate')
+        this.toasterService.pop('failure','Error occured')
       } else if (response.status === 200) {
         // Add Estimate to store
         if(this.edit) {

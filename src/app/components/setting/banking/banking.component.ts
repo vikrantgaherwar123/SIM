@@ -8,7 +8,7 @@ import { OrganisationService } from '../../../services/organisation.service'
 import { Store } from '@ngrx/store'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
-
+import {ToasterService} from 'angular2-toaster'
 @Component({
   selector: 'app-banking',
   templateUrl: './banking.component.html',
@@ -27,8 +27,11 @@ export class BankingComponent implements OnInit {
   org: any = {}
 
   constructor(private settingService: SettingService,
+    public toasterService : ToasterService,
     private orgService: OrganisationService,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>) {
+      this.toasterService = toasterService
+     }
 
   ngOnInit() {
     $('input').on('focus', function() {
@@ -71,7 +74,8 @@ export class BankingComponent implements OnInit {
 
       this.orgService.add(this.org).subscribe((response: any) => {
         if (response.status === 200) {
-          alert('Banking Details had been updated successfully!')
+          this.toasterService.pop('success','Bank Details had been updated successfully')
+          //alert('Banking Details had been updated successfully!')
           // notifications.showSuccess({message: response.data.message, hideDelay: 1500, hide: true});
         }
         $('#bankingDetailSubmit').removeAttr('disable')
