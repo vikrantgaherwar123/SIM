@@ -178,7 +178,7 @@
                   <div class="col-12 col-md-4" id="additionalTax{{index}}"
                     *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
                   >
-                    <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}:"
+                    <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
                       [(ngModel)]="taxNames.taxName" required
                     />
                   </div>
