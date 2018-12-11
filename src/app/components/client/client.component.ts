@@ -9,7 +9,6 @@ import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
 
-
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -58,7 +57,7 @@ export class ClientComponent implements OnInit {
       })
     } else {
       this.clientListLoading = false
-    }
+     }   
   }
 
   save(status, edit) {
@@ -139,6 +138,7 @@ export class ClientComponent implements OnInit {
             } else {    //edit
               self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
+              //console.log(this.clientList[index]);
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
             }
           }

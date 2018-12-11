@@ -22,10 +22,8 @@ export class ClientService {
     this.fetchUrl = `${CONST.BASE_URL}client/pull/client`
     this.fetchByIdUrl = `${CONST.BASE_URL}client/pull/client`
     this.addUrl = `${CONST.BASE_URL}client/add-clients`
-
     this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
   }
-
   fetch() {
     const headers = {
       headers: new HttpHeaders({
