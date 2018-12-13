@@ -136,7 +136,7 @@ export class ClientComponent implements OnInit {
               this.clientList.splice(index, 1)
               this.toasterService.pop('success', 'Client Deleted Successfully !!!');
             } else {    //edit
-              self.store.dispatch(new clientActions.edit({storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
+              self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
               //console.log(this.clientList[index]);
               this.toasterService.pop('success', 'Details Edited Successfully !!!');

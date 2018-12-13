@@ -11,7 +11,7 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
-              class="payment-detail-input" placeholder="Payable To"
+              class="payment-detail-input" placeholder="Payable To" onclick="this.select()"
               style="width: 300px;
                 padding: 0px;
                 margin: 13px 0 0 0;
@@ -31,7 +31,7 @@
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
               <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control"
-                placeholder="Banking Details" style="height: auto;"
+                placeholder="Banking Details" style="height: auto;" onclick="this.select()"
               ></textarea>
             </div>
           </div>
@@ -43,7 +43,7 @@
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
               <textarea type="text" [(ngModel)]="org.paypalDetails" name="paypalDetails" class="form-control"
-                placeholder="PayPal Details" style="height: auto;"
+                placeholder="PayPal Details" style="height: auto;" onclick="this.select()"
               ></textarea>
             </div>
           </div>
@@ -57,8 +57,8 @@
 
           <div class="col-12" *ngIf="activeSetting.payPalActivatinFlag" style="margin-bottom: 10px;">
             <div style="display: inline;">PayPal.Me/ </div>
-            <input [(ngModel)]="activeSetting.payPalUserAccountURL" name="payPalUserAccountURL"
-              placeholder="yourname" style="width: 226px;
+            <input [(ngModel)]="activeSetting.payPalUserAccountURL" name="payPalUserAccountURL" onclick="this.select()"
+              placeholder="yourname" style="width:226px;
                 padding: 0px;
                 margin: 0;display: inline;border-top: none;
                 border-left: none;

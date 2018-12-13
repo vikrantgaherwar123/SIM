@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
-
+import { CONSTANTS } from '../../../constants'
 import { response, client, invoice, terms, setting, product } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
@@ -37,8 +37,10 @@ export class AddEditComponent implements OnInit {
   private tempflagTaxList: any
   private taxtext: string
   edit: boolean = false
+  currencyCode: string
   last
   index
+  mysymbols
 
   private clientList: client[]
   private allClientList: client[]
@@ -71,7 +73,7 @@ export class AddEditComponent implements OnInit {
     setting: setting
   }
   
-  constructor(public router: Router,
+  constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
     public toasterService: ToasterService,
     private invoiceService: InvoiceService,
@@ -240,7 +242,16 @@ export class AddEditComponent implements OnInit {
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
     }
+    //  this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
+    // console.log(settings.currencyInText);
 
+    // Currency Dropdown
+    if(settings.currencyText) {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+    }
+    else{
+    this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
+    }
     if (settings) {
       this.activeInvoice.tax_on_item = 2
       this.activeInvoice.discount_on_item = 2
@@ -692,6 +703,7 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
+        console.log();
       }
 
       this.activeInvoice.discount = gross_amount * discountFactor
@@ -962,7 +974,6 @@ export class AddEditComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
-
 
   // CURRENTLY USELESS FUNCTIONS
   log(a) {

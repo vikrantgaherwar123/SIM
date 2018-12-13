@@ -153,7 +153,7 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>
               </div>
@@ -370,7 +370,7 @@
                   <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.grossAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
 
@@ -454,7 +454,7 @@
                   <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
             </div>

@@ -125,7 +125,7 @@ export class ProductComponent implements OnInit {
               this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
             } else {    //edit
-              self.store.dispatch(new productActions.edit({storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
+              self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
               this.viewThis(this.productList[index], false)
               this.toasterService.pop('success','Product Edited Successfully !!!');
