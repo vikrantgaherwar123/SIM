@@ -288,7 +288,7 @@
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                                 style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
-                                [(ngModel)]="activeItem.description"  placeholder="Description"
+                                [(ngModel)]="activeItem.description"  placeholder="Description" onclick="this.select()"
                               ></textarea>
                             </div>
                           </div>
@@ -427,7 +427,7 @@
                           <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                          <span class="font-custom-bold">{{activeInvoice.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>
@@ -439,7 +439,7 @@
                           {{settings.discount ? settings.discount : 'Discount'}}
                         </span>
                         <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom">
-                          ({{settings.currencyInText}})
+                          ({{mysymbols}})
                         </div>
                         <div *ngIf="activeInvoice.percentage_flag == 1" class="inline font-custom">(%)</div>
 
@@ -454,7 +454,7 @@
                           <ul class="dropdown-menu dropdown-menu-right">
                             <li [class.active]="activeInvoice.percentage_flag == 0">
                               <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
-                                Flat ({{settings.currencyInText}})
+                                Flat ({{mysymbols}})
                               </a>
                             </li>
                             <li [class.active]="activeInvoice.percentage_flag == 1">
@@ -471,13 +471,13 @@
                           <div class="input-group addon-input">
                             <input type="number" id="percentage_input" name="percentage_input" class="form-control"
                               *ngIf="activeInvoice.percentage_flag == 1" min="0.00" max="100" step="any"
-                              [(ngModel)]="activeInvoice.percentage_value" (change)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.percentage_value" (change)="calculateInvoice()" onclick="this.select()"
                             />
 
                             <input type="number" id="discount_input" name="discount_input" class="form-control"
                               min="0.00" [max]="activeInvoice.gross_amount" step="any"
                               *ngIf="activeInvoice.percentage_flag == 0" required 
-                              [(ngModel)]="activeInvoice.discount" (change)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.discount" (change)="calculateInvoice()" onclick="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -505,7 +505,7 @@
                           <div class="input-group pr-0">
                             <input type="number" id="tax_input" name="tax_input" class="form-control"
                               step="any"min="0.00" max="100" required
-                              [(ngModel)]="activeInvoice.tax_rate" (change)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.tax_rate" (change)="calculateInvoice()" onclick="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -529,7 +529,7 @@
                           <div class="input-group pr-0">
                             <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input"
                               step="any" min="0.00" max="100" class="form-control"
-                              [(ngModel)]="tax.percentage" (change)="calculateInvoice()"
+                              [(ngModel)]="tax.percentage" (change)="calculateInvoice()" onclick="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -605,7 +605,7 @@
 
                         <div class="col-6 text-right">
                           <span class="font-custom-bold">
-                            {{activeInvoice.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}
+                            {{activeInvoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                           </span>
                         </div>
                       </div>
@@ -618,7 +618,7 @@
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                          <span class="font-custom">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>
@@ -630,7 +630,7 @@
                           <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="bld">{{activeInvoice.balance | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                          <span class="bld">{{activeInvoice.balance | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
                       </div>
                     </div>

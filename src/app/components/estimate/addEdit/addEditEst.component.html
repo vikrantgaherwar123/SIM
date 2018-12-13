@@ -234,7 +234,7 @@
                         <div class="custom-description">
                           <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                             style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
-                            [(ngModel)]="activeItem.description"  placeholder="Description"
+                            [(ngModel)]="activeItem.description"  placeholder="Description" onclick="this.select()"
                           ></textarea>
                         </div>
                       </div>
@@ -371,7 +371,7 @@
                     <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                    <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
 
@@ -382,7 +382,7 @@
                       {{settings.discount ? settings.discount : 'Discount'}}
                     </span>
                     <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
-                      ({{settings.currencyInText}})
+                      ({{mysymbols}})
                     </div>
                     <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
 
@@ -401,7 +401,7 @@
                               calculateEstimate()
                             "
                           >
-                            Flat ({{settings.currencyInText}})
+                            Flat ({{mysymbols}})
                           </a>
                         </li>
                         <li [class.active]="activeEstimate.percentage_flag == 1">
@@ -557,7 +557,7 @@
                   </div>
 
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                    <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
 
@@ -567,7 +567,7 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld">{{balance | currency:settings.currencyInText:'symbol':'1.2-2'}}</span>
+                    <span class="bld">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
 

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
-
+import { CONSTANTS } from '../../../constants'
 import { response, addEditEstimate, client, terms, setting, product } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
@@ -36,6 +36,7 @@ export class AddEditEstComponent implements OnInit {
   edit: boolean = false
   last
   index
+  mysymbols
 
   private clientList: client[]
   private allClientList: client[]
@@ -71,7 +72,7 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
-  constructor(public router: Router,
+  constructor(private CONST: CONSTANTS,public router: Router,
     public toasterService : ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
@@ -203,6 +204,13 @@ export class AddEditEstComponent implements OnInit {
     if (settings.alstTaxName && settings.alstTaxName.length > 0) {
       this.activeEstimate.taxList = []
     }
+    // Currency Dropdown
+    if(settings.currencyText) {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+    }
+    else{
+    this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
+  }
 
     if (settings.dateDDMMYY === false) {
       this.settings.date_format = 'mm-dd-yy'

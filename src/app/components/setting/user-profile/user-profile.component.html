@@ -50,7 +50,7 @@
                     <img src="/assets/images/client-icon/ic_normal_org_name.png">
                   </span>
                   <input type="text" name="company_name" id="company_name" class="form-control"
-                    [(ngModel)]="org.org_name" placeholder="Company Name"
+                    [(ngModel)]="org.org_name" placeholder="Company Name" onclick="this.select()"
                   />
                 </div>
               </div>
@@ -63,7 +63,7 @@
                     <img src="/assets/images/client-icon/ic_normal_contact_person.png">
                   </span>
                   <input type="text" name="person_name" id="person_name" class="form-control"
-                    [(ngModel)]="org.contact_person_name" placeholder="Person Name"
+                    [(ngModel)]="org.contact_person_name" placeholder="Person Name" onclick="this.select()"
                   />
                 </div>
               </div>
@@ -72,7 +72,7 @@
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
                 <textarea type="text" name="address" class="form-control" style="height: auto;"
-                  [(ngModel)]="org.org_address_1" placeholder="Address"
+                  [(ngModel)]="org.org_address_1" placeholder="Address" onclick="this.select()"
                 ></textarea>
               </div>
             </div>
@@ -84,7 +84,7 @@
                     <img src="/assets/images/client-icon/ic_normal_business_id.png">
                   </span>
                   <input type="text" name="business_id" class="form-control"
-                    [(ngModel)]="org.business_id" placeholder="Business Id"
+                    [(ngModel)]="org.business_id" placeholder="Business Id" onclick="this.select()"
                   />
                 </div>
               </div>
@@ -97,7 +97,7 @@
                     <img src="/assets/images/client-icon/ic_normal_email_id.png">
                   </span>
                   <input type="text" name="display_email" class="form-control"
-                    [(ngModel)]="org.display_email" placeholder="Email Id"
+                    [(ngModel)]="org.display_email" placeholder="Email Id" onclick="this.select()"
                   />
                 </div>
               </div>
@@ -110,7 +110,7 @@
                     <img src="/assets/images/client-icon/ic_normal_contact_no.png">
                   </span>
                   <input type="text" name="contact_no" class="form-control" 
-                    [(ngModel)]="org.org_phone_no" placeholder="Contact No."
+                    [(ngModel)]="org.org_phone_no" placeholder="Contact No." onclick="this.select()"
                   />
                 </div>
               </div>
@@ -123,7 +123,7 @@
                     <img src="/assets/images/client-icon/ic_language_gry.png">
                   </span>
                   <input type="text" name="web_link" class="form-control"
-                    [(ngModel)]="org.website_link" placeholder="Website Link"
+                    [(ngModel)]="org.website_link" placeholder="Website Link" onclick="this.select()"
                   />
                 </div>
               </div>
