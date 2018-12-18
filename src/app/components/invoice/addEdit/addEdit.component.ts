@@ -37,6 +37,7 @@ export class AddEditComponent implements OnInit {
   private tempflagTaxList: any
   private taxtext: string
   edit: boolean = false
+  editTerm: boolean = true
   currencyCode: string
   last
   index
@@ -103,15 +104,17 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    this.fetchCommonData()
+
     this.route.params.subscribe(params => {
       if (params && params.invId) {
         this.edit = true
+        this.editTerm = false
         this.editInit(params.invId)
       } else {
         this.addInit()
       }
     })
+    this.fetchCommonData()
   }
 
   addInit() {
@@ -316,7 +319,7 @@ export class AddEditComponent implements OnInit {
         self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       })
     } else {
-      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
 
     // Fetch Settings every time
@@ -488,7 +491,7 @@ export class AddEditComponent implements OnInit {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
 
-    if(this.activeItem.unique_identifier) {
+    if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
         // Add Item to invoice
         this.activeInvoice.listItems.push(this.activeItem)
