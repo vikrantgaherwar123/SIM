@@ -183,8 +183,12 @@ export class LoginComponent implements OnInit {
     ).done((clientResponse: apiRespo, productResponse: apiRespo, termResponse: apiRespo, settingResponse: any) => {
       this.store.dispatch(new clientActions.add(clientResponse.records))
       this.store.dispatch(new productActions.add(productResponse.records.filter(prod => prod.enabled == 0)))
+      if(termResponse.termsAndConditionList !== null){
       this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-
+      }else{
+      let addProductTemp = [];
+      this.store.dispatch(new termActions.add(addProductTemp));
+      }
       setStorage(settingResponse.settings)
       $('#userLogout').show()
       $('#userLogout span').html(this.authenticated.registered_email)
