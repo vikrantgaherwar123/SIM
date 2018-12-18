@@ -2,7 +2,7 @@
 .main-wrapper {
 	overflow-x: hidden;
 	min-height: 88vh;
-	text-shadow: 2px 1px 1px rgba(0,0,0,0.004);
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
   position: relative;
