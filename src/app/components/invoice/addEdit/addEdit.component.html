@@ -458,7 +458,7 @@
                               </a>
                             </li>
                             <li [class.active]="activeInvoice.percentage_flag == 1">
-                              <a (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=1;calculateInvoice()">
+                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;calculateInvoice()">
                                 Percent (%)
                               </a>
                             </li>
@@ -470,13 +470,13 @@
                         <form #form_discount="ngForm" name="form_discount">
                           <div class="input-group addon-input">
                             <input type="number" id="percentage_input" name="percentage_input" class="form-control"
-                              *ngIf="activeInvoice.percentage_flag == 1" min="0.00" max="100" step="any"
+                              *ngIf="activeInvoice.percentage_flag == 1" min="1" max="5"
                               [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()" onclick="this.select()"
                             />
 
                             <input type="number" id="discount_input" name="discount_input" class="form-control"
-                              min="0.00" [max]="activeInvoice.gross_amount" step="any"
-                              *ngIf="activeInvoice.percentage_flag == 0" required 
+                              min="0.00" [max]="100" step="any"
+                              *ngIf="activeInvoice.percentage_flag == 0" 
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" onclick="this.select()"
                             />
 
@@ -824,7 +824,7 @@
             <div class="col-12">
               Quantity:
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()"
+                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()"
                 placeholder="Quantity" my-enter-in select-on-click
               />
             </div>
@@ -832,21 +832,21 @@
             <div class="col-12">
               Rate:
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
               Discount:
               <input type="number" name="discount" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.discount" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount"
               />
             </div>
 

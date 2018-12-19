@@ -422,13 +422,13 @@
                       <div class="input-group addon-input">
                         <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
                           *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control" onclick="this.select()"
-                          [(ngModel)]="activeEstimate.percentage_value" (change)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.percentage_value" (keyup)="calculateEstimate()"
                         />
 
                         <input type="number" id="discount_input" name="discount_input" step="any"
                           min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
                           *ngIf="activeEstimate.percentage_flag == 0" required onclick="this.select()"
-                          [(ngModel)]="activeEstimate.discount" (change)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
                         />
 
                         <div class="input-group-addon pr-0 remove-button">
@@ -457,7 +457,7 @@
                       <div class="input-group pr-0">
                         <input type="number" id="tax_input" name="tax_input" class="form-control"
                           step="any"min="0.00" max="100" required onclick="this.select()"
-                          [(ngModel)]="activeEstimate.tax_rate" (change)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
                         />
                         <!-- <div class="input-group-addon addon-right">%</div>-->
                         <div class="input-group-addon pr-0 remove-button">
@@ -485,7 +485,7 @@
                       <div class="input-group pr-0">
                         <input type="number" name="tax_input" id="tax_input_list{{taxIndex}}"
                           min="0.00" max="100" step="any" class="form-control" onclick="this.select()"
-                          [(ngModel)]="tax.percentage" (change)="calculateEstimate()"
+                          [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()"
                         />
 
                         <div class="input-group-addon pr-0 remove-button">
@@ -511,7 +511,7 @@
                       <div class="input-group pr-0">
                         <input type="number" name="shipping_input" class="form-control"
                           step="any" min="0.00" required onclick="this.select()"
-                          [(ngModel)]="activeEstimate.shipping_charges" (change)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()"
                         />
                         <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
@@ -536,7 +536,7 @@
                       <div class="input-group pr-0">
                         <input type="number" name="tax_input" class="form-control"
                           step="any" required onclick="this.select()"
-                          [(ngModel)]="activeEstimate.adjustment" (change)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()"
                         />
                         <div class="pr-0 remove-button">
                           <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
@@ -751,28 +751,28 @@
             <div class="col-12">
               Quantity:
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" placeholder="Quantity"
+                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" placeholder="Quantity"
               />
             </div>
 
             <div class="col-12">
               Rate:
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
               Discount:
-              <input type="number" name="discount" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.discount" (change)="calculateTotal()" placeholder="Rate"
+              <input type="number" name="discount" class="form-control add-client-input-custom" 
+              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount"
               />
             </div>
 

@@ -112,10 +112,18 @@ export class AddEditComponent implements OnInit {
         this.editInit(params.invId)
       } else {
         this.addInit()
-      }
+      } 
     })
     this.fetchCommonData()
   }
+  
+  // dataChanged(input){
+  //   if (input > 100 ){
+  //     alert('value should be between 0 to 100');
+  //   }
+  //   return ;
+  // }
+
 
   addInit() {
     this.commonSettingsInit()
@@ -156,6 +164,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.listItems = temp
 
         // Change payment keys compatible
+        if(this.activeInvoice.payments != undefined){
         if(this.activeInvoice.payments) {
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
@@ -171,6 +180,7 @@ export class AddEditComponent implements OnInit {
           }
           this.activeInvoice.payments = temp1
         }
+      }
 
         // Set Dates
         var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
@@ -708,6 +718,7 @@ export class AddEditComponent implements OnInit {
         discountFactor = 0
         console.log();
       }
+      
 
       this.activeInvoice.discount = gross_amount * discountFactor
       deductions += this.activeInvoice.discount
