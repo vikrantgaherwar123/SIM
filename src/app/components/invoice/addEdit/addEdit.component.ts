@@ -156,6 +156,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.listItems = temp
 
         // Change payment keys compatible
+        if(this.activeInvoice.payments != undefined){
         if(this.activeInvoice.payments) {
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
@@ -171,6 +172,7 @@ export class AddEditComponent implements OnInit {
           }
           this.activeInvoice.payments = temp1
         }
+      }
 
         // Set Dates
         var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
