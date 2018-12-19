@@ -30,7 +30,7 @@
               <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'" disabled>
             </div>
             <div class="col-9" style="left: -2%;">
-              <span class="ellipsisterm"> {{term.terms}}</span>
+              <pre class="pre_term ellipsisterm"> {{term.terms}}</pre>
             </div>
             <div class="col-2 text-right">
               <span [swal]="{ title: 'Are you sure want to delete?', type: 'warning',
@@ -76,7 +76,7 @@
           <div class="col-12">
             <div class="form-group">
               <textarea elastic name="term" class="form-control" placeholder="Add term & Condition *"
-                [(ngModel)]="activeTnc.terms" style="height: 110px;" required onclick="this.select()"
+                [(ngModel)]="activeTnc.terms" style="height: 110px;" required onfocus="this.select()"
               ></textarea>
             </div>
           </div>
