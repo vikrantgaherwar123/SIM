@@ -751,28 +751,28 @@
             <div class="col-12">
               Quantity:
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (change)="calculateTotal()" placeholder="Quantity"
+                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" placeholder="Quantity"
               />
             </div>
 
             <div class="col-12">
               Rate:
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (change)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
               Discount:
-              <input type="number" name="discount" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.discount" (change)="calculateTotal()" placeholder="Discount"
+              <input type="number" name="discount" class="form-control add-client-input-custom" 
+              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount"
               />
             </div>
 
