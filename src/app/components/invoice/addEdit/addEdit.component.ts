@@ -112,10 +112,18 @@ export class AddEditComponent implements OnInit {
         this.editInit(params.invId)
       } else {
         this.addInit()
-      }
+      } 
     })
     this.fetchCommonData()
   }
+  
+  // dataChanged(input){
+  //   if (input > 100 ){
+  //     alert('value should be between 0 to 100');
+  //   }
+  //   return ;
+  // }
+
 
   addInit() {
     this.commonSettingsInit()
@@ -708,6 +716,7 @@ export class AddEditComponent implements OnInit {
         discountFactor = 0
         console.log();
       }
+      
 
       this.activeInvoice.discount = gross_amount * discountFactor
       deductions += this.activeInvoice.discount
