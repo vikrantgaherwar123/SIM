@@ -8,6 +8,11 @@
 }
 
 .term-list-show {
-  padding: 8px 0;
+  padding-top: 16px;
+  margin-bottom: -7px;
   border-bottom: #ccc solid 1px;
+}
+.pre_term{
+  font-family: quicksand_regular!important;
+  font-size: 13.5px!important;
 }
