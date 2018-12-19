@@ -34,6 +34,7 @@ export class AddEditEstComponent implements OnInit {
   estimateFilterTerm: string
   balance: number
   edit: boolean = false
+  modalDescription: boolean = true
   last
   index
   mysymbols
@@ -102,6 +103,15 @@ export class AddEditEstComponent implements OnInit {
         this.addInit()
       }
     })
+  }
+
+  dataChanged(input){
+    if(input > 100){
+      alert("amount must be under 100");
+      this.activeEstimate.percentage_value = 0;
+      this.activeEstimate.amount = this.activeEstimate.gross_amount;
+      this.balance = this.activeEstimate.gross_amount;
+    }
   }
   
   displayWith(disp): string | undefined {
@@ -439,6 +449,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editEstimateItem(index) {
+    this.modalDescription = false;
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeEstimate.listItems[index]}
   }
@@ -507,6 +518,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   closeEditItemModal() {
+    this.modalDescription = true;
     this.activeItem = {
       quantity: 1,
       rate: 0.00,
@@ -529,12 +541,15 @@ export class AddEditEstComponent implements OnInit {
       this.activeItem.total = (this.activeItem.quantity * rateParse)
 
       // Discounts
+      
       if(isNaN(this.activeItem.discount) || this.activeItem.discount == 0) {
         this.activeItem.discount = 0
       } else {
         this.activeItem.discount_amount = (this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity
         this.activeItem.total -= this.activeItem.discount_amount
       }
+      console.log("test amount" + this.activeItem.discount_amount);
+
 
       // Tax
       if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {

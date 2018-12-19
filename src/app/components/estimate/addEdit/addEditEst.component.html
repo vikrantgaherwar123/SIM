@@ -234,6 +234,7 @@
                         <div class="custom-description">
                           <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                             style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
+                            *ngIf="modalDescription === true"
                             [(ngModel)]="activeItem.description"  placeholder="Description" onclick="this.select()"
                           ></textarea>
                         </div>
@@ -385,7 +386,7 @@
                       ({{mysymbols}})
                     </div>
                     <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
-
+                    
                     <div class="px-0" style="float: right;">
                       <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -420,15 +421,15 @@
                   <div class="col-7 pr-0">
                     <form #form_discount="ngForm" name="form_discount">
                       <div class="input-group addon-input">
-                        <input type="number" id="percentage_input" name="percentage_input" min="0.00" max="100"
+                        <input type="number" id="percentage_input" name="percentage_input" min="0" max="100"
                           *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control" onclick="this.select()"
-                          [(ngModel)]="activeEstimate.percentage_value" (keyup)="calculateEstimate()"
+                        [(ngModel)]="activeEstimate.percentage_value"  (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)" 
                         />
 
                         <input type="number" id="discount_input" name="discount_input" step="any"
                           min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
                           *ngIf="activeEstimate.percentage_flag == 0" required onclick="this.select()"
-                          [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
+                          [(ngModel)]="activeEstimate.discount"  (keyup)="calculateEstimate()"
                         />
 
                         <div class="input-group-addon pr-0 remove-button">
@@ -749,16 +750,18 @@
             </div>
 
             <div class="col-12">
-              Quantity:
+              Quantity (*):
               <input type="number" name="quantity" class="form-control add-client-input-custom"
                 [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" placeholder="Quantity"
+                required
               />
             </div>
 
             <div class="col-12">
-              Rate:
+              Rate (*):
               <input type="number" name="rate" class="form-control add-client-input-custom"
                 [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate"
+                required
               />
             </div>
 

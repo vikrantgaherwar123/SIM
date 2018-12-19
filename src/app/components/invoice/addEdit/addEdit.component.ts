@@ -38,6 +38,7 @@ export class AddEditComponent implements OnInit {
   private taxtext: string
   edit: boolean = false
   editTerm: boolean = true
+  modalDescription: boolean = true
   currencyCode: string
   last
   index
@@ -115,6 +116,15 @@ export class AddEditComponent implements OnInit {
       } 
     })
     this.fetchCommonData()
+  }
+
+  dataChanged(input){
+    if(input > 100){
+      alert("amount must be under 100");
+      this.activeInvoice.percentage_value = 0;
+      this.activeInvoice.amount = this.activeInvoice.gross_amount;
+      this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
   }
   
   // dataChanged(input){
@@ -477,6 +487,7 @@ export class AddEditComponent implements OnInit {
   }
 
   editInvoiceItem(index) {
+    this.modalDescription = false;
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeInvoice.listItems[index]}
   }
@@ -532,6 +543,7 @@ export class AddEditComponent implements OnInit {
   }
 
   closeItemModel() {
+    this.modalDescription = true;
     this.activeItem = {
       quantity: 1,
       rate: 0.00,
