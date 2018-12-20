@@ -49,7 +49,7 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.productListLoading = true
 
-    if(this.productList.length < 1) {
+    if(this.productList) {
       this.productService.fetch().subscribe((response: any) => {
         this.productListLoading = false
         if(response.status === 200) {

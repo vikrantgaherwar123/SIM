@@ -539,7 +539,7 @@
                           step="any" required onfocus="this.select()"
                           [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()"
                         />
-                        <div class="pr-0 remove-button">
+                        <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
                             <img src="assets/images/delete16.png" style="height:16px;">
                           </div>

@@ -140,8 +140,11 @@ export class AddEditEstComponent implements OnInit {
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if(estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+        if(!this.activeEstimate.taxList)
+        this.activeEstimate.taxList = [];
 
         // Change list item keys compatible
+        if(this.activeEstimate.listItems){
         var temp = []
         for(let i=0; i < this.activeEstimate.listItems.length; i++) {
           temp.push({
@@ -156,8 +159,10 @@ export class AddEditEstComponent implements OnInit {
           })
         }
         this.activeEstimate.listItems = temp
+      }
 
         // Change TnC keys compatible
+        if(this.activeEstimate.termsAndConditions){
         temp = []
         for(let i=0; i < this.activeEstimate.termsAndConditions.length; i++) {
           temp.push({
@@ -168,6 +173,7 @@ export class AddEditEstComponent implements OnInit {
           })
         }
         this.activeEstimate.termsAndConditions = temp
+      }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
