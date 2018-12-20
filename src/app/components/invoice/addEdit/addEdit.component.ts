@@ -118,9 +118,9 @@ export class AddEditComponent implements OnInit {
     this.fetchCommonData()
   }
 
-  dataChanged(input){
-    if(input > 100){
-      alert("amount must be under 100");
+  dataChanged(input) {
+    if (input > 100) {
+      alert("Percentage amount must be between 1 - 100");
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;

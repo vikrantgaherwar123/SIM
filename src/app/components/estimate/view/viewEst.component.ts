@@ -66,7 +66,7 @@ export class ViewEstComponent implements OnInit {
       if(estimates.length > 0) {
         this.estimateList = estimates
         this.setActiveEst()
-      } else {
+      }  
         this.estListLoader = true
         this.estimateService.fetch().subscribe((response: any) => {
           this.estListLoader = false
@@ -75,7 +75,7 @@ export class ViewEstComponent implements OnInit {
           this.estimateList = records
           this.setActiveEst()
         })
-      }
+      
     })
   }
 

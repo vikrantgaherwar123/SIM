@@ -20,6 +20,7 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import {ToasterService} from 'angular2-toaster'
+import { copyStyles } from '@angular/animations/browser/src/util';
 
 @Component({
   selector: 'app-estimate',
@@ -34,6 +35,7 @@ export class AddEditEstComponent implements OnInit {
   estimateFilterTerm: string
   balance: number
   edit: boolean = false
+  editTerm: boolean = true
   modalDescription: boolean = true
   last
   index
@@ -94,20 +96,21 @@ export class AddEditEstComponent implements OnInit {
 
   ngOnInit() {
     this.activeEstimate = <addEditEstimate>{}
-    this.fetchCommonData()
     this.route.params.subscribe(params => {
       if (params && params.estId) {
         this.edit = true
+        this.editTerm = false
         this.editInit(params.estId)
       } else {
         this.addInit()
       }
     })
+    this.fetchCommonData()
   }
 
   dataChanged(input){
     if(input > 100){
-      alert("amount must be under 100");
+      alert("Percentage amount must be between 1 - 100");
       this.activeEstimate.percentage_value = 0;
       this.activeEstimate.amount = this.activeEstimate.gross_amount;
       this.balance = this.activeEstimate.gross_amount;
@@ -140,8 +143,10 @@ export class AddEditEstComponent implements OnInit {
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if(estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-
+        if(!this.activeEstimate.taxList)
+          this.activeEstimate.taxList = [];
         // Change list item keys compatible
+        if( this.activeEstimate.listItems){
         var temp = []
         for(let i=0; i < this.activeEstimate.listItems.length; i++) {
           temp.push({
@@ -156,8 +161,10 @@ export class AddEditEstComponent implements OnInit {
           })
         }
         this.activeEstimate.listItems = temp
+      }
 
         // Change TnC keys compatible
+        if(this.activeEstimate.termsAndConditions){
         temp = []
         for(let i=0; i < this.activeEstimate.termsAndConditions.length; i++) {
           temp.push({
@@ -168,7 +175,7 @@ export class AddEditEstComponent implements OnInit {
           })
         }
         this.activeEstimate.termsAndConditions = temp
-
+      }
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
         this.estimateDate.reset(new Date(y, (m - 1), d))
@@ -334,7 +341,7 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       })
     } else {
-      this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT'):[];
     }
 
     //Fetch Settings every time
@@ -548,7 +555,7 @@ export class AddEditEstComponent implements OnInit {
         this.activeItem.discount_amount = (this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity
         this.activeItem.total -= this.activeItem.discount_amount
       }
-      console.log("test amount" + this.activeItem.discount_amount);
+      //console.log("test amount" + this.activeItem.discount_amount);
 
 
       // Tax
@@ -678,7 +685,7 @@ export class AddEditEstComponent implements OnInit {
       }
     }
 
-    if(this.activeEstimate.taxList) {
+    if(this.activeEstimate.taxList && this.activeEstimate.taxList.length > 0) {
       for (var t = 0; t < this.activeEstimate.taxList.length; t++) {
         if (this.activeEstimate.taxList[t] == null) {
           this.activeEstimate.taxList.splice(t, 1)
@@ -762,7 +769,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     // Tax
-    if (this.activeEstimate.tax_rate != null) {
+    if (this.activeEstimate && this.activeEstimate.tax_rate ) {
       if(isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
       }
