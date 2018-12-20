@@ -157,6 +157,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
 
         // Change list item keys compatible
+        if(this.activeInvoice.listItems){
         var temp = []
         for(let i=0; i < this.activeInvoice.listItems.length; i++) {
           temp.push({
@@ -172,10 +173,10 @@ export class AddEditComponent implements OnInit {
           })
         }
         this.activeInvoice.listItems = temp
+      }
 
         // Change payment keys compatible
-        if(this.activeInvoice.payments != undefined){
-        if(this.activeInvoice.payments) {
+        if(this.activeInvoice.payments){
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
             temp1.push({
@@ -189,7 +190,6 @@ export class AddEditComponent implements OnInit {
             })
           }
           this.activeInvoice.payments = temp1
-        }
       }
 
         // Set Dates
@@ -269,10 +269,10 @@ export class AddEditComponent implements OnInit {
     // console.log(settings.currencyInText);
 
     // Currency Dropdown
-    if(settings.currencyText) {
+    if(settings.currencyText && this.CONST.COUNTRIES ) {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
     }
-    else{
+    else if(this.CONST.COUNTRIES ){
     this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
     }
     if (settings) {

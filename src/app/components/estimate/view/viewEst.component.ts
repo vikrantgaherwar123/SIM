@@ -66,6 +66,7 @@ export class ViewEstComponent implements OnInit {
       if(estimates.length > 0) {
         this.estimateList = estimates
         this.setActiveEst()
+<<<<<<< HEAD
       }  
         this.estListLoader = true
         this.estimateService.fetch().subscribe((response: any) => {
@@ -76,6 +77,17 @@ export class ViewEstComponent implements OnInit {
           this.setActiveEst()
         })
       
+=======
+      } 
+      this.estListLoader = true
+      this.estimateService.fetch().subscribe((response: any) => {
+        this.estListLoader = false
+        var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+        this.store.dispatch(new estimateActions.add(records))
+        this.estimateList = records
+        this.setActiveEst()
+      })
+>>>>>>> d824feb34931661e7d053b787cbf250ab9bc91ef
     })
   }
 
@@ -123,7 +135,9 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
+    if(this.clientList !=null){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
   }
 
   // fetchEstimates(query = null) {

@@ -144,9 +144,10 @@ export class AddEditEstComponent implements OnInit {
       if(estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
         if(!this.activeEstimate.taxList)
-          this.activeEstimate.taxList = [];
+        this.activeEstimate.taxList = [];
+
         // Change list item keys compatible
-        if( this.activeEstimate.listItems){
+        if(this.activeEstimate.listItems){
         var temp = []
         for(let i=0; i < this.activeEstimate.listItems.length; i++) {
           temp.push({
