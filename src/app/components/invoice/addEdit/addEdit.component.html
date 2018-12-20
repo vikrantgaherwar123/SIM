@@ -288,6 +288,7 @@
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                                 style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
+                                *ngIf="modalDescription === true"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
@@ -471,7 +472,8 @@
                           <div class="input-group addon-input">
                             <input type="number" id="percentage_input" name="percentage_input" class="form-control"
                               *ngIf="activeInvoice.percentage_flag == 1" min="1" max="5"
-                              [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()" onfocus="this.select()"
+                              [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()"
+                              (ngModelChange)="dataChanged($event)" onfocus="this.select()"
                             />
 
                             <input type="number" id="discount_input" name="discount_input" class="form-control"
@@ -822,17 +824,18 @@
             </div>
 
             <div class="col-12">
-              Quantity:
+              Quantity (*):
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
+                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                 placeholder="Quantity" my-enter-in select-on-click
               />
             </div>
 
             <div class="col-12">
-              Rate:
+              Rate (*):
               <input type="number" name="rate" class="form-control add-client-input-custom"
                 [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()"
+                required
               />
             </div>
 
