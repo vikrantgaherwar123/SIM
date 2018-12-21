@@ -47,7 +47,7 @@ export class ClientComponent implements OnInit {
   ngOnInit() {
     this.clientListLoading = true
 
-    if(this.clientList.length < 1) {
+    if(this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
