@@ -182,8 +182,10 @@ export class LoginComponent implements OnInit {
       this.settingService.fetch().toPromise()
     ).done((clientResponse: apiRespo, productResponse: apiRespo, termResponse: apiRespo, settingResponse: any) => {
       this.store.dispatch(new clientActions.add(clientResponse.records))
+      if(productResponse.records){
       this.store.dispatch(new productActions.add(productResponse.records.filter(prod => prod.enabled == 0)))
-      if(termResponse.termsAndConditionList !== null){
+      }
+      if(termResponse.termsAndConditionList){
       this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
       }else{
       let addProductTemp = [];

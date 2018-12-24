@@ -34,6 +34,8 @@ export class AddEditEstComponent implements OnInit {
   estimateFilterTerm: string
   balance: number
   edit: boolean = false
+  editDiscount: boolean = true
+  ifClientExist: boolean = false
   modalDescription: boolean = true
   last
   index
@@ -98,6 +100,7 @@ export class AddEditEstComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params && params.estId) {
         this.edit = true
+        this.editDiscount = false
         this.editInit(params.estId)
       } else {
         this.addInit()
@@ -319,7 +322,7 @@ export class AddEditEstComponent implements OnInit {
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
-        if (response.records !== null) {
+        if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
@@ -334,7 +337,7 @@ export class AddEditEstComponent implements OnInit {
     // Fetch Terms if not in store
     if(this.termList.length < 1) {
       this.termConditionService.fetch().subscribe((response: response) => {
-        if (response.termsAndConditionList !== null) {
+        if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
@@ -368,11 +371,16 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
+    if(this.clientList){
     this.filteredClients = this.billingTo.valueChanges.pipe(
       startWith<string | client>(''),
       map(value => typeof value === 'string' ? value : value.name),
       map(name => name ? this._filterCli(name) : this.clientList.slice())
     )
+    }
+    else{
+      this.ifClientExist = true;
+    }
   }
 
   private _filterCli(value: string): client[] {
@@ -404,6 +412,9 @@ export class AddEditEstComponent implements OnInit {
   }
 
   closeAddClientModal() {
+    if(this.ifClientExist){
+      this.toasterService.pop('failure', 'No client to select');
+    }
     $('#add-client').modal('hide')
     this.addClientModal = {}
     this.activeClient = <client>{}
@@ -667,6 +678,8 @@ export class AddEditEstComponent implements OnInit {
     $('#estSubmitBtn').attr('disabled', 'disabled')
     this.activeEstimate.organization_id = parseInt(this.user.user.orgId)
 
+
+    if(this.activeEstimate.termsAndConditions !== undefined){
     var temp = []
     this.activeEstimate.termsAndConditions.forEach(tnc => {
       temp.push({...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier})
@@ -674,6 +687,7 @@ export class AddEditEstComponent implements OnInit {
     })
 
     this.activeEstimate.termsAndConditions = temp
+  }
 
     if (!this.edit) {
       this.activeEstimate.unique_identifier = generateUUID(this.user.user.orgId)

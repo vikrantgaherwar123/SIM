@@ -111,29 +111,27 @@ export class AddEditComponent implements OnInit {
         this.edit = true
         this.editTerm = false
         this.editInit(params.invId)
+        this.fetchCommonData()
       } else {
         this.addInit()
+        this.fetchCommonData()
       } 
     })
-    this.fetchCommonData()
+
   }
 
+  //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
     if(input > 100){
-      alert("amount must be under 100");
+      alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
   
-  // dataChanged(input){
-  //   if (input > 100 ){
-  //     alert('value should be between 0 to 100');
-  //   }
-  //   return ;
-  // }
 
+  
 
   addInit() {
     this.commonSettingsInit()
@@ -317,7 +315,7 @@ export class AddEditComponent implements OnInit {
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
-        if (response.records !== null) {
+        if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
@@ -333,7 +331,7 @@ export class AddEditComponent implements OnInit {
     if(this.termList.length < 1) {
       this.termConditionService.fetch().subscribe((response: response) => {
         // console.log(response)
-        if (response.termsAndConditionList !== null) {
+        if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
@@ -367,12 +365,14 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
+    if(this.clientList){
     this.filteredClients = this.billingTo.valueChanges.pipe(
       startWith<string | client>(''),
       map(value => typeof value === 'string' ? value : value.name),
       map(name => name ? this._filterCli(name) : this.clientList.slice())
     )
   }
+}
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
