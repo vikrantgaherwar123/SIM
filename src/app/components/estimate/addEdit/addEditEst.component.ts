@@ -35,7 +35,6 @@ export class AddEditEstComponent implements OnInit {
   estimateFilterTerm: string
   balance: number
   edit: boolean = false
-  editTerm: boolean = true
   modalDescription: boolean = true
   last
   index
@@ -99,7 +98,6 @@ export class AddEditEstComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params && params.estId) {
         this.edit = true
-        this.editTerm = false
         this.editInit(params.estId)
       } else {
         this.addInit()
@@ -343,7 +341,7 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       })
     } else {
-      this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT'):[];
+      this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
     }
 
     //Fetch Settings every time

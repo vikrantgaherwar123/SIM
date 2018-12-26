@@ -149,6 +149,8 @@ export class ClientComponent implements OnInit {
           self.viewMode = true
 
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
+        }else if(response.status === 414){
+          this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
         }
         else {
           self.errors = [response.error]

@@ -372,7 +372,7 @@
                     <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
-                    <div *ngIf="activeInvoice.adjustment === undefined">
+                    <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
@@ -454,12 +454,16 @@
                           </div>
                           <ul class="dropdown-menu dropdown-menu-right">
                             <li [class.active]="activeInvoice.percentage_flag == 0">
-                              <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
+                              <a (click)="activeInvoice.percentage_flag = 0;
+                                activeInvoice.discount=0.00;
+                                calculateInvoice()">
                                 Flat ({{mysymbols}})
                               </a>
                             </li>
                             <li [class.active]="activeInvoice.percentage_flag == 1">
-                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;calculateInvoice()">
+                              <a (click)="activeInvoice.discount=0.00;
+                                activeInvoice.percentage_flag=1;
+                                calculateInvoice()">
                                 Percent (%)
                               </a>
                             </li>
@@ -571,7 +575,7 @@
                     </div>
 
                     <!-- Adjustment -->
-                    <div class="row mx-0" *ngIf="activeInvoice.adjustment !== undefined">
+                    <div class="row mx-0" *ngIf="activeInvoice.adjustment !== null && activeInvoice.adjustment !== undefined">
                       <div class="col-5 discount-tax-label pr-0">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
