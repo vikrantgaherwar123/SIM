@@ -306,7 +306,7 @@
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
                 <div *ngIf="activeEstimate.discount_on_item === 2 || settings.discountFlagLevel ===0">
-                  <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag=1;activeEstimate.percentage_value=0">
+                  <a class="inline" (click)="estimateActive =true;activeEstimate.discount_on_item=0;activeEstimate.percentage_flag=1;activeEstimate.percentage_value=0">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
                 </div>
@@ -377,71 +377,73 @@
                 </div>
 
                 <!-- Discounts -->
-                <div class="row mx-0" *ngIf="activeEstimate.discount_on_item !==2">
-                  <div class="col-5 discount-tax-label pr-0">
-                    <span  style="text-align: left;vertical-align: bottom;" class="inline">
-                      {{settings.discount ? settings.discount : 'Discount'}}
-                    </span>
-                    <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
-                      ({{mysymbols}})
-                    </div>
-                    <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
-                    
-                    <div class="px-0" style="float: right;" >
-                      <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                      >
-                        <span class="glyphicon glyphicon-menu-down"
-                          style="font-size: 14px;vertical-align: middle;" title="Discount"
-                        ></span>
+                <div *ngIf="activeEstimate.percentage_value !==0 || activeEstimate.discount !==0 || estimateActive ===true ">
+                  <div class="row mx-0" *ngIf="activeEstimate.discount_on_item !==2">
+                    <div class="col-5 discount-tax-label pr-0">
+                      <span  style="text-align: left;vertical-align: bottom;" class="inline">
+                        {{settings.discount ? settings.discount : 'Discount'}}
+                      </span>
+                      <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
+                        ({{mysymbols}})
                       </div>
-                      <ul class="dropdown-menu dropdown-menu-right">
-                        <li [class.active]="activeEstimate.percentage_flag == 0">
-                          <a (click)="activeEstimate.percentage_flag = 0;
-                              activeEstimate.discount=0.00;
-                              calculateEstimate()
-                            "
-                          >
-                            Flat ({{mysymbols}})
-                          </a>
-                        </li>
-                        <li [class.active]="activeEstimate.percentage_flag == 1">
-                          <a (click)="activeEstimate.discount=0.00;
-                              activeEstimate.percentage_flag=1;
-                              calculateEstimate()
-                            "
-                          >
-                            Percent (%)
-                          </a>
-                        </li>
-                      </ul>
+                      <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
+                      
+                      <div class="px-0" style="float: right;" >
+                        <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " 
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        >
+                          <span class="glyphicon glyphicon-menu-down"
+                            style="font-size: 14px;vertical-align: middle;" title="Discount"
+                          ></span>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li [class.active]="activeEstimate.percentage_flag == 0">
+                            <a (click)="activeEstimate.percentage_flag = 0;
+                                activeEstimate.discount=0.00;
+                                calculateEstimate()
+                              "
+                            >
+                              Flat ({{mysymbols}})
+                            </a>
+                          </li>
+                          <li [class.active]="activeEstimate.percentage_flag == 1">
+                            <a (click)="activeEstimate.discount=0.00;
+                                activeEstimate.percentage_flag=1;
+                                calculateEstimate()
+                              "
+                            >
+                              Percent (%)
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="col-7 pr-0">
-                    <form #form_discount="ngForm" name="form_discount">
-                      <div class="input-group addon-input">
-                        <input type="number" id="percentage_input" name="percentage_input" min="0" max="100"
-                          *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control" onfocus="this.select()"
-                        [(ngModel)]="activeEstimate.percentage_value"  (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)"
-                        />
+                    <div class="col-7 pr-0">
+                      <form #form_discount="ngForm" name="form_discount">
+                        <div class="input-group addon-input">
+                          <input type="number" id="percentage_input" name="percentage_input" min="0" max="100"
+                            *ngIf="activeEstimate.percentage_flag == 1" step="any" class="form-control" onfocus="this.select()"
+                          [(ngModel)]="activeEstimate.percentage_value"  (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)"
+                          />
 
-                        <input type="number" id="discount_input" name="discount_input" step="any"
-                          min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
-                          *ngIf="activeEstimate.percentage_flag == 0" required onfocus="this.select()"
-                          [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
-                        />
+                          <input type="number" id="discount_input" name="discount_input" step="any"
+                            min="0.00" [max]="activeEstimate.gross_amount" class="form-control"
+                            *ngIf="activeEstimate.percentage_flag == 0" required onfocus="this.select()"
+                            [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
+                          />
 
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector"
-                            (click)="activeEstimate.discount_on_item=2;calculateEstimate()
-                            "
-                          >
-                            <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                          <div class="input-group-addon pr-0 remove-button">
+                            <div class="addon selector"
+                              (click)="activeEstimate.discount_on_item=2;calculateEstimate()
+                              "
+                            >
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
 

@@ -37,6 +37,8 @@ export class AddEditEstComponent implements OnInit {
   editDiscount: boolean = true
   ifClientExist: boolean = false
   modalDescription: boolean = true
+  estimateActive: boolean = false
+
   last
   index
   mysymbols
