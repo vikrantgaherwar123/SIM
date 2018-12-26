@@ -169,7 +169,7 @@
                             <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
                           <input type="text" id="prodName" name="prodName" placeholder="Product Name *"
-                            class="form-control" maxlength="45" onclick="this.select()" required
+                            class="form-control" maxlength="45" onfocus="this.select()" required
                             [(ngModel)]="activeProduct.prodName"
                           />
                         </div>
@@ -187,7 +187,7 @@
                           </span>
                           <input type="text" name="productCode" id="productCode"
                             class="form-control" placeholder="Product Code"
-                            [(ngModel)]="activeProduct.productCode" onclick="this.select()"
+                            [(ngModel)]="activeProduct.productCode" onfocus="this.select()"
                           />
                         </div>
                       </div>
@@ -200,7 +200,7 @@
                             <img src="/assets/images/product-icon/ic_normal_unit.png">
                           </span>
                           <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
-                            [(ngModel)]="activeProduct.unit" onclick="this.select()"
+                            [(ngModel)]="activeProduct.unit" onfocus="this.select()"
                           />
                         </div>
                       </div>
@@ -210,7 +210,7 @@
                       <div class="form-group">
                         <textarea elastic name="discription" id="discription" class="form-control"
                           placeholder="Description" style="max-height: 72px; height: 72px;"
-                          [(ngModel)]="activeProduct.discription" onclick="this.select()"
+                          [(ngModel)]="activeProduct.discription" onfocus="this.select()"
                         ></textarea>
                       </div>
                     </div>
@@ -222,7 +222,7 @@
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
                           <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="Rate *"
-                            [(ngModel)]="activeProduct.rate" required onclick="this.select()"
+                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()"
                           />
                         </div>
                       </div>
@@ -235,7 +235,7 @@
                             <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
                           </span>
                           <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
-                            [(ngModel)]="activeProduct.taxRate" onclick="this.select()"
+                            [(ngModel)]="activeProduct.taxRate" onfocus="this.select()"
                           />
                         </div>
                       </div>

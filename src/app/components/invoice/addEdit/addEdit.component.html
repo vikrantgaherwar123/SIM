@@ -88,7 +88,7 @@
                             && invNumberForm.invoiceNumber.$error.required"
                           >
                             <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
-                              [(ngModel)]="activeInvoice.invoice_number" required onclick="this.select()"
+                              [(ngModel)]="activeInvoice.invoice_number" required onfocus="this.select()"
                             />
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
                               <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
@@ -106,7 +106,7 @@
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
                             <input type="text" class="form-control" placeholder="mm/dd/yyyy" required readonly
-                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" onclick="this.select()"
+                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" onfocus="this.select()"
                               (click)="picker.open()"
                             >
                             <mat-datepicker #picker></mat-datepicker>
@@ -125,7 +125,7 @@
                       </div>
                       <div class="col-6">
                         <input type="text" id="referenceid" name="invoiceNumber" class="form-control pr-0"
-                          [(ngModel)]="activeInvoice.reference" onclick="this.select()"
+                          [(ngModel)]="activeInvoice.reference" onfocus="this.select()"
                         />
                       </div>
                     </div>
@@ -277,7 +277,7 @@
                       <tr class="row-item">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="text" name="product-name" class="form-control billing-input" onclick="this.select()"
+                            <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
                               placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
                             >
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
@@ -288,7 +288,8 @@
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control" elastic
                                 style="margin-top: 3px; padding: 1px 1px 0px 4px; min-height: 60px; max-height: 80px; height: 73px;"
-                                [(ngModel)]="activeItem.description"  placeholder="Description" onclick="this.select()"
+                                *ngIf="modalDescription === true"
+                                [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
                           </div>
@@ -297,7 +298,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0"
-                              [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onclick="this.select()"
+                              [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
                             />
                           </div>
                         </td>
@@ -305,7 +306,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" class="form-control text-right" min=0
-                              [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onclick="this.select()"
+                              [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()"
                             />
                           </div>
                         </td>
@@ -313,7 +314,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
-                              [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onclick="this.select()"
+                              [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text p-0">%</span>
@@ -325,7 +326,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
-                              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onclick="this.select()"
+                              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text p-0">%</span>
@@ -371,7 +372,7 @@
                     <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
-                    <div *ngIf="activeInvoice.adjustment === undefined">
+                    <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
@@ -453,12 +454,16 @@
                           </div>
                           <ul class="dropdown-menu dropdown-menu-right">
                             <li [class.active]="activeInvoice.percentage_flag == 0">
-                              <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
+                              <a (click)="activeInvoice.percentage_flag = 0;
+                                activeInvoice.discount=0.00;
+                                calculateInvoice()">
                                 Flat ({{mysymbols}})
                               </a>
                             </li>
                             <li [class.active]="activeInvoice.percentage_flag == 1">
-                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;calculateInvoice()">
+                              <a (click)="activeInvoice.discount=0.00;
+                                activeInvoice.percentage_flag=1;
+                                calculateInvoice()">
                                 Percent (%)
                               </a>
                             </li>
@@ -471,13 +476,14 @@
                           <div class="input-group addon-input">
                             <input type="number" id="percentage_input" name="percentage_input" class="form-control"
                               *ngIf="activeInvoice.percentage_flag == 1" min="1" max="5"
-                              [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()" onclick="this.select()"
+                              [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()"
+                              (ngModelChange)="dataChanged($event)" onfocus="this.select()"
                             />
 
                             <input type="number" id="discount_input" name="discount_input" class="form-control"
                               min="0.00" [max]="100" step="any"
                               *ngIf="activeInvoice.percentage_flag == 0" 
-                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" onclick="this.select()"
+                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" onfocus="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -505,7 +511,7 @@
                           <div class="input-group pr-0">
                             <input type="number" id="tax_input" name="tax_input" class="form-control"
                               step="any"min="0.00" max="100" required
-                              [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onclick="this.select()"
+                              [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onfocus="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -529,7 +535,7 @@
                           <div class="input-group pr-0">
                             <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input"
                               step="any" min="0.00" max="100" class="form-control"
-                              [(ngModel)]="tax.percentage" (keyup)="calculateInvoice()" onclick="this.select()"
+                              [(ngModel)]="tax.percentage" (keyup)="calculateInvoice()" onfocus="this.select()"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -569,7 +575,7 @@
                     </div>
 
                     <!-- Adjustment -->
-                    <div class="row mx-0" *ngIf="activeInvoice.adjustment !== undefined">
+                    <div class="row mx-0" *ngIf="activeInvoice.adjustment !== null && activeInvoice.adjustment !== undefined">
                       <div class="col-5 discount-tax-label pr-0">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
@@ -580,7 +586,7 @@
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
                             <input type="number" name="tax_input" class="form-control"
-                              step="any" required onclick="this.select()"
+                              step="any" required onfocus="this.select()"
                               [(ngModel)]="activeInvoice.adjustment" (keyup)="calculateInvoice()"
                             />
                             <!-- <div class="input-group-addon set-color">%</div>-->
@@ -711,7 +717,7 @@
               <div class="col-6" style="padding-left: 23px;">
                 <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" name="contactPersonName" class="form-control add-client-input-custom"
-                    [(ngModel)]="addClientModal.contactPersonName" placeholder="Contact Person"
+                    [(ngModel)]="addClientModal.contactPersonName" placeholder="Contact Person" onfocus="this.select()"
                   />
                 </div>
               </div>
@@ -723,14 +729,14 @@
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
-                    placeholder="Email" my-enter-in select-on-click
+                    placeholder="Email" onfocus="this.select()" my-enter-in select-on-click
                   />
                 </div>
               </div>
               <div class="col-6" style="padding-left: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
                   <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
-                    placeholder="Number" my-enter-in select-on-click
+                    placeholder="Number" onfocus="this.select()" my-enter-in select-on-click
                   />
                 </div>
               </div>
@@ -742,7 +748,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
-                class="form-control" placeholder="Address" select-on-click style="max-height: 69px; height: 69px;"
+                class="form-control" placeholder="Address" select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -752,7 +758,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
-                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;"
+                placeholder="Shipping Address" select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -760,7 +766,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
-                placeholder="Business Id " select-on-click
+                placeholder="Business Id " onfocus="this.select()" select-on-click
               />
             </div>
           </div>
@@ -768,7 +774,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
-                placeholder="Business Detail" my-enter-in select-on-click
+                placeholder="Business Detail" onfocus="this.select()" my-enter-in select-on-click
               />
             </div>
           </div>
@@ -805,55 +811,56 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal add-client-form" name="itemform" #itemform="ngForm">
-          <input type="hidden" name="uid" [ngModel]="activeItem.unique_identifier">
+          <input type="hidden" name="uid" onfocus="this.select()" [ngModel]="activeItem.unique_identifier">
           <div class="row">
             <div class="col-12">
               Name:
               <input type="text" name="name" class="form-control add-client-input-custom"
-                [ngModel]="activeItem.product_name" placeholder="Name" required disabled
+                [ngModel]="activeItem.product_name" placeholder="Name" onfocus="this.select()" required disabled
               />
             </div>
 
             <div class="col-12">
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description" class="form-control"
-                placeholder="Description" select-on-click style="max-height: 69px; height: 69px;"
+                placeholder="Description" onfocus="this.select()" select-on-click style="max-height: 69px; height: 69px;"
               ></textarea>
             </div>
 
             <div class="col-12">
-              Quantity:
+              Quantity (*):
               <input type="number" name="quantity" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()"
+                [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                 placeholder="Quantity" my-enter-in select-on-click
               />
             </div>
 
             <div class="col-12">
-              Rate:
+              Rate (*):
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()"
+                required
               />
             </div>
 
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate"
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
               Discount:
               <input type="number" name="discount" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount"
+                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount" onfocus="this.select()"
               />
             </div>
 
             <div class="col-12">
               Total:
               <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled
-                class="form-control add-client-input-custom"
+                class="form-control add-client-input-custom" onfocus="this.select()"
               />
             </div>
           </div>
@@ -895,7 +902,7 @@
             <div class="col-12">
               <div class="form-group">
                 <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 110px;" required elastic
+                  placeholder="Add term & Condition" style="height: 110px;" onfocus="this.select()" required elastic
                 ></textarea>
               </div>
             </div>
@@ -903,14 +910,14 @@
               <div class="checkbox pull-left">
                 <input type="checkbox" id="addtermcheck" name="setDefault"
                   [(ngModel)]="addTermModal.setDefault"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
                 >
                 <!-- <label class="inline" for="addtermcheck"></label> -->
                 <div class="inline">Default?</div>
               </div>
               <button type="button" id="addtermbtn" name="addtermbtn" title="save"
                 class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
-                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)"
+                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
               >
                 SAVE
               </button>

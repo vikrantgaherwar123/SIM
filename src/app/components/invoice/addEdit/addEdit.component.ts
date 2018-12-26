@@ -38,6 +38,7 @@ export class AddEditComponent implements OnInit {
   private taxtext: string
   edit: boolean = false
   editTerm: boolean = true
+  modalDescription: boolean = true
   currencyCode: string
   last
   index
@@ -110,20 +111,27 @@ export class AddEditComponent implements OnInit {
         this.edit = true
         this.editTerm = false
         this.editInit(params.invId)
+        this.fetchCommonData()
       } else {
         this.addInit()
+        this.fetchCommonData()
       } 
     })
-    this.fetchCommonData()
+
+  }
+
+  //restrict user to write more than 100 value in pecrentage of discount   
+  dataChanged(input){
+    if(input > 100){
+      alert("Percentage amount must be under 100");
+      this.activeInvoice.percentage_value = 0;
+      this.activeInvoice.amount = this.activeInvoice.gross_amount;
+      this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
   }
   
-  // dataChanged(input){
-  //   if (input > 100 ){
-  //     alert('value should be between 0 to 100');
-  //   }
-  //   return ;
-  // }
 
+  
 
   addInit() {
     this.commonSettingsInit()
@@ -147,6 +155,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
 
         // Change list item keys compatible
+        if(this.activeInvoice.listItems){
         var temp = []
         for(let i=0; i < this.activeInvoice.listItems.length; i++) {
           temp.push({
@@ -162,10 +171,10 @@ export class AddEditComponent implements OnInit {
           })
         }
         this.activeInvoice.listItems = temp
+      }
 
         // Change payment keys compatible
-        if(this.activeInvoice.payments != undefined){
-        if(this.activeInvoice.payments) {
+        if(this.activeInvoice.payments){
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
             temp1.push({
@@ -179,7 +188,6 @@ export class AddEditComponent implements OnInit {
             })
           }
           this.activeInvoice.payments = temp1
-        }
       }
 
         // Set Dates
@@ -259,10 +267,10 @@ export class AddEditComponent implements OnInit {
     // console.log(settings.currencyInText);
 
     // Currency Dropdown
-    if(settings.currencyText) {
+    if(settings.currencyText && this.CONST.COUNTRIES ) {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
     }
-    else{
+    else if(this.CONST.COUNTRIES ){
     this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
     }
     if (settings) {
@@ -307,7 +315,7 @@ export class AddEditComponent implements OnInit {
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
-        if (response.records !== null) {
+        if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
@@ -323,7 +331,7 @@ export class AddEditComponent implements OnInit {
     if(this.termList.length < 1) {
       this.termConditionService.fetch().subscribe((response: response) => {
         // console.log(response)
-        if (response.termsAndConditionList !== null) {
+        if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
@@ -357,12 +365,14 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
+    if(this.clientList){
     this.filteredClients = this.billingTo.valueChanges.pipe(
       startWith<string | client>(''),
       map(value => typeof value === 'string' ? value : value.name),
       map(name => name ? this._filterCli(name) : this.clientList.slice())
     )
   }
+}
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
@@ -477,6 +487,7 @@ export class AddEditComponent implements OnInit {
   }
 
   editInvoiceItem(index) {
+    this.modalDescription = false;
     $('#edit-item').modal('show')
     this.activeItem = {...this.activeInvoice.listItems[index]}
   }
@@ -532,6 +543,7 @@ export class AddEditComponent implements OnInit {
   }
 
   closeItemModel() {
+    this.modalDescription = true;
     this.activeItem = {
       quantity: 1,
       rate: 0.00,
