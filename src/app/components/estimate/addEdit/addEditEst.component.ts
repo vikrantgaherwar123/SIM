@@ -250,6 +250,7 @@ export class AddEditEstComponent implements OnInit {
     if (settings) {
       this.activeEstimate.tax_on_item = 2
       this.activeEstimate.discount_on_item = 2
+      console.log(settings)
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
