@@ -928,7 +928,8 @@
 
         <div class="col-12" style="padding: 20px 24px 20px 15px">
           <div class="col-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of termList; let index = index" id="term1{{index}}"
+            <div class="item termlist row product-list" id="term1{{index}}"
+             *ngFor="let term of termList; let index = index" 
               [class.selected]="selectedTerm == index"
             >
               <div class="col-12 px-0">

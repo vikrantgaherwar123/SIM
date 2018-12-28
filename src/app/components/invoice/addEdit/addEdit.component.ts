@@ -267,12 +267,14 @@ export class AddEditComponent implements OnInit {
     // console.log(settings.currencyInText);
 
     // Currency Dropdown
-    if(settings.currencyText && this.CONST.COUNTRIES ) {
+    if (settings.currencyText) {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
     }
-    else if(this.CONST.COUNTRIES ){
-    this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
+    else {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
+
+    
     if (settings) {
       this.activeInvoice.tax_on_item = 2
       this.activeInvoice.discount_on_item = 2
