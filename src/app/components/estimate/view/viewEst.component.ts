@@ -24,6 +24,7 @@ export class ViewEstComponent implements OnInit {
   estDispLimit: number = 20
   estSortTerm: string = 'createdDate'
   estSearchTerm: string
+  estId : number
 
   private estimateQueryForm = {
     client: new FormControl(),
@@ -150,8 +151,10 @@ export class ViewEstComponent implements OnInit {
   setActiveEst(estId: string = '') {
     if (!estId) {
       this.activeEst = this.estimateList[0]
+      //console.log(this.activeEst)
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+      console.log(this.activeEst)
     }
     this.setActiveClient()
   }

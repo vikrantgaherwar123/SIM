@@ -20,6 +20,7 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-invoice',
@@ -105,7 +106,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-
+    this.fetchCommonData()
     this.route.params.subscribe(params => {
       if (params && params.invId) {
         this.edit = true
@@ -120,16 +121,10 @@ export class AddEditComponent implements OnInit {
 
   }
 
-<<<<<<< HEAD
-  dataChanged(input) {
-    if (input > 100) {
-      alert("Percentage amount must be between 1 - 100");
-=======
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
     if(input > 100){
       alert("Percentage amount must be under 100");
->>>>>>> dae6d3220069b93c1af8835180e8dff060a8b242
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
@@ -273,12 +268,13 @@ export class AddEditComponent implements OnInit {
     // console.log(settings.currencyInText);
 
     // Currency Dropdown
-    if(settings.currencyText && this.CONST.COUNTRIES ) {
+    if (settings.currencyText) {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
     }
-    else if(this.CONST.COUNTRIES ){
-    this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
+    else {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
+
     if (settings) {
       this.activeInvoice.tax_on_item = 2
       this.activeInvoice.discount_on_item = 2
@@ -334,9 +330,9 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if(this.termList.length < 1) {
+    if(this.termList.length < 1 && this.termList != undefined) {
       this.termConditionService.fetch().subscribe((response: response) => {
-        // console.log(response)
+         //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
