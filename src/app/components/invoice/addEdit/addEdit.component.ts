@@ -20,6 +20,7 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-invoice',
@@ -105,7 +106,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-
+    this.fetchCommonData()
     this.route.params.subscribe(params => {
       if (params && params.invId) {
         this.edit = true
@@ -130,9 +131,6 @@ export class AddEditComponent implements OnInit {
     }
   }
   
-
-  
-
   addInit() {
     this.commonSettingsInit()
     var date = new Date()
@@ -145,7 +143,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.listItems = []
     }
   }
-
   editInit(invId) {
     this.commonSettingsInit()
 
@@ -329,9 +326,9 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if(this.termList.length < 1) {
+    if(this.termList.length < 1 && this.termList != undefined) {
       this.termConditionService.fetch().subscribe((response: response) => {
-        // console.log(response)
+         //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
@@ -429,6 +426,7 @@ export class AddEditComponent implements OnInit {
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
+      this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'true')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {

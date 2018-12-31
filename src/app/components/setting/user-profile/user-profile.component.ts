@@ -69,6 +69,8 @@ export class UserProfileComponent implements OnInit {
     window.history.back()
   }
 
+  
+
   uploadImage (type, image) {
     var fd = new FormData()
     fd.append('file', image)

@@ -105,10 +105,11 @@ export class AddEditEstComponent implements OnInit {
         this.edit = true
         this.editTerms = false
         this.editInit(params.estId)
+        this.fetchCommonData()
       } else {
         this.addInit()
+        this.fetchCommonData()
       }
-      this.fetchCommonData()
     })
   }
 
@@ -241,7 +242,7 @@ export class AddEditEstComponent implements OnInit {
     }
     // Currency Dropdown
     if (settings.currencyText) {
-      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyCode == this.settings.currencyInText)[0].currencyName;
     }
     else {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;

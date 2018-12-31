@@ -53,6 +53,7 @@ export class ClientComponent implements OnInit {
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(cli => cli.enabled == 0)
+          
         }
       })
     } else {

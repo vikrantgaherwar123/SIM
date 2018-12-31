@@ -213,7 +213,7 @@
                           />
                         </td>
                         <td width="3%" class="text-center">E</td>
-                        <td width="3%" class="text-center">D</td>
+                        <td width="3%" class="text-center">D</td>  
                       </tr>
                     </thead>
 
@@ -252,7 +252,7 @@
                             {{item.discount | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" style="position: unset !important;">
+                        <td [class.no-border-last]="last" style="position: unset !important;" >
                           <div class="text-center">
                             {{item.total | number:'2.'}}
                           </div>
@@ -278,7 +278,7 @@
                         <td [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
-                              placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto"
+                              placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               (optionSelected)="fillItemDetails()"
@@ -298,7 +298,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0"
-                              [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
+                              [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
                         </td>
@@ -306,7 +306,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" class="form-control text-right" min=0
-                              [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                              [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
                         </td>
@@ -341,7 +341,7 @@
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text-right" 
                               title="Amount is calculated automatically."
-                              name="itemTotal" [(ngModel)]="activeItem.total" disabled
+                              name="itemTotal" [(ngModel)]="activeItem.total"  disabled
                             />
                           </div>
 
@@ -517,7 +517,7 @@
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;calculateInvoice()">
+                              <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = undefined;calculateInvoice()">
                                 <img src="assets/images/delete16.png">
                               </div>
                             </div>
@@ -589,8 +589,9 @@
                           <div class="input-group pr-0">
                             <input type="number" name="tax_input" class="form-control"
                               step="any" required onfocus="this.select()"
-                              [(ngModel)]="activeInvoice.adjustment" (keyup)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.adjustment" (change)=setTwoNumberDecimal(activeInvoice.adjustment) (keyup)="calculateInvoice()"
                             />
+                            
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector" (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
