@@ -321,7 +321,6 @@ export class AddEditComponent implements OnInit {
         this.clientListLoading = false
       })
     } else {
-      this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
       this.setClientFilter()
     }
 
@@ -363,16 +362,27 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList){
+    if(this.clientList !== undefined){
     this.filteredClients = this.billingTo.valueChanges.pipe(
       startWith<string | client>(''),
       map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filterCli(name) : this.clientList.slice())
+      map(name => name ? this._filterCli(name)  : this.clientList.slice())
     )
+  }else{
+    this.clientListLoading = true
+    this.clientService.fetch().subscribe((response: response) => {
+      if (response.records) {
+        this.store.dispatch(new clientActions.add(response.records))
+        this.clientList = response.records.filter(recs => recs.enabled == 0)
+      }
+      this.setClientFilter()
+      this.clientListLoading = false
+    })
   }
 }
 
-  private _filterCli(value: string): client[] {
+   private _filterCli(value: string): client[] {
+    console.log(this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())));
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -511,6 +521,16 @@ export class AddEditComponent implements OnInit {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
 
+    if(this.activeItem.product_name ===null ){
+      this.toasterService.pop('failure', 'Product Name can not be empty');
+    }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
+      this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
+    }
+    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+      this.toasterService.pop('failure', 'rate can not be 0 or empty');
+    }
+    if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+      this.activeItem.rate !==null ){
     if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
         // Add Item to invoice
@@ -527,6 +547,7 @@ export class AddEditComponent implements OnInit {
         rate: 0.00
       }
       this.calculateInvoice()
+    }
     } else {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})

@@ -247,59 +247,99 @@
                             [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
                           />
                         </div>
-                      </td>
-  
-                      <td style="vertical-align: top;" [class.no-border-last]="last">
-                        <div class="form-group">
-                          <input type="number" name="itemRate" step="any" class="form-control text-right" min="0.01"
-                            [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()"
-                          />
+                      </div>
+                    </td>
+
+                    <td style="vertical-align: top;" [class.no-border-last]="last">
+                      <div class="form-group">
+                        <input type="number" name="itemQty" id="qty" step="any" class="form-control text-right" min="0.01"
+                          [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
+                        />
+                      </div>
+                    </td>
+
+                    <td style="vertical-align: top;" [class.no-border-last]="last">
+                      <div class="form-group">
+                        <input type="number" name="itemRate" step="any" class="form-control text-right" min="0.01"
+                          [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                        />
+                      </div>
+                    </td>
+
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                      <div class="input-group">
+                        <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
+                          [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                        />
+                        <div class="input-group-append">
+                          <span class="input-group-text p-0">%</span>
                         </div>
-                      </td>
-  
-                      <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                        <div class="input-group">
-                          <input type="number" name="itemTaxRate" class="form-control text-right" min=0 max=100
-                            [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text p-0">%</span>
-                          </div>
+                      </div>
+                      <div class="text-right">{{activeItem.tax_amount}}</div>
+                    </td>
+
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                      <div class="input-group">
+                        <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
+                          [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()"
+                        />
+                        <div class="input-group-append">
+                          <span class="input-group-text p-0">%</span>
                         </div>
-                        <div class="text-right">{{activeItem.tax_amount}}</div>
-                      </td>
-  
-                      <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                        <div class="input-group">
-                          <input type="number" name="itemDiscountRate" class="form-control text-right" min=0 max=100
-                            [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()"
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text p-0">%</span>
-                          </div>
-                        </div>
-                        <div class="text-right">{{activeItem.discount_amount}}</div>
-                      </td>
-  
-                      <td style="vertical-align: top; position: relative !important;" 
-                        [class.no-border-last]="last"
+                      </div>
+                      <div class="text-right">{{activeItem.discount_amount}}</div>
+                    </td>
+
+                    <td style="vertical-align: top; position: relative !important;" 
+                      [class.no-border-last]="last"
+                    >
+                      <div class="form-group">
+                        <input type="number" step="any" class="form-control text-right" 
+                          title="Amount is calculated automatically."
+                          name="itemTotal" [(ngModel)]="activeItem.total" disabled convert-decimal onfocus="this.select()"
+                        />
+                      </div>
+
+                      <button type="button"  class="btnd add-line-item-button" (click)="addEditEstimateItem()"
+                        style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value"
                       >
-                        <div class="form-group">
-                          <input type="number" step="any" class="form-control text-right" 
-                            title="Amount is calculated automatically."
-                            name="itemTotal" [(ngModel)]="activeItem.total" disabled convert-decimal onfocus="this.select()"
-                          />
-                        </div>
-  
-                        <button type="button" class="btnd add-line-item-button" (click)="addEditEstimateItem()"
-                          style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0"
-                        >
-                          Add Item
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                        Add Item
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tax discount list -->
+            <div class="row">
+              <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
+                <div *ngIf="activeEstimate.discount_on_item === 2 || settings.discountFlagLevel ===0 && activeEstimate.percentage_value ===0 || activeEstimate.discount ===0">
+                  <a class="inline" (click)="estimateActive =true;activeEstimate.discount_on_item=0;settings.discountFlagLevel=1;
+                  activeEstimate.percentage_flag = 0;activeEstimate.percentage_flag=1">
+                    {{settings.discount ? settings.discount : 'Discount'}}+
+                  </a>
+                </div>
+                <div *ngIf="activeEstimate.shipping_charges === undefined">
+                  <a class="inline" (click)="activeEstimate.shipping_charges = 0">
+                    {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                  </a>
+                </div>
+                <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
+                  <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
+                </div>
+                <div *ngIf="activeEstimate.adjustment === undefined">
+                  <a class="inline" (click)="activeEstimate.adjustment = 0">
+                    {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
+                  </a>
+                </div>
+                <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
+                  <a *ngIf="!activeEstimate.taxList[taxIndex]"
+                    (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}"
+                  >
+                    {{tax.taxName}}+
+                  </a>
+                </div>
               </div>
   
               <!-- Tax discount list -->
@@ -467,8 +507,14 @@
                           />
                           <!-- <div class="input-group-addon addon-right">%</div>-->
                           <div class="input-group-addon pr-0 remove-button">
-                            <div class="addon selector" (click)="activeEstimate.tax_on_item = 2;calculateEstimate()">
-                              <img src="assets/images/delete16.png" style="height:16px;">
+                            <div class="addon selector"
+                              (click)="activeEstimate.discount_on_item=2;calculateEstimate();
+                              activeEstimate.percentage_value=0;activeEstimate.discount=0;
+                              activeEstimate.amount=activeEstimate.gross_amount;
+                              balance=activeEstimate.gross_amount
+                              "
+                            >
+                              <img src="assets/images/delete16.png" alt="" style="height:16px;">
                             </div>
                           </div>
                         </div>
@@ -850,26 +896,26 @@
                 </button>
               </div>
             </div>
-          </form>
-  
-          <div class="col-12" style="padding: 20px 24px 20px 15px">
-            <div class="col-12 mCustomScrollbar">
-              <div class="item termlist row product-list" id="term1{{index}}"
-                *ngFor="let term of termList; let index = index"
-                 [class.selected]="selectedTerm == index"
-              >
-                <div class="col-12 px-0">
-                  <div class="row">
-                    <div class="col-md-1 px-0">
-                      <input type="checkbox" id="termcheck{{index}}" name="term"
-                        (change)="addRemoveTermsFromEstimate(term)"
-                        [checked]="isTermInEstimate(term)"
-                      />
-                      <!-- <label class="" for="termcheck{{$index}}"></label> -->
-                    </div>
-                    <div class="col-md-9 pl-0">
-                      <span style="vertical-align: top;"> {{term.terms}}</span>
-                    </div>
+          </div>
+        </form>
+
+        <div class="col-12" style="padding: 20px 24px 20px 15px">
+          <div class="col-12 mCustomScrollbar">
+            <div class="item termlist row product-list" id="term1{{index}}"
+              *ngFor="let term of termList; let index = index"
+               [class.selected]="selectedTerm == index"
+            >
+              <div class="col-12 px-0">
+                <div class="row">
+                  <div class="col-md-1 px-0">
+                    <input type="checkbox" id="termcheck{{index}}" name="term"
+                      (change)="addRemoveTermsFromEstimate(term)"
+                      [checked]="isTermInEstimate(term)"
+                    />
+                    <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                  </div>
+                  <div class="col-md-9 pl-0">
+                    <span style="vertical-align: top;"> {{term.terms}}</span>
                   </div>
                 </div>
               </div>

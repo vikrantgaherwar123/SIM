@@ -36,7 +36,7 @@
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
-                            <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
+                            <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -346,7 +346,7 @@
                           </div>
 
                           <button type="button" class="btnd add-line-item-button" (click)="addEditInvoiceItem()"
-                            style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value || !activeItem.quantity || !activeItem.rate"
+                            style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value"
                           >
                             Add Item
                           </button>
@@ -489,7 +489,9 @@
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
                                 (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
-                                  activeInvoice.percentage_value=0;calculateInvoice()
+                                  activeInvoice.percentage_value=0;activeInvoice.discount=0;calculateInvoice();
+                                  activeInvoice.amount=activeInvoice.gross_amount;
+                                  balance=activeInvoice.gross_amount
                                 "
                               >
                                 <img src="assets/images/delete16.png" alt="" style="height:16px;">
@@ -929,7 +931,8 @@
 
         <div class="col-12" style="padding: 20px 24px 20px 15px">
           <div class="col-12 mCustomScrollbar">
-            <div class="item termlist row product-list" *ngFor="let term of termList; let index = index" id="term1{{index}}"
+            <div class="item termlist row product-list" id="term1{{index}}"
+             *ngFor="let term of termList; let index = index" 
               [class.selected]="selectedTerm == index"
             >
               <div class="col-12 px-0">

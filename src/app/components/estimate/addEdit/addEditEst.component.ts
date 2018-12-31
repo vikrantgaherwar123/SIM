@@ -348,7 +348,6 @@ export class AddEditEstComponent implements OnInit {
         this.clientListLoading = false
       })
     } else {
-      this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
       this.setClientFilter()
     }
 
@@ -398,6 +397,15 @@ export class AddEditEstComponent implements OnInit {
       )
     }
     else {
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        if (response.records) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
+        }
+        this.setClientFilter()
+        this.clientListLoading = false
+      })
       this.ifClientExist = true;
     }
   }
@@ -431,9 +439,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   closeAddClientModal() {
-    if (this.ifClientExist) {
-      this.toasterService.pop('failure', 'No client to select');
-    }
     $('#add-client').modal('hide')
     this.addClientModal = {}
     this.activeClient = <client>{}
@@ -494,7 +499,18 @@ export class AddEditEstComponent implements OnInit {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
 
-    if (this.activeItem.unique_identifier && this.activeEstimate.listItems != undefined) {
+    if(this.activeItem.product_name ===null ){
+      this.toasterService.pop('failure', 'Product Name can not be empty');
+    }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
+      this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
+    }
+    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+      this.toasterService.pop('failure', 'rate can not be 0 or empty');
+    }
+
+    if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+       this.activeItem.rate !==null ){
+    if (this.activeItem.unique_identifier &&  this.activeEstimate.listItems.length != 0) {
       if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
@@ -510,7 +526,9 @@ export class AddEditEstComponent implements OnInit {
         rate: 0.00
       }
       this.calculateEstimate()
-    } else {
+   }
+   } 
+   else {
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
         this.fillItemDetails({ ...this.activeItem, ...product })
         this.activeEstimate.listItems.push(this.activeItem)
@@ -584,8 +602,6 @@ export class AddEditEstComponent implements OnInit {
         this.activeItem.discount_amount = (this.activeItem.rate * this.activeItem.discount / 100) * this.activeItem.quantity
         this.activeItem.total -= this.activeItem.discount_amount
       }
-      console.log("test amount" + this.activeItem.discount_amount);
-
 
       // Tax
       if (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
