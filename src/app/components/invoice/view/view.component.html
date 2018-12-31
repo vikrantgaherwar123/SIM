@@ -406,9 +406,9 @@
               <!-- Discount -->
               <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
                 <div class="col-5 discount-tax-label">
-                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
+                  <span style="text-align: left;vertical-align: bottom;" class="inline">Discount</span>
                   <div *ngIf="!isRate" class="inline font-custom">
-                    ({{currencySymbolTemp}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'| slice:0:1}})
                   </div>
                   <div *ngIf="isRate" class="inline font-custom">(%)</div>
                 </div>
@@ -425,14 +425,14 @@
               </div>
 
               <!-- Tax -->
-              <div *ngIf="show_tax_input" class="row mx-0">
+              <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                   <div class="inline font-custom">(%)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.taxrate | number:'2.' }}
+                    {{activeInv.tax_amount | number:'1.1-2'}}
                   </div>
                 </div>
               </div>
@@ -447,21 +447,21 @@
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.taxList[index].percentage | number:'2.'}}
+                    {{activeInv.taxList[index].percentage | number:'1.1-2'}}
                   </div>
                 </div>
               </div>
 
               <!-- Shipping -->
-              <div *ngIf="show_shipping_charge" class="row mx-0">
+              <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="row">
-                    <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping}}</div>
+                    <div class="inline" style="text-align: left;vertical-align: bottom;">Shipping</div>
                   </div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.shippingCharges | number:'2.'}}
+                    {{activeInv.shipping_charges | number:'1.1-2'}}
                   </div>
                 </div>
               </div>
@@ -470,12 +470,12 @@
               <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
-                    {{settings.adjustment}}
+                    Adjustment
                   </div>
                 </div>
                 <div class="col-8">
                   <div class="text-right">
-                    {{activeInv.adjustment | number:'2.'}}
+                    {{activeInv.adjustment | number:'1.1-2'}}
                   </div>
                 </div>
               </div>

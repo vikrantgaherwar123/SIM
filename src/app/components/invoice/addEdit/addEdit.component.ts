@@ -131,9 +131,6 @@ export class AddEditComponent implements OnInit {
     }
   }
   
-
-  
-
   addInit() {
     this.commonSettingsInit()
     var date = new Date()
@@ -146,7 +143,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.listItems = []
     }
   }
-
   editInit(invId) {
     this.commonSettingsInit()
 
@@ -419,6 +415,7 @@ export class AddEditComponent implements OnInit {
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
+      this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'true')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
