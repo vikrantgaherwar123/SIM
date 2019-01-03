@@ -69,6 +69,7 @@ export class ViewComponent implements OnInit {
       this.invoiceList = invoices
       this.setActiveInv()
     })
+    this.fetchInvoices()
   }
   
 

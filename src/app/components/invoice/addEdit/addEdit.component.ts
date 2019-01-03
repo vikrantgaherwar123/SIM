@@ -40,6 +40,8 @@ export class AddEditComponent implements OnInit {
   edit: boolean = false
   editTerm: boolean = true
   modalDescription: boolean = true
+  ifProductEmpty:boolean = false
+  openClientModal: boolean = false
   currencyCode: string
   last
   index
@@ -93,6 +95,25 @@ export class AddEditComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+
+
+   /*Scroll to top when arrow up clicked BEGIN*/
+    $(window).scroll(function () {
+      var height = $(window).scrollTop();
+      if (height > 100) {
+        $('#back2Top').fadeIn();
+      } else {
+        $('#back2Top').fadeOut();
+      }
+    });
+    $(document).ready(function () {
+      $("#back2Top").click(function (event) {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+      });
+    });
+/*Scroll to top when arrow up clicked END*/
   }
   
   displayWith(disp): string | undefined {
@@ -115,10 +136,17 @@ export class AddEditComponent implements OnInit {
         this.fetchCommonData()
       } else {
         this.addInit()
-        this.fetchCommonData()
       } 
     })
-
+    for (let i = 0; i < this.productList.length; i++) {
+      if (this.productList[i].prodName == "") {
+        var product = this.productList[i];
+        var index = this.productList.indexOf(product)
+        if (index > -1) {
+          this.productList.splice(index, 1);
+        }
+      }
+    }
   }
 
   //restrict user to write more than 100 value in pecrentage of discount   
@@ -265,7 +293,7 @@ export class AddEditComponent implements OnInit {
 
     // Currency Dropdown
     if (settings.currencyText) {
-      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
     }
     else {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
@@ -317,6 +345,17 @@ export class AddEditComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          var obj = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (obj.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              obj[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
         }
         this.setClientFilter()
         this.clientListLoading = false
@@ -363,24 +402,38 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList !== undefined){
-    this.filteredClients = this.billingTo.valueChanges.pipe(
-      startWith<string | client>(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filterCli(name)  : this.clientList.slice())
-    )
-  }else{
-    this.clientListLoading = true
-    this.clientService.fetch().subscribe((response: response) => {
-      if (response.records) {
-        this.store.dispatch(new clientActions.add(response.records))
-        this.clientList = response.records.filter(recs => recs.enabled == 0)
-      }
-      this.setClientFilter()
-      this.clientListLoading = false
-    })
+    if (this.clientList) {
+      this.filteredClients = this.billingTo.valueChanges.pipe(
+        startWith<string | client>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterCli(name) : this.clientList.slice())
+      )
+    }
+    else {
+
+      //to fetch and filter clients if clientlist comes undefined during switching components
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        if (response.records) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
+          var obj = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (obj.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              obj[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
+        }
+        this.setClientFilter()
+        this.clientListLoading = false
+      })
+    }
   }
-}
 
    private _filterCli(value: string): client[] {
     console.log(this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())));
@@ -406,6 +459,7 @@ export class AddEditComponent implements OnInit {
   }
 
   openAddClientModal(name) {
+    this.openClientModal = true
     this.addClientModal = {}
     this.addClientModal.name = name
     $('#add-client').modal('show')
@@ -447,6 +501,7 @@ export class AddEditComponent implements OnInit {
   }
 
   closeAddClientModal() {
+    this.openClientModal = false
     $('#add-client').modal('hide')
     this.addClientModal = {}
     this.activeClient = {}
@@ -456,12 +511,42 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
-    this.filteredProducts = this.addItem.valueChanges.pipe(
-      startWith<string | product>(''),
-      map(value => typeof value === 'string' ? value : value.prodName),
-      map(name => name ? this._filterProd(name) : this.productList.slice())
-    )
+    // for loop is to remove object of empty name
+    // for (let i = 0; i < this.productList.length; i++) {
+    //   if (this.productList[i].prodName == "") {
+    //     var product = this.productList[i];
+    //     var index = this.productList.indexOf(product)
+    //     if (index > -1) {
+    //       this.productList.splice(index, 1);
+    //     }
+    //   }
+    // }
+    
+      if (this.productList) {
+        // filter productlist to avoid duplicates
+        var obj = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueProducts = this.productList.filter(function (item) {
+            if (obj.hasOwnProperty(item.prodName)) {
+              return false;
+            } else {
+              obj[item.prodName] = true;
+              return true;
+            }
+          });
+          this.productList = uniqueProducts;
+
+          
+        this.filteredProducts = this.addItem.valueChanges.pipe(
+          startWith<string | product>(''),
+          map(value => typeof value === 'string' ? value : value.prodName),
+          map(name => name ? this._filterProd(name) : this.productList.slice())
+        )
+      }
   }
+  
+
+ 
 
   private _filterProd(value: string): product[] {
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
@@ -503,6 +588,7 @@ export class AddEditComponent implements OnInit {
   }
 
   fillItemDetails(prod = null) {
+    this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     // console.log(product)
     this.activeItem = {
@@ -522,15 +608,16 @@ export class AddEditComponent implements OnInit {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
 
-    if(this.activeItem.product_name ===null ){
-      this.toasterService.pop('failure', 'Product Name can not be empty');
+    if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
+      this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
     else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
-    if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+
+    if(this.activeItem.product_name !== undefined && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
       this.activeItem.rate !==null ){
     if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
@@ -549,7 +636,7 @@ export class AddEditComponent implements OnInit {
       }
       this.calculateInvoice()
     }
-    } else {
+    } else if(this.activeItem.product_name !== undefined) {
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
