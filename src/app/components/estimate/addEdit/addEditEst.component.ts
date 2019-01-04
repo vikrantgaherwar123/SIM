@@ -98,7 +98,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.activeEstimate = <addEditEstimate>{}
     this.route.params.subscribe(params => {
       if (params.estId) {
