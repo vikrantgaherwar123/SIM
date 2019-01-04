@@ -24,10 +24,16 @@
                           {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
 
-                        <div class="input-group pl-0">
-                          <input type="text" id="bill-to-input" class="form-control billing-input" placeholder="Search & Select Client"
+                        <div  class="input-group pl-0 inputWithIcon">
+                          <input type="text" id="bill-to-input" style="border-color: #0a71c3" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
                           >
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                          <span class="downArrowIcon">
+                          <i class="fa fa-chevron-down " aria-hidden="true"></i>
+                          </span>
+                          <a id="back2Top" title="Back to top" href="#">&#10148;</a> <!--Arrow Scroll when page ends-->
+
                           <div class="input-group-append">
                             <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
                           </div>
@@ -36,7 +42,12 @@
                           <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                           >
-                            <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()" style="width: 100%;margin-top: 3px;margin-bottom: 7px;height: 44px;"
+                              class="btn btn-primary">
+                              <i class="fa fa-plus"></i>
+                              Add New Client
+                            </button>
+                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -280,6 +291,8 @@
                             <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
                               placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
+                            <span *ngIf="ifProductEmpty === true" class="fa fa-info-circle errspan"></span>
+
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               (optionSelected)="fillItemDetails()"
                             >
@@ -346,7 +359,7 @@
                           </div>
 
                           <button type="button" class="btnd add-line-item-button" (click)="addEditInvoiceItem()"
-                            style="position: absolute; right: 0; bottom: 5px;" [disabled]="!addItem.value"
+                            style="position: absolute; right: 0; bottom: 5px;" 
                           >
                             Add Item
                           </button>
@@ -369,7 +382,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2">
+                    <div *ngIf="settings.taxFlagLevel === 1 || activeInvoice.tax_on_item === 2">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">

@@ -154,7 +154,6 @@ export class ViewEstComponent implements OnInit {
       //console.log(this.activeEst)
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
-      console.log(this.activeEst)
     }
     this.setActiveClient()
   }

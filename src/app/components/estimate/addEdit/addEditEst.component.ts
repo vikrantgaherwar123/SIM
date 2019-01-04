@@ -98,17 +98,28 @@ export class AddEditEstComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.activeEstimate = <addEditEstimate>{}
     this.route.params.subscribe(params => {
       if (params.estId) {
         this.edit = true
         this.editTerms = false
         this.editInit(params.estId)
+        this.fetchCommonData()
       } else {
+        this.fetchCommonData()
         this.addInit()
       }
-      this.fetchCommonData()
     })
+    for (let i = 0; i < this.productList.length; i++) {
+      if (this.productList[i].prodName == "") {
+        var product = this.productList[i];
+        var index = this.productList.indexOf(product)
+        if (index > -1) {
+          this.productList.splice(index, 1);
+        }
+      }
+    }
   }
 
   dataChanged(input) {
@@ -130,6 +141,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addInit() {
+    
     this.commonSettingsInit()
     var date = new Date()
     this.estimateDate.reset(date)
@@ -240,7 +252,7 @@ export class AddEditEstComponent implements OnInit {
     }
     // Currency Dropdown
     if (settings.currencyText) {
-      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
     }
     else {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
@@ -342,6 +354,17 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          var seen = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (seen.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              seen[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
         }
         this.setClientFilter()
         this.clientListLoading = false
@@ -388,26 +411,35 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if (this.clientList) {
+    if(this.clientList){
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
-    }
-    else {
-      this.clientListLoading = true
+  }else{
+    this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          var seen = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (seen.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              seen[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
         }
         this.setClientFilter()
         this.clientListLoading = false
       })
-      this.ifClientExist = true;
-    }
   }
+}
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
@@ -477,6 +509,20 @@ export class AddEditEstComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
+    // filter productlist to avoid duplicates
+    var obj = {};
+    //You can filter based on Id or Name based on the requirement
+    var uniqueProducts = this.productList.filter(function (item) {
+      if (obj.hasOwnProperty(item.prodName)) {
+        return false;
+      } else {
+        obj[item.prodName] = true;
+        return true;
+      }
+    });
+    this.productList = uniqueProducts;
+
+    
     this.filteredProducts = this.addItem.valueChanges.pipe(
       startWith<string | product>(''),
       map(value => typeof value === 'string' ? value : value.prodName),
@@ -509,7 +555,7 @@ export class AddEditEstComponent implements OnInit {
 
     if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
        this.activeItem.rate !==null ){
-    if (this.activeItem.unique_identifier &&  this.activeEstimate.listItems.length != 0) {
+    if (this.activeItem.unique_identifier && this.activeEstimate.listItems!==undefined || this.activeEstimate.listItems.length != 0) {
       if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
