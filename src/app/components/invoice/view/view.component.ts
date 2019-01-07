@@ -25,9 +25,7 @@ export class ViewComponent implements OnInit {
   invDispLimit: number = 20
   invSortTerm: string = 'created_date'
   invSearchTerm: string
-  mysymbols
 
-  
   private invoiceQueryForm = {
     client: new FormControl(),
     dateRange: {
@@ -71,7 +69,6 @@ export class ViewComponent implements OnInit {
     })
     this.fetchInvoices()
   }
-  
 
   paidAmount() {
     var temp = 0
@@ -155,7 +152,6 @@ export class ViewComponent implements OnInit {
     }
     this.setActiveClient()
   }
-  
 
   setActiveClient() {
     if (this.activeInv) {

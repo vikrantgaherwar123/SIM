@@ -28,8 +28,8 @@
                           <input type="text" id="bill-to-input" style="border-color: #0a71c3" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
                           >
-                          <i class="fa fa-search" aria-hidden="true"></i>
-                          <span class="downArrowIcon">
+                          <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true"></i>
+                          <span *ngIf="disableIcon === true" class="downArrowIcon">
                           <i class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a> <!--Arrow Scroll when page ends-->
@@ -80,7 +80,7 @@
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               Shipping Address
                             </span>
-                            <div class="address-render" *ngIf="activeClient">{{activeClient.shippingAddress}}<br /></div>
+                            <div class="address-render" *ngIf="activeClient">{{activeInvoice.shipping_address}}<br /></div>
                           </div>
                         </div>
                       </div>
@@ -91,7 +91,7 @@
                   <div class="col-12 col-sm-5 pr-0" id="invDataAdd">
                     <div class="row" style="margin-top: 5px;">
                       <div class="col-6 offset-md-2 col-md-4 pr-0">
-                        <span class="font-custom-bold text-left w-100">Invoice#</span>
+                        <span class="font-custom-bold text-left w-100">Invoice</span>
                       </div>
                       <div class="col-6">
                         <form #invNumberForm="ngForm" name="invNumberForm">
@@ -190,7 +190,7 @@
 
                 <!-- Items table -->
                 <div class="lineItemDiv">
-                  <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+                  <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
                     <thead>
                       <tr class="hd font-custom-bold">
                         <td width="34%">
@@ -373,7 +373,7 @@
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
                     <div *ngIf="settings.discountFlagLevel === 0 && activeInvoice.discount_on_item === 2">
-                      <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag=1;activeInvoice.percentage_value=0.00;">
+                      <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag=1">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
                     </div>
@@ -382,7 +382,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 || activeInvoice.tax_on_item === 2">
+                    <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2 || activeInvoice.tax_rate === 0">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
@@ -530,7 +530,7 @@
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = undefined;calculateInvoice()">
+                              <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0;calculateInvoice()">
                                 <img src="assets/images/delete16.png">
                               </div>
                             </div>
@@ -644,6 +644,24 @@
                         </div>
                       </div>
                     </div>
+                    <div *ngFor="let item of activeInvoice.payments">
+                        <div  class="row mx-0">
+                          <div class="col-6 text-left">
+                            <span class="font-custom">Paid Amount</span>
+                          </div>
+                          <div class="col-6 text-right">
+                            <span class="font-custom">{{item.paid_Amount}}</span>
+                          </div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class="col-6 text-left">
+                              <span class="font-custom">Paid Date </span>
+                            </div>
+                            <div class="col-6 text-right">
+                              <span class="font-custom">{{item.date_of_payment}}</span>
+                            </div>
+                          </div>
+                      </div>
 
                     <!-- Balance -->
                     <div class="col-12 balance-row">

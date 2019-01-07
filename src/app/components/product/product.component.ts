@@ -66,7 +66,7 @@ export class ProductComponent implements OnInit {
     var proStatus = true
 
     // If adding or editing product, make sure product with same name doesnt exist
-    if(!this.activeProduct.enabled) {
+    if(!this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {

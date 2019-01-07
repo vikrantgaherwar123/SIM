@@ -242,7 +242,7 @@
                       <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
                         Shipping Address
                       </span>
-                      <div class="address-render">{{activeClient.shippingAddress}}</div>
+                      <div class="address-render">{{activeInv.shipping_address}}</div>
                     </div>
                   </div>
                 </div>
@@ -251,7 +251,7 @@
             <div class="col-12 col-sm-5" id="invData" name="invData">
               <div class="row">
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">Invoice#</span>
+                  <span class="font-custom-bold text-left w-100">Invoice</span>
                 </div>
                 <div class="col-sm-6">
                   {{ activeInv.invoice_number  }}
@@ -408,9 +408,9 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">Discount</span>
                   <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'| slice:0:1}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
                   </div>
-                  <div *ngIf="isRate" class="inline font-custom">(%)</div>
+                  <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
                 </div>
                 <div class="col-7">
                   <div class="text-right">
@@ -428,7 +428,7 @@
               <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">(%)</div>
+                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
@@ -501,7 +501,24 @@
                   <span class="font-custom">{{paidAmount()|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
-
+              <div *ngFor="let item of activeInv.payments">
+                <div  class="row mx-0">
+                  <div class="col-6 text-left">
+                    <span class="font-custom">Paid Amount</span>
+                  </div>
+                  <div class="col-6 text-right">
+                    <span class="font-custom">{{item.paidAmount}}</span>
+                  </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="col-6 text-left">
+                      <span class="font-custom">Paid Date </span>
+                    </div>
+                    <div class="col-6 text-right">
+                      <span class="font-custom">{{item.dateOfPayment}}</span>
+                    </div>
+                  </div>
+              </div>
               <!-- Balance -->
               <div class="row mx-0 balance-row">
                 <div class="col-6 text-left">
@@ -512,6 +529,7 @@
                 </div>
               </div>
             </div>
+            <!-- Calculations -->
           </div>
         </form>
       </div>

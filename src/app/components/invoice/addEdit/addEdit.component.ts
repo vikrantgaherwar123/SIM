@@ -40,6 +40,7 @@ export class AddEditComponent implements OnInit {
   edit: boolean = false
   editTerm: boolean = true
   modalDescription: boolean = true
+  disableIcon: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
   currencyCode: string
@@ -127,7 +128,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    this.fetchCommonData()
+    
     this.route.params.subscribe(params => {
       if (params && params.invId) {
         this.edit = true
@@ -136,8 +137,9 @@ export class AddEditComponent implements OnInit {
         this.fetchCommonData()
       } else {
         this.addInit()
-      } 
+      }
     })
+    
     for (let i = 0; i < this.productList.length; i++) {
       if (this.productList[i].prodName == "") {
         var product = this.productList[i];
@@ -160,6 +162,7 @@ export class AddEditComponent implements OnInit {
   }
   
   addInit() {
+    this.fetchCommonData()
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -173,7 +176,7 @@ export class AddEditComponent implements OnInit {
   }
   editInit(invId) {
     this.commonSettingsInit()
-
+    this.disableIcon = false;
     // Fetch selected invoice
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       if(invoice.records !== null) {
@@ -192,7 +195,7 @@ export class AddEditComponent implements OnInit {
             tax_rate: this.activeInvoice.listItems[i].tax_rate,
             total: this.activeInvoice.listItems[i].price,
             unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
-            unit: this.activeInvoice.listItems[i].unit
+            unit: this.activeInvoice.listItems[i].unit,
           })
         }
         this.activeInvoice.listItems = temp
@@ -436,7 +439,6 @@ export class AddEditComponent implements OnInit {
   }
 
    private _filterCli(value: string): client[] {
-    console.log(this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())));
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -490,8 +492,10 @@ export class AddEditComponent implements OnInit {
           this.clientList.push(tempClient)
           this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
-
+          this.toasterService.pop('success', 'Client Added Successfully');
           $('#add-client').modal('hide')
+          this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
+          // this.selectedClientChange(this.activeClient);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -1096,6 +1100,8 @@ export class AddEditComponent implements OnInit {
 
     this.addPaymentModal.balance -= this.addPaymentModal.paid_amount
     this.addPaymentModal.paid_amount = 0.00
+    
+    
   }
 
   addPaymentsInInvoice() {

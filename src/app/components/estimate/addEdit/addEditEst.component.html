@@ -35,6 +35,11 @@
                       <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayWith"
                         autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                       >
+                      <button *ngIf="openClientModal === false" (click)="openAddClientModal()" style="width: 100%;margin-top: 3px;margin-bottom: 7px;height: 44px;"
+                        class="btn btn-primary">
+                        <i class="fa fa-plus"></i>
+                        Add New Client
+                      </button>
                         <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                           {{client.name}}
                         </mat-option>
@@ -73,7 +78,7 @@
                         </span>
                         <br />
                         <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                        <div class="address-render">{{activeClient.shippingAddress}}<br /></div>
+                        <div class="address-render">{{activeEstimate.shipping_address}}<br /></div>
                       </div>
                     </div>
                   </div>
@@ -125,7 +130,7 @@
 
             <!-- Items table -->
             <div class="lineItemDiv">
-              <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+              <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="34%">
@@ -305,9 +310,8 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold">
-                <div *ngIf="activeEstimate.discount_on_item === 2 || settings.discountFlagLevel ===0 && activeEstimate.percentage_value ===0 || activeEstimate.discount ===0">
-                  <a class="inline" (click)="estimateActive =true;activeEstimate.discount_on_item=0;settings.discountFlagLevel=1;
-                  activeEstimate.percentage_flag = 0;activeEstimate.percentage_flag=1">
+                <div *ngIf="activeEstimate.discount_on_item === 2 ||settings.discountFlagLevel === 0 && activeEstimate.discount === 0 || activeEstimate.percentage_value ===0 ">
+                  <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
                 </div>
@@ -316,7 +320,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
+                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === 0">
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
                 <div *ngIf="activeEstimate.adjustment === undefined">
@@ -378,8 +382,8 @@
                 </div>
 
                 <!-- Discounts -->
-                <div *ngIf="activeEstimate.percentage_value !==0 || activeEstimate.discount !==0 || estimateActive ===true ">
-                  <div class="row mx-0" *ngIf="activeEstimate.discount_on_item !==2">
+                <div *ngIf="activeEstimate.discount_on_item === 0 && activeEstimate.percentage_value!==0 || activeEstimate.discount !==0">
+                  <div *ngIf="activeEstimate.discount_on_item !== 2" class="row mx-0">
                     <div class="col-5 discount-tax-label pr-0">
                       <span  style="text-align: left;vertical-align: bottom;" class="inline">
                         {{settings.discount ? settings.discount : 'Discount'}}
@@ -452,7 +456,7 @@
                 </div>
 
                 <!-- Tax -->
-                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1">
+                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==0">
                   <div class="col-5 discount-tax-label pr-0">
                     <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                     <div class="d-inline font-custom">(%)</div>
@@ -467,7 +471,7 @@
                         />
                         <!-- <div class="input-group-addon addon-right">%</div>-->
                         <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.tax_on_item = 2;calculateEstimate()">
+                          <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
                             <img src="assets/images/delete16.png" style="height:16px;">
                           </div>
                         </div>
