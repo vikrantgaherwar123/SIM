@@ -238,7 +238,8 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 	border: 1px solid #666;
 }
 .row-item td {
-  border-bottom: 1px solid #e3e3e3;
+	border-bottom: none;
+	border-top: none;
   padding-bottom: 7px;
   padding-top: 7px;
 }

@@ -330,7 +330,7 @@
                       <div class="">
                         <div class="form-group">
                           <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
-                            {{item.productName}}
+                            {{item.prodName}}
                           </div>
                           <div class="text-left text-truncate">
                             {{item.description}}
@@ -408,9 +408,9 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">Discount</span>
                   <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'| slice:0:1}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
                   </div>
-                  <div *ngIf="isRate" class="inline font-custom">(%)</div>
+                  <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
                 </div>
                 <div class="col-7">
                   <div class="text-right">
@@ -428,7 +428,7 @@
               <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">(%)</div>
+                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">

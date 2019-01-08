@@ -816,7 +816,7 @@ export class AddEditEstComponent implements OnInit {
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
-          this.toasterService.pop('success', 'Estimate updated successfully');
+          //  this.toasterService.pop('success', 'Estimate updated successfully');
           this.router.navigate(['/estimate/view'])
         } else {
           this.toasterService.pop('success', 'Estimate saved successfully');
@@ -831,6 +831,7 @@ export class AddEditEstComponent implements OnInit {
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
     this.save(true)
+    this.toasterService.pop('success', 'Invoice Deleted successfully');
   }
 
   calculateEstimate() {

@@ -988,7 +988,7 @@ export class AddEditComponent implements OnInit {
         if(!this.edit) {
           this.updateSettings()
         }
-          this.toasterService.pop('success', 'Invoice saved successfully');
+          
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.router.navigate(['/invoice/view'])
@@ -1004,6 +1004,7 @@ export class AddEditComponent implements OnInit {
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
     this.save(true)
+    this.toasterService.pop('success', 'Invoice Deleted successfully');
   }
 
   resetCreateInvoice() {

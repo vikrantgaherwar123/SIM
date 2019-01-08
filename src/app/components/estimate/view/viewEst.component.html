@@ -400,11 +400,11 @@
               <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">(%)</div>
+                  <div class="inline font-custom">({{activeEst.taxrate}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeEst.taxrate | number:'2.'}}
+                    {{activeEst.taxAmt | number:'2.'}}
                   </div>
                 </div>
               </div>

@@ -34,6 +34,7 @@ export class ClientComponent implements OnInit {
   createMode: boolean = true
   editMode: boolean = false
   viewMode: boolean = false
+  deleteclient:boolean = false
 
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
@@ -168,6 +169,13 @@ export class ClientComponent implements OnInit {
       
           }
   }
+  openDeleteClientModal() {
+    this.deleteclient = true
+    $('#delete-client').modal('show')
+    $('#delete-client').on('shown.bs.modal', (e) => {
+      $('#delete-client input[type="text"]')[1].focus()
+    })
+  }
 
   addNew() {
     this.activeClient = <client>{}
@@ -184,6 +192,8 @@ export class ClientComponent implements OnInit {
     this.viewMode = false
   }
 
+  
+
   batchUpload() {
     this.router.navigate(['/client/batch/'])
   }
@@ -191,8 +201,10 @@ export class ClientComponent implements OnInit {
   deleteClient() {
     this.activeClient.enabled = 1
     this.save(true, null)
+    this.deleteclient = false
+    
   }
-
+ 
   editThis() {
     // If there are clients with same name in db, Allow them to make changes
     if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {

@@ -29,3 +29,21 @@
 	width: 40px;
 	height: auto;
 }
+/* css - tejaswini */
+/* scrollbar */
+.force-overflow
+{
+	min-height: 450px;
+}
+
+#style-3::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#style-3::-webkit-scrollbar-thumb
+{
+	background-color: #bababa;
+	border-radius: 100px;
+}

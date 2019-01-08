@@ -211,11 +211,17 @@ input[type=number] {
   font-family: quicksand_regular;
   font-size: 14px;
   color: rgba(0,0,0,.87);
-  border-bottom: 1px solid #c8c8c8;
+  /* border-bottom: 1px solid #c8c8c8; */
 }
 .mat-option:hover {
-  background-color: #e8e8e8 !important;
+  
+  background-color:none;
 }
+
+.mat-option:focus:not(.mat-option-disabled), .mat-option:hover:not(.mat-option-disabled) {
+  background: none;
+}
+
 .mat-calendar-previous-button::after, .mat-calendar-next-button::after {
   width: 10px;
   height: 10px;
@@ -223,4 +229,21 @@ input[type=number] {
 }
 .cdk-overlay-container {
   z-index: 1051;
+}
+/* css  -  tejaswini */
+.mat-calendar-body-today.mat-calendar-body-selected {
+  box-shadow: none;
+}
+.mat-calendar-body-selected {
+  background-color:#176cc1 !important;
+}
+textarea {
+  overflow: auto;
+  resize: vertical;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+}
+.height_40
+{
+  height: 40px !important;
 }
