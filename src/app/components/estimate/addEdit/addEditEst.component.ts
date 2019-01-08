@@ -38,6 +38,7 @@ export class AddEditEstComponent implements OnInit {
   ifClientExist: boolean = false
   modalDescription: boolean = true
   estimateActive: boolean = false
+  openClientModal: boolean = false
   editTerms: boolean = true
 
   last
@@ -461,6 +462,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   openAddClientModal(name) {
+    this.openClientModal = true
     this.addClientModal = {}
     this.addClientModal.name = name
     $('#add-client').modal('show')
@@ -470,6 +472,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   closeAddClientModal() {
+    this.openClientModal = false
     $('#add-client').modal('hide')
     this.addClientModal = {}
     this.activeClient = <client>{}
@@ -497,8 +500,9 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
           this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
           this.billingTo.setValue(this.activeClient)
-
+          this.toasterService.pop('success', 'Client Added Successfully');
           $('#add-client').modal('hide')
+          this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})

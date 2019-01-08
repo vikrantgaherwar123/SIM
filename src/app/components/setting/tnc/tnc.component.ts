@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 
+
 import { terms, setting } from '../../../interface'
 import { generateUUID } from '../../../globalFunctions'
 
@@ -58,7 +59,7 @@ export class TncComponent implements OnInit {
 
       var d = new Date()
       this.activeTnc.modifiedOn = d.getTime()
-
+      
       this.tncService.add([this.tncService.changeKeysForApi(this.activeTnc)]).subscribe((response: any) => {
         if (response.status === 200) {
           var changedTnc = this.tncService.changeKeysForStore(response.termsAndConditionList[0])
