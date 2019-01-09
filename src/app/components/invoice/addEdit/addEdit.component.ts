@@ -43,10 +43,12 @@ export class AddEditComponent implements OnInit {
   disableIcon: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
+  shippingAdressChanged: boolean = false
   currencyCode: string
   last
   index
   mysymbols
+  shippingAddress
 
   private clientList: client[]
   private allClientList: client[]
@@ -102,13 +104,13 @@ export class AddEditComponent implements OnInit {
     $(window).scroll(function () {
       var height = $(window).scrollTop();
       if (height > 100) {
-        $('#back2Top').fadeIn();
+        $('#invSubmitBtn').fadeIn();
       } else {
-        $('#back2Top').fadeOut();
+        $('#invSubmitBtn').fadeOut();
       }
     });
     $(document).ready(function () {
-      $("#back2Top").click(function (event) {
+      $("#invSubmitBtn").click(function (event) {
         event.preventDefault();
         $("html, body").animate({ scrollTop: 0 }, "slow");
         return false;
@@ -175,12 +177,15 @@ export class AddEditComponent implements OnInit {
     }
   }
   editInit(invId) {
+    //to view updated or viewed invoice in view page
+    // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
     this.disableIcon = false;
     // Fetch selected invoice
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       if(invoice.records !== null) {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+        this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
 
         // Change list item keys compatible
         if(this.activeInvoice.listItems){
@@ -447,6 +452,7 @@ export class AddEditComponent implements OnInit {
     temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
     if (temp !== undefined) {
+      this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
       this.activeClient = temp
       this.activeInvoice.unique_key_fk_client = temp.uniqueKeyClient
     } else {
@@ -548,12 +554,11 @@ export class AddEditComponent implements OnInit {
         )
       }
   }
-  
-
- 
 
   private _filterProd(value: string): product[] {
+    if(this.productList){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -970,6 +975,7 @@ export class AddEditComponent implements OnInit {
     var self = this
     // console.log(this.activeInvoice);
     // return false
+    if(this.activeInvoice.invoice_number !==""){
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
@@ -1004,9 +1010,17 @@ export class AddEditComponent implements OnInit {
       $('#invSubmitBtn').removeAttr('disabled')
     })
   }
+  // validate user if he removes invoice number and try to save invoice 
+  else {                    
+    this.toasterService.pop('failure', 'Couldnt save invoice Please add Invoice Number');
+    this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
+    $('#invSubmitBtn').removeAttr('disabled')
+  }
+  }
 
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
+    // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
   }
 

@@ -320,7 +320,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === 0">
+                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === undefined">
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
                 <div *ngIf="activeEstimate.adjustment === undefined">
@@ -456,7 +456,7 @@
                 </div>
 
                 <!-- Tax -->
-                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==0">
+                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==undefined">
                   <div class="col-5 discount-tax-label pr-0">
                     <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                     <div class="d-inline font-custom">(%)</div>
@@ -471,16 +471,12 @@
                         />
                         <!-- <div class="input-group-addon addon-right">%</div>-->
                         <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
+                          <div class="addon selector" (click)="activeEstimate.tax_rate=undefined;activeEstimate.tax_on_item=2;calculateEstimate()">
                             <img src="assets/images/delete16.png" style="height:16px;">
                           </div>
                         </div>
                       </div>
                     </form>
-
-                    <!-- <div class="form-error">
-                      <span *ngIf="tax_input.tax_input.$error.max">Not more than 100</span>
-                    </div>      -->
                   </div>
                 </div>
 

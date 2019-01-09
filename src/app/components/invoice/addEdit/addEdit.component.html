@@ -80,7 +80,8 @@
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               Shipping Address
                             </span>
-                            <div class="address-render" *ngIf="activeClient">{{activeInvoice.shipping_address}}<br /></div>
+                            <div class="address-render" *ngIf="disableIcon === false">{{shippingAddress}}<br /></div>
+                            <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
                           </div>
                         </div>
                       </div>
@@ -101,6 +102,7 @@
                             <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
                               [(ngModel)]="activeInvoice.invoice_number" required onfocus="this.select()"
                             />
+                            <span *ngIf="activeInvoice.invoice_number === '' " class="fa fa-info-circle errspan"></span> <!--show error icon if no invoice number-->
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
                               <span *ngIf="invNumberForm.invoiceNumber.error.required">Invoice No. required</span>
                             </div>
@@ -644,7 +646,8 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngFor="let item of activeInvoice.payments">
+                    <!-- To show List of paid Amount -->
+                    <!-- <div *ngFor="let item of activeInvoice.payments">
                         <div  class="row mx-0">
                           <div class="col-6 text-left">
                             <span class="font-custom">Paid Amount</span>
@@ -661,7 +664,7 @@
                               <span class="font-custom">{{item.date_of_payment}}</span>
                             </div>
                           </div>
-                      </div>
+                      </div> -->
 
                     <!-- Balance -->
                     <div class="col-12 balance-row">

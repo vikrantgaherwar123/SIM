@@ -133,10 +133,10 @@
             <div *ngIf="invListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
-
-            <div [class.active]=" invoice.created_date " [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-              (click)="setActiveInv(invoice.unique_identifier)"
+              <!-- [class.active]=" invoice.created_date " -->
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
               *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
+              (click)="setActiveInv(invoice.unique_identifier)"
             >
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ invoice.created_date | date: 'dd MMM' }}
@@ -231,10 +231,10 @@
                         Address
                       </span>
                       <div class="address-render">{{activeClient.addressLine1}}</div>
-                      <div *ngIf="activeClient.email">
+                      <div *ngIf="activeClient">         <!--activeClient.email-->
                         Email: {{activeClient.email}}
                       </div>
-                      <div *ngIf="activeClient.email">
+                      <div *ngIf="activeClient">         <!--activeClient.number-->
                         Contact No: {{activeClient.number}}
                       </div>
                     </div>
@@ -267,7 +267,7 @@
                 </div>
               </div>
 
-              <div class="row">
+              <div *ngIf="activeInv.reference" class="row">
                 <div class="offset-md-2 col-sm-6 col-md-4">
                   <span class="font-custom-bold text-left w-100">Reference</span>
                 </div>
@@ -276,7 +276,7 @@
                 </div>
               </div>
 
-              <div class="row">
+              <div *ngIf="activeInv.due_date" class="row">
                 <div class="offset-md-2 col-xs-6 col-md-4">
                   <span class="font-custom-bold text-left w-100">{{settings.mTvDueDate}}</span>
                 </div>

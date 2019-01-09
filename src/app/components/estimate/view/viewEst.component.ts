@@ -64,15 +64,17 @@ export class ViewEstComponent implements OnInit {
 
     // Set Active estimate whenever estimate list changes
     this.store.select('estimate').subscribe(estimates => {
+      // var estimateId = localStorage.estimateId;
       if(estimates.length > 0) {
-        this.estimateList = estimates
+        this.estimateList = estimates 
         this.setActiveEst()
       } 
+      // display estimateList and one single estimate detail
       this.estListLoader = true
       this.estimateService.fetch().subscribe((response: any) => {
         this.estListLoader = false
         var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-        this.store.dispatch(new estimateActions.add(records))
+        // this.store.dispatch(new estimateActions.add(records))
         this.estimateList = records
         this.setActiveEst()
       })

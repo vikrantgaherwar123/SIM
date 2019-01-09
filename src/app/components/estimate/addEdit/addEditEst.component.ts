@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute, NavigationStart  } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
@@ -39,6 +39,7 @@ export class AddEditEstComponent implements OnInit {
   modalDescription: boolean = true
   estimateActive: boolean = false
   openClientModal: boolean = false
+  shippingAdressChanged: boolean = false
   editTerms: boolean = true
 
   last
@@ -72,6 +73,7 @@ export class AddEditEstComponent implements OnInit {
   showMultipleTax
   taxtext
   discounttext
+  shippingAddress
 
   private user: {
     user: {
@@ -79,6 +81,7 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
+
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
     private route: ActivatedRoute,
@@ -96,6 +99,7 @@ export class AddEditEstComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+    
   }
 
   ngOnInit() {
@@ -153,12 +157,15 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
+    //to view updated or viewed estimate in view page
+    // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate
     this.commonSettingsInit()
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if (!this.activeEstimate.taxList)
           this.activeEstimate.taxList = [];
 
@@ -447,6 +454,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   selectedClientChange(client) {
+    this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
     var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
     if (temp !== undefined) {
@@ -794,6 +802,7 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.device_modified_on = new Date().getTime()
 
     var self = this
+    if(this.activeEstimate.estimate_number !==""){
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
         //alert('Couldnt save Estimate')
@@ -831,9 +840,17 @@ export class AddEditEstComponent implements OnInit {
       $('#estSubmitBtn').removeAttr('disabled')
     })
   }
+  // validate user if he removes invoice number and try to save invoice 
+  else {                    
+    this.toasterService.pop('failure', 'Couldnt save estimate Please add estimate Number');
+    this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
+    $('#estSubmitBtn').removeAttr('disabled')
+  }
+  }
 
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
+    // localStorage.setItem('deleteEstimateId', "1" )
     this.save(true)
   }
 

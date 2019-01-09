@@ -23,7 +23,7 @@ export class ViewComponent implements OnInit {
   activeInv: invoice
   invListLoader: boolean = false
   invDispLimit: number = 20
-  invSortTerm: string = 'created_date'
+  invSortTerm: string = 'createdDate'
   invSearchTerm: string
 
   private invoiceQueryForm = {
@@ -61,11 +61,21 @@ export class ViewComponent implements OnInit {
         this.store.dispatch(new clientActions.add(response.records))
       })
     }
-
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
       this.setActiveInv()
+
+
+      // var invoiceId = localStorage.invoiceId;                //set invoice which is updated recently 
+      // var deleteInvoiceId = localStorage.deleteinvoiceId;    //if viewed invoice is deleted then show default invoice
+      // if(deleteInvoiceId === "1"){
+      //   this.setActiveInv()
+      //   // localStorage.removeItem('deleteinvoiceId');
+      //   // localStorage.removeItem('invoiceId');
+      // }else if(deleteInvoiceId === undefined){        
+      //  this.setActiveInv(invoiceId)
+      
     })
     this.fetchInvoices()
   }
@@ -145,9 +155,10 @@ export class ViewComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    if (!invId) {
+    if (!invId || invId ==="null" ) {
       this.activeInv = this.invoiceList[0]
     } else {
+      // invId = invoiceId;
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()
