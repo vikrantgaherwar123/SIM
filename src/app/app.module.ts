@@ -47,6 +47,7 @@ import { PasswordComponent } from './components/setting/password/password.compon
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import { SearchModalComponent } from './components/search-modal/search-modal.component';
 
 
 // AoT requires an exported function for factories
@@ -90,6 +91,7 @@ export function getAuthServiceConfigs() {
     BankingComponent,
     PasswordComponent,
     UserProfileComponent,
+    SearchModalComponent,
   ],
   imports: [
     BrowserModule,

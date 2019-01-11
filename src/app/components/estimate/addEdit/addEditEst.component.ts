@@ -40,6 +40,7 @@ export class AddEditEstComponent implements OnInit {
   estimateActive: boolean = false
   openClientModal: boolean = false
   shippingAdressChanged: boolean = false
+  shippingAddressEditMode: boolean = false
   editTerms: boolean = true
 
   last
@@ -165,6 +166,7 @@ export class AddEditEstComponent implements OnInit {
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+        this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if (!this.activeEstimate.taxList)
           this.activeEstimate.taxList = [];
@@ -500,6 +502,7 @@ export class AddEditEstComponent implements OnInit {
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
+      this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'disabled')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
@@ -510,6 +513,8 @@ export class AddEditEstComponent implements OnInit {
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
           $('#add-client').modal('hide')
+          this.clientListLoading = false
+          // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
         }
         else {

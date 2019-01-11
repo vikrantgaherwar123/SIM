@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core'
+
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
+import { SearchService } from '../../../services/search.service';
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
 import { FormControl } from '@angular/forms'
@@ -42,19 +44,21 @@ export class ViewComponent implements OnInit {
   private settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
+    private searchService : SearchService,
     private store: Store<AppState>,
     public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
-    store.select('globals').subscribe(globals => {
-      if (Object.keys(globals.invoiceQueryForm).length > 0) {
-        this.invoiceQueryForm = globals.invoiceQueryForm
-      }
-    })
+    // store.select('globals').subscribe(globals => {
+    //   if (Object.keys(globals.invoiceQueryForm).length > 0) {
+    //     this.invoiceQueryForm = globals.invoiceQueryForm
+    //   }
+    // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
   }
 
   ngOnInit() {
+   
     // Fetch clients if not in store
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -65,19 +69,9 @@ export class ViewComponent implements OnInit {
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
       this.setActiveInv()
-
-
-      // var invoiceId = localStorage.invoiceId;                //set invoice which is updated recently 
-      // var deleteInvoiceId = localStorage.deleteinvoiceId;    //if viewed invoice is deleted then show default invoice
-      // if(deleteInvoiceId === "1"){
-      //   this.setActiveInv()
-      //   // localStorage.removeItem('deleteinvoiceId');
-      //   // localStorage.removeItem('invoiceId');
-      // }else if(deleteInvoiceId === undefined){        
-      //  this.setActiveInv(invoiceId)
-      
     })
-    this.fetchInvoices()
+    this.SearchInvoice()
+    // this.fetchInvoices()
   }
 
   paidAmount() {
@@ -106,7 +100,7 @@ export class ViewComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-
+    this.invoiceQueryForm.client = this.searchService.getUserData()
     if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {

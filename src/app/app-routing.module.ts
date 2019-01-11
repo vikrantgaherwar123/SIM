@@ -16,12 +16,16 @@ import { CustomFieldComponent } from './components/setting/custom-field/custom-f
 import { BankingComponent } from './components/setting/banking/banking.component'
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
+import { SearchModalComponent } from './components/search-modal/search-modal.component';
+
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
+  { path: 'search/invoice', component: SearchModalComponent, canActivate: [AuthGuard] },
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
   { path: 'invoice', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },

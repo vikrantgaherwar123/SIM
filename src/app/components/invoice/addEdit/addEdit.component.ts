@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
@@ -12,9 +13,9 @@ import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
-
 import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
+
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
@@ -48,6 +49,7 @@ export class AddEditComponent implements OnInit {
   last
   index
   mysymbols
+  formatedDate
   shippingAddress
 
   private clientList: client[]
@@ -98,25 +100,7 @@ export class AddEditComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
-
-
-   /*Scroll to top when arrow up clicked BEGIN*/
-    $(window).scroll(function () {
-      var height = $(window).scrollTop();
-      if (height > 100) {
-        $('#invSubmitBtn').fadeIn();
-      } else {
-        $('#invSubmitBtn').fadeOut();
-      }
-    });
-    $(document).ready(function () {
-      $("#invSubmitBtn").click(function (event) {
-        event.preventDefault();
-        $("html, body").animate({ scrollTop: 0 }, "slow");
-        return false;
-      });
-    });
-/*Scroll to top when arrow up clicked END*/
+    
   }
   
   displayWith(disp): string | undefined {
@@ -168,6 +152,10 @@ export class AddEditComponent implements OnInit {
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
+    console.log(this.invoiceDate);
+    this.formatedDate = new DatePipe('en').transform(date, 'dd/mm/yyyy')
+    console.log(this.formatedDate); 
+    
     this.activeInvoice.created_date = (date.getFullYear() + '-' +
       ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
       ('0' + date.getDate()).slice(-2)
@@ -499,7 +487,9 @@ export class AddEditComponent implements OnInit {
           this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
+          this.clientListLoading = false
           $('#add-client').modal('hide')
+          // match a key to select and save a client in a textbox after adding client successfully
           this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
           // this.selectedClientChange(this.activeClient);
         }
@@ -668,6 +658,8 @@ export class AddEditComponent implements OnInit {
     }
     $('#edit-item').modal('hide')
   }
+
+ 
 
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {

@@ -78,7 +78,8 @@
                         </span>
                         <br />
                         <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                        <div class="address-render">{{activeEstimate.shipping_address}}<br /></div>
+                        <div class="address-render" *ngIf="shippingAddressEditMode===true">{{shippingAddress}}<br /></div>
+                        <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
                       </div>
                     </div>
                   </div>

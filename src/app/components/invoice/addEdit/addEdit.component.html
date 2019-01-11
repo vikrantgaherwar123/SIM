@@ -30,7 +30,7 @@
                           >
                           <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true"></i>
                           <span *ngIf="disableIcon === true" class="downArrowIcon">
-                          <i class="fa fa-chevron-down " aria-hidden="true"></i>
+                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a> <!--Arrow Scroll when page ends-->
 
@@ -704,7 +704,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
+        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/search/invoice'])">   <!--'/invoice/view'-->
           Show Previous Invoices
         </button>
 
