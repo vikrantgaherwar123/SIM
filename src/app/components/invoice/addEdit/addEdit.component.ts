@@ -116,6 +116,21 @@ export class AddEditComponent implements OnInit {
       });
     });
 /*Scroll to top when arrow up clicked END*/
+    // save button processing script
+    $(document).ready(function () {
+      $('.btn').on('click', function () {
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+        setTimeout(function () {
+          $this.html($this.data('original-text'));
+        }, 4000);
+      });
+    })
+    // save button processing script ends
   }
   
   displayWith(disp): string | undefined {
@@ -1116,6 +1131,10 @@ export class AddEditComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
+
+  // save button processing script
+  
+  
 
   // CURRENTLY USELESS FUNCTIONS
   log(a) {

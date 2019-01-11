@@ -97,7 +97,7 @@
 
                 <!-- Top Buttons -->
                 <div class="col-5 col-md-4 pull-right px-0 font-custom-bold">
-                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn btn-success btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
+                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
@@ -105,12 +105,12 @@
                     DELETE
                   </button>
                   <div class="rightDivBtns">
-                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)" *ngIf="editMode" class="btn btn-success btn-raised width10btn no-border-radius pull-right ml-2 font-custom-bold"
+                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)" *ngIf="editMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid">
 
                       UPDATE
                     </button>
-                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn btn-success btn-raised width10btn no-border-radius pull-right ml-2 font-custom-bold"
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="createMode" [disabled]="!f.valid">
                       SAVE
                     </button>
@@ -312,7 +312,7 @@
               <!-- Bottom Buttons -->
               <div class="row">
                 <div class="col-12 align-self-end">
-                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn btn-success btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
+                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
@@ -325,14 +325,14 @@
                     [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
                       confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
                     "
-                    (confirm)="deleteClient()" [disabled]="!f.valid"
+                    (confirm)="deleteClient()" [disabled]="!f.valid"  
                   > -->
                   <div class="rightDivBtns">
-                    <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)" class="btn btn-success btn-raised ml-2 width10btn no-border-radius pull-right font-custom-bold"
+                    <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="editMode" [disabled]="!f.valid">
                       UPDATE
                     </button>
-                    <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 0)" class="btn btn-success btn-raised ml-2 width10btn no-border-radius pull-right font-custom-bold"
+                    <button id="saveClientBtn" type="button" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       data-loading-text="Saving <i class='fa fa-spinner fa-spin '></i>" *ngIf="createMode" [disabled]="!f.valid">
                       SAVE
                     </button>

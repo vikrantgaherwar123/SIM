@@ -113,7 +113,7 @@
                   </div>
                   <div class="col-6">
                     <input type="text" class="form-control"
-                      [formControl]="estimateDate" matInput [matDatepicker]="picker" required readonly
+                      [formControl]="myDate" matInput [matDatepicker]="picker" required readonly
                       (click)="picker.open()"
                     >
                     <mat-datepicker #picker></mat-datepicker>
@@ -595,7 +595,7 @@
                 <!-- Save -->
                 <div class="col-12 px-0 mt-2">
                   <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
-                    class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
                     data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                   >
                     SAVE
@@ -616,18 +616,18 @@
 
       <!-- Previous Estimates Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/estimate/view'])">
+        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
           Show Previous Estimates
         </button>
 
         <!-- Delete Estimates Button -->
-        <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
+        <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
           [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
             confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
           "
         >
           Delete Estimates
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -865,7 +865,7 @@
                 <div class="inline">Default?</div>
               </div>
               <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+              class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
                 [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)"
               >
                 SAVE

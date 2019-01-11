@@ -334,7 +334,7 @@
                               [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
-                          <button type="button"  class="small_btn btnd add-line-item-button" (click)="addEditInvoiceItem()"
+                          <button type="button"  class="small_btn btn-custom-1" (click)="addEditInvoiceItem()"
                           >Add Item
                           </button>
                           
@@ -515,7 +515,7 @@
                             <input type="number" id="percentage_input" name="percentage_input" class="form-control"
                               *ngIf="activeInvoice.percentage_flag == 1" min="1" max="5"
                               [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()"
-                              (ngModelChange)="dataChanged($event)" onfocus="this.select()"
+                              (ngModelChange)="dataChanged($event)" onfocus="this.select()" style="color: #aaaaaa;"
                             />
 
                             <input type="number" id="discount_input" name="discount_input" class="form-control"
@@ -528,7 +528,7 @@
                       </div>
                       <div class="col-4 pr-0">
                         <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label" 
-                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" disabled
+                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" disabled style="color:#eaeaea"
                       />
                       </div>
 
@@ -556,7 +556,7 @@
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
                             <input type="number" id="tax_input" name="tax_input" class="form-control"
-                              step="any"min="0.00" max="100" required
+                              step="any"min="0.00" max="100" required style="color: #aaaaaa;"
                               [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onfocus="this.select()"
                             />
                           </div>
@@ -564,7 +564,7 @@
                       </div>
                       <div class="col-4 pr-0">
                         <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label" 
-                        placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" disabled
+                        placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" style="color:#eaeaea" disabled
                       />
                       </div>
                       <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
@@ -714,8 +714,8 @@
                       </button>
                      
                       <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
-                        class="btn btn-success btn-raised width25btn pull-right font-weight-bold"
-                        data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>" style="box-shadow: none !important;"
+                        class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
+                        data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
                         SAVE
                       </button>
@@ -737,18 +737,8 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btnd add-line-item-button" (click)="router.navigate(['/invoice/view'])">
-          Show Previous Invoices
-        </button>
-
-        <!-- Delete Invoices Button -->
-        <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"
-          [swal]="{ title: 'Are you sure want to delete Invoice?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
-          "
-        >
-          Delete Invoices
-        </button>
+        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices
+        </button> 
       </div>
     </div>
   </div>

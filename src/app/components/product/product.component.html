@@ -113,7 +113,7 @@
                 <!-- Top Buttons -->
                 <div class="col-5 col-md-4 px-0 pull-right">
                   <button type="button" *ngIf="viewMode" (click)="editThis(product)"
-                    class="btn btn-success btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
@@ -126,13 +126,13 @@
                  </button>
                   <div class="rightDivBtns">
                     <button type="button" id="updateProBtn" (click)="save(f.valid, 0)"
-                      class="btn btn-raised btn-success no-border-radius pull-right ml-2 width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="createMode" [disabled]="!f.valid"
                     >
                       SAVE
                     </button>
                     <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
-                      class="btn btn-raised btn-success no-border-radius pull-right ml-2 width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="editMode" [disabled]="!f.valid"
                     >
                      
@@ -326,7 +326,7 @@
               <div class="row">
                 <div class="col-12 pull-right">
                   <button type="button" (click)="editThis(product)" *ngIf="viewMode"
-                    class="btn btn-success btn-raised no-border-radius pull-right width10btn"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
@@ -339,13 +339,13 @@
                   </button>
                   <div class="rightDivBtns">
                     <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="createMode"
-                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
                       SAVE
                     </button>
                     <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="editMode"
-                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
                       UPDATE

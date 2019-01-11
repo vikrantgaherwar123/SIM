@@ -20,12 +20,16 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster'
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-estimate',
   templateUrl: './addEditEst.component.html',
-  styleUrls: ['./addEditEst.component.css']
+  styleUrls: ['./addEditEst.component.css'],
+  providers: [DatePipe]
 })
+
+
 export class AddEditEstComponent implements OnInit {
 
   activeEstimate: addEditEstimate
@@ -70,6 +74,7 @@ export class AddEditEstComponent implements OnInit {
   tax_on: string
   discount_on: string
   settings: any
+  myDate : any
 
   showMultipleTax
   taxtext
@@ -89,6 +94,7 @@ export class AddEditEstComponent implements OnInit {
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
+    private datePipe: DatePipe,
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService
@@ -98,6 +104,26 @@ export class AddEditEstComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+
+    this.myDate = new Date();
+    console.log(this.myDate = this.datePipe.transform(this.myDate, 'dd-MM-yyyy'))
+
+    // save button processing script
+    $(document).ready(function () {
+      $('.btn').on('click', function () {
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+        setTimeout(function () {
+          $this.html($this.data('original-text'));
+        }, 4000);
+      });
+    })
+    // save button processing script ends
+    
   }
 
   ngOnInit() {

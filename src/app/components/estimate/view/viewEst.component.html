@@ -131,7 +131,7 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Estimate
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar">
+          <div class="col-12 px-0 mCustomScrollbar style-3">
             <div style="background-color: #fff;" *ngIf="estListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
@@ -178,7 +178,7 @@
           <div class="row">
             <div class="col-md-12">
               <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btn-raised btn-success no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn"
                 title="Edit"
               >
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
