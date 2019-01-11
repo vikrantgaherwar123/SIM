@@ -40,6 +40,8 @@ export class AddEditEstComponent implements OnInit {
   estimateActive: boolean = false
   openClientModal: boolean = false
   editTerms: boolean = true
+  disableProductText: boolean = true
+  ifProductEmpty:boolean = false
 
   last
   index
@@ -549,6 +551,7 @@ export class AddEditEstComponent implements OnInit {
     // console.log(this.addItem, uid)
 
     if(this.activeItem.product_name ===null ){
+      this.ifProductEmpty = true;
       this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
@@ -726,6 +729,7 @@ export class AddEditEstComponent implements OnInit {
 
   // Estimate Functions
   fillItemDetails(prod = null) {
+    this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     this.activeItem = {
       description: product.discription == null ? '' : product.discription,

@@ -17,7 +17,7 @@
                     aria-expanded="false" class="pull-right list-btn cus-img">
                     <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
+                  <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='name'">
                       <a (click)="sortTerm='name'">By Org. Name</a>
                     </li>
@@ -39,7 +39,7 @@
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit
           </div>
-          <div class="col-12 px-0 mCustomScrollbar" id="style-3">
+          <div class="col-12 px-0 mCustomScrollbar style-3">
             <div style="background-color: #fff;" *ngIf="clientListLoading">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
@@ -182,16 +182,16 @@
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control"
-                          [(ngModel)]="activeClient.addressLine1" placeholder="Address Line" style="height: 47px;"
+                        <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control mCustomScrollbar style-3"
+                          [(ngModel)]="activeClient.addressLine1" placeholder="Address Line" style="height: 47px !important;"
                           onfocus="this.select()"></textarea>
                       </div>
                     </div>
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px;"
-                          [(ngModel)]="activeClient.shippingAddress" class="form-control" placeholder="Shipping Address"
+                        <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px !important;"
+                          [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="Shipping Address"
                           onfocus="this.select()"></textarea>
                       </div>
                     </div>
@@ -208,8 +208,8 @@
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control"
-                          style="height: 47px;" [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
+                        <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control mCustomScrollbar style-3"
+                          style="height: 47px !important;" [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
                           onfocus="this.select()"></textarea>
                       </div>
                     </div>
@@ -346,12 +346,6 @@
                   </div>
                 </div>
               </div>
-              <!-- testing -->
-                <!-- <div class="scrollbar" id="style-2">
-                  <div class="force-overflow"></div>
-                </div> -->
-
-
               <!-- // testing -->
               <!-- Delete CLIENT MODAL -->
               <div id="delete-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
@@ -360,10 +354,11 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-                          <img src="assets/images/delete-color.png" class="del" style="height:28px;"> Delete Client
+                          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+                           Delete Client
                       </h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
-                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;">
+                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
                       </button>
                     </div>
                     <div class="modal-body">

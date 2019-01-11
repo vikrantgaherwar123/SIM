@@ -353,7 +353,9 @@
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class="list-unstyled">
                   <li *ngFor="let term of activeEst.alstQuotTermsCondition">
-                    <div class="col-md-12 margin-bottom-5px">{{term.termsConditionText}}<br /></div>
+                    <div class="col-md-12 margin-bottom-5px">
+                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span>><br />
+                    </div>
                   </li>
                 </ul>
                 <div *ngIf="activeEst.alstQuotTermsCondition?.length < 1">

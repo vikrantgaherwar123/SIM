@@ -92,7 +92,7 @@ select {
   position: absolute;
   left: 0;
   top: 5px;
-  padding: 9px 17px;
+  padding: 9px 5px;
   color: #aaa;
   transition: .3s;
 }
@@ -112,4 +112,6 @@ select {
 .label_color
 {
   color: #aaaaaa;
+  margin-top: 6px;
+  margin-left: -4px;
 }

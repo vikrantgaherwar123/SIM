@@ -41,6 +41,7 @@ export class AddEditComponent implements OnInit {
   editTerm: boolean = true
   modalDescription: boolean = true
   disableIcon: boolean = true
+  disableProductText: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
   currencyCode: string
