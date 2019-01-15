@@ -9,13 +9,13 @@
               <div class="row">
                 <div class="col-6" style="padding-top: 15px;">
                   <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="assets/images/list-icon/add-plus-button24.png">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="pull-right list-btn cus-img">
-                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='name'">

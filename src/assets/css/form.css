@@ -82,12 +82,13 @@ a, a:hover, a:focus {
 .item {
 	margin: 0;
 	border-bottom: 1px solid #d2d2d2;
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding-top: 12px;
+	padding-bottom: 6px;
 	cursor: pointer;
+	padding-left: 5px;
 }
 .item span {
-	height: 20px;
+	height: 18px;
 	font-size: 12px;
 }
 .product-list h5, .productInventoryList h5 {
@@ -166,7 +167,6 @@ a.more {
 	border-radius: 0px;
 	height: 29px !important;
 	color: #666666;
-  font-weight: bold;
 }
 .form-error {
 	color: #D9534F;

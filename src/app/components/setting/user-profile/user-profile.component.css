@@ -19,7 +19,7 @@
 }
 
 .user-profile input {
-  height: 38px;
+  height: 38px !important;
   margin-bottom: 0px !important;
 }
 

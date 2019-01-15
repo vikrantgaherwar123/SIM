@@ -35,8 +35,8 @@
                       <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                         autoActiveFirstOption (optionSelected)="selectedClientChange($event)"
                       >
-                      <button *ngIf="openClientModal === false" (click)="openAddClientModal()" style="width: 100%;margin-top: 3px;margin-bottom: 7px;height: 44px;"
-                        class="btn btn-primary">
+                      <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                        class="btn btn-primary add_client_btn" style="width: 29.5%;">
                         <i class="fa fa-plus"></i>
                         Add New Client
                       </button>
@@ -617,7 +617,7 @@
       <!-- Previous Estimates Button -->
       <div class="col-12 col-md-3">
         <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
-          Show Previous Estimates
+          Show All Estimates
         </button>
 
         <!-- Delete Estimates Button -->

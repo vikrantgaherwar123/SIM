@@ -42,8 +42,8 @@
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
                           >
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()" style="width: 100%;margin-top: 3px;margin-bottom: 7px;height: 44px;"
-                              class="btn btn-primary">
+                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                              class="btn btn-primary add_client_btn">
                               <i class="fa fa-plus"></i>
                               Add New Client
                             </button>
@@ -152,7 +152,7 @@
                         <div class="selectdiv">
                         <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag || 0"
                           class="form-control pr-0 selectDueDate" (change)="changeDueDate($event.target.value)"
-                           style="cursor: pointer;box-shadow: 0 5px 5px -3px #eaf7ff, 0 8px 10px 1px #eaf7ff, 0 3px 14px 2px #eaf7ff !important;"
+                           style="cursor: pointer;"
                         >
                           <option value="0">No Due Date</option>
                           <option value="1">Immediately</option>
@@ -308,7 +308,7 @@
                       <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="text" name="product-name" style="font-weight: 200 !important;" class="form-control billing-input" onfocus="this.select()"
+                            <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
                               placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
                             <span *ngIf="ifProductEmpty === true" class="fa fa-info-circle errspan help-block"></span>
@@ -611,7 +611,7 @@
                           <div class="input-group pr-0">
                             <input type="number" name="shipping_input" class="form-control" min="0.00" step="any"
                               [max]="activeInvoice.gross_amount" required onclick="this.select()" style="margin-right: -4px;"
-                              [(ngModel)]="activeInvoice.shipping_charges" (keyup)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.shipping_charges" (keyup)="calculateInvoice()" placeholder="0"
                             />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -636,7 +636,7 @@
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
                             <input type="number" name="tax_input" class="form-control" style="margin-right: -4px;"
-                              step="any" required onfocus="this.select()"
+                              step="any" required onfocus="this.select()" placeholder="0"
                               [(ngModel)]="activeInvoice.adjustment" (change)=setTwoNumberDecimal(activeInvoice.adjustment) (keyup)="calculateInvoice()"
                             />
                             
@@ -717,7 +717,7 @@
                         class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
-                        SAVE
+                        Save
                       </button>
                       <button type="submit" *ngIf="edit" [disabled]="activeInvoice.listItems?.length == 0"
                       class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
@@ -945,7 +945,7 @@
 <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" 
   aria-labelledby="gridSystemModalLabel" data-backdrop="static" data-keyboard="false"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
@@ -968,15 +968,25 @@
             </div>
             <div class="col-12">
               <div class="checkbox pull-left">
-                <input type="checkbox" id="addtermcheck" name="setDefault"
+                <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
                   [(ngModel)]="addTermModal.setDefault"
                   class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                >
-                <!-- <label class="inline" for="addtermcheck"></label> -->
+                > -->
                 <div class="inline">Default?</div>
+                  <label class="check">
+                    <div>
+                        <input type="checkbox" id="addtermcheck" name="setDefault"
+                        [(ngModel)]="addTermModal.setDefault" checked
+                        class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
+                      >
+                      <span class="checkmark" style="left: 78px;"></span>
+                    </div>
+                  </label>
+                <!-- <label class="inline" for="addtermcheck"></label> -->
+                
               </div>
               <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
+                class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
                 [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
               >
                 SAVE
@@ -985,8 +995,11 @@
             </div>
           </div>
         </form>
+        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
+          Please Select Terms
+        </h5>
 
-        <div class="col-12" style="padding: 20px 24px 20px 15px">
+        <div class="col-12 terms_border">
           <div class="col-12 mCustomScrollbar style-3">
             <div class="item termlist row product-list" id="term1{{index}}"
              *ngFor="let term of termList; let index = index" 
@@ -995,14 +1008,20 @@
               <div class="col-12 px-0">
                 <div class="row">
                   <div class="col-md-1 px-0">
-                    <input type="checkbox" id="termcheck{{index}}" name="term"
+                    <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
                       (change)="addRemoveTermsFromInvoice(term)"
                       [checked]="isTermInInvoice(term)"
-                    />
+                    /> -->
                     <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                    <label class="check">
+                      <div class="col-1">
+                        <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromInvoice(term)" [checked]="isTermInInvoice(term)" />
+                        <span class="checkmark"></span>
+                      </div>
+                    </label>
                   </div>
                   <div class="col-md-9 pl-0">
-                    <span style="vertical-align: top;"> {{term.terms}}</span>
+                    <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
                   </div>
                 </div>
               </div>
