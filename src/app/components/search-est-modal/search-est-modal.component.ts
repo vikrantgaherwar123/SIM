@@ -1,48 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms'
-import { response, client } from '../../interface'
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { response, client } from '../../interface'
 import { AppState } from 'src/app/app.state';
 import { Store } from '@ngrx/store';
+import { SearchEstService } from '../../services/search-est.service';
 import { ClientService } from '../../services/client.service'
-import { SearchService } from '../../services/search.service';
 import * as clientActions from '../../actions/client.action'
-@Component({
-  selector: 'app-search-modal',
-  templateUrl: './search-modal.component.html',
-  styleUrls: ['./search-modal.component.css']
-})
-export class SearchModalComponent implements OnInit {
 
+
+@Component({
+  selector: 'app-search-est-modal',
+  templateUrl: './search-est-modal.component.html',
+  styleUrls: ['./search-est-modal.component.css']
+})
+export class SearchEstModalComponent implements OnInit {
   private clientList: client[]
   clientListLoading: boolean
 
-  
-  private invoiceQueryForm = {
+  private estimateQueryForm = {
     client: new FormControl()
     // dateRange: {
     //   start: new FormControl(),
     //   end: new FormControl(new Date())
     // }
   }
-  // changingQuery: boolean = false
 
-  
   constructor(public router: Router,
-    private searchService: SearchService,
+    private searchEstService: SearchEstService,
     private clientService: ClientService,
-    private store: Store<AppState>
-  ) {
-    // to hide modal/go back to add page after browser back button clicked
+    private store: Store<AppState>) {
+    
+      // to hide modal/go back to add page after browser back button clicked
     $(window).on('popstate', function(event) {
       $('#search-client').modal('hide')
      });
-   }
+     }
 
   ngOnInit() {
     this.fetchClients()
     this.openSearchClientModal()
   }
+
 
   fetchClients(){
     this.clientListLoading = true
@@ -66,10 +65,9 @@ export class SearchModalComponent implements OnInit {
       })
   }
 
-
-  showSelectedInvoices(client){
-    this.searchService.setUserData(client);
-    this.router.navigate([`invoice/view`])
+  showSelectedEstimate(client){
+    this.searchEstService.setUserData(client);
+    this.router.navigate([`estimate/view`])
     $('#search-client').modal('hide')
   }
 
@@ -78,8 +76,8 @@ export class SearchModalComponent implements OnInit {
     $('#search-client').modal('show')
   }
 
-  closeSearchModel() {
+  closeEstSearchModel() {
     $('#search-client').modal('hide')
-    this.router.navigate(['/invoice/add'])
+    this.router.navigate(['estimate/add'])
   }
 }

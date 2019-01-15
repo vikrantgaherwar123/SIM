@@ -119,9 +119,10 @@
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
                             <input type="text" class="form-control" placeholder="mm/dd/yyyy" required readonly
-                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" onfocus="this.select()"
-                              (click)="picker.open()"
+                              [formControl]="invoiceDate" 
+                              matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
+                            <!-- <input class="form-control" name="formatedDate" [ngModelOptions]="{standalone: true}" matInput [matDatepicker]="picker" (click)="picker.open()"> -->
                             <mat-datepicker #picker></mat-datepicker>
                           </div>
                         </div>
@@ -131,6 +132,11 @@
                         <input type="hidden" [(ngModel)]="activeInvoice.created_date" name="createdDate"/>
                       </div>
                     </div>
+                    <!-- <input type="text" class="form-control" placeholder="mm/dd/yyyy" required readonly
+                    [(ngModel)]="formatedDate" name="formatedDate" [ngModelOptions]="{standalone: true}"
+                    matInput [matDatepicker]="picker"
+                  >
+                  <mat-datepicker #picker></mat-datepicker> -->
 
                     <div class="row" style="margin-top: 5px;">
                       <div class="offset-md-2 col-md-4 col-6 pr-0">

@@ -27,6 +27,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   selector: 'app-invoice',
   templateUrl: './addEdit.component.html',
   styleUrls: ['./addEdit.component.css'],
+  providers: [DatePipe]
   
 })
 export class AddEditComponent implements OnInit {
@@ -51,6 +52,7 @@ export class AddEditComponent implements OnInit {
   mysymbols
   formatedDate
   shippingAddress
+
 
   private clientList: client[]
   private allClientList: client[]
@@ -91,7 +93,8 @@ export class AddEditComponent implements OnInit {
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private datePipe: DatePipe
   ) {
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -152,10 +155,6 @@ export class AddEditComponent implements OnInit {
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
-    console.log(this.invoiceDate);
-    this.formatedDate = new DatePipe('en').transform(date, 'dd/mm/yyyy')
-    console.log(this.formatedDate); 
-    
     this.activeInvoice.created_date = (date.getFullYear() + '-' +
       ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
       ('0' + date.getDate()).slice(-2)
@@ -280,6 +279,10 @@ export class AddEditComponent implements OnInit {
         this.settings = { date_format: '' }
       }
       this.settings.date_format = 'dd-mm-yy'
+      this.formatedDate = new Date;
+      this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
+      console.log(this.formatedDate);
+      
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {

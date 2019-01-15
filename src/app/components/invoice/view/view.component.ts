@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
+import { SettingService } from '../../../services/setting.service'
 import { SearchService } from '../../../services/search.service';
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
@@ -27,6 +28,8 @@ export class ViewComponent implements OnInit {
   invDispLimit: number = 20
   invSortTerm: string = 'createdDate'
   invSearchTerm: string
+  dateDDMMYY: boolean
+  dateMMDDYY: boolean
 
   private invoiceQueryForm = {
     client: new FormControl(),
@@ -46,6 +49,7 @@ export class ViewComponent implements OnInit {
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private searchService : SearchService,
     private store: Store<AppState>,
+    private settingService: SettingService,
     public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
@@ -58,7 +62,6 @@ export class ViewComponent implements OnInit {
   }
 
   ngOnInit() {
-   
     // Fetch clients if not in store
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -70,8 +73,12 @@ export class ViewComponent implements OnInit {
       this.invoiceList = invoices
       this.setActiveInv()
     })
+    // show date as per format changed
     this.SearchInvoice()
-    // this.fetchInvoices()
+    this.settingService.fetch().subscribe((response: any) => {
+      this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
+      this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
+    })
   }
 
   paidAmount() {

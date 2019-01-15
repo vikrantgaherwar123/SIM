@@ -159,7 +159,7 @@
               </div>
             </div>
 
-            <div class="no-data-messsage" *ngIf="estimateList?.length < 1 && !estListLoader">
+            <div class="no-data-messsage" *ngIf="estimateList.length < 1 && !estListLoader">
               <h4>No Estimate to display</h4>
             </div>
             <div class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
@@ -257,8 +257,11 @@
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
                   <span class="font-custom-bold text-left w-100">Estimate Date</span>
                 </div>
-                <div class="col-sm-6">
-                  {{activeEst.createDate}}
+                <div *ngIf="dateDDMMYY"  class="col-sm-6">
+                  {{activeEst.createDate | date:"dd/MM/yyyy"}}
+                </div>
+                <div *ngIf="dateMMDDYY"  class="col-sm-6">
+                  {{activeEst.createDate | date:"MM/dd/yyyy"}}
                 </div>
               </div>
             </div>
