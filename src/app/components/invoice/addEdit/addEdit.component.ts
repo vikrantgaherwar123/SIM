@@ -127,7 +127,7 @@ export class AddEditComponent implements OnInit {
         }
         setTimeout(function () {
           $this.html($this.data('original-text'));
-        }, 4000);
+        }, 4);
       });
     })
     // save button processing script ends
