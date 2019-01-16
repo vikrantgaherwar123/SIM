@@ -20,12 +20,16 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster'
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-estimate',
   templateUrl: './addEditEst.component.html',
-  styleUrls: ['./addEditEst.component.css']
+  styleUrls: ['./addEditEst.component.css'],
+  providers: [DatePipe]
 })
+
+
 export class AddEditEstComponent implements OnInit {
 
   activeEstimate: addEditEstimate
@@ -42,6 +46,8 @@ export class AddEditEstComponent implements OnInit {
   shippingAdressChanged: boolean = false
   shippingAddressEditMode: boolean = false
   editTerms: boolean = true
+  disableProductText: boolean = true
+  ifProductEmpty:boolean = false
 
   last
   index
@@ -70,6 +76,7 @@ export class AddEditEstComponent implements OnInit {
   tax_on: string
   discount_on: string
   settings: any
+  myDate : any
 
   showMultipleTax
   taxtext
@@ -91,6 +98,7 @@ export class AddEditEstComponent implements OnInit {
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
+    private datePipe: DatePipe,
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService
@@ -101,6 +109,21 @@ export class AddEditEstComponent implements OnInit {
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
     
+    // save button processing script
+    $(document).ready(function () {
+      $('.btn').on('click', function () {
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+        setTimeout(function () {
+          $this.html($this.data('original-text'));
+        }, 4000);
+      });
+    })
+    // save button processing script ends
   }
 
   ngOnInit() {
@@ -562,6 +585,7 @@ export class AddEditEstComponent implements OnInit {
     // console.log(this.addItem, uid)
 
     if(this.activeItem.product_name ===null ){
+      this.ifProductEmpty = true;
       this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
@@ -739,6 +763,7 @@ export class AddEditEstComponent implements OnInit {
 
   // Estimate Functions
   fillItemDetails(prod = null) {
+    this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     this.activeItem = {
       description: product.discription == null ? '' : product.discription,
@@ -834,7 +859,7 @@ export class AddEditEstComponent implements OnInit {
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
-          this.toasterService.pop('success', 'Estimate updated successfully');
+          //  this.toasterService.pop('success', 'Estimate updated successfully');
           this.router.navigate(['/estimate/view'])
         } else {
           this.toasterService.pop('success', 'Estimate saved successfully');
@@ -857,6 +882,7 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.deleted_flag = 1
     // localStorage.setItem('deleteEstimateId', "1" )
     this.save(true)
+    this.toasterService.pop('success', 'Invoice Deleted successfully');
   }
 
   calculateEstimate() {

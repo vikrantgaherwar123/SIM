@@ -30,8 +30,8 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
-              <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control"
-                placeholder="Banking Details" style="height: auto;" onfocus="this.select()"
+              <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control mCustomScrollbar style-3"
+                placeholder="Banking Details" style="height: auto !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -42,8 +42,8 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
-              <textarea type="text" [(ngModel)]="org.paypalDetails" name="paypalDetails" class="form-control"
-                placeholder="PayPal Details" style="height: auto;" onfocus="this.select()"
+              <textarea type="text" [(ngModel)]="org.paypalDetails" name="paypalDetails" class="form-control mCustomScrollbar style-3"
+                placeholder="PayPal Details" style="height: auto !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -69,8 +69,8 @@
           </div>
 
           <div style="margin: 0 auto; max-width: 300px">
-            <button type="submit" id="bankingDetailSubmit" style="width: 300px;"
-              class="btn btn-success btn-raised no-border-radius font-custom-bold"
+            <button type="submit" id="bankingDetailSubmit" style="width: 300px;border: none !important;"
+              class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold"
               (click)="save(form.valid)"
             >
               SAVE

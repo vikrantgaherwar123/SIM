@@ -49,7 +49,7 @@ import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 import { SearchModalComponent } from './components/search-modal/search-modal.component';
 import { SearchEstModalComponent } from './components/search-est-modal/search-est-modal.component';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -123,7 +123,8 @@ export function getAuthServiceConfigs() {
       estimate: estimateReducer,
       invoice: invoiceReducer,
       globals: globalReducer
-    })
+    }),
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     CONSTANTS,

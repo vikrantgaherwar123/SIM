@@ -17,7 +17,7 @@
   width: 100%;
 }
 .sidebar-nav > .menu-item-wrapper >.menu-parent:hover {
-  background: #a0ceef;
+  background: #bae3ff;
   border-left: 4px solid #176cc1;
 }
 .sidebar-nav > .menu-item-wrapper a {
@@ -41,7 +41,7 @@
   /* display: inline-block; */
   font-weight: 400;
   list-style: none;
-  /* / text-align: center; / */
+  margin-left: -41px;
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
@@ -54,5 +54,5 @@
 }
 
 li:hover{
-  background-color:#cfcfcf;
+  background-color:#eaf7ff;;
 }
