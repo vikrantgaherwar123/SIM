@@ -37,6 +37,14 @@ export class ViewComponent implements OnInit {
       end: new FormControl(new Date())
     }
   }
+  
+  // multiselect dropdown
+
+  dropdownList : any;
+  selectedItems = [];
+  dropdownSettings = {};
+  
+  // multiselect dropdown ends
   changingQuery: boolean = false
 
   private clientList: client[]
@@ -51,6 +59,7 @@ export class ViewComponent implements OnInit {
     public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
+    
     // store.select('globals').subscribe(globals => {
     //   if (Object.keys(globals.invoiceQueryForm).length > 0) {
     //     this.invoiceQueryForm = globals.invoiceQueryForm
@@ -60,11 +69,16 @@ export class ViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     // Fetch clients if not in store
     if (this.clientList.length < 1) {
+      
       this.clientService.fetch().subscribe((response: response) => {
-        this.store.dispatch(new clientActions.add(response.records))
-      })
+      this.store.dispatch(new clientActions.add(response.records))
+      this.dropdownList = this.clientList;
+      }
+      )
+      
     }
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
@@ -77,6 +91,26 @@ export class ViewComponent implements OnInit {
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
     this.openSearchClientModal()
+    
+    // dropdown settings
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'uniqueKeyClient',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 10,
+      allowSearchFilter: true
+    };
+
+    // testing
+  }
+
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
   paidAmount() {

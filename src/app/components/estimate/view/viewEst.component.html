@@ -136,14 +136,14 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <div class="row mx-0">
                 <div class="col-6 pl-0" style="padding-top: 15px;">
                   <a (click)="router.navigate(['estimate/add'])" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="assets/images/list-icon/add-plus-button24.png">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 px-0" style="padding-top: 15px;">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                   >
-                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
+                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
                     <li [class.active]="estSortTerm=='createDate'">
@@ -173,7 +173,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Estimate
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar">
+          <div class="col-12 px-0 mCustomScrollbar style-3">
             <div style="background-color: #fff;" *ngIf="estListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
@@ -201,11 +201,11 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               </div>
             </div>
 
-            <div class="no-data-messsage" *ngIf="estimateList.length < 1 && !estListLoader">
+            <div class="no-data-messsage" *ngIf="estimateList < 1 && !estListLoader">
               <h4>No Estimate to display</h4>
             </div>
-            <div class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
-              <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
+            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList.length > estDispLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimateList.length > estDispLimit">
                 Click to view more >>
               </a>
             </div>
@@ -220,7 +220,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
           <div class="row">
             <div class="col-md-12">
               <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btn-raised btn-success no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn"
                 title="Edit"
               >
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
@@ -398,10 +398,12 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class="list-unstyled">
                   <li *ngFor="let term of activeEst.alstQuotTermsCondition">
-                    <div class="col-md-12 margin-bottom-5px">{{term.termsConditionText}}<br /></div>
+                    <div class="col-md-12 margin-bottom-5px">
+                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span>><br />
+                    </div>
                   </li>
                 </ul>
-                <div *ngIf="activeEst.alstQuotTermsCondition?.length < 1">
+                <div *ngIf="activeEst.alstQuotTermsCondition.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
@@ -445,11 +447,11 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">(%)</div>
+                  <div class="inline font-custom">({{activeEst.taxrate}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeEst.taxrate | number:'2.'}}
+                    {{activeEst.taxAmt | number:'2.'}}
                   </div>
                 </div>
               </div>

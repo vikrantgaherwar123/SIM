@@ -47,7 +47,7 @@ import { PasswordComponent } from './components/setting/password/password.compon
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -119,7 +119,8 @@ export function getAuthServiceConfigs() {
       estimate: estimateReducer,
       invoice: invoiceReducer,
       globals: globalReducer
-    })
+    }),
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     CONSTANTS,

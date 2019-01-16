@@ -33,6 +33,7 @@ export class ProductComponent implements OnInit {
   createMode: boolean = true
   editMode: boolean = false
   viewMode: boolean = false
+  deleteproduct:boolean = false
 
   productDisplayLimit = 12
 
@@ -159,9 +160,19 @@ export class ProductComponent implements OnInit {
     $('#prod_name').select()
   }
 
+  openDeleteProductModal() {
+    this.deleteproduct = true
+    $('#delete-product').modal('show')
+    $('#delete-product').on('shown.bs.modal', (e) => {
+      $('#delete-product input[type="text"]')[1].focus()
+    })
+  }
+
+
   deleteProduct() {
     this.activeProduct.enabled = 1
     this.save(true, null)
+    this.deleteproduct = false
   }
 
   editThis() {

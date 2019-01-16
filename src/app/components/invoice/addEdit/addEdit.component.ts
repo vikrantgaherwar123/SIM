@@ -43,6 +43,7 @@ export class AddEditComponent implements OnInit {
   editTerm: boolean = true
   modalDescription: boolean = true
   disableIcon: boolean = true
+  disableProductText: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
   shippingAdressChanged: boolean = false
@@ -103,7 +104,40 @@ export class AddEditComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
-    
+
+
+   /*Scroll to top when arrow up clicked BEGIN*/
+    $(window).scroll(function () {
+      var height = $(window).scrollTop();
+      if (height > 100) {
+        $('#back2Top').fadeIn();
+      } else {
+        $('#back2Top').fadeOut();
+      }
+    });
+    $(document).ready(function () {
+      $("#back2Top").click(function (event) {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+      });
+    });
+/*Scroll to top when arrow up clicked END*/
+    // save button processing script
+    $(document).ready(function () {
+      $('.btn').on('click', function () {
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+        setTimeout(function () {
+          $this.html($this.data('original-text'));
+        }, 4);
+      });
+    })
+    // save button processing script ends
   }
   
   displayWith(disp): string | undefined {
@@ -993,7 +1027,7 @@ export class AddEditComponent implements OnInit {
         if(!this.edit) {
           this.updateSettings()
         }
-          this.toasterService.pop('success', 'Invoice saved successfully');
+          
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.router.navigate(['/invoice/view'])
@@ -1017,6 +1051,7 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.deleted_flag = 1
     // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
+    this.toasterService.pop('success', 'Invoice Deleted successfully');
   }
 
   resetCreateInvoice() {
@@ -1123,6 +1158,10 @@ export class AddEditComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
+
+  // save button processing script
+  
+  
 
   // CURRENTLY USELESS FUNCTIONS
   log(a) {
