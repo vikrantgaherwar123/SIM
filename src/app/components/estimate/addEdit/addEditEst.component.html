@@ -469,38 +469,31 @@
                 </div>
 
                 <!-- Tax -->
-                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==undefined">
-                  <div class="col-5 discount-tax-label pr-0">
-                    <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                    <div class="d-inline font-custom">(%)</div>
-                  </div>
+                <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item === 1">
+                    <div class="col-5 discount-tax-label pr-0 label_color">
+                        <div class="d-inline font-custom">Tax (%)</div>
+                      </div>
 
-                  <div class="col-2 pr-0">
-                    <form #tax_input="ngForm" name="tax_input">
-                      <div class="input-group pr-0">
-                        <input type="number" id="tax_input" name="tax_input" class="form-control"
-                          step="any"min="0.00" max="100" required onfocus="this.select()"
-                          [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
-                        />
-                        <!-- <div class="input-group-addon addon-right">%</div>-->
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.tax_rate=undefined;activeEstimate.tax_on_item=2;calculateEstimate()">
-                            <img src="assets/images/delete16.png" style="height:16px;">
+                      <div class="col-2 pr-0">
+                        <form #form_tax_input="ngForm" name="form_tax_input">
+                          <div class="input-group pr-0">
+                            <input type="number" id="tax_input" name="tax_input" class="form-control"
+                              step="any"min="0.00" max="100" required style="color: #aaaaaa;"
+                              [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onfocus="this.select()"
+                            />
                           </div>
+                        </form>
+                      </div>
+                      <div class="col-4 pr-0">
+                        <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label" 
+                        placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" style="color:#eaeaea;width: 159px !important;" disabled
+                      />
+                      </div>
+                      <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
+                        <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0;calculateInvoice()">
+                          <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
                         </div>
                       </div>
-                    </form>
-                  </div>
-                  <div class="col-4 pr-0">
-                      <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label" 
-                      style="width: 158px !important;" placeholder="00.000" [(ngModel)]="activeEstimate.tax_amount" (keyup)="calculateInvoice()" disabled
-                    />
-                  </div>
-                  <div class="input-group-addon pr-0 remove-button" style="margin-left: 5px;">
-                      <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
-                          <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
-                      </div>
-                    </div>
                 </div>
 
                 <!-- Tax List -->
@@ -531,7 +524,8 @@
                 <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
                     <div class="col-5 discount-tax-label label_color">
                         <div class="inline" style="text-align: left;vertical-align: bottom;">
-                          {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                          <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}(+) -->
+                          Shipping(+)
                         </div>
                     </div>
 
@@ -556,7 +550,8 @@
                 <div class="row mr_right mr_0" *ngIf="activeEstimate.adjustment !== undefined">
                     <div class="col-5 discount-tax-label pr-0 label_color">
                         <div style="text-align: left;vertical-align: bottom;">
-                          {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
+                          <!-- {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-) -->
+                          Adjustment
                         </div>
                     </div>
 

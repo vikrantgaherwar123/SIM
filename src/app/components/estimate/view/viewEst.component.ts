@@ -101,8 +101,38 @@ export class ViewEstComponent implements OnInit {
   }
 
 
+  // showSelectedEstimate(client){
+  //   this.estimateQueryForm.client = client
+  //   this.SearchEstimate()
+  //   $('#search-client').modal('hide')
+  // }
   showSelectedEstimate(client){
     this.estimateQueryForm.client = client
+  //   if(this.estimateList.length === 0){
+  //   this.estimateService.fetch().subscribe((response: any) => {
+  //     this.estListLoader = false
+  //     var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+  //     this.estimateList = records
+  //     this.setActiveEst()
+  //   })
+  // }
+  var estList =[]
+    for(let i=0;i<client.value.length;i++){
+      var list= this.estimateList.filter(rec =>rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
+      estList.push(list)
+    }
+    let est1List = []
+    for(let i=0;i<estList.length;i++){
+      for(let j=0;j<=estList[i].length;j++)
+      {
+        var obj = estList[i][j];
+        est1List.push(obj)
+      }
+      est1List.splice(-1,1)
+    }
+  this.estimateList = est1List ;
+    
+    this.setActiveEst()
     this.SearchEstimate()
     $('#search-client').modal('hide')
   }

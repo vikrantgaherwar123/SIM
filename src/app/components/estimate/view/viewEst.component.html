@@ -201,11 +201,11 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               </div>
             </div>
 
-            <div class="no-data-messsage" *ngIf="estimateList.length < 1 && !estListLoader">
+            <div class="no-data-messsage" *ngIf="estimateList < 1 && !estListLoader">
               <h4>No Estimate to display</h4>
             </div>
-            <div class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
-              <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
+            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList.length > estDispLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimateList.length > estDispLimit">
                 Click to view more >>
               </a>
             </div>
@@ -403,7 +403,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                     </div>
                   </li>
                 </ul>
-                <div *ngIf="activeEst.alstQuotTermsCondition?.length < 1">
+                <div *ngIf="activeEst.alstQuotTermsCondition.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
