@@ -40,11 +40,11 @@ export class TncComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tncLoading = false
+    this.tncLoading = true
     this.store.dispatch(new tncActions.reset())
 
     this.tncService.fetch().subscribe((response: any) => {
-      this.tncLoading = true
+      this.tncLoading = false
       this.tncs = response.termsAndConditionList.filter(ter => ter.enabled == 0)
       this.store.dispatch(new tncActions.add(this.tncs))
     })

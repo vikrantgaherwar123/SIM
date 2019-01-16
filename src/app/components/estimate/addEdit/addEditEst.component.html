@@ -78,7 +78,8 @@
                         </span>
                         <br />
                         <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                        <div class="address-render">{{activeEstimate.shipping_address}}<br /></div>
+                        <div class="address-render" *ngIf="shippingAddressEditMode===true">{{shippingAddress}}<br /></div>
+                        <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
                       </div>
                     </div>
                   </div>
@@ -326,7 +327,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === 0">
+                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === undefined">
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
                 <div *ngIf="activeEstimate.adjustment === undefined">
@@ -468,9 +469,10 @@
                 </div>
 
                 <!-- Tax -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==0">
-                  <div class="col-5 discount-tax-label pr-0 label_color">
-                      <div class="d-inline font-custom">Tax (%)</div>
+                <div class="row mx-0" *ngIf="activeEstimate.tax_on_item === 1 || activeEstimate.tax_rate !==undefined">
+                  <div class="col-5 discount-tax-label pr-0">
+                    <div class="d-inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                    <div class="d-inline font-custom">(%)</div>
                   </div>
 
                   <div class="col-2 pr-0">
@@ -480,6 +482,12 @@
                           step="any"min="0.00" max="100" required onfocus="this.select()"
                           [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
                         />
+                        <!-- <div class="input-group-addon addon-right">%</div>-->
+                        <div class="input-group-addon pr-0 remove-button">
+                          <div class="addon selector" (click)="activeEstimate.tax_rate=undefined;activeEstimate.tax_on_item=2;calculateEstimate()">
+                            <img src="assets/images/delete16.png" style="height:16px;">
+                          </div>
+                        </div>
                       </div>
                     </form>
                   </div>

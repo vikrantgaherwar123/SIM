@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
@@ -12,9 +13,9 @@ import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
-
 import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
+
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
@@ -26,6 +27,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   selector: 'app-invoice',
   templateUrl: './addEdit.component.html',
   styleUrls: ['./addEdit.component.css'],
+  providers: [DatePipe]
   
 })
 export class AddEditComponent implements OnInit {
@@ -44,10 +46,14 @@ export class AddEditComponent implements OnInit {
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
+  shippingAdressChanged: boolean = false
   currencyCode: string
   last
   index
   mysymbols
+  formatedDate
+  shippingAddress
+
 
   private clientList: client[]
   private allClientList: client[]
@@ -88,7 +94,8 @@ export class AddEditComponent implements OnInit {
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private datePipe: DatePipe
   ) {
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -191,12 +198,15 @@ export class AddEditComponent implements OnInit {
     }
   }
   editInit(invId) {
+    //to view updated or viewed invoice in view page
+    // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
     this.disableIcon = false;
     // Fetch selected invoice
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       if(invoice.records !== null) {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+        this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
 
         // Change list item keys compatible
         if(this.activeInvoice.listItems){
@@ -303,6 +313,10 @@ export class AddEditComponent implements OnInit {
         this.settings = { date_format: '' }
       }
       this.settings.date_format = 'dd-mm-yy'
+      this.formatedDate = new Date;
+      this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
+      console.log(this.formatedDate);
+      
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
@@ -463,6 +477,7 @@ export class AddEditComponent implements OnInit {
     temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
     if (temp !== undefined) {
+      this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
       this.activeClient = temp
       this.activeInvoice.unique_key_fk_client = temp.uniqueKeyClient
     } else {
@@ -509,7 +524,9 @@ export class AddEditComponent implements OnInit {
           this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
+          this.clientListLoading = false
           $('#add-client').modal('hide')
+          // match a key to select and save a client in a textbox after adding client successfully
           this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
           // this.selectedClientChange(this.activeClient);
         }
@@ -564,12 +581,11 @@ export class AddEditComponent implements OnInit {
         )
       }
   }
-  
-
- 
 
   private _filterProd(value: string): product[] {
+    if(this.productList){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -679,6 +695,8 @@ export class AddEditComponent implements OnInit {
     }
     $('#edit-item').modal('hide')
   }
+
+ 
 
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {
@@ -986,6 +1004,7 @@ export class AddEditComponent implements OnInit {
     var self = this
     // console.log(this.activeInvoice);
     // return false
+    if(this.activeInvoice.invoice_number !==""){
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
@@ -1020,9 +1039,17 @@ export class AddEditComponent implements OnInit {
       $('#invSubmitBtn').removeAttr('disabled')
     })
   }
+  // validate user if he removes invoice number and try to save invoice 
+  else {                    
+    this.toasterService.pop('failure', 'Couldnt save invoice Please add Invoice Number');
+    this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
+    $('#invSubmitBtn').removeAttr('disabled')
+  }
+  }
 
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
+    // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
   }

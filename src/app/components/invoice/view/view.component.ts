@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core'
+
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
+import { SettingService } from '../../../services/setting.service'
+import { SearchService } from '../../../services/search.service';
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
 import { FormControl } from '@angular/forms'
@@ -23,8 +26,10 @@ export class ViewComponent implements OnInit {
   activeInv: invoice
   invListLoader: boolean = false
   invDispLimit: number = 20
-  invSortTerm: string = 'created_date'
+  invSortTerm: string = 'createdDate'
   invSearchTerm: string
+  dateDDMMYY: boolean
+  dateMMDDYY: boolean
 
   private invoiceQueryForm = {
     client: new FormControl(),
@@ -42,15 +47,17 @@ export class ViewComponent implements OnInit {
   private settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
+    private searchService : SearchService,
     private store: Store<AppState>,
+    private settingService: SettingService,
     public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
-    store.select('globals').subscribe(globals => {
-      if (Object.keys(globals.invoiceQueryForm).length > 0) {
-        this.invoiceQueryForm = globals.invoiceQueryForm
-      }
-    })
+    // store.select('globals').subscribe(globals => {
+    //   if (Object.keys(globals.invoiceQueryForm).length > 0) {
+    //     this.invoiceQueryForm = globals.invoiceQueryForm
+    //   }
+    // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
   }
 
@@ -61,12 +68,17 @@ export class ViewComponent implements OnInit {
         this.store.dispatch(new clientActions.add(response.records))
       })
     }
-
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
       this.setActiveInv()
     })
+    // show date as per format changed
+    this.settingService.fetch().subscribe((response: any) => {
+      this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
+      this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
+    })
+    this.openSearchClientModal()
   }
 
   paidAmount() {
@@ -88,6 +100,21 @@ export class ViewComponent implements OnInit {
     this.router.navigate([`invoice/edit/${invId}`])
   }
 
+
+  openSearchClientModal() {
+    $('#search-client').modal('show')
+  }
+
+  closeSearchModel() {
+    $('#search-client').modal('hide')
+  }
+
+  showSelectedInvoices(client){
+    this.invoiceQueryForm.client = client;
+    this.SearchInvoice()
+    $('#search-client').modal('hide')
+  }
+
   // Search Invoice Functions
   SearchInvoice() {
     var query = {
@@ -95,7 +122,7 @@ export class ViewComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-
+    // this.invoiceQueryForm.client = this.searchService.getUserData()
     if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {
@@ -144,9 +171,10 @@ export class ViewComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    if (!invId) {
+    if (!invId || invId ==="null" ) {
       this.activeInv = this.invoiceList[0]
     } else {
+      // invId = invoiceId;
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()
