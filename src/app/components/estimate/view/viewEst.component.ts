@@ -54,11 +54,6 @@ export class ViewEstComponent implements OnInit {
     private settingService: SettingService
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
-    // store.select('globals').subscribe(globals => {
-    //   if (Object.keys(globals.estimateQueryForm).length > 0) {
-    //     this.estimateQueryForm = globals.estimateQueryForm
-    //   }
-    // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
   }
 
@@ -72,24 +67,29 @@ export class ViewEstComponent implements OnInit {
     }
 
     // Set Active estimate whenever estimate list changes
-    // this.store.select('estimate').subscribe(estimates => {
-    //     this.estimateList = estimates 
-    //     this.setActiveEst()
-      // display estimateList and one single estimate detail
-      var selectedClients = this.searchService.getUserData()
-      this.estimateService.fetch().subscribe((response: any) => {
-        var records = (response.records ? response.records.filter(rec => rec.unique_key_fk_client == selectedClients.value[0].uniqueKeyClient) : [])
-        // this.store.dispatch(new estimateActions.add(records))
-        this.estimateList = records
-        this.setActiveEst()
+
+      this.store.select('estimate').subscribe(estimates => {
+        if(estimates.length > 0) {
+          this.estimateList = estimates
+          this.setActiveEst()
+        } 
+        this.estListLoader = true
+        this.estimateService.fetch().subscribe((response: any) => {
+          this.estListLoader = false
+          var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+          this.store.dispatch(new estimateActions.add(records))
+          this.estimateList = records
+          this.setActiveEst()
+        })
       })
-    // })
-    this.SearchEstimate()
+
+
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
+    this.openSearchClientModal()
   }
 
   loadMore() {
@@ -100,6 +100,23 @@ export class ViewEstComponent implements OnInit {
     this.router.navigate([`estimate/edit/${estId}`])
   }
 
+
+  showSelectedEstimate(client){
+    this.estimateQueryForm.client = client
+    this.SearchEstimate()
+    $('#search-client').modal('hide')
+  }
+
+  
+  openSearchClientModal() {
+    $('#search-client').modal('show')
+  }
+
+  closeEstSearchModel() {
+    $('#search-client').modal('hide')
+  }
+
+
  // Search Estimate Functions
   SearchEstimate() {
     var query = {
@@ -107,7 +124,7 @@ export class ViewEstComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-    this.estimateQueryForm.client = this.searchService.getUserData()
+    // this.estimateQueryForm.client = this.searchService.getUserData()
     if (this.estimateQueryForm.client.value && this.estimateQueryForm.client.value.length > 0) {
       query.clientIdListEst = this.estimateQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdListEst[0] == null) {

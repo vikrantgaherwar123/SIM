@@ -74,11 +74,11 @@ export class ViewComponent implements OnInit {
       this.setActiveInv()
     })
     // show date as per format changed
-    this.SearchInvoice()
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
+    this.openSearchClientModal()
   }
 
   paidAmount() {
@@ -100,6 +100,21 @@ export class ViewComponent implements OnInit {
     this.router.navigate([`invoice/edit/${invId}`])
   }
 
+
+  openSearchClientModal() {
+    $('#search-client').modal('show')
+  }
+
+  closeSearchModel() {
+    $('#search-client').modal('hide')
+  }
+
+  showSelectedInvoices(client){
+    this.invoiceQueryForm.client = client;
+    this.SearchInvoice()
+    $('#search-client').modal('hide')
+  }
+
   // Search Invoice Functions
   SearchInvoice() {
     var query = {
@@ -107,7 +122,7 @@ export class ViewComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-    this.invoiceQueryForm.client = this.searchService.getUserData()
+    // this.invoiceQueryForm.client = this.searchService.getUserData()
     if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {
