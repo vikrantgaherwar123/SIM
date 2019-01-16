@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core'
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
-import { SearchService } from '../../../services/search.service';
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
 import { FormControl } from '@angular/forms'
@@ -47,7 +46,6 @@ export class ViewComponent implements OnInit {
   private settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
-    private searchService : SearchService,
     private store: Store<AppState>,
     private settingService: SettingService,
     public router: Router

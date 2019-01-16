@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core'
 import { EstimateService } from '../../../services/estimate.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
-import { SearchEstService } from '../../../services/search-est.service';
 
 import { response, estimate, client } from '../../../interface'
 import { Observable } from 'rxjs'
@@ -49,7 +48,6 @@ export class ViewEstComponent implements OnInit {
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private store: Store<AppState>,
-    private searchService: SearchEstService,
     public router: Router,
     private settingService: SettingService
   ) {
@@ -65,6 +63,7 @@ export class ViewEstComponent implements OnInit {
         this.store.dispatch(new clientActions.add(response.records))
       })
     }
+    this.openSearchClientModal()
 
     // Set Active estimate whenever estimate list changes
 
@@ -72,7 +71,7 @@ export class ViewEstComponent implements OnInit {
         if(estimates.length > 0) {
           this.estimateList = estimates
           this.setActiveEst()
-        } 
+        } else{
         this.estListLoader = true
         this.estimateService.fetch().subscribe((response: any) => {
           this.estListLoader = false
@@ -81,15 +80,13 @@ export class ViewEstComponent implements OnInit {
           this.estimateList = records
           this.setActiveEst()
         })
+      }
       })
-
-
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-    this.openSearchClientModal()
   }
 
   loadMore() {
@@ -103,6 +100,27 @@ export class ViewEstComponent implements OnInit {
 
   showSelectedEstimate(client){
     this.estimateQueryForm.client = client
+    if(this.estimateList.length === 0){
+    this.estimateService.fetch().subscribe((response: any) => {
+      this.estListLoader = false
+      var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+      this.estimateList = records
+      this.setActiveEst()
+    })
+  }
+  var estList =[]
+    for(let i=0;i<client.value.length;i++){
+      var list= this.estimateList.filter(rec =>rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
+      estList.push(list)
+    }
+    let est1List = []
+    for(let i=0;i<estList.length;i++){
+      for(let j=0;j<=estList[i].length;j++)
+      var obj = estList[i][j]
+      est1List.push(obj)
+    }
+    this.estimateList = est1List
+    this.setActiveEst()
     this.SearchEstimate()
     $('#search-client').modal('hide')
   }
