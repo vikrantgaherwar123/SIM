@@ -45,10 +45,10 @@ input[type=text], input[type=password] {
 /* Button Styles */
 .btn-success {
   color: #fff !important;
-  background-color: #1a73cc !important;
+  background-color: #2096f3 !important;
   border: none !important;
-  border-color: #1966b7 !important;
-  border: #1a73cc solid 2px !important;
+  border-color: #2096f3 !important;
+  border: #2096f3 solid 2px !important;
   -webkit-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
   box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
   -moz-box-shadow: 2px 3px 8px 1px rgba(118,111,111,0.57) !important;
@@ -214,7 +214,7 @@ input[type=number] {
 .mat-icon-button {
   width: 30px !important;
   height: 30px !important;
-  top: -7px;
+  top: -42px;
 }
 .mat-option {
   font-family: quicksand_regular;
@@ -435,6 +435,7 @@ input::placeholder {
 .mat-autocomplete-panel:not([class*=mat-elevation-z]) {
   box-shadow: 0 5px 5px -3px #eaf7ff, 0 8px 10px 1px #eaf7ff, 0 3px 14px 2px #eaf7ff !important;
 }
+
 .small_dropdown
 {
   border: none !important;
@@ -450,9 +451,9 @@ option {
 .save_btn
 {
   border-radius: 6px !important;
-  box-shadow: 0 5px 0 0 #1678cd !important;
+  /* box-shadow: 0 5px 0 0 #1678cd !important; */
   background: #0299ff;
-  height: 38px !important;
+  height: 42px !important;
   color: white !important;
 }
 .view_desc
@@ -512,7 +513,7 @@ option {
   RAISED BUTTONS
 ************************/
 .btn2-primary.raised {
-    box-shadow: 0 5px 0 0 #1678cd;
+    /* box-shadow: 0 5px 0 0 #1678cd; */
     margin-top: 2px;
     margin-left: -22px;
 }
@@ -644,4 +645,44 @@ option {
 {
   padding: 20px 15px 20px 15px;
   border: 1px solid #d4d4d4;
+}
+/* multiselect dropdown */
+.multiselect-dropdown .dropdown-btn{
+  background-color: white;
+  border-radius: 0px !important;
+  border: 1px solid #d2cccc !important;
+  padding: 9px 12px !important;
+}
+.multiselect-dropdown .dropdown-btn .selected-item{
+  border: 1px solid #2096f3 !important;
+  background: #2096f3 !important;
+  padding: 3px 8px !important;
+  font-weight: 800;
+  margin-top: 5px;
+}
+.multiselect-item-checkbox input[type=checkbox]:checked + div:before {
+  background: #2096f3 !important;
+  border: 1px solid #2096f3 !important;
+}
+.multiselect-item-checkbox input[type=checkbox] + div:before{
+  border: 1px solid #2096f3 !important;
+  color: #2096f3 !important;
+}
+.multiselect-item-checkbox input[type=checkbox] + div:before
+  {
+    border: 1px solid #2096f3;
+  }
+  .multiselect-item-checkbox input[type=checkbox] + div:after
+  {
+    border-width: 0 0 2px 2px !important;
+  }
+  .multiselect-item-checkbox input[type=checkbox]:checked + div:before{
+    background: #2096f3 !important;
+  }
+  .mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding: .4375em 0;
+    border: 1px solid !important;
+  }
+  .multiselect-dropdown[_ngcontent-c9] .dropdown-btn[_ngcontent-c9] .selected-item[_ngcontent-c9]:hover {
+    box-shadow: none !important;
 }

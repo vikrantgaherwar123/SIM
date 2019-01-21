@@ -220,7 +220,7 @@
                 <div class="lineItemDiv">
                   <table  width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
                     <thead>
-                      <tr class="hd font-custom-bold">
+                      <tr class="hd">
                         <td width="20%">
                           <input style="margin-left: 10px;" type="text" id="itemLable" class="bld w-100 text-left" disabled
                             value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
@@ -251,8 +251,8 @@
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="4%" class="text-center">Edit</td>
-                        <td width="4%" class="text-center">Delete</td>  
+                        <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
+                        <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>  
                       </tr>
                     </thead>
 
@@ -306,7 +306,7 @@
                         <td [class.no-border-last]="last">
                           <div class="text-center">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/delete_dark.png" class="del" class="hg_20">
+                              <img src="assets/images/delete_dark.png" class="del" class="hg_20" style="margin-bottom: 7px;">
                             </a>
                           </div>
                         </td>

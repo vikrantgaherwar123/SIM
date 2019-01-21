@@ -1,6 +1,6 @@
 <div class="row main-wrapper">
     <!-- Invoice query bar -->
-    <div class="col-12 query-container">
+    <!-- <div class="col-12 query-container">
       <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
         <div class="row mx-0">
           <div class="col-12 col-md-4">
@@ -23,22 +23,7 @@
           </div>
   
           <div class="col-12 col-md-5">
-            <div class="row">
-              <div class="col-4">
-                <input placeholder="Start" required readonly style="max-width: 100%"
-                  matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
-                  (click)="picker3.open()"
-                >
-                <mat-datepicker #picker3></mat-datepicker>
-              </div>
-              <div class="col-4 pl-0">
-                <input placeholder="End" required readonly style="max-width: 100%"
-                  matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
-                  (click)="picker4.open()"
-                >
-                <mat-datepicker #picker4></mat-datepicker>
-              </div>
-            </div>
+           
           </div>
   
           <div class="col-12 col-md-2">
@@ -55,12 +40,12 @@
         <div class="row">
           <div class="col-12 col-md-9">
             Showing results for: Client: <span style="color: red">
-              {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
               <span *ngIf="invoiceQueryForm.client.value?.length > 1"
                 [title]="getNames()"
               >
                 (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
               </span>,
+              <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span>
             </span>
             Date Range: <span style="color: red">{{invoiceQueryForm.dateRange.start.value ? 
               invoiceQueryForm.dateRange.start.value.getDate() + '-' +
@@ -74,7 +59,7 @@
           </div>
   
           <div class="col-12 col-md-2">
-            <button type="button" (click)="changingQuery = true; invoiceQueryForm.client.reset([{name: 'All'}])"
+            <button type="button" (click)="openSearchClientModal()"
               class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;height: 34px !important;"
             >
               Change
@@ -82,9 +67,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   
-    <div class="w-100" style="padding-top: 60px">
+    <div class="w-100" style="padding-top: 14px">
       <div class="row mx-0">
         <!-- Invoice List -->
         <div class="col-12 col-sm-3 pr-0">
@@ -173,6 +158,45 @@
         <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
           *ngIf="activeInv"
         >
+        <div class="query-bar shadow  back" *ngIf="!changingQuery" style="padding: 18px 2px 2px 24px !important;
+        margin-bottom: 18px;">
+          <div class="row">
+            <div class="col-md-9">
+              <span>Showing results for:</span> <img src="assets/images/client.png" 
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
+                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
+                <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+                  [title]="getNames()"
+                >
+                  (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                </span>, -->
+                <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span>
+              </span>
+              <br>
+              <img src="assets/images/date.png" 
+              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
+                invoiceQueryForm.dateRange.start.value.getDate() + '-' +
+                (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                invoiceQueryForm.dateRange.start.value.getFullYear() : 0
+              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{invoiceQueryForm.dateRange.end.value ?
+                invoiceQueryForm.dateRange.end.value.getDate() + '-' +
+                (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                invoiceQueryForm.dateRange.end.value.getFullYear() : 0
+              }}</span>
+              <br>
+              <img src="assets/images/payment2.png" 
+              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span>
+            </div>
+    
+            <div class="col-12 col-md-2">
+              <button type="button" (click)="openSearchClientModal()"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;margin-right: -58px;"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+        </div>
           <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
             <!-- Buttons -->
             <div class="row">
@@ -500,7 +524,7 @@
                   </div>
                 </div>
                  <!-- Payment -->
-                <hr>
+                <hr ngIf="paidAmount()">
                 <div *ngFor="let item of activeInv.payments" class="top_bot_mr_10 pay_clr">
                   <div  class="row mx-0">
                     <div class="col-6 text-left label_color">
@@ -534,49 +558,99 @@
   <div id="search-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
     data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+      <div class="modal-content" style="background-color: #f3f2f1;border-radius: 0px;border-radius: 0px;padding: 12px;">
+        <form>
+        <div class="modal-header" style="border-bottom: none !important;">
+          <!-- <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
             Search Invoice
-          </h4>
+          </h4> -->
           <button type="button" class="close" aria-label="Close" (click)="closeSearchModel()">
-            <img src="assets/images/cross16.png" alt="logo">
-          </button>
+              <img src="assets/images/cross16.png" alt="logo">
+            </button>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-12">
           <div class="form-group pl-0">
-              
-            <mat-select placeholder="Select client" class="client-select" multiple disableRipple [formControl]="invoiceQueryForm.client">
-              <!-- <mat-select-trigger>
-              {{invoiceQueryForm.client.value?.length > 0 ? invoiceQueryForm.client.value[0].name : ''}}
-              <span *ngIf="invoiceQueryForm.client.value?.length > 1" class="example-additional-selection">
-                (+{{invoiceQueryForm.client.value.length - 1}}
-                  {{invoiceQueryForm.client.value?.length === 2 ? 'other' : 'others'}}
-                )
-              </span>
-            </mat-select-trigger> -->
-              <mat-option [value]="{name: 'All'}">All</mat-option>
-              <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
-            </mat-select>
             <ng-multiselect-dropdown
-            [placeholder]="'custom placeholder'"
+            [placeholder]="'Client'"
             [data]="dropdownList"
             [settings]="dropdownSettings"
+            [formControl]="invoiceQueryForm.client"
           >
           </ng-multiselect-dropdown>
           </div>
         </div>
-  
-        <div class="modal-footer">
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeSearchModel()">
-            Close
-          </button>
-          <div class="col-12 col-md-2">
-            <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" class="btn btn-success btn-raised font-custom pull-right width20btn">
-              Search
-            </button>
+        <div class="row" style="margin-top: -3px;">
+          <div class="col-md-5 mr_right" style="margin-left: 16px !important;margin-top: 20px;">
+              <ul class="nav">
+                <li class="button-dropdown">
+                  <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
+                  {{itemSelected}}  <span><img src="assets/images/filter.png" style="height: 20px;
+                  margin-left: 60px;"> </span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let item of duration">
+                      <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+          </div>
+          <div class="col-3" style="padding: 9px 0px 0px 0px;">
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
+            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+              matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start" [disabled]="customEnableDate == false"
+              (click)="picker3.open()"
+            >
+            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </div>
+          <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;">
+              <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
+            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+              matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end" [disabled]="customEnableDate == false"
+              (click)="picker4.open()"
+            >
+            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
           </div>
         </div>
+        <div class="row mr_right">
+          <div class="edit-setting">
+            <form>
+                <div class="row" style="padding: 40px 0px 0px 44px;">
+                  <div style="font-size: 13px;color: #32475b;margin-bottom: 6px;padding-left: 14px;">Payment</div>
+                  <div class="col-12 taxradio">
+                    <input type="radio" id="taxonItem" name="taxon" checked>
+                    <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
+                      All Invoices
+                    </label>
+        
+                    <input type="radio" id="taxonBill" name="taxon">
+                    <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                     Paid Invoices
+                    </label>
+        
+                    <input type="radio" id="taxdisabled" name="taxon">
+                    <label for="taxdisabled" class="disabled fontsize13 border-left-none font-custom-bold">
+                      Unpaid Invoices
+                    </label>
+                  </div>
+                </div>
+              </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          
+          <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
+            <span style="color: grey;">Clear all</span>
+          </button>
+          <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" style="font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
+            class="btn btn-success font-custom pull-right width20btn">
+            Apply
+          </button>
+        </div>
+      </form>
       </div>
     </div>
   </div>
