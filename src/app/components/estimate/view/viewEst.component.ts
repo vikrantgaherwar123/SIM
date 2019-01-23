@@ -31,6 +31,13 @@ export class ViewEstComponent implements OnInit {
   estId : number
   dateDDMMYY: boolean
   dateMMDDYY: boolean
+  customEnableDate : boolean = false
+
+  // multiselect dropdown
+  dropdownList : any;
+  itemSelected
+  selectedItems = [];
+  dropdownSettings = {};
 
   private estimateQueryForm = {
     client: new FormControl(),
@@ -55,6 +62,33 @@ export class ViewEstComponent implements OnInit {
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
     this.settings = JSON.parse(localStorage.getItem('user')).setting
+
+     // date and time dropdown
+     jQuery(document).ready(function (e) {
+      function t(t) {
+          e(t).bind("click", function (t) {
+              t.preventDefault();
+              e(this).parent().fadeOut()
+          })
+      }
+      e(".dropdown-toggle").click(function () {
+          var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+          e(".button-dropdown .dropdown-menu").hide();
+          e(".button-dropdown .dropdown-toggle").removeClass("active");
+          if (t) {
+              e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+          }
+      });
+      e(document).bind("click", function (t) {
+          var n = e(t.target);
+          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+      });
+      e(document).bind("click", function (t) {
+          var n = e(t.target);
+          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+      })
+  });
+  // date and time dropdown ends  
   }
 
   ngOnInit() {
@@ -62,8 +96,12 @@ export class ViewEstComponent implements OnInit {
     // Fetch clients if not in store
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
+        this.dropdownList = response.records
         this.store.dispatch(new clientActions.add(response.records))
       })
+    }
+    else{
+      this.dropdownList = this.clientList;
     }
 
     // Set Active estimate whenever estimate list changes
@@ -90,10 +128,35 @@ export class ViewEstComponent implements OnInit {
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
     this.openSearchClientModal()
+     // dropdown settings
+     this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'uniqueKeyClient',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 10,
+      allowSearchFilter: true
+    };
+
+     this.itemSelected = 'All Time';
+    // testing
   }
+  duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
 
   loadMore() {
     this.estDispLimit += 10
+  }
+  showItem(item){
+    this.itemSelected = item
+    console.log(this.itemSelected);
+    if(this.itemSelected === 'Custom')
+    {
+      this.customEnableDate = true
+    }
+    else{
+      this.customEnableDate = false
+    }
   }
 
   goEdit(estId) {

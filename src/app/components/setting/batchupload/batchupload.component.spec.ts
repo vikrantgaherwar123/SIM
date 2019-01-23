@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchModalComponent } from './search-modal.component';
+import { BatchuploadComponent } from './batchupload.component';
 
-describe('SearchModalComponent', () => {
-  let component: SearchModalComponent;
-  let fixture: ComponentFixture<SearchModalComponent>;
+describe('BatchuploadComponent', () => {
+  let component: BatchuploadComponent;
+  let fixture: ComponentFixture<BatchuploadComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchModalComponent ]
+      declarations: [ BatchuploadComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SearchModalComponent);
+    fixture = TestBed.createComponent(BatchuploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

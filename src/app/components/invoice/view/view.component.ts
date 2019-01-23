@@ -41,7 +41,6 @@ export class ViewComponent implements OnInit {
   }
   
   // multiselect dropdown
-
   dropdownList : any;
   itemSelected
   selectedItems = [];
@@ -101,13 +100,17 @@ export class ViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dropdownList = this.clientList;
+    
     // Fetch clients if not in store
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
+      this.dropdownList = response.records
       this.store.dispatch(new clientActions.add(response.records))
       }
       )
+    }
+    else{
+      this.dropdownList = this.clientList;
     }
     
     // Set Active invoice whenever invoice list changes

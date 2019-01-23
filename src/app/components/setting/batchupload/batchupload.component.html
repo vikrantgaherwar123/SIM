@@ -1,0 +1,81 @@
+<!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+<button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
+
+<table>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+    </tr>
+    
+	<tr *ngFor="let item of records">
+		<td>{{item.Organization_Name}}</td>
+        <td>{{item.Contact_Person}}</td>
+        <td>{{item.Address_Line_1}}</td>
+        <td>{{item.Address_Line_2}}</td>
+        <td>{{item.Address_Line_3}}</td>
+        <td>{{item.Business_Id}}</td>
+        <td>{{item.Business_Detail}}</td>
+        <td>{{item.Contact_No}}</td>
+        <td>{{item.Email_Id}}</td>
+        <td>{{item.Shipping_Address}}</td>
+    </tr>
+</table> -->
+<div class="row main-wrapper">
+        <div class="col-12" id="main">
+          <div style="margin: 0px auto;">
+            <form class="shadow form-horizontal back" name="userForm">
+              <div align="center" class="forget-pass-form table-editable" id="table">
+                    <div class="file-upload-wrapper">
+                      <input type="file" id="input-file-now" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx" class="file-upload" />
+                    </div>
+                    <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
+                    <button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
+                    <table class="table table-responsive" style="padding: 32px 0px 0px 24px;">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th scope="col">Organization</th>
+                                <th scope="col">Contact Person</th>
+                                <th scope="col">Address Line 1</th>
+                                <th scope="col">Address Line 2</th>
+                                <th scope="col">Address Line 3</th>
+                                <th scope="col">Business Id</th>
+                                <th scope="col">Business Detail</th>
+                                <th scope="col">Contact No</th>
+                                <th scope="col">Email Id</th>
+                                <th scope="col">Shipping Address</th>
+                                <th scope="col">Remove</th>
+                              </tr>
+                            </thead>
+                            <tbody style="border: 1px solid;">
+                            <tr *ngFor="let item of records">
+                                <td contenteditable="true">{{item.company_name}}</td>
+                                <td contenteditable="true">{{item.Contact_Person}}</td>
+                                <td contenteditable="true">{{item.Address_Line_1}}</td>
+                                <td contenteditable="true">{{item.Address_Line_2}}</td>
+                                <td contenteditable="true">{{item.Address_Line_3}}</td>
+                                <td contenteditable="true">{{item.Business_Id}}</td>
+                                <td contenteditable="true">{{item.Business_Detail}}</td>
+                                <td contenteditable="true">{{item.Contact_No}}</td>
+                                <td contenteditable="true">{{item.Email_Id}}</td>
+                                <td contenteditable="true">{{item.Shipping_Address}}</td>
+                                <td>
+                                 <span class="table-remove">
+                                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(id)">Remove</button>
+                                </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                          </table>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
