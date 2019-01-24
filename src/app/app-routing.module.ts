@@ -16,6 +16,7 @@ import { CustomFieldComponent } from './components/setting/custom-field/custom-f
 import { BankingComponent } from './components/setting/banking/banking.component'
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
+import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 
 
 
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'setting/banking', component: BankingComponent, canActivate: [AuthGuard] },
   { path: 'setting/password', component: PasswordComponent, canActivate: [AuthGuard] },
   { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'setting/batchUpload', component: BatchuploadComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

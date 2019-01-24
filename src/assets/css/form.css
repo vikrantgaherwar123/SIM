@@ -233,7 +233,6 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 .hd td, .hd td input {
 	background-color: #666;
 	border: none;
-	font-weight: bold;
 	color: #fff;
 }
 .hd td input {

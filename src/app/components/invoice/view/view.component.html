@@ -1,6 +1,45 @@
 <div class="row main-wrapper">
-    <!-- Invoice query bar -->
-    <div class="col-12 query-container">
+  <!-- Invoice query bar -->
+  <div class="col-12 query-container">
+      <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
+          <div class="row">
+            <div class="col-md-9">
+              <span>Showing results for:</span> <img src="assets/images/client.png" 
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
+                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
+                <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+                  [title]="getNames()"
+                >
+                  (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                </span>, -->
+                <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span>
+              </span>
+              <img src="assets/images/date.png" 
+              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
+                invoiceQueryForm.dateRange.start.value.getDate() + '-' +
+                (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                invoiceQueryForm.dateRange.start.value.getFullYear() : 0
+              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{invoiceQueryForm.dateRange.end.value ?
+                invoiceQueryForm.dateRange.end.value.getDate() + '-' +
+                (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                invoiceQueryForm.dateRange.end.value.getFullYear() : 0
+              }}</span>
+              <img src="assets/images/payment2.png" 
+              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span>
+            </div>
+    
+            <div class="col-12 col-md-2">
+              <button type="button" (click)="openSearchClientModal()"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;margin-right: -58px;"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- //Invoice query bar -->
+    <!-- <div class="col-12 query-container">
       <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
         <div class="row mx-0">
           <div class="col-12 col-md-4">
@@ -23,22 +62,7 @@
           </div>
   
           <div class="col-12 col-md-5">
-            <div class="row">
-              <div class="col-4">
-                <input placeholder="Start" required readonly style="max-width: 100%"
-                  matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
-                  (click)="picker3.open()"
-                >
-                <mat-datepicker #picker3></mat-datepicker>
-              </div>
-              <div class="col-4 pl-0">
-                <input placeholder="End" required readonly style="max-width: 100%"
-                  matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
-                  (click)="picker4.open()"
-                >
-                <mat-datepicker #picker4></mat-datepicker>
-              </div>
-            </div>
+           
           </div>
   
           <div class="col-12 col-md-2">
@@ -83,9 +107,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   
-    <div class="w-100" style="padding-top: 60px">
+    <div class="w-100" style="padding-top: 74px">
       <div class="row mx-0">
         <!-- Invoice List -->
         <div class="col-12 col-sm-3 pr-0">
