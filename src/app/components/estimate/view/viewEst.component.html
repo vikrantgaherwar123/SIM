@@ -1,6 +1,6 @@
 <div class="row main-wrapper">
   <!-- Estimate query bar -->
-  <!-- <div class="col-12 query-container">
+  <div class="col-12 query-container">
     <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
       <div class="row mx-0">
         <div class="col-12 col-md-4">
@@ -74,57 +74,128 @@
         </div>
 
         <div class="col-12 col-md-2">
-          <button type="button" (click)="changingQuery = true; estimateQueryForm.client.reset([{name: 'All'}])"
+          <button type="button" (click)="openSearchClientModal()"                                      
             class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
+          > <!--(click)=changingQuery = true; estimateQueryForm.client.reset([{name: 'All'}])-->
             Change
           </button>
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
 
   <!-- SEARCH CLIENT MODAL -->
-<div id="search-client" class="modal fade" role="dialog" aria-labelledby="clientEstFormLabel" 
-aria-hidden="true" data-backdrop="static" data-keyboard="false"
->
-<div class="modal-dialog">
-<div class="modal-content">
-  <div class="modal-header">
-    <h4 class="modal-title form-header font-custom-bold header-color" id="clientEstFormLabel">
-      Search Estimate
-    </h4>
-    <button type="button" class="close" aria-label="Close" (click)="closeEstSearchModel()">
-      <img src="assets/images/cross16.png" alt="logo">
-    </button>
-  </div>
-  <div class="col-12 col-md-4">
-    <div class="form-group pl-0">
-      <mat-select placeholder="Select client" class="client-select" multiple disableRipple
-        [formControl]="estimateQueryForm.client"
-      >
-      <mat-option [value]="{name: 'All'}">All</mat-option>
-        <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
-      </mat-select>
-    </div>
-  </div>
+  <div id="search-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #f3f2f1;border-radius: 0px;border-radius: 0px;padding: 12px;">
+        <form>
+        <div class="modal-header" style="border-bottom: none !important;">
+          <!-- <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+            Search Invoice
+          </h4> -->
+          <button type="button" class="close" aria-label="Close" (click)="closeEstSearchModel()">
+            <img src="assets/images/cross16.png" alt="logo">
+          </button>
+        </div>
+        <div class="col-12 col-md-12">
+          <div class="form-group pl-0">
+            <ng-multiselect-dropdown
+            [placeholder]="'Client'"
+            [data]="dropdownList"
+            [settings]="dropdownSettings"
+            [formControl]="estimateQueryForm.client"
+          >
+          </ng-multiselect-dropdown>
+          </div>
+        </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEstSearchModel()">
-      Close
-    </button>
-    <div class="col-12 col-md-2">
-      <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)"
-        class="btn btn-success btn-raised font-custom pull-right width20btn"
-      >
-        Search
-      </button>
+        <div class="row" style="margin-top: -3px;">
+          <div class="col-md-5 mr_right" style="margin-left: 16px !important;margin-top: 20px;">
+              <ul class="nav">
+                <li class="button-dropdown">
+                  <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
+                  {{itemSelected}}
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let item of duration">
+                      <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+          </div>
+          <div class="col-3" style="padding: 9px 0px 0px 0px;" [ngClass]="{disabledDiv: !customEnableDate}">
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
+            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+              matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
+              (click)="picker3.open()" 
+            >
+            <mat-datepicker #picker3></mat-datepicker>
+          </div>
+          <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;" [ngClass]="{disabledDiv: !customEnableDate}">
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
+            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+              matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
+              (click)="picker4.open()"
+            > 
+            <mat-datepicker #picker4></mat-datepicker>
+          </div>
+        </div>
+
+        <div class="row mr_right">
+          <div class="edit-setting">
+            <form>
+                <div class="row" style="padding: 40px 0px 0px 44px;">
+                  <div style="font-size: 13px;color: #32475b;margin-bottom: 6px;padding-left: 14px;">Payment</div>
+                  <div class="col-12 taxradio">
+                    <input type="radio" id="taxonItem" name="taxon" checked>
+                    <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
+                      All Invoices
+                    </label>
+        
+                    <input type="radio" id="taxonBill" name="taxon">
+                    <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                     Paid Invoices
+                    </label>
+        
+                    <input type="radio" id="taxdisabled" name="taxon">
+                    <label for="taxdisabled" class="disabled fontsize13 border-left-none font-custom-bold">
+                      Unpaid Invoices
+                    </label>
+                  </div>
+                </div>
+              </form>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          
+          <button type="button" style="padding-right: 14px;" value="reset">
+            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 2px;">
+            <span>Clear all</span>
+          </button>
+          <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" style="font-size: 14px !important;border-radius: 0px !important;margin-right: 16px;"
+            class="btn btn-success font-custom pull-right width20btn">
+            Apply
+          </button>
+        </div>
+      </form>
+
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEstSearchModel()">
+            Close
+          </button>
+          <div class="col-12 col-md-2">
+            <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" class="btn btn-success btn-raised font-custom pull-right width20btn">
+              Search
+            </button>
+          </div>
+        </div> -->
+      </div>
     </div>
   </div>
-</div>
-</div>
-</div>
 
   <div class="py-3 w-100">
     <div class="row mx-0">
@@ -140,9 +211,8 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                   </a>
                 </div>
                 <div class="col-6 px-0" style="padding-top: 15px;">
-                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
-                  >
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="pull-right list-btn cus-img">
                     <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
@@ -180,12 +250,11 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
               *ngFor="let estimate of (estimateList | orderBy: estSortTerm:true:true | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
-              (click)="setActiveEst(estimate.unique_identifier)"
-            >
+              (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ estimate.createDate | date: 'dd MMM' }}
               </div>
-              
+
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
@@ -195,17 +264,18 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
+                    'symbol'):'1.2-2' }}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="no-data-messsage" *ngIf="estimateList < 1 && !estListLoader">
-              <h4>No Estimate to display</h4>
+            <div class="no-data-messsage" *ngIf="estimateList?.length < 1 && !estListLoader">
+              <img src="assets/images/ic_notfound.png">
             </div>
-            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList.length > estDispLimit">
-              <a (click)="loadMore()" class="more btn" *ngIf="estimateList.length > estDispLimit">
+            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
                 Click to view more >>
               </a>
             </div>
@@ -214,29 +284,23 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
       </div>
 
       <!-- View Estimate -->
-      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form" *ngIf="activeEst">
+      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form" *ngIf="activeEst"> <!--activeEst-->
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
           <!-- Buttons -->
           <div class="row">
             <div class="col-md-12">
               <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn"
-                title="Edit"
-              >
+                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadEstimate('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                title="Download"
-              >
+                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
               <button id="previewBtn" type="button" (click)="downloadEstimate('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                title="Preview"
-              >
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
                 <img src="assets/images/buttons-icon/view16.png">
                 Preview
               </button>
@@ -291,7 +355,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                   <span class="font-custom-bold text-left w-100">Estimate#</span>
                 </div>
                 <div class="col-sm-6">
-                  {{ activeEst.quetationNo  }}
+                  {{ activeEst.quetationNo }}
                 </div>
               </div>
 
@@ -299,10 +363,10 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
                   <span class="font-custom-bold text-left w-100">Estimate Date</span>
                 </div>
-                <div *ngIf="dateDDMMYY"  class="col-sm-6">
+                <div *ngIf="dateDDMMYY" class="col-sm-6">
                   {{activeEst.createDate | date:"dd/MM/yyyy"}}
                 </div>
-                <div *ngIf="dateMMDDYY"  class="col-sm-6">
+                <div *ngIf="dateMMDDYY" class="col-sm-6">
                   {{activeEst.createDate | date:"MM/dd/yyyy"}}
                 </div>
               </div>
@@ -317,19 +381,13 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;"
-                        value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled
-                        value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled
-                        value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
                     <td width="17%" *ngIf="activeEst.assignTaxFlag == 0">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
@@ -339,8 +397,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                     </td>
                     <td width="18%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
-                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled
-                      >
+                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
                   </tr>
                 </thead>
@@ -414,10 +471,12 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <!-- Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
+                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' |
+                    translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.grossAmount |
+                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
 
@@ -426,7 +485,8 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">Discount</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'| slice:0:1}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
+                    slice:0:1}})
                   </div>
                   <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
                 </div>
@@ -472,7 +532,8 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <!-- Shipping Charges -->
               <div class="row mx-0" *ngIf="activeEst.shippingCharges > 0">
                 <div class="col-4 discount-tax-label">
-                  <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                  <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ?
+                    settings.shipping : 'Shipping'}}</div>
                 </div>
                 <div class="col-8">
                   <div class="text-right">
@@ -485,7 +546,7 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
               <div class="row mx-0" *ngIf="activeEst.adjustment > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
-                   Adjustment
+                    Adjustment
                   </div>
                 </div>
                 <div class="col-8">
@@ -501,12 +562,16 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false"
                   <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.amount |
+                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
             </div>
           </div>
         </form>
+      </div>
+      <div *ngIf="estimateList.length < 1"><!--estimateList.length<1 && !invoiceListLoader-->
+        <img src="assets/images/ic_notfound.png" style="width: 190%;">
       </div>
     </div>
   </div>

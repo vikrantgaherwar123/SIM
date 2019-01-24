@@ -27,24 +27,37 @@ export class ViewEstComponent implements OnInit {
   estDispLimit: number = 20
   estSortTerm: string = 'createdDate'
   estSearchTerm: string
-  estId : number
+  clientListLoading: boolean
+  estId: number
   dateDDMMYY: boolean
   dateMMDDYY: boolean
 
-  private estimateQueryForm = {
+  public estimateQueryForm = {
     client: new FormControl(),
     dateRange: {
       start: new FormControl(),
       end: new FormControl(new Date())
     }
   }
+
+  // multiselect dropdown
+
+  dropdownList
+  lastSelectedClients
+  itemSelected
+
+  selectedItems = [];
+  dropdownSettings = {};
+
+  // multiselect dropdown ends
   changingQuery: boolean = false
 
-  private clientList: client[]
+  public clientList: client[]
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
   private settings: any
+  customEnableDate: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private store: Store<AppState>,
@@ -53,40 +66,94 @@ export class ViewEstComponent implements OnInit {
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
     this.settings = JSON.parse(localStorage.getItem('user')).setting
+    // date and time dropdown
+    jQuery(document).ready(function (e) {
+      function t(t) {
+        e(t).bind("click", function (t) {
+          t.preventDefault();
+          e(this).parent().fadeOut()
+        })
+      }
+      e(".dropdown-toggle").click(function () {
+        var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+        e(".button-dropdown .dropdown-menu").hide();
+        e(".button-dropdown .dropdown-toggle").removeClass("active");
+        if (t) {
+          e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+        }
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+      })
+    });
+    // date and time dropdown ends
+
   }
 
   ngOnInit() {
-    
     // Fetch clients if not in store
+    this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
+        this.dropdownList = response.records;
         this.store.dispatch(new clientActions.add(response.records))
       })
+    } else {
+      this.dropdownList = this.clientList;
     }
     this.openSearchClientModal()
+    this.clientListLoading = false
 
-    // Set Active estimate whenever estimate list changes
+    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+    this.estListLoader = true
+    this.estimateService.fetch().subscribe((response: any) => {
+      this.estListLoader = false
+      var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+      this.store.dispatch(new estimateActions.add(records))
+      this.estimateList = records
+      this.setActiveEst()
+    })
 
-      this.store.select('estimate').subscribe(estimates => {
-        if(estimates.length > 0) {
-          this.estimateList = estimates
-          this.setActiveEst()
-        } else{
-        this.estListLoader = true
-        this.estimateService.fetch().subscribe((response: any) => {
-          this.estListLoader = false
-          var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-          this.store.dispatch(new estimateActions.add(records))
-          this.estimateList = records
-          this.setActiveEst()
-        })
-      }
-      })
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
+
+    // make invoice list empty if clients not selected in dropdown
+    if (this.estimateQueryForm.client.value === null) {
+      this.estimateList = []
+    }
+
+    // dropdown settings
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'uniqueKeyClient',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 10,
+      allowSearchFilter: true
+    };
+    // keep first item selected in madal
+    this.itemSelected = 'All Time'
+  }
+
+  duration = ['All Time', 'This Week', 'This Month', 'Last Week', 'Last Month', 'Custom']
+
+  showItem(item) {
+    this.itemSelected = item
+    if (this.itemSelected === 'Custom') {
+      // flag is set to enable and disable input fields
+      this.customEnableDate = true
+    } else {
+      this.customEnableDate = false
+    }
   }
 
   loadMore() {
@@ -97,44 +164,27 @@ export class ViewEstComponent implements OnInit {
     this.router.navigate([`estimate/edit/${estId}`])
   }
 
-
-  // showSelectedEstimate(client){
-  //   this.estimateQueryForm.client = client
-  //   this.SearchEstimate()
-  //   $('#search-client').modal('hide')
-  // }
-  showSelectedEstimate(client){
+  showSelectedEstimate(client) {
     this.estimateQueryForm.client = client
-  //   if(this.estimateList.length === 0){
-  //   this.estimateService.fetch().subscribe((response: any) => {
-  //     this.estListLoader = false
-  //     var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-  //     this.estimateList = records
-  //     this.setActiveEst()
-  //   })
-  // }
-  var estList =[]
-    for(let i=0;i<client.value.length;i++){
-      var list= this.estimateList.filter(rec =>rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
+    var estList = []
+    for (let i = 0; i < client.value.length; i++) {
+      var list = this.estimateList.filter(rec => rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
       estList.push(list)
     }
     let est1List = []
-    for(let i=0;i<estList.length;i++){
-      for(let j=0;j<=estList[i].length;j++)
-      {
+    for (let i = 0; i < estList.length; i++) {
+      for (let j = 0; j <= estList[i].length; j++) {
         var obj = estList[i][j];
         est1List.push(obj)
       }
-      est1List.splice(-1,1)
+      est1List.splice(-1, 1)
     }
-  this.estimateList = est1List ;
-    
-    this.setActiveEst()
+    this.estimateList = est1List;
     this.SearchEstimate()
+    this.setActiveEst()
     $('#search-client').modal('hide')
   }
 
-  
   openSearchClientModal() {
     $('#search-client').modal('show')
   }
@@ -144,7 +194,7 @@ export class ViewEstComponent implements OnInit {
   }
 
 
- // Search Estimate Functions
+  // Search Estimate Functions
   SearchEstimate() {
     var query = {
       clientIdListEst: [],
@@ -180,9 +230,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList !=null){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
-    }
   }
 
   fetchEstimates(query = null) {
@@ -206,7 +254,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   setActiveEst(estId: string = '') {
-    if (!estId || estId ==="null") {
+    if (!estId || estId === "null") {
       this.activeEst = this.estimateList[0]
       //console.log(this.activeEst)
     } else {

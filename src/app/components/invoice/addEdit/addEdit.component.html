@@ -687,7 +687,7 @@
                         </div>
                       </div>
                     </div>
-                    <hr>
+                    <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)">
                     <div *ngFor="let item of activeInvoice.payments" class="top_bot_mr_10 pay_clr">
                         <div  class="row mx-0">
                           <div class="col-6 text-left label_color">

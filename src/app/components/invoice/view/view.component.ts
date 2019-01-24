@@ -24,13 +24,15 @@ export class ViewComponent implements OnInit {
   invoiceList: invoice[]
   activeInv: invoice
   invListLoader: boolean = false
+  customEnableDate :boolean = false
   invDispLimit: number = 20
   invSortTerm: string = 'createdDate'
   invSearchTerm: string
+  clientListLoading: boolean
   dateDDMMYY: boolean
   dateMMDDYY: boolean
 
-  private invoiceQueryForm = {
+  public invoiceQueryForm = {
     client: new FormControl(),
     dateRange: {
       start: new FormControl(),
@@ -40,14 +42,17 @@ export class ViewComponent implements OnInit {
   
   // multiselect dropdown
 
-  dropdownList : any;
+  dropdownList
+  lastSelectedClients
+  itemSelected
+
   selectedItems = [];
   dropdownSettings = {};
   
   // multiselect dropdown ends
   changingQuery: boolean = false
 
-  private clientList: client[]
+  public clientList: client[]
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
@@ -66,20 +71,53 @@ export class ViewComponent implements OnInit {
     //   }
     // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
+    // date and time dropdown
+    jQuery(document).ready(function (e) {
+      function t(t) {
+          e(t).bind("click", function (t) {
+              t.preventDefault();
+              e(this).parent().fadeOut()
+          })
+      }
+      e(".dropdown-toggle").click(function () {
+          var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+          e(".button-dropdown .dropdown-menu").hide();
+          e(".button-dropdown .dropdown-toggle").removeClass("active");
+          if (t) {
+              e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+          }
+      });
+      e(document).bind("click", function (t) {
+          var n = e(t.target);
+          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+      });
+      e(document).bind("click", function (t) {
+          var n = e(t.target);
+          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+      })
+  });
+  // date and time dropdown ends
+
+  // hide modal when back button pressed
+    $(window).on('popstate', function () {
+      $('#search-client').modal('hide');
+    });
   }
 
   ngOnInit() {
-    
     // Fetch clients if not in store
+    this.clientListLoading = true
     if (this.clientList.length < 1) {
-      
       this.clientService.fetch().subscribe((response: response) => {
+        this.dropdownList = response.records;
       this.store.dispatch(new clientActions.add(response.records))
-      this.dropdownList = this.clientList;
       }
       )
-      
+    }else{
+      this.dropdownList = this.clientList;
     }
+    this.openSearchClientModal()
+    this.clientListLoading = false
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
@@ -90,7 +128,11 @@ export class ViewComponent implements OnInit {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-    this.openSearchClientModal()
+    // make invoice list empty if clients not selected in dropdown
+    if(this.invoiceQueryForm.client.value === null){
+      this.invoiceList = []
+    }
+    
     
     // dropdown settings
     this.dropdownSettings = {
@@ -102,15 +144,29 @@ export class ViewComponent implements OnInit {
       itemsShowLimit: 10,
       allowSearchFilter: true
     };
-
-    // testing
+    // keep first item selected in madal
+    this.itemSelected = 'All Time'
   }
 
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
+  duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
+
+
+  // these two functions are not in use
+  // onItemSelect() {
+  //   this.lastSelectedClients = this.invoiceQueryForm.client
+  // }
+  // onSelectAll(items: any) {
+  //   console.log(items);
+  // }
+
+  showItem(item){
+    this.itemSelected = item
+    if(this.itemSelected === 'Custom'){
+      // flag is set to enable and disable input fields
+      this.customEnableDate = true
+    }else{
+      this.customEnableDate = false
+    }
   }
 
   paidAmount() {
@@ -132,7 +188,6 @@ export class ViewComponent implements OnInit {
     this.router.navigate([`invoice/edit/${invId}`])
   }
 
-
   openSearchClientModal() {
     $('#search-client').modal('show')
   }
@@ -147,6 +202,7 @@ export class ViewComponent implements OnInit {
     $('#search-client').modal('hide')
   }
 
+
   // Search Invoice Functions
   SearchInvoice() {
     var query = {
@@ -154,7 +210,6 @@ export class ViewComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-    // this.invoiceQueryForm.client = this.searchService.getUserData()
     if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {
@@ -175,7 +230,7 @@ export class ViewComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ invoiceQueryForm: this.invoiceQueryForm }))
     this.fetchInvoices(query)
-    this.changingQuery = false
+    // this.changingQuery = false
   }
 
   getNames() {
