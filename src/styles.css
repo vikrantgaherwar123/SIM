@@ -686,3 +686,7 @@ option {
   .multiselect-dropdown[_ngcontent-c9] .dropdown-btn[_ngcontent-c9] .selected-item[_ngcontent-c9]:hover {
     box-shadow: none !important;
 }
+.fa-chevron-down:before {
+  content: "\f078";
+  padding: 32px;
+}

@@ -5,14 +5,14 @@
 	<tr>
 		<td>1</td>
 		<td>2</td>
-        <td>3</td>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-        <td>8</td>
-        <td>9</td>
-        <td>10</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+    <td>8</td>
+    <td>9</td>
+    <td>10</td>
     </tr>
     
 	<tr *ngFor="let item of records">
@@ -29,53 +29,92 @@
     </tr>
 </table> -->
 <div class="row main-wrapper">
-        <div class="col-12" id="main">
-          <div style="margin: 0px auto;">
-            <form class="shadow form-horizontal back" name="userForm">
-              <div align="center" class="forget-pass-form table-editable" id="table">
-                    <div class="file-upload-wrapper">
-                      <input type="file" id="input-file-now" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx" class="file-upload" />
-                    </div>
-                    <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
-                    <button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
-                    <table class="table table-responsive" style="padding: 32px 0px 0px 24px;">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th scope="col">Organization</th>
-                                <th scope="col">Contact Person</th>
-                                <th scope="col">Address Line 1</th>
-                                <th scope="col">Address Line 2</th>
-                                <th scope="col">Address Line 3</th>
-                                <th scope="col">Business Id</th>
-                                <th scope="col">Business Detail</th>
-                                <th scope="col">Contact No</th>
-                                <th scope="col">Email Id</th>
-                                <th scope="col">Shipping Address</th>
-                                <th scope="col">Remove</th>
-                              </tr>
-                            </thead>
-                            <tbody style="border: 1px solid;">
-                            <tr *ngFor="let item of records">
-                                <td contenteditable="true">{{item.company_name}}</td>
-                                <td contenteditable="true">{{item.Contact_Person}}</td>
-                                <td contenteditable="true">{{item.Address_Line_1}}</td>
-                                <td contenteditable="true">{{item.Address_Line_2}}</td>
-                                <td contenteditable="true">{{item.Address_Line_3}}</td>
-                                <td contenteditable="true">{{item.Business_Id}}</td>
-                                <td contenteditable="true">{{item.Business_Detail}}</td>
-                                <td contenteditable="true">{{item.Contact_No}}</td>
-                                <td contenteditable="true">{{item.Email_Id}}</td>
-                                <td contenteditable="true">{{item.Shipping_Address}}</td>
-                                <td>
-                                 <span class="table-remove">
-                                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(id)">Remove</button>
-                                </span>
-                                </td>
-                            </tr>
-                            </tbody>
-                          </table>
-              </div>
-            </form>
+  <div class="col-12" id="main">
+    <div style="margin: 0px auto;">
+      <form class="shadow form-horizontal back" name="userForm">
+        <div align="center" class="forget-pass-form table-editable" id="table">
+          <div class="file-upload-wrapper">
+            <input type="file" id="input-file-now" style="display: inline-block;" (change)="incomingfile($event)"
+              placeholder="Upload file" accept=".xlsx" class="file-upload" />
           </div>
+          <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
+          <button type="button" class="btn btn-info" (click)="Upload()">Upload</button>
+          <table class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+            <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
+              <tr>
+                <th scope="col">Sr.no</th>
+                <th scope="col">Organization</th>
+                <th scope="col">Contact Person</th>
+                <th scope="col">Address Line 1</th>
+                <th scope="col">Address Line 2</th>
+                <th scope="col">Address Line 3</th>
+                <th scope="col">Business Id</th>
+                <th scope="col">Business Detail</th>
+                <th scope="col">Contact No</th>
+                <th scope="col">Email Id</th>
+                <th scope="col">Shipping Address</th>
+                <th scope="col">Remove</th>
+              </tr>
+            </thead>
+            <div>
+            <tbody style="border: 1px solid;">
+              <tr *ngFor="let item of records; let in = index">
+                <td>{{in+1}}</td>
+                <td>
+                    <input type="text" name="company_name-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.company_name" required />
+                  </td>
+                <td>
+                    <input type="text" name="Contact_Person-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Contact_Person" required />
+                </td>
+                <td>
+                    <input type="text" name="Address_Line_1-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Address_Line_1" required />
+                </td>
+                <td>
+                    <input type="text" name="Address_Line_2-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Address_Line_2" required />
+                </td>
+                <td>
+                    <input type="text" name="Address_Line_3-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Address_Line_3" required />
+                </td>
+                <td>
+                    <input type="text" name="Business_Id-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Business_Id" required />
+                </td>
+                <td>
+                    <input type="text" name="Business_Detail-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Business_Detail" required />
+                </td>
+                <td>
+                    <input type="text" name="Contact_No-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Contact_No" required />
+                </td>
+                <td>
+                    <input type="text" name="Email_Id-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Email_Id" required />
+                </td>
+                <td>
+                    <input type="text" name="Shipping_Address-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.Shipping_Address" required />
+                </td>
+                <td>
+                  <span class="table-remove">
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(index)">Remove</button>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </div>
+          </table>
+          <button type="button" id="saveClientBtn1"  class="btn save_btn btn-raised pull-right font-weight-bold ml-2"
+          >
+          SAVE
+        </button>
         </div>
-      </div>
+      </form>
+    </div>
+  </div>
+</div>

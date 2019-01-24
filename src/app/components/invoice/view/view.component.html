@@ -195,7 +195,7 @@
   
         <!-- View Invoice -->
         <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
-          *ngIf="activeInv"
+          *ngIf="activeInv || invoiceList.length > 1"
         >
           <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
             <!-- Buttons -->
@@ -600,7 +600,8 @@
           </div>
           <div class="col-3" style="padding: 9px 0px 0px 0px;">
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
-            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start" [disabled]="customEnableDate == false"
               (click)="picker3.open()"
             >
@@ -609,7 +610,8 @@
           </div>
           <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;">
               <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
-            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end" [disabled]="customEnableDate == false"
               (click)="picker4.open()"
             >
