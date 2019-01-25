@@ -31,7 +31,7 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div style="margin: 0px auto;">
-      <form class="shadow form-horizontal back" name="userForm">
+      <form class="shadow form-horizontal back" #f="ngForm" name="userForm">
         <div align="center" class="forget-pass-form table-editable" id="table">
           <div class="file-upload-wrapper">
             <input type="file" id="input-file-now" style="display: inline-block;" (change)="incomingfile($event)"
@@ -46,8 +46,6 @@
                 <th scope="col">Organization</th>
                 <th scope="col">Contact Person</th>
                 <th scope="col">Address Line 1</th>
-                <th scope="col">Address Line 2</th>
-                <th scope="col">Address Line 3</th>
                 <th scope="col">Business Id</th>
                 <th scope="col">Business Detail</th>
                 <th scope="col">Contact No</th>
@@ -61,55 +59,48 @@
               <tr *ngFor="let item of records; let in = index">
                 <td>{{in+1}}</td>
                 <td>
-                    <input type="text" name="company_name-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.company_name" required />
+                    <input type="text" name="name-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.name" required /><!--[ngClass]="{disabledField: !customEnableDate}"-->
                   </td>
                 <td>
-                    <input type="text" name="Contact_Person-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Contact_Person" required />
+                    <input type="text" name="contactPersonName-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.contactPersonName" required />
                 </td>
                 <td>
-                    <input type="text" name="Address_Line_1-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Address_Line_1" required />
+                    <input type="text" name="addressLine1-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.addressLine1" required />
                 </td>
                 <td>
-                    <input type="text" name="Address_Line_2-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Address_Line_2" required />
+                    <input type="text" name="businessId-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.businessId" required />
                 </td>
                 <td>
-                    <input type="text" name="Address_Line_3-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Address_Line_3" required />
+                    <input type="text" name="businessDetail-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.businessDetail" required />
                 </td>
                 <td>
-                    <input type="text" name="Business_Id-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Business_Id" required />
+                    <input type="text" name="number-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.number" required />
                 </td>
                 <td>
-                    <input type="text" name="Business_Detail-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Business_Detail" required />
+                    <input type="text" name="email-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.email" required />
                 </td>
                 <td>
-                    <input type="text" name="Contact_No-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Contact_No" required />
-                </td>
-                <td>
-                    <input type="text" name="Email_Id-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Email_Id" required />
-                </td>
-                <td>
-                    <input type="text" name="Shipping_Address-{{in}}" class="form-control"
-                    onfocus="this.select()" [(ngModel)]="item.Shipping_Address" required />
+                    <input type="text" name="shippingAddress-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.shippingAddress" required />
                 </td>
                 <td>
                   <span class="table-remove">
-                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(index)">Remove</button>
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(in)">Remove</button>
                   </span>
                 </td>
               </tr>
             </tbody>
           </div>
           </table>
-          <button type="button" id="saveClientBtn1"  class="btn save_btn btn-raised pull-right font-weight-bold ml-2"
+          <button (click)="update()" type="button" id="saveClientBtn1"  class="btn save_btn btn-raised pull-right font-weight-bold ml-2"
+          [disabled]="!f.valid"
           >
           SAVE
         </button>

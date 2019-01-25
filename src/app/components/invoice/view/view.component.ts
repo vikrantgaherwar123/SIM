@@ -31,7 +31,6 @@ export class ViewComponent implements OnInit {
   clientListLoading: boolean
   dateDDMMYY: boolean
   dateMMDDYY: boolean
-  customEnableDate : boolean = false
 
   public invoiceQueryForm = {
     client: new FormControl(),
@@ -42,16 +41,11 @@ export class ViewComponent implements OnInit {
   }
   
   // multiselect dropdown
-<<<<<<< HEAD
 
   dropdownList
   lastSelectedClients
   itemSelected
 
-=======
-  dropdownList : any;
-  itemSelected
->>>>>>> ddc733077582e4f4f75304c7cea6fd891873fd53
   selectedItems = [];
   dropdownSettings = {};
   
@@ -77,10 +71,6 @@ export class ViewComponent implements OnInit {
     //   }
     // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
-<<<<<<< HEAD
-=======
-
->>>>>>> ddc733077582e4f4f75304c7cea6fd891873fd53
     // date and time dropdown
     jQuery(document).ready(function (e) {
       function t(t) {
@@ -106,17 +96,12 @@ export class ViewComponent implements OnInit {
           if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
       })
   });
-<<<<<<< HEAD
   // date and time dropdown ends
 
   // hide modal when back button pressed
     $(window).on('popstate', function () {
       $('#search-client').modal('hide');
     });
-=======
-  // date and time dropdown ends  
- 
->>>>>>> ddc733077582e4f4f75304c7cea6fd891873fd53
   }
 
   ngOnInit() {
@@ -124,7 +109,6 @@ export class ViewComponent implements OnInit {
     this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
-<<<<<<< HEAD
         this.dropdownList = response.records;
       this.store.dispatch(new clientActions.add(response.records))
       }
@@ -134,17 +118,6 @@ export class ViewComponent implements OnInit {
     }
     this.openSearchClientModal()
     this.clientListLoading = false
-=======
-      this.dropdownList = response.records
-      this.store.dispatch(new clientActions.add(response.records))
-      }
-      )
-    }
-    else{
-      this.dropdownList = this.clientList;
-    }
-    
->>>>>>> ddc733077582e4f4f75304c7cea6fd891873fd53
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
@@ -171,7 +144,6 @@ export class ViewComponent implements OnInit {
       itemsShowLimit: 10,
       allowSearchFilter: true
     };
-<<<<<<< HEAD
     // keep first item selected in madal
     this.itemSelected = 'All Time'
   }
@@ -196,15 +168,6 @@ export class ViewComponent implements OnInit {
       this.customEnableDate = false
     }
   }
-=======
-
-    this.itemSelected = 'All Time';
-    // testing
-  }
-
-  
-  duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
->>>>>>> ddc733077582e4f4f75304c7cea6fd891873fd53
 
   paidAmount() {
     var temp = 0
@@ -219,17 +182,6 @@ export class ViewComponent implements OnInit {
 
   loadMore() {
     this.invDispLimit += 10
-  }
-  showItem(item){
-    this.itemSelected = item
-    console.log(this.itemSelected);
-    if(this.itemSelected === 'Custom')
-    {
-      this.customEnableDate = true
-    }
-    else{
-      this.customEnableDate = false
-    }
   }
 
   goEdit(invId) {

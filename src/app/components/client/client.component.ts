@@ -81,6 +81,9 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
+          if(!this.clientList[p].name){
+            this.clientList.splice(p,1);
+          }
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
