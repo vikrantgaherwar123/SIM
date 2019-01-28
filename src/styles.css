@@ -651,7 +651,7 @@ option {
   background-color: white;
   border-radius: 0px !important;
   border: 1px solid #d2cccc !important;
-  padding: 9px 12px !important;
+  padding: 12px 12px !important;
 }
 .multiselect-dropdown .dropdown-btn .selected-item{
   border: 1px solid #2096f3 !important;

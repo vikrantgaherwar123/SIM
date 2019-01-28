@@ -1,88 +1,43 @@
 <div class="row main-wrapper">
   <!-- Estimate query bar -->
   <div class="col-12 query-container">
-    <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
-      <div class="row mx-0">
-        <div class="col-12 col-md-4">
-          <div class="form-group pl-0">
-            <mat-select placeholder="Select client" class="client-select" multiple disableRipple
-              [formControl]="estimateQueryForm.client"
-            >
-              <mat-select-trigger>
-                {{estimateQueryForm.client.value?.length > 0 ? estimateQueryForm.client.value[0].name : ''}}
-                <span *ngIf="estimateQueryForm.client.value?.length > 1" class="example-additional-selection">
-                  (+{{estimateQueryForm.client.value.length - 1}}
-                    {{estimateQueryForm.client.value?.length === 2 ? 'other' : 'others'}}
-                  )
-                </span>
-              </mat-select-trigger>
-              <mat-option [value]="{name: 'All'}">All</mat-option>
-              <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
-            </mat-select>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-5">
+      <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
           <div class="row">
-            <div class="col-4">
-              <input placeholder="Start" required readonly style="max-width: 100%"
-                matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
-                (click)="picker3.open()"
-              >
-              <mat-datepicker #picker3></mat-datepicker>
+            <div class="col-md-9">
+              <span>Showing results for:</span> <img src="assets/images/client.png" 
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
+                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
+                <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+                  [title]="getNames()"
+                >
+                  (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                </span>, -->
+                <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span>
+              </span>
+              <img src="assets/images/date.png" 
+              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
+                  estimateQueryForm.dateRange.start.value.getDate() + '-' +
+                (estimateQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                estimateQueryForm.dateRange.start.value.getFullYear() : 0
+              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{estimateQueryForm.dateRange.end.value ?
+                  estimateQueryForm.dateRange.end.value.getDate() + '-' +
+                (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                estimateQueryForm.dateRange.end.value.getFullYear() : 0
+              }}</span>
+              <img src="assets/images/payment2.png" 
+              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span>
             </div>
-            <div class="col-4 pl-0">
-              <input placeholder="End" required readonly style="max-width: 100%"
-                matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
-                (click)="picker4.open()"
+    
+            <div class="col-12 col-md-2">
+              <button type="button" (click)="openSearchClientModal()"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;margin-right: -58px;"
               >
-              <mat-datepicker #picker4></mat-datepicker>
+                Change
+              </button>
             </div>
           </div>
         </div>
-
-        <div class="col-12 col-md-2">
-          <button type="button" (click)="SearchEstimate()"
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
-            Search
-          </button>
-        </div>
-      </div>
-    </form>
-
-    <div class="query-bar" *ngIf="!changingQuery">
-      <div class="row">
-        <div class="col-12 col-md-9">
-          Showing results for: Client: <span style="color: red">
-            {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}}
-            <span *ngIf="estimateQueryForm.client.value?.length > 1"
-              [title]="getNames()"
-            >
-              (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-            </span>,
-          </span>
-          Date Range: <span style="color: red">{{estimateQueryForm.dateRange.start.value ? 
-            estimateQueryForm.dateRange.start.value.getDate() + '-' +
-            (estimateQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-            estimateQueryForm.dateRange.start.value.getFullYear() : 0
-          }}</span> TO <span style="color: red">{{estimateQueryForm.dateRange.end.value ?
-            estimateQueryForm.dateRange.end.value.getDate() + '-' +
-            (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-            estimateQueryForm.dateRange.end.value.getFullYear() : 0
-          }}</span>
-        </div>
-
-        <div class="col-12 col-md-2">
-          <button type="button" (click)="openSearchClientModal()"                                      
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          > <!--(click)=changingQuery = true; estimateQueryForm.client.reset([{name: 'All'}])-->
-            Change
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
 
   <!-- SEARCH CLIENT MODAL -->
@@ -171,10 +126,9 @@
         </div>
 
         <div class="modal-footer">
-          
-          <button type="button" style="padding-right: 14px;" value="reset">
-            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 2px;">
-            <span>Clear all</span>
+          <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+              <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
+              <span style="color: grey;">Clear all</span>
           </button>
           <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" style="font-size: 14px !important;border-radius: 0px !important;margin-right: 16px;"
             class="btn btn-success font-custom pull-right width20btn">
@@ -197,7 +151,7 @@
     </div>
   </div>
 
-  <div class="py-3 w-100">
+  <div class="py-3 w-100" style="padding-top: 74px !important;">
     <div class="row mx-0">
       <!-- Estimate List -->
       <div class="col-12 col-sm-3 pr-0">
@@ -272,7 +226,7 @@
             </div>
 
             <div class="no-data-messsage" *ngIf="estimateList?.length < 1 && !estListLoader">
-              <img src="assets/images/ic_notfound.png">
+                <img src="assets/images/no_data_found.png"  style="width: 324px;">
             </div>
             <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
               <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
@@ -571,7 +525,7 @@
         </form>
       </div>
       <div *ngIf="estimateList.length < 1"><!--estimateList.length<1 && !invoiceListLoader-->
-        <img src="assets/images/ic_notfound.png" style="width: 190%;">
+          <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
       </div>
     </div>
   </div>

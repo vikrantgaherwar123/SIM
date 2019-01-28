@@ -182,7 +182,7 @@
               </div>
       
               <div *ngIf="invoiceList.length < 1"><!--invoiceList.length<1 && !invoiceListLoader-->
-                <img src="assets/images/ic_notfound.png">
+                <img src="assets/images/no_data_found.png" style="width: 324px;">
               </div>
               <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
@@ -552,7 +552,7 @@
           </form>
         </div>
         <div *ngIf="invoiceList.length < 1"><!--invoiceList.length<1 && !invoiceListLoader-->
-          <img src="assets/images/ic_notfound.png">
+          <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
         </div>
       </div>
     </div>
@@ -563,7 +563,7 @@
     <div class="modal-dialog">
       <div class="modal-content" style="background-color: #f3f2f1;border-radius: 0px;border-radius: 0px;padding: 12px;">
         <form>
-        <div class="modal-header" style="border-bottom: none !important;">
+        <div class="modal-header" style="border-bottom: none !important;padding: 10px 15px 25px 26px !important;">
           <!-- <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
             Search Invoice
           </h4> -->
@@ -583,7 +583,7 @@
           </div>
         </div>
         <div class="row" style="margin-top: -3px;">
-          <div class="col-md-5 mr_right" style="margin-left: 16px !important;margin-top: 20px;">
+          <div class="col-md-5 mr_right" style="margin-left: 8px !important;margin-top: 20px;">
               <ul class="nav">
                 <li class="button-dropdown">
                   <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
@@ -598,7 +598,8 @@
                 </li>
               </ul>
           </div>
-          <div class="col-3" style="padding: 9px 0px 0px 0px;">
+          <div class="col-1"></div>
+          <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;">
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
             <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
@@ -622,7 +623,7 @@
         <div class="row mr_right">
           <div class="edit-setting">
             <form>
-                <div class="row" style="padding: 40px 0px 0px 44px;">
+                <div class="row" style="padding: 10px 0px 0px 32px;">
                   <div style="font-size: 13px;color: #32475b;margin-bottom: 6px;padding-left: 14px;">Payment</div>
                   <div class="col-12 taxradio">
                     <input type="radio" id="taxonItem" name="taxon" checked>
@@ -650,7 +651,7 @@
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>
           </button>
-          <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" style="font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
+          <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" style="width: 94px;font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
             class="btn btn-success font-custom pull-right width20btn">
             Apply
           </button>
