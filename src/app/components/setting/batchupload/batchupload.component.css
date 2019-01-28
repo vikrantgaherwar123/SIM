@@ -3,3 +3,6 @@
 .forget-pass-form .form-group {
   width: 300px !important;
 }
+input.ng-dirty.ng-invalid {
+  border:1px solid red;
+}

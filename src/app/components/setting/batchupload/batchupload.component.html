@@ -1,33 +1,4 @@
-<!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
-<button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
 
-<table>
-	<tr>
-		<td>1</td>
-		<td>2</td>
-    <td>3</td>
-    <td>4</td>
-    <td>5</td>
-    <td>6</td>
-    <td>7</td>
-    <td>8</td>
-    <td>9</td>
-    <td>10</td>
-    </tr>
-    
-	<tr *ngFor="let item of records">
-		<td>{{item.Organization_Name}}</td>
-        <td>{{item.Contact_Person}}</td>
-        <td>{{item.Address_Line_1}}</td>
-        <td>{{item.Address_Line_2}}</td>
-        <td>{{item.Address_Line_3}}</td>
-        <td>{{item.Business_Id}}</td>
-        <td>{{item.Business_Detail}}</td>
-        <td>{{item.Contact_No}}</td>
-        <td>{{item.Email_Id}}</td>
-        <td>{{item.Shipping_Address}}</td>
-    </tr>
-</table> -->
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div style="margin: 0px auto;">
@@ -38,8 +9,12 @@
               placeholder="Upload file" accept=".xlsx" class="file-upload" />
           </div>
           <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
-          <button type="button" class="btn btn-info" (click)="Upload()">Upload</button>
-          <table class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+          <button type="button" class="btn btn-info" (click)="Upload();showClientsOrProducts = true">Upload</button>
+          <div *ngIf = "showClientsOrProducts == true">
+            <button (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
+            <button (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
+          </div>
+          <table *ngIf="showClientsTable" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
               <tr>
                 <th scope="col">Sr.no</th>
@@ -56,7 +31,7 @@
             </thead>
             <div>
             <tbody style="border: 1px solid;">
-              <tr *ngFor="let item of records; let in = index">
+              <tr *ngFor="let item of clientRecords; let in = index">
                 <td>{{in+1}}</td>
                 <td>
                     <input type="text" name="name-{{in}}" class="form-control"
@@ -99,7 +74,59 @@
             </tbody>
           </div>
           </table>
-          <button (click)="update()" type="button" id="saveClientBtn1"  class="btn save_btn btn-raised pull-right font-weight-bold ml-2"
+          <!-- products -->
+          <table *ngIf="showProductsTable == true" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+            <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
+              <tr>
+                <th scope="col">Sr.no</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Description</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Tax Rate</th>
+                <th scope="col">Product Code</th>
+                <th scope="col">Remove</th>
+              </tr>
+            </thead>
+            <div>
+            <tbody style="border: 1px solid;">
+              <tr  *ngFor="let item of productRecords; let i = index">
+                <td>{{i+1}}</td>
+                <td>
+                    <input type="text" name="prodName-{{i}}" class="form-control"
+                    [ngClass]="{'input.ng-dirty.ng-invalid': !i }" id="name" 
+                    onfocus="this.select()" [(ngModel)]="item.prodName" required /><!--[ngClass]="{disabledField: !customEnableDate}"-->
+                  </td>
+                <td>
+                    <input type="text" name="unit-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.unit" required />
+                </td>
+                <td>
+                    <input type="text" name="discription-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.discription" required />
+                </td>
+                <td>
+                    <input type="text" name="rate-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.rate" required />
+                </td>
+                <td>
+                    <input type="text" name="taxRate-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.taxRate" required />
+                </td>
+                <td>
+                    <input type="text" name="productCode-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.productCode" required />
+                </td>
+                <td>
+                  <span class="table-remove">
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="productRemove(i)">Remove</button>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </div>
+          </table>
+          <button (click)="save()" type="button" id="saveClientBtn1"  class="btn save_btn btn-raised pull-right font-weight-bold ml-2"
           [disabled]="!f.valid"
           >
           SAVE
