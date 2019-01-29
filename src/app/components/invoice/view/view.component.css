@@ -32,9 +32,8 @@
 .nav li {
   display: inline-block;
   list-style: none;
-  padding-top: 7px;
+  padding-top: 2px;
   margin-left: 8px;
-  padding-bottom: 3px;
 }
 
 .nav .button-dropdown {
@@ -49,7 +48,7 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 800;
-  border-radius: 4px;
+  border-radius: 2px;
   width: 188px !important;
   padding: 9px 0px 11px 16px;
   margin-top: 3px;
@@ -77,9 +76,9 @@
   left: 0;
   padding: 0;
   margin: 0;
-  margin-top: -4px;
+  margin-top: -21px;
   text-align: left;
-  height: 276px;
+  height: 232px;
 }
 
 .nav li .dropdown-menu.active {
@@ -88,12 +87,12 @@
 
 .nav li .dropdown-menu button {
   width: 170px;
-  padding: 1px 0px 7px 4px;
+  padding: 2px 0px 6px 4px;
   font-weight: bold !important;
-  border: 1px solid #adaaaa;
-  border-radius: 2px;
+  border: 1px solid #bcbaba;
+  border-radius: 4px;
   margin-top: 10px;
-  margin-bottom: -7px;
+  margin-bottom: -6px;
 }
 .dropdown-toggle::after {
   margin-left: 42px !important;
@@ -139,7 +138,7 @@
   vertical-align: middle;
   cursor: pointer;
   background-color: #ffffff;
-  border: 1px solid #2196f3;
+  border: 1px solid #d8d1d1;
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
   padding: 9px 12px !important;
   font-family: quicksand_regular !important;
@@ -147,9 +146,9 @@
 
 }
 
-.edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
+/* .edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
   border-left:0
-}
+} */
 .date-format input[type=radio] + label {
   display:inline-block !important;
   padding: 0 0 0 0px !important;
@@ -199,7 +198,19 @@
 .edit-setting .country-code input[type=radio]:checked + label{
   background-color: #d0e4f7;
 }
+
+svg {
+  height: 18px !important;
+}
+
+.caln{
+  top: -42px !important;
+}
 /* radio button css ends */
+.disabledDiv {
+  pointer-events: none;
+  opacity: 0.4; 
+}
 @media (min-width: 576px)
 {
 .modal-dialog {

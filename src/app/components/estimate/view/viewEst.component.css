@@ -1,196 +1,220 @@
 @import '../../../../assets/css/form.css';
+
+.query-container {
+  position: fixed;
+  padding: 2px 15px;
+  top: 75px;
+  z-index: 1000;
+  background: #F9F9F9;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+}
+
+.query-bar {
+  border-radius: 4px;
+  padding-top: 8px;
+}
+
 .client-select {
-    padding: 2px;
-    border: 1px solid #CFCFCF;
-  }
-  /*date & time dropdown in modal */
-  
-  
-  .nav {
-    display: block;
-    margin: 0; 
-    padding: 0;
-  }
-  
-  .nav li {
-    display: inline-block;
-    list-style: none;
-    padding-top: 7px;
-    padding-bottom: 3px;
-  }
-  
-  .nav .button-dropdown {
-    position: relative;
-  }
-  
-  .nav li a {
-    display: block;
-    background-color: #2096f3;
-    color: #2096f3 !important;
-    padding: 10px 36px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 800;
-    border-radius: 4px;
-    width: 188px !important;
-    padding: 9px 0px 11px 16px;
-    margin-top: 3px;
-  }
-  
-  .nav li button span {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: 10px;
-    color: #999;
-  }
-  
-  .nav li a:hover, .nav li a.dropdown-toggle.active {
-    background-color: #2096f3 !important;
-    color: #fff !important;
-  }
-  
-  .nav li a:hover span, .nav li a.dropdown-toggle.active span {
-    color: #fff;
-  }
-  
-  .nav li .dropdown-menu {
-    display: none;
-    position: absolute;
-    left: 0;
-    padding: 0;
-    margin: 0;
-    margin-top: -4px;
-    text-align: left;
-    height: 276px;
-  }
-  
-  .nav li .dropdown-menu.active {
-    display: block;
-  }
-  
-  .nav li .dropdown-menu button {
-    width: 170px;
-    padding: 1px 0px 7px 4px;
-    font-weight: bold !important;
-    border: 1px solid #adaaaa;
-    border-radius: 2px;
-    margin-top: 10px;
-    margin-bottom: -7px;
-  }
-  .dropdown-toggle::after {
-    margin-left: 42px !important;
-    display: none;
-  }
-  .dropdown-menu
-  {
-    border: 1px solid rgba(0,0,0,.15) !important;
-      border-radius: .25rem !important;
-  }
-  .list_a
-  {
-    background-color: white !important;
-    color: #2096f3 !important;
-  }
-  .list_a:hover{
-    background-color:#2096f3 !important;
-    color: white !important;
-  }
-  /* radio button of payment option */
-  .edit-setting .taxradio label,.edit-setting .discountradio label{
-    text-align: center !important;
-  }
-  .edit-setting .taxradio input[type=radio], .edit-setting .discountradio input[type=radio],
-  .date-format input[type=radio], .country-radio input[type=radio]{
-    display:none;
-  }
-  .edit-setting input[type=radio]:checked + label {
-    outline: 0;
-    color:#fff;
-    background-color: #2196f3;
-  }
-  .edit-setting input[type=radio] + label {
-    display: inline-block;
-    margin: -2px;
-    padding: 5px 12px;
-    margin-bottom: 5px;
-    line-height: 20px;
-    color: #2196f3;
-    text-align: center;
-    font-size: 14px !important;
-    width:159px;
-    vertical-align: middle;
-    cursor: pointer;
-    background-color: #ffffff;
-    border: 1px solid #2196f3;
-    transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
-    padding: 9px 12px !important;
-    font-family: quicksand_regular !important;
-    font-weight: 800 !important;
-  
-  }
-  
-  .edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
-    border-left:0
-  }
-  .date-format input[type=radio] + label {
-    display:inline-block !important;
-    padding: 0 0 0 0px !important;
-    background:url("/assets/images/unchecked24.png") no-repeat !important;
-    height: 20px !important;
-    width: 20px !important;
-    background-size: 100% !important;
-    border: none !important;
-    margin: 0px 2px 0px 0px !important;
-  }
-  .date-format input[type=radio]:checked + label {
-    background:url("/assets/images/checked24.png") no-repeat !important;
-    height: 20px !important;
-    width: 20px !important;
-    display:inline-block !important;
-    background-size: 100% !important;
-    border: none !important;
-    margin: 0px 2px 0px 0px !important;
-  }
-  .dropbtn {
-    width: 150px;
-    color: #1a73cc;
-    padding: 6px;
-    background: #d0e4f7;
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: center;
-  }
-  .edit-setting .country-code input[type=radio] + label {
-    min-height: 32px;
-    display: inline-block;
-    margin: 0px !important;
-    padding: 5px 12px;
-    margin-bottom: 5px;
-    line-height: 20px;
-    color: #c6c6c6;
-    text-align: center;
-    font-size: 14px !important;
-    width: 150px;
-    vertical-align: middle;
-    cursor: pointer;
-    border: 1px solid #D0E4F7;
-    transition: box-shadow .2s;
-    border-radius: 5px;
-   
-  }
-  .edit-setting .country-code input[type=radio]:checked + label{
-    background-color: #d0e4f7;
-  }
-  /* radio button css ends */
-  @media (min-width: 576px)
-  {
-  .modal-dialog {
-      max-width: 630px !important;
-      margin: 1.75rem auto;
-  }
-  }
-  /* / modal input date disable / */
+  padding: 2px;
+  border: 1px solid #CFCFCF;
+}
+/*date & time dropdown in modal */
+
+
+.nav {
+  display: block;
+  margin: 0; 
+  padding: 0;
+}
+
+.nav li {
+  display: inline-block;
+  list-style: none;
+  padding-top: 2px;
+  margin-left: 8px;
+}
+
+.nav .button-dropdown {
+  position: relative;
+}
+
+.nav li a {
+  display: block;
+  background-color: #2096f3;
+  color: #2096f3 !important;
+  padding: 10px 36px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 2px;
+  width: 188px !important;
+  padding: 9px 0px 11px 16px;
+  margin-top: 3px;
+}
+
+.nav li button span {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 10px;
+  color: #999;
+}
+
+.nav li a:hover, .nav li a.dropdown-toggle.active {
+  background-color: #2096f3 !important;
+  color: #fff !important;
+}
+
+.nav li a:hover span, .nav li a.dropdown-toggle.active span {
+  color: #fff;
+}
+
+.nav li .dropdown-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  margin-top: -21px;
+  text-align: left;
+  height: 232px;
+}
+
+.nav li .dropdown-menu.active {
+  display: block;
+}
+
+.nav li .dropdown-menu button {
+  width: 170px;
+  padding: 2px 0px 6px 4px;
+  font-weight: bold !important;
+  border: 1px solid #bcbaba;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: -6px;
+}
+.dropdown-toggle::after {
+  margin-left: 42px !important;
+  display: none;
+}
+.dropdown-menu
+{
+  border: 1px solid rgba(0,0,0,.15) !important;
+    border-radius: .25rem !important;
+}
+.list_a
+{
+  background-color: white !important;
+  color: #2096f3 !important;
+}
+.list_a:hover{
+  background-color:#2096f3 !important;
+  color: white !important;
+}
+/* radio button of payment option */
+.edit-setting .taxradio label,.edit-setting .discountradio label{
+  text-align: center !important;
+}
+.edit-setting .taxradio input[type=radio], .edit-setting .discountradio input[type=radio],
+.date-format input[type=radio], .country-radio input[type=radio]{
+  display:none;
+}
+.edit-setting input[type=radio]:checked + label {
+  outline: 0;
+  color:#fff;
+  background-color: #2196f3;
+}
+.edit-setting input[type=radio] + label {
+  display: inline-block;
+  margin: -2px;
+  padding: 5px 12px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  color: #2196f3;
+  text-align: center;
+  font-size: 14px !important;
+  width:159px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #d8d1d1;
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+  padding: 9px 12px !important;
+  font-family: quicksand_regular !important;
+  font-weight: 800 !important;
+
+}
+
+/* .edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
+  border-left:0
+} */
+.date-format input[type=radio] + label {
+  display:inline-block !important;
+  padding: 0 0 0 0px !important;
+  background:url("/assets/images/unchecked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+.date-format input[type=radio]:checked + label {
+  background:url("/assets/images/checked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  display:inline-block !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+.dropbtn {
+  width: 150px;
+  color: #1a73cc;
+  padding: 6px;
+  background: #d0e4f7;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+.edit-setting .country-code input[type=radio] + label {
+  min-height: 32px;
+  display: inline-block;
+  margin: 0px !important;
+  padding: 5px 12px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  color: #c6c6c6;
+  text-align: center;
+  font-size: 14px !important;
+  width: 150px;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #D0E4F7;
+  transition: box-shadow .2s;
+  border-radius: 5px;
+ 
+}
+.edit-setting .country-code input[type=radio]:checked + label{
+  background-color: #d0e4f7;
+}
+
+svg {
+  height: 18px !important;
+}
+
+.caln{
+  top: -42px !important;
+}
+/* radio button css ends */
 .disabledDiv {
-    pointer-events: none;
-    opacity: 0.4; 
-  }
+  pointer-events: none;
+  opacity: 0.4; 
+}
+@media (min-width: 576px)
+{
+.modal-dialog {
+    max-width: 630px !important;
+    margin: 1.75rem auto;
+}
+}

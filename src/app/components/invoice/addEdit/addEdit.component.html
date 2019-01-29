@@ -204,8 +204,6 @@
                         </div>
                   </div>
                 </div>
-
-                
                 <!-- <div style="float: right; margin-top: 3px;" *ngIf="activeInvoice.due_date_flag === 2">
                     <div class="row mx-0">
                       <input type="text" name="dueDate" class="form-control"
@@ -266,7 +264,7 @@
                                 {{item.product_name}}
                               </div>
                             <div>
-                              <pre class="text-left selected-items" style="margin-left: 10px;font-family: quicksand_regular !important;">{{item.description}}</pre>
+                              <pre class="text-left selected-items mCustomScrollbar style-3"  style="margin-left: 10px;font-family: quicksand_regular !important;">{{item.description}}</pre>
                             </div>
                             </div>
                           </div>
@@ -327,7 +325,7 @@
                               <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
-                              <textarea id="descId" name="description_{{index}}" class="form-control font_wg_none" elastic
+                              <textarea id="descId" name="description_{{index}}" class="form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;min-height: 60px; max-height: 80px; height: 73px;"
                                 *ngIf="modalDescription === true"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"

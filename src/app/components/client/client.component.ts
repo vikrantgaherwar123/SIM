@@ -81,6 +81,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
+          // client will be removed if he has no name
           if(!this.clientList[p].name){
             this.clientList.splice(p,1);
           }

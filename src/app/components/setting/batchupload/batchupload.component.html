@@ -9,11 +9,9 @@
           </div>
           <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
           <button type="button" class="btn btn-info upload-btn" (click)="Upload();showClientsOrProducts = true">Upload</button>
-          <div *ngIf="showClientsOrProducts == true">
-            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showClientsTable = true;showProductsTable = false;">Show
-              Clients</button>
-            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showProductsTable = true;showClientsTable = false">Show
-              Products</button>
+          <div *ngIf = "showClientsOrProducts == true">
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
           </div>
           <table *ngIf="showClientsTable" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
@@ -41,31 +39,31 @@
                   </td>
                   <td>
                     <input type="text" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.contactPersonName" required />
+                      [(ngModel)]="item.contactPersonName" />
                   </td>
                   <td>
                     <input type="text" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.addressLine1" required />
+                      [(ngModel)]="item.addressLine1" />
                   </td>
                   <td>
                     <input type="text" name="businessId-{{in}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.businessId" required />
+                      [(ngModel)]="item.businessId" />
                   </td>
                   <td>
                     <input type="text" name="businessDetail-{{in}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.businessDetail" required />
+                      [(ngModel)]="item.businessDetail" />
                   </td>
                   <td>
                     <input type="text" name="number-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.number"
-                      required />
+                     />
                   </td>
                   <td>
                     <input type="text" name="email-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.email"
-                      required />
+                     />
                   </td>
                   <td>
                     <input type="text" name="shippingAddress-{{in}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.shippingAddress" required />
+                      [(ngModel)]="item.shippingAddress" />
                   </td>
                   <td>
                     <span class="table-remove">
@@ -101,23 +99,23 @@
                   </td>
                   <td>
                     <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.unit"
-                      required />
+                     />
                   </td>
                   <td>
                     <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.discription" required />
+                      [(ngModel)]="item.discription" />
                   </td>
                   <td>
                     <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.rate"
-                      required />
+                     />
                   </td>
                   <td>
                     <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.taxRate"
-                      required />
+                     />
                   </td>
                   <td>
                     <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()"
-                      [(ngModel)]="item.productCode" required />
+                      [(ngModel)]="item.productCode" />
                   </td>
                   <td>
                     <span class="table-remove">
