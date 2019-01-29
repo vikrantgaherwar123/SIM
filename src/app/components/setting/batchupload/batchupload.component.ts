@@ -41,7 +41,6 @@ export class BatchuploadComponent implements OnInit {
       orgId: string
     }
   }
-  addClient: boolean = false
   // client ends
   constructor(private productService: ProductService,
     public clientService: ClientService,

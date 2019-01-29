@@ -207,3 +207,7 @@
     margin: 1.75rem auto;
 }
 }
+.disabledDiv {
+  pointer-events: none;
+  opacity: 0.4; 
+}
