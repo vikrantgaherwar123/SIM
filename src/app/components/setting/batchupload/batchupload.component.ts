@@ -32,12 +32,15 @@ export class BatchuploadComponent implements OnInit {
   // client starts
   clientList: client[]
   productList: product[]
+  //these flags are set here to do npm build otherwise we can use without initializing bt its gud way to initialize 
+  showClientsOrProducts : boolean = false
+  showProductsTable : boolean = false
+  showClientsTable : boolean = false
   private user: {
     user: {
       orgId: string
     }
   }
-  addClient: boolean = false
   // client ends
   constructor(private productService: ProductService,
     public clientService: ClientService,
@@ -47,7 +50,6 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-    
   }
 
 
@@ -91,7 +93,7 @@ export class BatchuploadComponent implements OnInit {
   ngOnInit() {
 
   }
-  
+
   save() {
     // client start
 

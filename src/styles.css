@@ -690,3 +690,11 @@ option {
   content: "\f078";
   padding: 32px;
 }
+.dropdown-list{
+  border-top: none !important;
+  margin-top: -1px !important;
+  box-shadow: none !important;
+}
+dropdown-list li :hover{
+  background-color:red !important;
+}

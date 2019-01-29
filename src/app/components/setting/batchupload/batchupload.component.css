@@ -3,6 +3,34 @@
 .forget-pass-form .form-group {
   width: 300px !important;
 }
-input.ng-dirty.ng-invalid.ng-empty {
+input.ng-dirty.ng-invalid {
   border:1px solid red;
+}
+.upload-btn {
+  margin-left: 107px;
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
+.box-red{
+  border: 1px solid red;
+}
+
+.box-grey{
+  border: 1px solid #ced4da;
+}
+
+.dropzone-drop-area {
+  border: dashed 2px grey;
+  width: 40%;
+  min-height: 120px;
+  box-sizing: border-box;
+  padding: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  cursor: pointer;
+  position: relative;
 }

@@ -568,8 +568,8 @@
             Search Invoice
           </h4> -->
           <button type="button" class="close" aria-label="Close" (click)="closeSearchModel()">
-              <img src="assets/images/cross16.png" alt="logo">
-            </button>
+              <img src="assets/images/cross16.png">
+          </button>
         </div>
         <div class="col-12 col-md-12">
           <div class="form-group pl-0">
@@ -587,9 +587,9 @@
               <ul class="nav">
                 <li class="button-dropdown">
                   <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
-                  {{itemSelected}}  <span><img src="assets/images/filter.png" style="height: 20px;
-                  margin-left: 60px;"> </span>
-                  </a>
+                  {{itemSelected}}  
+                  </a><span><img src="assets/images/filter.png" style="height: 18px;
+                    margin-left: 160px;margin-top: -61px;"> </span>
                   <ul class="dropdown-menu">
                     <li *ngFor="let item of duration">
                       <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
@@ -599,25 +599,25 @@
               </ul>
           </div>
           <div class="col-1"></div>
-          <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;">
+          <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;" [ngClass]="{disabledDiv: !customEnableDate}">
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
             <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
-              matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start" [disabled]="customEnableDate == false"
-              (click)="picker3.open()"
+              matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
+              (click)="picker3.open()" 
             >
             <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker3></mat-datepicker>
           </div>
-          <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;">
-              <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
+          <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;" [ngClass]="{disabledDiv: !customEnableDate}">
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
             <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
-              matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end" [disabled]="customEnableDate == false"
+              matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
               (click)="picker4.open()"
-            >
-            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
-            <mat-datepicker #picker3></mat-datepicker>
+            > 
+            <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
           </div>
         </div>
         <div class="row mr_right">
@@ -646,7 +646,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          
           <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>

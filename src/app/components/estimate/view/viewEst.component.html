@@ -67,12 +67,13 @@
         </div>
 
         <div class="row" style="margin-top: -3px;">
-          <div class="col-md-5 mr_right" style="margin-left: 16px !important;margin-top: 20px;">
+          <div class="col-md-5 mr_right" style="margin-left: 8px !important;margin-top: 20px;">
               <ul class="nav">
                 <li class="button-dropdown">
                   <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
-                  {{itemSelected}}
-                  </a>
+                  {{itemSelected}}  
+                  </a><span><img src="assets/images/filter.png" style="height: 18px;
+                    margin-left: 160px;margin-top: -61px;"> </span>
                   <ul class="dropdown-menu">
                     <li *ngFor="let item of duration">
                       <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
@@ -81,75 +82,43 @@
                 </li>
               </ul>
           </div>
-          <div class="col-3" style="padding: 9px 0px 0px 0px;" [ngClass]="{disabledDiv: !customEnableDate}">
+          <div class="col-1"></div>
+          <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;" [ngClass]="{disabledDiv: !customEnableDate}">
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
-            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
               (click)="picker3.open()" 
             >
+            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker3></mat-datepicker>
           </div>
           <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;" [ngClass]="{disabledDiv: !customEnableDate}">
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
-            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;"
+            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
               (click)="picker4.open()"
             > 
+            <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker4></mat-datepicker>
           </div>
         </div>
-
-        <div class="row mr_right">
-          <div class="edit-setting">
-            <form>
-                <div class="row" style="padding: 40px 0px 0px 44px;">
-                  <div style="font-size: 13px;color: #32475b;margin-bottom: 6px;padding-left: 14px;">Payment</div>
-                  <div class="col-12 taxradio">
-                    <input type="radio" id="taxonItem" name="taxon" checked>
-                    <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
-                      All Invoices
-                    </label>
-        
-                    <input type="radio" id="taxonBill" name="taxon">
-                    <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                     Paid Invoices
-                    </label>
-        
-                    <input type="radio" id="taxdisabled" name="taxon">
-                    <label for="taxdisabled" class="disabled fontsize13 border-left-none font-custom-bold">
-                      Unpaid Invoices
-                    </label>
-                  </div>
-                </div>
-              </form>
-          </div>
-        </div>
-
         <div class="modal-footer">
           <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
-              <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
-              <span style="color: grey;">Clear all</span>
+            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
+            <span style="color: grey;">Clear all</span>
           </button>
-          <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" style="font-size: 14px !important;border-radius: 0px !important;margin-right: 16px;"
+          <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" style="width: 94px;font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
             class="btn btn-success font-custom pull-right width20btn">
             Apply
           </button>
         </div>
       </form>
-
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEstSearchModel()">
-            Close
-          </button>
-          <div class="col-12 col-md-2">
-            <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" class="btn btn-success btn-raised font-custom pull-right width20btn">
-              Search
-            </button>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
+  <!--Search client modal ends-->
 
   <div class="py-3 w-100" style="padding-top: 74px !important;">
     <div class="row mx-0">

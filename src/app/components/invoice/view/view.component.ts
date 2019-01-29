@@ -32,7 +32,7 @@ export class ViewComponent implements OnInit {
   dateMMDDYY: boolean
   customEnableDate : boolean = false
 
-  private invoiceQueryForm = {
+  public invoiceQueryForm = {
     client: new FormControl(),
     dateRange: {
       start: new FormControl(),
