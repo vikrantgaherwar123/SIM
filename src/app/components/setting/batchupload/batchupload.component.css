@@ -7,7 +7,7 @@ input.ng-dirty.ng-invalid {
   border:1px solid red;
 }
 .upload-btn {
-  margin-left: 107px;
+  margin-left: 10px;
   margin-top: 13px;
   margin-bottom: 13px;
 }
@@ -33,4 +33,10 @@ input.ng-dirty.ng-invalid {
   flex-wrap: wrap;
   cursor: pointer;
   position: relative;
+}
+.no_btn{
+  border: none;
+  background-color: white;
+  width: 36px !important;
+  height: 25px !important;
 }

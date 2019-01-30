@@ -125,7 +125,7 @@ export class AddEditComponent implements OnInit {
 /*Scroll to top when arrow up clicked END*/
     // save button processing script
     $(document).ready(function () {
-      $('.btn').on('click', function () {
+      $('.btnsave').on('click', function () {
         var $this = $(this);
         var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
         if ($(this).html() !== loadingText) {
@@ -470,6 +470,8 @@ export class AddEditComponent implements OnInit {
 
    private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    // return this.clientList.filter
+
   }
 
   selectedClientChange(client) {

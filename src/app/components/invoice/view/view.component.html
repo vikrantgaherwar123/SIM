@@ -38,76 +38,6 @@
           </div>
         </div>
     </div>
-    <!-- //Invoice query bar -->
-    <!-- <div class="col-12 query-container">
-      <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
-        <div class="row mx-0">
-          <div class="col-12 col-md-4">
-            <div class="form-group pl-0">
-              <mat-select placeholder="Select client" class="client-select" multiple disableRipple
-                [formControl]="invoiceQueryForm.client"
-              >
-                <mat-select-trigger>
-                  {{invoiceQueryForm.client.value?.length > 0 ? invoiceQueryForm.client.value[0].name : ''}}
-                  <span *ngIf="invoiceQueryForm.client.value?.length > 1" class="example-additional-selection">
-                    (+{{invoiceQueryForm.client.value.length - 1}}
-                      {{invoiceQueryForm.client.value?.length === 2 ? 'other' : 'others'}}
-                    )
-                  </span>
-                </mat-select-trigger>
-                <mat-option [value]="{name: 'All'}">All</mat-option>
-                <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
-              </mat-select>
-            </div>
-          </div>
-  
-          <div class="col-12 col-md-5">
-           
-          </div>
-  
-          <div class="col-12 col-md-2">
-            <button type="button" (click)="SearchInvoice()"
-            class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;height: 34px !important;"
-            >
-              Search
-            </button>
-          </div>
-        </div>
-      </form>
-  
-      <div class="query-bar" *ngIf="!changingQuery">
-        <div class="row">
-          <div class="col-12 col-md-9">
-            Showing results for: Client: <span style="color: red">
-              <span *ngIf="invoiceQueryForm.client.value?.length > 1"
-                [title]="getNames()"
-              >
-                (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-              </span>,
-              <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span>
-            </span>
-            Date Range: <span style="color: red">{{invoiceQueryForm.dateRange.start.value ? 
-              invoiceQueryForm.dateRange.start.value.getDate() + '-' +
-              (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-              invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-            }}</span> TO <span style="color: red">{{invoiceQueryForm.dateRange.end.value ?
-              invoiceQueryForm.dateRange.end.value.getDate() + '-' +
-              (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-              invoiceQueryForm.dateRange.end.value.getFullYear() : 0
-            }}</span>
-          </div>
-  
-          <div class="col-12 col-md-2">
-            <button type="button" (click)="openSearchClientModal()"
-              class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;height: 34px !important;"
-            >
-              Change
-            </button>
-          </div>
-        </div>
-      </div>
-    </div> -->
-  
     <div class="w-100" style="padding-top: 74px">
       <div class="row mx-0">
         <!-- Invoice List -->
@@ -263,10 +193,10 @@
                         </div>
                       </div>
                       <div class="col-md-6 col-sm-6 col-xs-6">
-                        <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold color_grey">
+                        <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
                           Shipping Address
                         </span>
-                        <div class="address-render">{{activeInv.shipping_address}}</div>
+                        <div class="address-render color_grey">{{activeInv.shipping_address}}</div>
                       </div>
                     </div>
                   </div>

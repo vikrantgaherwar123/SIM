@@ -33,7 +33,6 @@
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a> <!--Arrow Scroll when page ends-->
-
                           <div class="input-group-append">
                             <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
                           </div>
@@ -250,7 +249,7 @@
                           />
                         </td>
                         <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
-                        <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>  
+                        <td width="6%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>  
                       </tr>
                     </thead>
 
@@ -685,7 +684,7 @@
                         </div>
                       </div>
                     </div>
-                    <hr>
+                    <hr *ngIf="activeInvoice.payments">
                     <div *ngFor="let item of activeInvoice.payments" class="top_bot_mr_10 pay_clr">
                         <div  class="row mx-0">
                           <div class="col-6 text-left label_color">
@@ -899,7 +898,7 @@
             <div class="col-12">
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description" class="form-control mCustomScrollbar style-3"
-                placeholder="Description" onfocus="this.select()" select-on-click style="max-height: 69px; height: 69px;"
+                placeholder="Description" onfocus="this.select()" select-on-click style="max-height: 69px !important; height: 69px;"
               ></textarea>
             </div>
 
@@ -1049,6 +1048,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- PAYMENT MODAL -->
 <div class="modal fade" id="addPaymentAddInvoice" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"

@@ -12,7 +12,9 @@
                 >
                   (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
                 </span>, -->
+                <div *ngIf="estimateQueryForm.client">
                 <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span>
+                </div>
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
@@ -241,7 +243,7 @@
           <div class="row mb-2">
             <div class="col-12 col-sm-7" id="clientData" name="clientData">
               <div class="row">
-                <div class="col-12" style="width: 88%;">
+                <div class="col-12" style="width: 88%;padding-bottom: 20px;">
                   <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                     {{settings.mTvBillTo}}
                   </span>
@@ -255,11 +257,11 @@
                   <span type="text" id="BillAddress" class="adr bill-to font-custom-bold">
                     Address
                   </span>
-                  <div class="address-render">{{activeClient.addressLine1}}</div>
-                  <div *ngIf="activeClient?.email">
+                  <div class="address-render color_grey">{{activeClient.addressLine1}}</div>
+                  <div *ngIf="activeClient?.email" class="color_grey">
                     Email: {{activeClient.email}}
                   </div>
-                  <div *ngIf="activeClient?.email">
+                  <div *ngIf="activeClient?.email" class="color_grey">
                     Contact No: {{activeClient.number}}
                   </div>
                 </div>
@@ -267,7 +269,7 @@
                   <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
                     Shipping Address
                   </span>
-                  <div class="address-render">{{activeEst.shippingAddress}}</div>
+                  <div class="address-render color_grey">{{activeEst.shippingAddress}}</div>
                 </div>
               </div>
             </div>
@@ -277,7 +279,7 @@
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
                   <span class="font-custom-bold text-left w-100">Estimate#</span>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 color_grey">
                   {{ activeEst.quetationNo }}
                 </div>
               </div>
@@ -286,10 +288,10 @@
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
                   <span class="font-custom-bold text-left w-100">Estimate Date</span>
                 </div>
-                <div *ngIf="dateDDMMYY" class="col-sm-6">
+                <div *ngIf="dateDDMMYY" class="col-sm-6 color_grey">
                   {{activeEst.createDate | date:"dd/MM/yyyy"}}
                 </div>
-                <div *ngIf="dateMMDDYY" class="col-sm-6">
+                <div *ngIf="dateMMDDYY" class="col-sm-6 color_grey">
                   {{activeEst.createDate | date:"MM/dd/yyyy"}}
                 </div>
               </div>
@@ -299,27 +301,27 @@
           <!-- Items Table -->
           <div class="row mb-3">
             <div class="col-md-12 lineItemDiv">
-              <table width="100%" cellpadding="0" cellspacing="0" class="column" style="table-layout: fixed">
+              <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
                 <!--table head content itemDescription , Qty , Rate ,Amount start -->
                 <thead>
                   <tr class="hd font-custom-bold">
-                    <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
+                    <td width="20%">
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;margin-left: 10px;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
+                    <td width="10%">
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-left text-center" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
+                    <td width="10%" class="text-center">
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-left text-center" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignTaxFlag == 0">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
+                    <td width="10%" *ngIf="activeEst.assignTaxFlag == 0" class="text-center">
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-left text-center" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignDiscountFlag == 1">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount (%)" disabled>
+                    <td width="10%" *ngIf="activeEst.assignDiscountFlag == 1" class="text-center">
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-left text-center" value="Discount (%)" disabled>
                     </td>
-                    <td width="18%">
-                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
+                    <td width="4%">
+                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:center !important;"
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
                   </tr>
@@ -328,35 +330,35 @@
                 <tbody class="lineItems">
                   <tr class="row-item" *ngFor="let item of activeEst.alstQuotProduct; let last = last">
                     <td [class.no-border-last]="last">
-                      <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                      <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
                         {{item.productName}}
                       </div>
-                      <div class="text-left">
+                      <div class="text-left text-truncate view_desc">
                         {{item.description}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.qty}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.rate}}
                       </div>
                     </td>
                     <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.taxRate}}
                       </div>
                     </td>
                     <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.discountRate}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                      <div class="text-center">
                         {{item.price}}
                       </div>
                     </td>
@@ -375,11 +377,11 @@
                   {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                 </span>
               </div>
-              <div class="col-md-12 px-0 margin-top-8">
+              <div class="col-md-12 px-0 margin-top-8" style="margin-top: 10px;">
                 <ul class="list-unstyled">
                   <li *ngFor="let term of activeEst.alstQuotTermsCondition">
                     <div class="col-md-12 margin-bottom-5px">
-                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span>><br />
+                      <span style="word-wrap: break-word;color: #a4a4a4;">{{term.termsConditionText}}</span><br />
                     </div>
                   </li>
                 </ul>
@@ -392,7 +394,7 @@
             <!-- Calculations -->
             <div class="col-6">
               <!-- Total -->
-              <div class="row mx-0 term-cond-label">
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;"> 
                 <div class="col-6 text-left">
                   <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' |
                     translate}}</span>
@@ -427,7 +429,7 @@
               </div>
 
               <!-- Tax -->
-              <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
+              <div class="row mx-0" *ngIf="activeEst.taxrate > 0" >
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
                   <div class="inline font-custom">({{activeEst.taxrate}} %)</div>
@@ -480,7 +482,7 @@
               </div>
 
               <!-- Gross Total -->
-              <div class="row mx-0 term-cond-label">
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
                 <div class="col-6 text-left">
                   <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>

@@ -267,7 +267,7 @@ export class AddEditEstComponent implements OnInit {
         }, 50)
       } else {
         this.toasterService.pop('failure', 'Invalid estimate id');
-        this.router.navigate(['/estimate/view'])
+        // this.router.navigate(['/estimate/view'])
       }
     })
   }
@@ -474,9 +474,19 @@ export class AddEditEstComponent implements OnInit {
   }
 }
 
-  private _filterCli(value: string): client[] {
-    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+  public _filterCli(value: string): client[] {
+    if(this.clientList.length == undefined) return this.clientList;
+    return this.clientList.filter(function(Product) {
+      return Product.name.toLowerCase().includes(this.clientList.length.toLowerCase());
+  })
+    
   }
+
+  // public _filterCli(value: string): client[] {
+  //   if(this.clientList.length == undefined) return this.clientList;
+  //   return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    
+  // }
 
   selectedClientChange(client) {
     this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
@@ -860,7 +870,7 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
           //  this.toasterService.pop('success', 'Estimate updated successfully');
-          this.router.navigate(['/estimate/view'])
+          // this.router.navigate(['/estimate/view'])
         } else {
           this.toasterService.pop('success', 'Estimate saved successfully');
           self.resetFormControls()
@@ -877,12 +887,18 @@ export class AddEditEstComponent implements OnInit {
     $('#estSubmitBtn').removeAttr('disabled')
   }
   }
-
+  openDeleteEstimateModal() {
+    // this.deleteproduct = true
+    $('#delete-estimate').modal('show')
+    // $('#delete-invoice').on('shown.bs.modal', (e) => {
+    //   $('#delete-invoice input[type="text"]')[1].focus()
+    // })
+  }
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
     // localStorage.setItem('deleteEstimateId', "1" )
     this.save(true)
-    this.toasterService.pop('success', 'Invoice Deleted successfully');
+    this.toasterService.pop('success', 'Estimate Deleted successfully');
   }
 
   calculateEstimate() {

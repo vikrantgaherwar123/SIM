@@ -4,29 +4,32 @@
     <div style="margin: 0px auto;">
       <form class="shadow form-horizontal back" #f="ngForm" name="userForm">
         <div align="center" class="forget-pass-form table-editable" id="table">
-          <div class="file-upload-wrapper">
+          <div class="file-upload-wrapper" style="padding-top: 28px;">
             <input type="file" id="input-file-now" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
-              placeholder="Upload file" accept=".xlsx" class="file-upload dropzone-container dropzone-drop-area" />
+              placeholder="Upload file" accept=".xlsx, .xls, .csv" class="file-upload dropzone-container dropzone-drop-area" />
           </div>
           <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
-          <button type="button" class="btn btn-info upload-btn" (click)="Upload();showClientsOrProducts = true">Upload</button>
-          <div *ngIf = "showClientsOrProducts == true">
-            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
-            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
+          <div>
+            <button type="button" class="btn btn-info upload-btn" (click)="Upload();showClientsOrProducts = true">Upload</button>
           </div>
-          <table *ngIf="showClientsTable" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+          <div *ngIf = "showClientsOrProducts == true" style="padding-bottom: 24px;">
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
+          </div>
+          <table width="100%" *ngIf="showClientsTable" class="table 
+          table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
-              <tr>
-                <th scope="col">Sr.no</th>
-                <th scope="col">Organization</th>
-                <th scope="col">Contact Person</th>
-                <th scope="col">Address Line 1</th>
-                <th scope="col">Business Id</th>
-                <th scope="col">Business Detail</th>
-                <th scope="col">Contact No</th>
-                <th scope="col">Email Id</th>
-                <th scope="col">Shipping Address</th>
-                <th scope="col">Remove</th>
+              <tr class="hd">
+                <td width="1%" scope="col">Sr.no</td>
+                <td width="10%" scope="col">Organization</td>
+                <td width="10%" scope="col">Contact Person</td>
+                <td width="10%" scope="col">Address Line 1</td>
+                <td width="10%" scope="col">Business Id</td>
+                <td width="10%" scope="col">Business Detail</td>
+                <td width="10%" scope="col">Contact No</td>
+                <td width="10%" scope="col">Email Id</td>
+                <td width="10%" scope="col">Shipping Address</td>
+                <td width="2%" scope="col">Remove</td>
               </tr>
             </thead>
             <div>
@@ -67,7 +70,7 @@
                 </td>
                 <td>
                   <span class="table-remove">
-                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="remove(in)">Remove</button>
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="remove(in)"><img src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
                   </span>
                 </td>
               </tr>
@@ -75,17 +78,17 @@
           </div>
           </table>
           <!-- products -->
-          <table *ngIf="showProductsTable == true" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+          <table width="100%" *ngIf="showProductsTable == true" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
-              <tr>
-                <th scope="col">Sr.no</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Unit</th>
-                <th scope="col">Description</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Tax Rate</th>
-                <th scope="col">Product Code</th>
-                <th scope="col">Remove</th>
+              <tr class="hd">
+                <td width="1%" scope="col">Sr.no</td>
+                <td width="10%" scope="col">Product Name</td>
+                <td width="10%" scope="col">Unit</td>
+                <td width="10%" scope="col">Description</td>
+                <td width="10%" scope="col">Rate</td>
+                <td width="10%" scope="col">Tax Rate</td>
+                <td width="10%" scope="col">Product Code</td>
+                <td width="2%" scope="col">Remove</td>
               </tr>
             </thead>
             <div>
@@ -119,7 +122,7 @@
                 </td>
                 <td>
                   <span class="table-remove">
-                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0" (click)="productRemove(i)">Remove</button>
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="productRemove(i)"><img src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
                   </span>
                 </td>
               </tr>
