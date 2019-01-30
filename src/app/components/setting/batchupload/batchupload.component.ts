@@ -27,6 +27,8 @@ export class BatchuploadComponent implements OnInit {
   worksheet2: XLSX.WorkSheet;
   incomingfile(event) {
     this.file = event.target.files[0];
+    console.log(this.file);
+    
   }
 
   // client starts

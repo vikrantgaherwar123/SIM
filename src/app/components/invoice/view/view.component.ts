@@ -133,7 +133,6 @@ export class ViewComponent implements OnInit {
       this.invoiceList = []
     }
     
-    
     // dropdown settings
     this.dropdownSettings = {
       singleSelection: false,
@@ -150,15 +149,6 @@ export class ViewComponent implements OnInit {
 
   duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
 
-
-  // these two functions are not in use
-  // onItemSelect() {
-  //   this.lastSelectedClients = this.invoiceQueryForm.client
-  // }
-  // onSelectAll(items: any) {
-  //   console.log(items);
-  // }
-
   showItem(item){
     this.itemSelected = item
     if(this.itemSelected === 'Custom'){
@@ -167,6 +157,10 @@ export class ViewComponent implements OnInit {
     }else{
       this.customEnableDate = false
     }
+  }
+
+  clearItem(){
+    $("#taxonItem").prop("checked", true);
   }
 
   paidAmount() {
@@ -230,7 +224,6 @@ export class ViewComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ invoiceQueryForm: this.invoiceQueryForm }))
     this.fetchInvoices(query)
-    // this.changingQuery = false
   }
 
   getNames() {

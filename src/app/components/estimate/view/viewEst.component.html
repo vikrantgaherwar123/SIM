@@ -5,7 +5,9 @@
           <div class="row">
             <div class="col-md-9">
               <span>Showing results for:</span> <img src="assets/images/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
+              <span style="color:#0299ff">Client: </span>
+              <span style="color: black;font-family: quicksand_bold !important;">
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
                 <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
                   [title]="getNames()"
@@ -102,7 +104,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+          <button (click)="estimateQueryForm.client.reset();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>
           </button>
@@ -162,6 +164,9 @@
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Estimate
           </div>
+          <div *ngIf="estimateList.length < 1" class="no-data-messsage">
+              <img src="assets/images/no_data_found.png"  style="width: 324px;">
+          </div>
 
           <div class="col-12 px-0 mCustomScrollbar style-3">
             <div style="background-color: #fff;" *ngIf="estListLoader">
@@ -190,10 +195,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="no-data-messsage" *ngIf="estimateList?.length < 1 && !estListLoader">
-                <img src="assets/images/no_data_found.png"  style="width: 324px;">
-            </div>
             <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
               <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
                 Click to view more >>
@@ -202,9 +203,11 @@
           </div>
         </div>
       </div>
+      
 
       <!-- View Estimate -->
-      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form" *ngIf="activeEst"> <!--activeEst-->
+      <div  class="col-12 col-sm-9 item-form">
+      <div id="estMain" name="estMain" *ngIf="activeEst"> <!--activeEst-->
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
           <!-- Buttons -->
           <div class="row">
@@ -376,7 +379,7 @@
                 <ul class="list-unstyled">
                   <li *ngFor="let term of activeEst.alstQuotTermsCondition">
                     <div class="col-md-12 margin-bottom-5px">
-                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span>><br />
+                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span><br />
                     </div>
                   </li>
                 </ul>
@@ -490,7 +493,8 @@
           </div>
         </form>
       </div>
-      <div *ngIf="estimateList.length < 1"><!--estimateList.length<1 && !invoiceListLoader-->
+      </div>
+      <div *ngIf="estimateList?.length < 1"><!--estimateList.length<1 && !invoiceListLoader-->
           <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
       </div>
     </div>

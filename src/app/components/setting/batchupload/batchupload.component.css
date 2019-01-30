@@ -34,3 +34,9 @@ input.ng-dirty.ng-invalid {
   cursor: pointer;
   position: relative;
 }
+.no_btn{
+  border: none;
+  background-color: white;
+  width: 36px !important;
+  height: 25px !important;
+}
