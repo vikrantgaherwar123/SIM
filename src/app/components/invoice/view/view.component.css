@@ -20,7 +20,7 @@
   padding: 2px;
   border: 1px solid #CFCFCF;
 }
-/*date & time dropdown in modal */
+/* date & time dropdown in modal*/
 
 
 .nav {
@@ -217,4 +217,8 @@ svg {
     max-width: 630px !important;
     margin: 1.75rem auto;
 }
+}
+.disabledDiv {
+  pointer-events: none;
+  opacity: 0.4; 
 }

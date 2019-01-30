@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core'
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
-import { SearchService } from '../../../services/search.service';
 import { response, invoice, client } from '../../../interface'
 import { Observable } from 'rxjs'
 import { FormControl } from '@angular/forms'
@@ -25,12 +24,13 @@ export class ViewComponent implements OnInit {
   invoiceList: invoice[]
   activeInv: invoice
   invListLoader: boolean = false
+  customEnableDate :boolean = false
   invDispLimit: number = 20
   invSortTerm: string = 'createdDate'
   invSearchTerm: string
+  clientListLoading: boolean
   dateDDMMYY: boolean
   dateMMDDYY: boolean
-  customEnableDate : boolean = false
 
   public invoiceQueryForm = {
     client: new FormControl(),
@@ -41,22 +41,24 @@ export class ViewComponent implements OnInit {
   }
   
   // multiselect dropdown
-  dropdownList : any;
+
+  dropdownList
+  lastSelectedClients
   itemSelected
+
   selectedItems = [];
   dropdownSettings = {};
   
   // multiselect dropdown ends
   changingQuery: boolean = false
 
-  private clientList: client[]
+  public clientList: client[]
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
   private settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
-    private searchService : SearchService,
     private store: Store<AppState>,
     private settingService: SettingService,
     public router: Router
@@ -69,7 +71,6 @@ export class ViewComponent implements OnInit {
     //   }
     // })
     this.settings = JSON.parse(localStorage.getItem('user')).setting
-
     // date and time dropdown
     jQuery(document).ready(function (e) {
       function t(t) {
@@ -95,24 +96,28 @@ export class ViewComponent implements OnInit {
           if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
       })
   });
-  // date and time dropdown ends  
- 
+  // date and time dropdown ends
+
+  // hide modal when back button pressed
+    $(window).on('popstate', function () {
+      $('#search-client').modal('hide');
+    });
   }
 
   ngOnInit() {
-    
     // Fetch clients if not in store
+    this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
-      this.dropdownList = response.records
+        this.dropdownList = response.records;
       this.store.dispatch(new clientActions.add(response.records))
       }
       )
-    }
-    else{
+    }else{
       this.dropdownList = this.clientList;
     }
-    
+    this.openSearchClientModal()
+    this.clientListLoading = false
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
@@ -123,7 +128,10 @@ export class ViewComponent implements OnInit {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-    this.openSearchClientModal()
+    // make invoice list empty if clients not selected in dropdown
+    if(this.invoiceQueryForm.client.value === null){
+      this.invoiceList = []
+    }
     
     // dropdown settings
     this.dropdownSettings = {
@@ -135,13 +143,25 @@ export class ViewComponent implements OnInit {
       itemsShowLimit: 10,
       allowSearchFilter: true
     };
-
-    this.itemSelected = 'All Time';
-    // testing
+    // keep first item selected in madal
+    this.itemSelected = 'All Time'
   }
 
-  
   duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
+
+  showItem(item){
+    this.itemSelected = item
+    if(this.itemSelected === 'Custom'){
+      // flag is set to enable and disable input fields
+      this.customEnableDate = true
+    }else{
+      this.customEnableDate = false
+    }
+  }
+
+  clearItem(){
+    $("#taxonItem").prop("checked", true);
+  }
 
   paidAmount() {
     var temp = 0
@@ -157,22 +177,10 @@ export class ViewComponent implements OnInit {
   loadMore() {
     this.invDispLimit += 10
   }
-  showItem(item){
-    this.itemSelected = item
-    console.log(this.itemSelected);
-    if(this.itemSelected === 'Custom')
-    {
-      this.customEnableDate = true
-    }
-    else{
-      this.customEnableDate = false
-    }
-  }
 
   goEdit(invId) {
     this.router.navigate([`invoice/edit/${invId}`])
   }
-
 
   openSearchClientModal() {
     $('#search-client').modal('show')
@@ -188,6 +196,7 @@ export class ViewComponent implements OnInit {
     $('#search-client').modal('hide')
   }
 
+
   // Search Invoice Functions
   SearchInvoice() {
     var query = {
@@ -195,7 +204,6 @@ export class ViewComponent implements OnInit {
       startTime: 0,
       endTime: 0
     }
-    // this.invoiceQueryForm.client = this.searchService.getUserData()
     if (this.invoiceQueryForm.client.value && this.invoiceQueryForm.client.value.length > 0) {
       query.clientIdList = this.invoiceQueryForm.client.value.map(cli => cli.uniqueKeyClient)
       if (query.clientIdList[0] == null) {
@@ -216,7 +224,6 @@ export class ViewComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ invoiceQueryForm: this.invoiceQueryForm }))
     this.fetchInvoices(query)
-    this.changingQuery = false
   }
 
   getNames() {

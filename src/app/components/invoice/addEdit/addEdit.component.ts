@@ -398,7 +398,7 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if(this.termList.length < 1 && this.termList != undefined) {
+    if(this.termList.length < 1 && !this.edit) {
       this.termConditionService.fetch().subscribe((response: response) => {
          //console.log(response)
         if (response.termsAndConditionList) {
@@ -775,8 +775,7 @@ export class AddEditComponent implements OnInit {
   }
 
   addRemoveTermsFromInvoice(term) {
-    // console.log(term)
-    var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
+    var index = this.activeInvoice.termsAndConditions.findIndex(trms => trms.terms == term.terms)//trms =>trms.uniqueKeyTerms == term.uniqueKeyTerms
     if(index == -1) {
       this.activeInvoice.termsAndConditions.push(term)
     } else {

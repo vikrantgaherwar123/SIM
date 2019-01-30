@@ -81,7 +81,11 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          // tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          // client will be removed if he has no name
+          if(!this.clientList[p].name){
+            this.clientList.splice(p,1);
+          }
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
               if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {

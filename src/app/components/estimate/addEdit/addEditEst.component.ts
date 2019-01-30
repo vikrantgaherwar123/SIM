@@ -89,6 +89,8 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
+  keepGoing: boolean;
+  estimateDelete: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -232,7 +234,6 @@ export class AddEditEstComponent implements OnInit {
               this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
             }
             this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-            console.log(this.activeEstimate.termsAndConditions);
           })
         } else {
           this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
@@ -407,7 +408,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if (this.termList.length < 1) {
+    if (this.termList.length < 1 && !this.edit) {
       this.termConditionService.fetch().subscribe((response: response) => {
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
@@ -474,12 +475,10 @@ export class AddEditEstComponent implements OnInit {
   }
 }
 
-  public _filterCli(value: string): client[] {
-    if(this.clientList.length == undefined) return this.clientList;
-    return this.clientList.filter(function(Product) {
-      return Product.name.toLowerCase().includes(this.clientList.length.toLowerCase());
-  })
-    
+  private _filterCli(value: string): client[] {
+    if(this.clientList){
+    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   // public _filterCli(value: string): client[] {
@@ -753,8 +752,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addRemoveTermsFromEstimate(term) {
-    console.log(this.activeEstimate.termsAndConditions);
-
     var index = this.activeEstimate.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
     if (index == -1) {
       this.activeEstimate.termsAndConditions.push(term)
@@ -818,7 +815,11 @@ export class AddEditEstComponent implements OnInit {
       temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier })
 
     })
-
+  //   for(let i = 0;i<temp.length; i++){
+  //   if(temp[i].terms_condition === undefined){
+  //     temp.splice(i,1);
+  //   }
+  // }
     this.activeEstimate.termsAndConditions = temp
 
 
@@ -867,11 +868,21 @@ export class AddEditEstComponent implements OnInit {
           this.updateSettings()
         }
 
+        // if (this.edit && this.estimateDelete === false) {
+        //   //  this.toasterService.pop('success', 'Estimate updated successfully');
+        //   this.router.navigate(['/estimate/view'])
+        // } else if(this.estimateDelete === undefined) {
+        //   this.toasterService.pop('success', 'Estimate saved successfully');
+        //   this.router.navigate(['/estimate/view'])
+        //   self.resetFormControls()
+        //   self.ngOnInit()
+        // }
+
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
           //  this.toasterService.pop('success', 'Estimate updated successfully');
-          // this.router.navigate(['/estimate/view'])
-        } else {
+          this.router.navigate(['/estimate/view'])
+        } else{
           this.toasterService.pop('success', 'Estimate saved successfully');
           self.resetFormControls()
           self.ngOnInit()
@@ -897,9 +908,20 @@ export class AddEditEstComponent implements OnInit {
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
     // localStorage.setItem('deleteEstimateId', "1" )
+    // this.estimateDelete = false;
     this.save(true)
-    this.toasterService.pop('success', 'Estimate Deleted successfully');
+    this.toasterService.pop('success', 'estimate Deleted successfully');
+    // this.closeDeleteEstimateModal();
   }
+
+  // openDeleteEstimateModal() {
+  //   this.estimateDelete = true
+  //   $('#delete-estimate').modal('show')
+  // }
+
+  // closeDeleteEstimateModal(){
+  //   $('#delete-estimate').modal('hide')
+  // }
 
   calculateEstimate() {
     var gross_amount = 0
