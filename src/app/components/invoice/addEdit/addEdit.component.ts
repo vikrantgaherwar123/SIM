@@ -434,6 +434,7 @@ export class AddEditComponent implements OnInit {
 
   // Client Functions
   setClientFilter() {
+    this.clientListLoading = true;
     // Filter for client autocomplete
     if (this.clientList) {
       this.filteredClients = this.billingTo.valueChanges.pipe(
@@ -441,7 +442,9 @@ export class AddEditComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
+      this.clientListLoading = false;
     }
+    
     else {
 
       //to fetch and filter clients if clientlist comes undefined during switching components

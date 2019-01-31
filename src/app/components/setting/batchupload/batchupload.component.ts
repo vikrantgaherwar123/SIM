@@ -88,7 +88,8 @@ export class BatchuploadComponent implements OnInit {
       //header ends Products
       this.productRecords = XLSX.utils.sheet_to_json(this.worksheet2, { raw: true });
     }
-    fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
+    fileReader.readAsArrayBuffer(this.file); 
+    // readAsArrayBuffer represents the FILES DATA
   }
 
 

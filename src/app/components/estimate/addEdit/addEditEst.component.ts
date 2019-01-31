@@ -469,7 +469,6 @@ export class AddEditEstComponent implements OnInit {
           });
           this.clientList = uniqueClients;
         }
-        this.setClientFilter()
         this.clientListLoading = false
       })
   }
