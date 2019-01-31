@@ -299,7 +299,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="activeEstimate.tax_on_item === 2 && activeEstimate.tax_rate === 0">
+                <div *ngIf="activeEstimate.tax_amount === 0">
                   <!-- && activeEstimate.tax_rate === 0-->
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
@@ -440,7 +440,7 @@
                 </div>
 
                 <!-- Tax -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item === 1">
+                <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_amount !==0 || activeEstimate.tax_on_item ===1">
                   <div class="col-5 discount-tax-label pr-0 label_color">
                     <div class="d-inline font-custom">Tax (%)</div>
                   </div>

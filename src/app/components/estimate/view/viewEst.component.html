@@ -385,7 +385,7 @@
                     </div>
                   </li>
                 </ul>
-                <div *ngIf="activeEst.alstQuotTermsCondition.length < 1">
+                <div *ngIf="!activeEst.alstQuotTermsCondition || activeEst.alstQuotTermsCondition.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
@@ -442,17 +442,17 @@
               </div>
 
               <!-- Tax List -->
-              <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
-                <div class="col-4 discount-tax-label">
-                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                  <div class="inline font-custom">(%)</div>
-                </div>
-                <div class="col-8 ">
-                  <div class="text-right">
-                    {{activeEst.taxList[index].percentage}}
+                <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
+                  <div class="col-4 discount-tax-label">
+                    <div *ngIf="tax !== null" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                    <div *ngIf="tax" class="inline font-custom">(%)</div>
+                  </div>
+                  <div *ngIf="tax !== null" class="col-8 ">
+                    <div class="text-right">
+                      {{activeEst.taxList[index].percentage}}
+                    </div>
                   </div>
                 </div>
-              </div>
 
               <!-- Shipping Charges -->
               <div class="row mx-0" *ngIf="activeEst.shippingCharges > 0">
