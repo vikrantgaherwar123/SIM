@@ -8,13 +8,13 @@
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
               <span style="color:#0299ff">Client: </span>
               <span style="color: black;font-family: quicksand_bold !important;">
-                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
-                <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+                <!-- {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}} -->
+                <!-- <span *ngIf="estimateQueryForm.client.value?.length > 1"
                   [title]="getNames()"
                 >
-                  (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                  (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
                 </span>, -->
-                <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span>
+                <!-- <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
@@ -58,7 +58,10 @@
             <ng-multiselect-dropdown
             [placeholder]="'Client'"
             [data]="dropdownList"
+            [(ngModel)]="selectedItems"
             [settings]="dropdownSettings"
+            (onSelect)="onItemSelect($event)"
+            (onSelectAll)="onSelectAll($event)"
             [formControl]="estimateQueryForm.client"
           >
           </ng-multiselect-dropdown>
@@ -226,6 +229,10 @@
                 class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
                 <img src="assets/images/buttons-icon/view16.png">
                 Preview
+              </button>
+              <button id="previewBtn" type="button" (click)="makeInvoice()" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
+                Make Invoice
               </button>
             </div>
           </div>

@@ -201,7 +201,7 @@
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
-              <button id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
+              <button *ngIf="activeInv.unique_identifier" id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
                 class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit

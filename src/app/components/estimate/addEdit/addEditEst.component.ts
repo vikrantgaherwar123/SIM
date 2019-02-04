@@ -388,6 +388,14 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          //findout shipping address of selected client from clientlist
+          var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
+          console.log(client);
+          if(client.shippingAddress){
+            this.shippingAddress = client.shippingAddress;
+            this.activeEstimate.shipping_address = this.shippingAddress;
+          }
+          
           var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -835,6 +843,12 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.device_modified_on = new Date().getTime()
+    //add shipping address
+    if(this.shippingAddressEditMode === true){
+    this.activeEstimate.shipping_address = this.shippingAddress;
+    }else{
+      this.activeEstimate.shipping_address = this.activeClient.shippingAddress
+    }
 
     var self = this
     if(this.activeEstimate.estimate_number !==""){

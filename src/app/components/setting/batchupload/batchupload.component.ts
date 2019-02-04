@@ -25,10 +25,16 @@ export class BatchuploadComponent implements OnInit {
   errors: {};
   worksheet1: XLSX.WorkSheet;
   worksheet2: XLSX.WorkSheet;
+  addressRecord: any;
+  list: string;
+  duplicateOrgName: boolean = true;
   incomingfile(event) {
     this.file = event.target.files[0];
-    console.log(this.file);
-    
+    var cheangedFile = this.file;
+    if(cheangedFile !== event.target.files[0].name ){
+      this.showClientsTable = false
+      this.showProductsTable = false
+    }
   }
 
   // client starts
@@ -65,20 +71,32 @@ export class BatchuploadComponent implements OnInit {
       var bstr = arr.join("");
       var workbook = XLSX.read(bstr, { type: "binary" });
       var first_sheet_name = workbook.SheetNames[0];
-      var second_sheet_name = workbook.SheetNames[1];
+      //for client csv
+      if(workbook.Sheets.Sheet1 !== undefined){
+      if(workbook.Sheets.Sheet1["!ref"]=="A1:J2"){
       this.worksheet1 = workbook.Sheets[first_sheet_name];
+      this.showClientsTable = true;
+      this.showProductsTable = false;
       //get address of header 
       this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
       this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
       this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
-      this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "businessId"
-      this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "businessDetail"
-      this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w= "number"
-      this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w= "email"
-      this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w= "shippingAddress"
-      //header ends for clients
+      this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "addressLine2"
+      this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "addressLine3"
+      this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "businessId"
+      this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w = "businessDetail"
+      this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w= "number"
+      this.worksheet1.I1.v = this.worksheet1.I1.h = this.worksheet1.I1.w= "email"
+      this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w= "shippingAddress"
       this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
-      this.worksheet2 = workbook.Sheets[second_sheet_name];
+      this.productRecords = [];
+      }
+      //for product csv
+      else {
+        this.showClientsTable = false;
+        this.showProductsTable = true;
+      //header ends for clients
+      this.worksheet2 = workbook.Sheets[first_sheet_name];
       this.worksheet2.A1.v = this.worksheet2.A1.h = this.worksheet2.A1.w = "prodName"
       this.worksheet2.B1.v = this.worksheet2.B1.h = this.worksheet2.B1.w = "unit"
       this.worksheet2.C1.v = this.worksheet2.C1.h = this.worksheet2.C1.w = "discription"
@@ -87,6 +105,45 @@ export class BatchuploadComponent implements OnInit {
       this.worksheet2.F1.v = this.worksheet2.F1.h = this.worksheet2.F1.w= "productCode"
       //header ends Products
       this.productRecords = XLSX.utils.sheet_to_json(this.worksheet2, { raw: true });
+      this.clientRecords = [];
+      }
+    }
+      //for client xls & xlsx
+      else if(workbook.Sheets.clients){
+        this.worksheet1 = workbook.Sheets[first_sheet_name];
+      this.showClientsTable = true;
+      this.showProductsTable = false;
+      //get address of header 
+      this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
+      this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
+      this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
+      this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "addressLine2"
+      this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "addressLine3"
+      this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "businessId"
+      this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w = "businessDetail"
+      this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w= "number"
+      this.worksheet1.I1.v = this.worksheet1.I1.h = this.worksheet1.I1.w= "email"
+      this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w= "shippingAddress"
+      this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
+      this.productRecords = [];
+      }
+      
+      //for product xls & xlsx
+      else if(workbook.Sheets.products) {
+        this.showClientsTable = false;
+        this.showProductsTable = true;
+      //header ends for clients
+      this.worksheet2 = workbook.Sheets[first_sheet_name];
+      this.worksheet2.A1.v = this.worksheet2.A1.h = this.worksheet2.A1.w = "prodName"
+      this.worksheet2.B1.v = this.worksheet2.B1.h = this.worksheet2.B1.w = "unit"
+      this.worksheet2.C1.v = this.worksheet2.C1.h = this.worksheet2.C1.w = "discription"
+      this.worksheet2.D1.v = this.worksheet2.D1.h = this.worksheet2.D1.w = "rate"
+      this.worksheet2.E1.v = this.worksheet2.E1.h = this.worksheet2.E1.w = "taxRate"
+      this.worksheet2.F1.v = this.worksheet2.F1.h = this.worksheet2.F1.w= "productCode"
+      //header ends Products
+      this.productRecords = XLSX.utils.sheet_to_json(this.worksheet2, { raw: true });
+      this.clientRecords = [];
+      }
     }
     fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
   }
@@ -107,6 +164,8 @@ export class BatchuploadComponent implements OnInit {
       var d = new Date()
       this.clientRecords[i].deviceCreatedDate = d.getTime()
       this.clientRecords[i].modifiedDate = d.getTime()
+      //add all addresses in a single object and send it to api to show those all addr in client ciew mode
+      this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' +this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3
       this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
         if (response.status === 200) {
           // Update store and client list
@@ -118,9 +177,22 @@ export class BatchuploadComponent implements OnInit {
           })
 
           if (index == -1) {  // add
+            // this if condn and for loop is used to not add existing org name but right nw its not working
+            var OrgName = response.clientList[0].name.toLowerCase();
+            if(this.clientList){
+            for(let i=0;i<this.clientList.length;i++){
+             this.list =this.clientList[i].name.toLowerCase();
+             if(this.list[i] == OrgName){
+              this.toasterService.pop('failure', 'Client Already Exists !!!');
+              this.duplicateOrgName = false;
+             }
+            }
+            if(this.duplicateOrgName == true){
             this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Clients Saved Successfully !!!');
+            }
+          }
           }
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
         } else if (response.status === 414) {
@@ -134,11 +206,10 @@ export class BatchuploadComponent implements OnInit {
         }
       })
     }
-    // products starts
+    //product starts
 
     for (let i = 0; i < this.productRecords.length; i++) {
       //add required input params for api call
-
       this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
       this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
       var d = new Date()

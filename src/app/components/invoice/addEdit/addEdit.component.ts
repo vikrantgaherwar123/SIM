@@ -5,10 +5,12 @@ import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, client, invoice, terms, setting, product } from '../../../interface'
+import { response, client, invoice, terms, setting, product, addEditEstimate } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
+import { EstimateService } from '../../../services/estimate.service'
+
 import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
@@ -33,6 +35,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class AddEditComponent implements OnInit {
 
   activeInvoice: invoice = <invoice>{}
+  estimateDate = new FormControl()
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
   private tempInvNo: number
@@ -85,11 +88,15 @@ export class AddEditComponent implements OnInit {
     },
     setting: setting
   }
+  shippingAddressEditMode: boolean = false;
+  activeEstimate: addEditEstimate;
+  incrementInvNo: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
     public toasterService: ToasterService,
     private invoiceService: InvoiceService,
+    private estimateService: EstimateService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
     private settingService: SettingService,
@@ -162,6 +169,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+
     
     for (let i = 0; i < this.productList.length; i++) {
       if (this.productList[i].prodName == "") {
@@ -270,8 +278,124 @@ export class AddEditComponent implements OnInit {
           }
         }, 50)
       } else {
-        this.toasterService.pop('failure', 'Invalid invoice id!');
-        this.router.navigate(['/invoice/view'])
+        this.incrementInvNo = true;
+        //make edit flag false so that it will work as adding new invoice as addInit fun is doing
+        this.edit = false;
+        
+        this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
+          if (estimate.records !== null) {
+            this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+            this.shippingAddressEditMode = true
+            this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+            if (!this.activeEstimate.taxList)
+              this.activeEstimate.taxList = [];
+    
+            // Change list item keys compatible
+            if (this.activeEstimate.listItems) {
+              var temp = []
+              for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                temp.push({
+                  description: this.activeEstimate.listItems[i].description,
+                  product_name: this.activeEstimate.listItems[i].productName,
+                  quantity: this.activeEstimate.listItems[i].qty,
+                  rate: this.activeEstimate.listItems[i].rate,
+                  tax_rate: this.activeEstimate.listItems[i].tax_rate,
+                  total: this.activeEstimate.listItems[i].price,
+                  unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                  unit: this.activeEstimate.listItems[i].unit
+                })
+              }
+              this.activeEstimate.listItems = temp
+              this.activeInvoice.listItems = this.activeEstimate.listItems;
+            }
+    
+    
+    
+            // Change TnC keys compatible
+            if (this.activeEstimate.termsAndConditions) {
+              temp = []
+              for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+                temp.push({
+                  orgId: this.activeEstimate.termsAndConditions[i].orgId,
+                  terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+                  uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+                  _id: this.activeEstimate.termsAndConditions[i]._id
+                })
+              }
+              this.activeEstimate.termsAndConditions = temp
+              this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+            } else if (this.termList.length < 1) {
+              this.termConditionService.fetch().subscribe((response: response) => {
+                if (response.termsAndConditionList) {
+                  this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+                }
+                this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+                this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+              })
+            } else {
+              this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
+              this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+            }
+
+            //set reference no of estimate
+            this.activeInvoice.reference =  this.activeEstimate.estimate_number;
+            this.activeInvoice.gross_amount = this.activeEstimate.amount;
+            this.activeInvoice.amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
+            this.activeInvoice.discount = this.activeEstimate.discount;
+            this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+            this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
+            this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
+            this.activeInvoice.adjustment = this.activeEstimate.adjustment;
+            this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
+            var currentDate = Date.now();
+            this.formatedDate = currentDate;
+            
+            
+            
+    
+            // Set Dates
+            this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
+            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+            this.invoiceDate.reset(new Date(y, (m - 1), d))
+             
+    
+            // Tax and discounts show or hide
+            if (this.activeEstimate.discount == 0) {
+              // this.activeEstimate.percentage_flag = null
+              this.activeInvoice.percentage_flag = null
+            }
+            if (this.activeEstimate.shipping_charges == 0) {
+              // this.activeEstimate.shipping_charges = undefined
+              this.activeInvoice.shipping_charges = undefined
+            }
+            if (this.activeEstimate.adjustment == 0) {
+              this.activeInvoice.adjustment = null
+            }
+            if (this.activeEstimate.tax_amount == 0) {
+              this.activeInvoice.tax_rate = null
+            }
+    
+            
+            // Wait for clients to be loaded before setting active client
+            var ref = setInterval(() => {
+              if (this.allClientList.length > 0) {
+                //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
+                this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
+                let uid = this.activeInvoice.unique_key_fk_client
+                this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                this.billingTo.reset(this.activeClient)
+                clearInterval(ref)
+              }
+            }, 50)
+
+          } else {
+            this.toasterService.pop('failure', 'Invalid estimate id');
+            this.router.navigate(['/estimate/view'])
+          }
+        })
+        // this.toasterService.pop('failure', 'Invalid invoice id!');
+        // this.router.navigate(['/invoice/view'])
       }
       return false
     })
@@ -999,6 +1123,12 @@ export class AddEditComponent implements OnInit {
     }
 
     this.activeInvoice.device_modified_on = new Date().getTime()
+    //add shipping address 
+    if(this.disableIcon === false){
+      this.activeInvoice.shipping_address = this.shippingAddress;
+      }else{
+        this.activeInvoice.shipping_address = this.activeClient.shippingAddress
+      }
 
     var self = this
     // console.log(this.activeInvoice);
@@ -1029,8 +1159,15 @@ export class AddEditComponent implements OnInit {
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
+          this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate(['/invoice/view'])
-        } else {
+        }else if(this.incrementInvNo === true) {
+          this.toasterService.pop('success', 'Invoice saved successfully');
+          self.resetCreateInvoice()
+          this.router.navigate(['/invoice/view'])
+        }
+         else {
+          this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
           self.addInit()
         }
