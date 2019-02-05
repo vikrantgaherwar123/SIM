@@ -90,6 +90,7 @@ export class AddEditComponent implements OnInit {
   }
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
+  incrementInvNo: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -167,6 +168,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+
     
     for (let i = 0; i < this.productList.length; i++) {
       if (this.productList[i].prodName == "") {
@@ -275,6 +277,10 @@ export class AddEditComponent implements OnInit {
           }
         }, 50)
       } else {
+        this.incrementInvNo = true;
+        //make edit flag false so that it will work as adding new invoice as addInit fun is doing
+        this.edit = false;
+        
         this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
           if (estimate.records !== null) {
             this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
@@ -340,8 +346,6 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
             this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
             this.activeInvoice.adjustment = this.activeEstimate.adjustment;
-            
-
             this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
             var currentDate = Date.now();
             this.formatedDate = currentDate;
@@ -357,11 +361,11 @@ export class AddEditComponent implements OnInit {
     
             // Tax and discounts show or hide
             if (this.activeEstimate.discount == 0) {
-              this.activeEstimate.percentage_flag = null
+              // this.activeEstimate.percentage_flag = null
               this.activeInvoice.percentage_flag = null
             }
             if (this.activeEstimate.shipping_charges == 0) {
-              this.activeEstimate.shipping_charges = undefined
+              // this.activeEstimate.shipping_charges = undefined
               this.activeInvoice.shipping_charges = undefined
             }
             if (this.activeEstimate.adjustment == 0) {
@@ -371,6 +375,7 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.tax_rate = null
             }
     
+            
             // Wait for clients to be loaded before setting active client
             var ref = setInterval(() => {
               if (this.allClientList.length > 0) {
@@ -1152,8 +1157,15 @@ export class AddEditComponent implements OnInit {
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
+          this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate(['/invoice/view'])
-        } else {
+        }else if(this.incrementInvNo === true) {
+          this.toasterService.pop('success', 'Invoice saved successfully');
+          self.resetCreateInvoice()
+          this.router.navigate(['/invoice/view'])
+        }
+         else {
+          this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
           self.addInit()
         }

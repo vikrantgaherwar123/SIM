@@ -1,4 +1,8 @@
 Organization Name *,Contact Person,Address Line 1,Address Line 2,Address Line 3,Business Id,Business Detail,Contact No.,Email Id,Shipping Address
+<<<<<<< HEAD
 client csv,person,Address Line  text 1,Address Line  text 2,Address Line  text 3,id3434,"details:
+=======
+test batch upload,person,Address Line  text 1,Address Line  text 2,Address Line  text 3,id3434,"details:
+>>>>>>> 721fe942b6e53f9202f461a76a94f7917955d014
 test details 1
 test detail 2",4556632,gfd@fdh.com,shipping address text

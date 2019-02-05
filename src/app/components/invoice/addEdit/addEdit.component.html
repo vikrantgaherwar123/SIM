@@ -690,6 +690,7 @@
                         <div  class="row mx-0">
                           <div class="col-6 text-left label_color">
                             <span class="font-custom">{{item.date_of_payment | date}}</span>
+                            <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
                           </div>
                           <div class="col-6 text-right pad_rg_5">
                             <span class="font-custom">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
@@ -1130,6 +1131,9 @@
           <div class="col-12 label_color">
             <div class="pull-left" style="border-top: none;">
               {{payment.date_of_payment | date}}
+            </div>
+            <div *ngIf="!payment.date_of_payment" class="pull-left" style="border-top: none;">
+              {{formatedDate | date}}
             </div>
             <div class="pull-right" style="border-top: none;">
               {{payment.paid_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}

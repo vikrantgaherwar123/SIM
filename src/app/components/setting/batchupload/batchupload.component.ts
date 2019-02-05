@@ -177,7 +177,7 @@ export class BatchuploadComponent implements OnInit {
           })
 
           if (index == -1) {  // add
-            console.log(this.clientList);
+            // this if condn and for loop is used to not add existing org name but right nw its not working
             var OrgName = response.clientList[0].name.toLowerCase();
             if(this.clientList){
             for(let i=0;i<this.clientList.length;i++){
@@ -206,11 +206,10 @@ export class BatchuploadComponent implements OnInit {
         }
       })
     }
-    // products starts
+    //product starts
 
     for (let i = 0; i < this.productRecords.length; i++) {
       //add required input params for api call
-
       this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
       this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
       var d = new Date()

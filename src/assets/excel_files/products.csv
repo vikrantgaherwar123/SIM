@@ -1,2 +1,6 @@
 Product Name *,Unit,Desription,Rate,Tax Rate ,Product Code
+<<<<<<< HEAD
 Laptop csv,1,very awesome,45777,51,55585
+=======
+Laptop,1,very awesome,45777,51,55585
+>>>>>>> 721fe942b6e53f9202f461a76a94f7917955d014

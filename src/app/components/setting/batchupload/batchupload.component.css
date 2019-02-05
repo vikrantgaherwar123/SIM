@@ -40,3 +40,8 @@ input.ng-dirty.ng-invalid {
   width: 36px !important;
   height: 25px !important;
 }
+.upload-btn {
+  margin-left: -132px;
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
