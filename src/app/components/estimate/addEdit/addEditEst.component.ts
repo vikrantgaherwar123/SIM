@@ -115,7 +115,7 @@ export class AddEditEstComponent implements OnInit {
     $(document).ready(function () {
       $('.btn').on('click', function () {
         var $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
         if ($(this).html() !== loadingText) {
           $this.data('original-text', $(this).html());
           $this.html(loadingText);
@@ -268,7 +268,7 @@ export class AddEditEstComponent implements OnInit {
         }, 50)
       } else {
         this.toasterService.pop('failure', 'Invalid estimate id');
-        // this.router.navigate(['/estimate/view'])
+        this.router.navigate(['/estimate/view'])
       }
     })
   }
@@ -388,6 +388,14 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          //findout shipping address of selected client from clientlist
+          var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
+          console.log(client);
+          if(client.shippingAddress){
+            this.shippingAddress = client.shippingAddress;
+            this.activeEstimate.shipping_address = this.shippingAddress;
+          }
+          
           var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -469,6 +477,7 @@ export class AddEditEstComponent implements OnInit {
           });
           this.clientList = uniqueClients;
         }
+        this.setClientFilter()
         this.clientListLoading = false
       })
   }
@@ -479,12 +488,6 @@ export class AddEditEstComponent implements OnInit {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
     }
   }
-
-  // public _filterCli(value: string): client[] {
-  //   if(this.clientList.length == undefined) return this.clientList;
-  //   return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
-    
-  // }
 
   selectedClientChange(client) {
     this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
@@ -840,6 +843,12 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.device_modified_on = new Date().getTime()
+    //add shipping address
+    if(this.shippingAddressEditMode === true){
+    this.activeEstimate.shipping_address = this.shippingAddress;
+    }else{
+      this.activeEstimate.shipping_address = this.activeClient.shippingAddress
+    }
 
     var self = this
     if(this.activeEstimate.estimate_number !==""){
@@ -897,13 +906,7 @@ export class AddEditEstComponent implements OnInit {
     $('#estSubmitBtn').removeAttr('disabled')
   }
   }
-  openDeleteEstimateModal() {
-    // this.deleteproduct = true
-    $('#delete-estimate').modal('show')
-    // $('#delete-invoice').on('shown.bs.modal', (e) => {
-    //   $('#delete-invoice input[type="text"]')[1].focus()
-    // })
-  }
+
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
     // localStorage.setItem('deleteEstimateId', "1" )

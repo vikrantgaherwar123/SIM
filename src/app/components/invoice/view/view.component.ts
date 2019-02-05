@@ -253,7 +253,7 @@ export class ViewComponent implements OnInit {
   setActiveInv(invId: string = '') {
     if (!invId || invId ==="null" ) {
       this.activeInv = this.invoiceList[0]
-    } else {
+    } else{
       // invId = invoiceId;
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }

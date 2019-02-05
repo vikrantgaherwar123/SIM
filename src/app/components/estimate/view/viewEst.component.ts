@@ -40,6 +40,10 @@ export class ViewEstComponent implements OnInit {
     }
   }
 
+  public selectedClientQuery = {
+    selectedClient: new FormControl(),
+  }
+
   // multiselect dropdown
 
   dropdownList
@@ -100,7 +104,8 @@ export class ViewEstComponent implements OnInit {
     this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
-        this.dropdownList = response.records;
+        this.clientList = response.records;
+        this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
       })
     } else {
@@ -144,6 +149,12 @@ export class ViewEstComponent implements OnInit {
     this.itemSelected = 'All Time'
   }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+  }
+
   duration = ['All Time', 'This Week', 'This Month', 'Last Week', 'Last Month', 'Custom']
 
   showItem(item) {
@@ -162,6 +173,10 @@ export class ViewEstComponent implements OnInit {
 
   goEdit(estId) {
     this.router.navigate([`estimate/edit/${estId}`])
+  }
+
+  makeInvoice() {
+    this.router.navigate([`invoice/edit/${this.activeEst.unique_identifier}`])
   }
 
   showSelectedEstimate(client) {
@@ -267,6 +282,10 @@ export class ViewEstComponent implements OnInit {
     if (this.activeEst) {
       var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
       if (client) {
+        //if shipping Address isn't coming from estimateList then get it from clientList
+        if(!this.activeEst.shippingAddress){
+          this.activeEst.shippingAddress = client.shippingAddress;
+        }
         this.activeClient = client
       } else {
         this.activeClient = null
