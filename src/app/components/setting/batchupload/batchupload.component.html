@@ -1,12 +1,6 @@
+
 <div class="row main-wrapper">
   <div class="col-12 item-form" id="main">
-        <h5>Download Files</h5>
-       Client: <a href="../../../assets/excel_files/clients.csv">csv</a>,
-               <a href="../../../assets/excel_files/clients.xls">xls</a>, 
-               <a href="../../../assets/excel_files/clients.xlsx">xlsx</a><br /> 
-       Product: <a href="../../../assets/excel_files/products.csv">csv</a>,
-               <a href="../../../assets/excel_files/products.xls">xls</a>, 
-               <a href="../../../assets/excel_files/products.xlsx">xlsx</a> 
     <div style="margin: 0px auto;">
       <form class="shadow form-horizontal back" #f="ngForm" name="userForm">
         <div align="center" class="forget-pass-form table-editable" id="table">
@@ -16,13 +10,13 @@
           </div>
           <!-- <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx"> -->
           <div>
-            <button type="button" class="btn btn-info upload-btn" [disabled]="file === undefined" (click)="Upload();showClientsOrProducts = true;showClientsTable = true">Upload</button>
+            <button type="button" class="btn btn-info upload-btn" (click)="Upload();showClientsOrProducts = true">Upload</button>
           </div>
-          <!-- <div *ngIf = "showClientsOrProducts == true" style="padding-bottom: 24px;">
-            <button *ngIf = "file !==undefined" class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
-            <button *ngIf = "file !==undefined" class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
-          </div> -->
-          <table width="100%" *ngIf="showClientsTable && file !== undefined" class="table 
+          <div *ngIf = "showClientsOrProducts == true" style="padding-bottom: 24px;">
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showClientsTable = true;showProductsTable = false;">Show Clients</button>
+            <button class="btn save_btn btn-raised width25btn font-weight-bold ml-2" style="width: 200px;" (click)="showProductsTable = true;showClientsTable = false" >Show Products</button>
+          </div>
+          <table width="100%" *ngIf="showClientsTable" class="table 
           table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
               <tr class="hd">
@@ -30,8 +24,6 @@
                 <td width="10%" scope="col">Organization</td>
                 <td width="10%" scope="col">Contact Person</td>
                 <td width="10%" scope="col">Address Line 1</td>
-                <td width="10%" scope="col">Address Line 2</td>
-                <td width="10%" scope="col">Address Line 3</td>
                 <td width="10%" scope="col">Business Id</td>
                 <td width="10%" scope="col">Business Detail</td>
                 <td width="10%" scope="col">Contact No</td>
@@ -45,41 +37,40 @@
               <tr *ngFor="let item of clientRecords; let in = index">
                 <td>{{in+1}}</td>
                 <td>
-                  <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }" onfocus="this.select()"
-                    [(ngModel)]="item.name" required />
-                  <!--[ngClass]="{disabledField: !customEnableDate}"-->
+                    <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }"
+                    onfocus="this.select()" [(ngModel)]="item.name" required /><!--[ngClass]="{disabledField: !customEnableDate}"-->
+                  </td>
+                <td>
+                    <input type="text" name="contactPersonName-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.contactPersonName" required />
                 </td>
                 <td>
-                  <input type="text" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.contactPersonName" />
+                    <input type="text" name="addressLine1-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.addressLine1" required />
                 </td>
                 <td>
-                  <input type="text" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine1" />
+                    <input type="text" name="businessId-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.businessId" required />
                 </td>
                 <td>
-                  <input type="text" name="addressLine2-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine2" />
+                    <input type="text" name="businessDetail-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.businessDetail" required />
                 </td>
                 <td>
-                  <input type="text" name="addressLine3-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine3" />
+                    <input type="text" name="number-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.number" required />
                 </td>
                 <td>
-                  <input type="text" name="businessId-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.businessId" />
+                    <input type="text" name="email-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.email" required />
                 </td>
                 <td>
-                  <input type="text" name="businessDetail-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.businessDetail" />
-                </td>
-                <td>
-                  <input type="text" name="number-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.number" />
-                </td>
-                <td>
-                  <input type="text" name="email-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.email" />
-                </td>
-                <td>
-                  <input type="text" name="shippingAddress-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.shippingAddress" />
+                    <input type="text" name="shippingAddress-{{in}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.shippingAddress" required />
                 </td>
                 <td>
                   <span class="table-remove">
-                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="remove(in)"><img
-                        src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="remove(in)"><img src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
                   </span>
                 </td>
               </tr>
@@ -87,7 +78,7 @@
           </div>
           </table>
           <!-- products -->
-          <table width="100%" *ngIf="showProductsTable && file !==undefined" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
+          <table width="100%" *ngIf="showProductsTable == true" class="table table-responsive" style="padding: 32px 0px 0px 0px;">
             <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
               <tr class="hd">
                 <td width="1%" scope="col">Sr.no</td>
@@ -102,32 +93,36 @@
             </thead>
             <div>
             <tbody style="border: 1px solid;">
-              <tr *ngFor="let item of productRecords; let i = index">
+              <tr  *ngFor="let item of productRecords; let i = index">
                 <td>{{i+1}}</td>
                 <td>
-                  <input type="text" name="prodName-{{i}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.prodName }"
-                    onfocus="this.select()" [(ngModel)]="item.prodName" required />
-                  <!--[ngClass]="{disabledField: !customEnableDate}"-->
+                    <input type="text" name="prodName-{{i}}" class="form-control box-red"
+                    [ngClass]="{ 'box-grey': item.prodName }"
+                    onfocus="this.select()" [(ngModel)]="item.prodName" required /><!--[ngClass]="{disabledField: !customEnableDate}"-->
+                  </td>
+                <td>
+                    <input type="text" name="unit-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.unit" required />
                 </td>
                 <td>
-                  <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.unit" />
+                    <input type="text" name="discription-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.discription" required />
                 </td>
                 <td>
-                  <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.discription" />
+                    <input type="text" name="rate-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.rate" required />
                 </td>
                 <td>
-                  <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.rate" />
+                    <input type="text" name="taxRate-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.taxRate" required />
                 </td>
                 <td>
-                  <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.taxRate" />
-                </td>
-                <td>
-                  <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.productCode" />
+                    <input type="text" name="productCode-{{i}}" class="form-control"
+                    onfocus="this.select()" [(ngModel)]="item.productCode" required />
                 </td>
                 <td>
                   <span class="table-remove">
-                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="productRemove(i)"><img
-                        src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
+                    <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="productRemove(i)"><img src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
                   </span>
                 </td>
               </tr>
