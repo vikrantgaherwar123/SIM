@@ -16,22 +16,27 @@ import {ToasterService} from 'angular2-toaster'
 })
 export class BankingComponent implements OnInit {
 
-  user = <{
+  private user: {
     user: {
-      orgId: number
+      orgId: string
     },
     setting: setting
-  }>{}
+  }
+  
   appSettings: {androidSettings: setting}
   activeSetting: setting = <setting>{}
   org: any = {}
+  settings: setting;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
     private orgService: OrganisationService,
     private store: Store<AppState>) {
       this.toasterService = toasterService
+      this.user = JSON.parse(localStorage.getItem('user'))
+      this.settings = this.user.setting
      }
+     
 
   ngOnInit() {
     $('input').on('focus', function() {

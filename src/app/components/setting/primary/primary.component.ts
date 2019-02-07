@@ -22,12 +22,21 @@ export class PrimaryComponent implements OnInit {
     countryName: string
   }>
   activeCountry: any
+  private user: {
+    user: {
+      orgId: string
+    },
+    setting: any
+  }
+  settings: any;
 
   constructor(private CONST: CONSTANTS,
     public toasterService : ToasterService,
     private settingService: SettingService,
   ) {
     this.toasterService = toasterService
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
 
   }
 

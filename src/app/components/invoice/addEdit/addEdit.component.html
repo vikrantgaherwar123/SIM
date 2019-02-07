@@ -78,7 +78,7 @@
                           </div>
                           <div class="col-6 pr-0">
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                              Shipping Address
+                              {{settings.shipping}} Address
                             </span>
                             <div class="address-render" *ngIf="disableIcon === false">{{shippingAddress}}<br /></div>
                             <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
@@ -241,7 +241,7 @@
                         </td>
                         <td width="10%" *ngIf="settings.discountFlagLevel === 1">
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
-                            value="Discount (%)"
+                            value="{{settings.discount}} (%)"
                           />
                         </td>
                         <td width="10%">
@@ -315,7 +315,7 @@
                         <td [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
-                              placeholder="Type or Select Product" matInput [formControl]="addItem" [matAutocomplete]="auto" required
+                              placeholder="Type or Select {{settings.mTvProducts}}" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
                             <span *ngIf="ifProductEmpty === true" class="fa fa-info-circle errspan help-block"></span>
 
@@ -383,7 +383,7 @@
                         >
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text_center height_40" 
-                              title="Amount is calculated automatically."
+                              title="{{settings.mTvAmount}} is calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;"  disabled
                             />
                             
@@ -404,17 +404,18 @@
                 <!-- Tax discount list -->
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel === 0 && activeInvoice.discount_on_item === 2">
-                      <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag=1">
+                    <div *ngIf="activeInvoice.discount_on_item ===2 && activeInvoice.percentage_value===0 || activeInvoice.discount===0;">
+                      <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
                     </div>
                     <div *ngIf="activeInvoice.shipping_charges === undefined">
                       <a class="inline" (click)="activeInvoice.shipping_charges = 0">
-                        {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                        <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
+                        {{settings.shipping}}
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2 || activeInvoice.tax_rate === 0">
+                    <div *ngIf="settings.taxFlagLevel === 1">
                       <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
@@ -479,7 +480,7 @@
                     </div>
 
                     <!-- Discounts -->
-                    <div class="row mr_right mr_0" *ngIf="activeInvoice.discount_on_item === 0 && this.activeInvoice.percentage_value || this.activeInvoice.discount">
+                    <div class="row mr_right mr_0" *ngIf="settings.discountFlagLevel === 0">
                       <div class="col-5 discount-tax-label pr-0 label_color">
                         <span style="text-align: left;vertical-align: bottom;" class="inline">
                           {{settings.discount ? settings.discount : 'Discount'}}
@@ -494,7 +495,7 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                           >
                             <span class="glyphicon glyphicon-menu-down"
-                              style="font-size: 14px;vertical-align: middle;" title="Discount"
+                              style="font-size: 14px;vertical-align: middle;" title="{{settings.discount}}"
                             ></span>
                           </div>
                           <ul class="dropdown-menu dropdown-menu-right">
@@ -608,7 +609,7 @@
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.shipping_charges !== undefined">
                       <div class="col-5 discount-tax-label label_color">
                         <div class="inline" style="text-align: left;vertical-align: bottom;">
-                          {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                          {{settings.shipping}}(+)
                         </div>
                       </div>
 
@@ -835,7 +836,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control mCustomScrollbar style-3"
-                placeholder="Shipping Address" select-on-click style="height: 69px !important;" onfocus="this.select()"
+                placeholder="{{settings.shipping}} Address" select-on-click style="height: 69px !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -913,9 +914,9 @@
             </div>
 
             <div class="col-12">
-              Rate (*):
+              {{settings.mTvRate}} (*):
               <input type="number" name="rate" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()"
+                [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" placeholder="{{settings.mTvRate}}" onfocus="this.select()"
                 required
               />
             </div>
@@ -923,19 +924,19 @@
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()"
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax" onfocus="this.select()"
               />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
-              Discount:
+              {{settings.discount}}:
               <input type="number" name="discount" class="form-control add-client-input-custom"
-                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="Discount" onfocus="this.select()"
+                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="{{settings.discount}}" onfocus="this.select()"
               />
             </div>
 
             <div class="col-12">
-              Total:
+              {{settings.total}}:
               <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled
                 class="form-control add-client-input-custom" onfocus="this.select()"
               />
@@ -966,7 +967,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add Terms & Condition
+          Add {{settings.mTvTermsAndConditions}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <img src="assets/images/cross16.png" alt="logo">
@@ -1074,7 +1075,7 @@
                   <div class="input-group" style="width: 100%">
                     <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
                       class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
-                      [(ngModel)]="addPaymentModal.paid_amount" placeholder="Add Amount Paid"
+                      [(ngModel)]="addPaymentModal.paid_amount" placeholder="Add {{settings.mTvAmount}} {{settings.paid}}"
                     >
                     <!-- <div class="form-error">
                       <span *ngIf="innerform1.controls.paymentAmount.error.max">Should be Less than Balance</span>
@@ -1105,7 +1106,7 @@
         <div class="row mx-0 payment_modal_pg" style="background: #e0dede !important;">
           <div class="col-12">
             <div class="font-custom-bold float-left">
-              Invoice
+              {{settings.mTvInvoice}}
             </div>
             <div class="font-custom-bold float-right">
               {{ addPaymentModal.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
@@ -1144,7 +1145,7 @@
         <div class="row mx-0 payment_modal_pg" style="background: #e0dede !important; margin-top: 5px">
           <div class="col-12">
             <div class="font-custom-bold pull-left">
-              Balance Due
+              {{settings.balance}} Due
             </div>
             <div class="font-custom-bold pull-right">
               {{ addPaymentModal.balance | currency:settings.currencyInText:'symbol':'1.2-2'}}

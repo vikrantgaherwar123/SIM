@@ -17,6 +17,7 @@ import { BankingComponent } from './components/setting/banking/banking.component
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
+import { SupportComponent } from './components/support/support.component';
 
 
 
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'setting/password', component: PasswordComponent, canActivate: [AuthGuard] },
   { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'setting/batchUpload', component: BatchuploadComponent, canActivate: [AuthGuard] },
+  { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

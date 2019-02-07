@@ -16,12 +16,12 @@ import {ToasterService} from 'angular2-toaster'
 })
 export class CustomFieldComponent implements OnInit {
 
-  user = <{
+  private user: {
     user: {
-      orgId: number
+      orgId: string
     },
     setting: setting
-  }>{}
+  }
   appSettings: {androidSettings: setting}
   activeSetting: setting = <setting>{}
 

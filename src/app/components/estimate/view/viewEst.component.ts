@@ -27,7 +27,7 @@ export class ViewEstComponent implements OnInit {
   estDispLimit: number = 20
   estSortTerm: string = 'createdDate'
   estSearchTerm: string
-  clientListLoading: boolean
+  clientListLoading: boolean = false
   estId: number
   dateDDMMYY: boolean
   dateMMDDYY: boolean
@@ -60,7 +60,7 @@ export class ViewEstComponent implements OnInit {
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
-  private settings: any
+  public settings: any
   customEnableDate: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
@@ -101,6 +101,8 @@ export class ViewEstComponent implements OnInit {
 
   ngOnInit() {
     // Fetch clients if not in store
+    this.clientList = [];
+    this.dropdownList = [];
     this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -245,7 +247,10 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
+    if(this.clientList !== null)
+    {
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
   }
 
   fetchEstimates(query = null) {

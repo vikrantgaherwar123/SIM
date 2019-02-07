@@ -30,6 +30,7 @@ export class TncComponent implements OnInit {
     },
     setting: setting
   }
+  settings: setting;
 
   constructor(private tncService: TermConditionService,
     public toasterService : ToasterService,
@@ -37,6 +38,7 @@ export class TncComponent implements OnInit {
   ) {
     this.toasterService = toasterService,
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
   }
 
   ngOnInit() {

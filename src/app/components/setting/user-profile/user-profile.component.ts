@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
-
-
 import { setting } from '../../../interface'
-
 import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
-
 import { ToasterService } from 'angular2-toaster'
-
-
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -29,6 +23,7 @@ export class UserProfileComponent implements OnInit {
   signImgUrl: string
   logoStyle: SafeStyle
   signStyle: SafeStyle
+  settings: setting;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
@@ -37,6 +32,7 @@ export class UserProfileComponent implements OnInit {
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     this.logoImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "logo.jpg"
     this.signImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "sign.jpg"     
 }

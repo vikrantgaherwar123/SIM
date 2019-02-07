@@ -49,6 +49,9 @@ import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
+import { SupportComponent } from './components/support/support.component';
+import { EmailService } from './services/email.service';
+import { HttpModule } from '@angular/http';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -92,9 +95,11 @@ export function getAuthServiceConfigs() {
     PasswordComponent,
     UserProfileComponent,
     BatchuploadComponent,
+    SupportComponent,
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     SocialLoginModule,
     AppRoutingModule,
     TranslateModule.forRoot({
@@ -125,6 +130,7 @@ export function getAuthServiceConfigs() {
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    EmailService,
     CONSTANTS,
     {
       provide: AuthServiceConfig,

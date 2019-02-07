@@ -18,6 +18,13 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./batchupload.component.css']
 })
 export class BatchuploadComponent implements OnInit {
+  private user: {
+    user: {
+      orgId: string
+    },
+    setting: any
+  }
+
   arrayBuffer: any;
   file: File;
   clientRecords: any;
@@ -28,6 +35,9 @@ export class BatchuploadComponent implements OnInit {
   addressRecord: any;
   list: string;
   duplicateOrgName: boolean = true;
+  settings: any;
+
+  
   incomingfile(event) {
     this.file = event.target.files[0];
     var cheangedFile = this.file;
@@ -44,11 +54,6 @@ export class BatchuploadComponent implements OnInit {
   showClientsOrProducts : boolean = false
   showProductsTable : boolean = false
   showClientsTable : boolean = false
-  private user: {
-    user: {
-      orgId: string
-    }
-  }
   // client ends
   constructor(private productService: ProductService,
     public clientService: ClientService,
@@ -58,6 +63,7 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
   }
 
 

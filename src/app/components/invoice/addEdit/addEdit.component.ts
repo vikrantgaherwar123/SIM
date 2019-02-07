@@ -338,8 +338,8 @@ export class AddEditComponent implements OnInit {
 
             //set reference no of estimate
             this.activeInvoice.reference =  this.activeEstimate.estimate_number;
-            this.activeInvoice.gross_amount = this.activeEstimate.amount;
-            this.activeInvoice.amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.amount = this.activeEstimate.amount;
             this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
             this.activeInvoice.discount = this.activeEstimate.discount;
             this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;

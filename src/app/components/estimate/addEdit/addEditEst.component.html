@@ -73,7 +73,7 @@
                       </div>
                       <div class="col-6 pr-0">
                         <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                          Shipping Address
+                          {{settings.shipping}} Address
                         </span>
                         <br />
                         <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
@@ -142,7 +142,7 @@
                     </td>
                     <td width="10%" *ngIf="settings.discountFlagLevel === 1">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
-                        value="Discount (%)" />
+                        value="{{settings.discount}} (%)" />
                     </td>
                     <td width="10%">
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
@@ -213,7 +213,7 @@
                   <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
                       <div class="form-group">
-                        <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select Product"
+                        <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select {{settings.mTvProducts}}"
                           matInput [formControl]="addItem" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                           (optionSelected)="fillItemDetails()">
@@ -270,7 +270,7 @@
 
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                       <div class="form-group">
-                        <input type="number" step="any" class="form-control text_center height_40" title="Amount is calculated automatically."
+                        <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount}} is calculated automatically."
                           name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
                           convert-decimal onfocus="this.select()" />
                       </div>
@@ -386,7 +386,7 @@
                         <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">
                           <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
-                            title="Discount"></span>
+                            title="{{settings.discount}}"></span>
                         </div>
                         <ul class="dropdown-menu dropdown-menu-right">
                           <li [class.active]="activeEstimate.percentage_flag == 0">
@@ -493,7 +493,7 @@
                   <div class="col-5 discount-tax-label label_color">
                     <div class="inline" style="text-align: left;vertical-align: bottom;">
                       <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}(+) -->
-                      Shipping(+)
+                      {{settings.shipping}}(+)
                     </div>
                   </div>
 
@@ -695,7 +695,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
-                placeholder="Shipping Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+                placeholder="{{settings.shipping}} Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
             </div>
           </div>
 
@@ -764,25 +764,25 @@
             </div>
 
             <div class="col-12">
-              Rate (*):
+              {{settings.mTvRate}} (*):
               <input type="number" name="rate" class="form-control add-client-input-custom" [(ngModel)]="activeItem.rate"
-                (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()" required />
+                (keyup)="calculateTotal()" placeholder="{{settings.mTvRate}}" onfocus="this.select()" required />
             </div>
 
             <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Rate" onfocus="this.select()" />
+                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax" onfocus="this.select()" />
             </div>
 
             <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
-              Discount:
+              {{settings.discount}}:
               <input type="number" name="discount" class="form-control add-client-input-custom" [(ngModel)]="activeItem.discount"
-                (keyup)="calculateTotal()" placeholder="Discount" onfocus="this.select()" />
+                (keyup)="calculateTotal()" placeholder="{{settings.discount}}" onfocus="this.select()" />
             </div>
 
             <div class="col-12">
-              Total:
+              {{settings.total}}:
               <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled class="form-control add-client-input-custom"
                 onfocus="this.select()" />
             </div>
@@ -810,7 +810,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add Terms & Condition
+          Add {{settings.mTvTermsAndConditions}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <img src="assets/images/cross16.png" alt="logo">

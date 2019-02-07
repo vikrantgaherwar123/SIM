@@ -63,10 +63,10 @@
                         <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
                       </li>
                       <li [class.active]="invSortTerm=='balance'">
-                        <a (click)="invSortTerm='balance'">By Balance</a>
+                        <a (click)="invSortTerm='balance'">By {{settings.balance}}</a>
                       </li>
                       <li [class.active]="invSortTerm=='amount'">
-                        <a (click)="invSortTerm='amount'">By Amount</a>
+                        <a (click)="invSortTerm='amount'">By {{settings.mTvAmount}}</a>
                       </li>
                     </ul>
                   </div>
@@ -122,29 +122,37 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- View Invoice -->
-      <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide" *ngIf="activeInv || invoiceList.length > 1">
-        <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
-          <!-- Buttons -->
-          <div class="row">
-            <div class="col-12">
-              <button *ngIf="activeInv.unique_identifier" id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
-                <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
-                Edit
-              </button>
-              <button id="downloadBtn" type="button" (click)="downloadInvoice('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
-                <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
-                Download
-              </button>
-              <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
-                <img src="assets/images/buttons-icon/view16.png">
-                Preview
-              </button>
+  
+        <!-- View Invoice -->
+        <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
+          *ngIf="activeInv || invoiceList.length > 1"
+        >
+          <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
+            <!-- Buttons -->
+            <div class="row">
+              <div class="col-12">
+                <button id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn"
+                  title="Edit"
+                >
+                  <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                  Edit
+                </button>
+                <button id="downloadBtn" type="button" (click)="downloadInvoice('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
+                  class="btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                  title="Download"
+                >
+                  <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
+                  Download
+                </button>
+                <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+                  class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                  title="Preview"
+                >
+                  <img src="assets/images/buttons-icon/view16.png">
+                  Preview
+                </button>
+              </div>
             </div>
   
             <!-- Title -->
@@ -186,7 +194,7 @@
                       </div>
                       <div class="col-md-6 col-sm-6 col-xs-6">
                         <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
-                          Shipping Address
+                          {{settings.shipping}} Address
                         </span>
                         <div class="address-render color_grey">{{activeInv.shipping_address}}</div>
                       </div>
@@ -258,7 +266,7 @@
                         <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
                       </td>
                       <td width="10%" *ngIf="activeInv.discount_on_item == 1">
-                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="Discount (%)"
+                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="{{settings.discount}} (%)"
                           disabled
                         >
                       </td>
@@ -354,7 +362,7 @@
                 <!-- Discount -->
                 <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
                   <div class="col-5 discount-tax-label">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">Discount</span>
+                    <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
                     <div *ngIf="!isRate" class="inline font-custom">
                       ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
                     </div>
@@ -401,7 +409,7 @@
                 <!-- Shipping -->
                 <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline" style="text-align: left;vertical-align: bottom;">Shipping</div>
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping}}</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
@@ -414,7 +422,7 @@
                 <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
                     <div class="inline" style="text-align: left; vertical-align: bottom;">
-                      Adjustment
+                      {{settings.adjustment}}
                     </div>
                   </div>
                   <div class="col-8">
@@ -555,7 +563,7 @@
         
                     <input type="radio" id="taxonBill" name="taxon">
                     <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                     Paid Invoices
+                     {{settings.paid}} Invoices
                     </label>
         
                     <input type="radio" id="taxdisabled" name="taxon">

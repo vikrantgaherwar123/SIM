@@ -28,7 +28,7 @@
                       <a (click)="sortTerm='prodName'">By Name</a>
                     </li>
                     <li [class.active]="sortTerm=='rate'">
-                      <a (click)="sortTerm='rate'">By Rate</a>
+                      <a (click)="sortTerm='rate'">By {{settings.mTvRate}}</a>
                     </li>
                   </ul>
                 </div>
@@ -36,13 +36,13 @@
             </div>
             <div class="col-12 search-box">
               <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Product" />
+                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search {{settings.mTvProducts}}" />
               </div>
             </div>
           </div>
   
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            Select Product to view or edit
+            Select {{settings.mTvProducts}} to view or edit
           </div>
   
           <div class="col-12 px-0 mCustomScrollbar style-3">
@@ -82,7 +82,7 @@
               </div>
             </div>
             <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
-              <h4>No Product to display, please create a product</h4>
+              <h4>No {{settings.mTvProducts}} to display, please create a product</h4>
             </div>
             <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
               <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
@@ -102,12 +102,12 @@
                 <!-- Heading -->
                 <div class="col-7 col-md-8">
                   <h4 class="form-header product-header" style="margin-left: 59%" *ngIf="createMode">
-                    Create a new product
+                    Create a new {{settings.mTvProducts}}
                   </h4>
                   <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="editMode">
-                    Edit product
+                    Edit {{settings.mTvProducts}}
                   </h4>
-                  <h4 class="form-header product-header" *ngIf="viewMode">View Product</h4>
+                  <h4 class="form-header product-header" *ngIf="viewMode">View {{settings.mTvProducts}}</h4>
                 </div>
 
                 <!-- Top Buttons -->
@@ -164,13 +164,13 @@
                           <span class="input-group-addon">
                             <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
-                          <input type="text" id="prodName" name="prodName" placeholder="Product Name *"
+                          <input type="text" id="prodName" name="prodName" placeholder="{{settings.mTvProducts}} Name *"
                             class="form-control" maxlength="45" onfocus="this.select()" required
                             [(ngModel)]="activeProduct.prodName"
                           />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
-                          <span *ngIf="f.value.prodName == ''">Product name required</span>
+                          <span *ngIf="f.value.prodName == ''">{{settings.mTvProducts}} name required</span>
                         </div>
                       </div>
                     </div>
@@ -182,7 +182,7 @@
                             <img src="/assets/images/product-icon/ic_product_code_grey.png">
                           </span>
                           <input type="text" name="productCode" id="productCode"
-                            class="form-control" placeholder="Product Code"
+                            class="form-control" placeholder="{{settings.mTvProducts}} Code"
                             [(ngModel)]="activeProduct.productCode" onfocus="this.select()"
                           />
                         </div>
@@ -217,7 +217,7 @@
                           <span class="input-group-addon">
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
-                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="Rate *"
+                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate}} *"
                             [(ngModel)]="activeProduct.rate" required onfocus="this.select()"
                           />
                         </div>
@@ -258,7 +258,7 @@
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_prod_name.png">
-                          Product name:
+                          {{settings.mTvProducts}} name:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.prodName}}
@@ -269,7 +269,7 @@
                       <div class="row">
                         <div class=" col-6 client-view-label ">
                           <img src="/assets/images/product-icon/ic_product_code_grey.png">
-                          Product code:
+                          {{settings.mTvProducts}} code:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.productCode}}
@@ -300,7 +300,7 @@
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_rate.png">
-                          Rate:
+                          {{settings.mTvRate}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.rate}}
@@ -311,7 +311,7 @@
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
-                          Tax Rate:
+                          Tax {{settings.mTvRate}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.taxRate}}
@@ -379,7 +379,7 @@
                     </div>
                     <div class="modal-body">
                       <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this Product?</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this {{settings.mTvProducts}}?</h5>
                         <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
 
                       </form>
