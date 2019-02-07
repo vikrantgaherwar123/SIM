@@ -1,0 +1,7 @@
+@import '../../../assets/css/form.css';
+.center-div{
+    left: 50%;
+    /* -webkit-transform: translate3d(-50%,-50%,0); */
+    /* transform: translate3d(-47%,-50%,0); */
+    position: absolute;
+}

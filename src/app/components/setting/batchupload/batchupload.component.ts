@@ -29,6 +29,7 @@ export class BatchuploadComponent implements OnInit {
   list: string;
   duplicateOrgName: boolean = true;
   incomingfile(event) {
+    if(event.target.files[0]){
     this.file = event.target.files[0];
     var cheangedFile = this.file;
     if(cheangedFile !== event.target.files[0].name ){
@@ -36,6 +37,7 @@ export class BatchuploadComponent implements OnInit {
       this.showProductsTable = false
     }
   }
+}
 
   // client starts
   clientList: client[]

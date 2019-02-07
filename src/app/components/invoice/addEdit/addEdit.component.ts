@@ -266,6 +266,9 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.adjustment == 0) {
           this.activeInvoice.adjustment = null
         }
+        if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
+          this.activeInvoice.tax_on_item = 0;
+        }
 
         this.changeDueDate(this.activeInvoice.due_date_flag.toString())
         // Wait for clients to be loaded before setting active client
@@ -343,13 +346,23 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice.amount = this.activeEstimate.gross_amount;
             this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
             this.activeInvoice.discount = this.activeEstimate.discount;
+            
+            
+            this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
             this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
             this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
+
             this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
             this.activeInvoice.adjustment = this.activeEstimate.adjustment;
             this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
             var currentDate = Date.now();
             this.formatedDate = currentDate;
+            if(this.activeInvoice.discount){
+              this.activeInvoice.discount_on_item = 0;
+            }
+            if(this.activeInvoice.tax_rate!==0 || this.activeInvoice.tax_amount!==0 ){
+              this.activeInvoice.tax_on_item=1;
+            }
             
             
             

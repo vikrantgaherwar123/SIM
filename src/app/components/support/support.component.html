@@ -1,0 +1,4 @@
+<form [formGroup]="subscribeForm" novalidate (ngSubmit)="sendMail($event)">
+  <input type="text" placeholder="Enter your email" formControlName="email"/>
+  <button class="button margin-top-15" type="submit">Subscribe</button>
+</form>
