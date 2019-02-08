@@ -86,6 +86,10 @@ export class AuthService {
 
   // Change Password api
   changePassword(currentPass, newPass) {
+    //after login access token comes undefined so we've get it here
+    if(this.user.access_token === undefined){
+      this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
+      }
     const headers = {
       headers: new HttpHeaders({
         "currentPass": currentPass,

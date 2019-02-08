@@ -416,7 +416,7 @@
                       </a>
                     </div>
                     <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2 || activeInvoice.tax_rate === 0"><!--settings.taxFlagLevel === 1 &&-->
-                      <a class="inline" (click)="activeInvoice.tax_on_item=1">Tax+</a>
+                      <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">

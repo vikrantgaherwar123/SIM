@@ -25,21 +25,35 @@ export class BatchuploadComponent implements OnInit {
   productRecords: any;
   errors: {};
   worksheet1: XLSX.WorkSheet;
-  worksheet2: XLSX.WorkSheet;
+  private activeClient = <client>{}
+  private activeProduct = <product>{}
+  repeatativeClientName: string = ''
+  addressRecord: any;
+  list: string;
+  duplicateOrgName: boolean = true;
+  OrgName: string;
+  prodName: any;
+  clientListLoading: boolean;
   productListLoading: boolean;
-  clientListloading: boolean;
-  orgName: string;
+  repeatativeProductName: string;
   incomingfile(event) {
-    this.file = event.target.files[0];
+    if (event.target.files[0]) {
+      this.file = event.target.files[0];
+      var cheangedFile = this.file;
+      if (cheangedFile !== event.target.files[0].name) {
+        this.showClientsTable = false
+        this.showProductsTable = false
+      }
+    }
   }
 
   // client starts
   clientList: client[]
   productList: product[]
   //these flags are set here to do npm build otherwise we can use without initializing bt its gud way to initialize 
-  showClientsOrProducts : boolean = false
-  showProductsTable : boolean = false
-  showClientsTable : boolean = false
+  showClientsOrProducts: boolean = false
+  showProductsTable: boolean = false
+  showClientsTable: boolean = false
   private user: {
     user: {
       orgId: string
@@ -59,6 +73,37 @@ export class BatchuploadComponent implements OnInit {
       
   }
 
+  ngOnInit() {
+    this.clientListLoading = true
+
+    if (this.clientList) {
+      this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        if (response.status === 200) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.clientList = response.records.filter(cli => cli.enabled == 0)
+
+        }
+      })
+    } else {
+      this.clientListLoading = false
+    }
+
+
+    this.productListLoading = true
+
+    if (this.productList) {
+      this.productService.fetch().subscribe((response: any) => {
+        this.productListLoading = false
+        if (response.status === 200) {
+          this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
+          this.productList = response.records.filter(prod => prod.enabled == 0)
+        }
+      })
+    } else {
+      this.productListLoading = false
+    }
+  }
 
   Upload() {
     let fileReader = new FileReader();
@@ -72,120 +117,236 @@ export class BatchuploadComponent implements OnInit {
       var first_sheet_name = workbook.SheetNames[0];
       var second_sheet_name = workbook.SheetNames[1];
       this.worksheet1 = workbook.Sheets[first_sheet_name];
-      //get address of header 
-      this.orgName = this.worksheet1.A1.v.replace(/ /g, '').toLowerCase();
-      console.log(this.orgName);
-      this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
-      this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
-      this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
-      this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "businessId"
-      this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "businessDetail"
-      this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w= "number"
-      this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w= "email"
-      this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w= "shippingAddress"
-      //header ends for clients
-      this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
-      this.worksheet2 = workbook.Sheets[second_sheet_name];
-      this.worksheet2.A1.v = this.worksheet2.A1.h = this.worksheet2.A1.w = "prodName"
-      this.worksheet2.B1.v = this.worksheet2.B1.h = this.worksheet2.B1.w = "unit"
-      this.worksheet2.C1.v = this.worksheet2.C1.h = this.worksheet2.C1.w = "discription"
-      this.worksheet2.D1.v = this.worksheet2.D1.h = this.worksheet2.D1.w = "rate"
-      this.worksheet2.E1.v = this.worksheet2.E1.h = this.worksheet2.E1.w = "taxRate"
-      this.worksheet2.F1.v = this.worksheet2.F1.h = this.worksheet2.F1.w= "productCode"
-      //header ends Products
-      this.productRecords = XLSX.utils.sheet_to_json(this.worksheet2, { raw: true });
+
+      //get name of client
+      this.OrgName = this.worksheet1.A1.v;
+      var clientName = this.OrgName.replace(/\s/g, "").toLowerCase();
+      //get name of product
+      this.prodName = this.worksheet1.A1.v;
+      var productName = this.prodName.replace(/\s/g, "").toLowerCase();
+
+      if (clientName === "organizationname*") {
+        this.showClientsTable = true;
+        this.showProductsTable = false;
+        //get address of header
+        this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
+        this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
+        this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
+        this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "addressLine2"
+        this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "addressLine3"
+        this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "businessId"
+        this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w = "businessDetail"
+        this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w = "number"
+        this.worksheet1.I1.v = this.worksheet1.I1.h = this.worksheet1.I1.w = "email"
+        this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w = "shippingAddress"
+        this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
+        //header ends for clients
+      }
+      if (productName === "productname*") {
+
+        this.showClientsTable = false;
+        this.showProductsTable = true;
+        this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "prodName"
+        this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "unit"
+        this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "discription"
+        this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "rate"
+        this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "taxRate"
+        this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "productCode"
+        //header ends Products
+        this.productRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
+      }
     }
     fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
   }
 
 
-  ngOnInit() {
-  }
 
-  save() {
+  save(status, edit) {
     // client start
+    if (this.clientRecords) {
+      for (let i = 0; i < this.clientRecords.length; i++) {
+        this.activeClient = this.clientRecords[i];
 
-    for (let i = 0; i < this.clientRecords.length; i++) {
-      //add required input params for api call
-      this.clientRecords[i].enabled = 0;
-      this.clientRecords[i].organizationId = parseInt(this.user.user.orgId);
-      this.clientRecords[i].uniqueKeyClient = generateUUID(this.user.user.orgId);
-      var d = new Date()
-      this.clientRecords[i].deviceCreatedDate = d.getTime()
-      this.clientRecords[i].modifiedDate = d.getTime()
-      this.clientListloading = true
-      this.clientRecords[i].name = this.clientRecords[i].name.replace(/ +(?= )/g,'');
-      if(this.clientRecords[i].name !== ' '){
-      this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
-        this.clientListloading = false
-        if (response.status === 200) {
-          // Update store and client list
-          let index, storeIndex
-          index = this.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
-          // storeIndex is used if user want to delete some record right now we havent used it
-          this.store.select('client').subscribe(clients => {
-            storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
-          })
+        var proStatus = true
 
-          if (index == -1) {  // add
-            this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-            this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-            this.toasterService.pop('success', 'Clients Saved Successfully !!!');
+        // If adding or editing client, make sure client with same name doesnt already exist
+        if (!this.activeClient.enabled) {
+          var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+
+          // If empty spaces
+          if (!tempClientName) {
+            this.activeClient.name = ''
+            this.toasterService.pop('failure', 'Organization name required');
+            return false
           }
-          // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
-        } else if (response.status === 414) {
-          this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
-        }
-        else {
-          // self.errors = [response.error]
-          // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-          //console.log(response.error)
-          this.toasterService.pop('failure', 'Some error occurred, please try again!');
-        }
-        
-      })
-    }
-    else{
-      this.toasterService.pop('failure', 'Org name required!');
-    }
-    }
-    // products starts
 
-    for (let i = 0; i < this.productRecords.length; i++) {
-      //add required input params for api call
-
-      this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
-      this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
-      var d = new Date()
-      this.productRecords[i].modifiedDate = d.getTime()
-      this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-      this.productListLoading = true
-      this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
-        this.productListLoading = false
-        if (response.status === 200) {
-          // Update store and client list
-          let index, storeIndex
-          index = this.productList.findIndex(pro => pro.uniqueKeyProduct == response.productList[0].unique_identifier)
-          this.store.select('product').subscribe(prods => {
-            storeIndex = prods.findIndex(prs => prs.uniqueKeyProduct == response.productList[0].unique_identifier)
-          })
-
-          if (index == -1) {  // add
-            this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
-            this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
-            this.toasterService.pop('success', 'Product added successfully !!!');
+          var tempCompare = ''
+          if (this.clientList.length > 0) {
+            for (var p = 0; p < this.clientList.length; p++) {
+              // client will be removed if he has no name
+              if (!this.clientList[p].name) {
+                this.clientList.splice(p, 1);
+              }
+              tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+              if (tempCompare === tempClientName) {
+                if (edit == 1) {
+                  if (this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
+                    proStatus = false
+                    break
+                  }
+                } else {
+                  proStatus = false
+                  break
+                }
+              }
+            }
           }
-          // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
-        } else if (response.status === 414) {
-          this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
+          this.repeatativeClientName = ''
         }
-        else {
-          // self.errors = [response.error]
-          // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-          //console.log(response.error)
-          this.toasterService.pop('failure', 'Some error occurred, please try again!');
+
+
+        if (status && proStatus) {
+          //add required input params for api call
+          this.clientRecords[i].enabled = 0;
+          this.clientRecords[i].organizationId = parseInt(this.user.user.orgId);
+          this.clientRecords[i].uniqueKeyClient = generateUUID(this.user.user.orgId);
+          var d = new Date()
+          this.clientRecords[i].deviceCreatedDate = d.getTime()
+          this.clientRecords[i].modifiedDate = d.getTime()
+          //add all addresses in a single object and send it to api to show those all addr in client view mode
+          this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ +(?= )/g, '');
+          if (this.clientRecords[i].name !== ' ') {
+            this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
+              if (response.status === 200) {
+                // Update store and client list
+                let index, storeIndex
+                index = this.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+                // storeIndex is used if user want to delete some record right now we havent used it
+                this.store.select('client').subscribe(clients => {
+                  storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+                })
+
+                if (index == -1) {  // add
+                  // this if condn and for loop is used to not add existing org name but right nw its not working
+                  var OrgName = response.clientList[0].name.toLowerCase();
+                  if (this.clientList) {
+                    for (let i = 0; i < this.clientList.length; i++) {
+                      this.list = this.clientList[i].name.toLowerCase();
+                      if (this.list[i] == OrgName) {
+                        this.toasterService.pop('failure', 'Client Already Exists !!!');
+                        this.duplicateOrgName = false;
+                      }
+                    }
+                    if (this.duplicateOrgName == true) {
+                      this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+                      this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
+                      this.toasterService.pop('success', 'Clients Saved Successfully !!!');
+                    }
+                  }
+                }
+                // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
+              } else if (response.status === 414) {
+                this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
+              }
+              else {
+                // self.errors = [response.error]
+                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
+                //console.log(response.error)
+                this.toasterService.pop('failure', 'Some error occurred, please try again!');
+              }
+            })
+
+          } else {
+            this.toasterService.pop('failure', 'Organization name required!');
+          }
+        } else {
+          if (!proStatus) {
+            this.toasterService.pop('failure', 'Client name already exists.');
+          }
         }
-      })
+      }
+    }
+
+    //product starts
+    if (this.productRecords) {
+      for (let i = 0; i < this.productRecords.length; i++) {
+        this.activeProduct = this.productRecords[i];
+
+        var proStatus = true
+
+        // If adding or editing product, make sure product with same name doesnt exist
+        if (this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+          var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
+          var tempCompare = ''
+          for (var p = 0; p < this.productList.length; p++) {
+            tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+            // If Name is same,
+            if (tempCompare === tempProName) {
+              // Case 1: Edit mode -> diff uniqueKey
+              // Case 2: Add mode
+              if (edit == 1) {
+                if (this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct && tempProName !== this.repeatativeProductName) {
+                  proStatus = false
+                  break
+                }
+              } else {
+                proStatus = false
+                break
+              }
+            }
+          }
+          this.repeatativeProductName = ''
+        }
+
+
+
+
+
+
+        if (status && proStatus) {
+          //add required input params for api call
+          this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
+          this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
+          var d = new Date()
+          this.productRecords[i].modifiedDate = d.getTime()
+          this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
+          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ +(?= )/g, '');
+          if (this.productRecords[i].prodName !== ' ') {
+            this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
+              if (response.status === 200) {
+                // Update store and client list
+                let index, storeIndex
+                index = this.productList.findIndex(pro => pro.uniqueKeyProduct == response.productList[0].unique_identifier)
+                this.store.select('product').subscribe(prods => {
+                  storeIndex = prods.findIndex(prs => prs.uniqueKeyProduct == response.productList[0].unique_identifier)
+                })
+
+                if (index == -1) {  // add
+                  this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
+                  this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
+                  this.toasterService.pop('success', 'Product added successfully !!!');
+                }
+                // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
+              } else if (response.status === 414) {
+                this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
+              }
+              else {
+                // self.errors = [response.error]
+                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
+                //console.log(response.error)
+                this.toasterService.pop('failure', 'Some error occurred, please try again!');
+              }
+            })
+          } else {
+            this.toasterService.pop('failure', 'Product name required!');
+          }
+        } else {
+          if (!proStatus) {
+            this.toasterService.pop('failure', 'Product name already exists.');
+          }
+        }
+      }
     }
   }
   remove(index) {

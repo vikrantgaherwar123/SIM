@@ -31,10 +31,13 @@ export class PasswordComponent implements OnInit {
         this.currentPass = ""
         this.newPass = ""
         this.confirmPass = ""
-
+        if(response.status === 200){
         alert(response.message)
         $('#bsave').removeAttr('disabled')
         this.toasterService.pop('success','Password Changed Successfully')
+        }else{
+          this.toasterService.pop('failure','Something went wrong')
+        }
       })
     } else {
       //alert('Invalid password!')

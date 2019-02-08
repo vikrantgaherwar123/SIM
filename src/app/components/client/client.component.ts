@@ -52,18 +52,18 @@ export class ClientComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Client');
     this.clientListLoading = true
 
-    if(this.clientList) {
+    if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(cli => cli.enabled == 0)
-          
+
         }
       })
     } else {
       this.clientListLoading = false
-     }   
+    }   
   }
 
   save(status, edit) {
@@ -170,12 +170,10 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
-      if(!proStatus) 
-      {
+      if(!proStatus){
         this.toasterService.pop('failure', 'Client name already exists.');
-      }
-      
-          }
+      }  
+    }
   }
   openDeleteClientModal() {
     this.deleteclient = true

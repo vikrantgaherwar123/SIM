@@ -268,6 +268,7 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.adjustment == 0) {
           this.activeInvoice.adjustment = null
         }
+        //to show when editing if value exists
         if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
           this.activeInvoice.tax_on_item = 0;
         }
@@ -377,11 +378,9 @@ export class AddEditComponent implements OnInit {
     
             // Tax and discounts show or hide
             if (this.activeEstimate.discount == 0) {
-              // this.activeEstimate.percentage_flag = null
               this.activeInvoice.percentage_flag = null
             }
             if (this.activeEstimate.shipping_charges == 0) {
-              // this.activeEstimate.shipping_charges = undefined
               this.activeInvoice.shipping_charges = undefined
             }
             if (this.activeEstimate.adjustment == 0) {
