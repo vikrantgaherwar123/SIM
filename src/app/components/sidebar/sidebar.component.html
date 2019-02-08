@@ -43,8 +43,12 @@
   </div> -->
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/manage-users') || isActive('/edit/organization') || isActive('/edit/me') }">
-    <div class="menu-parent btn accordion-toggle collapsed" data-toggle="collapse" data-target="#menu_list4">
-      <a href="javascript:void(0)"><span><img src="assets/images/setting_n.png" alt="logo" /></span> Settings</a>
+    <div (click)="javascript = void(0)" class="menu-parent btn accordion-toggle collapsed" data-toggle="collapse" data-target="#menu_list4">
+      <a>
+        <span>
+          <img src="assets/images/setting_n.png" alt="logo" />
+        </span>
+        Settings</a>
     </div>
     <ul class="collapse" id="menu_list4">
       <li class="btn2" (click)="toggle('/setting/primary')">
