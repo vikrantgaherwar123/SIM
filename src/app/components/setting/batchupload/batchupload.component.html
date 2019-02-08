@@ -47,12 +47,12 @@
               <tr *ngFor="let item of clientRecords; let in = index">
                 <td>{{in+1}}</td>
                 <td>
-                  <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }" onfocus="this.select()"
-                    [(ngModel)]="item.name" required />
+                  <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name && item.name !== null}" onfocus="this.select()"
+                    [(ngModel)]="item.name" required="required" />
                   <!--[ngClass]="{disabledField: !customEnableDate}"-->
                 </td>
                 <td>
-                  <input type="text"  name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.contactPersonName" />
+                  <input type="text" id="testInput" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.contactPersonName" />
                 </td>
                 <td>
                   <input type="text" rel="tooltip" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine1" />

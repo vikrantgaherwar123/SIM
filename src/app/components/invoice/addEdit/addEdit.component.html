@@ -391,7 +391,7 @@
                         </td>
                         <td style="vertical-align: top; position: relative !important;" 
                         [class.no-border-last]="last">
-                            <img (click)="disableProductText=false;activeInvoice.listItems=undefined;" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                            <img (click)="disableProductText=false;activeInvoice.listItems=undefined;" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
                         </td>
                       </tr>
                       <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="addEditInvoiceItem()"
@@ -457,7 +457,7 @@
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
                             <a class="closeicon show float-right">
-                              <img src="assets/images/delete_in_grey.png" class="del set-color" alt="" class="hg_16">
+                              <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color" alt="" class="hg_16">
                             </a>
                           </div>
                         </div>
@@ -534,7 +534,7 @@
                       </div>
                       <div class="col-4 pr-0">
                         <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label" 
-                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" disabled style="color:#eaeaea"
+                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="background-color: #eaeaea;"
                       />
                       </div>
 
@@ -546,7 +546,7 @@
                             balance=activeInvoice.gross_amount
                           "
                           ><!--activeInvoice.tax_amount-->
-                            <img src="assets/images/grey_cross.png" alt="" class="hg_20 cross_label_img">
+                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
                           </div>                               
                       </div>
                       
@@ -575,7 +575,7 @@
                       </div>
                       <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
                         <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
-                          <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                          <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
                         </div>
                       </div>
                     </div>
@@ -585,23 +585,37 @@
                       <div class="col-5 discount-tax-label pr-0 label_color" *ngIf="tax">
                         <div class="d-inline font-custom">{{tax.taxName}} (%)</div>
                       </div>
-  
-                      <div class="col-7 pr-0" *ngIf="tax">
-                        <form #form_tax_input="ngForm" name="form_tax_input">
-                          <div class="input-group pr-0">
-                            <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input"
-                              step="any" min="0.00" max="100" class="form-control" style="margin-right: -4px;"
+                      <div class="col-7 input-group pr-0" *ngIf="tax">
+                        <!-- <form #form_tax_input="ngForm" name="form_tax_input">
+                          <div class="input-group pr-0 row" style="margin-left: -1px;">
+                            <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" 
+                              step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
                               [(ngModel)]="tax.percentage" (keyup)="calculateInvoice()" onfocus="this.select()"
+                            /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
+                               [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()" style="background-color:#eaeaea"
                             />
-
-                            <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                            </div>
+                        </form> -->
+                        <form #form_tax_input="ngForm" name="form_tax_input">
+                            <div class="input-group pr-0" style="margin-left: -1px;">
+                                <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" 
+                                step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
+                                [(ngModel)]="tax.percentage" (keyup)="calculateInvoice()" onfocus="this.select()"
+                              /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
+                                 [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()" style="background-color:#eaeaea;margin-right: -5px;"
+                              />
+  
+                              <div class="input-group-addon pr-0 remove-button">
+                                <div class="addon selector" (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
+                                  <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </form>
+                          </form> 
                       </div>
+                      
+
+                     
                     </div>
 
                     <!-- Shipping -->
@@ -622,7 +636,7 @@
 
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector padr0" (click)="activeInvoice.shipping_charges = undefined;calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" alt="" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -649,7 +663,7 @@
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector" (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -721,7 +735,7 @@
                       </button>
                      
                       <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
-                        class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
+                        class="save btn save_btn btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
                       >
                         Save

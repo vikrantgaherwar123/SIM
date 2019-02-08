@@ -2,13 +2,13 @@
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/dashboard') }">
     <div class="menu-parent btn" (click)="toggle('/dashboard')">
-      <a><span><img src="assets/images/dashboard@2x.png" alt="logo" /></span> Dashboard </a>
+      <a (click)="setTitle( 'Dashboard' )"><span><img src="assets/images/dashboard@2x.png" alt="logo" /></span> Dashboard </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/client') || isActive('/client/batch') }">
     <div (click)="toggle('/client');" class="menu-parent btn ">
-      <a><span><img src="assets/images/client_n.png" alt="logo" /></span> Clients</a>
+      <a (click)="setTitle( 'Clients' )"><span><img src="assets/images/client_n.png" alt="logo" /></span> Clients</a>
     </div>
   </div>
 
@@ -43,10 +43,17 @@
     </ul>
   </div> -->
 
-  <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/manage-users') || isActive('/edit/organization') || isActive('/edit/me') }">
+  <div (click)="javascript=void(0)" class="menu-item-wrapper" ng-class="{ active_nav : isActive('/manage-users') || isActive('/edit/organization') || isActive('/edit/me') }">
+ 
     <div class="menu-parent btn accordion-toggle collapsed" data-toggle="collapse" data-target="#menu_list4">
-      <a href="javascript:void(0)"><span><img src="assets/images/setting_n.png" alt="logo" /></span> Settings</a>
+        <a>  
+      <span>
+          <img src="assets/images/setting_n.png" alt="logo" />
+        </span>
+        Settings
+      </a>
     </div>
+ 
     <ul class="collapse" id="menu_list4">
       <li class="btn2" (click)="toggle('/setting/primary')">
         <a> Primary Settings </a>

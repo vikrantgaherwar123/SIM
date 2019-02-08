@@ -52,6 +52,7 @@ import { BatchuploadComponent } from './components/setting/batchupload/batchuplo
 import { SupportComponent } from './components/support/support.component';
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
+import { Title }     from '@angular/platform-browser';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {

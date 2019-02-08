@@ -7,12 +7,15 @@
               <span>Showing results for:</span> <img src="assets/images/client.png" 
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
-                <!-- <span *ngIf="invoiceQueryForm.client.value?.length > 1"
-                  [title]="getNames()"
-                >
-                  (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                </span>, -->
-                <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span>
+                <span>
+                    {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
+                    <span *ngIf="invoiceQueryForm.client.value?.length > 1"
+                      [title]="getNames()"
+                    >
+                      (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                    </span>,
+                  </span>
+                <!-- <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
@@ -52,7 +55,7 @@
                     </a>
                   </div>
                   <div class="col-6 px-0" style="padding-top: 15px;">
-                    <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="pull-right list-btn back">
+                    <a data-toggle="dropdown" Title="Search By" aria-haspopup="true" aria-expanded="false" class="pull-right list-btn back">
                       <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
@@ -397,11 +400,11 @@
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                   <div class="col-4 discount-tax-label">
                       <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                      <div class="inline font-custom">(%)</div>
+                      <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeInv.taxList[index].percentage | number:'1.1-2'}}
+                      {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
                     </div>
                   </div>
                 </div>

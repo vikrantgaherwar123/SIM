@@ -21,6 +21,8 @@ import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster'
 import { DatePipe } from '@angular/common';
+import { Title }     from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-estimate',
@@ -100,7 +102,8 @@ export class AddEditEstComponent implements OnInit {
     private settingService: SettingService,
     private productService: ProductService,
     private datePipe: DatePipe,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private titleService: Title
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -112,7 +115,7 @@ export class AddEditEstComponent implements OnInit {
     
     // save button processing script
     $(document).ready(function () {
-      $('.btn').on('click', function () {
+      $('.save').on('click', function () {
         var $this = $(this);
         var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
         if ($(this).html() !== loadingText) {
@@ -128,7 +131,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.titleService.setTitle('Simple Invoice | Estimate');
     this.activeEstimate = <addEditEstimate>{}
     this.route.params.subscribe(params => {
       if (params.estId) {

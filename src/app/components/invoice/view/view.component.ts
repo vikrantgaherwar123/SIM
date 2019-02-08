@@ -13,6 +13,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router } from '@angular/router'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view',
@@ -59,6 +60,7 @@ export class ViewComponent implements OnInit {
   public settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
+    private titleService: Title,
     private store: Store<AppState>,
     private settingService: SettingService,
     public router: Router
@@ -107,8 +109,9 @@ export class ViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Invoice');
     // Fetch clients if not in store
-    this.clientList = [];
+    // this.clientList = [];
     this.dropdownList = [];
     this.clientListLoading = true
     if (this.clientList.length < 1) {

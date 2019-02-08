@@ -434,11 +434,11 @@
               <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">({{activeEst.taxrate}} %)</div>
+                  <div class="inline font-custom">({{activeEst.taxrate | number:'1.1-2'}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeEst.taxAmt | number:'2.'}}
+                    {{activeEst.taxAmt | number:'1.1-2'}}
                   </div>
                 </div>
               </div>
@@ -447,11 +447,11 @@
                 <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
                   <div class="col-4 discount-tax-label">
                     <div *ngIf="tax !== null" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                    <div *ngIf="tax" class="inline font-custom">(%)</div>
+                    <div *ngIf="tax" class="inline font-custom">({{activeEst.taxList[index].percentage | number:'1.1-2'}} %)</div>
                   </div>
                   <div *ngIf="tax !== null" class="col-8 ">
                     <div class="text-right">
-                      {{activeEst.taxList[index].percentage}}
+                      {{activeEst.taxList[index].calculateValue}}
                     </div>
                   </div>
                 </div>

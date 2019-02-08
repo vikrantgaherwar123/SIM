@@ -6,6 +6,7 @@ import { ClientService } from '../../services/client.service'
 import { EmailService } from '../../services/email.service'
 import { Store } from '@ngrx/store'
 import { AppState } from '../../app.state'
+import { Title }     from '@angular/platform-browser';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class SupportComponent implements OnInit {
 
   constructor(public clientService: ClientService,private store: Store<AppState>,
      private fb: FormBuilder,
+     private titleService: Title,
     private emailService: EmailService) {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -59,6 +61,7 @@ export class SupportComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Support');
     this.browser_details();
     
   }

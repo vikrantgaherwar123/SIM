@@ -276,7 +276,7 @@
                       </div>
                     </td>
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                      <img (click)="disableProductText=false" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
                     </td>
                   </tr>
                   <button *ngIf="disableProductText === false" type="button" class="small_btn btnd add-line-item-button"
@@ -338,7 +338,7 @@
                       </div>
                       <div *ngIf="term.terms !=undefined" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
                         <a class="closeicon show float-right">
-                          <img src="assets/images/delete_in_grey.png" class="del set-color" alt="" class="hg_16">
+                          <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color" alt="" class="hg_16">
                         </a>
                       </div>
                       <!-- <div *ngIf="term.terms_condition" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
@@ -433,7 +433,7 @@
                           activeEstimate.amount=activeEstimate.gross_amount;
                           balance=activeEstimate.gross_amount
                           ">
-                        <img src="assets/images/grey_cross.png" alt="" class="hg_20 cross_label_img">
+                        <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
                       </div>
                     </div>
                   </div>
@@ -449,19 +449,19 @@
                     <form #form_tax_input="ngForm" name="form_tax_input">
                       <div class="input-group pr-0">
                         <input type="number" id="tax_input" name="tax_input" class="form-control" step="any" min="0.00"
-                          max="100" required style="color: #aaaaaa;" [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
+                          max="100" required style="" [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
                           onfocus="this.select()" />
                       </div>
                     </form>
                   </div>
                   <div class="col-4 pr-0">
                     <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label"
-                      placeholder="00.000" [(ngModel)]="activeEstimate.tax_amount" (keyup)="calculateEstimate()" style="color:#eaeaea;width: 159px !important;"
-                      disabled />
+                      placeholder="00.000" [(ngModel)]="activeEstimate.tax_amount" (keyup)="calculateEstimate()" style="background-color: #e9ecef;width: 159px !important;"
+                       />
                   </div>
                   <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
                     <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
-                      <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                      <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
                     </div>
                   </div>
                 </div>
@@ -473,18 +473,22 @@
                   </div>
 
                   <div class="col-7 pr-0" *ngIf="tax">
-                    <form #tax_list_input="ngForm" name="tax_list_input">
-                      <div class="input-group pr-0">
-                        <input type="number" name="tax_input" id="tax_input_list{{taxIndex}}" min="0.00" max="100" step="any"
-                          class="form-control" onfocus="this.select()" [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()" />
+                      <form #form_tax_input="ngForm" name="form_tax_input">
+                          <div class="input-group pr-0" style="margin-left: -1px;">
+                              <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" 
+                              step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
+                              [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()" onfocus="this.select()"
+                            /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
+                               [(ngModel)]="tax.calculateValue" (keyup)="calculateEstimate()" style="background-color: #e9ecef;margin-right: -2px;"
+                            />
 
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.taxList[taxIndex] = null;calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                            <div class="input-group-addon pr-0 remove-button">
+                              <div class="addon selector" (click)="activeEstimate.taxList[taxIndex] = null;">
+                                <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </form>
+                        </form> 
                   </div>
                 </div>
 
@@ -504,7 +508,7 @@
                           onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
                         <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" alt="" class="hg_20 cross_label_img">
+                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
                           </div>
                         </div>
                       </div>
@@ -528,7 +532,7 @@
                           [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()" />
                         <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" alt="" class="hg_20 cross_label_img">
+                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
                           </div>
                         </div>
                       </div>
@@ -564,7 +568,7 @@
                 <!-- Save -->
                 <div class="col-12 px-0 mt-2">
                   <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
-                    class="btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
+                    class="save btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
                     SAVE
                   </button>
                   <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
@@ -607,7 +611,7 @@
           Delete Client
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
-          <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+          <img src="assets/images/cross.png"  Title="Delete" alt="logo" style="height: 30px;margin-top: 6px;">
         </button>
       </div>
       <div class="modal-body">

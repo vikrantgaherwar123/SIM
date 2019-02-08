@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store'
 import * as tncActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tnc',
@@ -34,6 +35,7 @@ export class TncComponent implements OnInit {
 
   constructor(private tncService: TermConditionService,
     public toasterService : ToasterService,
+    private titleService: Title,
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService,
@@ -42,6 +44,7 @@ export class TncComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Terms And Conditions');
     this.tncLoading = true
     this.store.dispatch(new tncActions.reset())
 

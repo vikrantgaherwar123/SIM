@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client',
@@ -38,6 +39,7 @@ export class ClientComponent implements OnInit {
 
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
+    private titleService: Title,
     private router: Router, private store: Store<AppState>
   ) {
     this.toasterService = toasterService; 
@@ -47,6 +49,7 @@ export class ClientComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Client');
     this.clientListLoading = true
 
     if(this.clientList) {

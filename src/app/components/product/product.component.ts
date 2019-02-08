@@ -9,6 +9,7 @@ import * as productActions from '../../actions/product.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { SettingService } from '../../services/setting.service'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product',
@@ -42,7 +43,8 @@ export class ProductComponent implements OnInit {
 
   constructor(private productService: ProductService,
     public toasterService : ToasterService,
-    private router: Router, private store : Store<AppState>
+    private router: Router, private store : Store<AppState>,
+    private titleService: Title
   ) {
     this.toasterService = toasterService;
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
@@ -52,6 +54,7 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Product');
     this.productListLoading = true
 
     if(this.productList) {
