@@ -39,6 +39,7 @@ export class BatchuploadComponent implements OnInit {
 
   
   incomingfile(event) {
+    if(event.target.files[0]){
     this.file = event.target.files[0];
     var cheangedFile = this.file;
     if(cheangedFile !== event.target.files[0].name ){
@@ -46,6 +47,7 @@ export class BatchuploadComponent implements OnInit {
       this.showProductsTable = false
     }
   }
+}
 
   // client starts
   clientList: client[]
@@ -65,6 +67,7 @@ export class BatchuploadComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
   }
+  
 
 
   Upload() {
@@ -81,8 +84,8 @@ export class BatchuploadComponent implements OnInit {
       if(workbook.Sheets.Sheet1 !== undefined){
       if(workbook.Sheets.Sheet1["!ref"]=="A1:J2"){
       this.worksheet1 = workbook.Sheets[first_sheet_name];
-      this.showClientsTable = true;
-      this.showProductsTable = false;
+      // this.showClientsTable = true;
+      // this.showProductsTable = false;
       //get address of header 
       this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
       this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
@@ -96,11 +99,11 @@ export class BatchuploadComponent implements OnInit {
       this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w= "shippingAddress"
       this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
       this.productRecords = [];
+      this.showClientsTable = true;
       }
       //for product csv
-      else {
-        this.showClientsTable = false;
-        this.showProductsTable = true;
+      if(workbook.Sheets.Sheet1["!ref"]=="A1:F2") {
+       
       //header ends for clients
       this.worksheet2 = workbook.Sheets[first_sheet_name];
       this.worksheet2.A1.v = this.worksheet2.A1.h = this.worksheet2.A1.w = "prodName"
@@ -112,6 +115,9 @@ export class BatchuploadComponent implements OnInit {
       //header ends Products
       this.productRecords = XLSX.utils.sheet_to_json(this.worksheet2, { raw: true });
       this.clientRecords = [];
+      this.showProductsTable = true;
+      this.showClientsTable = false;
+
       }
     }
       //for client xls & xlsx

@@ -76,7 +76,6 @@ export class AddEditEstComponent implements OnInit {
   tax_on: string
   discount_on: string
   settings: any
-  myDate : any
 
   showMultipleTax
   taxtext
@@ -312,6 +311,7 @@ export class AddEditEstComponent implements OnInit {
     if (settings) {
       this.activeEstimate.tax_on_item = 2
       this.activeEstimate.discount_on_item = 2
+      
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
@@ -851,7 +851,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     var self = this
-    if(this.activeEstimate.estimate_number !==""){
+    if(this.activeEstimate.estimate_number !=="" && this.activeEstimate.created_date){
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
         //alert('Couldnt save Estimate')

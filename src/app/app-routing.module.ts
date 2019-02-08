@@ -19,12 +19,10 @@ import { UserProfileComponent } from './components/setting/user-profile/user-pro
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
 
-
-
-
 const routes: Routes = [
   { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
