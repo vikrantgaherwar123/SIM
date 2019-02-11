@@ -24,6 +24,7 @@ import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-invoice',
@@ -102,7 +103,8 @@ export class AddEditComponent implements OnInit {
     private settingService: SettingService,
     private productService: ProductService,
     private store: Store<AppState>,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private titleService: Title
   ) {
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -132,9 +134,9 @@ export class AddEditComponent implements OnInit {
 /*Scroll to top when arrow up clicked END*/
     // save button processing script
     $(document).ready(function () {
-      $('.btn').on('click', function () {
+      $('.save').on('click', function () {
         var $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
         if ($(this).html() !== loadingText) {
           $this.data('original-text', $(this).html());
           $this.html(loadingText);
@@ -158,7 +160,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    
+    this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
       if (params && params.invId) {
         this.edit = true
@@ -187,6 +189,14 @@ export class AddEditComponent implements OnInit {
     if(input > 100){
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
+      this.activeInvoice.amount = this.activeInvoice.gross_amount;
+      this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
+  }
+  changeTax(input){
+    if(input > 100){
+      alert("Tax amount must be under 100");
+      this.activeInvoice.tax_rate = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
@@ -343,8 +353,8 @@ export class AddEditComponent implements OnInit {
 
             //set reference no of estimate
             this.activeInvoice.reference =  this.activeEstimate.estimate_number;
-            this.activeInvoice.gross_amount = this.activeEstimate.amount;
-            this.activeInvoice.amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.amount = this.activeEstimate.amount;
             this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
             this.activeInvoice.discount = this.activeEstimate.discount;
             
@@ -400,7 +410,6 @@ export class AddEditComponent implements OnInit {
                 clearInterval(ref)
               }
             }, 50)
-
           } else {
             this.toasterService.pop('failure', 'Invalid estimate id');
             this.router.navigate(['/estimate/view'])
@@ -412,6 +421,15 @@ export class AddEditComponent implements OnInit {
       return false
     })
   }
+  // week() {
+  //   var current = new Date();     // get current date    
+  //   var weekstart = current.getDate() - current.getDay() + 1;
+  //   var weekend = weekstart + 6;       // end day is the first day + 6 
+  //   var monday = new Date(current.setDate(weekstart));
+  //   var sunday = new Date(current.setDate(weekend));
+  //   console.log(monday,sunday);
+    
+  // }
 
   commonSettingsInit() {
     this.invoiceDate.valueChanges.subscribe(value => {

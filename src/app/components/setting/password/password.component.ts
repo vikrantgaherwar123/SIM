@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core'
 
 import { AuthService } from '../../../services/auth.service'
 import {ToasterService} from 'angular2-toaster'
+import { Title }     from '@angular/platform-browser';
+
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
@@ -13,11 +15,13 @@ export class PasswordComponent implements OnInit {
   newPass: string = ""
   confirmPass: string = ""
 
-  constructor(private authService: AuthService,public toasterService : ToasterService) {
+  constructor(private authService: AuthService,public toasterService : ToasterService,
+    private titleService: Title) {
     this.toasterService = toasterService
    }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Password');
   }
 
   changePassword () {

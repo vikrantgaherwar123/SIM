@@ -15,6 +15,7 @@ import * as clientActions from '../../actions/client.action'
 import * as productActions from '../../actions/product.action'
 import * as termActions from '../../actions/terms.action'
 import { AppState } from '../../app.state'
+import { Title }     from '@angular/platform-browser';
 
 import { AuthService as socialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angular-6-social-login'
 
@@ -53,12 +54,14 @@ export class LoginComponent implements OnInit {
     private termsService: TermConditionService,
     private settingService: SettingService,
     private store: Store<AppState>,
-    private socialAuthService: socialAuthService
+    private socialAuthService: socialAuthService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
-    var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
+     var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
     $('#sidebar, #content').addClass('active')

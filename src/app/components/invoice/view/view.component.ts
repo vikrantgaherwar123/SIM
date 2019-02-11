@@ -13,6 +13,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router } from '@angular/router'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view',
@@ -28,7 +29,7 @@ export class ViewComponent implements OnInit {
   invDispLimit: number = 20
   invSortTerm: string = 'createdDate'
   invSearchTerm: string
-  clientListLoading: boolean
+  clientListLoading: boolean = false
   dateDDMMYY: boolean
   dateMMDDYY: boolean
 
@@ -42,7 +43,7 @@ export class ViewComponent implements OnInit {
   
   // multiselect dropdown
 
-  dropdownList
+  dropdownList = [];
   lastSelectedClients
   itemSelected
 
@@ -56,9 +57,10 @@ export class ViewComponent implements OnInit {
   private activeClient: client
   filteredClients: Observable<string[] | client[]>
 
-  private settings: any
+  public settings: any
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
+    private titleService: Title,
     private store: Store<AppState>,
     private settingService: SettingService,
     public router: Router
@@ -102,22 +104,30 @@ export class ViewComponent implements OnInit {
     $(window).on('popstate', function () {
       $('#search-client').modal('hide');
     });
+
+    
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Invoice');
     // Fetch clients if not in store
+    // this.clientList = [];
+    this.dropdownList = [];
     this.clientListLoading = true
     if (this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
-        this.dropdownList = response.records;
-      this.store.dispatch(new clientActions.add(response.records))
+        this.clientList = response.records;
+        this.dropdownList = this.clientList;
+        this.store.dispatch(new clientActions.add(response.records))
       }
       )
     }else{
-      this.dropdownList = this.clientList;
+      
+       this.dropdownList = this.clientList;
     }
     this.openSearchClientModal()
     this.clientListLoading = false
+    this.invListLoader = true
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
@@ -194,6 +204,7 @@ export class ViewComponent implements OnInit {
     $("#taxonItem").prop("checked", true);
   }
 
+     
   paidAmount() {
     var temp = 0
     if (this.activeInv.payments) {
@@ -284,7 +295,7 @@ export class ViewComponent implements OnInit {
   setActiveInv(invId: string = '') {
     if (!invId || invId ==="null" ) {
       this.activeInv = this.invoiceList[0]
-    } else {
+    } else{
       // invId = invoiceId;
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }

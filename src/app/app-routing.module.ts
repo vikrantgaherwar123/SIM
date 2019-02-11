@@ -21,10 +21,6 @@ import { SupportComponent } from './components/support/support.component';
 import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
 
 
-
-
-
-
 const routes: Routes = [
   { path: '', redirectTo: '/load', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -36,6 +32,7 @@ const routes: Routes = [
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'load', component: LoadalldataComponent, canActivate: [AuthGuard] },
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
+  { path: 'invoice/add/:estId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },
   { path: 'estimate/add', component: AddEditEstComponent, canActivate: [AuthGuard] },
   { path: 'estimate/edit/:estId', component: AddEditEstComponent, canActivate: [AuthGuard] },
@@ -47,6 +44,7 @@ const routes: Routes = [
   { path: 'setting/password', component: PasswordComponent, canActivate: [AuthGuard] },
   { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'setting/batchUpload', component: BatchuploadComponent, canActivate: [AuthGuard] },
+  { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

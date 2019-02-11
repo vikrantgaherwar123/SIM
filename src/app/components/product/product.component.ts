@@ -8,6 +8,8 @@ import { Store } from '@ngrx/store'
 import * as productActions from '../../actions/product.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
+import { SettingService } from '../../services/setting.service'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product',
@@ -36,18 +38,23 @@ export class ProductComponent implements OnInit {
   deleteproduct:boolean = false
 
   productDisplayLimit = 12
+  settings: any;
+  
 
   constructor(private productService: ProductService,
     public toasterService : ToasterService,
-    private router: Router, private store : Store<AppState>
+    private router: Router, private store : Store<AppState>,
+    private titleService: Title
   ) {
     this.toasterService = toasterService;
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     this.codeOrSym = this.user.setting.currencyText ? 'code' : 'symbol'
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Product');
     this.productListLoading = true
 
     if(this.productList) {
@@ -144,6 +151,7 @@ export class ProductComponent implements OnInit {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');
       }
+      // else if(){}
       // $('#saveProBtn').button('reset')
       // $('#saveProBtn1').button('reset')
       // $('#updateProBtn').button('reset')

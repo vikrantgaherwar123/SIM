@@ -5,6 +5,7 @@ import { setting } from '../../../interface'
 
 import { SettingService } from '../../../services/setting.service'
 import {ToasterService} from 'angular2-toaster'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-primary',
@@ -22,16 +23,27 @@ export class PrimaryComponent implements OnInit {
     countryName: string
   }>
   activeCountry: any
+  private user: {
+    user: {
+      orgId: string
+    },
+    setting: any
+  }
+  settings: any;
 
   constructor(private CONST: CONSTANTS,
     public toasterService : ToasterService,
     private settingService: SettingService,
+    private titleService: Title
   ) {
     this.toasterService = toasterService
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
 
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Primary Setting');
     // this.loaded = true
     this.countries = this.CONST.COUNTRIES
     this.countries.sort(this.dynamicSort("countryName"))

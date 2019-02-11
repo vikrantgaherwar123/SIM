@@ -7,6 +7,8 @@ import { SettingService } from '../../services/setting.service'
 
 import { Store } from '@ngrx/store'
 import { AppState } from '../../app.state'
+import { Title }     from '@angular/platform-browser';
+
 
 interface response {
   status: number,
@@ -30,12 +32,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(private router: Router,
     private settingService: SettingService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private titleService: Title
   ) {
     this.settingStore = store.select('setting')
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Dashboard');
     this.settingStore.subscribe(settings => {
       if(Object.keys(settings).length == 0) {
         this.settingService.fetch().subscribe((response: response) => {

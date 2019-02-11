@@ -52,6 +52,9 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
 import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
+import { EmailService } from './services/email.service';
+import { HttpModule } from '@angular/http';
+import { Title }     from '@angular/platform-browser';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -101,6 +104,7 @@ export function getAuthServiceConfigs() {
   imports: [
     ProgressBarModule,
     BrowserModule,
+    HttpModule,
     SocialLoginModule,
     AppRoutingModule,
     TranslateModule.forRoot({
@@ -131,6 +135,7 @@ export function getAuthServiceConfigs() {
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    EmailService,
     CONSTANTS,
     {
       provide: AuthServiceConfig,

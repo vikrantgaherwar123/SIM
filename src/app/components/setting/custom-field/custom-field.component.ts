@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-custom-field',
@@ -16,20 +17,24 @@ import {ToasterService} from 'angular2-toaster'
 })
 export class CustomFieldComponent implements OnInit {
 
-  user = <{
+  private user: {
     user: {
-      orgId: number
+      orgId: string
     },
     setting: setting
-  }>{}
+  }
   appSettings: {androidSettings: setting}
   activeSetting: setting = <setting>{}
 
-  constructor(private settingService: SettingService,public toasterService : ToasterService, private store: Store<AppState>) {
+  constructor(private settingService: SettingService,
+    public toasterService : ToasterService,
+    private titleService: Title,
+     private store: Store<AppState>) {
     this.toasterService = toasterService
    }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Custom Field');
     $('input').on('focus', () => {
       $(this).prev().addClass('focused-icon')
       $(this).prev().css({ "color": "#176cc1" })

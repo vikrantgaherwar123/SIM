@@ -335,11 +335,11 @@ textarea {
 {
   box-shadow: none !important;
 }
-.sidebar-switch-icon[_ngcontent-c2] {
+/* .sidebar-switch-icon[_ngcontent-c2] {
   margin-left: 16px !important;
   padding: 8px 15px 0px 10px !important;
   border-radius: 4px !important;
-}
+} */
 .label_padng_top
 {
   padding-top: 5px;
@@ -695,6 +695,6 @@ option {
   margin-top: -1px !important;
   box-shadow: none !important;
 }
-dropdown-list li :hover{
-  background-color:red !important;
+.save{
+
 }
