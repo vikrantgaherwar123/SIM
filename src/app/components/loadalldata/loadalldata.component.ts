@@ -40,6 +40,7 @@ export class LoadalldataComponent implements OnInit {
 
   ngOnInit() {
     this.fetchBasicData();
+    
   }
 
   fetchBasicData() {
@@ -53,21 +54,22 @@ export class LoadalldataComponent implements OnInit {
     ).done((clientResponse: apiRespo, productResponse: apiRespo, termResponse: apiRespo, settingResponse: any,
       invoiceResponse: apiRespo,estimateResponse: apiRespo) => {
       if(clientResponse.records){
-      this.store.dispatch(new clientActions.add(clientResponse.records))
+      // this.store.dispatch(new clientActions.add(clientResponse.records))
       console.log("clients fetched");
       
       }
       if(productResponse.records){
-      this.store.dispatch(new productActions.add(productResponse.records.filter(prod => prod.enabled == 0)))
+      // this.store.dispatch(new productActions.add(productResponse.records.filter(prod => prod.enabled == 0)))
       console.log("products fetched");
       }
       if(termResponse.termsAndConditionList){
-      this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+      // this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
       console.log("tnc fetched");
-      }else{
-      let addProductTemp = [];
-      this.store.dispatch(new termActions.add(addProductTemp));
       }
+      // else{
+      // let addProductTemp = [];
+      // this.store.dispatch(new termActions.add(addProductTemp));
+      // }
       setStorage(settingResponse.settings)
       if(invoiceResponse.records){
       console.log("invoice fetched");

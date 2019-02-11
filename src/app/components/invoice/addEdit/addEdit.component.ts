@@ -171,7 +171,16 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-
+    if(this.termList.length < 1){
+      this.termConditionService.fetch().subscribe((response: response) => {
+         //console.log(response)
+        if (response.termsAndConditionList) {
+          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        }
+        this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      })
+      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+    }
     
     for (let i = 0; i < this.productList.length; i++) {
       if (this.productList[i].prodName == "") {
@@ -421,15 +430,6 @@ export class AddEditComponent implements OnInit {
       return false
     })
   }
-  // week() {
-  //   var current = new Date();     // get current date    
-  //   var weekstart = current.getDate() - current.getDay() + 1;
-  //   var weekend = weekstart + 6;       // end day is the first day + 6 
-  //   var monday = new Date(current.setDate(weekstart));
-  //   var sunday = new Date(current.setDate(weekend));
-  //   console.log(monday,sunday);
-    
-  // }
 
   commonSettingsInit() {
     this.invoiceDate.valueChanges.subscribe(value => {
@@ -517,9 +517,10 @@ export class AddEditComponent implements OnInit {
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
-        } else {
-          this.setProductFilter()
-        }
+        } 
+        // else {
+        //   this.setProductFilter()
+        // }
       })
     } else {
       this.setProductFilter()
@@ -553,13 +554,15 @@ export class AddEditComponent implements OnInit {
 
     // Fetch Terms if not in store
     if(this.termList.length < 1 && !this.edit) {
-      this.termConditionService.fetch().subscribe((response: response) => {
-         //console.log(response)
-        if (response.termsAndConditionList) {
-          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-        }
-        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
+      self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+
+      // this.termConditionService.fetch().subscribe((response: response) => {
+      //    //console.log(response)
+      //   if (response.termsAndConditionList) {
+      //     this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+      //   }
+      //   self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      // })
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
@@ -646,9 +649,11 @@ export class AddEditComponent implements OnInit {
   }
 
   openAddClientModal(name) {
-    this.openClientModal = true
     this.addClientModal = {}
-    this.addClientModal.name = name
+    this.addClientModal.name = this.billingTo.value;
+    this.openClientModal = true
+    
+    // this.addClientModal.name = name
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()
@@ -711,6 +716,15 @@ export class AddEditComponent implements OnInit {
     //       this.productList.splice(index, 1);
     //     }
     //   }
+    // }
+    // function removeDups(names) {
+    //   let unique = {};
+    //   names.forEach(function(i) {
+    //     if(!unique[i]) {
+    //       unique[i] = true;
+    //     }
+    //   });
+    //   return Object.keys(unique);
     // }
     
       if (this.productList) {

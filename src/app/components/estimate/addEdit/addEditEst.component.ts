@@ -206,8 +206,9 @@ export class AddEditEstComponent implements OnInit {
               description: this.activeEstimate.listItems[i].description,
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
+              discount: this.activeEstimate.listItems[i].discountAmt,
               rate: this.activeEstimate.listItems[i].rate,
-              tax_rate: this.activeEstimate.listItems[i].tax_rate,
+              tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
               unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
               unit: this.activeEstimate.listItems[i].unit
@@ -318,7 +319,7 @@ export class AddEditEstComponent implements OnInit {
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeEstimate.tax_on_item = 0
+        this.activeEstimate.tax_on_item = 2
       }
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
@@ -511,7 +512,7 @@ export class AddEditEstComponent implements OnInit {
   openAddClientModal(name) {
     this.openClientModal = true
     this.addClientModal = {}
-    this.addClientModal.name = name
+    this.addClientModal.name = this.billingTo.value;
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()

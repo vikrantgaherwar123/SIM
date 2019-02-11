@@ -579,7 +579,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+          <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>
           </button>

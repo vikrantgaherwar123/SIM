@@ -154,7 +154,10 @@ export class ViewComponent implements OnInit {
       allowSearchFilter: true
     };
     // keep first item selected in madal
-    this.itemSelected = 'All Time'
+    var date = new Date()
+    this.itemSelected = 'This Month'
+    this.invoiceQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
+    this.invoiceQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   }
 
   duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
@@ -181,22 +184,18 @@ export class ViewComponent implements OnInit {
     if(this.itemSelected === 'This Week'){
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'Last Week'){
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastWeekLastsDay)))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'This Month'){
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.getFullYear(), curr.getMonth(), 1))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.getFullYear(), curr.getMonth() + 1, 0))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'Last Month'){
       this.invoiceQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
       this.invoiceQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
-      this.itemSelected = 'Custom'
     }
   }
 

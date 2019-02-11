@@ -181,22 +181,18 @@ export class ViewEstComponent implements OnInit {
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'Last Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
       this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastWeekLastsDay)))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'This Month'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.getFullYear(), curr.getMonth(), 1))
       this.estimateQueryForm.dateRange.end.reset(new Date(curr.getFullYear(), curr.getMonth() + 1, 0))
-      this.itemSelected = 'Custom'
     }
     if(this.itemSelected === 'Last Month'){
       this.estimateQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
       this.estimateQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
-      this.itemSelected = 'Custom'
     }
   }
 
@@ -278,8 +274,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList !== null)
-    {
+    if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }

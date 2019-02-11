@@ -191,8 +191,8 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px !important;"
-                          [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="{{settings.shipping}} Address"
-                          onfocus="this.select()"></textarea>
+                          [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="Shipping Address"
+                          onfocus="this.select()"></textarea><!--{{settings.shipping}} Address-->
                       </div>
                     </div>
 
@@ -275,8 +275,8 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_address_line.png">
-                          {{settings.shipping}} address:
+                          <img src="/assets/images/client-icon/ic_normal_address_line.png"><!--{{settings.shipping}} address:-->
+                          Shipping address:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeClient.shippingAddress}}
