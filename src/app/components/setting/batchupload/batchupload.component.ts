@@ -70,6 +70,8 @@ export class BatchuploadComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    //fetching clients
     this.clientListLoading = true
 
     if (this.clientList) {
@@ -85,7 +87,7 @@ export class BatchuploadComponent implements OnInit {
       this.clientListLoading = false
     }
 
-
+    //fetching products
     this.productListLoading = true
 
     if (this.productList) {

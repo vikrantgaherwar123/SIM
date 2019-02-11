@@ -158,12 +158,43 @@ export class ViewEstComponent implements OnInit {
   duration = ['All Time', 'This Week', 'This Month', 'Last Week', 'Last Month', 'Custom']
 
   showItem(item) {
+    var curr = new Date; 
+    var firstday = curr.getDate() - curr.getDay();
+    var lastday = firstday + 6;
+    var lastWeekFirstDay = firstday - 7;
+    var lastWeekLastsDay = firstday - 1;
+    var lastdayoflastmonth = new Date();
+    lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0);
+    var firstdayoflastmonth = new Date();
+    firstdayoflastmonth.setDate(1);
+    firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth() - 1);
+    
     this.itemSelected = item
-    if (this.itemSelected === 'Custom') {
-      // flag is set to enable and disable input fields
-      this.customEnableDate = true
-    } else {
-      this.customEnableDate = false
+    // if(this.itemSelected === 'Custom'){
+    //   // flag is set to enable and disable input fields
+    //   this.customEnableDate = true
+    // }else{
+    //   this.customEnableDate = false
+    // }
+    if(this.itemSelected === 'This Week'){
+      this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
+      this.itemSelected = 'Custom'
+    }
+    if(this.itemSelected === 'Last Week'){
+      this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastWeekLastsDay)))
+      this.itemSelected = 'Custom'
+    }
+    if(this.itemSelected === 'This Month'){
+      this.estimateQueryForm.dateRange.start.reset(new Date(curr.getFullYear(), curr.getMonth(), 1))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.getFullYear(), curr.getMonth() + 1, 0))
+      this.itemSelected = 'Custom'
+    }
+    if(this.itemSelected === 'Last Month'){
+      this.estimateQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
+      this.estimateQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
+      this.itemSelected = 'Custom'
     }
   }
 
