@@ -193,6 +193,14 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
+  changeTax(input){
+    if(input > 100){
+      alert("Tax amount must be under 100");
+      this.activeInvoice.tax_rate = 0;
+      this.activeInvoice.amount = this.activeInvoice.gross_amount;
+      this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
+  }
   
   addInit() {
     this.fetchCommonData()
