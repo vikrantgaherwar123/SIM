@@ -53,7 +53,7 @@
             <!-- Discount -->
             <div class="form-group pt-2">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">{{settings.discount}}</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18">{{settings.discount ? settings.discount : 'Discount'}} </label>
                 <div class="col-12 col-md-9 discountradio">
                   <input type="radio" id="discountonitem" name="discounton"
                     (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
@@ -61,7 +61,7 @@
                   <label for="discountonitem"
                     class="discountonitem fontsize13 border-right-none font-custom-bold" style="text-transform:uppercase"
                   >
-                  {{settings.discount}} ON ITEM
+                  {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
                   </label>
 
                   <input type="radio" id="discountonBill" name="discounton"
@@ -70,7 +70,7 @@
                   <label for="discountonBill"
                     class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="text-transform:uppercase"
                   >
-                  {{settings.discount}} ON BILL
+                  {{settings.discount ? settings.discount : 'Discount'}} ON BILL
                   </label>
 
                   <input type="radio" id="discountdisabled" name="discounton"
