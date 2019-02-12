@@ -9,14 +9,14 @@
         <div class="col-12 px-0" style="padding-bottom: 20px;padding-top: 10px;">
           <div class="row">
             <div class="col-7 font-custom-bold">
-              <h3 class="px-0 margin-top0"> {{settings.mTvTermsAndConditions}}</h3>
+              <h3 class="px-0 margin-top0"> {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}</h3>
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
                 class="save_btn btn-raised pull-right font-weight-bold" style="border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
-                Add {{settings.mTvTermsAndConditions}}
+                Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
               </button>
             </div>
           </div>
@@ -24,7 +24,7 @@
 
         <!-- Terms And Conditions List -->
         <div class="col-12 mb-1 mCustomScrollbar style-3">
-          <div class="row term-list-show" *ngFor="let term of tncs; let index = index; let last = last" id="term{{index}}">
+          <div class="row term-list-show" *ngFor="let term of tncs | orderBy:'-terms'; let index = index; let last = last" id="term{{index}}">
           <label class="check">
             <div class="col-1">
               <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'">
@@ -68,7 +68,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel1">
-          Add {{settings.mTvTermsAndConditions}}
+          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </h4>
         <a class="pull-right" (click)="close()" style="margin-top: 6px;">
           <img src="assets/images/cross16.png" alt="logo">
@@ -78,7 +78,7 @@
         <form name="addtermpopup" #addtermpopup="ngForm">
           <div class="col-12">
             <div class="form-group">
-              <textarea elastic name="term" class="form-control style-3" placeholder="Add term & Condition *"
+              <textarea elastic name="term" class="form-control style-3" placeholder="Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}} *"
                 [(ngModel)]="activeTnc.terms" style="height: 110px !important;" required onfocus="this.select()"
               ></textarea>
             </div>

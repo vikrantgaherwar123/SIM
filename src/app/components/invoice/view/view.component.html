@@ -66,10 +66,10 @@
                         <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
                       </li>
                       <li [class.active]="invSortTerm=='balance'">
-                        <a (click)="invSortTerm='balance'">By {{settings.balance}}</a>
+                        <a (click)="invSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
                       </li>
                       <li [class.active]="invSortTerm=='amount'">
-                        <a (click)="invSortTerm='amount'">By {{settings.mTvAmount}}</a>
+                        <a (click)="invSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
                       </li>
                     </ul>
                   </div>
@@ -83,7 +83,7 @@
             </div>
       
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-              <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice}}
+              <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
             </div>
   
             <div class="col-12 px-0 back mCustomScrollbar style-3">
@@ -161,7 +161,7 @@
             <!-- Title -->
             <div class="text-right px-1">
               <span class="c-name" type="text" id="title" name="title" *ngIf="settings.mTvInvoice">
-                {{settings.mTvInvoice}}
+                {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
               </span>
               <span class="c-name" type="text" id="titleelse" name="title" *ngIf="!settings.mTvInvoice">
                 {{'INV_LABEL' | translate}}
@@ -197,7 +197,7 @@
                       </div>
                       <div class="col-md-6 col-sm-6 col-xs-6">
                         <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
-                          {{settings.shipping}} Address
+                          {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                         </span>
                         <div class="address-render color_grey">{{activeInv.shipping_address}}</div>
                       </div>
@@ -208,7 +208,7 @@
               <div class="col-12 col-sm-5" id="invData" name="invData">
                 <div class="row">
                   <div class="offset-md-2 col-md-4 col-sm-6 ">
-                    <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice}}</span>
+                    <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} </span>
                   </div>
                   <div class="col-sm-6 color_grey">
                     {{ activeInv.invoice_number  }}
@@ -217,7 +217,7 @@
   
                 <div class="row">
                   <div class="offset-md-2 col-md-4 col-sm-6 ">
-                    <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice}} Date</span>
+                    <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} Date</span>
                   </div>
                   <div class="col-sm-6 color_grey">
                     {{activeInv.created_date}}
@@ -235,7 +235,7 @@
   
                 <div *ngIf="activeInv.due_date" class="row">
                   <div class="offset-md-2 col-xs-6 col-md-4">
-                    <span class="font-custom-bold text-left w-100">{{settings.mTvDueDate}}</span>
+                    <span class="font-custom-bold text-left w-100">{{settings.mTvDueDate ? settings.mTvDueDate : 'Due Date'}}</span>
                   </div>
                   <div class="col-sm-6 color_grey">
                     {{activeInv.due_date}}
@@ -269,7 +269,7 @@
                         <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
                       </td>
                       <td width="10%" *ngIf="activeInv.discount_on_item == 1">
-                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="{{settings.discount}} (%)"
+                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
                       </td>

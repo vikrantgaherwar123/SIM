@@ -11,7 +11,7 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
-              class="payment-detail-input" placeholder="{{settings.payableTo}}" onfocus="this.select()"
+              class="payment-detail-input" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
               style="width: 300px;
                 padding: 0px;
                 margin: 13px 0 0 0;
@@ -25,19 +25,19 @@
           </div>
 
           <div class="col-12" style="margin-bottom: 5px;">
-            <span class="font-custom-bold fontsize12" style="margin-left: -200px">{{settings.bankingDetails}}</span>
+            <span class="font-custom-bold fontsize12" style="margin-left: -200px">{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}</span>
           </div>
 
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
               <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control mCustomScrollbar style-3"
-                placeholder="{{settings.bankingDetails}}" style="height: auto !important;" onfocus="this.select()"
+                placeholder="{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}" style="height: auto !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
 
           <div class="col-12" style="margin-bottom: 5px;">
-            <span class="font-custom-bold fontsize12" style="margin-left: -212px">{{settings.otherDetails}}</span>
+            <span class="font-custom-bold fontsize12" style="margin-left: -212px">{{settings.otherDetails ? settings.otherDetails : 'Other Details'}}</span>
           </div>
 
           <div class="col-12" style="margin-bottom: 10px;">

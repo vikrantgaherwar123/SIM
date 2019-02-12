@@ -145,10 +145,10 @@
                       <a (click)="estSortTerm='quetationNo'">By Est No.</a>
                     </li>
                     <li [class.active]="estSortTerm=='balance'">
-                      <a (click)="estSortTerm='balance'">By Balance</a>
+                      <a (click)="estSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
                     </li>
                     <li [class.active]="estSortTerm=='amount'">
-                      <a (click)="estSortTerm='amount'">By {{settings.mTvAmount}}</a>
+                      <a (click)="estSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
                     </li>
                   </ul>
                 </div>
@@ -156,13 +156,13 @@
             </div>
             <div class="col-12 search-box">
               <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search estimates" />
+                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}}" />
               </div>
             </div>
           </div>
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.Estimate}}
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvAmount ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
           </div>
           <div *ngIf="estimateList.length < 1" class="no-data-messsage">
               <img src="assets/images/no_data_found.png"  style="width: 324px;">
@@ -237,7 +237,7 @@
           <!-- Title -->
           <div class="text-right w-100 px-1">
             <span class="c-name" type="text" id="title" name="title">
-              {{settings.mTvEstimate ? settings.mTvEstimate : 'INV_LABEL' | translate}}
+              {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
             </span>
           </div>
 
@@ -247,7 +247,7 @@
               <div class="row">
                 <div class="col-12" style="width: 88%;">
                   <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
-                    {{settings.mTvBillTo}}
+                    {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}} 
                   </span>
                   <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
                     {{activeClient.name}}
@@ -269,7 +269,7 @@
                 </div>
                 <div class="col-6">
                   <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
-                    {{settings.shipping}} Address
+                    {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                   </span>
                   <div class="address-render">{{activeEst.shippingAddress}}</div>
                 </div>
@@ -279,7 +279,7 @@
             <div class="col-12 col-sm-5" id="estData" name="estData">
               <div class="row">
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">Estimate#</span>
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No</span>
                 </div>
                 <div class="col-sm-6">
                   {{ activeEst.quetationNo }}
@@ -288,7 +288,7 @@
 
               <div class="row">
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">Estimate Date</span>
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                 </div>
                 <div *ngIf="dateDDMMYY" class="col-sm-6">
                   {{activeEst.createDate | date:"dd/MM/yyyy"}}
@@ -320,7 +320,7 @@
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
                     <td width="17%" *ngIf="activeEst.assignDiscountFlag == 1">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount}} (%)" disabled>
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -410,7 +410,7 @@
               <!-- Discount -->
               <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
                 <div class="col-5 discount-tax-label">
-                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
+                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
                     ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
                     slice:0:1}})
@@ -473,7 +473,7 @@
               <div class="row mx-0" *ngIf="activeEst.adjustment > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
-                    {{settings.adjustment}}
+                    {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                   </div>
                 </div>
                 <div class="col-8">

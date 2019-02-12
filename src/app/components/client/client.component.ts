@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core'
 import { ClientService } from '../../services/client.service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
+
 import { client, response } from '../../interface'
 import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
-import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client',
@@ -20,9 +20,9 @@ export class ClientComponent implements OnInit {
     user: {
       orgId: string
     }
-    
   }
   clientList: client[]
+
   private activeClient = <client>{}
   private errors: object = {}
   clientListLoading: boolean = false
@@ -35,35 +35,31 @@ export class ClientComponent implements OnInit {
   editMode: boolean = false
   viewMode: boolean = false
   deleteclient:boolean = false
-  settings: any;
 
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
-    private titleService: Title,
     private router: Router, private store: Store<AppState>
   ) {
     this.toasterService = toasterService; 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-    
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Simple Invoice | Client');
     this.clientListLoading = true
 
-    if (this.clientList) {
+    if(this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(cli => cli.enabled == 0)
-
+          
         }
       })
     } else {
       this.clientListLoading = false
-    }   
+     }   
   }
 
   save(status, edit) {
@@ -85,10 +81,6 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          // client will be removed if he has no name
-          if(!this.clientList[p].name){
-            this.clientList.splice(p,1);
-          }
           tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
@@ -170,10 +162,12 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
-      if(!proStatus){
+      if(!proStatus) 
+      {
         this.toasterService.pop('failure', 'Client name already exists.');
-      }  
-    }
+      }
+      
+          }
   }
   openDeleteClientModal() {
     this.deleteclient = true
