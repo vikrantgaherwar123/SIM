@@ -758,7 +758,6 @@ export class AddEditComponent implements OnInit {
 
   saveProduct(add_product, callback: Function = null) {
     var d = new Date()
-
     var product = {
       device_modified_on: d.getTime(),
       discription: add_product.description ? add_product.description : '',
@@ -808,10 +807,28 @@ export class AddEditComponent implements OnInit {
     this.calculateTotal()
   }
 
+  addInvoiceItem(addItem){
+
+    if(addItem.value){
+      var product = {
+        // device_modified_on: d.getTime(),
+        // discription: this.activeItem.description ? this.activeItem.description : '',
+        // organization_id: this.user.user.orgId,
+        // prod_name: add_product.value,
+        // rate: this.activeItem.rate ? this.activeItem.rate : 0,
+        // tax_rate: this.activeItem.tax_rate ? this.activeItem.tax_rate : 0,
+        // unique_identifier: add_product.unique_identifier ? add_product.unique_identifier : generateUUID(this.user.user.orgId),
+        // unit: add_product.unit ? add_product.unit : ""
+      }
+    }
+
+  }
+
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-
+    console.log(this.addItem);
+    
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
@@ -840,7 +857,8 @@ export class AddEditComponent implements OnInit {
       }
       this.calculateInvoice()
     }
-    } else if(this.activeItem.product_name !== undefined) {
+    } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0  ) {
+      // this.activeItem.product_name = this.addItem.value;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)

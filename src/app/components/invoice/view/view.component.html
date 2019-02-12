@@ -176,7 +176,7 @@
                     <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                       {{settings.mTvBillTo}}
                     </span>
-                    <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
+                    <div *ngIf="activeClient.name" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
                       {{activeClient.name}}
                     </div>
                   </div>
@@ -286,7 +286,7 @@
                       <td [class.no-border-last]="last">
                         <div class="">
                           <div class="form-group">
-                            <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                            <div *ngIf="item.productName" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
                               {{item.productName}}
                             </div>
                             <div class="text-left text-truncate view_desc" >
@@ -399,7 +399,7 @@
                 <!-- TaxList -->
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                      <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                       <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
                   </div>
                   <div class="col-8 ">
