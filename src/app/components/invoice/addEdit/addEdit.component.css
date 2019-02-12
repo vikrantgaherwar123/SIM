@@ -115,5 +115,12 @@ select {
   margin-top: 6px;
   margin-left: -4px;
 }
+.box-red{
+  border: 1px solid red;
+}
+
+.box-grey{
+  border: 1px solid #ced4da;
+}
 
 

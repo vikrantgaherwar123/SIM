@@ -26,7 +26,7 @@
 
                         <div class="input-group pl-0 inputWithIcon">
                           <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box-red': noClientSelected ===true }"
                           >
                           <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
                           <span *ngIf="disableIcon === true" class="downArrowIcon">
@@ -317,7 +317,7 @@
                             <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
-                            <span *ngIf="ifProductEmpty === true" class="fa fa-info-circle errspan help-block"></span>
+                            <span *ngIf="ifProductEmpty === true && addItem !==null" class="fa fa-info-circle errspan help-block"></span>
 
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" class="mCustomScrollbar style-3"
                               (optionSelected)="fillItemDetails()"
@@ -327,7 +327,7 @@
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;min-height: 60px; max-height: 80px; height: 73px;"
-                                *ngIf="modalDescription === true"
+                                
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
@@ -391,7 +391,8 @@
                         </td>
                         <td style="vertical-align: top; position: relative !important;" 
                         [class.no-border-last]="last">
-                            <img (click)="disableProductText=false;activeInvoice.listItems=undefined;" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                          <img (click)="disableProductText=false;" 
+                          Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;"><!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
                       <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="addEditInvoiceItem();disableProductText=true;ifProductEmpty=false">

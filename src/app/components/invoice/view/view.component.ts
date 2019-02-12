@@ -161,6 +161,12 @@ export class ViewComponent implements OnInit {
 
   duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
 
+  //to make custom as selsected item when user changes date from calender
+  public onDate(event): void {
+    if(this.invoiceQueryForm.dateRange.start.value || this.invoiceQueryForm.dateRange.end.value !== event.value){
+      this.itemSelected = 'Custom'
+    }
+  }
   showItem(item){
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();

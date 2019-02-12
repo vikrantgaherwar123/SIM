@@ -92,6 +92,7 @@ export class AddEditComponent implements OnInit {
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
+  noClientSelected: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -598,6 +599,7 @@ export class AddEditComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
+      console.log(this.filteredClients);
     }
     else {
 
@@ -688,6 +690,7 @@ export class AddEditComponent implements OnInit {
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
           // this.selectedClientChange(this.activeClient);
+          window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -778,6 +781,8 @@ export class AddEditComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product had been added!');
+        // window will refresh when product added successfully to see that product in a list
+        window.location.reload(true);
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -805,23 +810,6 @@ export class AddEditComponent implements OnInit {
       discount: 0.00
     }
     this.calculateTotal()
-  }
-
-  addInvoiceItem(addItem){
-
-    if(addItem.value){
-      var product = {
-        // device_modified_on: d.getTime(),
-        // discription: this.activeItem.description ? this.activeItem.description : '',
-        // organization_id: this.user.user.orgId,
-        // prod_name: add_product.value,
-        // rate: this.activeItem.rate ? this.activeItem.rate : 0,
-        // tax_rate: this.activeItem.tax_rate ? this.activeItem.tax_rate : 0,
-        // unique_identifier: add_product.unique_identifier ? add_product.unique_identifier : generateUUID(this.user.user.orgId),
-        // unit: add_product.unit ? add_product.unit : ""
-      }
-    }
-
   }
 
   addEditInvoiceItem(uid = null) {
@@ -859,6 +847,7 @@ export class AddEditComponent implements OnInit {
     }
     } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0  ) {
       // this.activeItem.product_name = this.addItem.value;
+      this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
@@ -1080,6 +1069,7 @@ export class AddEditComponent implements OnInit {
       additions += (this.activeInvoice.gross_amount - deductions) * (
         this.activeInvoice.tax_rate / 100
       )
+      this.activeInvoice.tax_amount = additions
     }
 
     // Multiple Taxes
@@ -1097,7 +1087,7 @@ export class AddEditComponent implements OnInit {
       }
       additions += temp_tax_amount
     }
-    this.activeInvoice.tax_amount = additions
+    // this.activeInvoice.tax_amount = additions
 
     // Shipping
     if (isNaN(this.activeInvoice.shipping_charges)) {
@@ -1127,7 +1117,8 @@ export class AddEditComponent implements OnInit {
   save(status) {
     if(!this.activeInvoice.unique_key_fk_client) {
       this.toasterService.pop('Failure', 'Client Not Selected');
-      $('#bill-to-input').select()
+      this.noClientSelected = true;
+      // $('#bill-to-input').select()
       return false
     }
 

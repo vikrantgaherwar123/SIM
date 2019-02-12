@@ -554,6 +554,7 @@ export class AddEditEstComponent implements OnInit {
           this.clientListLoading = false
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
+          window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
