@@ -395,7 +395,7 @@
                           Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;"><!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
-                      <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="addEditInvoiceItem();disableProductText=true;ifProductEmpty=false">
+                      <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="disableProductText=true;ifProductEmpty=false">
                         Add Item
                       </button>
                     </tbody>
@@ -728,7 +728,7 @@
 
                     <!-- Payment and Save buttons -->
                     <div class="col-12 px-0 mt-2">
-                      <button type="button" title="ADD PAYMENT"
+                      <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
                         class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold" style="width: 134px;"
                         (click)="openAddPaymentModal()"
                       >

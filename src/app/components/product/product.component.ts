@@ -74,11 +74,13 @@ export class ProductComponent implements OnInit {
     var proStatus = true
 
     // If adding or editing product, make sure product with same name doesnt exist
-    if(!this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+    if(this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {
+        if(this.productList[p].prodName){
         tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+        }
         // If Name is same,
         if (tempCompare === tempProName) {
           // Case 1: Edit mode -> diff uniqueKey
@@ -92,6 +94,8 @@ export class ProductComponent implements OnInit {
             proStatus = false
             break
           }
+        }else{
+          var proStatus = true
         }
       }
       this.repeatativeProductName = ''

@@ -172,27 +172,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-    if(this.termList.length < 1){
-      this.termConditionService.fetch().subscribe((response: response) => {
-         //console.log(response)
-        if (response.termsAndConditionList) {
-          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-        }
-        this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
-      this.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-    }
-    
-    for (let i = 0; i < this.productList.length; i++) {
-      if (this.productList[i].prodName == "") {
-        var product = this.productList[i];
-        var index = this.productList.indexOf(product)
-        if (index > -1) {
-          this.productList.splice(index, 1);
-        }
-      }
-    }
-  }
+}
 
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -555,15 +535,13 @@ export class AddEditComponent implements OnInit {
 
     // Fetch Terms if not in store
     if(this.termList.length < 1 && !this.edit) {
-      self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-
-      // this.termConditionService.fetch().subscribe((response: response) => {
-      //    //console.log(response)
-      //   if (response.termsAndConditionList) {
-      //     this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-      //   }
-      //   self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      // })
+      this.termConditionService.fetch().subscribe((response: response) => {
+         //console.log(response)
+        if (response.termsAndConditionList) {
+          this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        }
+        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      })
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
@@ -632,6 +610,7 @@ export class AddEditComponent implements OnInit {
   }
 
   selectedClientChange(client) {
+    this.noClientSelected = false; // to remove red box
     var temp
     temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
@@ -743,6 +722,21 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.productList = uniqueProducts;
+          // var list = []
+          // for (let i = 0; i < this.productList.length; i++) {
+          //   var tempProduct = this.productList[i].prodName;
+          //   if (this.productList[i].prodName == tempProduct) {
+              
+          //     list.push(tempProduct)
+          //     var product = this.productList[i];
+          //     var index = this.productList.indexOf(product)
+          //     if (index > -1) {
+          //       this.productList.splice(index, 1);
+          //     }
+          //   }
+          // }
+          // console.log(list);
+          
 
           
         this.filteredProducts = this.addItem.valueChanges.pipe(
@@ -826,7 +820,8 @@ export class AddEditComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem.product_name !== undefined && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+    if(this.activeItem){
+    if(this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
       this.activeItem.rate !==null ){
     if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
@@ -845,7 +840,7 @@ export class AddEditComponent implements OnInit {
       }
       this.calculateInvoice()
     }
-    } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0  ) {
+    } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
       // this.activeItem.product_name = this.addItem.value;
       this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
@@ -860,6 +855,14 @@ export class AddEditComponent implements OnInit {
       })
     }
   }
+  }
+
+  // clearItem(){
+  //   this.activeItem.total = 0;
+  //   this.activeItem.rate = 0;
+  //   this.activeItem.discount = 0;
+  //   this.activeItem.tax_rate = 0;
+  // }
 
   closeItemModel() {
     this.modalDescription = true;

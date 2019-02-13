@@ -395,7 +395,7 @@ export class AddEditEstComponent implements OnInit {
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
           console.log(client);
-          if(client.shippingAddress){
+          if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
           }
@@ -610,9 +610,9 @@ export class AddEditEstComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+    if(this.activeItem.quantity !==null && this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.rate !== 0 &&
        this.activeItem.rate !==null ){
-    if (this.activeItem.unique_identifier && this.activeEstimate.listItems!==undefined || this.activeEstimate.listItems.length != 0) {
+    if (this.activeItem.unique_identifier  ||  this.activeEstimate.listItems.length != 0) { //&&
       if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
@@ -630,7 +630,7 @@ export class AddEditEstComponent implements OnInit {
       this.calculateEstimate()
    }
    } 
-   else {
+   else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
         this.fillItemDetails({ ...this.activeItem, ...product })
         this.activeEstimate.listItems.push(this.activeItem)
@@ -667,6 +667,7 @@ export class AddEditEstComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product has been added')
+        window.location.reload(true);
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }

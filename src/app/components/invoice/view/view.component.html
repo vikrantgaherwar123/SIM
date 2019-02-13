@@ -7,7 +7,7 @@
               <span>Showing results for:</span> <img src="assets/images/client.png" 
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
-                <span>
+                <span *ngIf="invoiceQueryForm.client.value">
                     {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
                     <span *ngIf="invoiceQueryForm.client.value?.length > 1"
                       [title]="getNames()"
@@ -176,7 +176,7 @@
                     <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                       {{settings.mTvBillTo}}
                     </span>
-                    <div *ngIf="activeClient.name" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
+                    <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
                       {{activeClient.name}}
                     </div>
                   </div>
@@ -286,7 +286,7 @@
                       <td [class.no-border-last]="last">
                         <div class="">
                           <div class="form-group">
-                            <div *ngIf="item.productName" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                            <div *ngIf="item" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
                               {{item.productName}}
                             </div>
                             <div class="text-left text-truncate view_desc" >
