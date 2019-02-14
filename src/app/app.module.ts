@@ -47,9 +47,11 @@ import { PasswordComponent } from './components/setting/password/password.compon
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import {ProgressBarModule} from "angular-progress-bar"
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
+import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
@@ -97,8 +99,10 @@ export function getAuthServiceConfigs() {
     UserProfileComponent,
     BatchuploadComponent,
     SupportComponent,
+    LoadalldataComponent,
   ],
   imports: [
+    ProgressBarModule,
     BrowserModule,
     HttpModule,
     SocialLoginModule,

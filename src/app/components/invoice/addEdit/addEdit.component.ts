@@ -93,6 +93,7 @@ export class AddEditComponent implements OnInit {
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
+  noClientSelected: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -172,18 +173,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-
-    
-    for (let i = 0; i < this.productList.length; i++) {
-      if (this.productList[i].prodName == "") {
-        var product = this.productList[i];
-        var index = this.productList.indexOf(product)
-        if (index > -1) {
-          this.productList.splice(index, 1);
-        }
-      }
-    }
-  }
+}
 
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -430,15 +420,6 @@ export class AddEditComponent implements OnInit {
       return false
     })
   }
-  // week() {
-  //   var current = new Date();     // get current date    
-  //   var weekstart = current.getDate() - current.getDay() + 1;
-  //   var weekend = weekstart + 6;       // end day is the first day + 6 
-  //   var monday = new Date(current.setDate(weekstart));
-  //   var sunday = new Date(current.setDate(weekend));
-  //   console.log(monday,sunday);
-    
-  // }
 
   commonSettingsInit() {
     this.invoiceDate.valueChanges.subscribe(value => {
@@ -526,9 +507,10 @@ export class AddEditComponent implements OnInit {
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
-        } else {
-          this.setProductFilter()
-        }
+        } 
+        // else {
+        //   this.setProductFilter()
+        // }
       })
     } else {
       this.setProductFilter()
@@ -604,6 +586,7 @@ export class AddEditComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
+      console.log(this.filteredClients);
     }
     else {
 
@@ -636,6 +619,7 @@ export class AddEditComponent implements OnInit {
   }
 
   selectedClientChange(client) {
+    this.noClientSelected = false; // to remove red box
     var temp
     temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
@@ -655,9 +639,11 @@ export class AddEditComponent implements OnInit {
   }
 
   openAddClientModal(name) {
-    this.openClientModal = true
     this.addClientModal = {}
-    this.addClientModal.name = name
+    this.addClientModal.name = this.billingTo.value;
+    this.openClientModal = true
+    
+    // this.addClientModal.name = name
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()
@@ -692,6 +678,7 @@ export class AddEditComponent implements OnInit {
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
           // this.selectedClientChange(this.activeClient);
+          window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -721,6 +708,15 @@ export class AddEditComponent implements OnInit {
     //     }
     //   }
     // }
+    // function removeDups(names) {
+    //   let unique = {};
+    //   names.forEach(function(i) {
+    //     if(!unique[i]) {
+    //       unique[i] = true;
+    //     }
+    //   });
+    //   return Object.keys(unique);
+    // }
     
       if (this.productList) {
         // filter productlist to avoid duplicates
@@ -735,6 +731,21 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.productList = uniqueProducts;
+          // var list = []
+          // for (let i = 0; i < this.productList.length; i++) {
+          //   var tempProduct = this.productList[i].prodName;
+          //   if (this.productList[i].prodName == tempProduct) {
+              
+          //     list.push(tempProduct)
+          //     var product = this.productList[i];
+          //     var index = this.productList.indexOf(product)
+          //     if (index > -1) {
+          //       this.productList.splice(index, 1);
+          //     }
+          //   }
+          // }
+          // console.log(list);
+          
 
           
         this.filteredProducts = this.addItem.valueChanges.pipe(
@@ -753,7 +764,6 @@ export class AddEditComponent implements OnInit {
 
   saveProduct(add_product, callback: Function = null) {
     var d = new Date()
-
     var product = {
       device_modified_on: d.getTime(),
       discription: add_product.description ? add_product.description : '',
@@ -774,6 +784,8 @@ export class AddEditComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product had been added!');
+        // window will refresh when product added successfully to see that product in a list
+        window.location.reload(true);
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -806,7 +818,8 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-
+    console.log(this.addItem);
+    
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
@@ -816,7 +829,8 @@ export class AddEditComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem.product_name !== undefined && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+    if(this.activeItem){
+    if(this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
       this.activeItem.rate !==null ){
     if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
@@ -835,7 +849,9 @@ export class AddEditComponent implements OnInit {
       }
       this.calculateInvoice()
     }
-    } else if(this.activeItem.product_name !== undefined) {
+    } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
+      // this.activeItem.product_name = this.addItem.value;
+      this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
@@ -848,6 +864,14 @@ export class AddEditComponent implements OnInit {
       })
     }
   }
+  }
+
+  // clearItem(){
+  //   this.activeItem.total = 0;
+  //   this.activeItem.rate = 0;
+  //   this.activeItem.discount = 0;
+  //   this.activeItem.tax_rate = 0;
+  // }
 
   closeItemModel() {
     this.modalDescription = true;
@@ -1058,6 +1082,7 @@ export class AddEditComponent implements OnInit {
       additions += (this.activeInvoice.gross_amount - deductions) * (
         this.activeInvoice.tax_rate / 100
       )
+      this.activeInvoice.tax_amount = additions
     }
 
     // Multiple Taxes
@@ -1075,7 +1100,7 @@ export class AddEditComponent implements OnInit {
       }
       additions += temp_tax_amount
     }
-    this.activeInvoice.tax_amount = additions
+    // this.activeInvoice.tax_amount = additions
 
     // Shipping
     if (isNaN(this.activeInvoice.shipping_charges)) {
@@ -1105,7 +1130,8 @@ export class AddEditComponent implements OnInit {
   save(status) {
     if(!this.activeInvoice.unique_key_fk_client) {
       this.toasterService.pop('Failure', 'Client Not Selected');
-      $('#bill-to-input').select()
+      this.noClientSelected = true;
+      // $('#bill-to-input').select()
       return false
     }
 

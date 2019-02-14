@@ -206,8 +206,9 @@ export class AddEditEstComponent implements OnInit {
               description: this.activeEstimate.listItems[i].description,
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
+              discount: this.activeEstimate.listItems[i].discountAmt,
               rate: this.activeEstimate.listItems[i].rate,
-              tax_rate: this.activeEstimate.listItems[i].tax_rate,
+              tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
               unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
               unit: this.activeEstimate.listItems[i].unit
@@ -318,7 +319,7 @@ export class AddEditEstComponent implements OnInit {
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeEstimate.tax_on_item = 0
+        this.activeEstimate.tax_on_item = 2
       }
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
@@ -393,7 +394,7 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = response.records.filter(recs => recs.enabled == 0)
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
-          // console.log(client);
+          console.log(client);
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
@@ -511,7 +512,7 @@ export class AddEditEstComponent implements OnInit {
   openAddClientModal(name) {
     this.openClientModal = true
     this.addClientModal = {}
-    this.addClientModal.name = name
+    this.addClientModal.name = this.billingTo.value;
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()
@@ -553,6 +554,7 @@ export class AddEditEstComponent implements OnInit {
           this.clientListLoading = false
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
+          window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -608,9 +610,9 @@ export class AddEditEstComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+    if(this.activeItem.quantity !==null && this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.rate !== 0 &&
        this.activeItem.rate !==null ){
-    if (this.activeItem.unique_identifier && this.activeEstimate.listItems!==undefined || this.activeEstimate.listItems.length != 0) {
+    if (this.activeItem.unique_identifier  ||  this.activeEstimate.listItems.length != 0) { //&&
       if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
@@ -628,7 +630,7 @@ export class AddEditEstComponent implements OnInit {
       this.calculateEstimate()
    }
    } 
-   else {
+   else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
         this.fillItemDetails({ ...this.activeItem, ...product })
         this.activeEstimate.listItems.push(this.activeItem)
@@ -665,6 +667,7 @@ export class AddEditEstComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product has been added')
+        window.location.reload(true);
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }

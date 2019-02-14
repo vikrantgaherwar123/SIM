@@ -7,7 +7,7 @@
               <span>Showing results for:</span> <img src="assets/images/client.png" 
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
-                <span>
+                <span *ngIf="invoiceQueryForm.client.value">
                     {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
                     <span *ngIf="invoiceQueryForm.client.value?.length > 1"
                       [title]="getNames()"
@@ -87,9 +87,9 @@
             </div>
   
             <div class="col-12 px-0 back mCustomScrollbar style-3">
-              <div *ngIf="invListLoader">
+              <!-- <div *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-              </div>
+              </div> -->
                 <!-- [class.active]=" invoice.created_date " -->
               <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
                 *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true:true | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
@@ -176,7 +176,7 @@
                     <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                      {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}}
                     </span>
-                    <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
+                    <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
                       {{activeClient.name}}
                     </div>
                   </div>
@@ -286,7 +286,7 @@
                       <td [class.no-border-last]="last">
                         <div class="">
                           <div class="form-group">
-                            <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                            <div *ngIf="item" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
                               {{item.productName}}
                             </div>
                             <div class="text-left text-truncate view_desc" >
@@ -399,7 +399,7 @@
                 <!-- TaxList -->
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                      <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
                       <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
                   </div>
                   <div class="col-8 ">
@@ -537,10 +537,10 @@
             <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
-              (click)="picker3.open()" 
+              (click)="picker3.open()"  (dateChange)="onDate($event)"
             >
-            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
-            <mat-datepicker #picker3></mat-datepicker>
+            <mat-datepicker-toggle  matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker3 ></mat-datepicker>
           </div>
           <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;"><!-- [ngClass]="{disabledDiv: !customEnableDate}"-->
             <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
@@ -579,7 +579,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+          <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>
           </button>

@@ -26,7 +26,7 @@
 
                         <div class="input-group pl-0 inputWithIcon">
                           <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
                             <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
@@ -321,7 +321,7 @@
                             <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
-                            <span *ngIf="ifProductEmpty === true" class="fa fa-info-circle errspan help-block"></span>
+                            <span *ngIf="ifProductEmpty === true && addItem !==null" class="fa fa-info-circle errspan help-block"></span>
 
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" class="mCustomScrollbar style-3"
                               (optionSelected)="fillItemDetails()"
@@ -394,11 +394,12 @@
                         </td>
                         <td style="vertical-align: top; position: relative !important;" 
                         [class.no-border-last]="last">
-                            <img (click)="disableProductText=false;activeInvoice.listItems=undefined;" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                          <img (click)="disableProductText=false;" 
+                          Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;"><!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
-                      <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="addEditInvoiceItem()"
-                      (click)="disableProductText=true;ifProductEmpty=false" >Add Item
+                      <button *ngIf="disableProductText === false" type="button"  class="small_btn btnd add-line-item-button" (click)="disableProductText=true;ifProductEmpty=false">
+                        Add Item
                       </button>
                     </tbody>
                   </table>
@@ -731,7 +732,7 @@
 
                     <!-- Payment and Save buttons -->
                     <div class="col-12 px-0 mt-2">
-                      <button type="button" title="ADD PAYMENT"
+                      <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
                         class="btn btnd btn-custom-1 btn-raised pull-left font-weight-bold" style="width: 134px;"
                         (click)="openAddPaymentModal()"
                       >

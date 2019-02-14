@@ -93,7 +93,7 @@ export class BatchuploadComponent implements OnInit {
       this.clientListLoading = false
     }
 
-
+    //fetching products
     this.productListLoading = true
 
     if (this.productList) {
@@ -382,7 +382,9 @@ export class BatchuploadComponent implements OnInit {
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
+            if(this.productList[p].prodName){
             tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+            }
             // If Name is same,
             if (tempCompare === tempProName) {
               // Case 1: Edit mode -> diff uniqueKey
@@ -396,6 +398,8 @@ export class BatchuploadComponent implements OnInit {
                 proStatus = false
                 break
               }
+            }else{
+              var proStatus = true
             }
           }
           this.repeatativeProductName = ''

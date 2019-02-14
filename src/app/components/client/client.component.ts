@@ -21,7 +21,7 @@ export class ClientComponent implements OnInit {
     user: {
       orgId: string
     }
-    setting: any
+    setting:any
   }
   clientList: client[]
 
@@ -47,7 +47,7 @@ export class ClientComponent implements OnInit {
     this.toasterService = toasterService; 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-    this.settings = this.user.setting
+    this.settings = this.user.setting;
   }
 
   ngOnInit() {

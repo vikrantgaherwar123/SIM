@@ -18,9 +18,11 @@ import { PasswordComponent } from './components/setting/password/password.compon
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
+import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
+
 
 const routes: Routes = [
-  { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
+  { path: '', redirectTo: '/load', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
@@ -28,6 +30,7 @@ const routes: Routes = [
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
   { path: 'invoice', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
+  { path: 'load', component: LoadalldataComponent, canActivate: [AuthGuard] },
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/add/:estId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },
