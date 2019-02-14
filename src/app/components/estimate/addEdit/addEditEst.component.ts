@@ -194,7 +194,7 @@ export class AddEditEstComponent implements OnInit {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
         this.shippingAddressEditMode = true
-        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
         if (!this.activeEstimate.taxList)
           this.activeEstimate.taxList = [];
 

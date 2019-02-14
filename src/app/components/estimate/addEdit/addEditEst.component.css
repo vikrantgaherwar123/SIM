@@ -8,3 +8,6 @@
 {
   color: #aaaaaa;
 }
+.hide_dropdown {
+  display :none;
+}

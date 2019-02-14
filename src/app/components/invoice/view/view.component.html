@@ -174,7 +174,7 @@
                 <div class="row">
                   <div class="col-12" style="width: 88%;">
                     <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
-                      {{settings.mTvBillTo}}
+                     {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}}
                     </span>
                     <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
                       {{activeClient.name}}
@@ -229,7 +229,7 @@
                     <span class="font-custom-bold text-left w-100">Reference</span>
                   </div>
                   <div class="col-sm-6 color_grey">
-                    {{activeInv.reference}}
+                   <span style="word-wrap: break-word"> {{activeInv.reference}}</span>
                   </div>
                 </div>
   
@@ -365,7 +365,7 @@
                 <!-- Discount -->
                 <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
                   <div class="col-5 discount-tax-label">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
+                    <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                     <div *ngIf="!isRate" class="inline font-custom">
                       ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
                     </div>
@@ -412,7 +412,7 @@
                 <!-- Shipping -->
                 <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping}}</div>
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
@@ -425,7 +425,7 @@
                 <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
                     <div class="inline" style="text-align: left; vertical-align: bottom;">
-                      {{settings.adjustment}}
+                        {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                     </div>
                   </div>
                   <div class="col-8">
@@ -566,7 +566,7 @@
         
                     <input type="radio" id="taxonBill" name="taxon">
                     <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                     {{settings.paid}} Invoices
+                        {{settings.paid ? settings.paid : 'Paid'}}
                     </label>
         
                     <input type="radio" id="taxdisabled" name="taxon">

@@ -13,6 +13,9 @@ import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import * as XLSX from 'xlsx';
 import { empty } from 'rxjs';
+import { IfStmt } from '@angular/compiler';
+import { Title }     from '@angular/platform-browser';
+
 @Component({
   selector: 'app-batchupload',
   templateUrl: './batchupload.component.html',
@@ -63,6 +66,7 @@ export class BatchuploadComponent implements OnInit {
   constructor(private productService: ProductService,
     public clientService: ClientService,
     public toasterService: ToasterService,
+    private titleService: Title,
     private router: Router, private store: Store<AppState>) {
 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
@@ -74,10 +78,8 @@ export class BatchuploadComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    //fetching clients
+    this.titleService.setTitle('Simple Invoice | Batch Upload');
     this.clientListLoading = true
-
     if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
@@ -108,6 +110,12 @@ export class BatchuploadComponent implements OnInit {
   }
 
   Upload() {
+    // if(this.worksheet1.A1.v === ' '){
+    //   console.log('remove spaces');
+    // }
+    // else{
+      
+    // }
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -118,42 +126,136 @@ export class BatchuploadComponent implements OnInit {
       var workbook = XLSX.read(bstr, { type: "binary" });
       var first_sheet_name = workbook.SheetNames[0];
       var second_sheet_name = workbook.SheetNames[1];
+      var temp = [];
+      temp.push(workbook.Sheets.Sheet1);
+      console.log(temp);
+      
       this.worksheet1 = workbook.Sheets[first_sheet_name];
 
       //get name of client
       this.OrgName = this.worksheet1.A1.v;
+      if(this.OrgName === undefined){
+        this.toasterService.pop('Failure', 'Org Name Required !!!');
+      }
       var clientName = this.OrgName.replace(/\s/g, "").toLowerCase();
       //get name of product
       this.prodName = this.worksheet1.A1.v;
       var productName = this.prodName.replace(/\s/g, "").toLowerCase();
+      
 
       if (clientName === "organizationname*") {
         this.showClientsTable = true;
         this.showProductsTable = false;
         //get address of header
-        this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
-        this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
-        this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
-        this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "addressLine2"
-        this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "addressLine3"
-        this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "businessId"
-        this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w = "businessDetail"
-        this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w = "number"
-        this.worksheet1.I1.v = this.worksheet1.I1.h = this.worksheet1.I1.w = "email"
-        this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w = "shippingAddress"
+        if(this.worksheet1.A1 === undefined){
+          this.worksheet1.A1 = "name";
+        }
+        else{
+          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
+        }
+
+        if(this.worksheet1.B1 === undefined){
+          this.worksheet1.B1 = "contactPersonName";
+        }
+        else{
+          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "contactPersonName"
+        }
+        if(this.worksheet1.C1 === undefined){
+          this.worksheet1.C1 = "addressLine1";
+        }
+        else{
+          this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "addressLine1"
+        }
+        if(this.worksheet1.D1 === undefined){
+          this.worksheet1.D1 = "addressLine2";
+        }
+        else{
+          this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "addressLine2"
+        }
+        if(this.worksheet1.E1 === undefined){
+          this.worksheet1.E1 = "addressLine3";
+        }
+        else{
+          this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "addressLine3"
+        }
+        if(this.worksheet1.F1 === undefined){
+          this.worksheet1.F1 = "businessId";
+        }
+        else{
+          this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "businessId"
+        }
+        if(this.worksheet1.G1 === undefined){
+          this.worksheet1.G1 = "businessDetail";
+        }
+        else{
+          this.worksheet1.G1.v = this.worksheet1.G1.h = this.worksheet1.G1.w = "businessDetail"
+        }
+        if(this.worksheet1.H1 === undefined){
+          this.worksheet1.H1 = "number";
+        }
+        else{
+          this.worksheet1.H1.v = this.worksheet1.H1.h = this.worksheet1.H1.w = "number"
+        }
+        if(this.worksheet1.I1 === undefined){
+          this.worksheet1.I1 = "email";
+        }
+        else{
+          this.worksheet1.I1.v = this.worksheet1.I1.h = this.worksheet1.I1.w = "email"
+        }
+        if(this.worksheet1.J1 === undefined){
+          this.worksheet1.J1 = "shippingAddress";
+        }
+        else{
+          this.worksheet1.J1.v = this.worksheet1.J1.h = this.worksheet1.J1.w = "shippingAddress"
+        }
         this.clientRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
+        
         //header ends for clients
       }
       if (productName === "productname*") {
 
         this.showClientsTable = false;
         this.showProductsTable = true;
-        this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "prodName"
-        this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "unit"
-        this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "discription"
-        this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "rate"
-        this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "taxRate"
-        this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "productCode"
+
+        if(this.worksheet1.A1 === undefined){
+          this.worksheet1.A1 = "prodName";
+        }
+        else{
+          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "unit"
+        }
+
+        if(this.worksheet1.B1 === undefined){
+          this.worksheet1.B1 = "unit";
+        }
+        else{
+          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "prodName"
+        }
+
+        if(this.worksheet1.C1 === undefined){
+          this.worksheet1.C1 = "discription";
+        }
+        else{
+          this.worksheet1.C1.v = this.worksheet1.C1.h = this.worksheet1.C1.w = "discription"
+        }
+        if(this.worksheet1.D1 === undefined){
+          this.worksheet1.D1 = "rate";
+        }
+        else{
+          this.worksheet1.D1.v = this.worksheet1.D1.h = this.worksheet1.D1.w = "rate"
+        }
+        if(this.worksheet1.E1 === undefined){
+          this.worksheet1.E1 = "taxRate";
+        }
+        else{
+          this.worksheet1.E1.v = this.worksheet1.E1.h = this.worksheet1.E1.w = "taxRate"
+        }
+        if(this.worksheet1.F1 === undefined){
+          this.worksheet1.F1 = "productCode";
+        }
+        else{
+          this.worksheet1.F1.v = this.worksheet1.F1.h = this.worksheet1.F1.w = "productCode"
+        }
+
         //header ends Products
         this.productRecords = XLSX.utils.sheet_to_json(this.worksheet1, { raw: true });
       }
@@ -274,9 +376,7 @@ export class BatchuploadComponent implements OnInit {
     if (this.productRecords) {
       for (let i = 0; i < this.productRecords.length; i++) {
         this.activeProduct = this.productRecords[i];
-
         var proStatus = true
-
         // If adding or editing product, make sure product with same name doesnt exist
         if (this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
@@ -356,6 +456,11 @@ export class BatchuploadComponent implements OnInit {
     }
   }
   remove(index) {
+    this.clientRecords.splice(index, 1);
+  }
+
+  removespaceRow(index) {
+    if(this.clientRecords.i === ' ')
     this.clientRecords.splice(index, 1);
   }
 

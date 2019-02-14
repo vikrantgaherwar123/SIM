@@ -115,12 +115,14 @@ select {
   margin-top: 6px;
   margin-left: -4px;
 }
-.box-red{
-  border: 1px solid red;
+.hide_dropdown {
+  display :none;
 }
-
-.box-grey{
-  border: 1px solid #ced4da;
+.box_red{
+  border-color:red;
+}
+.box_grey{
+  border-color: grey;
 }
 
 
