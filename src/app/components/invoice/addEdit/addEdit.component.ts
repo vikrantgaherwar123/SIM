@@ -22,7 +22,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import {ToasterModule, ToasterService} from 'angular2-toaster';
+import {ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Title }     from '@angular/platform-browser';
 
@@ -51,6 +51,7 @@ export class AddEditComponent implements OnInit {
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
   shippingAdressChanged: boolean = false
+  invoiceFlag : boolean = false
   currencyCode: string
   last
   index
@@ -191,6 +192,14 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
+  }
+  invoiceNoChanged(input){
+    if(input.target.value.length >= 15){
+      this.invoiceFlag = true
+      this.toasterService.pop('failure', 'Invoice number should contains 15 characters only !');
+    }else{
+      this.invoiceFlag = false
     }
   }
   changeTax(input){
@@ -883,6 +892,7 @@ export class AddEditComponent implements OnInit {
     this.addTermModal = {}
     $('#add-terms').modal('show')
   }
+  
 
   saveTerm(status) {
     if(this.addTermModal.terms.replace(/ /g, '') == '') {
@@ -1163,7 +1173,7 @@ export class AddEditComponent implements OnInit {
     var self = this
     // console.log(this.activeInvoice);
     // return false
-    if(this.activeInvoice.invoice_number !==""){
+    if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
@@ -1219,6 +1229,14 @@ export class AddEditComponent implements OnInit {
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
   }
+
+  deleteInstallment(index){
+    this.activeInvoice.payments.splice(index, 1);
+    // this.addPaymentModal.payments.pop(index, 1);
+  }
+  // deleteInstallmentModal(index){
+  //   this.addPaymentModal.payments.splice(index, 1);
+  // }
 
   resetCreateInvoice() {
     this.billingTo.reset('')

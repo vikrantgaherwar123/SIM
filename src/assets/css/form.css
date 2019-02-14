@@ -243,7 +243,8 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 	border-bottom: none;
 	border-top: none;
   padding-bottom: 7px;
-  padding-top: 7px;
+	padding-top: 7px;
+	word-wrap: break-word;
 }
 .column tbody {
 	max-height: 250px;

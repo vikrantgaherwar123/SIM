@@ -13,77 +13,81 @@
 
             <!-- Estimate Details Header -->
             <div class="row">
-              <div class="col-12 col-sm-7" id="clientDataAdd" name="clientData">
-                <div class="row">
-                  <!-- Billing To -->
-                  <div class="col-10">
-                    <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                      {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
-                    </span>
-                    <br />
-
-                    <div class="input-group pl-0">
-                      <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"
-                        placeholder="Search & Select Client" matInput [formControl]="billingTo" [matAutocomplete]="auto1"
-                        *ngIf="!edit" (click)="closeAddClientModal()" onfocus="this.select()">
-                      <div class="input-group-append">
-                        <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
-                      </div>
-
-                      <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                      <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
-                        autoActiveFirstOption (optionSelected)="selectedClientChange($event)">
-                        <button *ngIf="openClientModal === false" (click)="openAddClientModal()" class="btn btn-primary add_client_btn"
-                          style="width: 29.5%;">
-                          <i class="fa fa-plus"></i>
-                          Add New Client
-                        </button>
-                        <mat-option *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)"
-                          [value]="client">
-                          {{client.name}}
-                        </mat-option>
-                        <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
-                          Add Client {{billingTo.value}}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </div>
-                  </div>
-
-                  <div class="col-2" style="padding-top: 30px;">
-                    <span>
-                      <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
-                    </span>
-                  </div>
-
-                  <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px;padding-top: 16px;">
+              <div class="col-sm-7 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
-                      <div class="col-6">
-                        <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">
-                          Address
+                      <!-- Billing To -->
+                      <div class="col-10">
+                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                         </span>
-                        <br />
-                        <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                        <div class="address-render">{{activeClient.addressLine1}}<br /></div>
-                        <div *ngIf="activeClient.email">
-                          Email: {{activeClient.email}}
-                        </div>
-                        <div *ngIf="activeClient.number">
-                          Contact No: {{activeClient.number}}
+
+                        <div class="input-group pl-0 inputWithIcon">
+                          <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
+                          >
+                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
+                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                          </span>
+                          
+                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <span *ngIf="disableIcon === true" class="downArrowIcon">
+                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                          </span>
+                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
+
+                          <div class="input-group-append">
+                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
+                          </div>
+                           
+                          <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
+                          <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                            autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
+                          >
+                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                              class="btn btn-primary add_client_btn">
+                              <i class="fa fa-plus"></i>
+                              Add New Client
+                            </button>
+                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                              {{client.name}}
+                            </mat-option>
+                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                              Add Client {{billingTo.value}}
+                            </mat-option>
+                          </mat-autocomplete>
                         </div>
                       </div>
-                      <div class="col-6 pr-0">
-                        <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                          {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+
+                      <div class="col-2" style="padding-top: 30px;">
+                        <span>
+                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
                         </span>
-                        <br />
-                        <!--<textarea elastic  [(ngModel)]="client_display.addressLine1" id="customerNotes"name="shipping_address" class="form-control" readonly ></textarea>-->
-                        <div class="address-render" *ngIf="shippingAddressEditMode===true">{{shippingAddress}}<br /></div>
-                        <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
+                      </div>
+
+                      <!-- Address and Shipping Address -->
+                      <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px;padding-top: 16px;">
+                        <div class="row mx-0">
+                          <div class="col-6 pl-0">
+                            <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
+                            <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
+                            <div *ngIf="activeClient && activeClient.email">
+                              Email: {{activeClient.email}}
+                            </div>
+                            <div *ngIf="activeClient && activeClient.number">
+                              Contact No: {{activeClient.number}}
+                            </div>
+                          </div>
+                          <div class="col-6 pr-0">
+                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                              {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+                            </span>
+                            <div class="address-render" *ngIf="disableIcon === false">{{shippingAddress}}<br /></div>
+                            <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
               <div class="col-12 col-sm-5" id="estDataAdd">
                 <div class="row"> 
@@ -807,11 +811,11 @@
 <!-- ADD TERMS MODAL -->
 <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"
   data-keyboard="false">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}} 
+          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <img src="assets/images/cross16.png" alt="logo">
@@ -823,38 +827,67 @@
           <div class="row">
             <div class="col-12">
               <div class="form-group">
-                <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms" placeholder="Add term & Condition"
-                  style="height: 110px !important;" onfocus="this.select()" required elastic></textarea>
+                <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
+                  placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required elastic
+                ></textarea>
               </div>
             </div>
             <div class="col-12">
               <div class="checkbox pull-left">
-                <input type="checkbox" id="addtermcheck" name="setDefault" [(ngModel)]="addTermModal.setDefault" class="ng-pristine ng-valid ng-touched modal-checkbox"
-                  onfocus="this.select()">
-                <!-- <label class="inline" for="addtermcheck"></label> -->
+                <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
+                  [(ngModel)]="addTermModal.setDefault"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
+                > -->
                 <div class="inline">Default?</div>
+                  <label class="check">
+                    <div>
+                        <input type="checkbox" id="addtermcheck" name="setDefault"
+                        [(ngModel)]="addTermModal.setDefault" checked
+                        class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
+                      >
+                      <span class="checkmark" style="left: 78px;"></span>
+                    </div>
+                  </label>
+                <!-- <label class="inline" for="addtermcheck"></label> -->
+                
               </div>
-              <button type="button" id="addtermbtn" name="addtermbtn" title="save" class="btn save_btn btn-raised width25btn pull-right font-weight-bold"
-                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)">
+              <button type="button" id="addtermbtn" name="addtermbtn" title="save"
+                class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
+                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
+              >
                 SAVE
               </button>
+              
             </div>
           </div>
         </form>
+        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
+          Please Select Terms
+        </h5>
 
-        <div class="col-12" style="padding: 20px 24px 20px 15px">
+        <div class="col-12 terms_border">
           <div class="col-12 mCustomScrollbar style-3">
-            <div class="item termlist row product-list" id="term1{{index}}" *ngFor="let term of termList; let index = index"
-              [class.selected]="selectedTerm == index">
+            <div class="item termlist row product-list" id="term1{{index}}"
+             *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index" 
+              [class.selected]="selectedTerm == index"
+            >
               <div class="col-12 px-0">
                 <div class="row">
                   <div class="col-md-1 px-0">
-                    <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)"
-                      [checked]="isTermInEstimate(term)" />
+                    <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
+                      (change)="addRemoveTermsFromInvoice(term)"
+                      [checked]="isTermInInvoice(term)"
+                    /> -->
                     <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                    <label class="check">
+                      <div class="col-1">
+                        <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)" [checked]="isTermInEstimate(term)" />
+                        <span class="checkmark"></span>
+                      </div>
+                    </label>
                   </div>
                   <div class="col-md-9 pl-0">
-                    <span style="vertical-align: top;"> {{term.terms}}</span>
+                    <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
                   </div>
                 </div>
               </div>

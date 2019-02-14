@@ -111,7 +111,7 @@ export class ViewComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Invoice');
     // Fetch clients if not in store
-    // this.clientList = [];
+     this.clientList = [];
     this.dropdownList = [];
     this.clientListLoading = true
     if (this.clientList.length < 1) {

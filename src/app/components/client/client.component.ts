@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client',
@@ -20,6 +21,7 @@ export class ClientComponent implements OnInit {
     user: {
       orgId: string
     }
+    setting: any
   }
   clientList: client[]
 
@@ -35,19 +37,22 @@ export class ClientComponent implements OnInit {
   editMode: boolean = false
   viewMode: boolean = false
   deleteclient:boolean = false
+  settings: any;
 
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
+    private titleService: Title,
     private router: Router, private store: Store<AppState>
   ) {
     this.toasterService = toasterService; 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Clients');
     this.clientListLoading = true
-
     if(this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false

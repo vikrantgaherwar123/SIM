@@ -115,5 +115,14 @@ select {
   margin-top: 6px;
   margin-left: -4px;
 }
+.hide_dropdown {
+  display :none;
+}
+.box_red{
+  border-color:red;
+}
+.box_grey{
+  border-color: grey;
+}
 
 

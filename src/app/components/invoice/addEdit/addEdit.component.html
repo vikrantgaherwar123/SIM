@@ -26,18 +26,22 @@
 
                         <div class="input-group pl-0 inputWithIcon">
                           <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
                           >
-                          <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
+                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                          </span>
+                          
+                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
                           <span *ngIf="disableIcon === true" class="downArrowIcon">
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
-                          <a id="back2Top" title="Back to top" href="#">&#10148;</a> <!--Arrow Scroll when page ends-->
+                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
 
                           <div class="input-group-append">
                             <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
                           </div>
-
+                           
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
@@ -100,7 +104,7 @@
                             && invNumberForm.invoiceNumber.$error.required"
                           >
                             <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
-                              [(ngModel)]="activeInvoice.invoice_number" required onfocus="this.select()"
+                              [(ngModel)]="activeInvoice.invoice_number" [ngClass]="{ 'box_red': invoiceFlag === true}" (keyup)="invoiceNoChanged($event)" required onfocus="this.select()"
                             />
                             <span *ngIf="activeInvoice.invoice_number === '' " class="fa fa-info-circle errspan"></span> <!--show error icon if no invoice number-->
                             <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
@@ -123,7 +127,7 @@
                               matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
                             <!-- <input class="form-control" name="formatedDate" [ngModelOptions]="{standalone: true}" matInput [matDatepicker]="picker" (click)="picker.open()"> -->
-                            <mat-datepicker #picker></mat-datepicker>
+                            <!-- <mat-datepicker #picker></mat-datepicker> -->
                           </div>
                         </div>
                         <div class="form-error" *ngIf="invoiceGeneratorAdd.submitted || invoiceGeneratorAdd.touched">
@@ -326,8 +330,7 @@
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea id="descId" name="description_{{index}}" class="form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;min-height: 60px; max-height: 80px; height: 73px;"
-                                *ngIf="modalDescription === true"
+                                style="margin-top: 3px;height: 69px !important;"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
@@ -340,7 +343,7 @@
                               [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
-                          <button type="button"  class="small_btn btn-custom-1" (click)="addEditInvoiceItem()"
+                          <button type="button"  class="small_btn btn-custom-1" (click)="addEditInvoiceItem();"
                           >Add Item
                           </button>
                           
@@ -383,7 +386,7 @@
                         >
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text_center height_40" 
-                              title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
+                              title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;"  disabled
                             />
                             
@@ -546,7 +549,7 @@
                             balance=activeInvoice.gross_amount
                           "
                           ><!--activeInvoice.tax_amount-->
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                            <img src="assets/images/grey_cross.png"  Title="Delete" alt="" class="hg_20 cross_label_img">
                           </div>                               
                       </div>
                       
@@ -700,14 +703,15 @@
                       </div>
                     </div>
                     <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)">
-                    <div *ngFor="let item of activeInvoice.payments" class="top_bot_mr_10 pay_clr">
+                    <div *ngFor="let item of activeInvoice.payments; let in = index" class="top_bot_mr_10 pay_clr">
                         <div  class="row mx-0">
                           <div class="col-6 text-left label_color">
                             <span class="font-custom">{{item.date_of_payment | date}}</span>
                             <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
                           </div>
                           <div class="col-6 text-right pad_rg_5">
-                            <span class="font-custom">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          <span class="font-custom">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          <img src="assets/images/grey_cross.png" (click)="deleteInstallment(in)" Title="Delete" alt="" class="hg_20 cross_label_img">
                           </div>
                         </div>
                         
@@ -839,7 +843,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
-                class="form-control mCustomScrollbar style-3" placeholder="Address" select-on-click style="height: 69px !important;" onfocus="this.select()"
+                class="form-control mCustomScrollbar style-3" placeholder="Address" style="height: 69px !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -849,7 +853,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control mCustomScrollbar style-3"
-                placeholder=" {{settings.shipping ? settings.shipping : 'Shipping'}} Address" select-on-click style="height: 69px !important;" onfocus="this.select()"
+                placeholder=" {{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="height: 69px !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -857,7 +861,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
-                placeholder="Business Id " onfocus="this.select()" select-on-click
+                placeholder="Business Id " onfocus="this.select()" 
               />
             </div>
           </div>
@@ -865,7 +869,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width">
               <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
-                placeholder="Business Detail" onfocus="this.select()" my-enter-in select-on-click
+                placeholder="Business Detail" onfocus="this.select()"
               />
             </div>
           </div>
@@ -914,7 +918,7 @@
             <div class="col-12">
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description" class="form-control mCustomScrollbar style-3"
-                placeholder="Description" onfocus="this.select()" select-on-click style="max-height: 69px; height: 69px;"
+                placeholder="Description" onfocus="this.select()" select-on-click style="height: 69px !important;"
               ></textarea>
             </div>
 
@@ -993,7 +997,7 @@
             <div class="col-12">
               <div class="form-group">
                 <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 110px !important;" onfocus="this.select()" required elastic
+                  placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required elastic
                 ></textarea>
               </div>
             </div>
@@ -1033,7 +1037,7 @@
         <div class="col-12 terms_border">
           <div class="col-12 mCustomScrollbar style-3">
             <div class="item termlist row product-list" id="term1{{index}}"
-             *ngFor="let term of termList; let index = index" 
+             *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index" 
               [class.selected]="selectedTerm == index"
             >
               <div class="col-12 px-0">
@@ -1140,7 +1144,7 @@
         <hr style="margin-bottom: 0px !important;">
 
         <div class="row mx-0 payment_modal_pg"
-          *ngFor="let payment of addPaymentModal.payments"
+          *ngFor="let payment of addPaymentModal.payments; let i = index;"
         >
           <div class="col-12 label_color">
             <div class="pull-left" style="border-top: none;">
@@ -1151,6 +1155,7 @@
             </div>
             <div class="pull-right" style="border-top: none;">
               {{payment.paid_amount | currency:settings.currencyInText:'symbol':'1.2-2'}}
+              <!-- <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt="" class="hg_20 cross_label_img"> -->
             </div>
           </div>
         </div>
