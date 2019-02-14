@@ -29,8 +29,8 @@
                             <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           
-                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="disableIcon === true" class="downArrowIcon">
+                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <span *ngIf="shippingChange === true" class="downArrowIcon">
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
@@ -81,7 +81,7 @@
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                             </span>
-                            <div class="address-render" *ngIf="disableIcon === false">{{shippingAddress}}<br /></div>
+                            <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
                             <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
                           </div>
                         </div>

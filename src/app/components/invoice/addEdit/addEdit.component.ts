@@ -46,7 +46,7 @@ export class AddEditComponent implements OnInit {
   edit: boolean = false
   editTerm: boolean = true
   modalDescription: boolean = true
-  disableIcon: boolean = true
+  shippingChange: boolean = true
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
   openClientModal: boolean = false
@@ -185,7 +185,7 @@ export class AddEditComponent implements OnInit {
     }
   }
   invoiceNoChanged(input){
-    if(input.target.value.length >= 15){
+    if(input.target.value.length >= 16){
       this.invoiceFlag = true
       this.toasterService.pop('failure', 'Invoice number should contains 15 characters only !');
     }else{
@@ -218,7 +218,7 @@ export class AddEditComponent implements OnInit {
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
-    this.disableIcon = false;
+    this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       if(invoice.records !== null) {
@@ -620,8 +620,14 @@ export class AddEditComponent implements OnInit {
 
   selectedClientChange(client) {
     this.noClientSelected = false; // to remove red box
-    var temp
-    temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
+
+    if (client.name) { //while adding and showing client invoice page modal
+      var temp
+      temp = this.clientList.filter(cli => cli.name == client.name)[0]
+    } else if(client.option){
+      var temp
+      temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
+    }
 
     if (temp !== undefined) {
       this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
@@ -677,8 +683,7 @@ export class AddEditComponent implements OnInit {
           $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeInvoice.unique_key_fk_client = this.activeClient.uniqueKeyClient;
-          // this.selectedClientChange(this.activeClient);
-          window.location.reload(true);
+          this.selectedClientChange(this.activeClient); //this function shows added recent client
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -757,7 +762,7 @@ export class AddEditComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList){
+    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
     }
   }
@@ -785,7 +790,8 @@ export class AddEditComponent implements OnInit {
         }
         this.toasterService.pop('success', 'Product had been added!');
         // window will refresh when product added successfully to see that product in a list
-        window.location.reload(true);
+        // window.location.reload(true);
+        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -822,6 +828,7 @@ export class AddEditComponent implements OnInit {
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
+      this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
@@ -829,10 +836,8 @@ export class AddEditComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem){
-    if(this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.quantity !==null && this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 &&
+    if(this.activeItem.quantity !==null && this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
       this.activeItem.rate !==null ){
-    if(this.activeItem.unique_identifier && this.activeInvoice.listItems != undefined ) {
       if(uid == null) {
         // Add Item to invoice
         this.activeInvoice.listItems.push(this.activeItem)
@@ -849,8 +854,22 @@ export class AddEditComponent implements OnInit {
       }
       this.calculateInvoice()
     }
-    } else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
+    else  {
+
+    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
       // this.activeItem.product_name = this.addItem.value;
+      var tempCompare = ''
+      var duplicateProduct = false;
+      for (var p = 0; p < this.productList.length; p++) {
+        if (this.productList[p].prodName) {
+          tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '');
+        }
+        // If Name is same,
+        if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
+          duplicateProduct = true;
+        }
+      }
+      if(duplicateProduct === false){
       this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
@@ -862,6 +881,9 @@ export class AddEditComponent implements OnInit {
         }
         this.calculateInvoice()
       })
+    }else{
+      this.toasterService.pop('failure', 'Duplicate name or field is empty!!!');
+    }
     }
   }
   }
@@ -1190,7 +1212,7 @@ export class AddEditComponent implements OnInit {
 
     this.activeInvoice.device_modified_on = new Date().getTime()
     //add shipping address 
-    if(this.disableIcon === false){
+    if(this.shippingChange === false){
       this.activeInvoice.shipping_address = this.shippingAddress;
       }else{
         this.activeInvoice.shipping_address = this.activeClient.shippingAddress
@@ -1230,7 +1252,7 @@ export class AddEditComponent implements OnInit {
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
-          this.router.navigate(['/invoice/view'])
+          this.router.navigate(['/invoice/add'])
         }
          else {
           this.toasterService.pop('success', 'Invoice saved successfully');
