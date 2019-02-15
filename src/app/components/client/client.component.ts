@@ -38,6 +38,7 @@ export class ClientComponent implements OnInit {
   viewMode: boolean = false
   deleteclient:boolean = false
   settings: any;
+  emptyClient: boolean;
 
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
@@ -73,7 +74,7 @@ export class ClientComponent implements OnInit {
     var proStatus = true
 
     // If adding or editing client, make sure client with same name doesnt already exist
-    if (!this.activeClient.enabled) {
+    if (!this.activeClient.enabled && this.emptyClient == false) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
       // If empty spaces
@@ -86,7 +87,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          tempCompare = this.clientList[p].name
           if (tempCompare === tempClientName) {
             if(edit == 1) {
               if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
@@ -137,18 +138,19 @@ export class ClientComponent implements OnInit {
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
-          } else {
-            if (self.activeClient.enabled) {   // delete
-              self.store.dispatch(new clientActions.remove(storeIndex))
-              this.clientList.splice(index, 1)
-              this.toasterService.pop('success', 'Client Deleted Successfully !!!');
-            } else {    //edit
+          } else {// delete
+            self.store.dispatch(new clientActions.remove(storeIndex))
+            this.clientList.splice(index, 1)
+            this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+            this.addNew();
+
+          }
+            if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
               //console.log(this.clientList[index]);
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
             }
-          }
           self.errors = {}
           // self.activeClient = <client>{}
           self.createMode = false
@@ -174,11 +176,19 @@ export class ClientComponent implements OnInit {
       
           }
   }
+  emptyField(input){
+    if(input.target.value == ''){
+      this.emptyClient = true
+      this.toasterService.pop('failure', 'Organization Name Required');
+    }else{
+      this.emptyClient = false
+    }
+  }
   openDeleteClientModal() {
     this.deleteclient = true
     $('#delete-client').modal('show')
     $('#delete-client').on('shown.bs.modal', (e) => {
-      $('#delete-client input[type="text"]')[1].focus()
+      // $('#delete-client input[type="text"]')[1].focus() //1
     })
   }
 
@@ -197,8 +207,6 @@ export class ClientComponent implements OnInit {
     this.viewMode = false
   }
 
-  
-
   batchUpload() {
     this.router.navigate(['/client/batch/'])
   }
@@ -207,7 +215,6 @@ export class ClientComponent implements OnInit {
     this.activeClient.enabled = 1
     this.save(true, null)
     this.deleteclient = false
-    
   }
  
   editThis() {

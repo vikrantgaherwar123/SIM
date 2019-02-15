@@ -14,10 +14,12 @@ export class PasswordComponent implements OnInit {
   currentPass: string = ""
   newPass: string = ""
   confirmPass: string = ""
+  user: any;
 
   constructor(private authService: AuthService,public toasterService : ToasterService,
     private titleService: Title) {
-    this.toasterService = toasterService
+    this.toasterService = toasterService,
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
    }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class PasswordComponent implements OnInit {
         this.toasterService.pop('success','Password Changed Successfully')
         }else{
           this.toasterService.pop('failure','Something went wrong')
+          this.authService.validateToken(this.user.access_token , this.user.user.orgId);
         }
       })
     } else {

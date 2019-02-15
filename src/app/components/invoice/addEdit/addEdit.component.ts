@@ -162,6 +162,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
       if (params && params.invId) {
@@ -170,6 +171,7 @@ export class AddEditComponent implements OnInit {
         this.editInit(params.invId)
         this.fetchCommonData()
       } else {
+        this.fetchCommonData()
         this.addInit()
       }
     })
@@ -202,7 +204,7 @@ export class AddEditComponent implements OnInit {
   }
   
   addInit() {
-    this.fetchCommonData()
+    
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -615,7 +617,9 @@ export class AddEditComponent implements OnInit {
   }
 
    private _filterCli(value: string): client[] {
-    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    return this.clientList.filter(cli => cli.name)
+    // return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())) original code
+
   }
 
   selectedClientChange(client) {
@@ -788,9 +792,16 @@ export class AddEditComponent implements OnInit {
         if(callback !== null) {
           callback(temp)
         }
+<<<<<<< HEAD
         this.toasterService.pop('success', 'Product has been added!');
         //called store and set product here to update store when new product added
         this.store.select('product').subscribe(products => this.productList = products)
+=======
+        this.toasterService.pop('success', 'Product had been added!');
+        this.store.select('product').subscribe(products => this.productList = products)
+        // window will refresh when product added successfully to see that product in a list
+        // window.location.reload(true);
+>>>>>>> 8d37ef1c92190df15ca9c0fc8d4f4e90a96d8fff
         this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
@@ -840,6 +851,7 @@ export class AddEditComponent implements OnInit {
       if(uid == null) {
         // Add Item to invoice
         this.activeInvoice.listItems.push(this.activeItem)
+
       } else {
         // Edit Item from Invoice
         var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier == uid)
@@ -872,6 +884,7 @@ export class AddEditComponent implements OnInit {
       this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
+        // this.addEditInvoiceItem({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
         this.addItem.reset('')
         this.activeItem = {
@@ -1251,7 +1264,7 @@ export class AddEditComponent implements OnInit {
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
-          this.router.navigate(['/invoice/add'])
+          // this.router.navigate(['/invoice/add'])
         }
          else {
           this.toasterService.pop('success', 'Invoice saved successfully');
