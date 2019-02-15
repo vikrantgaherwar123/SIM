@@ -686,7 +686,9 @@ export class AddEditEstComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product has been added')
-        window.location.reload(true);
+        //called store and set product here to update store when new product added
+        this.store.select('product').subscribe(products => this.productList = products)
+        this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }

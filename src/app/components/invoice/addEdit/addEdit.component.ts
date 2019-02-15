@@ -788,10 +788,10 @@ export class AddEditComponent implements OnInit {
         if(callback !== null) {
           callback(temp)
         }
-        this.toasterService.pop('success', 'Product had been added!');
-        // window will refresh when product added successfully to see that product in a list
-        // window.location.reload(true);
-        // this.setProductFilter();
+        this.toasterService.pop('success', 'Product has been added!');
+        //called store and set product here to update store when new product added
+        this.store.select('product').subscribe(products => this.productList = products)
+        this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -828,7 +828,6 @@ export class AddEditComponent implements OnInit {
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-      this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
