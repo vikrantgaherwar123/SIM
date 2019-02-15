@@ -85,17 +85,24 @@ export class ProductComponent implements OnInit {
         if (tempCompare === tempProName) {
           // Case 1: Edit mode -> diff uniqueKey
           // Case 2: Add mode
+
+          //edit=1: case of editing
+          //edit=null: case of deleting
+          //edit=0: case of adding duplicate
           if(edit == 1) {
             if(this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct && tempProName !== this.repeatativeProductName) {
               proStatus = false
               break
             }
-          } else {
+          } 
+          if(edit == null) {
+              proStatus = true
+              break
+          } 
+          if(edit == 0) {
             proStatus = false
             break
-          }
-        }else{
-          var proStatus = true
+        } 
         }
       }
       this.repeatativeProductName = ''
@@ -176,7 +183,7 @@ export class ProductComponent implements OnInit {
     this.deleteproduct = true
     $('#delete-product').modal('show')
     $('#delete-product').on('shown.bs.modal', (e) => {
-      $('#delete-product input[type="text"]')[1].focus()
+      $('#delete-product input[type="text"]')[0].focus()
     })
   }
 

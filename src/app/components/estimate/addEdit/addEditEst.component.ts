@@ -45,6 +45,7 @@ export class AddEditEstComponent implements OnInit {
   modalDescription: boolean = true
   estimateActive: boolean = false
   openClientModal: boolean = false
+  shippingChange: boolean = true
   shippingAdressChanged: boolean = false
   shippingAddressEditMode: boolean = false
   editTerms: boolean = true
@@ -587,7 +588,9 @@ export class AddEditEstComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
+    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   editEstimateItem(index) {
@@ -610,9 +613,8 @@ export class AddEditEstComponent implements OnInit {
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
-    if(this.activeItem.quantity !==null && this.activeItem.product_name === this.addItem.value.prodName && this.activeItem.rate !== 0 &&
+    if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
-    if (this.activeItem.unique_identifier  ||  this.activeEstimate.listItems.length != 0) { //&&
       if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
@@ -628,9 +630,22 @@ export class AddEditEstComponent implements OnInit {
         rate: 0.00
       }
       this.calculateEstimate()
-   }
    } 
-   else if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
+   else {
+   
+   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
+    var tempCompare = ''
+    var duplicateProduct = false;
+    for (var p = 0; p < this.productList.length; p++) {
+      if (this.productList[p].prodName) {
+        tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '');
+      }
+      // If Name is same,
+      if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
+        duplicateProduct = true;
+      }
+    }
+    if(duplicateProduct === false){
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
         this.fillItemDetails({ ...this.activeItem, ...product })
         this.activeEstimate.listItems.push(this.activeItem)
@@ -641,7 +656,11 @@ export class AddEditEstComponent implements OnInit {
         }
         this.calculateEstimate()
       })
+    }else{
+      this.toasterService.pop('failure', 'Duplicate name or field is empty!!!');
     }
+    }
+  }
   }
 
   saveProduct(add_product, callback: Function = null) {
