@@ -55,7 +55,8 @@ import { LoadalldataComponent } from './components/loadalldata/loadalldata.compo
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
-
+import { NgDatepickerModule } from 'ng2-datepicker';
+import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -121,6 +122,7 @@ export function getAuthServiceConfigs() {
     SweetAlert2Module.forRoot(),
     FilterPipeModule,
     OrderModule,
+    NgDatepickerModule,
     BrowserAnimationsModule,
     ToasterModule.forRoot(),
     MaterialModule,
@@ -137,9 +139,12 @@ export function getAuthServiceConfigs() {
   providers: [
     EmailService,
     CONSTANTS,
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs
+      
     }
   ],
   bootstrap: [AppComponent]

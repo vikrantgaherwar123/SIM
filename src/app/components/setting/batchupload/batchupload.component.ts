@@ -372,7 +372,7 @@ export class BatchuploadComponent implements OnInit {
       }
     }
 
-    //product starts
+    //product starts  
     if (this.productRecords) {
       for (let i = 0; i < this.productRecords.length; i++) {
         this.activeProduct = this.productRecords[i];

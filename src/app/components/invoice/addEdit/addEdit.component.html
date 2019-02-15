@@ -82,7 +82,7 @@
                           </div>
                           <div class="col-6 pr-0">
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                              {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+                                {{settings.mTvShipTo ? settings.mTvShipTo : 'Shipping Address'}}
                             </span>
                             <div class="address-render" *ngIf="disableIcon === false">{{shippingAddress}}<br /></div>
                             <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
@@ -416,7 +416,7 @@
                     <div *ngIf="activeInvoice.shipping_charges === undefined">
                       <a class="inline" (click)="activeInvoice.shipping_charges = 0">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
-                        {{settings.shipping ? settings.shipping : 'Shipping'}}
+                       Shipping+
                       </a>
                     </div>
                     <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2 || activeInvoice.tax_rate === 0"><!--settings.taxFlagLevel === 1 &&-->
@@ -626,7 +626,7 @@
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.shipping_charges !== undefined">
                       <div class="col-5 discount-tax-label label_color">
                         <div class="inline" style="text-align: left;vertical-align: bottom;">
-                          {{settings.shipping ? settings.shipping : 'shipping'}}(+)
+                            {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
                         </div>
                       </div>
 
@@ -854,7 +854,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)"
             >
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control mCustomScrollbar style-3"
-                placeholder=" {{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="height: 69px !important;" onfocus="this.select()"
+                placeholder=" Shipping Address" style="height: 69px !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>

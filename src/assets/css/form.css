@@ -86,7 +86,8 @@ a, a:hover, a:focus {
 	padding-bottom: 6px;
 	cursor: pointer;
 	padding-left: 5px;
-  padding-right: 14px;
+	padding-right: 14px;
+	word-wrap: break-word;
 }
 .item span {
 	height: 18px;
@@ -171,7 +172,8 @@ a.more {
 }
 .form-error {
 	color: #D9534F;
-	font-size: 8px;
+	font-size: 11px;
+    margin-top: -53px;
 }
 .form-error {
 	position: absolute; 

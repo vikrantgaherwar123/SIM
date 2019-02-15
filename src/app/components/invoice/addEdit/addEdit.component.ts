@@ -162,6 +162,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
       if (params && params.invId) {
@@ -615,7 +616,9 @@ export class AddEditComponent implements OnInit {
   }
 
    private _filterCli(value: string): client[] {
-    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+    return this.clientList.filter(cli => cli.name)
+    // return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())) original code
+
   }
 
   selectedClientChange(client) {
@@ -757,7 +760,7 @@ export class AddEditComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList){
+    if(this.productList !== undefined){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
     }
   }
