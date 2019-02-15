@@ -77,6 +77,13 @@ export class ClientComponent implements OnInit {
     if (!this.activeClient.enabled && this.emptyClient == false) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
+      // If empty spaces
+      if(!tempClientName) {
+        this.activeClient.name = ''
+        this.toasterService.pop('failure', 'Organization name required');
+        return false
+      }
+
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
@@ -95,12 +102,6 @@ export class ClientComponent implements OnInit {
         }
       }
       this.repeatativeClientName = ''
-    }
-     // If empty spaces
-     if(!tempClientName) {
-      this.activeClient.name = ''
-      // this.toasterService.pop('failure', 'Organization name required');
-      // return false
     }
 
     if (status && proStatus) {
@@ -140,8 +141,8 @@ export class ClientComponent implements OnInit {
           } else {// delete
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)
-            this.addNew();
             this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+            this.addNew();
 
           }
             if(self.activeClient.enabled == 0){    //edit
@@ -187,7 +188,7 @@ export class ClientComponent implements OnInit {
     this.deleteclient = true
     $('#delete-client').modal('show')
     $('#delete-client').on('shown.bs.modal', (e) => {
-      $('#delete-client input[type="text"]')[0].focus() //1
+      // $('#delete-client input[type="text"]')[1].focus() //1
     })
   }
 

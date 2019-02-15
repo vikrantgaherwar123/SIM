@@ -140,7 +140,7 @@
                             <img src="/assets/images/client-icon/ic_normal_org_name.png">
                           </span>
                           <div class="form-error" *ngIf="f.submitted || errors.name">
-                            <span *ngIf="f.value.name == ''">Organization name required</span>
+                            <span *ngIf="f.value.name == '' && name.errors.required">Organization name required</span>
                           </div>
                           <input type="text" name="name" id="name" class="form-control" placeholder="Organization name *"
                             onfocus="this.select()" [(ngModel)]="activeClient.name" required />

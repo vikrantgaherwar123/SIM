@@ -171,6 +171,7 @@ export class AddEditComponent implements OnInit {
         this.editInit(params.invId)
         this.fetchCommonData()
       } else {
+        this.fetchCommonData()
         this.addInit()
       }
     })
@@ -203,7 +204,7 @@ export class AddEditComponent implements OnInit {
   }
   
   addInit() {
-    this.fetchCommonData()
+    
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -792,9 +793,10 @@ export class AddEditComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product had been added!');
+        this.store.select('product').subscribe(products => this.productList = products)
         // window will refresh when product added successfully to see that product in a list
         // window.location.reload(true);
-        // this.setProductFilter();
+        this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -844,6 +846,7 @@ export class AddEditComponent implements OnInit {
       if(uid == null) {
         // Add Item to invoice
         this.activeInvoice.listItems.push(this.activeItem)
+
       } else {
         // Edit Item from Invoice
         var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier == uid)
@@ -876,6 +879,7 @@ export class AddEditComponent implements OnInit {
       this.ifProductEmpty = false;
       this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
         this.fillItemDetails({...this.activeItem, ...product})
+        // this.addEditInvoiceItem({...this.activeItem, ...product})
         this.activeInvoice.listItems.push(this.activeItem)
         this.addItem.reset('')
         this.activeItem = {
@@ -1255,7 +1259,7 @@ export class AddEditComponent implements OnInit {
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
-          this.router.navigate(['/invoice/add'])
+          // this.router.navigate(['/invoice/add'])
         }
          else {
           this.toasterService.pop('success', 'Invoice saved successfully');
