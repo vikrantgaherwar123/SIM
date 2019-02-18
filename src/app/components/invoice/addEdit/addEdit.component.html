@@ -238,12 +238,12 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="10%" *ngIf="settings.taxFlagLevel === 0">
+                        <td width="10%" *ngIf="showTaxRateFlag === false || settings.taxFlagLevel === 0">
                           <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
                             value="Tax (%)"
                           />
                         </td>
-                        <td width="10%" *ngIf="settings.discountFlagLevel === 1">
+                        <td width="10%" *ngIf="showDiscountRateFlag === false || settings.discountFlagLevel === 1">
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
                             value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           />
@@ -278,17 +278,17 @@
                             {{item.quantity | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last">
+                        <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
                           <div class="text-center">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate!==0 || item.tax_rate===0 ">
                           <div class="text-center">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 || item.discount===0">
                           <div class="text-center">
                             {{item.discount | number:'2.'}}
                           </div>
@@ -408,7 +408,7 @@
                 <!-- Tax discount list -->
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel === 0 && activeInvoice.discount_on_item === 1 || activeInvoice.discount_on_item === 2">
+                    <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true">
                       <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
@@ -416,10 +416,10 @@
                     <div *ngIf="activeInvoice.shipping_charges === undefined">
                       <a class="inline" (click)="activeInvoice.shipping_charges = 0">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
-                       Shipping+
+                        {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_on_item === 2 || activeInvoice.tax_rate === 0"><!--settings.taxFlagLevel === 1 &&-->
+                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true"><!--settings.taxFlagLevel === 1 &&-->
                       <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
@@ -954,7 +954,7 @@
             </div>
 
             <div class="col-12">
-              {{settings.total ? settings.total : 'Total'}}:
+              {{settings.total ? settings.total : 'Amount'}}:
               <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled
                 class="form-control add-client-input-custom" onfocus="this.select()"
               />

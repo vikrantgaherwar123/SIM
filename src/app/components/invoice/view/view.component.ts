@@ -12,7 +12,7 @@ import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { Title }     from '@angular/platform-browser';
 
 @Component({
@@ -58,8 +58,10 @@ export class ViewComponent implements OnInit {
   filteredClients: Observable<string[] | client[]>
 
   public settings: any
+  invoiceListLoading: boolean;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
+    private route: ActivatedRoute,
     private titleService: Title,
     private store: Store<AppState>,
     private settingService: SettingService,
@@ -124,6 +126,10 @@ export class ViewComponent implements OnInit {
     }else{
        this.dropdownList = this.clientList;
     }
+    // this.route.params.subscribe(params => {
+    //   console.log(params);
+      
+    // })
     this.openSearchClientModal()
     this.clientListLoading = false
     this.invListLoader = true
@@ -132,6 +138,20 @@ export class ViewComponent implements OnInit {
       this.invoiceList = invoices
       this.setActiveInv()
     })
+
+    //if empty invoice then all fetch from api to find latest and oldest invoice date
+    // if(this.invoiceList.length < 1){
+    //   this.invoiceListLoading = true;
+    //   this.invoiceService.fetch().subscribe((response: any) => {
+    //   this.invoiceListLoading = false;
+    //   this.invoiceList = response.records
+    //   var mindate = this.invoiceList[0].created_date;
+    //   var maxdate = this.invoiceList[this.invoiceList.length-1].created_date;
+    //   console.log(mindate);
+    //   console.log(maxdate);
+    //   })
+    //   }
+
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
@@ -186,6 +206,10 @@ export class ViewComponent implements OnInit {
     // }else{
     //   this.customEnableDate = false
     // }
+    if(this.itemSelected === 'All Time'){
+      this.invoiceQueryForm.dateRange.start.reset()
+      this.invoiceQueryForm.dateRange.end.reset()
+    }
     if(this.itemSelected === 'This Week'){
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))

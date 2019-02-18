@@ -3,6 +3,8 @@ import { Action } from '@ngrx/store'
 export const ADD = 'ADD_ESTIMATE'
 export const EDIT = 'EDIT_ESTIMATE'
 export const REMOVE = 'REMOVE_ESTIMATE'
+export const RESET = 'RESET_ESTIMATE'
+
 
 export class add implements Action {
   readonly type = ADD
@@ -28,4 +30,11 @@ export class remove implements Action {
   }
 }
 
-export type Action = add | edit | remove
+export class reset implements Action {
+  readonly type = RESET
+
+  constructor(public payload: any) {
+    
+  }
+}
+export type Action = add | edit | remove | reset

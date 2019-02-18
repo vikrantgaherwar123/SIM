@@ -118,11 +118,15 @@ export class ViewEstComponent implements OnInit {
 
     // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
     this.estListLoader = true
-    this.estimateService.fetch().subscribe((response: any) => {
-      this.estListLoader = false
-      var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-      this.store.dispatch(new estimateActions.add(records))
-      this.estimateList = records
+    // this.estimateService.fetch().subscribe((response: any) => {
+    //   this.estListLoader = false
+    //   var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+    //   this.store.dispatch(new estimateActions.add(records))
+    //   this.estimateList = records
+    //   // this.setActiveEst()
+    // })
+    this.store.select('estimate').subscribe(estimate => {
+      this.estimateList = estimate
       this.setActiveEst()
     })
 
@@ -148,7 +152,10 @@ export class ViewEstComponent implements OnInit {
       allowSearchFilter: true
     };
     // keep first item selected in madal
-    this.itemSelected = 'All Time'
+    this.itemSelected = 'This Month'
+    var date = new Date()
+    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
+    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   }
 
   onItemSelect(item: any) {
@@ -178,6 +185,10 @@ export class ViewEstComponent implements OnInit {
     // }else{
     //   this.customEnableDate = false
     // }
+    if(this.itemSelected === 'All Time'){
+      this.estimateQueryForm.dateRange.start.reset()
+      this.estimateQueryForm.dateRange.end.reset()
+    }
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
@@ -210,20 +221,20 @@ export class ViewEstComponent implements OnInit {
 
   showSelectedEstimate(client) {
     this.estimateQueryForm.client = client
-    var estList = []
-    for (let i = 0; i < client.value.length; i++) {
-      var list = this.estimateList.filter(rec => rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
-      estList.push(list)
-    }
-    let est1List = []
-    for (let i = 0; i < estList.length; i++) {
-      for (let j = 0; j <= estList[i].length; j++) {
-        var obj = estList[i][j];
-        est1List.push(obj)
-      }
-      est1List.splice(-1, 1)
-    }
-    this.estimateList = est1List;
+    // var estList = []
+    // for (let i = 0; i < client.value.length; i++) {
+    //   var list = this.estimateList.filter(rec => rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
+    //   estList.push(list)
+    // }
+    // let est1List = []
+    // for (let i = 0; i < estList.length; i++) {
+    //   for (let j = 0; j <= estList[i].length; j++) {
+    //     var obj = estList[i][j];
+    //     est1List.push(obj)
+    //   }
+    //   est1List.splice(-1, 1)
+    // }
+    // this.estimateList = est1List;
     this.SearchEstimate()
     this.setActiveEst()
     $('#search-client').modal('hide')
@@ -266,7 +277,7 @@ export class ViewEstComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ estimateQueryForm: this.estimateQueryForm }))
     this.fetchEstimates(query)
-    this.changingQuery = false
+    // this.changingQuery = false
   }
 
   getNames() {
@@ -292,8 +303,11 @@ export class ViewEstComponent implements OnInit {
     this.estListLoader = true
     this.estimateService.fetch().subscribe((response: any) => {
       if (response.status === 200) {
-        this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-        // this.setActiveEst()
+        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 1) : []))
+        this.store.select('estimate').subscribe(estimate => {
+          this.estimateList = estimate
+          this.setActiveEst()
+        })
       }
       this.estListLoader = false
     })
