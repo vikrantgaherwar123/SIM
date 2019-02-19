@@ -87,7 +87,7 @@
             <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
-              (click)="picker3.open()" 
+              (click)="picker3.open()" (dateChange)="onDate($event)"
             >
             <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker3></mat-datepicker>
@@ -97,7 +97,7 @@
             <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
-              (click)="picker4.open()"
+              (click)="picker4.open()" (dateChange)="onDate($event)"
             > 
             <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker4></mat-datepicker>
@@ -316,10 +316,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignTaxFlag == 0">
+                    <td width="17%">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignDiscountFlag == 1">
+                    <td width="17%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
@@ -349,12 +349,12 @@
                         {{item.rate}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
                         {{item.taxRate}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
                         {{item.discountRate}}
                       </div>

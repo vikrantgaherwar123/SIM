@@ -116,20 +116,7 @@ export class ViewEstComponent implements OnInit {
     this.openSearchClientModal()
     this.clientListLoading = false
 
-    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
-    this.estListLoader = true
-    // this.estimateService.fetch().subscribe((response: any) => {
-    //   this.estListLoader = false
-    //   var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-    //   this.store.dispatch(new estimateActions.add(records))
-    //   this.estimateList = records
-    //   // this.setActiveEst()
-    // })
-    this.store.select('estimate').subscribe(estimate => {
-      this.estimateList = estimate
-      this.setActiveEst()
-    })
-
+    
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
@@ -151,11 +138,11 @@ export class ViewEstComponent implements OnInit {
       itemsShowLimit: 10,
       allowSearchFilter: true
     };
-    // keep first item selected in madal
-    this.itemSelected = 'This Month'
-    var date = new Date()
-    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
-    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
+   // keep first item selected in madal
+   var date = new Date()
+   this.itemSelected = 'This Month'
+   this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
+   this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   }
 
   onItemSelect(item: any) {
@@ -166,6 +153,13 @@ export class ViewEstComponent implements OnInit {
 
   duration = ['All Time', 'This Week', 'This Month', 'Last Week', 'Last Month', 'Custom']
 
+
+  //to make custom as selsected item when user changes date from calender
+  public onDate(event): void {
+    if (this.estimateQueryForm.dateRange.start.value || this.estimateQueryForm.dateRange.end.value !== event.value) {
+      this.itemSelected = 'Custom'
+    }
+  }
   showItem(item) {
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
@@ -179,12 +173,6 @@ export class ViewEstComponent implements OnInit {
     firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth() - 1);
     
     this.itemSelected = item
-    // if(this.itemSelected === 'Custom'){
-    //   // flag is set to enable and disable input fields
-    //   this.customEnableDate = true
-    // }else{
-    //   this.customEnableDate = false
-    // }
     if(this.itemSelected === 'All Time'){
       this.estimateQueryForm.dateRange.start.reset()
       this.estimateQueryForm.dateRange.end.reset()
@@ -235,8 +223,18 @@ export class ViewEstComponent implements OnInit {
     //   est1List.splice(-1, 1)
     // }
     // this.estimateList = est1List;
-    this.SearchEstimate()
-    this.setActiveEst()
+    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+    this.estListLoader = true
+    this.estimateService.fetch().subscribe((response: any) => {
+      this.estListLoader = false
+      var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+      this.store.dispatch(new estimateActions.add(records))
+      this.estimateList = records
+      this.setActiveEst()
+    })
+
+    // this.SearchEstimate()
+    // this.setActiveEst()
     $('#search-client').modal('hide')
   }
 
@@ -277,7 +275,7 @@ export class ViewEstComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ estimateQueryForm: this.estimateQueryForm }))
     this.fetchEstimates(query)
-    // this.changingQuery = false
+    this.changingQuery = false
   }
 
   getNames() {
@@ -303,11 +301,8 @@ export class ViewEstComponent implements OnInit {
     this.estListLoader = true
     this.estimateService.fetch().subscribe((response: any) => {
       if (response.status === 200) {
-        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 1) : []))
-        this.store.select('estimate').subscribe(estimate => {
-          this.estimateList = estimate
-          this.setActiveEst()
-        })
+        this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+        // this.setActiveEst()
       }
       this.estListLoader = false
     })

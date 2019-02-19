@@ -547,7 +547,7 @@
             <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
-              (click)="picker4.open()"
+              (click)="picker4.open()" (dateChange)="onDate($event)"
             > 
             <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker4></mat-datepicker>

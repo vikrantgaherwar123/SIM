@@ -861,7 +861,7 @@ export class AddEditComponent implements OnInit {
         if(callback !== null) {
           callback(temp)
         }
-        this.toasterService.pop('success', 'Product had been added!');
+        this.toasterService.pop('success', 'Product has been added!');
         this.store.select('product').subscribe(products => this.productList = products)
         // window will refresh when product added successfully to see that product in a list
         // window.location.reload(true);

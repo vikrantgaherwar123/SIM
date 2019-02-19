@@ -246,6 +246,8 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
+          this.showTaxRate = this.activeEstimate.listItems[0].tax_rate;
+          this.showDiscountRate = this.activeEstimate.listItems[0].discount;
         }
 
 
@@ -512,7 +514,7 @@ export class AddEditEstComponent implements OnInit {
           });
           this.clientList = uniqueClients;
         }
-        this.setClientFilter()
+        // this.setClientFilter()
         this.clientListLoading = false
       })
   }
@@ -718,7 +720,7 @@ export class AddEditEstComponent implements OnInit {
         this.toasterService.pop('success', 'Product has been added')
         //called store and set product here to update store when new product added
         this.store.select('product').subscribe(products => this.productList = products)
-        this.setProductFilter();
+        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
