@@ -31,11 +31,10 @@
             <div class="col-12 search-box">
               <div class="form-group label-floating">
                 <!--<label class="control-label fontsize13">Search, Filter Clients</label>-->
-                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Clients" />
+                <input class="form-control" [(ngModel)]="searchTerms" placeholder="Search Clients" />
               </div>
             </div>
           </div>
-
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             Select client to view or edit
           </div>
@@ -44,7 +43,9 @@
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
 
-            <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:false:true | filterBy: {name: searchTerm} | slice:0:clientDisplayLimit); index as index"
+            <!-- <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:false:true | filter:searchTerm | slice:0:clientDisplayLimit); index as index" -->
+            <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | filter:searchTerms | orderBy: 'client': 'desc' |  slice:0:clientDisplayLimit); index as index"
+
               [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-2">
@@ -101,7 +102,7 @@
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
-                  <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button" *ngIf="viewMode"  (click)="openDeleteClientModal()">
+                  <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"  *ngIf="viewMode"  (click)="openDeleteClientModal()">
                     DELETE
                   </button>
                   <div class="rightDivBtns">
@@ -142,7 +143,7 @@
                           <div class="form-error" *ngIf="f.submitted || errors.name">
                             <span *ngIf="f.value.name == '' && name.errors.required">Organization name required</span>
                           </div>
-                          <input type="text" name="name" id="name" class="form-control" placeholder="Organization name *"
+                          <input type="text" name="name" id="name" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyClient == true}" class="form-control" placeholder="Organization name *"
                             onfocus="this.select()" [(ngModel)]="activeClient.name" required />
                         </div>
                        
@@ -221,7 +222,7 @@
                   </div>
 
                   <!-- View -->
-                  <div class="col-12 mt-2" *ngIf="viewMode">
+                  <div class="col-12 mt-2" *ngIf="viewMode == true">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
@@ -338,9 +339,9 @@
                       UPDATE
                     </button>
                     <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
-                    *ngIf="createMode" [disabled]="!f.valid">
-                    SAVE
-                  </button>
+                      *ngIf="createMode">
+                      SAVE
+                    </button>
                     <button type="button" (click)="cancelThis()" *ngIf="editMode" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
                       CANCEL
                     </button>

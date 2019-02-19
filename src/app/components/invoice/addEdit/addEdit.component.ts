@@ -376,15 +376,12 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.tax_on_item=1;
             }
             
-            
-            
-    
             // Set Dates
             this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
             var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
             this.invoiceDate.reset(new Date(y, (m - 1), d))
-             
-    
+
+            
             // Tax and discounts show or hide
             if (this.activeEstimate.discount == 0) {
               this.activeInvoice.percentage_flag = null
@@ -582,29 +579,25 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if (this.clientList) {
+    if(this.clientList){
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
-      console.log(this.filteredClients);
-    }
-    else {
-
-      //to fetch and filter clients if clientlist comes undefined during switching components
-      this.clientListLoading = true
+  }else{
+    this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          var obj = {};
+          var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
-            if (obj.hasOwnProperty(item.name)) {
+            if (seen.hasOwnProperty(item.name)) {
               return false;
             } else {
-              obj[item.name] = true;
+              seen[item.name] = true;
               return true;
             }
           });
@@ -613,8 +606,8 @@ export class AddEditComponent implements OnInit {
         this.setClientFilter()
         this.clientListLoading = false
       })
-    }
   }
+}
 
    private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name)

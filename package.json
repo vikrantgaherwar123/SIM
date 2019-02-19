@@ -46,6 +46,7 @@
     "moment": "^2.24.0",
     "ng-multiselect-dropdown": "^0.2.3",
     "ng2-datepicker": "^3.1.1",
+    "ng2-search-filter": "^0.4.7",
     "ngx-filter-pipe": "^2.1.1",
     "ngx-order-pipe": "^2.0.1",
     "popper.js": "^1.14.4",
