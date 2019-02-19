@@ -1,901 +1,901 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main">
-    <div class="row">
-      <div id="msgInv" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
-        <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
-          (ngSubmit)="save(estimateGeneratorAdd.valid)">
-          <div class="shadow back p-5">
-            <div class="vtop text-right">
-              <span class="c-name" type="text" id="titleAdd" name="title">
-                {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
-              </span>
-            </div>
-
-            <!-- Estimate Details Header -->
-            <div class="row">
-              <div class="col-sm-7 px-0" id="clientDataAdd" name="clientData">
-                    <div class="row">
-                      <!-- Billing To -->
-                      <div class="col-10">
-                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
-                        </span>
-
-                        <div class="input-group pl-0 inputWithIcon">
-                          <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
-                          >
-                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+    <div class="col-12" id="main">
+      <div class="row">
+        <div id="msgInv" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
+          <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
+            (ngSubmit)="save(estimateGeneratorAdd.valid)">
+            <div class="shadow back p-5">
+              <div class="vtop text-right">
+                <span class="c-name" type="text" id="titleAdd" name="title">
+                  {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
+                </span>
+              </div>
+  
+              <!-- Estimate Details Header -->
+              <div class="row">
+                <div class="col-sm-7 px-0" id="clientDataAdd" name="clientData">
+                      <div class="row">
+                        <!-- Billing To -->
+                        <div class="col-10">
+                          <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                            {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                           </span>
-                          
-                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="shippingChange === true" class="downArrowIcon">
-                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
-                          </span>
-                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
-
-                          <div class="input-group-append">
-                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
-                          </div>
-                           
-                          <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                          <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
-                            autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
-                          >
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
-                            </button>
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
-                              {{client.name}}
-                            </mat-option>
-                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
-                              Add Client {{billingTo.value}}
-                            </mat-option>
-                          </mat-autocomplete>
-                        </div>
-                      </div>
-
-                      <div class="col-2" style="padding-top: 30px;">
-                        <span>
-                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
-                        </span>
-                      </div>
-
-                      <!-- Address and Shipping Address -->
-                      <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px;padding-top: 16px;">
-                        <div class="row mx-0">
-                          <div class="col-6 pl-0">
-                            <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
-                            <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
-                            <div *ngIf="activeClient && activeClient.email">
-                              Email: {{activeClient.email}}
-                            </div>
-                            <div *ngIf="activeClient && activeClient.number">
-                              Contact No: {{activeClient.number}}
-                            </div>
-                          </div>
-                          <div class="col-6 pr-0">
-                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                              {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+  
+                          <div class="input-group pl-0 inputWithIcon">
+                            <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
+                              matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
+                            >
+                            <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
+                              <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                             </span>
-                            <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
-                            <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
+                            
+                            <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                            <span *ngIf="shippingChange === true" class="downArrowIcon">
+                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                            </span>
+                            <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
+  
+                            <div class="input-group-append">
+                              <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
+                            </div>
+                             
+                            <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
+                            <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                              autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
+                            >
+                              <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                                class="btn btn-primary add_client_btn">
+                                <i class="fa fa-plus"></i>
+                                Add New Client
+                              </button>
+                              <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                                {{client.name}}
+                              </mat-option>
+                              <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                                Add Client {{billingTo.value}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </div>
+                        </div>
+  
+                        <div class="col-2" style="padding-top: 30px;">
+                          <span>
+                            <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
+                          </span>
+                        </div>
+  
+                        <!-- Address and Shipping Address -->
+                        <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px;padding-top: 16px;">
+                          <div class="row mx-0">
+                            <div class="col-6 pl-0">
+                              <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
+                              <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
+                              <div *ngIf="activeClient && activeClient.email">
+                                Email: {{activeClient.email}}
+                              </div>
+                              <div *ngIf="activeClient && activeClient.number">
+                                Contact No: {{activeClient.number}}
+                              </div>
+                            </div>
+                            <div class="col-6 pr-0">
+                              <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                                {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+                              </span>
+                              <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
+                              <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-              <div class="col-12 col-sm-5" id="estDataAdd">
-                <div class="row"> 
-                  <!-- Estimate Number and Dates -->
-                  <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
-                    <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
-                  </div>
-                  <div class="col-6">
-                    <form #estNumberForm="ngForm" name="estNumberForm">
-                      <div class="form-group" [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required">
-                        <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
-                          [(ngModel)]="activeEstimate.estimate_number" required onfocus="this.select()" />
-                        <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
-                          <span *ngIf="estNumberForm.estimateNumber.error.required"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No. required</span>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <div class="row" style="margin-top: 5px;">
-                  <div class="col-6 offset-md-2 col-md-4">
-                    <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
-                  </div>
-                  <div class="col-6">
-                    <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker"
-                      required readonly (click)="picker.open()">
-                    <mat-datepicker #picker></mat-datepicker>
-                    <div class="form-error" *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched">
-                      <span *ngIf="estimateGeneratorAdd.error"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} date required</span>
+  
+                <div class="col-12 col-sm-5" id="estDataAdd">
+                  <div class="row"> 
+                    <!-- Estimate Number and Dates -->
+                    <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
+                      <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
                     </div>
-                    <input type="hidden" [(ngModel)]="activeEstimate.created_date" name="createdDate" required />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Items table -->
-            <div class="lineItemDiv">
-              <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
-                <thead>
-                  <tr class="hd">
-                    <td width="20%">
-                      <input type="text" style="margin-left: 10px;text-align: left;" id="itemDescLabelAdd" class="bld w-100"
-                        disabled value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}" />
-                    </td>
-                    <td width="10%">
-                      <input type="text" id="itemQtyLabelAdd" class="bld w-100 text-center" name="quantity" disabled
-                        value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}" />
-                    </td>
-                    <td width="10%">
-                      <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
-                    </td>
-                    <td width="10%" *ngIf="showTaxRateFlag === false || settings.taxFlagLevel === 0">
-                      <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled value="Tax (%)" />
-                    </td>
-                    <td width="10%" *ngIf="showDiscountRateFlag === false || settings.discountFlagLevel === 1">
-                      <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
-                        value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
-                    </td>
-                    <td width="10%">
-                      <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
-                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
-                    </td>
-                    <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
-                    <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>
-                  </tr>
-                </thead>
-
-                <tbody class="lineItems">
-                  <!-- selected Items list -->
-                  <tr class="row-item" *ngFor="let item of activeEstimate.listItems; let index = index; let last = last">
-                    <td [class.no-border-last]="last">
-                      <div class="">
-                        <div class="form-group" style="margin-bottom: -12px;margin-top: 8px;">
-                          <div class="text-left product-color" style="margin-left: 10px;">
-                            {{item.product_name}}
+                    <div class="col-6">
+                      <form #estNumberForm="ngForm" name="estNumberForm">
+                        <div class="form-group" [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required">
+                          <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
+                            [(ngModel)]="activeEstimate.estimate_number" required onfocus="this.select()" />
+                          <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
+                            <span *ngIf="estNumberForm.estimateNumber.error.required"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No. required</span>
                           </div>
-                          <pre class="text-left selected-items" style="font-size: 11px; color: #a4a4a4;margin-left: 10px;">
-                            {{item.description}}
-                          </pre>
                         </div>
+                      </form>
+                    </div>
+                  </div>
+  
+                  <div class="row" style="margin-top: 5px;">
+                    <div class="col-6 offset-md-2 col-md-4">
+                      <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker"
+                        required readonly (click)="picker.open()">
+                      <mat-datepicker #picker></mat-datepicker>
+                      <div class="form-error" *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched">
+                        <span *ngIf="estimateGeneratorAdd.error"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} date required</span>
                       </div>
-                    </td>
-                    <td [class.no-border-last]="last">
-                      <div class="text-center">
-                        {{item.quantity | number:'2.'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last">
-                      <div class="text-center">
-                        {{item.rate | number:'2.'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate!==0 || item.tax_rate===0 ">
-                      <div class="text-center">
-                        {{item.tax_rate | number:'2.'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 || item.discount===0">
-                      <div class="text-center">
-                        {{item.discount | number:'2.'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last">
-                      <div class="text-center">
-                        {{item.total | number:'2.'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last">
-                      <div class="text-center">
-                        <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index)">
-                          <img src="assets/images/edit_blue.png" class="del" class="hg_20">
-                        </a>
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last">
-                      <div class="text-center">
-                        <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                          <img src="assets/images/delete_dark.png" class="del" class="hg_20">
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <!-- Select Item for estimate input -->
-                  <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
-                    <td [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
-                          matInput [formControl]="addItem" [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
-                          (optionSelected)="fillItemDetails()">
-                          <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
-                            [value]="product">{{product.prodName}}</mat-option>
-                        </mat-autocomplete>
-                        <div class="custom-description">
-                          <textarea id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
-                            *ngIf="modalDescription === true" [(ngModel)]="activeItem.description" placeholder="Description"
-                            onfocus="this.select()"></textarea>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="number" name="itemQty" id="qty" step="any" class="form-control text_center  height_40"
-                          min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
-                      </div>
-                      <button type="button" class="small_btn btnd add-line-item-button" (click)="addEditEstimateItem()"
-                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0">
-                        Add Item
-                      </button>
-                    </td>
-
-                    <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="number" name="itemRate" step="any" class="form-control text_center  height_40" min="0.01"
-                          [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
-                      </div>
-                    </td>
-
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                      <div class="input-group">
-                        <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
-                          [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
-                          <span class="input-group-text p-0">%</span>
-                        </div>
-                      </div>
-                      <div class="text-right">{{activeItem.tax_amount}}</div>
-                    </td>
-
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                      <div class="input-group">
-                        <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0
-                          max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
-                          <span class="input-group-text p-0">%</span>
-                        </div>
-                      </div>
-                      <div class="text-right">{{activeItem.discount_amount}}</div>
-                    </td>
-
-                    <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
-                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
-                          convert-decimal onfocus="this.select()" />
-                      </div>
-                    </td>
-                    <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
-                    </td>
-                  </tr>
-                  <button *ngIf="disableProductText === false" type="button" class="small_btn btnd add-line-item-button"
-                    (click)="disableProductText=true;">Add Item
-                  </button>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Tax discount list -->
-            <div class="row">
-              <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true">
-                  <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
-                    {{settings.discount ? settings.discount : 'Discount'}}+
-                  </a>
-                </div>
-                <div *ngIf="activeEstimate.shipping_charges === undefined">
-                  <a class="inline" (click)="activeEstimate.shipping_charges = 0">
-                    {{settings.shipping ? settings.shipping : 'Shipping'}}+
-                  </a>
-                </div>
-                <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true">
-                  <!-- && activeEstimate.tax_rate === 0-->
-                  <a class="inline" (click)="activeEstimate.tax_on_item=0">Tax+</a>
-                </div>
-                <div *ngIf="activeEstimate.adjustment === undefined">
-                  <a class="inline" (click)="activeEstimate.adjustment = 0">
-                    {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
-                  </a>
-                </div>
-                <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
-                  <a *ngIf="!activeEstimate.taxList[taxIndex]" (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
-                    {{tax.taxName}}+
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Bottom -->
-            <div class="row">
-              <!--Term and Condition -->
-              <div class="col-12 col-md-6">
-                <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
-                  <span class="bld">
-                    {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
-                  </span>
-                  <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
-                    <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;" />
-                    Add Terms
-                  </a>
-                </div>
-
-                <div class="col-12 px-0" style="font-size: 13px;">
-                  <div class="form-group" style="margin-top: 10px;">
-                    <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
-                      <div *ngIf="term.terms !=undefined" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
-                        <span style="word-wrap: break-word">{{term.terms}}</span>
-                      </div>
-                      <div *ngIf="term.terms !=undefined" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
-                        <a class="closeicon show float-right">
-                          <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color" alt="" class="hg_16">
-                        </a>
-                      </div>
-                      <!-- <div *ngIf="term.terms_condition" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
-                        <span style="word-wrap: break-word">{{term.terms_condition}}</span>
-                      </div>
-                      <div *ngIf="term.terms_condition" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
-                        <a class="closeicon show float-right">
-                          <img src="assets/images/delete_in_grey.png" class="del set-color" alt="" class="hg_16">
-                        </a>
-                      </div> -->
+                      <input type="hidden" [(ngModel)]="activeEstimate.created_date" name="createdDate" required />
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="col-12 col-md-6">
-                <!-- Total -->
-                <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
-                  <div class="row">
-                    <div class="col-6 text-left">
-                      <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
-                    </div>
-                    <div class="col-6 text-right">
-                      <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+  
+              <!-- Items table -->
+              <div class="lineItemDiv">
+                <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
+                  <thead>
+                    <tr class="hd">
+                      <td width="20%">
+                        <input type="text" style="margin-left: 10px;text-align: left;" id="itemDescLabelAdd" class="bld w-100"
+                          disabled value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}" />
+                      </td>
+                      <td width="10%">
+                        <input type="text" id="itemQtyLabelAdd" class="bld w-100 text-center" name="quantity" disabled
+                          value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}" />
+                      </td>
+                      <td width="10%">
+                        <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
+                      </td>
+                      <td width="10%" *ngIf="showTaxRateFlag === false && settings.taxFlagLevel === 0">
+                        <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled value="Tax (%)" />
+                      </td>
+                      <td width="10%" *ngIf="showDiscountRateFlag === false && settings.discountFlagLevel === 1">
+                        <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
+                          value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
+                      </td>
+                      <td width="10%">
+                        <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
+                          value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
+                      </td>
+                      <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
+                      <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>
+                    </tr>
+                  </thead>
+  
+                  <tbody class="lineItems">
+                    <!-- selected Items list -->
+                    <tr class="row-item" *ngFor="let item of activeEstimate.listItems; let index = index; let last = last">
+                      <td [class.no-border-last]="last">
+                        <div class="">
+                          <div class="form-group" style="margin-bottom: -12px;margin-top: 8px;">
+                            <div class="text-left product-color" style="margin-left: 10px;">
+                              {{item.product_name}}
+                            </div>
+                            <pre class="text-left selected-items" style="font-size: 11px; color: #a4a4a4;margin-left: 10px;">
+                              {{item.description}}
+                            </pre>
+                          </div>
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last">
+                        <div class="text-center">
+                          {{item.quantity | number:'2.'}}
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last">
+                        <div class="text-center">
+                          {{item.rate | number:'2.'}}
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate !==0">
+                        <div class="text-center">
+                          {{item.tax_rate | number:'2.'}}
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 ">
+                        <div class="text-center">
+                          {{item.discount | number:'2.'}}
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last">
+                        <div class="text-center">
+                          {{item.total | number:'2.'}}
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last">
+                        <div class="text-center">
+                          <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index)">
+                            <img src="assets/images/edit_blue.png" class="del" class="hg_20">
+                          </a>
+                        </div>
+                      </td>
+                      <td [class.no-border-last]="last">
+                        <div class="text-center">
+                          <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
+                            <img src="assets/images/delete_dark.png" class="del" class="hg_20">
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+  
+                    <!-- Select Item for estimate input -->
+                    <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
+                      <td [class.no-border-last]="last">
+                        <div class="form-group">
+                          <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
+                            matInput [formControl]="addItem" [matAutocomplete]="auto">
+                          <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                            (optionSelected)="fillItemDetails()">
+                            <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
+                              [value]="product">{{product.prodName}}</mat-option>
+                          </mat-autocomplete>
+                          <div class="custom-description">
+                            <textarea id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
+                              *ngIf="modalDescription === true" [(ngModel)]="activeItem.description" placeholder="Description"
+                              onfocus="this.select()"></textarea>
+                          </div>
+                        </div>
+                      </td>
+  
+                      <td style="vertical-align: top;" [class.no-border-last]="last">
+                        <div class="form-group">
+                          <input type="number" name="itemQty" id="qty" step="any" class="form-control text_center  height_40"
+                            min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
+                        </div>
+                        <button type="button" class="small_btn btnd add-line-item-button" (click)="addEditEstimateItem()"
+                          [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0">
+                          Add Item
+                        </button>
+                      </td>
+  
+                      <td style="vertical-align: top;" [class.no-border-last]="last">
+                        <div class="form-group">
+                          <input type="number" name="itemRate" step="any" class="form-control text_center  height_40" min="0.01"
+                            [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
+                        </div>
+                      </td>
+  
+                      <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                        <div class="input-group">
+                          <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
+                            [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          <div class="input-group-append">
+                            <span class="input-group-text p-0">%</span>
+                          </div>
+                        </div>
+                        <div class="text-right">{{activeItem.tax_amount}}</div>
+                      </td>
+  
+                      <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                        <div class="input-group">
+                          <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0
+                            max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          <div class="input-group-append">
+                            <span class="input-group-text p-0">%</span>
+                          </div>
+                        </div>
+                        <div class="text-right">{{activeItem.discount_amount}}</div>
+                      </td>
+  
+                      <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
+                        <div class="form-group">
+                          <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
+                            name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
+                            convert-decimal onfocus="this.select()" />
+                        </div>
+                      </td>
+                      <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
+                        <img (click)="disableProductText=false" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                      </td>
+                    </tr>
+                    <button *ngIf="disableProductText === false" type="button" class="small_btn btnd add-line-item-button"
+                      (click)="disableProductText=true;">Add Item
+                    </button>
+                  </tbody>
+                </table>
+              </div>
+  
+              <!-- Tax discount list -->
+              <div class="row">
+                <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
+                  <div *ngIf="settings.discountFlagLevel === 0 || showDiscountRateFlag === true || activeEstimate.discount_on_item === 2">
+                    <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
+                      {{settings.discount ? settings.discount : 'Discount'}}+
+                    </a>
+                  </div>
+                  <div *ngIf="activeEstimate.shipping_charges === undefined">
+                    <a class="inline" (click)="activeEstimate.shipping_charges = 0">
+                      {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                    </a>
+                  </div>
+                  <div *ngIf="settings.taxFlagLevel === 1 || showTaxRateFlag === true && activeEstimate.tax_on_item === 2">
+                    <!-- && activeEstimate.tax_rate === 0-->
+                    <a class="inline" (click)="activeEstimate.tax_on_item=1;">Tax+</a>
+                  </div>
+                  <div *ngIf="activeEstimate.adjustment === undefined">
+                    <a class="inline" (click)="activeEstimate.adjustment = 0">
+                      {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
+                    </a>
+                  </div>
+                  <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
+                    <a *ngIf="!activeEstimate.taxList[taxIndex]" (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                      {{tax.taxName}}+
+                    </a>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Bottom -->
+              <div class="row">
+                <!--Term and Condition -->
+                <div class="col-12 col-md-6">
+                  <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
+                    <span class="bld">
+                      {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                    </span>
+                    <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
+                      <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;" />
+                      Add Terms
+                    </a>
+                  </div>
+  
+                  <div class="col-12 px-0" style="font-size: 13px;">
+                    <div class="form-group" style="margin-top: 10px;">
+                      <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
+                        <div *ngIf="term.terms !=undefined" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                          <span style="word-wrap: break-word">{{term.terms}}</span>
+                        </div>
+                        <div *ngIf="term.terms !=undefined" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
+                          <a class="closeicon show float-right">
+                            <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color" alt="" class="hg_16">
+                          </a>
+                        </div>
+                        <!-- <div *ngIf="term.terms_condition" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                          <span style="word-wrap: break-word">{{term.terms_condition}}</span>
+                        </div>
+                        <div *ngIf="term.terms_condition" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
+                          <a class="closeicon show float-right">
+                            <img src="assets/images/delete_in_grey.png" class="del set-color" alt="" class="hg_16">
+                          </a>
+                        </div> -->
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                <!-- Discounts -->
-                <div *ngIf="activeEstimate.discount_on_item === 0">
-                  <div *ngIf="activeEstimate.percentage_value!==0 || activeEstimate.discount !==0"
-                    class="row mr_right mr_0">
+  
+                <div class="col-12 col-md-6">
+                  <!-- Total -->
+                  <div class="col-12 term-cond-label" style="margin-bottom: 5px;">
+                    <div class="row">
+                      <div class="col-6 text-left">
+                        <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
+                      </div>
+                      <div class="col-6 text-right">
+                        <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Discounts -->
+                  <div *ngIf="activeEstimate.discount_on_item === 0">
+                    <div *ngIf="activeEstimate.percentage_value!==0 || activeEstimate.discount !==0"
+                      class="row mr_right mr_0">
+                      <div class="col-5 discount-tax-label pr-0 label_color">
+                        <span style="text-align: left;vertical-align: bottom;color: #aaaaaa;" class="inline">
+                          {{settings.discount ? settings.discount : 'Discount'}}
+                        </span>
+                        <div *ngIf="activeEstimate.percentage_flag == 0" style="color: #aaaaaa;" class="inline font-custom">
+                          ({{mysymbols}})
+                        </div>
+                        <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
+  
+                        <div class="px-0" style="float: right; padding-right: 10px;">
+                          <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
+                              title="{{settings.discount ? settings.discount : 'Discount'}}"></span>
+                          </div>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <li [class.active]="activeEstimate.percentage_flag == 0">
+                              <a (click)="activeEstimate.percentage_flag = 0;
+                                  activeEstimate.discount=0.00;
+                                  calculateEstimate()
+                                ">
+                                Flat ({{mysymbols}})
+                              </a>
+                            </li>
+                            <li [class.active]="activeEstimate.percentage_flag == 1">
+                              <a (click)="activeEstimate.discount=0.00;
+                                  activeEstimate.percentage_flag=1;
+                                  calculateEstimate()
+                                ">
+                                Percent (%)
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+  
+                      <div class="col-2 pr-0">
+                        <form #form_discount="ngForm" name="form_discount">
+                          <div class="input-group addon-input">
+                            <input type="number" id="percentage_input" name="percentage_input" min="0" max="100" *ngIf="activeEstimate.percentage_flag == 1"
+                              step="any" class="form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
+                              (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)" />
+  
+                            <input type="number" id="discount_input" name="discount_input" step="any" min="0.00" [max]="activeEstimate.gross_amount"
+                              class="form-control" *ngIf="activeEstimate.percentage_flag == 0" required onfocus="this.select()"
+                              [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()" />
+                          </div>
+                        </form>
+                      </div>
+                      <div class="col-4 pr-0">
+                        <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label"
+                          style="width: 158px !important;" [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
+                          disabled />
+                      </div>
+                      <div class="input-group-addon pr-0 remove-button" style="margin-left: 5px;">
+                        <div class="addon selector" (click)="activeEstimate.discount_on_item=2;calculateEstimate();
+                            activeEstimate.percentage_value=0;activeEstimate.discount=0;
+                            activeEstimate.amount=activeEstimate.gross_amount;
+                            balance=activeEstimate.gross_amount
+                            ">
+                          <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Tax -->
+                  <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item===1 || activeEstimate.tax_rate !== 0">
                     <div class="col-5 discount-tax-label pr-0 label_color">
-                      <span style="text-align: left;vertical-align: bottom;color: #aaaaaa;" class="inline">
-                        {{settings.discount ? settings.discount : 'Discount'}}
-                      </span>
-                      <div *ngIf="activeEstimate.percentage_flag == 0" style="color: #aaaaaa;" class="inline font-custom">
-                        ({{mysymbols}})
-                      </div>
-                      <div *ngIf="activeEstimate.percentage_flag == 1" class="inline font-custom">(%)</div>
-
-                      <div class="px-0" style="float: right; padding-right: 10px;">
-                        <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                          <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
-                            title="{{settings.discount ? settings.discount : 'Discount'}}"></span>
-                        </div>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                          <li [class.active]="activeEstimate.percentage_flag == 0">
-                            <a (click)="activeEstimate.percentage_flag = 0;
-                                activeEstimate.discount=0.00;
-                                calculateEstimate()
-                              ">
-                              Flat ({{mysymbols}})
-                            </a>
-                          </li>
-                          <li [class.active]="activeEstimate.percentage_flag == 1">
-                            <a (click)="activeEstimate.discount=0.00;
-                                activeEstimate.percentage_flag=1;
-                                calculateEstimate()
-                              ">
-                              Percent (%)
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
+                      <div class="d-inline font-custom">Tax (%)</div>
                     </div>
-
+  
                     <div class="col-2 pr-0">
-                      <form #form_discount="ngForm" name="form_discount">
-                        <div class="input-group addon-input">
-                          <input type="number" id="percentage_input" name="percentage_input" min="0" max="100" *ngIf="activeEstimate.percentage_flag == 1"
-                            step="any" class="form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
-                            (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)" />
-
-                          <input type="number" id="discount_input" name="discount_input" step="any" min="0.00" [max]="activeEstimate.gross_amount"
-                            class="form-control" *ngIf="activeEstimate.percentage_flag == 0" required onfocus="this.select()"
-                            [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()" />
+                      <form #form_tax_input="ngForm" name="form_tax_input">
+                        <div class="input-group pr-0">
+                          <input type="number" id="tax_input" name="tax_input" class="form-control" step="any" min="0.00"
+                            max="100" required [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
+                            onfocus="this.select()" />
                         </div>
                       </form>
                     </div>
                     <div class="col-4 pr-0">
-                      <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label"
-                        style="width: 158px !important;" [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
-                        disabled />
+                      <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label"
+                        placeholder="00.000" [(ngModel)]="activeEstimate.tax_amount" (keyup)="calculateEstimate()" style="background-color: #e9ecef;width: 159px !important;"
+                         />
                     </div>
-                    <div class="input-group-addon pr-0 remove-button" style="margin-left: 5px;">
-                      <div class="addon selector" (click)="activeEstimate.discount_on_item=2;calculateEstimate();
-                          activeEstimate.percentage_value=0;activeEstimate.discount=0;
-                          activeEstimate.amount=activeEstimate.gross_amount;
-                          balance=activeEstimate.gross_amount
-                          ">
-                        <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                    <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
+                      <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
+                        <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <!-- Tax -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item===1">
-                  <div class="col-5 discount-tax-label pr-0 label_color">
-                    <div class="d-inline font-custom">Tax (%)</div>
-                  </div>
-
-                  <div class="col-2 pr-0">
-                    <form #form_tax_input="ngForm" name="form_tax_input">
-                      <div class="input-group pr-0">
-                        <input type="number" id="tax_input" name="tax_input" class="form-control" step="any" min="0.00"
-                          max="100" required [(ngModel)]="activeEstimate.tax_rate" (keyup)="calculateEstimate()"
-                          onfocus="this.select()" />
-                      </div>
-                    </form>
-                  </div>
-                  <div class="col-4 pr-0">
-                    <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label"
-                      placeholder="00.000" [(ngModel)]="activeEstimate.tax_amount" (keyup)="calculateEstimate()" style="background-color: #e9ecef;width: 159px !important;"
-                       />
-                  </div>
-                  <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
-                    <div class="addon selector" (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
-                      <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+  
+                  <!-- Tax List -->
+                  <div class="row mr_right mr_0" *ngFor="let tax of activeEstimate.taxList; let taxIndex = index">
+                    <div class="col-5 discount-tax-label pr-0 label_color" *ngIf="tax">
+                      <div class="d-inline font-custom">{{tax.taxName}} (%)</div>
                     </div>
-                  </div>
-                </div>
-
-                <!-- Tax List -->
-                <div class="row mr_right mr_0" *ngFor="let tax of activeEstimate.taxList; let taxIndex = index">
-                  <div class="col-5 discount-tax-label pr-0 label_color" *ngIf="tax">
-                    <div class="d-inline font-custom">{{tax.taxName}} (%)</div>
-                  </div>
-
-                  <div class="col-7 pr-0" *ngIf="tax">
-                      <form #form_tax_input="ngForm" name="form_tax_input">
-                          <div class="input-group pr-0" style="margin-left: -1px;">
-                              <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" 
-                              step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
-                              [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()" onfocus="this.select()"
-                            /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
-                               [(ngModel)]="tax.calculateValue" (keyup)="calculateEstimate()" style="background-color: #e9ecef;margin-right: -2px;"
-                            />
-
-                            <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeEstimate.taxList[taxIndex] = null;">
-                                <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+  
+                    <div class="col-7 pr-0" *ngIf="tax">
+                        <form #form_tax_input="ngForm" name="form_tax_input">
+                            <div class="input-group pr-0" style="margin-left: -1px;">
+                                <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" 
+                                step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
+                                [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()" onfocus="this.select()"
+                              /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
+                                 [(ngModel)]="tax.calculateValue" (keyup)="calculateEstimate()" style="background-color: #e9ecef;margin-right: -2px;"
+                              />
+  
+                              <div class="input-group-addon pr-0 remove-button">
+                                <div class="addon selector" (click)="activeEstimate.taxList[taxIndex] = null;">
+                                  <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </form> 
-                  </div>
-                </div>
-
-                <!-- Shipping -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
-                  <div class="col-5 discount-tax-label label_color">
-                    <div class="inline" style="text-align: left;vertical-align: bottom;">
-                      <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}(+) -->
-                      {{settings.shipping ? settings.shipping : 'Shipping'}} (+)
+                          </form> 
                     </div>
                   </div>
-
-                  <div class="col-7 pr-0">
-                    <form #form_shipping_input="ngForm" name="form_shipping_input">
-                      <div class="input-group pr-0">
-                        <input type="number" name="shipping_input" class="form-control" step="any" min="0.00" required
-                          onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+  
+                  <!-- Shipping -->
+                  <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
+                    <div class="col-5 discount-tax-label label_color">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">
+                        <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}(+) -->
+                        {{settings.shipping ? settings.shipping : 'Shipping'}} (+)
+                      </div>
+                    </div>
+  
+                    <div class="col-7 pr-0">
+                      <form #form_shipping_input="ngForm" name="form_shipping_input">
+                        <div class="input-group pr-0">
+                          <input type="number" name="shipping_input" class="form-control" step="any" min="0.00" required
+                            onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
+                          <div class="input-group-addon pr-0 remove-button">
+                            <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
+                              <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <!-- Adjustment -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.adjustment !== undefined">
-                  <div class="col-5 discount-tax-label pr-0 label_color">
-                    <div style="text-align: left;vertical-align: bottom;">
-                      <!-- {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-) -->
-                      Adjustment
+                      </form>
                     </div>
                   </div>
-
-                  <div class="col-7 pr-0">
-                    <form #adjst_input="ngForm" name="adjst_input">
-                      <div class="input-group pr-0">
-                        <input type="number" name="tax_input" class="form-control" step="any" required onfocus="this.select()"
-                          [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()" />
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+  
+                  <!-- Adjustment -->
+                  <div class="row mr_right mr_0" *ngIf="activeEstimate.adjustment !== undefined">
+                    <div class="col-5 discount-tax-label pr-0 label_color">
+                      <div style="text-align: left;vertical-align: bottom;">
+                        <!-- {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-) -->
+                        Adjustment
+                      </div>
+                    </div>
+  
+                    <div class="col-7 pr-0">
+                      <form #adjst_input="ngForm" name="adjst_input">
+                        <div class="input-group pr-0">
+                          <input type="number" name="tax_input" class="form-control" step="any" required onfocus="this.select()"
+                            [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()" />
+                          <div class="input-group-addon pr-0 remove-button">
+                            <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
+                              <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <!-- Grand Total -->
-                <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px !important;">
-                  <div class="col-6 text-left">
-                    <span class="font-custom-bold">
-                      {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
-                    </span>
-                  </div>
-
-                  <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                  </div>
-                </div>
-
-                <!-- Balance -->
-                <div class="row mx-0 balance-row" style="padding: 6.5px 0px !important;">
-                  <div class="col-6 text-left">
-                    <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
-                  </div>
-                  <div class="col-6 text-right">
-                    <span class="bld">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' :
-                      'symbol'):'1.2-2'}}</span>
-                  </div>
-                </div>
-
-                <!-- Save -->
-                <div class="col-12 px-0 mt-2">
-                  <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
-                    class="save btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
-                    SAVE
-                  </button>
-                  <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                    style="margin-right: 8px;" (click)="deleteEstimate()">
-                    DELETE
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Previous Estimates Button -->
-      <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
-          Show All Estimates
-        </button>
-
-        <!-- Delete Estimates Button -->
-        <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
-          [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
-          "
-        >
-          Delete Estimates
-        </button> -->
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Delete CLIENT MODAL -->
-<div id="delete-estimate" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
-          Delete Client
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
-          <img src="assets/images/cross.png"  Title="Delete" alt="logo" style="height: 30px;margin-top: 6px;">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-          <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
-          <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="close btn btn-raised btn-custom-1 width20btn" data-dismiss="modal" aria-label="Close"
-          style="opacity: unset;margin-right: 46%;">
-          No
-        </button>
-        <button type="button" id="clientFormLabel" (click)="deleteEstimate()" class="close btn btn-raised  btn-success width20btn"
-          data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
-          Yes
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Delete CLIENT MODAL ends -->
-<!-- ADD CLIENT MODAL -->
-<div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-          Add New Client
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-          <div class="col-12">
-            <div class="row">
-              <div class="col-6" style="padding-right: 23px;">
-                <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" name="name" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.name"
-                    placeholder="Organization Name" required onfocus="this.select()" />
-                  <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
-                    <span *ngIf="clientform.name">Required</span>
-                    <span *ngIf="errors">{{ errors.name[0] }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-6" style="padding-left: 23px;">
-                <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" name="contactPersonName" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.contactPersonName"
-                    placeholder="Contact Person" onfocus="this.select()" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="row">
-              <div class="col-6" style="padding-right: 23px;">
-                <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
-                    placeholder="Email" onfocus="this.select()" />
-                </div>
-              </div>
-              <div class="col-6" style="padding-left: 23px;">
-                <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
-                    placeholder="Number" onfocus="this.select()" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
-              <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1" class="form-control"
-                placeholder="Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
-              <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
-                placeholder="{{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="form-group add-client-input-width">
-              <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
-                placeholder="Business Id " onfocus="this.select()" />
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="form-group add-client-input-width">
-              <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
-                placeholder="Business Detail" onfocus="this.select()" />
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
-          Close
-        </button>
-        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
-          [disabled]="!clientform.valid" (click)="saveClient(clientform.valid)">
-          Add Client
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT ITEM MODAL -->
-<div id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true" data-backdrop="static"
-  data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-          Edit Item
-        </h4>
-        <button type="button" class="close" aria-label="Close" (click)="closeEditItemModal()">
-          <img src="assets/images/cross16.png" alt="logo">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal add-client-form" name="itemform" #itemform="ngForm">
-          <input type="hidden" name="uid" [ngModel]="activeItem.unique_identifier">
-          <div class="row">
-            <div class="col-12">
-              Name:
-              <input type="text" name="name" class="form-control add-client-input-custom" [ngModel]="activeItem.product_name"
-                placeholder="Name" required disabled />
-            </div>
-
-            <div class="col-12">
-              Description:
-              <textarea [(ngModel)]="activeItem.description" name="description" class="form-control" placeholder="Description"
-                select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
-            </div>
-
-            <div class="col-12">
-              Quantity (*):
-              <input type="number" name="quantity" class="form-control add-client-input-custom" [(ngModel)]="activeItem.quantity"
-                (keyup)="calculateTotal()" placeholder="Quantity" onfocus="this.select()" required />
-            </div>
-
-            <div class="col-12">
-              {{settings.mTvRate ? settings.mTvRate : 'Rate'}} (*):
-              <input type="number" name="rate" class="form-control add-client-input-custom" [(ngModel)]="activeItem.rate"
-                (keyup)="calculateTotal()" placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}" onfocus="this.select()" required />
-            </div>
-
-            <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
-              Tax:
-              <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax" onfocus="this.select()" />
-            </div>
-
-            <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
-              {{settings.discount ? settings.discount : 'Discount'}}:
-              <input type="number" name="discount" class="form-control add-client-input-custom" [(ngModel)]="activeItem.discount"
-                (keyup)="calculateTotal()" placeholder="{{settings.discount ? settings.discount : 'Discount'}}" onfocus="this.select()" />
-            </div>
-
-            <div class="col-12">
-              {{settings.total ? settings.total : 'Total'}}:
-              <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled class="form-control add-client-input-custom"
-                onfocus="this.select()" />
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEditItemModal()">
-          Close
-        </button>
-        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" [disabled]="!itemform.valid"
-          (click)="addEditEstimateItem(itemform.controls.uid.value)">
-          Edit Item
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD TERMS MODAL -->
-<div id="add-terms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"
-  data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <form name="termForm" #termForm="ngForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required elastic
-                ></textarea>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="checkbox pull-left">
-                <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
-                  [(ngModel)]="addTermModal.setDefault"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                > -->
-                <div class="inline">Default?</div>
-                  <label class="check">
-                    <div>
-                        <input type="checkbox" id="addtermcheck" name="setDefault"
-                        [(ngModel)]="addTermModal.setDefault" checked
-                        class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                      >
-                      <span class="checkmark" style="left: 78px;"></span>
+                      </form>
                     </div>
-                  </label>
-                <!-- <label class="inline" for="addtermcheck"></label> -->
-                
+                  </div>
+  
+                  <!-- Grand Total -->
+                  <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px !important;">
+                    <div class="col-6 text-left">
+                      <span class="font-custom-bold">
+                        {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                      </span>
+                    </div>
+  
+                    <div class="col-6 text-right">
+                      <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    </div>
+                  </div>
+  
+                  <!-- Balance -->
+                  <div class="row mx-0 balance-row" style="padding: 6.5px 0px !important;">
+                    <div class="col-6 text-left">
+                      <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
+                    </div>
+                    <div class="col-6 text-right">
+                      <span class="bld">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' :
+                        'symbol'):'1.2-2'}}</span>
+                    </div>
+                  </div>
+  
+                  <!-- Save -->
+                  <div class="col-12 px-0 mt-2">
+                    <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
+                      class="save btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
+                      SAVE
+                    </button>
+                    <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                      style="margin-right: 8px;" (click)="deleteEstimate()">
+                      DELETE
+                    </button>
+                  </div>
+                </div>
               </div>
-              <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
-                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
-              >
-                SAVE
-              </button>
-              
             </div>
-          </div>
-        </form>
-        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
-          Please Select Terms
-        </h5>
-
-        <div class="col-12 terms_border">
-          <div class="col-12 mCustomScrollbar style-3">
-            <div class="item termlist row product-list" id="term1{{index}}"
-             *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index" 
-              [class.selected]="selectedTerm == index"
-            >
-              <div class="col-12 px-0">
-                <div class="row">
-                  <div class="col-md-1 px-0">
-                    <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
-                      (change)="addRemoveTermsFromInvoice(term)"
-                      [checked]="isTermInInvoice(term)"
-                    /> -->
-                    <!-- <label class="" for="termcheck{{$index}}"></label> -->
+          </form>
+        </div>
+  
+        <!-- Previous Estimates Button -->
+        <div class="col-12 col-md-3">
+          <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
+            Show All Estimates
+          </button>
+  
+          <!-- Delete Estimates Button -->
+          <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
+            [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
+              confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
+            "
+          >
+            Delete Estimates
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete CLIENT MODAL -->
+  <div id="delete-estimate" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+            <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+            Delete Client
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
+            <img src="assets/images/cross.png"  Title="Delete" alt="logo" style="height: 30px;margin-top: 6px;">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+            <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
+            <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+  
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="close btn btn-raised btn-custom-1 width20btn" data-dismiss="modal" aria-label="Close"
+            style="opacity: unset;margin-right: 46%;">
+            No
+          </button>
+          <button type="button" id="clientFormLabel" (click)="deleteEstimate()" class="close btn btn-raised  btn-success width20btn"
+            data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Delete CLIENT MODAL ends -->
+  <!-- ADD CLIENT MODAL -->
+  <div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+            Add New Client
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="assets/images/cross16.png" alt="logo">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-6" style="padding-right: 23px;">
+                  <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
+                    <input type="text" name="name" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.name"
+                      placeholder="Organization Name" required onfocus="this.select()" />
+                    <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
+                      <span *ngIf="clientform.name">Required</span>
+                      <span *ngIf="errors">{{ errors.name[0] }}</span>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-6" style="padding-left: 23px;">
+                  <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
+                    <input type="text" name="contactPersonName" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.contactPersonName"
+                      placeholder="Contact Person" onfocus="this.select()" />
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-12">
+              <div class="row">
+                <div class="col-6" style="padding-right: 23px;">
+                  <div class="form-group " [class.has-error]="(clientform.submitted && clientform.errors)">
+                    <input type="text" [(ngModel)]="addClientModal.email" name="email" class="form-control add-client-input-custom"
+                      placeholder="Email" onfocus="this.select()" />
+                  </div>
+                </div>
+                <div class="col-6" style="padding-left: 23px;">
+                  <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
+                    <input type="text" [(ngModel)]="addClientModal.number" name="cont_number" class="form-control add-client-input-custom"
+                      placeholder="Number" onfocus="this.select()" />
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-12">
+              <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
+                <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1" class="form-control"
+                  placeholder="Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+              </div>
+            </div>
+  
+            <div class="col-12">
+              <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
+                <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
+                  placeholder="{{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+              </div>
+            </div>
+  
+            <div class="col-12">
+              <div class="form-group add-client-input-width">
+                <input type="text" [(ngModel)]="addClientModal.businessId" name="businessId" class="form-control add-client-input-custom"
+                  placeholder="Business Id " onfocus="this.select()" />
+              </div>
+            </div>
+  
+            <div class="col-12">
+              <div class="form-group add-client-input-width">
+                <input type="text" [(ngModel)]="addClientModal.businessDetail" name="businessDetail" class="form-control add-client-input-custom"
+                  placeholder="Business Detail" onfocus="this.select()" />
+              </div>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
+            Close
+          </button>
+          <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>"
+            [disabled]="!clientform.valid" (click)="saveClient(clientform.valid)">
+            Add Client
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- EDIT ITEM MODAL -->
+  <div id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+            Edit Item
+          </h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeEditItemModal()">
+            <img src="assets/images/cross16.png" alt="logo">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal add-client-form" name="itemform" #itemform="ngForm">
+            <input type="hidden" name="uid" [ngModel]="activeItem.unique_identifier">
+            <div class="row">
+              <div class="col-12">
+                Name:
+                <input type="text" name="name" class="form-control add-client-input-custom" [ngModel]="activeItem.product_name"
+                  placeholder="Name" required disabled />
+              </div>
+  
+              <div class="col-12">
+                Description:
+                <textarea [(ngModel)]="activeItem.description" name="description" class="form-control" placeholder="Description"
+                  select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+              </div>
+  
+              <div class="col-12">
+                Quantity (*):
+                <input type="number" name="quantity" class="form-control add-client-input-custom" [(ngModel)]="activeItem.quantity"
+                  (keyup)="calculateTotal()" placeholder="Quantity" onfocus="this.select()" required />
+              </div>
+  
+              <div class="col-12">
+                {{settings.mTvRate ? settings.mTvRate : 'Rate'}} (*):
+                <input type="number" name="rate" class="form-control add-client-input-custom" [(ngModel)]="activeItem.rate"
+                  (keyup)="calculateTotal()" placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}" onfocus="this.select()" required />
+              </div>
+  
+              <div class="col-12" *ngIf="settings.taxFlagLevel === 0">
+                Tax:
+                <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
+                  [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax" onfocus="this.select()" />
+              </div>
+  
+              <div class="col-12" *ngIf="settings.discountFlagLevel === 1">
+                {{settings.discount ? settings.discount : 'Discount'}}:
+                <input type="number" name="discount" class="form-control add-client-input-custom" [(ngModel)]="activeItem.discount"
+                  (keyup)="calculateTotal()" placeholder="{{settings.discount ? settings.discount : 'Discount'}}" onfocus="this.select()" />
+              </div>
+  
+              <div class="col-12">
+                {{settings.total ? settings.total : 'Total'}}:
+                <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled class="form-control add-client-input-custom"
+                  onfocus="this.select()" />
+              </div>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeEditItemModal()">
+            Close
+          </button>
+          <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn" [disabled]="!itemform.valid"
+            (click)="addEditEstimateItem(itemform.controls.uid.value)">
+            Edit Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ADD TERMS MODAL -->
+  <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+            Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="assets/images/cross16.png" alt="logo">
+          </button>
+        </div>
+  
+        <div class="modal-body">
+          <form name="termForm" #termForm="ngForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
+                    placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required elastic
+                  ></textarea>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="checkbox pull-left">
+                  <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
+                    [(ngModel)]="addTermModal.setDefault"
+                    class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
+                  > -->
+                  <div class="inline">Default?</div>
                     <label class="check">
-                      <div class="col-1">
-                        <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)" [checked]="isTermInEstimate(term)" />
-                        <span class="checkmark"></span>
+                      <div>
+                          <input type="checkbox" id="addtermcheck" name="setDefault"
+                          [(ngModel)]="addTermModal.setDefault" checked
+                          class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
+                        >
+                        <span class="checkmark" style="left: 78px;"></span>
                       </div>
                     </label>
-                  </div>
-                  <div class="col-md-9 pl-0">
-                    <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
+                  <!-- <label class="inline" for="addtermcheck"></label> -->
+                  
+                </div>
+                <button type="button" id="addtermbtn" name="addtermbtn" title="save"
+                  class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
+                  [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
+                >
+                  SAVE
+                </button>
+                
+              </div>
+            </div>
+          </form>
+          <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
+            Please Select Terms
+          </h5>
+  
+          <div class="col-12 terms_border">
+            <div class="col-12 mCustomScrollbar style-3">
+              <div class="item termlist row product-list" id="term1{{index}}"
+               *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index" 
+                [class.selected]="selectedTerm == index"
+              >
+                <div class="col-12 px-0">
+                  <div class="row">
+                    <div class="col-md-1 px-0">
+                      <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
+                        (change)="addRemoveTermsFromInvoice(term)"
+                        [checked]="isTermInInvoice(term)"
+                      /> -->
+                      <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                      <label class="check">
+                        <div class="col-1">
+                          <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)" [checked]="isTermInEstimate(term)" />
+                          <span class="checkmark"></span>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="col-md-9 pl-0">
+                      <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="modal-footer"></div>
       </div>
-      <div class="modal-footer"></div>
     </div>
   </div>
-</div>

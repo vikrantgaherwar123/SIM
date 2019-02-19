@@ -183,7 +183,9 @@ export class AddEditEstComponent implements OnInit {
     if(this.settings.taxFlagLevel === 1){
       this.showTaxRateFlag = true;
     }else{
+      this.activeEstimate.tax_rate = 0
       this.showTaxRateFlag = false;
+      this.activeEstimate.tax_on_item = 0;
     }
     if(this.settings.discountFlagLevel === 0){
       this.showDiscountRateFlag = true;
@@ -206,6 +208,7 @@ export class AddEditEstComponent implements OnInit {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
       this.showTaxRateFlag = false;
+      this.activeEstimate.tax_on_item = 1;
     }else{
       this.showTaxRateFlag = true;
     }

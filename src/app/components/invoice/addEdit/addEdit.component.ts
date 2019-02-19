@@ -242,12 +242,12 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
+    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
       this.showTaxRateFlag = false;
     }else{
       this.showTaxRateFlag = true;
     }
-    if(this.settings.discountFlagLevel === 1 || this.showDiscountRate !==0){
+    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
       this.showDiscountRateFlag = false;
     }else{
       this.showDiscountRateFlag = true;
