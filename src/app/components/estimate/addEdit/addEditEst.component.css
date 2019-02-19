@@ -11,3 +11,130 @@
 .hide_dropdown {
   display :none;
 }
+
+.inv-generator {
+  max-height: none;
+}
+.create-invoice {
+  background: #fff;
+  box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
+}
+input, textarea {
+  margin-bottom: 2px;
+}
+.bld {
+  margin: 2px 0;
+}
+select {
+  font-family: quicksand_book !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 800 !important;
+  padding: 3px 12px !important;
+}
+.set-color {
+  color: #2196f3 !important;
+}
+.add, .del {
+  height: 21px;
+  margin-top: -6px;
+}
+.del {
+  background-position: -404px -214px;
+  width: 20px;
+}
+.add-item-button {
+  margin-bottom: 10px;
+  margin-top: 3px;
+}
+.discount-tax-pad {
+  padding-top: 15px;
+}
+.bld {
+  margin: 2px 0;
+}
+.bld, .terms {
+  font-weight: 700;
+  font-size: 14px;
+}
+.mat-form-field-infix {
+  border-top: 0 !important;
+}
+/* classes added by Vikrant */
+#back2Top {
+  width: 40px;
+  line-height: 40px;
+  overflow: hidden;
+  z-index: 999;
+  display: none;
+  cursor: pointer;
+  -moz-transform: rotate(270deg);
+  -webkit-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+  position: fixed;
+  bottom: 50px;
+  right: 0;
+  background-color: #DDD;
+  color: #555;
+  text-align: center;
+  font-size: 30px;
+  text-decoration: none;
+}
+#back2Top:hover {
+  background-color: #DDF;
+  color: #000;
+}
+.errspan {
+  float: right;
+  margin-right: 6px;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  color: red;
+}
+.inputWithIcon input[type=text]{
+  padding-left: 40px;
+}
+.inputWithIcon{
+  position: relative;
+}
+.inputWithIcon i{
+  position: absolute;
+  left: 0;
+  top: 5px;
+  padding: 9px 5px;
+  color: #aaa;
+  transition: .3s;
+}
+.inputWithIcon input[type=text]:focus + i {
+  color: dodgerblue;
+}
+.downArrowIcon{
+  position: absolute;
+    left: 390px;
+    top: -1px;
+    padding: 9px 17px;
+    color: #aaa;
+    transition: .3s;
+}
+
+/* css - tejaswini */
+.label_color
+{
+  color: #aaaaaa;
+  margin-top: 6px;
+  margin-left: -4px;
+}
+.hide_dropdown {
+  display :none;
+}
+.box_red{
+  border-color:red;
+}
+.box_grey{
+  border-color: grey;
+}
+
+

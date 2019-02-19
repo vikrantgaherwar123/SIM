@@ -50,7 +50,7 @@
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
             <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
-              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
+              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0:productDisplayLimit); index as index"
             >
               <div class="row item product-list">
                 <div class="col-2 pl-1">

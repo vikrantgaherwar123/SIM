@@ -26,14 +26,14 @@
 
                         <div class="input-group pl-0 inputWithIcon">
                           <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
                             <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           
-                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="disableIcon === true" class="downArrowIcon">
+                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <span *ngIf="shippingChange === true" class="downArrowIcon">
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
@@ -248,6 +248,11 @@
                             value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           />
                         </td>
+                        <td width="10%" *ngIf="settings.taxFlagLevel === 0">
+                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
+                            value="Tax (%)"
+                          />
+                        </td>
                         <td width="10%">
                           <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
@@ -285,12 +290,12 @@
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate!==0 || item.tax_rate===0 ">
                           <div class="text-center">
-                            {{item.tax_rate | number:'2.'}}
+                            {{item.discount | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 || item.discount===0">
                           <div class="text-center">
-                            {{item.discount | number:'2.'}}
+                            {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;" >

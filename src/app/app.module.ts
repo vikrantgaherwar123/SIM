@@ -55,6 +55,11 @@ import { LoadalldataComponent } from './components/loadalldata/loadalldata.compo
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
+import { NgDatepickerModule } from 'ng2-datepicker';
+// search module
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
+
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -104,6 +109,7 @@ export function getAuthServiceConfigs() {
   imports: [
     ProgressBarModule,
     BrowserModule,
+    Ng2SearchPipeModule,
     HttpModule,
     SocialLoginModule,
     AppRoutingModule,

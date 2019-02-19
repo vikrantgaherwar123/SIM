@@ -170,7 +170,7 @@ export class ViewComponent implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 10,
-      allowSearchFilter: true
+      allowSearchFilter: true,
     };
     // keep first item selected in madal
     var date = new Date()

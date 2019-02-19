@@ -24,7 +24,7 @@
 
         <!-- Terms And Conditions List -->
         <div class="col-12 mb-1 mCustomScrollbar style-3">
-          <div class="row term-list-show" *ngFor="let term of tncs | orderBy: 'term': 'desc'; let index = index; let last = last" id="term{{index}}">
+          <div class="row term-list-show" *ngFor="let term of tncs | orderBy: 'false': true; let index = index ;" id="term{{index}}">
           <label class="check">
             <div class="col-1">
               <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'">
