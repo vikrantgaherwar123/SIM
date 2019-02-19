@@ -127,7 +127,6 @@ export function getAuthServiceConfigs() {
     SweetAlert2Module.forRoot(),
     FilterPipeModule,
     OrderModule,
-    NgDatepickerModule,
     BrowserAnimationsModule,
     ToasterModule.forRoot(),
     MaterialModule,

@@ -93,6 +93,10 @@ export class AddEditEstComponent implements OnInit {
   }
   keepGoing: boolean;
   estimateDelete: boolean;
+  showTaxRate: number;
+  showTaxRateFlag: boolean;
+  showDiscountRateFlag: boolean;
+  showDiscountRate: number;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -175,7 +179,19 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addInit() {
-    
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 1){
+      this.showTaxRateFlag = true;
+    }else{
+      this.showTaxRateFlag = false;
+    }
+    if(this.settings.discountFlagLevel === 0){
+      this.showDiscountRateFlag = true;
+    }else{
+      this.showDiscountRateFlag = false;
+    }
+
+
     this.commonSettingsInit()
     var date = new Date()
     this.estimateDate.reset(date)
@@ -186,6 +202,20 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
+
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
+      this.showTaxRateFlag = false;
+    }else{
+      this.showTaxRateFlag = true;
+    }
+    if(this.settings.discountFlagLevel === 1 || this.showDiscountRate !==0){
+      this.showDiscountRateFlag = false;
+    }else{
+      this.showDiscountRateFlag = true;
+    }
+
+    
     //to view updated or viewed estimate in view page
     // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate
@@ -686,7 +716,9 @@ export class AddEditEstComponent implements OnInit {
           callback(temp)
         }
         this.toasterService.pop('success', 'Product has been added')
-        window.location.reload(true);
+        //called store and set product here to update store when new product added
+        this.store.select('product').subscribe(products => this.productList = products)
+        this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }

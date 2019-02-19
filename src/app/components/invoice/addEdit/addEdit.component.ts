@@ -94,6 +94,15 @@ export class AddEditComponent implements OnInit {
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
   noClientSelected: boolean;
+  showTaxRate: any;
+  showDiscountRate: any;
+  showProduct: any;
+  showDescription: any;
+  showQuantity: any;
+  showPrice: any;
+  showDiscountedRate: any;
+  showTaxRateFlag: any;
+  showDiscountRateFlag: any;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -204,7 +213,20 @@ export class AddEditComponent implements OnInit {
   }
   
   addInit() {
-    
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 1){
+      this.showTaxRateFlag = true;
+    }else{
+      this.showTaxRateFlag = false;
+    }
+    if(this.settings.discountFlagLevel === 0){
+      this.showDiscountRateFlag = true;
+    }else{
+      this.showDiscountRateFlag = false;
+    }
+
+
+
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -216,7 +238,22 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.listItems = []
     }
   }
+
+
   editInit(invId) {
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
+      this.showTaxRateFlag = false;
+    }else{
+      this.showTaxRateFlag = true;
+    }
+    if(this.settings.discountFlagLevel === 1 || this.showDiscountRate !==0){
+      this.showDiscountRateFlag = false;
+    }else{
+      this.showDiscountRateFlag = true;
+    }
+
+    
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
@@ -244,6 +281,19 @@ export class AddEditComponent implements OnInit {
           })
         }
         this.activeInvoice.listItems = temp
+        // this.showProduct = this.activeInvoice.listItems[0].productName;
+        // this.showDescription = this.activeInvoice.listItems[0].description;
+        // this.showDiscountedRate =  this.activeInvoice.listItems[0].discountRate;
+        // this.showQuantity = this.activeInvoice.listItems[0].qty;
+        // this.showPrice = this.activeInvoice.listItems[0].price;
+        this.showTaxRate = this.activeInvoice.listItems[0].tax_rate;
+        this.showDiscountRate = this.activeInvoice.listItems[0].discount;
+      }
+      if(this.showTaxRate!==0){
+        this.settings.taxFlagLevel=0;
+      }
+      if(this.showDiscountRate!==0){
+        this.settings.discountFlagLevel=1;
       }
 
         // Change payment keys compatible
@@ -563,15 +613,34 @@ export class AddEditComponent implements OnInit {
       }
 
       // Invoice Number
-      if (!isNaN(parseInt(this.settings.invNo))) {
-        this.tempInvNo = parseInt(this.settings.invNo) + 1
+      
+        this.tempInvNo = JSON.parse(localStorage.getItem('invNo'));
+        if (this.tempInvNo) {
+        //regex code to find no. from string
+        // var r = /\d+/;
+        // var m = r.exec(this.tempInvNo.toString())[0]
+        // var s =parseInt(m);
+        // console.log(s);
+
+
+        // this regex code separates string and no.
+        var text = this.tempInvNo.toString().split(/(\d+)/)
+        var t = text[0] //text
+        var n = parseInt(text[1]) //number
+        if( isNaN(n)){
+          n = 0; 
+        }
+        // var x = t+(n+1);
+        this.tempInvNo = n + 1 ;
+
       } else {
         this.tempInvNo = 1
+        t = this.settings.setInvoiceFormat;
       }
       if (this.settings.setInvoiceFormat) {
-        this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+        this.activeInvoice.invoice_number = t + this.tempInvNo
       } else {
-        this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+        this.activeInvoice.invoice_number = this.tempInvNo.toString();
       }
     })
   }
@@ -789,7 +858,7 @@ export class AddEditComponent implements OnInit {
         this.store.select('product').subscribe(products => this.productList = products)
         // window will refresh when product added successfully to see that product in a list
         // window.location.reload(true);
-        this.setProductFilter();
+        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -813,7 +882,7 @@ export class AddEditComponent implements OnInit {
       quantity: product.quantity ? product.quantity : 1,
       unit: product.unit,
       rate: product.rate,
-      tax_rate: 0.00,
+      tax_rate: product.taxRate,
       discount: 0.00
     }
     this.calculateTotal()
@@ -826,7 +895,6 @@ export class AddEditComponent implements OnInit {
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-      this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
@@ -888,13 +956,6 @@ export class AddEditComponent implements OnInit {
   }
   }
 
-  // clearItem(){
-  //   this.activeItem.total = 0;
-  //   this.activeItem.rate = 0;
-  //   this.activeItem.discount = 0;
-  //   this.activeItem.tax_rate = 0;
-  // }
-
   closeItemModel() {
     this.modalDescription = true;
     this.activeItem = {
@@ -926,7 +987,7 @@ export class AddEditComponent implements OnInit {
       // Tax
       if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
         this.activeItem.tax_rate = 0
-      } else {
+      } else if(this.settings.taxFlagLevel === 0){ //when tax on item selected from settings
         this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
         this.activeItem.total += this.activeItem.tax_amount
       }
@@ -1255,6 +1316,7 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else {
+          localStorage.setItem('invNo', JSON.stringify(this.activeInvoice.invoice_number));
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
           self.addInit()

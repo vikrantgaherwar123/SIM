@@ -169,9 +169,9 @@
           </div>
 
           <div class="col-12 px-0 mCustomScrollbar style-3">
-            <div style="background-color: #fff;" *ngIf="estListLoader">
+            <!-- <div style="background-color: #fff;" *ngIf="estListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-            </div>
+            </div> -->
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
               *ngFor="let estimate of (estimateList | orderBy: estSortTerm:true:true | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
@@ -249,13 +249,13 @@
                   <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                     {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}} 
                   </span>
-                  <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
+                  <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
                     {{activeClient.name}}
                   </div>
                 </div>
               </div>
               <div class="row" id="addressBar" name="addressBar">
-                <div class="col-6">
+                <div *ngIf="activeClient" class="col-6">
                   <span type="text" id="BillAddress" class="adr bill-to font-custom-bold">
                     Address
                   </span>

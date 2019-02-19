@@ -143,6 +143,7 @@ export class ProductComponent implements OnInit {
               this.activeProduct = this.productList[0]
               this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
+              // window.location.reload(true);
             } else {    //edit
               self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
@@ -183,7 +184,7 @@ export class ProductComponent implements OnInit {
     this.deleteproduct = true
     $('#delete-product').modal('show')
     $('#delete-product').on('shown.bs.modal', (e) => {
-      $('#delete-product input[type="text"]')[0].focus()
+      // $('#delete-product input[type="text"]')[1].focus()
     })
   }
 
