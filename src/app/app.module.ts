@@ -55,7 +55,6 @@ import { LoadalldataComponent } from './components/loadalldata/loadalldata.compo
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
-import { NgDatepickerModule } from 'ng2-datepicker';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
