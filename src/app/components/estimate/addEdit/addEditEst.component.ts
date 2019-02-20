@@ -97,6 +97,9 @@ export class AddEditEstComponent implements OnInit {
   showTaxRateFlag: boolean;
   showDiscountRateFlag: boolean;
   showDiscountRate: number;
+  setTaxOnItem: boolean;
+  setDiscountOnItem: boolean;
+  showDiscountField: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -164,6 +167,7 @@ export class AddEditEstComponent implements OnInit {
     if (input > 100) {
       alert("amount must be under 100");
       this.activeEstimate.percentage_value = 0;
+      this.activeEstimate.discount = 0;
       this.activeEstimate.amount = this.activeEstimate.gross_amount;
       this.balance = this.activeEstimate.gross_amount;
     }
@@ -181,16 +185,14 @@ export class AddEditEstComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = true;
-    }else{
-      this.activeEstimate.tax_rate = 0
       this.showTaxRateFlag = false;
-      this.activeEstimate.tax_on_item = 0;
+    }else{
+      this.showTaxRateFlag = true;
     }
     if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = true;
-    }else{
       this.showDiscountRateFlag = false;
+    }else{
+      this.showDiscountRateFlag = true;
     }
 
 
@@ -206,16 +208,18 @@ export class AddEditEstComponent implements OnInit {
   editInit(estId) {
 
     //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
+    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
       this.showTaxRateFlag = false;
       this.activeEstimate.tax_on_item = 1;
     }else{
       this.showTaxRateFlag = true;
     }
-    if(this.settings.discountFlagLevel === 1 || this.showDiscountRate !==0){
+    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
       this.showDiscountRateFlag = false;
+      this.showDiscountField = true;
     }else{
       this.showDiscountRateFlag = true;
+      this.showDiscountField = false;
     }
 
     
@@ -249,8 +253,16 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
-          this.showTaxRate = this.activeEstimate.listItems[0].tax_rate;
-          this.showDiscountRate = this.activeEstimate.listItems[0].discount;
+          for(let i=0;i<this.activeEstimate.listItems.length;i++){
+          this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
+          if(this.showTaxRate!==0){
+            this.setTaxOnItem = true;
+          }
+          this.showDiscountRate = this.activeEstimate.listItems[i].discount;
+          if(this.showDiscountRate!==0){
+            this.setDiscountOnItem = true;
+          }
+          }
         }
 
 
@@ -285,6 +297,8 @@ export class AddEditEstComponent implements OnInit {
         // Tax and discounts show or hide
         if (this.activeEstimate.discount == 0) {
           this.activeEstimate.percentage_flag = null
+        }else{
+          this.activeEstimate.discount_on_item = 0;
         }
         if (this.activeEstimate.shipping_charges == 0) {
           this.activeEstimate.shipping_charges = undefined
@@ -292,8 +306,10 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.adjustment == 0) {
           this.activeEstimate.adjustment = undefined
         }
-        if (this.activeEstimate.tax_amount == 0) {
+        if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
           this.activeEstimate.tax_rate = null
+        }else{
+          this.activeEstimate.tax_on_item = 1;
         }
 
         // Wait for clients to be loaded before setting active client
@@ -493,7 +509,19 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList && this.filteredClients !== undefined){
+    this.clientList = this.allClientList;
+    var seen = {};
+    //You can filter based on Id or Name based on the requirement
+    var uniqueClients = this.clientList.filter(function (item) {
+      if (seen.hasOwnProperty(item.name)) {
+        return false;
+      } else {
+        seen[item.name] = true;
+        return true;
+      }
+    });
+    this.clientList = uniqueClients;
+    if(this.clientList){
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -524,6 +552,7 @@ export class AddEditEstComponent implements OnInit {
 }
 
   private _filterCli(value: string): client[] {
+    this.clientList = this.allClientList; // this solved toLowercase issue bcz clients comes undefined when we switsh pages in state 
     if(this.clientList){
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
     }
@@ -955,7 +984,7 @@ export class AddEditEstComponent implements OnInit {
         } else{
           this.toasterService.pop('success', 'Estimate saved successfully');
           self.resetFormControls()
-          self.ngOnInit()
+          self.addInit()
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
