@@ -100,6 +100,8 @@ export class AddEditEstComponent implements OnInit {
   setTaxOnItem: boolean;
   setDiscountOnItem: boolean;
   showDiscountField: boolean;
+  tncLoading: boolean;
+  settingsLoading: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -440,9 +442,17 @@ export class AddEditEstComponent implements OnInit {
     if (this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          //remove whitespaces from clientlist
+          for (let i = 0; i < this.clientList.length; i++) {
+            if (this.clientList[i].name.replace(/\s/g, "") === "") {
+              this.clientList.splice(i, 1);
+            }
+          }
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
           console.log(client);
@@ -464,15 +474,18 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = uniqueClients;
         }
         this.setClientFilter()
-        this.clientListLoading = false
+        
       })
     } else {
+      
       this.setClientFilter()
     }
 
     // Fetch Terms if not in store
     if (this.termList.length < 1 && !this.edit) {
+      this.tncLoading = false;
       this.termConditionService.fetch().subscribe((response: response) => {
+        this.tncLoading = true;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
@@ -484,7 +497,9 @@ export class AddEditEstComponent implements OnInit {
 
 
     //Fetch Settings every time
+    this.settingsLoading = false;
     this.settingService.fetch().subscribe((response: any) => {
+      this.settingsLoading = true;
       if (response.settings !== null) {
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
@@ -500,7 +515,7 @@ export class AddEditEstComponent implements OnInit {
       if (this.settings.quotFormat || this.settings.quotFormat == '') {
         this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
       } else {
-        this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
+        this.activeEstimate.estimate_number = ""+ this.tempEstNo
       }
     })
   }
@@ -508,7 +523,10 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    this.clientList = this.allClientList;
+    // if(this.clientList.length < 0){
+    //   this.clientList = this.allClientList;
+    // }
+    if(this.clientList){
     var seen = {};
     //You can filter based on Id or Name based on the requirement
     var uniqueClients = this.clientList.filter(function (item) {
@@ -520,7 +538,6 @@ export class AddEditEstComponent implements OnInit {
       }
     });
     this.clientList = uniqueClients;
-    if(this.clientList){
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -529,6 +546,7 @@ export class AddEditEstComponent implements OnInit {
   }else{
     this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false;
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
@@ -543,9 +561,13 @@ export class AddEditEstComponent implements OnInit {
             }
           });
           this.clientList = uniqueClients;
+          this.filteredClients = this.billingTo.valueChanges.pipe(
+            startWith<string | client>(''),
+            map(value => typeof value === 'string' ? value : value.name),
+            map(name => name ? this._filterCli(name) : this.clientList.slice())
+          )
         }
         // this.setClientFilter()
-        this.clientListLoading = false
       })
   }
 }
