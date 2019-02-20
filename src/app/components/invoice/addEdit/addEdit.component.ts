@@ -242,14 +242,16 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 || this.showTaxRate !==0){
+    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
       this.showTaxRateFlag = false;
     }else{
+      // tax on bill
       this.showTaxRateFlag = true;
     }
-    if(this.settings.discountFlagLevel === 1 || this.showDiscountRate !==0){
+    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
       this.showDiscountRateFlag = false;
     }else{
+      //discount on bill
       this.showDiscountRateFlag = true;
     }
 
@@ -286,15 +288,19 @@ export class AddEditComponent implements OnInit {
         // this.showDiscountedRate =  this.activeInvoice.listItems[0].discountRate;
         // this.showQuantity = this.activeInvoice.listItems[0].qty;
         // this.showPrice = this.activeInvoice.listItems[0].price;
-        this.showTaxRate = this.activeInvoice.listItems[0].tax_rate;
-        this.showDiscountRate = this.activeInvoice.listItems[0].discount;
+        for(let i=0;i<this.activeInvoice.listItems.length;i++){
+          this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+          if(this.showTaxRate!==0){
+            this.settings.taxFlagLevel=0;
+          }
+          this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+          if(this.showDiscountRate!==0){
+            this.settings.discountFlagLevel=1;
+          }
+        }
       }
-      if(this.showTaxRate!==0){
-        this.settings.taxFlagLevel=0;
-      }
-      if(this.showDiscountRate!==0){
-        this.settings.discountFlagLevel=1;
-      }
+      
+      
 
         // Change payment keys compatible
         if(this.activeInvoice.payments){
@@ -330,6 +336,8 @@ export class AddEditComponent implements OnInit {
         //to show when editing if value exists
         if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
           this.activeInvoice.tax_on_item = 0;
+        }else{
+          this.activeInvoice.tax_on_item = 1;
         }
 
         this.changeDueDate(this.activeInvoice.due_date_flag.toString())
@@ -613,7 +621,7 @@ export class AddEditComponent implements OnInit {
       }
 
       // Invoice Number
-      
+      if(!this.edit){
         this.tempInvNo = JSON.parse(localStorage.getItem('invNo'));
         if (this.tempInvNo) {
         //regex code to find no. from string
@@ -642,7 +650,9 @@ export class AddEditComponent implements OnInit {
       } else {
         this.activeInvoice.invoice_number = this.tempInvNo.toString();
       }
+    }
     })
+    
   }
 
   // Client Functions

@@ -26,14 +26,14 @@
 
                         <div class="input-group pl-0 inputWithIcon">
                           <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
+                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
                             <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           
-                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="shippingChange === true" class="downArrowIcon">
+                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <span *ngIf="disableIcon === true" class="downArrowIcon">
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
@@ -238,19 +238,14 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="10%" *ngIf="showTaxRateFlag === false || settings.taxFlagLevel === 0">
-                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
-                            value="Tax (%)"
-                          />
-                        </td>
-                        <td width="10%" *ngIf="showDiscountRateFlag === false || settings.discountFlagLevel === 1">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
-                            value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
-                          />
-                        </td>
                         <td width="10%" *ngIf="settings.taxFlagLevel === 0">
                           <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
                             value="Tax (%)"
+                          />
+                        </td>
+                        <td width="10%" *ngIf=" settings.discountFlagLevel === 1">
+                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
+                            value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           />
                         </td>
                         <td width="10%">
@@ -288,14 +283,14 @@
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate!==0 || item.tax_rate===0 ">
-                          <div class="text-center">
-                            {{item.discount | number:'2.'}}
-                          </div>
-                        </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 || item.discount===0">
+                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                           <div class="text-center">
                             {{item.tax_rate | number:'2.'}}
+                          </div>
+                        </td>
+                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                          <div class="text-center">
+                            {{item.discount | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;" >
@@ -413,7 +408,7 @@
                 <!-- Tax discount list -->
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true">
+                    <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true && activeInvoice.discount_on_item === 2 ">
                       <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
@@ -424,7 +419,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true"><!--settings.taxFlagLevel === 1 &&-->
+                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true && activeInvoice.tax_on_item === 2"><!--settings.taxFlagLevel === 1 &&-->
                       <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
@@ -543,13 +538,13 @@
                       </div>
                       <div class="col-4 pr-0">
                         <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label" 
-                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="background-color: #eaeaea;"
+                        [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="background-color: #eaeaea;" readonly
                       />
                       </div>
 
                       <div class="input-group-addon pr-0 remove-button" style="margin-left: 9px;">
                           <div class="addon selector"
-                            (click)="activeInvoice.discount_on_item=1;activeInvoice.percentage_flag=0;
+                            (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
                             activeInvoice.percentage_value=0;activeInvoice.discount=0;calculateInvoice();
                             activeInvoice.amount=activeInvoice.gross_amount;
                             balance=activeInvoice.gross_amount
@@ -578,7 +573,7 @@
                         </form>
                       </div>
                       <div class="col-4 pr-0">
-                        <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label" 
+                        <input type="number" id="tax_input" name="tax_input" class="form-control text_center height_40 dis_tax_label" readonly 
                         placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" style="background-color:#eaeaea"
                       />
                       </div>
@@ -611,7 +606,7 @@
                                 step="any" min="0.00" max="100" class="form-control col-3" style="margin-right: 15px;"
                                 [(ngModel)]="tax.percentage" (keyup)="calculateInvoice()" onfocus="this.select()"
                               /><input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-8 form-control text_center height_40 dis_tax_label" 
-                                 [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()" style="background-color:#eaeaea;margin-right: -5px;"
+                                 [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()" style="background-color:#eaeaea;margin-right: -5px;" readonly
                               />
   
                               <div class="input-group-addon pr-0 remove-button">

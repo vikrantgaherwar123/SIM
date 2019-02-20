@@ -142,7 +142,7 @@ export class ClientComponent implements OnInit {
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
-          } else if(self.activeClient.enabled == 1){// delete
+          } else if(self.activeClient.enabled !== 0){// delete
            
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)

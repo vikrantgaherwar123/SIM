@@ -141,10 +141,10 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                     </td>
-                    <td width="10%" *ngIf="showTaxRateFlag === false || settings.taxFlagLevel === 0">
+                    <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRateFlag == true">
                       <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled value="Tax (%)" />
                     </td>
-                    <td width="10%" *ngIf="showDiscountRateFlag === false || settings.discountFlagLevel === 1">
+                    <td width="10%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRateFlag == true">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
@@ -182,12 +182,12 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || item.tax_rate!==0 || item.tax_rate===0 ">
+                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || setTaxOnItem === true">
                       <div class="text-center">
                         {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || item.discount!==0 || item.discount===0">
+                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || setDiscountOnItem === true">
                       <div class="text-center">
                         {{item.discount | number:'2.'}}
                       </div>
@@ -293,8 +293,8 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true">
-                  <a class="inline" (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
+                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === false || activeEstimate.discount_on_item===2 ">
+                  <a class="inline" (click)="activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
                 </div>
@@ -303,9 +303,9 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true">
+                <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
                   <!-- && activeEstimate.tax_rate === 0-->
-                  <a class="inline" (click)="activeEstimate.tax_on_item=0">Tax+</a>
+                  <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
                 <div *ngIf="activeEstimate.adjustment === undefined">
                   <a class="inline" (click)="activeEstimate.adjustment = 0">
@@ -372,9 +372,8 @@
                 </div>
 
                 <!-- Discounts -->
-                <div *ngIf="activeEstimate.discount_on_item === 0">
-                  <div *ngIf="activeEstimate.percentage_value!==0 || activeEstimate.discount !==0"
-                    class="row mr_right mr_0">
+                <div *ngIf="activeEstimate.discount_on_item === 0 && showDiscountField === true">
+                  <div class="row mr_right mr_0">
                     <div class="col-5 discount-tax-label pr-0 label_color">
                       <span style="text-align: left;vertical-align: bottom;color: #aaaaaa;" class="inline">
                         {{settings.discount ? settings.discount : 'Discount'}}
