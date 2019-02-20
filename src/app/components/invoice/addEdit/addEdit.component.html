@@ -51,7 +51,7 @@
                                 <i class="fa fa-plus"></i>
                                 Add New Client
                               </button>
-                              <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                              <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                                 {{client.name}}
                               </mat-option>
                               <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -537,7 +537,7 @@
                           </form>
                         </div>
                         <div class="col-4 pr-0">
-                          <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label" 
+                          <input type="number" id="discount_input" name="discount_input" readonly class="form-control text_center height_40 dis_tax_label" 
                           [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="background-color: #eaeaea;"
                         />
                         </div>

@@ -698,3 +698,6 @@ option {
 .save{
 
 }
+.box_red{
+  border-color:red;
+}

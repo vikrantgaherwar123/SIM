@@ -493,7 +493,7 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList){
+    if(this.clientList && this.filteredClients !== undefined){
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),

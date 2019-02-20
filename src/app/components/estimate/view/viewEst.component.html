@@ -497,10 +497,12 @@
           </div>
         </form>
       </div>
+      <div *ngIf="estimateList?.length < 1">
+        <!--estimateList.length<1 && !invoiceListLoader-->
+        <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
       </div>
-      <div *ngIf="estimateList?.length < 1"><!--estimateList.length<1 && !invoiceListLoader-->
-          <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
       </div>
+      
     </div>
   </div>
 </div>
