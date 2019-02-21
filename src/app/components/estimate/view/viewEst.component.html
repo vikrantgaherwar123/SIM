@@ -164,9 +164,7 @@
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvAmount ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
           </div>
-          <div *ngIf="estimateList.length < 1" class="no-data-messsage">
-              <img src="assets/images/no_data_found.png"  style="width: 324px;">
-          </div>
+          
 
           <div class="col-12 px-0 mCustomScrollbar style-3">
             <!-- <div style="background-color: #fff;" *ngIf="estListLoader">
@@ -194,6 +192,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div *ngIf="estimateList.length < 1 && !activeEst" class="no-data-messsage">
+              <img src="assets/images/no_data_found.png" style="width: 324px;">
             </div>
             <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
               <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
@@ -497,7 +498,7 @@
           </div>
         </form>
       </div>
-      <div *ngIf="estimateList?.length < 1">
+      <div *ngIf="estimateList?.length < 1 && !activeEst">
         <!--estimateList.length<1 && !invoiceListLoader-->
         <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
       </div>

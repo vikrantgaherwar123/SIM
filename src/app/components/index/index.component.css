@@ -38,7 +38,7 @@ a[data-toggle="collapse"] {
   left: 250px;
   top: 0;
   right: 0;
-  height: 618px;
+  height: 750px !important;
 }
 #content.active {
   left: 0;

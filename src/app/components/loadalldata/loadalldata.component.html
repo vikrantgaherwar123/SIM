@@ -2,7 +2,7 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div style="margin: 0px auto; max-width:1000px;">
-      <form class="shadow form-horizontal back" name="userForm" style="min-height: 390px;">
+      <!-- <form class="shadow form-horizontal back" name="userForm" style="min-height: 390px;">
         <div class="loading_div">
           <!-- <progress-bar  [progress]="100" [color]="'#488aff'">
             </progress-bar> -->
@@ -15,7 +15,7 @@
               <div id="inTurnFadingTextG_5" class="inTurnFadingTextG">i</div>
               <div id="inTurnFadingTextG_6" class="inTurnFadingTextG">n</div>
               <div id="inTurnFadingTextG_7" class="inTurnFadingTextG">g</div>
-            </div> -->
+            </div> 
           <div class="2">
             <div class="progress container"><i class="fa fa-check" aria-hidden="true"></i> Clients Loading
               <span></span>
@@ -64,7 +64,25 @@
             </div>
           </div>
         </div>
-      </form>
+      </form> -->
+      <div class="progress">
+        <div id="client_records" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+          <span id="client"></span>
+        </div>
+        <br />
+        <div id="product_records" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100" style="width: 0%">
+          <span id="product"></span>
+        </div>
+        <br />
+        <div id="term_records" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100" style="width: 0%">
+          <span id="term"></span>
+        </div>
+        <br />
+        <div id="setting_records" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100" style="width: 0%">
+          <span id="setting"></span>
+        </div>
+      </div>
+      
     </div>
   </div>
 </div>

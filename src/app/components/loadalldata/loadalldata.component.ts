@@ -36,7 +36,61 @@ export class LoadalldataComponent implements OnInit {
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>) {
+
+
+// loader script
+      $(function() {
+        // all clients
+        var client = 0;
+        var interval_client = setInterval(function() {
+          client += 10;
+            $("#client_records")
+            .css("width", client + "%")
+            .attr("aria-valuenow", client)
+            .text("Client Loading " + client + " % Complete");
+            if (client >= 100)
+                clearInterval(interval_client);
+        }, 900);
+
+
+        var product = 0;
+        var interval_product = setInterval(function() {
+          product += 20;
+            $("#product_records")
+            .css("width", product + "%")
+            .attr("aria-valuenow", product)
+            // .text("Products Loading" + product + "% Complete");
+            .text("Products Loading " + product + " % Complete");
+            if (product >= 100)
+                clearInterval(interval_product);
+        }, 1000);
+
+        var term = 0;
+        var interval_terms = setInterval(function() {
+          term += 20;
+            $("#term_records")
+            .css("width", term + "%")
+            .attr("aria-valuenow", term)
+            .text("Terms and Conditions Loading " + term + " % Complete");
+            if (term >= 100)
+                clearInterval(interval_terms);
+        }, 500);
+
+        var setting = 0;
+        var interval_setting = setInterval(function() {
+          setting += 20;
+            $("#setting_records")
+            .css("width", setting + "%")
+            .attr("aria-valuenow", setting)
+            .text("Settings Loading " + setting + " % Complete");
+            if (setting >= 100)
+                clearInterval(interval_setting);
+        }, 800);
+      });
+     }
+
+     
 
   ngOnInit() {
     this.fetchBasicData();
@@ -79,7 +133,7 @@ export class LoadalldataComponent implements OnInit {
       console.log("estimate fetched");
         
       }
-      this.router.navigate(['/invoice/add'])
+        this.router.navigate(['/invoice/add'])
     })
   }
    

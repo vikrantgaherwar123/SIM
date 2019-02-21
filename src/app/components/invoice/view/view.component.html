@@ -114,7 +114,7 @@
                 </div>
               </div>
       
-              <div *ngIf="invoiceList.length < 1"><!--invoiceList.length<1 && !invoiceListLoader-->
+              <div *ngIf="invoiceList.length < 1 && !activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
                 <img src="assets/images/no_data_found.png" style="width: 324px;">
               </div>
               <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
@@ -128,7 +128,7 @@
   
         <!-- View Invoice -->
         <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
-          *ngIf="activeInv && invoiceList.length > 1"
+          *ngIf="activeInv"
         >
           <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
             <!-- Buttons -->
@@ -484,7 +484,7 @@
             </div>
           </form>
         </div>
-        <div *ngIf="invoiceList.length < 1"><!--invoiceList.length<1 && !invoiceListLoader-->
+        <div *ngIf="invoiceList.length < 1 && !activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
           <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
         </div>
       </div>
