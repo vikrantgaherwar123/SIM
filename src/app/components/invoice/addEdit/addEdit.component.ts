@@ -103,6 +103,7 @@ export class AddEditComponent implements OnInit {
   showDiscountedRate: any;
   showTaxRateFlag: any;
   showDiscountRateFlag: any;
+  addedInvoice: any;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -767,7 +768,7 @@ export class AddEditComponent implements OnInit {
       })
     }
   }
-
+  
   closeAddClientModal() {
     this.openClientModal = false
     $('#add-client').modal('hide')
@@ -1309,6 +1310,7 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          this.addedInvoice = result.invoiceList[0];
         }
 
         // Update settings
@@ -1322,6 +1324,7 @@ export class AddEditComponent implements OnInit {
           this.router.navigate(['/invoice/view'])
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
+          this.selectedClientChange(this.addedInvoice);
           self.resetCreateInvoice()
           // this.router.navigate(['/invoice/add'])
         }

@@ -188,4 +188,24 @@
       transform: translate(0, -15px); 
       background-color: red;    
     }  
-  }
+	}
+	.progress {
+		margin: 10px;
+		width: 700px;
+		font-size: 15px;
+		border-radius: 10px;
+		padding: 2px;
+		background-color: #ededed !important;
+	}
+	.progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width .6s ease;
+    border-radius: 10px !important;
+    padding: 2px !important;
+}

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core'
-
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
