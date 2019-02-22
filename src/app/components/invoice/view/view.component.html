@@ -18,17 +18,22 @@
                 <!-- <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
               <img src="assets/images/date.png" 
-              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
-                invoiceQueryForm.dateRange.start.value.getDate() + '-' +
-                (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-                invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{invoiceQueryForm.dateRange.end.value ?
-                invoiceQueryForm.dateRange.end.value.getDate() + '-' +
-                (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-                invoiceQueryForm.dateRange.end.value.getFullYear() : 0
-              }}</span>
-              <img src="assets/images/payment2.png" 
-              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span>
+              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
+               <span  style="color:#0299ff">{{itemSelected}} :</span>
+              <div *ngIf="disableDateText === false">
+                <span 
+                  style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
+                              invoiceQueryForm.dateRange.start.value.getDate() + '-' +
+                              (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                              invoiceQueryForm.dateRange.start.value.getFullYear() : 0
+                            }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{invoiceQueryForm.dateRange.end.value ?
+                              invoiceQueryForm.dateRange.end.value.getDate() + '-' +
+                              (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                              invoiceQueryForm.dateRange.end.value.getFullYear() : 0
+                            }}</span>
+              </div>
+              <!-- <img src="assets/images/payment2.png" 
+              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
     
             <div class="col-12 col-md-2">
@@ -92,7 +97,7 @@
               </div> -->
                 <!-- [class.active]=" invoice.created_date " -->
               <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-                *ngFor="let invoice of (invoiceList | filter:invSearchTerm| orderBy: invSortTerm:false:true |  slice:0:invDispLimit); index as key"
+                *ngFor="let invoice of (invoiceList | filter:invSearchTerm| orderBy: invSortTerm:true |  slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-2 list-date font-custom-bold fontsize13">

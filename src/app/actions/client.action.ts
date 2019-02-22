@@ -28,4 +28,5 @@ export class remove implements Action {
   }
 }
 
-export type Action = add | edit | remove
+
+export type Action = add | edit | remove 

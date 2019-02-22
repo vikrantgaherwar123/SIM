@@ -419,7 +419,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === ture || activeInvoice.tax_on_item === 2"><!--settings.taxFlagLevel === 1 &&-->
+                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true || activeInvoice.tax_on_item === 2"><!--settings.taxFlagLevel === 1 &&-->
                       <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">

@@ -509,56 +509,53 @@ export class AddEditEstComponent implements OnInit {
       }
 
       // Estimate Number
-      // if (!isNaN(parseInt(this.settings.quotNo))) {
-      //   this.tempEstNo = parseInt(this.settings.quotNo) + 1
-      // } else {
-      //   this.tempEstNo = 1
-      // }
-      // if (this.settings.quotFormat || this.settings.quotFormat == '') {
-      //   this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
-      // } else {
-      //   this.activeEstimate.estimate_number = ""+ this.tempEstNo
-      // }
-
-      if(!this.edit){
-        this.tempEstNo = JSON.parse(localStorage.getItem('estNo'));
-        if (this.tempEstNo) {
-        //regex code to find no. from string
-        // var r = /\d+/;
-        // var m = r.exec(this.tempInvNo.toString())[0]
-        // var s =parseInt(m);
-        // console.log(s);
-
-
-        // this regex code separates string and no.
-        var text = this.tempEstNo.toString().split(/(\d+)/)
-        var t = text[0] //text
-        var n = parseInt(text[1]) //number
-        if( isNaN(n)){
-          n = 0; 
-        }
-        // var x = t+(n+1);
-        this.tempEstNo = n + 1 ;
-
+      if (!isNaN(parseInt(this.settings.quotNo))) {
+        this.tempEstNo = parseInt(this.settings.quotNo) + 1
       } else {
         this.tempEstNo = 1
-        t = this.settings.setInvoiceFormat;
       }
-      if (this.settings.setInvoiceFormat) {
-        this.activeEstimate.estimate_number = t + this.tempEstNo
+      if (this.settings.quotFormat || this.settings.quotFormat == '') {
+        this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
       } else {
         this.activeEstimate.estimate_number = this.tempEstNo.toString();
       }
-    }
+
+    //   if(!this.edit){
+    //     this.tempEstNo = JSON.parse(localStorage.getItem('estNo'));
+    //     if (this.tempEstNo) {
+    //     //regex code to find no. from string
+    //     // var r = /\d+/;
+    //     // var m = r.exec(this.tempInvNo.toString())[0]
+    //     // var s =parseInt(m);
+    //     // console.log(s);
+
+
+    //     // this regex code separates string and no.
+    //     var text = this.tempEstNo.toString().split(/(\d+)/)
+    //     var t = text[0] //text
+    //     var n = parseInt(text[1]) //number
+    //     if( isNaN(n)){
+    //       n = 0; 
+    //     }
+    //     // var x = t+(n+1);
+    //     this.tempEstNo = n + 1 ;
+
+    //   } else {
+    //     this.tempEstNo = 1
+    //     t = this.settings.setInvoiceFormat;
+    //   }
+    //   if (this.settings.setInvoiceFormat) {
+    //     this.activeEstimate.estimate_number = t + this.tempEstNo
+    //   } else {
+    //     this.activeEstimate.estimate_number = this.tempEstNo.toString();
+    //   }
+    // }
     })
   }
 
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    // if(this.clientList.length < 0){
-    //   this.clientList = this.allClientList;
-    // }
     if(this.clientList){
     var seen = {};
     //You can filter based on Id or Name based on the requirement
@@ -606,9 +603,6 @@ export class AddEditEstComponent implements OnInit {
 }
 
   private _filterCli(value: string): client[] {
-    
-    // this.clientList = this.allClientList; // this solved toLowercase issue bcz clients comes undefined when we switsh pages in state 
-    
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -1017,19 +1011,10 @@ export class AddEditEstComponent implements OnInit {
         }
 
         // Update settings
-        if (!this.edit) {
-          this.updateSettings()
-        }
-
-        // if (this.edit && this.estimateDelete === false) {
-        //   //  this.toasterService.pop('success', 'Estimate updated successfully');
-        //   this.router.navigate(['/estimate/view'])
-        // } else if(this.estimateDelete === undefined) {
-        //   this.toasterService.pop('success', 'Estimate saved successfully');
-        //   this.router.navigate(['/estimate/view'])
-        //   self.resetFormControls()
-        //   self.ngOnInit()
+        // if (!this.edit) {
+        //   this.updateSettings()
         // }
+
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
@@ -1037,8 +1022,9 @@ export class AddEditEstComponent implements OnInit {
           // this.router.navigate(['/estimate/view'])
           this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
-          localStorage.setItem('estNo', JSON.stringify(this.activeEstimate.estimate_number));
+          // localStorage.setItem('estNo', JSON.stringify(this.activeEstimate.estimate_number));
           this.toasterService.pop('success', 'Estimate saved successfully');
+          this.updateSettings();
           self.resetFormControls()
           self.addInit()
         }
@@ -1063,14 +1049,6 @@ export class AddEditEstComponent implements OnInit {
     // this.closeDeleteEstimateModal();
   }
 
-  // openDeleteEstimateModal() {
-  //   this.estimateDelete = true
-  //   $('#delete-estimate').modal('show')
-  // }
-
-  // closeDeleteEstimateModal(){
-  //   $('#delete-estimate').modal('hide')
-  // }
 
   calculateEstimate() {
     var gross_amount = 0
@@ -1185,7 +1163,7 @@ export class AddEditEstComponent implements OnInit {
       androidSettings: user.setting,
       android_donot_update_push_flag: 1
     }
-    settings1.androidSettings.estNo = this.tempEstNo
+    // settings1.androidSettings.estNo = this.tempEstNo
 
     this.settingService.add(settings1).subscribe((response: any) => { })
   }

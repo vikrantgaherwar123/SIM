@@ -60,6 +60,7 @@ export class ViewComponent implements OnInit {
   public settings: any
   invoiceListLoading: boolean;
   InvoiceId: any;
+  disableDateText: boolean = false;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -216,6 +217,7 @@ export class ViewComponent implements OnInit {
     //   this.customEnableDate = false
     // }
     if(this.itemSelected === 'All Time'){
+      this.disableDateText = true;
       this.invoiceQueryForm.dateRange.start.reset()
       this.invoiceQueryForm.dateRange.end.reset()
     }
@@ -332,15 +334,8 @@ export class ViewComponent implements OnInit {
   setActiveInv(invId: string = '') {
     this.closeSearchModel();
     if (!invId || invId ==="null" ) {
-      this.activeInv = this.invoiceList[0]
+      this.activeInv = this.invoiceList[this.invoiceList.length - 1];
     } else{
-      // if(this.invoiceList.length < 1){
-      //   this.invoiceService.fetch().subscribe((response: any) => {
-      //     if (response.status === 200) {
-      //       this.invoiceList = response.records;
-      //     }
-      //   })
-      // }
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()
