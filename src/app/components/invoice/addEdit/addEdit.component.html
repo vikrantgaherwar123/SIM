@@ -378,7 +378,7 @@
                               <span class="input-group-text p-0">%</span>
                             </div>
                           </div>
-                          <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
+                          <!-- <div class="text-right">{{activeItem.discount_amount}}</div>            -->
                         </td>
 
                         <td style="vertical-align: top; position: relative !important;" 
@@ -422,7 +422,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true && activeInvoice.tax_on_item === 2"><!--settings.taxFlagLevel === 1 &&-->
+                    <div *ngIf="settings.taxFlagLevel === 1 && showTaxRateFlag === true || activeInvoice.tax_on_item === 2"><!--settings.taxFlagLevel === 1 &&-->
                       <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">

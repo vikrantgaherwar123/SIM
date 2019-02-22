@@ -25,7 +25,6 @@ import { AppState } from '../../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Title }     from '@angular/platform-browser';
-import { formControlBinding } from '@angular/forms/src/directives/reactive_directives/form_control_directive';
 
 @Component({
   selector: 'app-invoice',
@@ -68,6 +67,7 @@ export class AddEditComponent implements OnInit {
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   addClientModal: any = {}
+
   private productList: product[]
   activeItem: any = {
     quantity: 1,
@@ -75,7 +75,6 @@ export class AddEditComponent implements OnInit {
     total: 0.00
   }
   addItem = new FormControl()
-  description = new FormControl()
   filteredProducts: Observable<string[] | product[]>
 
   termList: terms[]
@@ -104,7 +103,13 @@ export class AddEditComponent implements OnInit {
   showDiscountedRate: any;
   showTaxRateFlag: any;
   showDiscountRateFlag: any;
-  addedInvoice: any;
+  invoiceListLoading: boolean;
+  estimateListLoading: boolean;
+  tncLoading: boolean;
+  productListLoading: boolean;
+  settingsLoading: boolean;
+  InvoiceId: any;
+  InvoiceNumber: string;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -177,6 +182,7 @@ export class AddEditComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
       if (params && params.invId) {
+        this.InvoiceId = params.invId;
         this.edit = true
         this.editTerm = false
         this.editInit(params.invId)
@@ -263,7 +269,9 @@ export class AddEditComponent implements OnInit {
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
+    this.invoiceListLoading = true;
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+      this.invoiceListLoading = false;
       if(invoice.records !== null) {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
@@ -356,8 +364,9 @@ export class AddEditComponent implements OnInit {
         this.incrementInvNo = true;
         //make edit flag false so that it will work as adding new invoice as addInit fun is doing
         this.edit = false;
-        
+        this.estimateListLoading = true;
         this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
+          this.estimateListLoading = false;
           if (estimate.records !== null) {
             this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
             this.shippingAddressEditMode = true
@@ -400,7 +409,9 @@ export class AddEditComponent implements OnInit {
               this.activeEstimate.termsAndConditions = temp
               this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
             } else if (this.termList.length < 1) {
+              this.tncLoading = true;
               this.termConditionService.fetch().subscribe((response: response) => {
+                this.tncLoading = false;
                 if (response.termsAndConditionList) {
                   this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
                 }
@@ -559,7 +570,9 @@ export class AddEditComponent implements OnInit {
 
     // Fetch Products if not in store
     if(this.productList.length < 1) {
+      this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
+        this.productListLoading = false;
         // console.log(response)
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
@@ -579,6 +592,7 @@ export class AddEditComponent implements OnInit {
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
@@ -595,7 +609,7 @@ export class AddEditComponent implements OnInit {
           this.clientList = uniqueClients;
         }
         this.setClientFilter()
-        this.clientListLoading = false
+        
       })
     } else {
       this.setClientFilter()
@@ -603,7 +617,9 @@ export class AddEditComponent implements OnInit {
 
     // Fetch Terms if not in store
     if(this.termList.length < 1 && !this.edit) {
+      this.tncLoading = true;
       this.termConditionService.fetch().subscribe((response: response) => {
+        this.tncLoading = false;
          //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
@@ -615,7 +631,9 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Settings every time
+    this.settingsLoading = true;
     this.settingService.fetch().subscribe((response: any) => {
+      this.settingsLoading = false;
       if (response.settings !== null) {
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
@@ -623,35 +641,46 @@ export class AddEditComponent implements OnInit {
       }
 
       // Invoice Number
-      if(!this.edit){
-        this.tempInvNo = JSON.parse(localStorage.getItem('invNo'));
-        if (this.tempInvNo) {
-        //regex code to find no. from string
-        // var r = /\d+/;
-        // var m = r.exec(this.tempInvNo.toString())[0]
-        // var s =parseInt(m);
-        // console.log(s);
+    //   if(!this.edit){
+    //     this.tempInvNo = JSON.parse(localStorage.getItem('invNo'));
+    //     if (this.tempInvNo) {
+    //     //regex code to find no. from string
+    //     // var r = /\d+/;
+    //     // var m = r.exec(this.tempInvNo.toString())[0]
+    //     // var s =parseInt(m);
+    //     // console.log(s);
 
 
-        // this regex code separates string and no.
-        var text = this.tempInvNo.toString().split(/(\d+)/)
-        var t = text[0] //text
-        var n = parseInt(text[1]) //number
-        if( isNaN(n)){
-          n = 0; 
-        }
-        // var x = t+(n+1);
-        this.tempInvNo = n + 1 ;
+    //     // this regex code separates string and no.
+    //     var text = this.tempInvNo.toString().split(/(\d+)/)
+    //     var t = text[0] //text
+    //     var n = parseInt(text[1]) //number
+    //     if( isNaN(n)){
+    //       n = 0; 
+    //     }
+    //     // var x = t+(n+1);
+    //     this.tempInvNo = n + 1 ;
 
-      } else {
-        this.tempInvNo = 1
-        t = this.settings.setInvoiceFormat;
-      }
-      if (this.settings.setInvoiceFormat) {
-        this.activeInvoice.invoice_number = t + this.tempInvNo
-      } else {
-        this.activeInvoice.invoice_number = this.tempInvNo.toString();
-      }
+    //   } else {
+    //     this.tempInvNo = 1
+    //     t = this.settings.setInvoiceFormat;
+    //   }
+    //   if (this.settings.setInvoiceFormat) {
+    //     this.activeInvoice.invoice_number = t + this.tempInvNo
+    //   } else {
+    //     this.activeInvoice.invoice_number = this.tempInvNo.toString();
+    //   }
+    // }
+    if (!isNaN(parseInt(this.settings.invNo))) {
+      console.log(this.InvoiceNumber);
+      this.tempInvNo = parseInt(this.settings.invNo) + 1
+    } else {
+      this.tempInvNo = 1
+    }
+    if (this.settings.setInvoiceFormat) {
+      this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+    } else {
+      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
     }
     })
     
@@ -669,6 +698,7 @@ export class AddEditComponent implements OnInit {
   }else{
     this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
@@ -685,15 +715,13 @@ export class AddEditComponent implements OnInit {
           this.clientList = uniqueClients;
         }
         this.setClientFilter()
-        this.clientListLoading = false
+        
       })
   }
 }
 
    private _filterCli(value: string): client[] {
-    return this.clientList.filter(cli => cli.name)
-    // return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase())) original code
-
+    return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
   }
 
   selectedClientChange(client) {
@@ -769,7 +797,7 @@ export class AddEditComponent implements OnInit {
       })
     }
   }
-  
+
   closeAddClientModal() {
     this.openClientModal = false
     $('#add-client').modal('hide')
@@ -840,9 +868,7 @@ export class AddEditComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-    }
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -1190,6 +1216,9 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice.taxList[i].percentage = 0
           }
           this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions) / 100 * this.activeInvoice.taxList[i].percentage
+          //remove digits after two decimal
+          var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 6)
+          this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
           temp_tax_amount += this.activeInvoice.taxList[i].calculateValue
         } 
       }
@@ -1311,27 +1340,26 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          this.addedInvoice = result.invoiceList[0];
         }
 
         // Update settings
-        if(!this.edit) {
-          this.updateSettings()
-        }
+        // if(!this.edit) {
+        //   this.updateSettings()
+        // }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate(['/invoice/view'])
+          this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
-          this.selectedClientChange(this.addedInvoice);
           self.resetCreateInvoice()
           // this.router.navigate(['/invoice/add'])
         }
          else {
-          localStorage.setItem('invNo', JSON.stringify(this.activeInvoice.invoice_number));
+          // localStorage.setItem('invNo', JSON.stringify(this.activeInvoice.invoice_number));
           this.toasterService.pop('success', 'Invoice saved successfully');
+          this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
         }
@@ -1377,7 +1405,8 @@ export class AddEditComponent implements OnInit {
     if (this.settings.setInvoiceFormat) {
       this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
     } else {
-      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+      this.activeInvoice.invoice_number =  this.tempInvNo.toString();
+      this.InvoiceNumber = this.activeInvoice.invoice_number;
     }
 
     this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
@@ -1411,7 +1440,7 @@ export class AddEditComponent implements OnInit {
       androidSettings: user.setting,
       android_donot_update_push_flag: 1
     }
-    settings1.androidSettings.invNo = this.tempInvNo
+    // settings1.androidSettings.invNo = this.tempInvNo
 
     this.settingService.add(settings1).subscribe((response: any) => {})
   }

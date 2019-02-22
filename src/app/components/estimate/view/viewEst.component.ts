@@ -12,7 +12,7 @@ import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-view',
@@ -62,8 +62,11 @@ export class ViewEstComponent implements OnInit {
 
   public settings: any
   customEnableDate: boolean;
+  estimateId: any;
+  showBackground: boolean = false;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
+    private route: ActivatedRoute,
     private store: Store<AppState>,
     public router: Router,
     private settingService: SettingService
@@ -103,9 +106,10 @@ export class ViewEstComponent implements OnInit {
     // Fetch clients if not in store
     this.clientList = [];
     this.dropdownList = [];
-    this.clientListLoading = true
     if (this.clientList.length < 1) {
+      this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
         this.clientList = response.records;
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
@@ -113,9 +117,45 @@ export class ViewEstComponent implements OnInit {
     } else {
       this.dropdownList = this.clientList;
     }
-    this.openSearchClientModal()
-    this.clientListLoading = false
+    this.route.params.subscribe(params => {
+      if(params.estId){
+        this.estimateId = params.estId;
+      }else{
+        this.showBackground = true;
+        this.openSearchClientModal()
+      }
+      
+    })
+    
+    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+    this.store.select('estimate').subscribe(estimates => {
+      this.estimateList = estimates
+      if(this.estimateList.length < 1){
+        this.estListLoader = true
+        this.estimateService.fetch().subscribe((response: any) => {
+          this.estListLoader = false
+          var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+          this.store.dispatch(new estimateActions.add(records))
+          this.estimateList = records
+          if(this.estimateList){
+            if(this.estimateId){
+              this.setActiveEst(this.estimateId)
+            }else{
+              this.setActiveEst()
+            }
+          }
+        })
+      }else{
+        if(this.estimateId){
+          this.setActiveEst(this.estimateId)
+        }else{
+          this.setActiveEst()
+        }
+      }
+    })
+    
 
+    
     
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
@@ -124,9 +164,9 @@ export class ViewEstComponent implements OnInit {
     })
 
     // make invoice list empty if clients not selected in dropdown
-    if (this.estimateQueryForm.client.value === null) {
-      this.estimateList = []
-    }
+    // if (this.estimateQueryForm.client.value === null) {
+    //   this.estimateList = []
+    // }
 
     // dropdown settings
     this.dropdownSettings = {
@@ -209,6 +249,8 @@ export class ViewEstComponent implements OnInit {
 
   showSelectedEstimate(client) {
     this.estimateQueryForm.client = client
+    this.SearchEstimate()
+    $('#search-client').modal('hide')
     // var estList = []
     // for (let i = 0; i < client.value.length; i++) {
     //   var list = this.estimateList.filter(rec => rec.unique_key_fk_client == client.value[i].uniqueKeyClient)
@@ -223,19 +265,7 @@ export class ViewEstComponent implements OnInit {
     //   est1List.splice(-1, 1)
     // }
     // this.estimateList = est1List;
-    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
-    this.estListLoader = true
-    this.estimateService.fetch().subscribe((response: any) => {
-      this.estListLoader = false
-      var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-      this.store.dispatch(new estimateActions.add(records))
-      this.estimateList = records
-      this.setActiveEst()
-    })
-
-    // this.SearchEstimate()
-    // this.setActiveEst()
-    $('#search-client').modal('hide')
+    
   }
 
   openSearchClientModal() {
@@ -309,8 +339,9 @@ export class ViewEstComponent implements OnInit {
   }
 
   setActiveEst(estId: string = '') {
+    this.closeEstSearchModel();
     if (!estId || estId === "null") {
-      this.activeEst = this.estimateList[0]
+      this.activeEst = this.estimateList[this.estimateList.length - 1];
       //console.log(this.activeEst)
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]

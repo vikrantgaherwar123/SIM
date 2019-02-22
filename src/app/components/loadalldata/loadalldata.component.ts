@@ -133,7 +133,7 @@ export class LoadalldataComponent implements OnInit {
       console.log("estimate fetched");
         
       }
-      this.router.navigate(['/invoice/add'])
+        this.router.navigate(['/invoice/add'])
     })
   }
    

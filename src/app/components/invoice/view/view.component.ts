@@ -58,6 +58,8 @@ export class ViewComponent implements OnInit {
 
   public settings: any
   invoiceListLoading: boolean;
+  InvoiceId: any;
+  disableDateText: boolean = false;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -114,9 +116,10 @@ export class ViewComponent implements OnInit {
     // Fetch clients if not in store
     this.clientList = [];
     this.dropdownList = [];
-    this.clientListLoading = true
     if (this.clientList.length < 1) {
+      this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
         this.clientList = response.records;
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
@@ -125,17 +128,24 @@ export class ViewComponent implements OnInit {
     }else{
        this.dropdownList = this.clientList;
     }
-    // this.route.params.subscribe(params => {
-    //   console.log(params);
+    this.route.params.subscribe(params => {
+      if(params.invId){
+        this.InvoiceId = params.invId;
+      }else{
+        this.openSearchClientModal()
+      }
       
-    // })
-    this.openSearchClientModal()
-    this.clientListLoading = false
-    this.invListLoader = true
+    })
+
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
-      this.setActiveInv()
+      if(this.InvoiceId){
+        this.setActiveInv(this.InvoiceId)
+        this.closeSearchModel();
+      }else{
+        this.setActiveInv()
+      }
     })
 
     //if empty invoice then all fetch from api to find latest and oldest invoice date
@@ -157,9 +167,9 @@ export class ViewComponent implements OnInit {
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
     // make invoice list empty if clients not selected in dropdown
-    if(this.invoiceQueryForm.client.value === null){
-      this.invoiceList = []
-    }
+    // if(this.invoiceQueryForm.client.value === null){
+    //   this.invoiceList = []
+    // }
     
     // dropdown settings
     this.dropdownSettings = {
@@ -206,6 +216,7 @@ export class ViewComponent implements OnInit {
     //   this.customEnableDate = false
     // }
     if(this.itemSelected === 'All Time'){
+      this.disableDateText = true;
       this.invoiceQueryForm.dateRange.start.reset()
       this.invoiceQueryForm.dateRange.end.reset()
     }
@@ -320,10 +331,10 @@ export class ViewComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
+    this.closeSearchModel();
     if (!invId || invId ==="null" ) {
-      this.activeInv = this.invoiceList[0]
+      this.activeInv = this.invoiceList[this.invoiceList.length - 1];
     } else{
-      // invId = invoiceId;
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()

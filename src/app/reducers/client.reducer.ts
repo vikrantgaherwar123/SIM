@@ -18,6 +18,7 @@ export function clientReducer(state = initialState, action: ClientActions.Action
       state.splice(action.payload, 1)
     return state
 
+
 		default:
 			return state
 	}
