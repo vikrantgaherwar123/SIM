@@ -25,6 +25,7 @@ import { AppState } from '../../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Title }     from '@angular/platform-browser';
+import { formControlBinding } from '@angular/forms/src/directives/reactive_directives/form_control_directive';
 
 @Component({
   selector: 'app-invoice',
@@ -67,7 +68,6 @@ export class AddEditComponent implements OnInit {
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   addClientModal: any = {}
-
   private productList: product[]
   activeItem: any = {
     quantity: 1,
@@ -75,6 +75,7 @@ export class AddEditComponent implements OnInit {
     total: 0.00
   }
   addItem = new FormControl()
+  description = new FormControl()
   filteredProducts: Observable<string[] | product[]>
 
   termList: terms[]

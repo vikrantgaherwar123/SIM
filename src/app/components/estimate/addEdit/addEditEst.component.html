@@ -26,7 +26,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                            <i class="client_arrow  fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           
                           <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
@@ -58,11 +58,11 @@
                         </div>
                       </div>
 
-                      <div class="col-2" style="padding-top: 30px;">
+                      <!-- <div class="col-2" style="padding-top: 30px;">
                         <span>
                           <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
                         </span>
-                      </div>
+                      </div> -->
 
                       <!-- Address and Shipping Address -->
                       <div id="addressBarAdd" name="addressBar" class="col-12" style="margin-bottom: 15px;padding-top: 16px;">
@@ -114,7 +114,7 @@
                   </div>
                   <div class="col-6">
                     <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker"
-                      required readonly (click)="picker.open()">
+                      required (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                     <div class="form-error" *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched">
                       <span *ngIf="estimateGeneratorAdd.error"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} date required</span>
@@ -237,7 +237,7 @@
                         <input type="number" name="itemQty" id="qty" step="any" class="form-control text_center  height_40"
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
-                      <button type="button" class="small_btn btnd add-line-item-button" (click)="addEditEstimateItem()"
+                      <button type="button" class="btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
                         [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0">
                         Add Item
                       </button>
@@ -283,8 +283,8 @@
                       <img (click)="disableProductText=false" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
                     </td>
                   </tr>
-                  <button *ngIf="disableProductText === false" type="button" class="small_btn btnd add-line-item-button"
-                    (click)="disableProductText=true;">Add Item
+                  <button *ngIf="disableProductText === false" type="button" style="width: 130px !important;" class="btn save_btn btn-raised add_new_btn"
+                    (click)="disableProductText=true;">Add New Item
                   </button>
                 </tbody>
               </table>
@@ -366,7 +366,7 @@
                       <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                     </div>
                     <div class="col-6 text-right">
-                      <span class="font-custom-bold">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                     </div>
                   </div>
                 </div>
@@ -550,7 +550,7 @@
                   </div>
 
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="font-custom-bold price">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
 
@@ -560,7 +560,7 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' :
+                    <span class="bld price">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' :
                       'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
