@@ -573,16 +573,12 @@ export class AddEditComponent implements OnInit {
       this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
         this.productListLoading = false;
-        // console.log(response)
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
         } 
-        // else {
-        //   this.setProductFilter()
-        // }
       })
     } else {
       this.setProductFilter()
@@ -721,9 +717,7 @@ export class AddEditComponent implements OnInit {
 }
 
    private _filterCli(value: string): client[] {
-    // return this.clientList.filter(cli => cli.name)
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
-
   }
 
   selectedClientChange(client) {
@@ -811,68 +805,15 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
-    // for loop is to remove object of empty name
-    // for (let i = 0; i < this.productList.length; i++) {
-    //   if (this.productList[i].prodName == "") {
-    //     var product = this.productList[i];
-    //     var index = this.productList.indexOf(product)
-    //     if (index > -1) {
-    //       this.productList.splice(index, 1);
-    //     }
-    //   }
-    // }
-    // function removeDups(names) {
-    //   let unique = {};
-    //   names.forEach(function(i) {
-    //     if(!unique[i]) {
-    //       unique[i] = true;
-    //     }
-    //   });
-    //   return Object.keys(unique);
-    // }
-    
-      if (this.productList) {
-        // filter productlist to avoid duplicates
-        var obj = {};
-          //You can filter based on Id or Name based on the requirement
-          var uniqueProducts = this.productList.filter(function (item) {
-            if (obj.hasOwnProperty(item.prodName)) {
-              return false;
-            } else {
-              obj[item.prodName] = true;
-              return true;
-            }
-          });
-          this.productList = uniqueProducts;
-          // var list = []
-          // for (let i = 0; i < this.productList.length; i++) {
-          //   var tempProduct = this.productList[i].prodName;
-          //   if (this.productList[i].prodName == tempProduct) {
-              
-          //     list.push(tempProduct)
-          //     var product = this.productList[i];
-          //     var index = this.productList.indexOf(product)
-          //     if (index > -1) {
-          //       this.productList.splice(index, 1);
-          //     }
-          //   }
-          // }
-          // console.log(list);
-          
-
-          
-        this.filteredProducts = this.addItem.valueChanges.pipe(
-          startWith<string | product>(''),
-          map(value => typeof value === 'string' ? value : value.prodName),
-          map(name => name ? this._filterProd(name) : this.productList.slice())
-        )
-      }
+    this.filteredProducts = this.addItem.valueChanges.pipe(
+      startWith<string | product>(''),
+      map(value => typeof value === 'string' ? value : value.prodName),
+      map(name => name ? this._filterProd(name) : this.productList.slice())
+    )
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList && value){
-    return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-    }
+    return this.productList.filter(prod => prod.prodName.replace(/\s/g, "").toLowerCase().includes(value.toLowerCase()))
   }
 
   saveProduct(add_product, callback: Function = null) {

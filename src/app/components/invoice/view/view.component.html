@@ -20,7 +20,7 @@
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
                <span  style="color:#0299ff">{{itemSelected}} :</span>
-              <div *ngIf="disableDateText === false">
+              <span *ngIf="disableDateText === false">
                 <span 
                   style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
                               invoiceQueryForm.dateRange.start.value.getDate() + '-' +
@@ -31,7 +31,7 @@
                               (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.end.value.getFullYear() : 0
                             }}</span>
-              </div>
+              </span>
               <!-- <img src="assets/images/payment2.png" 
               style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>

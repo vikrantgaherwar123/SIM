@@ -222,18 +222,22 @@ export class ViewComponent implements OnInit {
       this.invoiceQueryForm.dateRange.end.reset()
     }
     if(this.itemSelected === 'This Week'){
+      this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
     }
     if(this.itemSelected === 'Last Week'){
+      this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastWeekLastsDay)))
     }
     if(this.itemSelected === 'This Month'){
+      this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.getFullYear(), curr.getMonth(), 1))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.getFullYear(), curr.getMonth() + 1, 0))
     }
     if(this.itemSelected === 'Last Month'){
+      this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
       this.invoiceQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
     }
