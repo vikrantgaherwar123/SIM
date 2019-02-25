@@ -14,7 +14,7 @@ input, textarea {
   margin: 2px 0;
 }
 select {
-  font-family: quicksand_book !important;
+  /* font-family: quicksand_book !important; */
   font-size: 14px !important;
   font-style: normal;
   font-weight: 800 !important;
@@ -124,5 +124,8 @@ select {
 .box_grey{
   border-color: grey;
 }
-
-
+.mat-icon-button {
+  width: 30px !important;
+  height: 30px !important;
+  /* top: -42px; */
+}

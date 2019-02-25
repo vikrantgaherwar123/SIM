@@ -783,6 +783,8 @@ export class AddEditEstComponent implements OnInit {
       discription: add_product.description ? add_product.description : '',
       organization_id: this.user.user.orgId,
       prod_name: add_product.prodName,
+      tax : add_product.tax,
+      discountAmt : add_product.discountAmt,
       rate: add_product.rate ? add_product.rate : 0,
       tax_rate: add_product.tax_rate ? add_product.tax_rate : 0,
       unique_identifier: add_product.unique_identifier ? add_product.unique_identifier : generateUUID(this.user.user.orgId),

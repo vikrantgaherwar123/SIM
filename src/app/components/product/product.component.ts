@@ -31,6 +31,7 @@ export class ProductComponent implements OnInit {
   searchTerm: string
   codeOrSym: string
   repeatativeProductName: string = ''
+  emptyProduct: boolean;
 
   createMode: boolean = true
   editMode: boolean = false
@@ -72,7 +73,9 @@ export class ProductComponent implements OnInit {
 
   save(status, edit) {
     var proStatus = true
-
+    if(this.activeProduct.prodName == undefined){
+      this.emptyProduct = true
+    }
     // If adding or editing product, make sure product with same name doesnt exist
     if(this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
@@ -193,6 +196,12 @@ export class ProductComponent implements OnInit {
     this.activeProduct.enabled = 1
     this.save(true, null)
     this.deleteproduct = false
+  }
+
+  emptyField(input){
+    if(input.target.value !== ''){
+      this.emptyProduct = false
+    }
   }
 
   editThis() {

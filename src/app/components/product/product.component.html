@@ -125,9 +125,9 @@
                    DELETE
                  </button>
                   <div class="rightDivBtns">
-                    <button type="button" id="updateProBtn" (click)="save(f.valid, 0)"
+                    <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
-                      *ngIf="createMode" [disabled]="!f.valid"
+                      *ngIf="createMode" 
                     >
                       SAVE
                     </button>
@@ -164,7 +164,7 @@
                           <span class="input-group-addon">
                             <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
-                          <input type="text" id="prodName" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
+                          <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
                             class="form-control" maxlength="45" onfocus="this.select()" required
                             [(ngModel)]="activeProduct.prodName"
                           />

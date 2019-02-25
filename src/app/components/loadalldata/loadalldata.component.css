@@ -189,7 +189,6 @@
       background-color: red;    
     }  
 	}
-	
 	.progress {
 		margin: 10px;
 		width: 700px;
@@ -205,8 +204,12 @@
     color: #fff;
     text-align: center;
     white-space: nowrap;
-    background-color: #007bff;
+    background-color: #2d8ef5;
     transition: width .6s ease;
-    border-radius: 10px !important;
-    padding: 2px !important;
+    /* border-radius: 10px !important; */
+    /* padding: 2px !important; */
+}
+.progress-bar-striped {
+	background-image: none !important;
+	background-size: 1rem 1rem;
 }

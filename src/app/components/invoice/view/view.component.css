@@ -222,3 +222,12 @@ svg {
   pointer-events: none;
   opacity: 0.4; 
 }
+.form-group{
+	margin-bottom: 5px !important;
+	margin-top: 5px !important;
+}
+.mat-icon-button {
+  width: 30px !important;
+  height: 30px !important;
+  top: -42px !important;
+}

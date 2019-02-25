@@ -61,6 +61,7 @@ input[type=text], input[type=password] {
   -moz-box-shadow: none !important;
   border-radius: 6px !important;
 }
+.button :focus{ outline: none ; box-shadow:none !important;} 
 .btn-custom-2 {
   color: #1a73cc !important;
   background-color: #fafafa !important;
@@ -211,11 +212,7 @@ input[type=number] {
   width: 30px !important;
   height: 30px !important;
 }
-.mat-icon-button {
-  width: 30px !important;
-  height: 30px !important;
-  top: -42px;
-}
+
 .mat-option {
   font-family: quicksand_regular;
   font-size: 14px;
@@ -374,6 +371,13 @@ hr {
     pointer-events: none;
     font-weight: normal;
     color: #aaaaaa;
+  }
+  .price {
+    display: inline-block;
+  }
+  
+  .price::first-letter {
+    padding-right: 0.3em;
   }
 
 /* IE11 hide native button (thanks Matt!) */
@@ -563,6 +567,9 @@ option {
 .mat-datepicker-content .mat-calendar-next-button, .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-toggle {
   color: #8d8d99 !important;
 }
+.mat-datepicker-toggle{
+  display: none; 
+}
 .mat-calendar-previous-button::after {
   border-left-width: 2px;
   transform: translateX(2px) rotate(-45deg);
@@ -667,6 +674,8 @@ option {
 .multiselect-item-checkbox input[type=checkbox] + div:before{
   border: 1px solid #2096f3 !important;
   color: #2096f3 !important;
+  width: 17px !important;
+  height: 17px !important;
 }
 .multiselect-item-checkbox input[type=checkbox] + div:before
   {
@@ -675,6 +684,7 @@ option {
   .multiselect-item-checkbox input[type=checkbox] + div:after
   {
     border-width: 0 0 2px 2px !important;
+    left: 5px !important;
   }
   .multiselect-item-checkbox input[type=checkbox]:checked + div:before{
     background: #2096f3 !important;
@@ -697,4 +707,38 @@ option {
 }
 .save{
 
+}
+.box_red{
+  border-color:red;
+}
+.client_arrow {
+  left: -30px !important;
+}
+.add_new_btn{
+  width: 104px !important;
+  height: 36px !important;
+  background-color: #bae3ff!important;
+  color: #0299ff!important;
+  box-shadow: none!important;
+  margin-top: 32px;
+}
+
+@media (min-width: 1440px)
+{
+.client_arrow {
+  left: -4px !important;
+}
+}
+@media (min-width: 1326px)
+{
+.client_arrow {
+  left: -45px !important;
+}
+}
+select{
+      /* font-family: quicksand_book !important; */
+      font-size: 14px !important;
+      font-style: normal;
+      font-weight: 800 !important;
+      padding: 2px 0px 0px 17px !important;
 }

@@ -309,10 +309,7 @@ export class AddEditComponent implements OnInit {
           }
         }
       }
-      
-      
-
-        // Change payment keys compatible
+       // Change payment keys compatible
         if(this.activeInvoice.payments){
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {

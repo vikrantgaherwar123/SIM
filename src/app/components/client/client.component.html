@@ -44,9 +44,7 @@
             </div>
 
             <!-- <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:false:true | filter:searchTerm | slice:0:clientDisplayLimit); index as index" -->
-            <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:(sortTerm=='name'? false : true):true |filter:searchTerms |  slice:0:clientDisplayLimit); index as index"
-
-
+            <div id="prod{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:(sortTerm=='name'? true : false):true | filter:searchTerms |  slice:0:clientDisplayLimit); index as index"
               [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-2">

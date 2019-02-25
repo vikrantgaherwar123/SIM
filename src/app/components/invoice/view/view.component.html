@@ -97,7 +97,7 @@
               </div> -->
                 <!-- [class.active]=" invoice.created_date " -->
               <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-                *ngFor="let invoice of (invoiceList | filter:invSearchTerm| orderBy: invSortTerm:true |  slice:0:invDispLimit); index as key"
+                *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true | filter:invSearchTerm  | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-2 list-date font-custom-bold fontsize13">
@@ -363,7 +363,7 @@
                     <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeInv.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="font-custom-bold price">{{activeInv.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
   
@@ -381,7 +381,7 @@
                       <div *ngIf="!activeInv.discountFlag == 0">
                         {{activeInv.percentageValue | number:'2.'}}
                       </div>
-                      <div *ngIf="!activeInv.discountFlag == 1">
+                      <div  class="price" *ngIf="!activeInv.discountFlag == 1">
                         {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                       </div>
                     </div>
@@ -448,7 +448,7 @@
                     </span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="font-custom-bold price">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
   
@@ -458,7 +458,7 @@
                     <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom">{{paidAmount()|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="font-custom price">{{paidAmount()|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
                  <!-- Payment -->
@@ -469,7 +469,7 @@
                       <span class="font-custom">{{item.dateOfPayment | date}}</span>
                     </div>
                     <div class="col-6 text-right pad_rg_5" style="margin-left: -10px;">
-                      <span class="font-custom">{{item.paidAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                      <span class="font-custom price">{{item.paidAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                     </div>
                   </div>
               </div>
@@ -480,7 +480,7 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld">{{activeInv.balance|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="bld price">{{activeInv.balance|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                   </div>
                 </div>
               </div>
@@ -512,7 +512,7 @@
         <div class="col-12 col-md-12">
           <div class="form-group pl-0">
             <ng-multiselect-dropdown
-            [placeholder]="'Client'"
+            [placeholder]="'All Clients'"
             [data]="dropdownList"
             [settings]="dropdownSettings"
             [formControl]="invoiceQueryForm.client"
@@ -538,7 +538,7 @@
           </div>
           <div class="col-1"></div>
           <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;" ><!--[ngClass]="{disabledDiv: !customEnableDate}"-->
-            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
+            <div style="font-size: 11px;color: #787879;margin-bottom: 6px;">From Date:</div>
             <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
@@ -548,17 +548,17 @@
             <mat-datepicker #picker3 ></mat-datepicker>
           </div>
           <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;"><!-- [ngClass]="{disabledDiv: !customEnableDate}"-->
-            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
+            <div style="font-size: 11px;color: #787879;margin-bottom: 6px;">To Date:</div>
             <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
             border: 1px solid #c4c1c1;color: black;"
               matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
               (click)="picker4.open()" (dateChange)="onDate($event)"
             > 
-            <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-bottom: -68px !important;"></mat-datepicker-toggle>
             <mat-datepicker #picker4></mat-datepicker>
           </div>
         </div>
-        <div class="row mr_right">
+        <!-- <div class="row mr_right">
           <div class="edit-setting">
             <form>
                 <div class="row" style="padding: 10px 0px 0px 32px;">
@@ -582,7 +582,7 @@
                 </div>
               </form>
           </div>
-        </div>
+        </div> -->
         <div class="modal-footer">
           <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
