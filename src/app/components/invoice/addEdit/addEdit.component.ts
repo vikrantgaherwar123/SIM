@@ -309,10 +309,7 @@ export class AddEditComponent implements OnInit {
           }
         }
       }
-      
-      
-
-        // Change payment keys compatible
+       // Change payment keys compatible
         if(this.activeInvoice.payments){
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
@@ -868,7 +865,9 @@ export class AddEditComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    return this.productList.filter(prod => prod.prodName.toLowerCase().replace(/ /g, '').toLowerCase().includes(value.toLowerCase()))
+    // console.log();
+    
   }
 
   saveProduct(add_product, callback: Function = null) {
