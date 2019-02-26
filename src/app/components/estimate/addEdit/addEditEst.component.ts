@@ -1004,6 +1004,7 @@ export class AddEditEstComponent implements OnInit {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
+
             } else {
               self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
             }
@@ -1021,8 +1022,8 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
            this.toasterService.pop('success', 'Estimate updated successfully');
-          // this.router.navigate(['/estimate/view'])
-          this.router.navigate([`estimate/view/${this.estimateId}`])
+           this.router.navigate(['/estimate/view'])
+          // this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
           // localStorage.setItem('estNo', JSON.stringify(this.activeEstimate.estimate_number));
           this.toasterService.pop('success', 'Estimate saved successfully');
@@ -1042,13 +1043,16 @@ export class AddEditEstComponent implements OnInit {
   }
   }
 
-  deleteEstimate() {
+  openDeleteEstimateModal() {
+    $('#delete-client').modal('show')
+    $('#delete-client').on('shown.bs.modal', (e) => {
+    })
+  }
+  deleteInvoice() {
     this.activeEstimate.deleted_flag = 1
-    // localStorage.setItem('deleteEstimateId', "1" )
-    // this.estimateDelete = false;
     this.save(true)
-    this.toasterService.pop('success', 'estimate Deleted successfully');
-    // this.closeDeleteEstimateModal();
+    this.edit = false
+    this.router.navigate(['/estimate/add'])
   }
 
 

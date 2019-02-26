@@ -36,6 +36,8 @@ import { Title }     from '@angular/platform-browser';
 export class AddEditComponent implements OnInit {
 
   activeInvoice: invoice = <invoice>{}
+  invoiceList: invoice[]
+  activeInv: invoice
   estimateDate = new FormControl()
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
@@ -110,6 +112,9 @@ export class AddEditComponent implements OnInit {
   settingsLoading: boolean;
   InvoiceId: any;
   InvoiceNumber: string;
+  recentInvoices: any = [];
+  showdesc: boolean = false
+  disabledDescription: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -1003,8 +1008,6 @@ export class AddEditComponent implements OnInit {
     $('#edit-item').modal('hide')
   }
 
- 
-
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {
       var rateParse = parseFloat(this.activeItem.rate)
@@ -1339,6 +1342,7 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          // localStorage.setItem('recentInvoices',JSON.stringify(result.invoiceList[0]))
         }
 
         // Update settings
@@ -1348,16 +1352,14 @@ export class AddEditComponent implements OnInit {
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
-          this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate([`invoice/view/${this.InvoiceId}`])
+          // this.toasterService.pop('success', 'invoice Updated successfully');
+          // this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
           // this.router.navigate(['/invoice/add'])
         }
          else {
-          // localStorage.setItem('invNo', JSON.stringify(this.activeInvoice.invoice_number));
-          this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
@@ -1376,10 +1378,17 @@ export class AddEditComponent implements OnInit {
 
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
-    // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
-    this.toasterService.pop('success', 'Invoice Deleted successfully');
+    this.edit = false
+    this.router.navigate(['/invoice/add'])
   }
+  openDeleteInvoiceModal() {
+    $('#delete-invoice').modal('show')
+    $('#delete-invoice').on('shown.bs.modal', (e) => {
+      $('#delete-client input[type="text"]')[1].focus() //1
+    })
+  }
+
 
   deleteInstallment(index){
     this.activeInvoice.payments.splice(index, 1);
@@ -1495,6 +1504,13 @@ export class AddEditComponent implements OnInit {
     $('#addPaymentAddInvoice').modal('hide')
   }
 
+  
+
+  deleteClient() {
+    this.activeClient.enabled = 1
+    this.saveClient(status)
+    // this.addNew();
+  }
   // save button processing script
   
   
