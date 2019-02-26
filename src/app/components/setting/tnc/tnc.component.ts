@@ -112,6 +112,7 @@ export class TncComponent implements OnInit {
   }
 
   edit(index) {
+    index = this.tncs.length - (index +1);
     this.operation = 'edit'
     this.activeTnc = {...this.tncs[index]}
     $('#addEditTnc').modal('show')
@@ -126,6 +127,7 @@ export class TncComponent implements OnInit {
   }
 
   delete(index) {
+    index = this.tncs.length - (index +1);
     this.operation = 'delete'
     this.activeTnc = this.tncs[index]
     this.activeTnc.enabled = 1

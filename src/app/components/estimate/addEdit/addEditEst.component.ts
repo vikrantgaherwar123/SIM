@@ -103,6 +103,7 @@ export class AddEditEstComponent implements OnInit {
   tncLoading: boolean;
   settingsLoading: boolean;
   estimateId: any;
+  recentEstimateList: any = [];
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -165,6 +166,16 @@ export class AddEditEstComponent implements OnInit {
         }
       }
     }
+
+    //getting arraylist of recenlty added invoices 
+    this.recentEstimateList = JSON.parse(localStorage.getItem('recentEstimateList'));
+    if (this.recentEstimateList) {
+      this.recentEstimateList = this.recentEstimateList;
+    } else {
+      this.recentEstimateList = [];
+      localStorage.setItem('recentEstimateList', JSON.stringify(this.recentEstimateList));
+    }
+    // localStorage.removeItem('recentInvoicesList');
   }
 
   dataChanged(input) {
@@ -1010,6 +1021,7 @@ export class AddEditEstComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          localStorage.setItem('recentEstimate', JSON.stringify(response.quotationList[0]));
         }
 
         // Update settings
@@ -1025,6 +1037,9 @@ export class AddEditEstComponent implements OnInit {
           this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
           // localStorage.setItem('estNo', JSON.stringify(this.activeEstimate.estimate_number));
+          var currentEstimate = JSON.parse(localStorage.getItem('recentEstimate'));
+          this.recentEstimateList.push(currentEstimate);
+          localStorage.setItem('recentEstimateList', JSON.stringify(this.recentEstimateList));
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1040,6 +1055,12 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
     $('#estSubmitBtn').removeAttr('disabled')
   }
+  }
+
+  getClientName(id) {
+    if(this.clientList){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
   }
 
   deleteEstimate() {

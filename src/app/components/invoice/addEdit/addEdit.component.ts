@@ -110,6 +110,7 @@ export class AddEditComponent implements OnInit {
   settingsLoading: boolean;
   InvoiceId: any;
   InvoiceNumber: string;
+  recentInvoiceList: any = [];
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private route: ActivatedRoute,
@@ -192,6 +193,15 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+    //getting arraylist of recenlty added invoices 
+    this.recentInvoiceList = JSON.parse(localStorage.getItem('recentInvoicesList'));
+    if (this.recentInvoiceList) {
+      this.recentInvoiceList = JSON.parse(this.recentInvoiceList);
+    } else {
+      this.recentInvoiceList = [];
+      localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
+    }
+    // localStorage.removeItem('recentInvoicesList');
 }
 
   //restrict user to write more than 100 value in pecrentage of discount   
@@ -564,7 +574,6 @@ export class AddEditComponent implements OnInit {
 
   fetchCommonData() {
     var self = this
-
     // Fetch Products if not in store
     if(this.productList.length < 1) {
       this.productListLoading = true;
@@ -802,15 +811,17 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
+    if(this.productList){
     this.filteredProducts = this.addItem.valueChanges.pipe(
       startWith<string | product>(''),
       map(value => typeof value === 'string' ? value : value.prodName),
       map(name => name ? this._filterProd(name) : this.productList.slice())
     )
+    }
   }
 
   private _filterProd(value: string): product[] {
-    return this.productList.filter(prod => prod.prodName.replace(/\s/g, "").toLowerCase().includes(value.toLowerCase()))
+    return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -1282,6 +1293,8 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          localStorage.setItem('recentInvoice', JSON.stringify(result.invoiceList[0]));
+          
         }
 
         // Update settings
@@ -1299,7 +1312,10 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else {
-          // localStorage.setItem('invNo', JSON.stringify(this.activeInvoice.invoice_number));
+          //set recently added invoice list in local storage
+          var currentInvoice = JSON.parse(localStorage.getItem('recentInvoice'));
+          this.recentInvoiceList.push(currentInvoice);
+          localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1317,11 +1333,14 @@ export class AddEditComponent implements OnInit {
   }
   }
 
+  
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
     // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
+    this.edit = false;
+    this.router.navigate(['/invoice/add'])
   }
 
   deleteInstallment(index){

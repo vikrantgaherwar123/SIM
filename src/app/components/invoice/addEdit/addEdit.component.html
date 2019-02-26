@@ -51,7 +51,7 @@
                               <i class="fa fa-plus"></i>
                               Add New Client
                             </button>
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -767,7 +767,45 @@
       <div class="col-12 col-md-3">
         <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices
         </button> 
-        
+        <!-- recently added invoice -->
+        <div class="back list-shadow">
+          <div class="col-12 px-0 filter-box">
+           
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+              <!-- <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
+              </div> -->
+            </div>
+          </div>
+    
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
+          </div>
+
+          <div class="col-12 px-0 back mCustomScrollbar style-3">
+           
+            <div *ngFor="let invoice of recentInvoiceList">
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ invoice.created_date | date: 'dd MMM' }}
+              </div>
+    
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <!-- <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5> -->
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    {{ invoice.invoice_number }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- ends -->
 
         <!-- Delete Invoices Button -->
         <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"

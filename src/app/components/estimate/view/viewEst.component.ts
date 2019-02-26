@@ -126,37 +126,7 @@ export class ViewEstComponent implements OnInit {
       }
       
     })
-    
-    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
-    this.store.select('estimate').subscribe(estimates => {
-      this.estimateList = estimates
-      if(this.estimateList.length < 1){
-        this.estListLoader = true
-        this.estimateService.fetch().subscribe((response: any) => {
-          this.estListLoader = false
-          var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-          this.store.dispatch(new estimateActions.add(records))
-          this.estimateList = records
-          if(this.estimateList){
-            if(this.estimateId){
-              this.setActiveEst(this.estimateId)
-            }else{
-              this.setActiveEst()
-            }
-          }
-        })
-      }else{
-        if(this.estimateId){
-          this.setActiveEst(this.estimateId)
-        }else{
-          this.setActiveEst()
-        }
-      }
-    })
-    
-
-    
-    
+  
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
@@ -248,6 +218,30 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
+    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+    this.store.select('estimate').subscribe(estimates => {
+      this.estimateList = estimates
+      if(this.estimateList.length < 1){
+        this.estListLoader = true
+        this.estimateService.fetch().subscribe((response: any) => {
+          this.estListLoader = false
+          var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+          this.store.dispatch(new estimateActions.add(records))
+          this.estimateList = records
+            if(this.estimateId){
+              this.setActiveEst(this.estimateId)
+            }else{
+              this.setActiveEst()
+            }
+        })
+      }else{
+        if(this.estimateId){
+          this.setActiveEst(this.estimateId)
+        }else{
+          this.setActiveEst()
+        }
+      }
+    })
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')
@@ -280,19 +274,19 @@ export class ViewEstComponent implements OnInit {
   // Search Estimate Functions
   SearchEstimate() {
     var query = {
-      clientIdListEst: [],
+      clientIdList: [],
       startTime: 0,
       endTime: 0
     }
     // this.estimateQueryForm.client = this.searchService.getUserData()
     if (this.estimateQueryForm.client.value && this.estimateQueryForm.client.value.length > 0) {
-      query.clientIdListEst = this.estimateQueryForm.client.value.map(cli => cli.uniqueKeyClient)
-      if (query.clientIdListEst[0] == null) {
-        query.clientIdListEst = null
+      query.clientIdList = this.estimateQueryForm.client.value.map(cli => cli.uniqueKeyClient)
+      if (query.clientIdList[0] == null) {
+        query.clientIdList = null
         this.estimateQueryForm.client.reset([{ name: 'All' }])
       }
     } else {
-      query.clientIdListEst = null
+      query.clientIdList = null
       // this.estimateQueryForm.client.reset([{ name: 'All' }])
     }
     if (this.estimateQueryForm.dateRange.start.value) {
@@ -305,7 +299,6 @@ export class ViewEstComponent implements OnInit {
     }
     this.store.dispatch(new globalActions.add({ estimateQueryForm: this.estimateQueryForm }))
     this.fetchEstimates(query)
-    this.changingQuery = false
   }
 
   getNames() {
@@ -322,26 +315,28 @@ export class ViewEstComponent implements OnInit {
     // Fetch estimates with given query
     if (query == null) {
       query = {
-        clientIdListEst: null,
+        clientIdList: null,
         startTime: 0,
         endTime: new Date().getTime()
       }
     }
 
     this.estListLoader = true
-    this.estimateService.fetch().subscribe((response: any) => {
+    this.estimateService.fetchByQuery(query).subscribe((response: any) => {
+      this.estListLoader = false
       if (response.status === 200) {
-        this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-        // this.setActiveEst()
+        this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+        this.estimateList = response.records ? response.records.filter(rec => rec.enabled == 0) : [];
+        this.setActiveEst(this.estimateList[0].unique_identifier);
       }
       this.estListLoader = false
     })
   }
 
   setActiveEst(estId: string = '') {
-    this.closeEstSearchModel();
+    // this.closeEstSearchModel();
     if (!estId || estId === "null") {
-      this.activeEst = this.estimateList[this.estimateList.length - 1];
+      this.activeEst = this.estimateList[0];
       //console.log(this.activeEst)
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]

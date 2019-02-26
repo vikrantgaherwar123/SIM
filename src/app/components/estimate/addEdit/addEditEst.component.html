@@ -48,7 +48,7 @@
                               <i class="fa fa-plus"></i>
                               Add New Client
                             </button>
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
+                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -587,6 +587,42 @@
         <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
           Show All Estimates
         </button>
+
+        <!-- recently added Estimate -->
+        <div class="back list-shadow">
+          <div class="col-12 px-0 filter-box">
+           
+           
+          </div>
+    
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
+          </div>
+
+          <div class="col-12 px-0 back mCustomScrollbar style-3">
+           
+            <div *ngFor="let estimate of recentEstimateList">
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ estimate.created_date | date: 'dd MMM' }}
+              </div>
+    
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    #{{ estimate.estimate_number }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- ends -->
 
         <!-- Delete Estimates Button -->
         <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
