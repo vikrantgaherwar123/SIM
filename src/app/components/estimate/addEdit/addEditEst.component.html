@@ -141,10 +141,10 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                     </td>
-                    <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRateFlag == true">
+                    <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                       <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled value="Tax (%)" />
                     </td>
-                    <td width="10%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRateFlag == true">
+                    <td width="10%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
@@ -199,7 +199,7 @@
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text-center">
-                        <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index)">
+                        <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index);disabledDescription = true">
                           <img src="assets/images/edit_blue.png" class="del" class="hg_20">
                         </a>
                       </div>
@@ -225,9 +225,13 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
-                            *ngIf="modalDescription === true" [(ngModel)]="activeItem.description" placeholder="Description"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
+                             [(ngModel)]="activeItem.description" placeholder="Description"
                             onfocus="this.select()"></textarea>
+                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                                style="margin-top: 3px;height: 69px !important;"
+                                placeholder="Description" onfocus="this.select()"
+                          ></textarea>
                         </div>
                       </div>
                     </td>
@@ -250,7 +254,7 @@
                       </div>
                     </td>
 
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                       <div class="input-group">
                         <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
                           [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" />
@@ -261,7 +265,7 @@
                       <div class="text-right">{{activeItem.tax_amount}}</div>
                     </td>
 
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                       <div class="input-group">
                         <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0
                           max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
@@ -293,7 +297,7 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === false || activeEstimate.discount_on_item===2 ">
+                <div *ngIf="settings.discountFlagLevel === 0 &&  activeEstimate.discount_on_item===2 ">
                   <a class="inline" (click)="activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
@@ -303,7 +307,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="settings.taxFlagLevel === 1 || activeEstimate.tax_on_item === 2">
+                <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2">
                   <!-- && activeEstimate.tax_rate === 0-->
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
@@ -372,7 +376,7 @@
                 </div>
 
                 <!-- Discounts -->
-                <div *ngIf="activeEstimate.discount_on_item === 0 && showDiscountField === true">
+                <div *ngIf="activeEstimate.discount_on_item === 0 && showDiscountField === true && discountFlag ===1 || showDiscountRateFlag === true">
                   <div class="row mr_right mr_0">
                     <div class="col-5 discount-tax-label pr-0 label_color">
                       <span style="text-align: left;vertical-align: bottom;color: #aaaaaa;" class="inline">
@@ -599,9 +603,10 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3">
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
            
-            <div *ngFor="let estimate of recentEstimateList">
+            <div *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            border-bottom: 1px solid #d2d2d2;margin: -1px  0px 0px 4px;">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ estimate.created_date | date: 'dd MMM' }}
               </div>
@@ -794,7 +799,7 @@
             <div class="col-12">
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description" class="form-control" placeholder="Description"
-                select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+                select-on-click style="height: 69px !important;" onfocus="this.select()"></textarea>
             </div>
 
             <div class="col-12">

@@ -517,9 +517,9 @@ option {
   RAISED BUTTONS
 ************************/
 .btn2-primary.raised {
-    /* box-shadow: 0 5px 0 0 #1678cd; */
-    margin-top: 2px;
-    margin-left: -22px;
+  margin-top: 2px;
+  margin-left: -2px;
+  margin-bottom: 16px;
 }
 .btn2-primary.raised:active, .btn2-primary.raised.active {
     background: #3276b1;

@@ -104,6 +104,9 @@ export class AddEditEstComponent implements OnInit {
   settingsLoading: boolean;
   estimateId: any;
   recentEstimateList: any = [];
+  disabledDescription: boolean = false;
+  discountFlag: any;
+
 
   constructor(private CONST: CONSTANTS, public router: Router,
     public toasterService: ToasterService,
@@ -201,13 +204,13 @@ export class AddEditEstComponent implements OnInit {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
       this.showTaxRateFlag = false;
+      this.showTaxRate = 0;
     }else{
       this.showTaxRateFlag = true;
     }
     if(this.settings.discountFlagLevel === 0){
       this.showDiscountRateFlag = false;
-    }else{
-      this.showDiscountRateFlag = true;
+      this.showDiscountRate = 0;
     }
 
 
@@ -230,10 +233,10 @@ export class AddEditEstComponent implements OnInit {
     }
     if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
       this.showDiscountRateFlag = false;
-      this.showDiscountField = false;
+      this.showDiscountField = true;
     }else{
       this.showDiscountRateFlag = true;
-      this.showDiscountField = true;
+      this.showDiscountField = false;
     }
 
     
@@ -244,7 +247,11 @@ export class AddEditEstComponent implements OnInit {
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
+        this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+        if(this.activeEstimate.discount !==0){
+          this.discountFlag = 1;
+        }
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
         if (!this.activeEstimate.taxList)
@@ -274,6 +281,7 @@ export class AddEditEstComponent implements OnInit {
           }
           this.showDiscountRate = this.activeEstimate.listItems[i].discount;
           if(this.showDiscountRate!==0){
+            this.showDiscountRateFlag = false;
             this.setDiscountOnItem = true;
           }
           }
@@ -460,9 +468,13 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          //remove whitespaces from clientlist
-          for (let i = 0; i < this.clientList.length; i++) {
-            if (this.clientList[i].name.replace(/\s/g, "") === "") {
+            //remove whitespaces from clientlist
+           for (let i = 0; i < this.clientList.length; i++) {
+            if(!this.clientList[i].name){
+              this.clientList.splice(i, 1);
+            }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
               this.clientList.splice(i, 1);
             }
           }
@@ -659,7 +671,23 @@ export class AddEditEstComponent implements OnInit {
       return false
     }
 
-    if (status) {
+    var proStatus = true
+    // If adding or editing client, make sure client with same name doesnt already exist
+      var tempClientName = this.addClientModal.name.toLowerCase().replace(/ /g, '')
+
+      var tempCompare = ''
+      if (this.clientList.length > 0) {
+        for (var p = 0; p < this.clientList.length; p++) {
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          if (tempCompare === tempClientName) {
+            proStatus = false
+            break
+          }
+        }
+      }
+
+
+    if (status && proStatus) {
       this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
@@ -684,6 +712,10 @@ export class AddEditEstComponent implements OnInit {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
       })
+    }else {
+      if (!proStatus) {
+        this.toasterService.pop('failure', 'Client name already exists.');
+      }
     }
   }
 
@@ -966,8 +998,7 @@ export class AddEditEstComponent implements OnInit {
 
     var temp = []
     this.activeEstimate.termsAndConditions.forEach(tnc => {
-      temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier })
-
+      temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc)}) //, unique_key_fk_quotation: this.activeEstimate.unique_identifier 
     })
   //   for(let i = 0;i<temp.length; i++){
   //   if(temp[i].terms_condition === undefined){
@@ -981,9 +1012,14 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.unique_identifier = generateUUID(this.user.user.orgId)
     }
     for (var i = this.activeEstimate.listItems.length; i > 0; i--) {
+      this.activeEstimate.listItems[i - 1].unique_key_fk_quotation = this.activeEstimate.unique_identifier
       if (!this.activeEstimate.listItems[i - 1].product_name || this.activeEstimate.listItems[i - 1].product_name == '') {
         this.activeEstimate.listItems.splice(i - 1, 1)
       }
+    }
+
+    for (var j = 0; j < this.activeEstimate.termsAndConditions.length; j++) {
+      this.activeEstimate.termsAndConditions[j].unique_key_fk_quotation = this.activeEstimate.unique_identifier
     }
 
     if (this.activeEstimate.taxList) {

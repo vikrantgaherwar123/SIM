@@ -22,6 +22,8 @@ import { productReducer } from './reducers/product.reducer'
 import { termsReducer } from './reducers/terms.reducer'
 import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
+import { recentInvoice } from './reducers/recentInvoice.reducer'
+
 import { globalReducer } from './reducers/globals.reducer'
 
 import { CONSTANTS } from './constants'
@@ -135,6 +137,7 @@ export function getAuthServiceConfigs() {
       terms: termsReducer,
       estimate: estimateReducer,
       invoice: invoiceReducer,
+      recentInvoices: recentInvoice,
       globals: globalReducer
     }),
     NgMultiSelectDropDownModule.forRoot()

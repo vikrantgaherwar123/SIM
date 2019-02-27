@@ -104,7 +104,7 @@ export class ViewEstComponent implements OnInit {
 
   ngOnInit() {
     // Fetch clients if not in store
-    this.clientList = [];
+    // this.clientList = [];
     this.dropdownList = [];
     if (this.clientList.length < 1) {
       this.clientListLoading = true
