@@ -135,3 +135,7 @@ select {
 .white{
   color:white
 }
+.filter-box[_ngcontent-c5] {
+  background: #ffffff;
+  border-bottom: none !important;
+}

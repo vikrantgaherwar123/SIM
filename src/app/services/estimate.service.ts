@@ -14,10 +14,12 @@ export class EstimateService {
   private user: {
     access_token: string
   }
+  fetchByQueryUrl = '';
 
   constructor(private http: HttpClient, private CONST: CONSTANTS) {
     this.fetchUrl = `${CONST.BASE_URL}estimate/pull/quotation`
     this.fetchByIdUrl = `${CONST.BASE_URL}estimate/pull/estimate/byId`
+    this.fetchByQueryUrl = `${CONST.BASE_URL}estimate/pull/estimate/clientId`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/estimate/`
     this.addUrl = `${CONST.BASE_URL}estimate/add-estimate`
     
@@ -45,6 +47,17 @@ export class EstimateService {
     }
 
     return this.http.post(this.fetchByIdUrl, {"idList": idList}, headers)
+  }
+
+  fetchByQuery(query) {
+    const headers = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "accessToken": this.user.access_token
+      })
+    }
+
+    return this.http.post(this.fetchByQueryUrl, query, headers)
   }
 
   add(estimate) {

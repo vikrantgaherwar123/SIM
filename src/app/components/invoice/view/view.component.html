@@ -31,7 +31,7 @@
                               (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.end.value.getFullYear() : 0
                             }}</span>
-                          </span>
+              </span>
               <!-- <img src="assets/images/payment2.png" 
               style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
@@ -119,10 +119,10 @@
                 </div>
               </div>
       
-              <div *ngIf="invoiceList.length < 1 && !activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
+              <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
                 <img src="assets/images/no_data_found.png" style="width: 324px;">
               </div>
-              <div class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
+              <div *ngIf="invoiceList" class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
                   Click to view more >>
                 </a>
@@ -489,7 +489,7 @@
             </div>
           </form>
         </div>
-        <div *ngIf="invoiceList.length < 1 && !activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
+        <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
           <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
         </div>
       </div>

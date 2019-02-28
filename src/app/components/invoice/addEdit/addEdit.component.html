@@ -432,12 +432,14 @@
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
                     </div>
+                    <div>
                     <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                       <a *ngIf="!activeInvoice.taxList[taxIndex]"
                         (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}"
                       >
                         {{tax.taxName}}+
                       </a>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -768,48 +770,47 @@
       <div class="col-12 col-md-3">
         <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices <br />
         </button> 
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show Recent Invoices
-        </button> 
+         
         <!-- recently added invoice -->
-          <div class="back list-shadow">
-            <div class="col-12 px-0 filter-box">
-             
-              <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
-                <div class="form-group label-floating">
-                  <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
-                </div>
+        <div class="back">
+          <div class="col-12 px-0 filter-box">
+           
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
+              <!-- <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
+              </div> -->
+            </div>
+          </div>
+    
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
+          </div>
+
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
+           
+            <div *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            border-bottom: 1px solid #d2d2d2;margin: -1px  0px 12px 4px;">
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ invoice.created_date | date: 'dd MMM' }}
               </div>
-            </div>
-      
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-              <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
-            </div>
-  
-            <div class="col-12 px-0 back mCustomScrollbar style-3">
-             
-              <div *ngFor="let invoice of recentInvoices">
-                <div class="col-2 list-date font-custom-bold fontsize13">
-                  {{ invoice.created_date | date: 'dd MMM' }}
-                </div>
-      
-                <div class="col-10">
-                  <div class="row">
-                    <div class="col-12">
-                      <!-- <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5> -->
-                    </div>
-                    <div class="col-5 font-custom-book fontsize13">
-                      {{ invoice.invoice_number }}
-                    </div>
-                    <div class="col-6 text-right font-custom-bold fontsize12">
-                      {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
-                    </div>
+    
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    {{ invoice.invoice_number }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        <!-- ends -->
-        
+        </div>
+      <!-- ends -->
 
         <!-- Delete Invoices Button -->
         <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteInvoice()"
@@ -847,10 +848,7 @@
                   <input type="text" name="name" class="form-control add-client-input-custom"
                     [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
                   />
-                  <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
-                    <span *ngIf="clientform.name.$error.required">Required</span>
-                    <span *ngIf="errors">{{ errors.name[0] }}</span>
-                  </div>
+                 
                 </div>
               </div>
 

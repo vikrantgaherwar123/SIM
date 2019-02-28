@@ -199,7 +199,7 @@
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text-center">
-                        <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index)">
+                        <a class="closeicon show" title="Edit Row" (click)="editEstimateItem(index);disabledDescription=true">
                           <img src="assets/images/edit_blue.png" class="del" class="hg_20">
                         </a>
                       </div>
@@ -224,10 +224,20 @@
                           <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
-                        <div class="custom-description">
+                        <!-- <div class="custom-description">
                           <textarea id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
                             *ngIf="modalDescription === true" [(ngModel)]="activeItem.description" placeholder="Description"
                             onfocus="this.select()"></textarea>
+                        </div> -->
+                        <div class="custom-description">
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                            style="margin-top: 3px;height: 69px !important;"
+                            [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
+                          ></textarea>
+                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                            style="margin-top: 3px;height: 69px !important;"
+                            placeholder="Description" onfocus="this.select()"
+                          ></textarea>
                         </div>
                       </div>
                     </td>
@@ -293,7 +303,7 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === false || activeEstimate.discount_on_item===2 ">
+                <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === false && activeEstimate.discount_on_item===2 ">
                   <a class="inline" (click)="activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
@@ -587,75 +597,41 @@
         <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
           Show All Estimates
         </button>
+        
+        <!-- recently added Estimate -->
         <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
-            <div class="col-12">
-              <div class="row mx-0">
-                <div class="col-6 pl-0" style="padding-top: 15px;">
-                  <a (click)="router.navigate(['invoice/add'])" title="Add New" class="pull-left list-btn">
-                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
-                  </a>
-                </div>
-                <div class="col-6 px-0" style="padding-top: 15px;">
-                  <a data-toggle="dropdown" Title="Search By" aria-haspopup="true" aria-expanded="false" class="pull-right list-btn back">
-                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li [class.active]="invSortTerm=='created_date'">
-                      <a (click)="invSortTerm='created_date'">By Date</a>
-                    </li>
-                    <li [class.active]="invSortTerm=='invoice_number'">
-                      <a (click)="invSortTerm='invoice_number'">By Inv No.</a>
-                    </li>
-                    <li [class.active]="invSortTerm=='balance'">
-                      <a (click)="invSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
-                    </li>
-                    <li [class.active]="invSortTerm=='amount'">
-                      <a (click)="invSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
-              <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
-              </div>
-            </div>
           </div>
     
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3">
-            <!-- <div *ngIf="invListLoader">
-              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-            </div> -->
-              <!-- [class.active]=" invoice.created_date " -->
-              <div 
-              *ngFor="let estimate of allEstimates">
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
+           
+            <div *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            border-bottom: 1px solid #d2d2d2;margin: -1px  0px 0px 4px;">
               <div class="col-2 list-date font-custom-bold fontsize13">
-                {{ estimate.createDate | date: 'dd MMM' }}
+                {{ estimate.created_date | date: 'dd MMM' }}
               </div>
-
+    
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <!-- <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5> -->
+                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
                   <div class="col-5 font-custom-book fontsize13">
-                    #{{ estimate.quetationNo }}
+                    #{{ estimate.estimate_number }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
-                    'symbol'):'1.2-2' }}
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      <!-- ends -->
 
         <!-- Delete Estimates Button -->
         <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
@@ -827,7 +803,7 @@
             <div class="col-12">
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description" class="form-control" placeholder="Description"
-                select-on-click style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+                select-on-click style="height: 69px !important;" onfocus="this.select()"></textarea>
             </div>
 
             <div class="col-12">

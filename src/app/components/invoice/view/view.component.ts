@@ -137,16 +137,7 @@ export class ViewComponent implements OnInit {
       
     })
 
-    // Set Active invoice whenever invoice list changes
-    this.store.select('invoice').subscribe(invoices => {
-      this.invoiceList = invoices
-      if(this.InvoiceId){
-        this.setActiveInv(this.InvoiceId)
-        this.closeSearchModel();
-      }else{
-        this.setActiveInv()
-      }
-    })
+    
 
     //if empty invoice then all fetch from api to find latest and oldest invoice date
     // if(this.invoiceList.length < 1){
@@ -275,6 +266,16 @@ export class ViewComponent implements OnInit {
   }
 
   showSelectedInvoices(client){
+    // Set Active invoice whenever invoice list changes
+    this.store.select('invoice').subscribe(invoices => {
+      this.invoiceList = invoices
+      if(this.InvoiceId){
+        this.setActiveInv(this.InvoiceId)
+        this.closeSearchModel();
+      }else{
+        this.setActiveInv()
+      }
+    })
     this.invoiceQueryForm.client = client;
     this.SearchInvoice()
     $('#search-client').modal('hide')

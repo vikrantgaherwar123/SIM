@@ -36,8 +36,6 @@ import { Title }     from '@angular/platform-browser';
 export class AddEditComponent implements OnInit {
 
   activeInvoice: invoice = <invoice>{}
-  invoiceList: invoice[]
-  activeInv: invoice
   estimateDate = new FormControl()
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
@@ -112,7 +110,7 @@ export class AddEditComponent implements OnInit {
   settingsLoading: boolean;
   InvoiceId: any;
   InvoiceNumber: string;
-  recentInvoices: any = [];
+  recentInvoiceList: any = [];
   showdesc: boolean = false
   disabledDescription: boolean = false;
   
@@ -197,6 +195,15 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+    //getting arraylist of recenlty added invoices 
+    this.recentInvoiceList = JSON.parse(localStorage.getItem('recentInvoicesList'));
+    if (this.recentInvoiceList) {
+      this.recentInvoiceList = this.recentInvoiceList;
+    } else {
+      this.recentInvoiceList = [];
+      localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
+    }
+    // localStorage.removeItem('recentInvoicesList');
 }
 
   //restrict user to write more than 100 value in pecrentage of discount   
@@ -206,6 +213,11 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
+  }
+  getClientName(id) {
+    if(this.clientList){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }
   invoiceNoChanged(input){
@@ -569,22 +581,17 @@ export class AddEditComponent implements OnInit {
 
   fetchCommonData() {
     var self = this
-
     // Fetch Products if not in store
     if(this.productList.length < 1) {
       this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
         this.productListLoading = false;
-        // console.log(response)
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
         } 
-        // else {
-        //   this.setProductFilter()
-        // }
       })
     } else {
       this.setProductFilter()
@@ -811,68 +818,17 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
-    // for loop is to remove object of empty name
-    // for (let i = 0; i < this.productList.length; i++) {
-    //   if (this.productList[i].prodName == "") {
-    //     var product = this.productList[i];
-    //     var index = this.productList.indexOf(product)
-    //     if (index > -1) {
-    //       this.productList.splice(index, 1);
-    //     }
-    //   }
-    // }
-    // function removeDups(names) {
-    //   let unique = {};
-    //   names.forEach(function(i) {
-    //     if(!unique[i]) {
-    //       unique[i] = true;
-    //     }
-    //   });
-    //   return Object.keys(unique);
-    // }
-    
-      if (this.productList) {
-        // filter productlist to avoid duplicates
-        var obj = {};
-          //You can filter based on Id or Name based on the requirement
-          var uniqueProducts = this.productList.filter(function (item) {
-            if (obj.hasOwnProperty(item.prodName)) {
-              return false;
-            } else {
-              obj[item.prodName] = true;
-              return true;
-            }
-          });
-          this.productList = uniqueProducts;
-          // var list = []
-          // for (let i = 0; i < this.productList.length; i++) {
-          //   var tempProduct = this.productList[i].prodName;
-          //   if (this.productList[i].prodName == tempProduct) {
-              
-          //     list.push(tempProduct)
-          //     var product = this.productList[i];
-          //     var index = this.productList.indexOf(product)
-          //     if (index > -1) {
-          //       this.productList.splice(index, 1);
-          //     }
-          //   }
-          // }
-          // console.log(list);
-          
-
-          
-        this.filteredProducts = this.addItem.valueChanges.pipe(
-          startWith<string | product>(''),
-          map(value => typeof value === 'string' ? value : value.prodName),
-          map(name => name ? this._filterProd(name) : this.productList.slice())
-        )
-      }
+    if(this.productList){
+    this.filteredProducts = this.addItem.valueChanges.pipe(
+      startWith<string | product>(''),
+      map(value => typeof value === 'string' ? value : value.prodName),
+      map(name => name ? this._filterProd(name) : this.productList.slice())
+    )
+    }
   }
 
   private _filterProd(value: string): product[] {
-    return this.productList.filter(prod => prod.prodName.toLowerCase().replace(/ /g, '').toLowerCase().includes(value.toLowerCase()))
-    // console.log();
-    
+    return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -1007,6 +963,8 @@ export class AddEditComponent implements OnInit {
     }
     $('#edit-item').modal('hide')
   }
+
+ 
 
   calculateTotal() {
     if (Object.keys(this.activeItem).length > 0) {
@@ -1342,7 +1300,8 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          // localStorage.setItem('recentInvoices',JSON.stringify(result.invoiceList[0]))
+          localStorage.setItem('recentInvoice', JSON.stringify(result.invoiceList[0]));
+          
         }
 
         // Update settings
@@ -1352,14 +1311,19 @@ export class AddEditComponent implements OnInit {
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
-          // this.toasterService.pop('success', 'invoice Updated successfully');
-          // this.router.navigate([`invoice/view/${this.InvoiceId}`])
+          this.toasterService.pop('success', 'invoice Updated successfully');
+          this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
           this.toasterService.pop('success', 'Invoice saved successfully');
           self.resetCreateInvoice()
           // this.router.navigate(['/invoice/add'])
         }
          else {
+          //set recently added invoice list in local storage
+          var currentInvoice = JSON.parse(localStorage.getItem('recentInvoice'));
+          this.recentInvoiceList.push(currentInvoice);
+          localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
+          this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
@@ -1376,19 +1340,15 @@ export class AddEditComponent implements OnInit {
   }
   }
 
+  
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
+    // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
-    this.edit = false
+    this.toasterService.pop('success', 'Invoice Deleted successfully');
+    this.edit = false;
     this.router.navigate(['/invoice/add'])
   }
-  openDeleteInvoiceModal() {
-    $('#delete-invoice').modal('show')
-    $('#delete-invoice').on('shown.bs.modal', (e) => {
-      $('#delete-client input[type="text"]')[1].focus() //1
-    })
-  }
-
 
   deleteInstallment(index){
     this.activeInvoice.payments.splice(index, 1);
@@ -1504,13 +1464,6 @@ export class AddEditComponent implements OnInit {
     $('#addPaymentAddInvoice').modal('hide')
   }
 
-  
-
-  deleteClient() {
-    this.activeClient.enabled = 1
-    this.saveClient(status)
-    // this.addNew();
-  }
   // save button processing script
   
   
