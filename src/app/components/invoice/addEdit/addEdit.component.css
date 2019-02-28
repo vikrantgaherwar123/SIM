@@ -129,12 +129,6 @@ select {
   height: 30px !important;
   /* top: -42px; */
 }
-.black{
-  color:#666666
-}
-.white{
-  color:white
-}
 .filter-box[_ngcontent-c5] {
   background: #ffffff;
   border-bottom: none !important;

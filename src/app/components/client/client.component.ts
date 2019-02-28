@@ -174,12 +174,10 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
-      if(!proStatus) 
-      {
+      if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
       }
-      
-          }
+    }
   }
   emptyField(input){
     if(input.target.value !== ''){

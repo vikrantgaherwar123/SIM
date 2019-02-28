@@ -372,9 +372,9 @@ hr {
     font-weight: normal;
     color: #aaaaaa;
   }
-  .price {
+  /* .price {
     display: inline-block;
-  }
+  } */
   
   .price::first-letter {
     padding-right: 0.3em;

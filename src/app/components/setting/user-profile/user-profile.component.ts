@@ -26,6 +26,7 @@ export class UserProfileComponent implements OnInit {
   logoStyle: SafeStyle
   signStyle: SafeStyle
   settings: setting;
+  emptyCompanyName: boolean = true;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
@@ -85,13 +86,17 @@ export class UserProfileComponent implements OnInit {
       }
     })
   }
-
+ 
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
 
   save(valid) {
-    if (valid) {
+     if(this.org.org_name == ''){
+      // this.toasterService.pop('failure','Company Name required')
+    }
+    this.org.org_name = this.org.org_name.replace(/ +(?= )/g, '');
+    if (valid && this.org.org_name !== ' ') {
       $('#profileSubmitBtn').attr('disabled', 'disabled')
 
       this.orgService.add(this.org).subscribe((response: any) => {
@@ -101,6 +106,9 @@ export class UserProfileComponent implements OnInit {
       }, (err) => {
         console.log('errrr', err)
       })
+    }
+    else{
+      this.toasterService.pop('failure','Company Name required')
     }
   }
 }

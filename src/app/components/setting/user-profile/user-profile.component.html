@@ -45,6 +45,17 @@
 
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
+                <div class="input-group client-input">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                  </span>
+                 
+                  <input type="text" name="org_name" id="org_name" class="form-control" placeholder="Company Name *"
+                    onfocus="this.select()" [(ngModel)]="org.org_name" required />
+                </div>
+               
+              </div>
+              <!-- <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
                     <img src="/assets/images/client-icon/ic_normal_org_name.png">
@@ -53,7 +64,7 @@
                     [(ngModel)]="org.org_name" placeholder="Company Name" onfocus="this.select()"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="col-12" style="margin-bottom: 10px;">
@@ -62,7 +73,7 @@
                   <span class="input-group-addon">
                     <img src="/assets/images/client-icon/ic_normal_contact_person.png">
                   </span>
-                  <input type="text" name="person_name" id="person_name" class="form-control"
+                  <input type="text" name="person_name" id="person_name" class="form-control" required
                     [(ngModel)]="org.contact_person_name" placeholder="Person Name" onfocus="this.select()"
                   />
                 </div>
@@ -136,7 +147,7 @@
                 >
                   CANCEL
                 </button>
-                <button type="button" id="profileSubmitBtn" (click)="save(userForm.valid)"
+                <button type="button" id="profileSubmitBtn" (click)="save(userForm.valid);"
                   class="btn btn-success btn-raised width10btn no-border-radius font-custom-bold pull-right"
                 >
                   SAVE
