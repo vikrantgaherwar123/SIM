@@ -272,8 +272,6 @@ export class ViewComponent implements OnInit {
       if(this.InvoiceId){
         this.setActiveInv(this.InvoiceId)
         this.closeSearchModel();
-      }else{
-        this.setActiveInv()
       }
     })
     this.invoiceQueryForm.client = client;

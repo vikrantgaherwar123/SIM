@@ -91,16 +91,23 @@ export class UserProfileComponent implements OnInit {
   }
 
   save(valid) {
-    if (valid) {
-      $('#profileSubmitBtn').attr('disabled', 'disabled')
+    if(this.org.org_name == ''){
+     // this.toasterService.pop('failure','Company Name required')
+   }
+   this.org.org_name = this.org.org_name.replace(/\s/g, "");
+   if (valid && this.org.org_name !== "") {
+     $('#profileSubmitBtn').attr('disabled', 'disabled')
 
-      this.orgService.add(this.org).subscribe((response: any) => {
-        this.toasterService.pop('success','Saved Successfully')
-        //alert(response.message)
-        $('#profileSubmitBtn').removeAttr('disabled')
-      }, (err) => {
-        console.log('errrr', err)
-      })
-    }
-  }
+     this.orgService.add(this.org).subscribe((response: any) => {
+       this.toasterService.pop('success','Saved Successfully')
+       //alert(response.message)
+       $('#profileSubmitBtn').removeAttr('disabled')
+     }, (err) => {
+       console.log('errrr', err)
+     })
+   }
+   else{
+     this.toasterService.pop('failure','Company Name required')
+   }
+ }
 }

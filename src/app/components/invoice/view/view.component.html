@@ -91,7 +91,7 @@
               <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
             </div>
   
-            <div class="col-12 px-0 back mCustomScrollbar style-3">
+            <div *ngIf = "activeInv" class="col-12 px-0 back mCustomScrollbar style-3">
               <!-- <div *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div> -->

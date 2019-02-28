@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Dashboard');
     this.settingStore.subscribe(settings => {
+      if(settings){
       if(Object.keys(settings).length == 0) {
         this.settingService.fetch().subscribe((response: response) => {
           if (response.status === 200) {
@@ -170,6 +171,7 @@ export class DashboardComponent implements OnInit {
           }
         })
       }
+    }
     })
   }
 
