@@ -9,39 +9,42 @@
         <div class="col-12 px-0" style="padding-bottom: 20px;padding-top: 10px;">
           <div class="row">
             <div class="col-7 font-custom-bold">
-              <h3 class="px-0 margin-top0"> Terms & Conditions</h3>
+              <h3 class="px-0 margin-top0"> {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}</h3>
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
-                class="btn btnd btn-success no-border-radius pull-right font-weight-bold"
+                class="save_btn btn-raised pull-right font-weight-bold" style="border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
-                Add Terms & Conditions
+                Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
               </button>
             </div>
           </div>
         </div>
 
         <!-- Terms And Conditions List -->
-        <div class="col-12 mb-1" style="height: 60vh; overflow-y: auto">
-          <div class="row term-list-show" *ngFor="let term of tncs; let index = index; let last = last" id="term{{index}}">
+        <div class="col-12 mb-1 mCustomScrollbar style-3">
+          <div class="row term-list-show" *ngFor="let term of tncs | orderBy:'term':'asc' ; let index = index ;" id="term{{index}}">
+          <label class="check">
             <div class="col-1">
-              <!-- <md-switch [(ngModel)]="data.terms[index]" disabled aria-label="Switch 1" style="display:inline; margin: 0px 0px 0px 24px;"></md-switch> -->
-              <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'" disabled>
+              <input type="checkbox" name="default{{index}}" id="default{{index}}" [checked]="term.setDefault=='DEFAULT'">
+              <span class="checkmark"></span>
             </div>
+          </label>
             <div class="col-9" style="left: -2%;">
-              <pre class="pre_term ellipsisterm"> {{term.terms}}</pre>
+              <div style="word-wrap: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
             </div>
+          
             <div class="col-2 text-right">
               <span [swal]="{ title: 'Are you sure want to delete?', type: 'warning',
                   showCancelButton: true, confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'
                 }"
                 (confirm)="delete(index)"
               >
-                <img style="width: 16px; height: 16px;" src="/assets/images/cross64.png">
+                <img style="width: 16px; height: 16px;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>
               <span (click)="edit(index)">
-                <img style="width: 16px; height: 16px;margin-left: 10px;" src="/assets/images/edit64.png">
+                <img style="width: 16px; height: 16px;margin-left: 10px;" Title="Edit Term" src="/assets/images/edit_blue.png">
               </span>
             </div>
           </div>
@@ -65,7 +68,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel1">
-          Add Terms & Condition
+          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </h4>
         <a class="pull-right" (click)="close()" style="margin-top: 6px;">
           <img src="assets/images/cross16.png" alt="logo">
@@ -75,8 +78,8 @@
         <form name="addtermpopup" #addtermpopup="ngForm">
           <div class="col-12">
             <div class="form-group">
-              <textarea elastic name="term" class="form-control" placeholder="Add term & Condition *"
-                [(ngModel)]="activeTnc.terms" style="height: 110px;" required onfocus="this.select()"
+              <textarea elastic name="term" class="form-control style-3" placeholder="Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}} *"
+                [(ngModel)]="activeTnc.terms" style="height: 110px !important;" required onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -88,8 +91,8 @@
               <label for="set_default">Default?</label>
             </div>
             <button type="submit" id="addtermButton" title="save"
-              class="btn btnd btn-success btn-raised pull-right width10btn fontsize12 font-custom-bold"
-              (click)="save(addtermpopup.valid );" [disabled]="!addtermpopup.valid"
+            class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+              (click)="save(addtermpopup.valid);" [disabled]="!addtermpopup.valid"
             >
               {{activeTnc.uniqueKeyTerms ? 'Update' : 'Save'}}
             </button>

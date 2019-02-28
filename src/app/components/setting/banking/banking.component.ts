@@ -9,6 +9,8 @@ import { Store } from '@ngrx/store'
 import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
+import { Title }     from '@angular/platform-browser';
+
 @Component({
   selector: 'app-banking',
   templateUrl: './banking.component.html',
@@ -16,24 +18,31 @@ import {ToasterService} from 'angular2-toaster'
 })
 export class BankingComponent implements OnInit {
 
-  user = <{
+  private user: {
     user: {
-      orgId: number
+      orgId: string
     },
     setting: setting
-  }>{}
+  }
+  
   appSettings: {androidSettings: setting}
   activeSetting: setting = <setting>{}
   org: any = {}
+  settings: setting;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
     private orgService: OrganisationService,
+    private titleService: Title,
     private store: Store<AppState>) {
       this.toasterService = toasterService
+      this.user = JSON.parse(localStorage.getItem('user'))
+      this.settings = this.user.setting
      }
+     
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Banking');
     $('input').on('focus', function() {
       $(this).prev().addClass('focused-icon')
       $(this).prev().css({ "color": "#176cc1" })

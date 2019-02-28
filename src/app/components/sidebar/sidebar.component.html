@@ -29,6 +29,7 @@
       <a><span><img src="assets/images/estimet_n.png" alt="logo" /></span> Estimates</a>
     </div>
   </div>
+ 
 
   <!-- <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/add-inventory')}">
     <div class="menu-parent btn accordion-toggle collapsed" data-toggle="collapse"
@@ -44,8 +45,13 @@
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/manage-users') || isActive('/edit/organization') || isActive('/edit/me') }">
     <div class="menu-parent btn accordion-toggle collapsed" data-toggle="collapse" data-target="#menu_list4">
-      <a href="javascript:void(0)"><span><img src="assets/images/setting_n.png" alt="logo" /></span> Settings</a>
+      <a>
+        <span>
+          <img src="assets/images/setting_n.png" alt="logo" />
+        </span>
+        Settings</a>
     </div>
+ 
     <ul class="collapse" id="menu_list4">
       <li class="btn2" (click)="toggle('/setting/primary')">
         <a> Primary Settings </a>
@@ -65,6 +71,14 @@
       <li class="btn2" (click)="toggle('/setting/userProfile')">
         <a> User Profile </a>
       </li>
+      <li class="btn2" (click)="toggle('/setting/batchUpload')">
+        <a> Batch Upload </a>
+      </li>
     </ul>
+  </div>
+  <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/support/view/0') || isActive('/support') }">
+    <div class="menu-parent btn" (click)="toggle('/support');">
+      <a><span><img src="assets/images/estimet_n.png" alt="logo" /></span> Support</a>
+    </div>
   </div>
 </nav>

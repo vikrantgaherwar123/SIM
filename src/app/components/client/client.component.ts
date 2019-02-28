@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store'
 import * as clientActions from '../../actions/client.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client',
@@ -20,6 +21,7 @@ export class ClientComponent implements OnInit {
     user: {
       orgId: string
     }
+    setting:any
   }
   clientList: client[]
 
@@ -34,25 +36,31 @@ export class ClientComponent implements OnInit {
   createMode: boolean = true
   editMode: boolean = false
   viewMode: boolean = false
-
+  settings: any;
+  emptyClient: boolean;
+  searchTerms;
+  
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
+    private titleService: Title,
     private router: Router, private store: Store<AppState>
   ) {
     this.toasterService = toasterService; 
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting;
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Clients');
     this.clientListLoading = true
-
     if(this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(cli => cli.enabled == 0)
+          
         }
       })
     } else {
@@ -64,6 +72,9 @@ export class ClientComponent implements OnInit {
     // $('#saveClientBtn1').button('loading')
     // $('#saveClientBtn').button('loading')
     var proStatus = true
+    if(this.activeClient.name == undefined){
+      this.emptyClient = true
+    }
 
     // If adding or editing client, make sure client with same name doesnt already exist
     if (!this.activeClient.enabled) {
@@ -72,6 +83,7 @@ export class ClientComponent implements OnInit {
       // If empty spaces
       if(!tempClientName) {
         this.activeClient.name = ''
+        
         this.toasterService.pop('failure', 'Organization name required');
         return false
       }
@@ -79,7 +91,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          tempCompare = this.clientList[p].name
           if (tempCompare === tempClientName) {
             if(edit == 1) {
               if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
@@ -130,23 +142,25 @@ export class ClientComponent implements OnInit {
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
-          } else {
-            if (self.activeClient.enabled) {   // delete
-              self.store.dispatch(new clientActions.remove(storeIndex))
-              this.clientList.splice(index, 1)
-              this.toasterService.pop('success', 'Client Deleted Successfully !!!');
-            } else {    //edit
+          } else if(self.activeClient.enabled !== 0){// delete
+           
+            self.store.dispatch(new clientActions.remove(storeIndex))
+            this.clientList.splice(index, 1)
+            
+            this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+          }
+            if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
               //console.log(this.clientList[index]);
+              
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
             }
-          }
           self.errors = {}
           // self.activeClient = <client>{}
-          self.createMode = false
-          self.editMode = false
-          self.viewMode = true
+          // self.createMode = false
+          // self.editMode = false
+          // self.viewMode = true
 
           // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
         }else if(response.status === 414){
@@ -160,12 +174,21 @@ export class ClientComponent implements OnInit {
         }
       })
     } else {
-      if(!proStatus) 
-      {
+      if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
       }
-      
-          }
+    }
+  }
+  emptyField(input){
+    if(input.target.value !== ''){
+      this.emptyClient = false
+    }
+  }
+  openDeleteClientModal() {
+    $('#delete-client').modal('show')
+    $('#delete-client').on('shown.bs.modal', (e) => {
+      // $('#delete-client input[type="text"]')[1].focus() //1
+    })
   }
 
   addNew() {
@@ -190,8 +213,9 @@ export class ClientComponent implements OnInit {
   deleteClient() {
     this.activeClient.enabled = 1
     this.save(true, null)
+    this.addNew();
   }
-
+ 
   editThis() {
     // If there are clients with same name in db, Allow them to make changes
     if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {
@@ -216,6 +240,7 @@ export class ClientComponent implements OnInit {
     this.editMode = false
     this.viewMode = true
   }
+  
 
   cancelThis() {
     this.activeClient = {...this.clientList.filter(cli => cli.uniqueKeyClient == this.activeClient.uniqueKeyClient)[0]}

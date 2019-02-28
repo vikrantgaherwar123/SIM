@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core'
 
 import { AuthService } from '../../../services/auth.service'
 import {ToasterService} from 'angular2-toaster'
+import { Title }     from '@angular/platform-browser';
+
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
@@ -12,12 +14,16 @@ export class PasswordComponent implements OnInit {
   currentPass: string = ""
   newPass: string = ""
   confirmPass: string = ""
+  user: any;
 
-  constructor(private authService: AuthService,public toasterService : ToasterService) {
-    this.toasterService = toasterService
+  constructor(private authService: AuthService,public toasterService : ToasterService,
+    private titleService: Title) {
+    this.toasterService = toasterService,
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
    }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Password');
   }
 
   changePassword () {
@@ -27,10 +33,14 @@ export class PasswordComponent implements OnInit {
         this.currentPass = ""
         this.newPass = ""
         this.confirmPass = ""
-
+        if(response.status === 200){
         alert(response.message)
         $('#bsave').removeAttr('disabled')
         this.toasterService.pop('success','Password Changed Successfully')
+        }else{
+          this.toasterService.pop('failure','Something went wrong')
+          this.authService.validateToken(this.user.access_token , this.user.user.orgId);
+        }
       })
     } else {
       //alert('Invalid password!')

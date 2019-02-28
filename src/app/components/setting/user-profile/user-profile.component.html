@@ -36,7 +36,7 @@
                     </div>
   
                     <div class="font-custom-bold margin-top-8 text-left">
-                      Upload Signature
+                      Upload {{settings.signature ? settings.signature : 'Signature'}}
                     </div>
                   </form>
                 </div>
@@ -71,9 +71,9 @@
 
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
-                <textarea type="text" name="address" class="form-control" style="height: auto;"
+                <textarea type="text" name="address" class="form-control mCustomScrollbar style-3" style="height: auto !important;"
                   [(ngModel)]="org.org_address_1" placeholder="Address" onfocus="this.select()"
-                ></textarea>
+                ></textarea>  
               </div>
             </div>
 

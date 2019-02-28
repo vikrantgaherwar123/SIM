@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser'
-
-
 import { setting } from '../../../interface'
-
 import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
-
 import { ToasterService } from 'angular2-toaster'
-
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-profile',
@@ -29,20 +25,24 @@ export class UserProfileComponent implements OnInit {
   signImgUrl: string
   logoStyle: SafeStyle
   signStyle: SafeStyle
+  settings: setting;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
     private orgService: OrganisationService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private titleService: Title
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     this.logoImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "logo.jpg"
     this.signImgUrl = "https://images-live.nyc3.digitaloceanspaces.com/org" + this.user.user.orgId + "sign.jpg"     
 }
 
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | User Profile');
     $('input').on('focus', function() {
       $(this).prev().addClass('focused-icon')
       $(this).prev().css({ "color": "#176cc1" })
@@ -69,6 +69,8 @@ export class UserProfileComponent implements OnInit {
     window.history.back()
   }
 
+  
+
   uploadImage (type, image) {
     var fd = new FormData()
     fd.append('file', image)
@@ -89,16 +91,23 @@ export class UserProfileComponent implements OnInit {
   }
 
   save(valid) {
-    if (valid) {
-      $('#profileSubmitBtn').attr('disabled', 'disabled')
+    if(this.org.org_name == ''){
+     // this.toasterService.pop('failure','Company Name required')
+   }
+   this.org.org_name = this.org.org_name.replace(/\s/g, "");
+   if (valid && this.org.org_name !== "") {
+     $('#profileSubmitBtn').attr('disabled', 'disabled')
 
-      this.orgService.add(this.org).subscribe((response: any) => {
-        this.toasterService.pop('success','Saved Successfully')
-        //alert(response.message)
-        $('#profileSubmitBtn').removeAttr('disabled')
-      }, (err) => {
-        console.log('errrr', err)
-      })
-    }
-  }
+     this.orgService.add(this.org).subscribe((response: any) => {
+       this.toasterService.pop('success','Saved Successfully')
+       //alert(response.message)
+       $('#profileSubmitBtn').removeAttr('disabled')
+     }, (err) => {
+       console.log('errrr', err)
+     })
+   }
+   else{
+     this.toasterService.pop('failure','Company Name required')
+   }
+ }
 }

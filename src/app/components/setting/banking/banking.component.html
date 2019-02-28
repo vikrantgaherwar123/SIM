@@ -11,7 +11,7 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
-              class="payment-detail-input" placeholder="Payable To" onfocus="this.select()"
+              class="payment-detail-input" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
               style="width: 300px;
                 padding: 0px;
                 margin: 13px 0 0 0;
@@ -25,25 +25,25 @@
           </div>
 
           <div class="col-12" style="margin-bottom: 5px;">
-            <span class="font-custom-bold fontsize12" style="margin-left: -200px">Banking details</span>
+            <span class="font-custom-bold fontsize12" style="margin-left: -200px">{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}</span>
           </div>
 
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
-              <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control"
-                placeholder="Banking Details" style="height: auto;" onfocus="this.select()"
+              <textarea type="text" [(ngModel)]="org.bankingDetails" name="bankingDetails" class="form-control mCustomScrollbar style-3"
+                placeholder="{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}" style="height: auto !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
 
           <div class="col-12" style="margin-bottom: 5px;">
-            <span class="font-custom-bold fontsize12" style="margin-left: -212px">Other details</span>
+            <span class="font-custom-bold fontsize12" style="margin-left: -212px">{{settings.otherDetails ? settings.otherDetails : 'Other Details'}}</span>
           </div>
 
           <div class="col-12" style="margin-bottom: 10px;">
             <div class="form-group">
-              <textarea type="text" [(ngModel)]="org.paypalDetails" name="paypalDetails" class="form-control"
-                placeholder="PayPal Details" style="height: auto;" onfocus="this.select()"
+              <textarea type="text" [(ngModel)]="org.paypalDetails" name="paypalDetails" class="form-control mCustomScrollbar style-3"
+                placeholder="PayPal Details" style="height: auto !important;" onfocus="this.select()"
               ></textarea>
             </div>
           </div>
@@ -69,8 +69,8 @@
           </div>
 
           <div style="margin: 0 auto; max-width: 300px">
-            <button type="submit" id="bankingDetailSubmit" style="width: 300px;"
-              class="btn btn-success btn-raised no-border-radius font-custom-bold"
+            <button type="submit" id="bankingDetailSubmit" style="width: 300px;border: none !important;"
+              class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold"
               (click)="save(form.valid)"
             >
               SAVE

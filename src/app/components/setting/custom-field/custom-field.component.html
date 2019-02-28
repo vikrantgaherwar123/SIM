@@ -5,8 +5,8 @@
         <div class="custom-field-form">
           <div style="padding-top: 25px;">
             <div align="center">
-              <div class="col-12" style="margin-bottom: 20px;">
-                <span class="font-custom-bold" style="font-size: 15px;">Custom Field Name</span>
+              <div class="col-12" style="margin-bottom: 10px;">
+                <span class="font-custom-bold" style="font-size: 21px;">Custom Field Name</span>
               </div>
 
               <div class="col-12" style="margin-bottom: 10px;">
@@ -15,7 +15,7 @@
                 </span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
+              <div class="col-12" style="margin-bottom: 18px;">
                 <div class="form-group">
                   <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
                     class="form-control" placeholder="Invoice" onfocus="this.select()"
@@ -209,12 +209,12 @@
               <div class="col-12" style="margin-bottom: 10px;">
                 <div style="width: 300px;">
                   <button type="button" (click)="cancel();"
-                    class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
+                    class="btn btn-custom-1 btn-raised no-border-radius pull-left width10btn ml-2 font-custom-bold"
                   >
                     CANCEL
                   </button>
                   <button type="submit" id="customSubmit" (click)="save(form.valid)"
-                    class="btn btn-success btn-raised width10btn no-border-radius font-custom-bold pull-right"
+                    class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2" style="height: 29px !important;padding-top: 4px !important;"
                   >
                     SAVE
                   </button>

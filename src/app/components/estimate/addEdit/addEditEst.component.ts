@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute, NavigationStart  } from '@angular/router'
 import { FormControl } from '@angular/forms'
-import {Observable} from 'rxjs'
-import {map, startWith} from 'rxjs/operators'
+import { Observable } from 'rxjs'
+import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, addEditEstimate, client, terms, setting, product } from '../../../interface'
+import { response, addEditEstimate, estimate , client, terms, setting, product } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { EstimateService } from '../../../services/estimate.service'
@@ -19,25 +19,40 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import {ToasterService} from 'angular2-toaster'
+import { ToasterService } from 'angular2-toaster'
+import { DatePipe } from '@angular/common';
+import { Title }     from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-estimate',
   templateUrl: './addEditEst.component.html',
-  styleUrls: ['./addEditEst.component.css']
+  styleUrls: ['./addEditEst.component.css'],
+  providers: [DatePipe]
 })
+
+
 export class AddEditEstComponent implements OnInit {
 
+
+  estimateList: estimate[]
   activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
   estimateFilterTerm: string
   balance: number
   edit: boolean = false
-  editDiscount: boolean = true
+  // editDiscount: boolean = true
   ifClientExist: boolean = false
   modalDescription: boolean = true
   estimateActive: boolean = false
+  openClientModal: boolean = false
+  shippingChange: boolean = true
+  shippingAdressChanged: boolean = false
+  shippingAddressEditMode: boolean = false
+  editTerms: boolean = true
+  disableProductText: boolean = true
+  ifProductEmpty:boolean = false
 
   last
   index
@@ -70,6 +85,7 @@ export class AddEditEstComponent implements OnInit {
   showMultipleTax
   taxtext
   discounttext
+  shippingAddress
 
   private user: {
     user: {
@@ -77,15 +93,34 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
-  constructor(private CONST: CONSTANTS,public router: Router,
-    public toasterService : ToasterService,
+  keepGoing: boolean;
+  estimateDelete: boolean;
+  showTaxRate: number;
+  showTaxRateFlag: boolean;
+  showDiscountRateFlag: boolean;
+  showDiscountRate: number;
+  setTaxOnItem: boolean;
+  setDiscountOnItem: boolean;
+  showDiscountField: boolean;
+  tncLoading: boolean;
+  settingsLoading: boolean;
+  estimateId: any;
+  recentEstimateList: any = [];
+  disabledDescription: boolean = false;
+  discountFlag: any;
+
+
+  constructor(private CONST: CONSTANTS, public router: Router,
+    public toasterService: ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
     private clientService: ClientService,
     private termConditionService: TermConditionService,
     private settingService: SettingService,
     private productService: ProductService,
-    private store: Store<AppState>
+    private datePipe: DatePipe,
+    private store: Store<AppState>,
+    private titleService: Title
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -94,108 +129,205 @@ export class AddEditEstComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+    
+    // save button processing script
+    $(document).ready(function () {
+      $('.save').on('click', function () {
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+        if ($(this).html() !== loadingText) {
+          $this.data('original-text', $(this).html());
+          $this.html(loadingText);
+        }
+        setTimeout(function () {
+          $this.html($this.data('original-text'));
+        }, 4000);
+      });
+    })
+    // save button processing script ends
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Estimate');
     this.activeEstimate = <addEditEstimate>{}
-    this.fetchCommonData()
     this.route.params.subscribe(params => {
-      if (params && params.estId) {
+      if (params.estId) {
+        this.estimateId = params.estId;
         this.edit = true
-        this.editDiscount = false
+        this.editTerms = false
         this.editInit(params.estId)
+        this.fetchCommonData()
       } else {
+        this.fetchCommonData()
         this.addInit()
       }
     })
+    for (let i = 0; i < this.productList.length; i++) {
+      if (this.productList[i].prodName == "") {
+        var product = this.productList[i];
+        var index = this.productList.indexOf(product)
+        if (index > -1) {
+          this.productList.splice(index, 1);
+        }
+      }
+    }
+    //getting arraylist of recenlty added estimates 
+    this.store.select('recentEstimates').subscribe(estimates => {
+      this.estimateList = estimates
+    })
   }
 
-  dataChanged(input){
-    if(input > 100){
+  dataChanged(input) {
+    if (input > 100) {
       alert("amount must be under 100");
       this.activeEstimate.percentage_value = 0;
+      this.activeEstimate.discount = 0;
       this.activeEstimate.amount = this.activeEstimate.gross_amount;
       this.balance = this.activeEstimate.gross_amount;
     }
   }
-  
+
   displayWith(disp): string | undefined {
     if (disp && disp.name) {
       return disp.name
-    } else if ( disp && disp.prodName) {
+    } else if (disp && disp.prodName) {
       return disp.prodName
     }
     return undefined
   }
 
   addInit() {
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 1){
+      this.showTaxRateFlag = false;
+      this.showTaxRate = 0;
+    }else{
+      this.showTaxRateFlag = true;
+    }
+    if(this.settings.discountFlagLevel === 0){
+      this.showDiscountRateFlag = false;
+      this.showDiscountRate = 0;
+    }
+
+
     this.commonSettingsInit()
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
-    if(!this.activeEstimate.listItems) {
+    if (!this.activeEstimate.listItems) {
       this.activeEstimate.listItems = []
     }
   }
 
   editInit(estId) {
+
+    //tax and discount position according to settings changed
+    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
+      this.showTaxRateFlag = false;
+    }else{
+      this.showTaxRateFlag = true;
+    }
+    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
+      this.showDiscountRateFlag = false;
+      this.showDiscountField = true;
+    }else{
+      this.showDiscountRateFlag = true;
+      this.showDiscountField = false;
+    }
+
+    
+    //to view updated or viewed estimate in view page
+    // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate
     this.commonSettingsInit()
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
-      if(estimate.records !== null) {
+      if (estimate.records !== null) {
+        this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-        if(!this.activeEstimate.taxList)
-        this.activeEstimate.taxList = [];
+        if(this.activeEstimate.discount !==0){
+          this.discountFlag = 1;
+        }
+        this.shippingAddressEditMode = true
+        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
+        if (!this.activeEstimate.taxList)
+          this.activeEstimate.taxList = [];
 
         // Change list item keys compatible
-        if(this.activeEstimate.listItems){
-        var temp = []
-        for(let i=0; i < this.activeEstimate.listItems.length; i++) {
-          temp.push({
-            description: this.activeEstimate.listItems[i].description,
-            product_name: this.activeEstimate.listItems[i].productName,
-            quantity: this.activeEstimate.listItems[i].qty,
-            rate: this.activeEstimate.listItems[i].rate,
-            tax_rate: this.activeEstimate.listItems[i].tax_rate,
-            total: this.activeEstimate.listItems[i].price,
-            unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-            unit: this.activeEstimate.listItems[i].unit
-          })
+        if (this.activeEstimate.listItems) {
+          var temp = []
+          for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            temp.push({
+              description: this.activeEstimate.listItems[i].description,
+              product_name: this.activeEstimate.listItems[i].productName,
+              quantity: this.activeEstimate.listItems[i].qty,
+              discount: this.activeEstimate.listItems[i].discountRate,
+              rate: this.activeEstimate.listItems[i].rate,
+              tax_rate: this.activeEstimate.listItems[i].taxRate,
+              total: this.activeEstimate.listItems[i].price,
+              unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+              unit: this.activeEstimate.listItems[i].unit
+            })
+          }
+          this.activeEstimate.listItems = temp
+          for(let i=0;i<this.activeEstimate.listItems.length;i++){
+          this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
+          if(this.showTaxRate!==0){
+            this.setTaxOnItem = true;
+          }
+          this.showDiscountRate = this.activeEstimate.listItems[i].discount;
+          if(this.showDiscountRate!==0){
+            this.showDiscountRateFlag = false;
+            this.setDiscountOnItem = true;
+          }
+          }
         }
-        this.activeEstimate.listItems = temp
-      }
+
+
 
         // Change TnC keys compatible
-        if(this.activeEstimate.termsAndConditions){
-        temp = []
-        for(let i=0; i < this.activeEstimate.termsAndConditions.length; i++) {
-          temp.push({
-            orgId: this.activeEstimate.termsAndConditions[i].orgId,
-            terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
-            uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
-            _id: this.activeEstimate.termsAndConditions[i]._id
+        if (this.activeEstimate.termsAndConditions) {
+          temp = []
+          for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+            temp.push({
+              orgId: this.activeEstimate.termsAndConditions[i].orgId,
+              terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+              _id: this.activeEstimate.termsAndConditions[i]._id
+            })
+          }
+          this.activeEstimate.termsAndConditions = temp
+        } else if (this.termList.length < 1) {
+          this.termConditionService.fetch().subscribe((response: response) => {
+            if (response.termsAndConditionList) {
+              this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+            }
+            this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
           })
+        } else {
+          this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
         }
-        this.activeEstimate.termsAndConditions = temp
-      }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
         this.estimateDate.reset(new Date(y, (m - 1), d))
 
         // Tax and discounts show or hide
-        if(this.activeEstimate.discount == 0) {
+        if (this.activeEstimate.discount == 0) {
           this.activeEstimate.percentage_flag = null
+        }else{
+          this.activeEstimate.discount_on_item = 0;
         }
-        if(this.activeEstimate.shipping_charges == 0) {
+        if (this.activeEstimate.shipping_charges == 0) {
           this.activeEstimate.shipping_charges = undefined
         }
-        if(this.activeEstimate.adjustment == 0) {
+        if (this.activeEstimate.adjustment == 0) {
           this.activeEstimate.adjustment = undefined
         }
-        if(this.activeEstimate.tax_amount == 0) {
+        if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
           this.activeEstimate.tax_rate = null
+        }else{
+          this.activeEstimate.tax_on_item = 1;
         }
 
         // Wait for clients to be loaded before setting active client
@@ -226,18 +358,18 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.taxList = []
     }
     // Currency Dropdown
-    if(settings.currencyText) {
-      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyName;
+    if (settings.currencyText) {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
     }
-    else{
-    this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
-  }
+    else {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
+    }
 
     if (settings.dateDDMMYY === false) {
       this.settings.date_format = 'mm-dd-yy'
     } else if (settings.dateDDMMYY === true) {
-      if(!this.settings) {
-        this.settings = {date_format: ''}
+      if (!this.settings) {
+        this.settings = { date_format: '' }
       }
       this.settings.date_format = 'dd-mm-yy'
     }
@@ -253,10 +385,11 @@ export class AddEditEstComponent implements OnInit {
     if (settings) {
       this.activeEstimate.tax_on_item = 2
       this.activeEstimate.discount_on_item = 2
+      
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeEstimate.tax_on_item = 0
+        this.activeEstimate.tax_on_item = 2
       }
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
@@ -307,10 +440,12 @@ export class AddEditEstComponent implements OnInit {
 
   fetchCommonData() {
     // Fetch Products if not in store
-    if(this.productList.length < 1) {
+    if (this.productList.length < 1) {
       this.productService.fetch().subscribe((response: response) => {
         if (response.records != null) {
-          this.store.dispatch(new productActions.add(response.records.filter((prod: any) => (prod.enabled == 0 && prod.prodName !== undefined))))
+          this.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
+            (prod.enabled == 0 && prod.prodName !== undefined)
+          )))
           this.setProductFilter()
         } else {
           this.setProductFilter()
@@ -321,35 +456,71 @@ export class AddEditEstComponent implements OnInit {
     }
 
     // Fetch Clients if not in store
-    if(this.allClientList.length < 1) {
+    if (this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          //remove whitespaces from clientlist
+           for (let i = 0; i < this.clientList.length; i++) {
+            if(!this.clientList[i].name){
+              this.clientList.splice(i, 1);
+            }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
+              this.clientList.splice(i, 1);
+            }
+          }
+          //findout shipping address of selected client from clientlist
+          var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
+          console.log(client);
+          if(client){
+            this.shippingAddress = client.shippingAddress;
+            this.activeEstimate.shipping_address = this.shippingAddress;
+          }
+          
+          var seen = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (seen.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              seen[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
         }
         this.setClientFilter()
-        this.clientListLoading = false
+        
       })
     } else {
-      this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
+      
       this.setClientFilter()
     }
 
     // Fetch Terms if not in store
-    if(this.termList.length < 1) {
+    if (this.termList.length < 1 && !this.edit) {
+      this.tncLoading = false;
       this.termConditionService.fetch().subscribe((response: response) => {
+        this.tncLoading = true;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       })
     } else {
-      this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+      this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
     }
 
+
     //Fetch Settings every time
+    this.settingsLoading = false;
     this.settingService.fetch().subscribe((response: any) => {
+      this.settingsLoading = true;
       if (response.settings !== null) {
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
@@ -365,8 +536,39 @@ export class AddEditEstComponent implements OnInit {
       if (this.settings.quotFormat || this.settings.quotFormat == '') {
         this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
       } else {
-        this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
+        this.activeEstimate.estimate_number = this.tempEstNo.toString();
       }
+
+    //   if(!this.edit){
+    //     this.tempEstNo = JSON.parse(localStorage.getItem('estNo'));
+    //     if (this.tempEstNo) {
+    //     //regex code to find no. from string
+    //     // var r = /\d+/;
+    //     // var m = r.exec(this.tempInvNo.toString())[0]
+    //     // var s =parseInt(m);
+    //     // console.log(s);
+
+
+    //     // this regex code separates string and no.
+    //     var text = this.tempEstNo.toString().split(/(\d+)/)
+    //     var t = text[0] //text
+    //     var n = parseInt(text[1]) //number
+    //     if( isNaN(n)){
+    //       n = 0; 
+    //     }
+    //     // var x = t+(n+1);
+    //     this.tempEstNo = n + 1 ;
+
+    //   } else {
+    //     this.tempEstNo = 1
+    //     t = this.settings.setInvoiceFormat;
+    //   }
+    //   if (this.settings.setInvoiceFormat) {
+    //     this.activeEstimate.estimate_number = t + this.tempEstNo
+    //   } else {
+    //     this.activeEstimate.estimate_number = this.tempEstNo.toString();
+    //   }
+    // }
     })
   }
 
@@ -374,29 +576,64 @@ export class AddEditEstComponent implements OnInit {
   setClientFilter() {
     // Filter for client autocomplete
     if(this.clientList){
-    this.filteredClients = this.billingTo.valueChanges.pipe(
-      startWith<string | client>(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filterCli(name) : this.clientList.slice())
-    )
-    }
-    else{
-      this.ifClientExist = true;
-    }
+    var seen = {};
+    //You can filter based on Id or Name based on the requirement
+    var uniqueClients = this.clientList.filter(function (item) {
+      if (seen.hasOwnProperty(item.name)) {
+        return false;
+      } else {
+        seen[item.name] = true;
+        return true;
+      }
+    });
+    this.clientList = uniqueClients;
+      this.filteredClients = this.billingTo.valueChanges.pipe(
+        startWith<string | client>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterCli(name) : this.clientList.slice())
+      )
+  }else{
+    this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false;
+        if (response.records) {
+          this.store.dispatch(new clientActions.add(response.records))
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
+          var seen = {};
+          //You can filter based on Id or Name based on the requirement
+          var uniqueClients = this.clientList.filter(function (item) {
+            if (seen.hasOwnProperty(item.name)) {
+              return false;
+            } else {
+              seen[item.name] = true;
+              return true;
+            }
+          });
+          this.clientList = uniqueClients;
+          this.filteredClients = this.billingTo.valueChanges.pipe(
+            startWith<string | client>(''),
+            map(value => typeof value === 'string' ? value : value.name),
+            map(name => name ? this._filterCli(name) : this.clientList.slice())
+          )
+        }
+        // this.setClientFilter()
+      })
   }
+}
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   selectedClientChange(client) {
+    this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
     var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
     if (temp !== undefined) {
       this.activeClient = temp
       this.activeEstimate.unique_key_fk_client = temp.uniqueKeyClient
     } else {
-      if(this.activeClient) {
+      if (this.activeClient) {
         this.activeClient = <client>{}
       }
       this.openAddClientModal(client.option.value)
@@ -405,8 +642,9 @@ export class AddEditEstComponent implements OnInit {
   }
 
   openAddClientModal(name) {
+    this.openClientModal = true
     this.addClientModal = {}
-    this.addClientModal.name = name
+    this.addClientModal.name = this.billingTo.value;
     $('#add-client').modal('show')
     $('#add-client').on('shown.bs.modal', (e) => {
       $('#add-client input[type="text"]')[1].focus()
@@ -414,9 +652,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   closeAddClientModal() {
-    if(this.ifClientExist){
-      this.toasterService.pop('failure', 'No client to select');
-    }
+    this.openClientModal = false
     $('#add-client').modal('hide')
     this.addClientModal = {}
     this.activeClient = <client>{}
@@ -426,16 +662,33 @@ export class AddEditEstComponent implements OnInit {
 
   saveClient(status) {
     // If empty spaces
-    if(!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
+    if (!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
       this.toasterService.pop('failure', 'Organization name required');
       return false
     }
 
-    if (status) {
+    var proStatus = true
+    // If adding or editing client, make sure client with same name doesnt already exist
+      var tempClientName = this.addClientModal.name.toLowerCase().replace(/ /g, '')
+
+      var tempCompare = ''
+      if (this.clientList.length > 0) {
+        for (var p = 0; p < this.clientList.length; p++) {
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
+          if (tempCompare === tempClientName) {
+            proStatus = false
+            break
+          }
+        }
+      }
+
+
+    if (status && proStatus) {
       this.addClientModal.uniqueKeyClient = generateUUID(this.user.user.orgId)
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
+      this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'disabled')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
@@ -444,18 +697,40 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
           this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
           this.billingTo.setValue(this.activeClient)
-
+          this.toasterService.pop('success', 'Client Added Successfully');
           $('#add-client').modal('hide')
+          this.clientListLoading = false
+          // match a key to select and save a client in a textbox after adding client successfully
+          this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
+          window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
       })
+    }else {
+      if (!proStatus) {
+        this.toasterService.pop('failure', 'Client name already exists.');
+      }
     }
   }
 
   // Product Functions
   setProductFilter() {
+    // filter productlist to avoid duplicates
+    var obj = {};
+    //You can filter based on Id or Name based on the requirement
+    var uniqueProducts = this.productList.filter(function (item) {
+      if (obj.hasOwnProperty(item.prodName)) {
+        return false;
+      } else {
+        obj[item.prodName] = true;
+        return true;
+      }
+    });
+    this.productList = uniqueProducts;
+
+    
     this.filteredProducts = this.addItem.valueChanges.pipe(
       startWith<string | product>(''),
       map(value => typeof value === 'string' ? value : value.prodName),
@@ -464,21 +739,34 @@ export class AddEditEstComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
+    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   editEstimateItem(index) {
     this.modalDescription = false;
     $('#edit-item').modal('show')
-    this.activeItem = {...this.activeEstimate.listItems[index]}
+    this.activeItem = { ...this.activeEstimate.listItems[index] }
   }
 
   addEditEstimateItem(uid = null) {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
 
-    if(this.activeItem.unique_identifier) {
-      if(uid == null) {
+    if(this.activeItem.product_name ===null ){
+      this.ifProductEmpty = true;
+      this.toasterService.pop('failure', 'Product Name can not be empty');
+    }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
+      this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
+    }
+    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+      this.toasterService.pop('failure', 'rate can not be 0 or empty');
+    }
+
+    if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
+       this.activeItem.rate !==null ){
+      if (uid == null) {
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
       } else {
@@ -493,9 +781,24 @@ export class AddEditEstComponent implements OnInit {
         rate: 0.00
       }
       this.calculateEstimate()
-    } else {
-      this.saveProduct({...this.activeItem, prodName: this.addItem.value}, (product) => {
-        this.fillItemDetails({...this.activeItem, ...product})
+   } 
+   else {
+   
+   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
+    var tempCompare = ''
+    var duplicateProduct = false;
+    for (var p = 0; p < this.productList.length; p++) {
+      if (this.productList[p].prodName) {
+        tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '');
+      }
+      // If Name is same,
+      if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
+        duplicateProduct = true;
+      }
+    }
+    if(duplicateProduct === false){
+      this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
+        this.fillItemDetails({ ...this.activeItem, ...product })
         this.activeEstimate.listItems.push(this.activeItem)
         this.addItem.reset('')
         this.activeItem = {
@@ -504,7 +807,11 @@ export class AddEditEstComponent implements OnInit {
         }
         this.calculateEstimate()
       })
+    }else{
+      this.toasterService.pop('failure', 'Duplicate name or field is empty!!!');
     }
+    }
+  }
   }
 
   saveProduct(add_product, callback: Function = null) {
@@ -515,6 +822,8 @@ export class AddEditEstComponent implements OnInit {
       discription: add_product.description ? add_product.description : '',
       organization_id: this.user.user.orgId,
       prod_name: add_product.prodName,
+      tax : add_product.tax,
+      discountAmt : add_product.discountAmt,
       rate: add_product.rate ? add_product.rate : 0,
       tax_rate: add_product.tax_rate ? add_product.tax_rate : 0,
       unique_identifier: add_product.unique_identifier ? add_product.unique_identifier : generateUUID(this.user.user.orgId),
@@ -526,10 +835,13 @@ export class AddEditEstComponent implements OnInit {
         var temp = this.productService.changeKeysForStore(result.productList[0])
         this.store.dispatch(new productActions.add([temp]))
 
-        if(callback !== null) {
+        if (callback !== null) {
           callback(temp)
         }
-        this.toasterService.pop('success','Product has been added')
+        this.toasterService.pop('success', 'Product has been added')
+        //called store and set product here to update store when new product added
+        this.store.select('product').subscribe(products => this.productList = products)
+        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -560,21 +872,19 @@ export class AddEditEstComponent implements OnInit {
       this.activeItem.total = (this.activeItem.quantity * rateParse)
 
       // Discounts
-      
-      if(isNaN(this.activeItem.discount) || this.activeItem.discount == 0) {
+
+      if (isNaN(this.activeItem.discount) || this.activeItem.discount == 0) {
         this.activeItem.discount = 0
       } else {
-        this.activeItem.discount_amount = (this.activeItem.rate*this.activeItem.discount/100)*this.activeItem.quantity
+        this.activeItem.discount_amount = (this.activeItem.rate * this.activeItem.discount / 100) * this.activeItem.quantity
         this.activeItem.total -= this.activeItem.discount_amount
       }
-      console.log("test amount" + this.activeItem.discount_amount);
-
 
       // Tax
-      if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
+      if (isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
         this.activeItem.tax_rate = 0
       } else {
-        this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
+        this.activeItem.tax_amount = (this.activeItem.rate * this.activeItem.tax_rate / 100) * this.activeItem.quantity
         this.activeItem.total += this.activeItem.tax_amount
       }
     }
@@ -587,7 +897,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   saveTerm(status) {
-    if(this.addTermModal.terms.replace(/ /g, '') == '') {
+    if (this.addTermModal.terms.replace(/ /g, '') == '') {
       this.toasterService.pop('failure', 'Term text is mandatory');
       return false
     }
@@ -624,9 +934,8 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addRemoveTermsFromEstimate(term) {
-    // console.log(term)
     var index = this.activeEstimate.termsAndConditions.findIndex(trms => trms.uniqueKeyTerms == term.uniqueKeyTerms)
-    if(index == -1) {
+    if (index == -1) {
       this.activeEstimate.termsAndConditions.push(term)
     } else {
       this.activeEstimate.termsAndConditions.splice(index, 1)
@@ -634,7 +943,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if(this.activeEstimate.termsAndConditions) {
+    if (this.activeEstimate.termsAndConditions) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -643,6 +952,7 @@ export class AddEditEstComponent implements OnInit {
 
   // Estimate Functions
   fillItemDetails(prod = null) {
+    this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     this.activeItem = {
       description: product.discription == null ? '' : product.discription,
@@ -658,7 +968,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   save(status) {
-    if(!this.activeEstimate.unique_key_fk_client) {
+    if (!this.activeEstimate.unique_key_fk_client) {
       this.toasterService.pop('failure', 'Client not selected');
       $('#bill-to-input').select()
       return false
@@ -669,8 +979,8 @@ export class AddEditEstComponent implements OnInit {
       return false
     }
 
-    if(this.balance < 0) {
-      if(confirm('It seems like you have estimate with negative balance, should we adjust it for you?')) {
+    if (this.balance < 0) {
+      if (confirm('It seems like you have estimate with negative balance, should we adjust it for you?')) {
         this.activeEstimate.adjustment += this.balance
         this.calculateEstimate()
       }
@@ -681,26 +991,34 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.organization_id = parseInt(this.user.user.orgId)
 
 
-    if(this.activeEstimate.termsAndConditions !== undefined){
+
     var temp = []
     this.activeEstimate.termsAndConditions.forEach(tnc => {
-      temp.push({...this.termConditionService.changeKeysForInvoiceApi(tnc), unique_key_fk_quotation: this.activeEstimate.unique_identifier})
-      
+      temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc)}) //, unique_key_fk_quotation: this.activeEstimate.unique_identifier 
     })
-
+  //   for(let i = 0;i<temp.length; i++){
+  //   if(temp[i].terms_condition === undefined){
+  //     temp.splice(i,1);
+  //   }
+  // }
     this.activeEstimate.termsAndConditions = temp
-  }
+
 
     if (!this.edit) {
       this.activeEstimate.unique_identifier = generateUUID(this.user.user.orgId)
     }
     for (var i = this.activeEstimate.listItems.length; i > 0; i--) {
+      this.activeEstimate.listItems[i - 1].unique_key_fk_quotation = this.activeEstimate.unique_identifier
       if (!this.activeEstimate.listItems[i - 1].product_name || this.activeEstimate.listItems[i - 1].product_name == '') {
         this.activeEstimate.listItems.splice(i - 1, 1)
       }
     }
 
-    if(this.activeEstimate.taxList) {
+    for (var j = 0; j < this.activeEstimate.termsAndConditions.length; j++) {
+      this.activeEstimate.termsAndConditions[j].unique_key_fk_quotation = this.activeEstimate.unique_identifier
+    }
+
+    if (this.activeEstimate.taxList) {
       for (var t = 0; t < this.activeEstimate.taxList.length; t++) {
         if (this.activeEstimate.taxList[t] == null) {
           this.activeEstimate.taxList.splice(t, 1)
@@ -709,57 +1027,89 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.device_modified_on = new Date().getTime()
+    //add shipping address
+    if(this.shippingAddressEditMode === true){
+    this.activeEstimate.shipping_address = this.shippingAddress;
+    }else{
+      this.activeEstimate.shipping_address = this.activeClient.shippingAddress
+    }
 
     var self = this
+    if(this.activeEstimate.estimate_number !=="" && this.activeEstimate.created_date){
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
         //alert('Couldnt save Estimate')
-        this.toasterService.pop('failure','Error occured')
+        this.toasterService.pop('failure', 'Error occured')
       } else if (response.status === 200) {
         // Add Estimate to store
-        if(this.edit) {
+        if (this.edit) {
           this.store.select('estimate').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
             } else {
-              // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
             }
           })
         } else {
-          // self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
         }
 
         // Update settings
-        if(!this.edit) {
-          this.updateSettings()
-        }
+        // if (!this.edit) {
+        //   this.updateSettings()
+        // }
+
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
-        if(this.edit) {
-          this.toasterService.pop('success', 'Estimate updated successfully');
-          this.router.navigate(['/estimate/view'])
-        } else {
+        if (this.edit) {
+           this.toasterService.pop('success', 'Estimate updated successfully');
+          // this.router.navigate(['/estimate/view'])
+          this.router.navigate([`estimate/view/${this.estimateId}`])
+        } else{
+          //add recently added esimate in store
+          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          
+         
           this.toasterService.pop('success', 'Estimate saved successfully');
+          this.updateSettings();
           self.resetFormControls()
-          self.ngOnInit()
+          self.addInit()
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
     })
   }
+  // validate user if he removes invoice number and try to save invoice 
+  else {                    
+    this.toasterService.pop('failure', 'Couldnt save estimate Please add estimate Number');
+    this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
+    $('#estSubmitBtn').removeAttr('disabled')
+  }
+  }
+
+  getClientName(id) {
+    if(this.clientList){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
+  }
 
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
+    // localStorage.setItem('deleteEstimateId', "1" )
+    // this.estimateDelete = false;
     this.save(true)
+    this.toasterService.pop('success', 'estimate Deleted successfully');
+    // this.closeDeleteEstimateModal();
   }
+
 
   calculateEstimate() {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
 
-    if(this.activeEstimate.listItems) {
+    if (this.activeEstimate.listItems) {
       for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
         gross_amount += parseFloat(this.activeEstimate.listItems[i].total)
       }
@@ -776,7 +1126,7 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.discount = gross_amount * discountFactor
       deductions += this.activeEstimate.discount
     } else {
-      if(isNaN(this.activeEstimate.discount)) {
+      if (isNaN(this.activeEstimate.discount)) {
         this.activeEstimate.discount = 0
       }
       deductions += this.activeEstimate.discount
@@ -785,12 +1135,12 @@ export class AddEditEstComponent implements OnInit {
 
     // Tax
     if (this.activeEstimate.tax_rate != null) {
-      if(isNaN(this.activeEstimate.tax_rate)) {
+      if (isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }
-
+    // multiple taxes
     if (this.activeEstimate.taxList && this.activeEstimate.taxList.length > 0) {
       var temp_tax_amount = 0
       for (var i = 0; i < this.activeEstimate.taxList.length; i++) {
@@ -799,7 +1149,10 @@ export class AddEditEstComponent implements OnInit {
           if (isNaN(this.activeEstimate.taxList[i].percentage)) {
             this.activeEstimate.taxList[i].percentage = 0
           }
-          this.activeEstimate.taxList[i].calculateValue = (this.activeEstimate.gross_amount - deductions) / 100 * this.activeEstimate.taxList[i].percentage          
+          this.activeEstimate.taxList[i].calculateValue = (this.activeEstimate.gross_amount - deductions) / 100 * this.activeEstimate.taxList[i].percentage
+          //remove digits after two decimal
+          var b = this.activeEstimate.taxList[i].calculateValue.toString().substring(0, this.activeEstimate.taxList[i].toString().indexOf(".") + 6);
+          this.activeEstimate.taxList[i].calculateValue = parseFloat(b);
           temp_tax_amount += this.activeEstimate.taxList[i].calculateValue
         }
       }
@@ -828,7 +1181,7 @@ export class AddEditEstComponent implements OnInit {
   resetFormControls() {
     this.billingTo.setValue('')
     this.addItem.reset('')
-
+    this.activeEstimate = <addEditEstimate>{}
     this.activeClient = <client>{}
     // Estimate Number
     if (!isNaN(parseInt(this.settings.quotNo))) {
@@ -839,9 +1192,10 @@ export class AddEditEstComponent implements OnInit {
     if (this.settings.quotFormat || this.settings.quotFormat == '') {
       this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
     } else {
-      this.activeEstimate.estimate_number = "EST_" + this.tempEstNo
+      this.activeEstimate.estimate_number = this.tempEstNo.toString();
     }
     this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
+    
   }
 
   updateSettings() {
@@ -864,8 +1218,8 @@ export class AddEditEstComponent implements OnInit {
       androidSettings: user.setting,
       android_donot_update_push_flag: 1
     }
-    settings1.androidSettings.estNo = this.tempEstNo
+    // settings1.androidSettings.estNo = this.tempEstNo
 
-    this.settingService.add(settings1).subscribe((response: any) => {})
+    this.settingService.add(settings1).subscribe((response: any) => { })
   }
 }

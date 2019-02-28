@@ -16,19 +16,28 @@ import { CustomFieldComponent } from './components/setting/custom-field/custom-f
 import { BankingComponent } from './components/setting/banking/banking.component'
 import { PasswordComponent } from './components/setting/password/password.component'
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
+import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
+import { SupportComponent } from './components/support/support.component';
+import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
+
 
 const routes: Routes = [
-  { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
+  { path: '', redirectTo: '/load', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
   { path: 'invoice', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
+  { path: 'load', component: LoadalldataComponent, canActivate: [AuthGuard] },
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
+  { path: 'invoice/add/:estId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },
+  { path: 'invoice/view/:invId', component: ViewComponent, canActivate: [AuthGuard] },
   { path: 'estimate/add', component: AddEditEstComponent, canActivate: [AuthGuard] },
   { path: 'estimate/edit/:estId', component: AddEditEstComponent, canActivate: [AuthGuard] },
+  { path: 'estimate/view/:estId', component: ViewEstComponent, canActivate: [AuthGuard] },
   { path: 'estimate/view', component: ViewEstComponent, canActivate: [AuthGuard] },
   { path: 'setting/primary', component: PrimaryComponent, canActivate: [AuthGuard] },
   { path: 'setting/tnc', component: TncComponent, canActivate: [AuthGuard] },
@@ -36,6 +45,8 @@ const routes: Routes = [
   { path: 'setting/banking', component: BankingComponent, canActivate: [AuthGuard] },
   { path: 'setting/password', component: PasswordComponent, canActivate: [AuthGuard] },
   { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'setting/batchUpload', component: BatchuploadComponent, canActivate: [AuthGuard] },
+  { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

@@ -48,6 +48,10 @@ export class ClientService {
   }
 
   add(client) {
+    //after login access token comes undefined so we've get it here
+    if(this.user.access_token === undefined){
+    this.user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
+    }
     const headers = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
@@ -67,6 +71,7 @@ export class ClientService {
       deleted_flag: client.enabled,
       device_modified_on: client.modifiedDate,
       email: client.email,
+      epoch : 0,
       name: client.name,
       organization_id: client.organizationId,
       number: client.number,
@@ -84,6 +89,7 @@ export class ClientService {
       businessId: client.business_id,
       contactPersonName: client.contact_person_name,
       deviceCreatedDate: 0,
+      epoch : 0,
       email: client.email,
       enabled: client.deleted_flag,
       localClientid: client._id,

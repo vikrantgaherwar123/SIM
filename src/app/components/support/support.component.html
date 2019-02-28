@@ -1,0 +1,60 @@
+ <div id="log"></div>
+<div class="row main-wrapper">
+    <div class="col-12" id="main">
+      <div style="margin: 0px auto; max-width:1000px;" class="back">
+        <form class="shadow" name="userForm" #form="ngForm">
+          <div align="center" class="custom-field-form" style="padding: 15px">
+            <div class="col-12" style="margin-bottom: 10px;">
+              <h5 class=" form-header font-custom-bold" style="margin-top: 0px;">
+               Support
+              </h5>
+            </div>
+            <div class="col-12" style="margin-bottom: 10px;">
+                <div class="form-group">
+                  <input type="text" id="CurrPass" name="orgMail" class="form-control"
+                    [(ngModel)]="orgMail" onfocus="this.select()"
+                  />
+                </div>
+              </div>
+  
+            <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <textarea type="text" name="queryMessage" class="form-control mCustomScrollbar style-3"
+                  placeholder="Your Query" style="height: auto !important;" onfocus="this.select()"
+                ></textarea>
+              </div>
+            </div>
+            <input type="text"  name="osname" class="form-control" [(ngModel)]="osName"
+              onfocus="this.select()" />
+              <input type="text"  name="osversion" class="form-control" [(ngModel)]="osVersion"
+              onfocus="this.select()" /> 
+               <input type="text"  name="browsername" class="form-control" [(ngModel)]="browserName"
+              onfocus="this.select()" />
+              <input type="text"  name="browserversion" class="form-control" [(ngModel)]="browserVersion"
+              onfocus="this.select()" />
+
+              <input type="text"  name="userAgent" class="form-control" [(ngModel)]="userAgent"
+              onfocus="this.select()" />
+              <input type="text"  name="appVersion" class="form-control" [(ngModel)]="appVersion"
+              onfocus="this.select()" />
+              <input type="text"  name="platform" class="form-control" [(ngModel)]="platform"
+              onfocus="this.select()" />
+              <input type="text"  name="vendor" class="form-control" [(ngModel)]="vendor"
+              onfocus="this.select()" />
+                  
+            
+            <div style="margin: 0 auto; max-width: 300px">
+              <button type="submit" id="bankingDetailSubmit" style="width: 300px;border: none !important;"
+                class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold"
+               
+              >
+                SAVE
+              </button>
+              <!-- <button type="button" (click)="mailing(orgMail.value)">send Mail</button> -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+  

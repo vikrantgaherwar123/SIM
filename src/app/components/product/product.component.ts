@@ -8,6 +8,8 @@ import { Store } from '@ngrx/store'
 import * as productActions from '../../actions/product.action'
 import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
+import { SettingService } from '../../services/setting.service'
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product',
@@ -29,24 +31,31 @@ export class ProductComponent implements OnInit {
   searchTerm: string
   codeOrSym: string
   repeatativeProductName: string = ''
+  emptyProduct: boolean;
 
   createMode: boolean = true
   editMode: boolean = false
   viewMode: boolean = false
+  deleteproduct:boolean = false
 
   productDisplayLimit = 12
+  settings: any;
+  
 
   constructor(private productService: ProductService,
     public toasterService : ToasterService,
-    private router: Router, private store : Store<AppState>
+    private router: Router, private store : Store<AppState>,
+    private titleService: Title
   ) {
     this.toasterService = toasterService;
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     this.codeOrSym = this.user.setting.currencyText ? 'code' : 'symbol'
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Simple Invoice | Product');
     this.productListLoading = true
 
     if(this.productList) {
@@ -64,26 +73,39 @@ export class ProductComponent implements OnInit {
 
   save(status, edit) {
     var proStatus = true
-
+    if(this.activeProduct.prodName == undefined){
+      this.emptyProduct = true
+    }
     // If adding or editing product, make sure product with same name doesnt exist
-    if(!this.activeProduct.enabled) {
+    if(this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {
+        if(this.productList[p].prodName){
         tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
+        }
         // If Name is same,
         if (tempCompare === tempProName) {
           // Case 1: Edit mode -> diff uniqueKey
           // Case 2: Add mode
+
+          //edit=1: case of editing
+          //edit=null: case of deleting
+          //edit=0: case of adding duplicate
           if(edit == 1) {
             if(this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct && tempProName !== this.repeatativeProductName) {
               proStatus = false
               break
             }
-          } else {
+          } 
+          if(edit == null) {
+              proStatus = true
+              break
+          } 
+          if(edit == 0) {
             proStatus = false
             break
-          }
+        } 
         }
       }
       this.repeatativeProductName = ''
@@ -124,6 +146,7 @@ export class ProductComponent implements OnInit {
               this.activeProduct = this.productList[0]
               this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
+              // window.location.reload(true);
             } else {    //edit
               self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
@@ -143,6 +166,7 @@ export class ProductComponent implements OnInit {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');
       }
+      // else if(){}
       // $('#saveProBtn').button('reset')
       // $('#saveProBtn1').button('reset')
       // $('#updateProBtn').button('reset')
@@ -159,9 +183,25 @@ export class ProductComponent implements OnInit {
     $('#prod_name').select()
   }
 
+  openDeleteProductModal() {
+    this.deleteproduct = true
+    $('#delete-product').modal('show')
+    $('#delete-product').on('shown.bs.modal', (e) => {
+      // $('#delete-product input[type="text"]')[1].focus()
+    })
+  }
+
+
   deleteProduct() {
     this.activeProduct.enabled = 1
     this.save(true, null)
+    this.deleteproduct = false
+  }
+
+  emptyField(input){
+    if(input.target.value !== ''){
+      this.emptyProduct = false
+    }
   }
 
   editThis() {

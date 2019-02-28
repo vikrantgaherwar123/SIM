@@ -1,6 +1,7 @@
 .app-container {
   background-color: #ededed;
   margin-top: 75px;
+  height:auto !important;
 }
 .header-container {
   position: fixed;

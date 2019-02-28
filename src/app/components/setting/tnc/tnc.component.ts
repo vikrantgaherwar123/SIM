@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 
+
 import { terms, setting } from '../../../interface'
 import { generateUUID } from '../../../globalFunctions'
 
@@ -9,6 +10,7 @@ import { Store } from '@ngrx/store'
 import * as tncActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tnc',
@@ -29,21 +31,25 @@ export class TncComponent implements OnInit {
     },
     setting: setting
   }
+  settings: setting;
 
   constructor(private tncService: TermConditionService,
     public toasterService : ToasterService,
+    private titleService: Title,
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService,
     this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
   }
 
   ngOnInit() {
-    this.tncLoading = false
+    this.titleService.setTitle('Simple Invoice | Terms And Conditions');
+    this.tncLoading = true
     this.store.dispatch(new tncActions.reset())
 
     this.tncService.fetch().subscribe((response: any) => {
-      this.tncLoading = true
+      this.tncLoading = false
       this.tncs = response.termsAndConditionList.filter(ter => ter.enabled == 0)
       this.store.dispatch(new tncActions.add(this.tncs))
     })
@@ -58,7 +64,7 @@ export class TncComponent implements OnInit {
 
       var d = new Date()
       this.activeTnc.modifiedOn = d.getTime()
-
+      
       this.tncService.add([this.tncService.changeKeysForApi(this.activeTnc)]).subscribe((response: any) => {
         if (response.status === 200) {
           var changedTnc = this.tncService.changeKeysForStore(response.termsAndConditionList[0])
@@ -106,6 +112,7 @@ export class TncComponent implements OnInit {
   }
 
   edit(index) {
+    index = this.tncs.length - (index +1);
     this.operation = 'edit'
     this.activeTnc = {...this.tncs[index]}
     $('#addEditTnc').modal('show')
@@ -120,6 +127,7 @@ export class TncComponent implements OnInit {
   }
 
   delete(index) {
+    index = this.tncs.length - (index +1);
     this.operation = 'delete'
     this.activeTnc = this.tncs[index]
     this.activeTnc.enabled = 1

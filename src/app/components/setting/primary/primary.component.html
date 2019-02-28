@@ -10,7 +10,7 @@
           </div>
 
           <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
-            class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold fontsize13 mr-2"
+          class="btn save_btn btn-raised pull-right font-weight-bold ml-2 width12perbtn"
             [disabled]="!addTaxesForm.valid"
           >
             UPDATE
@@ -53,24 +53,24 @@
             <!-- Discount -->
             <div class="form-group pt-2">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Discount</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18">{{settings.discount ? settings.discount : 'Discount'}} </label>
                 <div class="col-12 col-md-9 discountradio">
                   <input type="radio" id="discountonitem" name="discounton"
                     (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
                   >
                   <label for="discountonitem"
-                    class="discountonitem fontsize13 border-right-none font-custom-bold"
+                    class="discountonitem fontsize13 border-right-none font-custom-bold" style="text-transform:uppercase"
                   >
-                    DISCOUNT ON ITEM
+                  {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
                   </label>
 
                   <input type="radio" id="discountonBill" name="discounton"
                     (click)="activeSettings.discountFlagLevel=0" [checked]="activeSettings.discountFlagLevel==0"
                   >
                   <label for="discountonBill"
-                    class="discountonbill fontsize13 border-left-right-none font-custom-bold"
+                    class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="text-transform:uppercase"
                   >
-                    DISCOUNT ON BILL
+                  {{settings.discount ? settings.discount : 'Discount'}} ON BILL
                   </label>
 
                   <input type="radio" id="discountdisabled" name="discounton"

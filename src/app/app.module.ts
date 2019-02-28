@@ -22,6 +22,10 @@ import { productReducer } from './reducers/product.reducer'
 import { termsReducer } from './reducers/terms.reducer'
 import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
+import { recentInvoice } from './reducers/recentInvoice.reducer'
+import { recentEstimate } from './reducers/recentEstimate.reducer'
+
+
 import { globalReducer } from './reducers/globals.reducer'
 
 import { CONSTANTS } from './constants'
@@ -47,8 +51,19 @@ import { PasswordComponent } from './components/setting/password/password.compon
 import { UserProfileComponent } from './components/setting/user-profile/user-profile.component'
 import { environment } from '../environments/environment'
 import {ToasterModule, ToasterService} from 'angular2-toaster';
+import {ProgressBarModule} from "angular-progress-bar"
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
+import { SupportComponent } from './components/support/support.component';
+import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
+import { EmailService } from './services/email.service';
+import { HttpModule } from '@angular/http';
+import { Title }     from '@angular/platform-browser';
+// search module
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 
+import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -90,9 +105,15 @@ export function getAuthServiceConfigs() {
     BankingComponent,
     PasswordComponent,
     UserProfileComponent,
+    BatchuploadComponent,
+    SupportComponent,
+    LoadalldataComponent,
   ],
   imports: [
+    ProgressBarModule,
     BrowserModule,
+    Ng2SearchPipeModule,
+    HttpModule,
     SocialLoginModule,
     AppRoutingModule,
     TranslateModule.forRoot({
@@ -118,14 +139,21 @@ export function getAuthServiceConfigs() {
       terms: termsReducer,
       estimate: estimateReducer,
       invoice: invoiceReducer,
+      recentInvoices: recentInvoice,
+      recentEstimates: recentEstimate,
       globals: globalReducer
-    })
+    }),
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    EmailService,
     CONSTANTS,
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs
+      
     }
   ],
   bootstrap: [AppComponent]

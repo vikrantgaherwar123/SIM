@@ -9,10 +9,10 @@
               <div class="row">
                 <div class="col-3" style="padding-top: 15px;">
                   <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="/assets/images/list-icon/add-plus-button24.png">
+                    <img src="/assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
-                <div class="col-6 text-center px-0" style="padding-top: 15px;">
+                <div class="col-6 text-center px-0" style="padding-top: 15px;" >
                   <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
                     Batch Upload
                   </button> -->
@@ -21,14 +21,14 @@
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                   >
-                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png">
+                    <img alt="logo" Title="Search By" src="/assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
+                  <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='prodName'">
                       <a (click)="sortTerm='prodName'">By Name</a>
                     </li>
                     <li [class.active]="sortTerm=='rate'">
-                      <a (click)="sortTerm='rate'">By Rate</a>
+                      <a (click)="sortTerm='rate'">By {{settings.mTvRate ? settings.mTvRate : 'Rate'}}</a>
                     </li>
                   </ul>
                 </div>
@@ -36,21 +36,21 @@
             </div>
             <div class="col-12 search-box">
               <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search Product" />
+                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}" />
               </div>
             </div>
           </div>
   
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            Select Product to view or edit
+            Select {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} to view or edit
           </div>
   
-          <div class="col-12 px-0 scroll mCustomScrollbar">
+          <div class="col-12 px-0 mCustomScrollbar style-3">
             <div style="background-color: #fff;" *ngIf="productListLoading">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
             </div>
             <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
-              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filterBy:{prodName:searchTerm} | slice:0:productDisplayLimit); index as index"
+              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0:productDisplayLimit); index as index"
             >
               <div class="row item product-list">
                 <div class="col-2 pl-1">
@@ -82,7 +82,7 @@
               </div>
             </div>
             <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
-              <h4>No Product to display, please create a product</h4>
+              <h4>No {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} to display, please create a product</h4>
             </div>
             <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
               <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
@@ -102,41 +102,37 @@
                 <!-- Heading -->
                 <div class="col-7 col-md-8">
                   <h4 class="form-header product-header" style="margin-left: 59%" *ngIf="createMode">
-                    Create a new product
+                    Create a new {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}
                   </h4>
                   <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="editMode">
-                    Edit product
+                    Edit {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}
                   </h4>
-                  <h4 class="form-header product-header" *ngIf="viewMode">View Product</h4>
+                  <h4 class="form-header product-header" *ngIf="viewMode">View {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}</h4>
                 </div>
 
                 <!-- Top Buttons -->
                 <div class="col-5 col-md-4 px-0 pull-right">
                   <button type="button" *ngIf="viewMode" (click)="editThis(product)"
-                    class="btn btn-success btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit
                   </button>
-                  <button type="button" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
-                    [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
-                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
-                    "
-                    (confirm)="deleteProduct(activeProduct)" *ngIf="viewMode" [disabled]="!f.valid"
-                  >
-                    DELETE
-                  </button>
+                  <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
+                  *ngIf="viewMode"  (click)="openDeleteProductModal()">
+                   DELETE
+                 </button>
                   <div class="rightDivBtns">
-                    <button type="button" id="updateProBtn" (click)="save(f.valid, 0)"
-                      class="btn btn-raised btn-success no-border-radius pull-right ml-2 width10btn font-custom-bold"
-                      *ngIf="createMode" [disabled]="!f.valid"
+                    <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                      *ngIf="createMode" 
                     >
                       SAVE
                     </button>
                     <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
-                      class="btn btn-raised btn-success no-border-radius pull-right ml-2 width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="editMode" [disabled]="!f.valid"
                     >
                      
@@ -168,13 +164,13 @@
                           <span class="input-group-addon">
                             <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
-                          <input type="text" id="prodName" name="prodName" placeholder="Product Name *"
+                          <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
                             class="form-control" maxlength="45" onfocus="this.select()" required
                             [(ngModel)]="activeProduct.prodName"
                           />
                         </div>
                         <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
-                          <span *ngIf="f.value.prodName == ''">Product name required</span>
+                          <span *ngIf="f.value.prodName == ''">{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name required</span>
                         </div>
                       </div>
                     </div>
@@ -186,7 +182,7 @@
                             <img src="/assets/images/product-icon/ic_product_code_grey.png">
                           </span>
                           <input type="text" name="productCode" id="productCode"
-                            class="form-control" placeholder="Product Code"
+                            class="form-control" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Code"
                             [(ngModel)]="activeProduct.productCode" onfocus="this.select()"
                           />
                         </div>
@@ -208,8 +204,8 @@
 
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
-                        <textarea elastic name="discription" id="discription" class="form-control"
-                          placeholder="Description" style="max-height: 72px; height: 72px;"
+                        <textarea elastic name="discription" id="discription" class="form-control mCustomScrollbar style-3"
+                          placeholder="Description" style="height: 72px !important;"
                           [(ngModel)]="activeProduct.discription" onfocus="this.select()"
                         ></textarea>
                       </div>
@@ -221,7 +217,7 @@
                           <span class="input-group-addon">
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
-                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="Rate *"
+                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*"
                             [(ngModel)]="activeProduct.rate" required onfocus="this.select()"
                           />
                         </div>
@@ -262,7 +258,7 @@
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_prod_name.png">
-                          Product name:
+                          {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.prodName}}
@@ -273,7 +269,7 @@
                       <div class="row">
                         <div class=" col-6 client-view-label ">
                           <img src="/assets/images/product-icon/ic_product_code_grey.png">
-                          Product code:
+                          {{settings.productCode ? settings.productCode : 'Products Code'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.productCode}}
@@ -297,14 +293,14 @@
                           <img src="/assets/images/product-icon/ic_normal_description.png">
                           Description:
                         </div>
-                        <pre class="col-6 client-view-body font-custom-bold">{{activeProduct.discription}}</pre>
+                        <div class="col-6 client-view-body font-custom-bold" style="text-align: justify;">{{activeProduct.discription}}</div>
                       </div>
                     </div>
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_rate.png">
-                          Rate:
+                          {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.rate}}
@@ -315,7 +311,7 @@
                       <div class="row">
                         <div class="col-6 client-view-label">
                           <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
-                          Tax Rate:
+                          Tax {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.taxRate}}
@@ -330,30 +326,26 @@
               <div class="row">
                 <div class="col-12 pull-right">
                   <button type="button" (click)="editThis(product)" *ngIf="viewMode"
-                    class="btn btn-success btn-raised no-border-radius pull-right width10btn"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
                     <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit
                   </button>
-                  <button type="button" class="btn btn-raised btn-custom-1 no-border-radius pull-right mr-2 width10btn font-custom-bold"
-                    [swal]="{ title: 'Are you sure want to delete Product ?', type: 'warning', showCancelButton: true,
-                      confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!' }
-                    "
-                    (confirm)="deleteProduct(activeProduct)" *ngIf="viewMode" [disabled]="!f.valid"
-                  >
+                  <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
+                   *ngIf="viewMode"  (click)="openDeleteProductModal()">
                     DELETE
                   </button>
                   <div class="rightDivBtns">
                     <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="createMode"
-                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
                       SAVE
                     </button>
                     <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="editMode"
-                      class="btn btn-raised btn-success no-border-radius pull-right width10btn font-custom-bold"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
                       UPDATE
@@ -371,6 +363,42 @@
                   </div>
                 </div>
               </div>
+              <!-- Delete product MODAL -->
+              <div id="delete-product" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
+                data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title form-header font-custom-bold header-color" id="productFormLabel">
+                          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+                           Delete Client
+                      </h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
+                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}?</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="close btn btn-raised btn-custom-1 width20btn" 
+                      data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
+                        No
+                      </button>
+                      <button type="button" id="clientFormLabel" (click)="deleteProduct()"  
+                      class="close btn btn-raised  btn-success width20btn"
+                        data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+                        Yes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Delete Product MODAL ends -->
             </div>
           </div>
         </form>

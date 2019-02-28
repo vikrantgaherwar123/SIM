@@ -1,14 +1,14 @@
 @import '../../../../assets/css/form.css';
 
 .blue {
-  background:#176cc1;
+  background:#1678cd;
   height:120px;
   margin: -9px -20px 0px -20px;
   box-shadow: 0 -1px 3px 0 #666
 }
 
 .term-list-show {
-  padding-top: 16px;
+  padding-top: 14px;
   margin-bottom: -7px;
   border-bottom: #ccc solid 1px;
 }

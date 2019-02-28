@@ -1,90 +1,125 @@
 <div class="row main-wrapper">
   <!-- Estimate query bar -->
-  <!-- <div class="col-12 query-container">
-    <form name="searchform" #searchform="ngForm" class="query-bar" *ngIf="changingQuery">
-      <div class="row mx-0">
-        <div class="col-12 col-md-4">
-          <div class="form-group pl-0">
-            <mat-select placeholder="Select client" class="client-select" multiple disableRipple
-              [formControl]="estimateQueryForm.client"
-            >
-              <mat-select-trigger>
-                {{estimateQueryForm.client.value?.length > 0 ? estimateQueryForm.client.value[0].name : ''}}
-                <span *ngIf="estimateQueryForm.client.value?.length > 1" class="example-additional-selection">
-                  (+{{estimateQueryForm.client.value.length - 1}}
-                    {{estimateQueryForm.client.value?.length === 2 ? 'other' : 'others'}}
-                  )
-                </span>
-              </mat-select-trigger>
-              <mat-option [value]="{name: 'All'}">All</mat-option>
-              <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
-            </mat-select>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-5">
+  <div class="col-12 query-container">
+      <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
           <div class="row">
-            <div class="col-4">
-              <input placeholder="Start" required readonly style="max-width: 100%"
-                matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
-                (click)="picker3.open()"
-              >
-              <mat-datepicker #picker3></mat-datepicker>
+            <div class="col-md-9">
+              <span>Showing results for:</span> <img src="assets/images/client.png" 
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
+              <span style="color:#0299ff">Client: </span>
+              <span style="color: black;font-family: quicksand_bold !important;">
+                <!-- {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}} -->
+                <!-- <span *ngIf="estimateQueryForm.client.value?.length > 1"
+                  [title]="getNames()"
+                >
+                  (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                </span>, -->
+                <!-- <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span> -->
+              </span>
+              <img src="assets/images/date.png" 
+              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#0299ff">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
+                  estimateQueryForm.dateRange.start.value.getDate() + '-' +
+                (estimateQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                estimateQueryForm.dateRange.start.value.getFullYear() : 0
+              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{estimateQueryForm.dateRange.end.value ?
+                  estimateQueryForm.dateRange.end.value.getDate() + '-' +
+                (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                estimateQueryForm.dateRange.end.value.getFullYear() : 0
+              }}</span>
+              <!-- <img src="assets/images/payment2.png" 
+              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
-            <div class="col-4 pl-0">
-              <input placeholder="End" required readonly style="max-width: 100%"
-                matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
-                (click)="picker4.open()"
+    
+            <div class="col-12 col-md-2">
+              <button type="button" (click)="openSearchClientModal()"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;margin-right: -58px;"
               >
-              <mat-datepicker #picker4></mat-datepicker>
+                Change
+              </button>
             </div>
           </div>
         </div>
+    </div>
 
-        <div class="col-12 col-md-2">
-          <button type="button" (click)="SearchEstimate()"
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
-            Search
+
+  <!-- SEARCH CLIENT MODAL -->
+  <div id="search-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #f3f2f1;border-radius: 0px;border-radius: 0px;padding: 12px;">
+        <form>
+        <div class="modal-header" style="border-bottom: none !important;">
+          <button type="button" class="close" aria-label="Close" (click)="closeEstSearchModel()">
+            <img src="assets/images/cross16.png" alt="logo">
           </button>
         </div>
-      </div>
-    </form>
+        <div class="col-12 col-md-12">
+          <div class="form-group pl-0">
+            <ng-multiselect-dropdown
+            [placeholder]="'Client'"
+            [data]="dropdownList"
+            [settings]="dropdownSettings"
+            [formControl]="estimateQueryForm.client"
+          >
+          </ng-multiselect-dropdown>
+          </div>
+        </div>
 
-    <div class="query-bar" *ngIf="!changingQuery">
-      <div class="row">
-        <div class="col-12 col-md-9">
-          Showing results for: Client: <span style="color: red">
-            {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}}
-            <span *ngIf="estimateQueryForm.client.value?.length > 1"
-              [title]="getNames()"
+        <div class="row" style="margin-top: -3px;">
+          <div class="col-md-5 mr_right" style="margin-left: 8px !important;margin-top: 20px;">
+              <ul class="nav">
+                <li class="button-dropdown">
+                  <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
+                  {{itemSelected}}  
+                  </a><span><img src="assets/images/filter.png" style="height: 18px;
+                    margin-left: 160px;margin-top: -61px;"> </span>
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let item of duration">
+                      <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+          </div>
+          <div class="col-1"></div>
+          <div class="col-3" style="padding: 9px 0px 0px 0px;margin-left: -11px;" ><!--[ngClass]="{disabledDiv: !customEnableDate}"-->
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">From Date:</div>
+            <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
+              matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
+              (click)="picker3.open()" (dateChange)="onDate($event)"
             >
-              (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-            </span>,
-          </span>
-          Date Range: <span style="color: red">{{estimateQueryForm.dateRange.start.value ? 
-            estimateQueryForm.dateRange.start.value.getDate() + '-' +
-            (estimateQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-            estimateQueryForm.dateRange.start.value.getFullYear() : 0
-          }}</span> TO <span style="color: red">{{estimateQueryForm.dateRange.end.value ?
-            estimateQueryForm.dateRange.end.value.getDate() + '-' +
-            (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-            estimateQueryForm.dateRange.end.value.getFullYear() : 0
-          }}</span>
+            <mat-datepicker-toggle matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </div>
+          <div class="col-3 pl-0" style="padding: 9px 0px 0px 0px;padding-left: 15px !important;" ><!--[ngClass]="{disabledDiv: !customEnableDate}"-->
+            <div style="font-size: 11px;color: #bbbcbe;margin-bottom: 6px;">To Date:</div>
+            <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
+            border: 1px solid #c4c1c1;color: black;"
+              matInput [matDatepicker]="picker4" [formControl]="estimateQueryForm.dateRange.end"
+              (click)="picker4.open()" (dateChange)="onDate($event)"
+            > 
+            <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+          </div>
         </div>
-
-        <div class="col-12 col-md-2">
-          <button type="button" (click)="changingQuery = true; estimateQueryForm.client.reset([{name: 'All'}])"
-            class="btn btn-success btn-raised font-custom pull-right width20btn"
-          >
-            Change
+        <div class="modal-footer">
+          <button (click)="estimateQueryForm.client.reset();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
+            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
+            <span style="color: grey;">Clear all</span>
+          </button>
+          <button type="button" (click)="showSelectedEstimate(estimateQueryForm.client)" style="width: 94px;font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
+            class="btn btn-success font-custom pull-right width20btn">
+            Apply
           </button>
         </div>
+      </form>
       </div>
     </div>
-  </div> -->
+  </div>
+  <!--Search client modal ends-->
 
-  <div class="py-3 w-100">
+  <div class="py-3 w-100" style="padding-top: 74px !important;">
     <div class="row mx-0">
       <!-- Estimate List -->
       <div class="col-12 col-sm-3 pr-0">
@@ -94,14 +129,13 @@
               <div class="row mx-0">
                 <div class="col-6 pl-0" style="padding-top: 15px;">
                   <a (click)="router.navigate(['estimate/add'])" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="assets/images/list-icon/add-plus-button24.png">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 px-0" style="padding-top: 15px;">
-                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
-                  >
-                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="pull-right list-btn cus-img">
+                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
                     <li [class.active]="estSortTerm=='createDate'">
@@ -111,10 +145,10 @@
                       <a (click)="estSortTerm='quetationNo'">By Est No.</a>
                     </li>
                     <li [class.active]="estSortTerm=='balance'">
-                      <a (click)="estSortTerm='balance'">By Balance</a>
+                      <a (click)="estSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
                     </li>
                     <li [class.active]="estSortTerm=='amount'">
-                      <a (click)="estSortTerm='amount'">By Amount</a>
+                      <a (click)="estSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
                     </li>
                   </ul>
                 </div>
@@ -122,28 +156,28 @@
             </div>
             <div class="col-12 search-box">
               <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search estimates" />
+                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}}" />
               </div>
             </div>
           </div>
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of Estimate
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
           </div>
+          
 
-          <div class="col-12 px-0 mCustomScrollbar">
-            <div style="background-color: #fff;" *ngIf="estListLoader">
+          <div class="col-12 px-0 mCustomScrollbar style-3">
+            <!-- <div style="background-color: #fff;" *ngIf="estListLoader">
               <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-            </div>
+            </div> -->
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
-              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:true:true | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
-              (click)="setActiveEst(estimate.unique_identifier)"
-            >
+              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
+              (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ estimate.createDate | date: 'dd MMM' }}
               </div>
-              
+
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
@@ -153,16 +187,16 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
+                    'symbol'):'1.2-2' }}
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="no-data-messsage" *ngIf="estimateList?.length < 1 && !estListLoader">
-              <h4>No Estimate to display</h4>
+            <div *ngIf="!activeEst" class="no-data-messsage">
+              <img src="assets/images/no_data_found.png" style="width: 324px;">
             </div>
-            <div class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
+            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
               <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
                 Click to view more >>
               </a>
@@ -170,33 +204,33 @@
           </div>
         </div>
       </div>
+      
 
       <!-- View Estimate -->
-      <div id="estMain" name="estMain" class="col-12 col-sm-9 item-form" *ngIf="activeEst">
+      <div  class="col-12 col-sm-9 item-form">
+      <div id="estMain" name="estMain" *ngIf="activeEst"> <!--activeEst-->
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
           <!-- Buttons -->
           <div class="row">
             <div class="col-md-12">
               <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btn-raised btn-success no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                title="Edit"
-              >
+                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadEstimate('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                title="Download"
-              >
+                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
               <button id="previewBtn" type="button" (click)="downloadEstimate('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                title="Preview"
-              >
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
                 <img src="assets/images/buttons-icon/view16.png">
                 Preview
+              </button>
+              <button id="previewBtn" type="button" (click)="makeInvoice()" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
+                Make Invoice
               </button>
             </div>
           </div>
@@ -204,7 +238,7 @@
           <!-- Title -->
           <div class="text-right w-100 px-1">
             <span class="c-name" type="text" id="title" name="title">
-              {{settings.mTvEstimate ? settings.mTvEstimate : 'INV_LABEL' | translate}}
+              {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
             </span>
           </div>
 
@@ -214,15 +248,15 @@
               <div class="row">
                 <div class="col-12" style="width: 88%;">
                   <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
-                    {{settings.mTvBillTo}}
+                    {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}} 
                   </span>
-                  <div class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
+                  <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
                     {{activeClient.name}}
                   </div>
                 </div>
               </div>
               <div class="row" id="addressBar" name="addressBar">
-                <div class="col-6">
+                <div *ngIf="activeClient" class="col-6">
                   <span type="text" id="BillAddress" class="adr bill-to font-custom-bold">
                     Address
                   </span>
@@ -236,9 +270,9 @@
                 </div>
                 <div class="col-6">
                   <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
-                    Shipping Address
+                    {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                   </span>
-                  <div class="address-render">{{activeClient.shippingAddress}}</div>
+                  <div class="address-render">{{activeEst.shippingAddress}}</div>
                 </div>
               </div>
             </div>
@@ -246,19 +280,22 @@
             <div class="col-12 col-sm-5" id="estData" name="estData">
               <div class="row">
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">Estimate#</span>
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No</span>
                 </div>
                 <div class="col-sm-6">
-                  {{ activeEst.quetationNo  }}
+                  {{ activeEst.quetationNo }}
                 </div>
               </div>
 
               <div class="row">
                 <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">Estimate Date</span>
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                 </div>
-                <div class="col-sm-6">
-                  {{activeEst.createDate}}
+                <div *ngIf="dateDDMMYY" class="col-sm-6">
+                  {{activeEst.createDate | date:"dd/MM/yyyy"}}
+                </div>
+                <div *ngIf="dateMMDDYY" class="col-sm-6">
+                  {{activeEst.createDate | date:"MM/dd/yyyy"}}
                 </div>
               </div>
             </div>
@@ -272,30 +309,23 @@
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;"
-                        value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled
-                        value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled
-                        value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
-                      >
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignTaxFlag == 0">
+                    <td width="17%">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="activeEst.assignDiscountFlag == 1">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="Discount (%)" disabled>
+                    <td width="17%">
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
-                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled
-                      >
+                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
                   </tr>
                 </thead>
@@ -320,12 +350,12 @@
                         {{item.rate}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
                         {{item.taxRate}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
                         {{item.discountRate}}
                       </div>
@@ -353,10 +383,12 @@
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class="list-unstyled">
                   <li *ngFor="let term of activeEst.alstQuotTermsCondition">
-                    <div class="col-md-12 margin-bottom-5px">{{term.termsConditionText}}<br /></div>
+                    <div class="col-md-12 margin-bottom-5px">
+                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span><br />
+                    </div>
                   </li>
                 </ul>
-                <div *ngIf="activeEst.alstQuotTermsCondition?.length < 1">
+                <div *ngIf="!activeEst.alstQuotTermsCondition || activeEst.alstQuotTermsCondition.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
@@ -367,19 +399,22 @@
               <!-- Total -->
               <div class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
-                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
+                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' |
+                    translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.grossAmount |
+                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
 
               <!-- Discount -->
               <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
                 <div class="col-5 discount-tax-label">
-                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount}}</span>
+                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{currencySymbolTemp}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
+                    slice:0:1}})
                   </div>
                   <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
                 </div>
@@ -400,32 +435,33 @@
               <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">(%)</div>
+                  <div class="inline font-custom">({{activeEst.taxrate | number:'1.1-2'}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeEst.taxrate | number:'2.'}}
+                    {{activeEst.taxAmt | number:'1.1-2'}}
                   </div>
                 </div>
               </div>
 
               <!-- Tax List -->
-              <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
-                <div class="col-4 discount-tax-label">
-                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                  <div class="inline font-custom">(%)</div>
-                </div>
-                <div class="col-8 ">
-                  <div class="text-right">
-                    {{activeEst.taxList[index].percentage}}
+                <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
+                  <div class="col-4 discount-tax-label">
+                    <div *ngIf="tax !== null" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                    <div *ngIf="tax" class="inline font-custom">({{activeEst.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                  </div>
+                  <div *ngIf="tax !== null" class="col-8 ">
+                    <div class="text-right">
+                      {{activeEst.taxList[index].calculateValue}}
+                    </div>
                   </div>
                 </div>
-              </div>
 
               <!-- Shipping Charges -->
               <div class="row mx-0" *ngIf="activeEst.shippingCharges > 0">
                 <div class="col-4 discount-tax-label">
-                  <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                  <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ?
+                    settings.shipping : 'Shipping'}}</div>
                 </div>
                 <div class="col-8">
                   <div class="text-right">
@@ -435,10 +471,10 @@
               </div>
 
               <!-- Adjustment -->
-              <div class="row mx-0" *ngIf="activeEst.adjustment != 0">
+              <div class="row mx-0" *ngIf="activeEst.adjustment > 0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
-                    {{settings.adjustment}}
+                    {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                   </div>
                 </div>
                 <div class="col-8">
@@ -454,13 +490,20 @@
                   <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  <span class="font-custom-bold price">{{activeEst.amount |
+                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
             </div>
           </div>
         </form>
       </div>
+      <div *ngIf="estimateList?.length < 1 && !activeEst">
+        <!--estimateList.length<1 && !invoiceListLoader-->
+        <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
+      </div>
+      </div>
+      
     </div>
   </div>
 </div>
