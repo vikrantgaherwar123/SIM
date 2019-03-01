@@ -260,6 +260,38 @@ export interface estimate {
   version: number
 }
 
+export interface recentEstimates {
+  adjustment: number
+  alstQuotProduct: Array<any>
+  alstQuotTermsCondition: Array<any>
+  amount: number
+  assignDiscountFlag: number
+  assignTaxFlag: number
+  createDate: string
+  deviceCreatedDate: number
+  discount: number
+  discountFlag: number
+  enabled: number
+  epochTime: number
+  grossAmount: number
+  localClientId: number
+  localId: number
+  organizationId: number
+  percentageValue: number
+  pushFlag: number
+  quetationNo: string
+  serverClientId: number
+  serverUpdateTime: number
+  shippingAddress: string
+  shippingCharges: number
+  taxAmt: number
+  taxList: Array<any>
+  taxrate: number
+  unique_identifier: string
+  unique_key_fk_client: string
+  version: number
+}
+
 export interface addEditEstimate {
   adjustment: number
   amount: number

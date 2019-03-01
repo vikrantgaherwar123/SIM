@@ -196,15 +196,6 @@ export class AddEditComponent implements OnInit {
       }
     })
     //getting arraylist of recenlty added invoices 
-    // this.recentInvoiceList = JSON.parse(localStorage.getItem('recentInvoicesList'));
-    // if (this.recentInvoiceList) {
-    //   this.recentInvoiceList = this.recentInvoiceList;
-    // } else {
-    //   this.recentInvoiceList = [];
-    //   localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
-    // }
-    // localStorage.removeItem('recentInvoicesList');
-
     this.store.select('recentInvoices').subscribe(invoices => {
       this.invoiceList = invoices
     })
@@ -610,6 +601,16 @@ export class AddEditComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+          //remove whitespaces from clientlist
+          for (let i = 0; i < this.clientList.length; i++) {
+            if(!this.clientList[i].name){
+              this.clientList.splice(i, 1);
+            }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
+              this.clientList.splice(i, 1);
+            }
+          }
           var obj = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -727,6 +728,7 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.clientList = uniqueClients;
+          //remove whitespaces from clientlist
           for (let i = 0; i < this.clientList.length; i++) {
             if(!this.clientList[i].name){
               this.clientList.splice(i, 1);
@@ -811,9 +813,9 @@ export class AddEditComponent implements OnInit {
       var d = new Date()
       this.addClientModal.device_modified_on = d.getTime()
       this.addClientModal.organizationId = this.user.user.orgId
-      this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'true')
+      this.clientListLoading = true
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
           let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
@@ -1336,8 +1338,6 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          // localStorage.setItem('recentInvoice', JSON.stringify(result.invoiceList[0]));
-          
         }
 
         // Update settings
@@ -1350,11 +1350,8 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
 
-          // var currentInvoice = JSON.parse(localStorage.getItem('recentInvoice'));
-          // this.recentInvoiceList.push(currentInvoice);
-          // localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1365,9 +1362,6 @@ export class AddEditComponent implements OnInit {
           //set recently added invoice list in local storage
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
 
-          // var currentInvoice = JSON.parse(localStorage.getItem('recentInvoice'));
-          // this.recentInvoiceList.push(currentInvoice);
-          // localStorage.setItem('recentInvoicesList', JSON.stringify(this.recentInvoiceList));
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()

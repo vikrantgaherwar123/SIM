@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, addEditEstimate, client, terms, setting, product } from '../../../interface'
+import { response, addEditEstimate, estimate , client, terms, setting, product } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { EstimateService } from '../../../services/estimate.service'
@@ -34,6 +34,8 @@ import { Title }     from '@angular/platform-browser';
 
 export class AddEditEstComponent implements OnInit {
 
+
+  estimateList: estimate[]
   activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
@@ -170,16 +172,10 @@ export class AddEditEstComponent implements OnInit {
         }
       }
     }
-
-    //getting arraylist of recenlty added invoices 
-    this.recentEstimateList = JSON.parse(localStorage.getItem('recentEstimateList'));
-    if (this.recentEstimateList) {
-      this.recentEstimateList = this.recentEstimateList;
-    } else {
-      this.recentEstimateList = [];
-      localStorage.setItem('recentEstimateList', JSON.stringify(this.recentEstimateList));
-    }
-    // localStorage.removeItem('recentInvoicesList');
+    //getting arraylist of recenlty added estimates 
+    this.store.select('recentEstimates').subscribe(estimates => {
+      this.estimateList = estimates
+    })
   }
 
   dataChanged(input) {
@@ -469,7 +465,8 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          for (let i = 0; i < this.clientList.length; i++) {
+          //remove whitespaces from clientlist
+           for (let i = 0; i < this.clientList.length; i++) {
             if(!this.clientList[i].name){
               this.clientList.splice(i, 1);
             }
@@ -1057,7 +1054,6 @@ export class AddEditEstComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
-          localStorage.setItem('recentEstimate', JSON.stringify(response.quotationList[0]));
         }
 
         // Update settings
@@ -1072,10 +1068,10 @@ export class AddEditEstComponent implements OnInit {
            this.router.navigate(['/estimate/view'])
           // this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
-          // localStorage.setItem('estNo', JSON.stringify(this.activeEstimate.estimate_number));
-          var currentEstimate = JSON.parse(localStorage.getItem('recentEstimate'));
-          this.recentEstimateList.push(currentEstimate);
-          localStorage.setItem('recentEstimateList', JSON.stringify(this.recentEstimateList));
+          //add recently added esimate in store
+          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          
+         
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1184,7 +1180,7 @@ export class AddEditEstComponent implements OnInit {
   resetFormControls() {
     this.billingTo.setValue('')
     this.addItem.reset('')
-
+    this.activeEstimate = <addEditEstimate>{}
     this.activeClient = <client>{}
     // Estimate Number
     if (!isNaN(parseInt(this.settings.quotNo))) {
@@ -1198,6 +1194,7 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.estimate_number = this.tempEstNo.toString();
     }
     this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
+    
   }
 
   updateSettings() {

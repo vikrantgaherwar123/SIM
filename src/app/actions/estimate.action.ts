@@ -4,6 +4,7 @@ export const ADD = 'ADD_ESTIMATE'
 export const EDIT = 'EDIT_ESTIMATE'
 export const REMOVE = 'REMOVE_ESTIMATE'
 export const RESET = 'RESET_ESTIMATE'
+export const RECENTESTIMATE = 'RECENT_ESTIMATE'
 
 
 export class add implements Action {
@@ -37,4 +38,12 @@ export class reset implements Action {
     
   }
 }
-export type Action = add | edit | remove | reset
+
+export class recentEstimate implements Action {
+  readonly type = RECENTESTIMATE
+
+  constructor(public payload: any) {
+    
+  }
+}
+export type Action = add | edit | remove | reset | recentEstimate
