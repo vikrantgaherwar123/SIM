@@ -270,6 +270,7 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
+          //show discount and tax fields when item settings is selected
           for(let i=0;i<this.activeEstimate.listItems.length;i++){
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
@@ -281,6 +282,14 @@ export class AddEditEstComponent implements OnInit {
             this.setDiscountOnItem = true;
           }
           }
+        }
+        //hide discount and tax fields when bill settings is selected
+        if (this.activeEstimate.discount !== 0) {
+          this.settings.discountFlagLevel = 0;
+        }
+        if (this.activeEstimate.tax_rate !== 0) {
+          this.settings.taxFlagLevel = 1;
+          this.showTaxRate=0;
         }
 
 

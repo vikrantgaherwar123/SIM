@@ -64,6 +64,8 @@ export class ViewEstComponent implements OnInit {
   customEnableDate: boolean;
   estimateId: any;
   showBackground: boolean = false;
+  hideTaxLabel: boolean;
+  hideDiscountLabel: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -111,6 +113,16 @@ export class ViewEstComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        //remove whitespaces from clientlist
+        for (let i = 0; i < this.clientList.length; i++) {
+          if(!this.clientList[i].name){
+            this.clientList.splice(i, 1);
+          }
+          var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+          if (tempClient === "") {
+            this.clientList.splice(i, 1);
+          }
+        }
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
       })
@@ -332,6 +344,20 @@ export class ViewEstComponent implements OnInit {
       //console.log(this.activeEst)
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    }
+    if(this.activeEst.alstQuotProduct){
+      for(let i = 0;i<this.activeEst.alstQuotProduct.length; i++){
+        if(this.activeEst.alstQuotProduct[i].discountRate === 0){
+          this.hideTaxLabel = true;
+        }else{
+          this.hideTaxLabel = false;
+        }
+        if(this.activeEst.alstQuotProduct[i].taxRate === 0){
+          this.hideDiscountLabel = true;
+        }else{
+          this.hideDiscountLabel = false;
+        }
+      }
     }
     this.setActiveClient()
   }

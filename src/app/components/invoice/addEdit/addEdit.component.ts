@@ -283,39 +283,45 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
 
+
+        
         // Change list item keys compatible
-        if(this.activeInvoice.listItems){
-        var temp = []
-        for(let i=0; i < this.activeInvoice.listItems.length; i++) {
-          temp.push({
-            description: this.activeInvoice.listItems[i].description,
-            discount: this.activeInvoice.listItems[i].discountRate,
-            product_name: this.activeInvoice.listItems[i].productName,
-            quantity: this.activeInvoice.listItems[i].qty,
-            rate: this.activeInvoice.listItems[i].rate,
-            tax_rate: this.activeInvoice.listItems[i].tax_rate,
-            total: this.activeInvoice.listItems[i].price,
-            unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
-            unit: this.activeInvoice.listItems[i].unit,
-          })
-        }
-        this.activeInvoice.listItems = temp
-        // this.showProduct = this.activeInvoice.listItems[0].productName;
-        // this.showDescription = this.activeInvoice.listItems[0].description;
-        // this.showDiscountedRate =  this.activeInvoice.listItems[0].discountRate;
-        // this.showQuantity = this.activeInvoice.listItems[0].qty;
-        // this.showPrice = this.activeInvoice.listItems[0].price;
-        for(let i=0;i<this.activeInvoice.listItems.length;i++){
-          this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
-          if(this.showTaxRate!==0){
-            this.settings.taxFlagLevel=0;
+        if (this.activeInvoice.listItems) {
+          var temp = []
+          for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+            temp.push({
+              description: this.activeInvoice.listItems[i].description,
+              discount: this.activeInvoice.listItems[i].discountRate,
+              product_name: this.activeInvoice.listItems[i].productName,
+              quantity: this.activeInvoice.listItems[i].qty,
+              rate: this.activeInvoice.listItems[i].rate,
+              tax_rate: this.activeInvoice.listItems[i].tax_rate,
+              total: this.activeInvoice.listItems[i].price,
+              unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+              unit: this.activeInvoice.listItems[i].unit,
+            })
           }
-          this.showDiscountRate = this.activeInvoice.listItems[i].discount;
-          if(this.showDiscountRate!==0){
-            this.settings.discountFlagLevel=1;
+          this.activeInvoice.listItems = temp
+          //show discount and tax fields when item settings is selected
+          for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+            this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+            if (this.showTaxRate !== 0) {
+              this.settings.taxFlagLevel = 0;
+            }
+            this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+            if (this.showDiscountRate !== 0) {
+              this.settings.discountFlagLevel = 1;
+            }
           }
         }
-      }
+        //hide discount and tax fields when bill settings is selected
+        if (this.activeInvoice.discount !== 0) {
+          this.settings.discountFlagLevel = 0;
+        }
+        if (this.activeInvoice.tax_rate !== 0) {
+          this.settings.taxFlagLevel = 1;
+          this.showTaxRate=0;
+        }
        // Change payment keys compatible
         if(this.activeInvoice.payments){
           var temp1 = []
@@ -378,6 +384,14 @@ export class AddEditComponent implements OnInit {
             if (this.activeEstimate.taxList){
               this.activeInvoice.taxList = this.activeEstimate.taxList;
             }
+            //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
+            if(this.activeEstimate.tax_rate!==0){
+              this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+              this.activeInvoice.tax_on_item=1;
+            }
+            if(this.activeEstimate.discount!==0){
+              this.activeInvoice.discount_on_item=0;
+            }
     
             // Change list item keys compatible
             if (this.activeEstimate.listItems) {
@@ -385,10 +399,11 @@ export class AddEditComponent implements OnInit {
               for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
                 temp.push({
                   description: this.activeEstimate.listItems[i].description,
+                  discount: this.activeEstimate.listItems[i].discountRate,
                   product_name: this.activeEstimate.listItems[i].productName,
                   quantity: this.activeEstimate.listItems[i].qty,
                   rate: this.activeEstimate.listItems[i].rate,
-                  tax_rate: this.activeEstimate.listItems[i].tax_rate,
+                  tax_rate: this.activeEstimate.listItems[i].taxRate,
                   total: this.activeEstimate.listItems[i].price,
                   unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
                   unit: this.activeEstimate.listItems[i].unit
@@ -396,6 +411,17 @@ export class AddEditComponent implements OnInit {
               }
               this.activeEstimate.listItems = temp
               this.activeInvoice.listItems = this.activeEstimate.listItems;
+              for(let i=0;i<this.activeInvoice.listItems.length;i++){
+                this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+                if(this.showTaxRate!==0){
+                  this.settings.taxFlagLevel=0;
+                  this.activeInvoice.tax_on_item = 0;
+                }
+                this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+                if(this.showDiscountRate!==0){
+                  this.settings.discountFlagLevel=1;
+                }
+              }
             }
     
     
@@ -445,13 +471,13 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
             var currentDate = Date.now();
             this.formatedDate = currentDate;
-            if(this.activeInvoice.discount){
-              this.activeInvoice.discount_on_item = 0;
-            }
-            if(this.activeInvoice.tax_rate!==0 || this.activeInvoice.tax_amount!==0 ){
-              this.activeInvoice.tax_on_item=1;
-            }
-            
+            // // //to show when editing if value exists
+            // if (this.activeInvoice.tax_amount == 0 || this.activeInvoice.tax_rate === 0) {
+            //   this.activeInvoice.tax_on_item = 0;
+            //   this.activeInvoice.tax_rate = null;
+            // } else {
+            //   this.activeInvoice.tax_on_item = 1;
+            // }
             // Set Dates
             this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
             var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
