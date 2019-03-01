@@ -196,7 +196,7 @@ export class ViewEstComponent implements OnInit {
   showItem(item) {
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
-    var lastday = firstday + 6;
+    // var lastday = firstday + 6;
     var lastWeekFirstDay = firstday - 7;
     var lastWeekLastsDay = firstday - 1;
     var lastdayoflastmonth = new Date();
@@ -212,7 +212,7 @@ export class ViewEstComponent implements OnInit {
     }
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
-      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay()+6))) //lastday
     }
     if(this.itemSelected === 'Last Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
