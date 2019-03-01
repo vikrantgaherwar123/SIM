@@ -575,18 +575,28 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList){
-    var seen = {};
-    //You can filter based on Id or Name based on the requirement
-    var uniqueClients = this.clientList.filter(function (item) {
-      if (seen.hasOwnProperty(item.name)) {
-        return false;
-      } else {
-        seen[item.name] = true;
-        return true;
+    if (this.clientList) {
+      var seen = {};
+      //You can filter based on Id or Name based on the requirement
+      var uniqueClients = this.clientList.filter(function (item) {
+        if (seen.hasOwnProperty(item.name)) {
+          return false;
+        } else {
+          seen[item.name] = true;
+          return true;
+        }
+      });
+      this.clientList = uniqueClients;
+      //remove whitespaces from clientlist
+      for (let i = 0; i < this.clientList.length; i++) {
+        if (!this.clientList[i].name) {
+          this.clientList.splice(i, 1);
+        }
+        var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+        if (tempClient === "") {
+          this.clientList.splice(i, 1);
+        }
       }
-    });
-    this.clientList = uniqueClients;
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -599,6 +609,16 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+           //remove whitespaces from clientlist
+           for (let i = 0; i < this.clientList.length; i++) {
+            if(!this.clientList[i].name){
+              this.clientList.splice(i, 1);
+            }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
+              this.clientList.splice(i, 1);
+            }
+          }
           var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -729,6 +749,16 @@ export class AddEditEstComponent implements OnInit {
       }
     });
     this.productList = uniqueProducts;
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if(!this.productList[i].prodName){
+        this.productList.splice(i, 1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i, 1);
+      }
+    }
 
     
     this.filteredProducts = this.addItem.valueChanges.pipe(
@@ -739,9 +769,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-    }
   }
 
   editEstimateItem(index) {

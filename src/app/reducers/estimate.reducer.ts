@@ -19,6 +19,9 @@ export function estimateReducer(state = initialState, action: EstimateActions.Ac
       state.splice(action.payload, 1)
       return state
 
+    case EstimateActions.RESET:
+      return action.payload
+
 		default:
 			return state
 	}

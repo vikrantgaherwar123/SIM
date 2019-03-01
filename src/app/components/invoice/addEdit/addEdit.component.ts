@@ -682,7 +682,7 @@ export class AddEditComponent implements OnInit {
     //   }
     // }
     if (!isNaN(parseInt(this.settings.invNo))) {
-      console.log(this.InvoiceNumber);
+      // console.log(this.InvoiceNumber);
       this.tempInvNo = parseInt(this.settings.invNo) + 1
     } else {
       this.tempInvNo = 1
@@ -690,7 +690,7 @@ export class AddEditComponent implements OnInit {
     if (this.settings.setInvoiceFormat) {
       this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
     } else {
-      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+      this.activeInvoice.invoice_number = this.tempInvNo.toString();
     }
     })
     
@@ -1414,7 +1414,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
     } else {
       this.activeInvoice.invoice_number =  this.tempInvNo.toString();
-      this.InvoiceNumber = this.activeInvoice.invoice_number;
+      // this.InvoiceNumber = this.activeInvoice.invoice_number;
     }
 
     this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')
