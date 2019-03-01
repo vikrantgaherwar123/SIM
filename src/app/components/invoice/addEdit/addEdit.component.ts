@@ -210,11 +210,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
-  getClientName(id) {
-    if(this.clientList){
-    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
-    }
-  }
   invoiceNoChanged(input){
     if(input.target.value.length >= 16){
       this.invoiceFlag = true
@@ -539,7 +534,6 @@ export class AddEditComponent implements OnInit {
       this.settings.date_format = 'dd-mm-yy'
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
-      console.log(this.formatedDate);
       
     }
 
@@ -687,7 +681,6 @@ export class AddEditComponent implements OnInit {
     //   }
     // }
     if (!isNaN(parseInt(this.settings.invNo))) {
-      console.log(this.InvoiceNumber);
       this.tempInvNo = parseInt(this.settings.invNo) + 1
     } else {
       this.tempInvNo = 1
@@ -927,8 +920,6 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-    console.log(this.addItem);
-    
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
@@ -1180,7 +1171,6 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
-        console.log();
       }
       
 
@@ -1378,6 +1368,14 @@ export class AddEditComponent implements OnInit {
     $('#invSubmitBtn').removeAttr('disabled')
   }
   }
+
+  getClientName(id) {
+    if(this.clientList){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
+  }
+
+  
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
     // localStorage.setItem('deleteinvoiceId', "1" )

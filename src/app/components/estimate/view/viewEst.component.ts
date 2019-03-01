@@ -212,7 +212,7 @@ export class ViewEstComponent implements OnInit {
     }
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
-      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay() + 6)))
     }
     if(this.itemSelected === 'Last Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))

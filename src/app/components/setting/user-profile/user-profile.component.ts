@@ -92,9 +92,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   save(valid) {
-    if(this.org.org_name == ''){
-     // this.toasterService.pop('failure','Company Name required')
-   }
    this.org.org_name = this.org.org_name.replace(/\s/g, "");
    if (valid && this.org.org_name !== "") {
      $('#profileSubmitBtn').attr('disabled', 'disabled')

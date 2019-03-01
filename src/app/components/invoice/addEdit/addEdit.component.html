@@ -302,7 +302,7 @@
                         </td>
                         <td [class.no-border-last]="last">
                           <div class="text-center">
-                            <a class="closeicon show" title="Edit Row" (click)="editInvoiceItem(index);disabledDescription=true">
+                            <a class="closeicon show" title="Edit Row" (click)="editInvoiceItem(index);disabledDescription = true">
                               <img src="assets/images/edit_blue.png" class="del" style="height:20px;">
                             </a>
                           </div>
@@ -349,6 +349,8 @@
                               [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
+                          
+                          
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
@@ -432,14 +434,12 @@
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
                     </div>
-                    <div>
-                    <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
+                    <div  class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                       <a *ngIf="!activeInvoice.taxList[taxIndex]"
                         (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}"
                       >
                         {{tax.taxName}}+
                       </a>
-                    </div>
                     </div>
                   </div>
                 </div>
@@ -751,9 +751,10 @@
                       >
                         Save
                       </button>
-                      <button type="submit" [disabled]="activeInvoice.listItems?.length == 0"
+                      <button type="submit" *ngIf="edit" [disabled]="activeInvoice.listItems?.length == 0"
                       class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                      style="margin-right: 8px;" (click)="openDeleteInvoiceModal()"
+                      style="margin-right: 8px;" (click)="deleteInvoice()"
+                     
                     >
                       DELETE
                     </button>
@@ -768,11 +769,10 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices <br />
+        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices
         </button> 
-         
         <!-- recently added invoice -->
-        <div class="back">
+        <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
            
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
@@ -848,7 +848,10 @@
                   <input type="text" name="name" class="form-control add-client-input-custom"
                     [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
                   />
-                 
+                  <!-- <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
+                    <span *ngIf="clientform.name.$error.required">Required</span>
+                    <span *ngIf="errors">{{ errors.name[0] }}</span>
+                  </div> -->
                 </div>
               </div>
 
@@ -1006,11 +1009,11 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel();modalDescription=true">
+        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
           Close
         </button>
         <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn"
-          [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value);modalDescription=true"
+          [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)"
         >
           Edit Item
         </button>
@@ -1238,40 +1241,3 @@
     </div>
   </div>
 </div>
-
-<!-- Delete Invoice MODAL -->
-<div id="delete-invoice" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
-           Delete Client
-      </h4>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
-        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
-      </button>
-    </div>
-    <div class="modal-body">
-      <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
-        <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
-
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="close btn btn-raised btn-custom-1 width20btn" 
-      data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
-        No
-      </button>
-      <button type="button" id="clientFormLabel" (click)="deleteInvoice()"  
-      class="close btn btn-raised  btn-success width20btn"
-        data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
-        Yes
-      </button>
-    </div>
-  </div>
-</div>
-</div>
-<!-- Delete CLIENT MODAL ends -->

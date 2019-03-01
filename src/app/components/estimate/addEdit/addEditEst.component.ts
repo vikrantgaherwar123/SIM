@@ -53,8 +53,6 @@ export class AddEditEstComponent implements OnInit {
   editTerms: boolean = true
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
-  disabledDescription: boolean = false;
-
 
   last
   index
@@ -108,6 +106,7 @@ export class AddEditEstComponent implements OnInit {
   settingsLoading: boolean;
   estimateId: any;
   recentEstimateList: any = [];
+  disabledDescription: boolean = false;
   discountFlag: any;
 
 
@@ -470,10 +469,13 @@ export class AddEditEstComponent implements OnInit {
             if(!this.clientList[i].name){
               this.clientList.splice(i, 1);
             }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
+              this.clientList.splice(i, 1);
+            }
           }
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
-          console.log(client);
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
@@ -572,18 +574,28 @@ export class AddEditEstComponent implements OnInit {
   // Client Functions
   setClientFilter() {
     // Filter for client autocomplete
-    if(this.clientList){
-    var seen = {};
-    //You can filter based on Id or Name based on the requirement
-    var uniqueClients = this.clientList.filter(function (item) {
-      if (seen.hasOwnProperty(item.name)) {
-        return false;
-      } else {
-        seen[item.name] = true;
-        return true;
+    if (this.clientList) {
+      var seen = {};
+      //You can filter based on Id or Name based on the requirement
+      var uniqueClients = this.clientList.filter(function (item) {
+        if (seen.hasOwnProperty(item.name)) {
+          return false;
+        } else {
+          seen[item.name] = true;
+          return true;
+        }
+      });
+      this.clientList = uniqueClients;
+      //remove whitespaces from clientlist
+      for (let i = 0; i < this.clientList.length; i++) {
+        if (!this.clientList[i].name) {
+          this.clientList.splice(i, 1);
+        }
+        var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+        if (tempClient === "") {
+          this.clientList.splice(i, 1);
+        }
       }
-    });
-    this.clientList = uniqueClients;
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -596,6 +608,16 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
+           //remove whitespaces from clientlist
+           for (let i = 0; i < this.clientList.length; i++) {
+            if(!this.clientList[i].name){
+              this.clientList.splice(i, 1);
+            }
+            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
+            if (tempClient === "") {
+              this.clientList.splice(i, 1);
+            }
+          }
           var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -735,13 +757,10 @@ export class AddEditEstComponent implements OnInit {
     )
   }
 
-  // private _filterProd(value: string): product[] {
-  //   if(this.productList && value){
-  //   return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-  //   }
-  // } taken from invoice
   private _filterProd(value: string): product[] {
+    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
+    }
   }
 
   editEstimateItem(index) {
@@ -1047,7 +1066,6 @@ export class AddEditEstComponent implements OnInit {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
-
             } else {
               self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
             }
@@ -1065,8 +1083,8 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
            this.toasterService.pop('success', 'Estimate updated successfully');
-           this.router.navigate(['/estimate/view'])
-          // this.router.navigate([`estimate/view/${this.estimateId}`])
+          // this.router.navigate(['/estimate/view'])
+          this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
           //add recently added esimate in store
           self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
@@ -1097,9 +1115,11 @@ export class AddEditEstComponent implements OnInit {
 
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
+    // localStorage.setItem('deleteEstimateId', "1" )
+    // this.estimateDelete = false;
     this.save(true)
-    this.edit = false
-    this.router.navigate(['/estimate/add'])
+    this.toasterService.pop('success', 'estimate Deleted successfully');
+    // this.closeDeleteEstimateModal();
   }
 
 

@@ -190,7 +190,6 @@ export class ViewComponent implements OnInit {
   showItem(item){
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
-    var lastday = firstday + 6;
     var lastWeekFirstDay = firstday - 7;
     var lastWeekLastsDay = firstday - 1;
     var lastdayoflastmonth = new Date();
@@ -214,7 +213,7 @@ export class ViewComponent implements OnInit {
     if(this.itemSelected === 'This Week'){
       this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
-      this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
+      this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay() + 6)))
     }
     if(this.itemSelected === 'Last Week'){
       this.disableDateText = false;
