@@ -388,14 +388,27 @@ export class AddEditComponent implements OnInit {
                   product_name: this.activeEstimate.listItems[i].productName,
                   quantity: this.activeEstimate.listItems[i].qty,
                   rate: this.activeEstimate.listItems[i].rate,
-                  tax_rate: this.activeEstimate.listItems[i].tax_rate,
+                  tax_rate: this.activeEstimate.listItems[i].taxRate,
                   total: this.activeEstimate.listItems[i].price,
                   unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-                  unit: this.activeEstimate.listItems[i].unit
+                  unit: this.activeEstimate.listItems[i].unit,
+                  discount: this.activeEstimate.listItems[i].discountRate
+                  
                 })
               }
               this.activeEstimate.listItems = temp
               this.activeInvoice.listItems = this.activeEstimate.listItems;
+              for(let i=0;i<this.activeInvoice.listItems.length;i++){
+                this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+                if(this.showTaxRate!==0){
+                  this.settings.taxFlagLevel=0;
+                  this.activeInvoice.tax_on_item = 0;
+                }
+                this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+                if(this.showDiscountRate!==0){
+                  this.settings.discountFlagLevel=1;
+                }
+              }
             }
     
     
@@ -681,6 +694,7 @@ export class AddEditComponent implements OnInit {
     //   }
     // }
     if (!isNaN(parseInt(this.settings.invNo))) {
+      // console.log(this.InvoiceNumber);
       this.tempInvNo = parseInt(this.settings.invNo) + 1
     } else {
       this.tempInvNo = 1
@@ -688,7 +702,7 @@ export class AddEditComponent implements OnInit {
     if (this.settings.setInvoiceFormat) {
       this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
     } else {
-      this.activeInvoice.invoice_number = "INV_" + this.tempInvNo
+      this.activeInvoice.invoice_number = this.tempInvNo.toString();
     }
     })
     
@@ -1409,7 +1423,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
     } else {
       this.activeInvoice.invoice_number =  this.tempInvNo.toString();
-      this.InvoiceNumber = this.activeInvoice.invoice_number;
+      // this.InvoiceNumber = this.activeInvoice.invoice_number;
     }
 
     this.activeInvoice.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT')

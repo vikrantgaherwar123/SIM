@@ -12,7 +12,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
 import { Router, ActivatedRoute } from '@angular/router'
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view',
@@ -24,7 +24,7 @@ export class ViewComponent implements OnInit {
   invoiceList: invoice[]
   activeInv: invoice
   invListLoader: boolean = false
-  customEnableDate :boolean = false
+  customEnableDate: boolean = false
   invDispLimit: number = 20
   invSortTerm: string = 'createdDate'
   invSearchTerm: string
@@ -39,7 +39,7 @@ export class ViewComponent implements OnInit {
       end: new FormControl(new Date())
     }
   }
-  
+
   // multiselect dropdown
 
   dropdownList = [];
@@ -48,7 +48,7 @@ export class ViewComponent implements OnInit {
 
   selectedItems = [];
   dropdownSettings = {};
-  
+
   // multiselect dropdown ends
   changingQuery: boolean = false
 
@@ -69,7 +69,7 @@ export class ViewComponent implements OnInit {
     public router: Router
   ) {
     store.select('client').subscribe(clients => this.clientList = clients)
-    
+
     // store.select('globals').subscribe(globals => {
     //   if (Object.keys(globals.invoiceQueryForm).length > 0) {
     //     this.invoiceQueryForm = globals.invoiceQueryForm
@@ -79,36 +79,36 @@ export class ViewComponent implements OnInit {
     // date and time dropdown
     jQuery(document).ready(function (e) {
       function t(t) {
-          e(t).bind("click", function (t) {
-              t.preventDefault();
-              e(this).parent().fadeOut()
-          })
+        e(t).bind("click", function (t) {
+          t.preventDefault();
+          e(this).parent().fadeOut()
+        })
       }
       e(".dropdown-toggle").click(function () {
-          var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
-          e(".button-dropdown .dropdown-menu").hide();
-          e(".button-dropdown .dropdown-toggle").removeClass("active");
-          if (t) {
-              e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
-          }
+        var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+        e(".button-dropdown .dropdown-menu").hide();
+        e(".button-dropdown .dropdown-toggle").removeClass("active");
+        if (t) {
+          e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+        }
       });
       e(document).bind("click", function (t) {
-          var n = e(t.target);
-          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
       });
       e(document).bind("click", function (t) {
-          var n = e(t.target);
-          if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
       })
-  });
-  // date and time dropdown ends
+    });
+    // date and time dropdown ends
 
-  // hide modal when back button pressed
+    // hide modal when back button pressed
     $(window).on('popstate', function () {
       $('#search-client').modal('hide');
     });
 
-    
+
   }
 
   ngOnInit() {
@@ -125,19 +125,19 @@ export class ViewComponent implements OnInit {
         this.store.dispatch(new clientActions.add(response.records))
       }
       )
-    }else{
-       this.dropdownList = this.clientList;
+    } else {
+      this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
-      if(params.invId){
+      if (params.invId) {
         this.InvoiceId = params.invId;
-      }else{
+      } else {
         this.openSearchClientModal()
       }
-      
+
     })
 
-    
+
 
     //if empty invoice then all fetch from api to find latest and oldest invoice date
     // if(this.invoiceList.length < 1){
@@ -161,7 +161,7 @@ export class ViewComponent implements OnInit {
     // if(this.invoiceQueryForm.client.value === null){
     //   this.invoiceList = []
     // }
-    
+
     // dropdown settings
     this.dropdownSettings = {
       singleSelection: false,
@@ -179,17 +179,18 @@ export class ViewComponent implements OnInit {
     this.invoiceQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   }
 
-  duration = ['All Time','This Week','This Month','Last Week','Last Month','Custom']
+  duration = ['All Time', 'This Week', 'This Month', 'Last Week', 'Last Month', 'Custom']
 
   //to make custom as selsected item when user changes date from calender
   public onDate(event): void {
-    if(this.invoiceQueryForm.dateRange.start.value || this.invoiceQueryForm.dateRange.end.value !== event.value){
+    if (this.invoiceQueryForm.dateRange.start.value || this.invoiceQueryForm.dateRange.end.value !== event.value) {
       this.itemSelected = 'Custom'
     }
   }
-  showItem(item){
-    var curr = new Date; 
+  showItem(item) {
+    var curr = new Date;
     var firstday = curr.getDate() - curr.getDay();
+    // var lastday = firstday + 6;
     var lastWeekFirstDay = firstday - 7;
     var lastWeekLastsDay = firstday - 1;
     var lastdayoflastmonth = new Date();
@@ -197,46 +198,41 @@ export class ViewComponent implements OnInit {
     var firstdayoflastmonth = new Date();
     firstdayoflastmonth.setDate(1);
     firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth() - 1);
-    
+
     this.itemSelected = item
-    // if(this.itemSelected === 'Custom'){
-    //   // flag is set to enable and disable input fields
-    //   this.customEnableDate = true
-    // }else{
-    //   this.customEnableDate = false
-    // }
-    if(this.itemSelected === 'All Time'){
+
+    if (this.itemSelected === 'All Time') {
       this.disableDateText = true;
       this.invoiceQueryForm.dateRange.start.reset()
       this.invoiceQueryForm.dateRange.end.reset()
     }
-    if(this.itemSelected === 'This Week'){
+    if (this.itemSelected === 'This Week') {
       this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay() + 6)))
     }
-    if(this.itemSelected === 'Last Week'){
+    if (this.itemSelected === 'Last Week') {
       this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.setDate(lastWeekLastsDay)))
     }
-    if(this.itemSelected === 'This Month'){
+    if (this.itemSelected === 'This Month') {
       this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(curr.getFullYear(), curr.getMonth(), 1))
       this.invoiceQueryForm.dateRange.end.reset(new Date(curr.getFullYear(), curr.getMonth() + 1, 0))
     }
-    if(this.itemSelected === 'Last Month'){
+    if (this.itemSelected === 'Last Month') {
       this.disableDateText = false;
       this.invoiceQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
       this.invoiceQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
     }
   }
 
-  clearItem(){
+  clearItem() {
     $("#taxonItem").prop("checked", true);
   }
 
-     
+
   paidAmount() {
     var temp = 0
     if (this.activeInv.payments) {
@@ -264,11 +260,11 @@ export class ViewComponent implements OnInit {
     $('#search-client').modal('hide')
   }
 
-  showSelectedInvoices(client){
+  showSelectedInvoices(client) {
     // Set Active invoice whenever invoice list changes
     this.store.select('invoice').subscribe(invoices => {
       this.invoiceList = invoices
-      if(this.InvoiceId){
+      if (this.InvoiceId) {
         this.setActiveInv(this.InvoiceId)
         this.closeSearchModel();
       }
@@ -334,9 +330,9 @@ export class ViewComponent implements OnInit {
 
   setActiveInv(invId: string = '') {
     this.closeSearchModel();
-    if (!invId || invId ==="null" ) {
+    if (!invId || invId === "null") {
       this.activeInv = this.invoiceList[this.invoiceList.length - 1];
-    } else{
+    } else {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     this.setActiveClient()

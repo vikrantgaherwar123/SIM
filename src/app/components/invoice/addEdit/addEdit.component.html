@@ -123,8 +123,7 @@
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
                             <input type="text" class="form-control" placeholder="mm/dd/yyyy" required
-                              [formControl]="invoiceDate" 
-                              matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
+                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
                             <!-- <input class="form-control" name="formatedDate" [ngModelOptions]="{standalone: true}" matInput [matDatepicker]="picker" (click)="picker.open()"> -->
                             <mat-datepicker #picker></mat-datepicker>
@@ -240,7 +239,7 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="10%" *ngIf="settings.taxFlagLevel === 0">
+                        <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                           <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
                             value="Tax (%)"
                           />

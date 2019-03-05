@@ -118,15 +118,14 @@
                   </div>
                 </div>
               </div>
-      
-              <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
-                <img src="assets/images/no_data_found.png" style="width: 324px;">
-              </div>
               <div *ngIf="invoiceList" class="col-12 px-0" [class.list-shadow]="invoiceList.length > invDispLimit">
                 <a (click)="loadMore()" class="more btn" *ngIf="invoiceList.length > invDispLimit">
                   Click to view more >>
                 </a>
               </div>
+            </div>
+            <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
+              <img src="assets/images/no_data_found.png" style="width: 324px;">
             </div>
           </div>
         </div>

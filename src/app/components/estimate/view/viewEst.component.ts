@@ -155,27 +155,27 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
    // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
-   this.store.select('estimate').subscribe(estimates => {
-    this.estimateList = estimates
-    if(this.estimateList.length < 1){
-      this.estListLoader = true
-      this.estimateService.fetch().subscribe((response: any) => {
-        this.estListLoader = false
-        var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-        this.store.dispatch(new estimateActions.add(records))
-        this.estimateList = records
-          if(this.estimateId){
-            this.setActiveEst(this.estimateId)
-          }
-          else{
-            this.setActiveEst()
-          }
-      })
-    }
-    else{
-        this.setActiveEst()
-    }
-  })
+  //  this.store.select('estimate').subscribe(estimates => {
+  //   this.estimateList = estimates
+  //   if(this.estimateList.length < 1){
+  //     this.estListLoader = true
+  //     this.estimateService.fetch().subscribe((response: any) => {
+  //       this.estListLoader = false
+  //       var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
+  //       this.store.dispatch(new estimateActions.add(records))
+  //       this.estimateList = records
+  //         if(this.estimateId){
+  //           this.setActiveEst(this.estimateId)
+  //         }
+  //         else{
+  //           this.setActiveEst()
+  //         }
+  //     })
+  //   }
+  //   else{
+  //       this.setActiveEst()
+  //   }
+  // })
   }
 
   onItemSelect(item: any) {
@@ -196,7 +196,7 @@ export class ViewEstComponent implements OnInit {
   showItem(item) {
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
-    var lastday = firstday + 6;
+    // var lastday = firstday + 6;
     var lastWeekFirstDay = firstday - 7;
     var lastWeekLastsDay = firstday - 1;
     var lastdayoflastmonth = new Date();
@@ -212,7 +212,7 @@ export class ViewEstComponent implements OnInit {
     }
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
-      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay() + 6)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay()+6))) //lastday
     }
     if(this.itemSelected === 'Last Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
@@ -241,6 +241,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
+    
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')
@@ -309,9 +310,16 @@ export class ViewEstComponent implements OnInit {
     this.estimateService.fetchByQuery(query).subscribe((response: any) => {
       this.estListLoader = false
       if (response.status === 200) {
-        // this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-        this.estimateList = response.records ? response.records.filter(rec => rec.enabled == 0) : [];
-        this.setActiveEst(this.estimateList[0].unique_identifier);
+        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+          // if(this.InvoiceId){
+          //   this.setActiveInv(this.InvoiceId)
+          //   this.closeSearchModel();
+          // }
+        })
+        this.setActiveEst();
       }
       this.estListLoader = false
     })

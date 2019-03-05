@@ -748,6 +748,16 @@ export class AddEditEstComponent implements OnInit {
       }
     });
     this.productList = uniqueProducts;
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if(!this.productList[i].prodName){
+        this.productList.splice(i, 1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i, 1);
+      }
+    }
 
     
     this.filteredProducts = this.addItem.valueChanges.pipe(
@@ -758,9 +768,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-    }
   }
 
   editEstimateItem(index) {
