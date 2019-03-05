@@ -317,10 +317,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
+                    <td width="17%" *ngIf="hideTaxLabel === false">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%">
+                    <td width="17%" *ngIf="hideDiscountLabel ===false">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
@@ -350,13 +350,13 @@
                         {{item.rate}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                    <td *ngIf="item.taxRate!==0" [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div  class="text-right">
                         {{item.taxRate}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
+                    <td *ngIf="item.discountRate!==0"  [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div  class="text-right">
                         {{item.discountRate}}
                       </div>
                     </td>

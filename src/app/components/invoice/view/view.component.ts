@@ -60,6 +60,8 @@ export class ViewComponent implements OnInit {
   invoiceListLoading: boolean;
   InvoiceId: any;
   disableDateText: boolean = false;
+  hideTaxLabel: boolean;
+  hideDiscountLabel: boolean;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -157,10 +159,6 @@ export class ViewComponent implements OnInit {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-    // make invoice list empty if clients not selected in dropdown
-    // if(this.invoiceQueryForm.client.value === null){
-    //   this.invoiceList = []
-    // }
 
     // dropdown settings
     this.dropdownSettings = {
@@ -335,6 +333,30 @@ export class ViewComponent implements OnInit {
     } else {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
+    //display label and values if tax on item & discount on item selected and values are there
+    if(this.activeInv.listItems){
+      for(let i = 0;i<this.activeInv.listItems.length; i++){
+        if(this.activeInv.listItems[i].discountRate === 0){
+          this.hideDiscountLabel = true;
+        }else{
+          this.hideDiscountLabel = false;
+        }
+        if(this.activeInv.listItems[i].tax_rate === 0){
+          this.hideTaxLabel = true;
+        }else{
+          this.hideTaxLabel = false;
+        }
+      }
+    }
+    //display label and values if tax on Bill & discount on Bill selected and values are there
+    if(this.activeInv.discount > 0){
+      this.hideDiscountLabel = true;
+    }
+
+    if(this.activeInv.tax_rate > 0){
+      this.hideTaxLabel = true;
+    }
+
     this.setActiveClient()
   }
 

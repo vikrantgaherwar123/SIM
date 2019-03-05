@@ -112,6 +112,7 @@ export class AddEditEstComponent implements OnInit {
 
 
   constructor(private CONST: CONSTANTS, public router: Router,
+    private adapter: DateAdapter<any>,
     public toasterService: ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
@@ -121,7 +122,6 @@ export class AddEditEstComponent implements OnInit {
     private productService: ProductService,
     private datePipe: DatePipe,
     private store: Store<AppState>,
-    private adapter: DateAdapter<any>,
     private titleService: Title
   ) {
     this.toasterService = toasterService
@@ -272,6 +272,7 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
+          //show discount and tax fields when item settings is selected
           for(let i=0;i<this.activeEstimate.listItems.length;i++){
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
@@ -283,6 +284,14 @@ export class AddEditEstComponent implements OnInit {
             this.setDiscountOnItem = true;
           }
           }
+        }
+        //hide discount and tax fields when bill settings is selected
+        if (this.activeEstimate.discount !== 0) {
+          this.settings.discountFlagLevel = 0;
+        }
+        if (this.activeEstimate.tax_rate !== 0) {
+          this.settings.taxFlagLevel = 1;
+          this.showTaxRate=0;
         }
 
 
@@ -375,8 +384,8 @@ export class AddEditEstComponent implements OnInit {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = this.adapter.setLocale('en-GB');
       // this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
     }
 
     if (this.settings.date_format === 'dd-mm-yy') {

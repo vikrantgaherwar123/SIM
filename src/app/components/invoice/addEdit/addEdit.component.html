@@ -244,7 +244,7 @@
                             value="Tax (%)"
                           />
                         </td>
-                        <td width="10%" *ngIf=" settings.discountFlagLevel === 1">
+                        <td width="10%" *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0">
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
                             value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           />
@@ -360,7 +360,7 @@
                           </div>
                         </td>
 
-                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
@@ -372,7 +372,7 @@
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                         </td>
 
-                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0 max=100
                               [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()"
