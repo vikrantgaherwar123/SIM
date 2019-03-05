@@ -25,6 +25,7 @@ import { AppState } from '../../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
 
 @Component({
   selector: 'app-invoice',
@@ -115,6 +116,7 @@ export class AddEditComponent implements OnInit {
   disabledDescription: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
+    private adapter: DateAdapter<any>,
     private route: ActivatedRoute,
     public toasterService: ToasterService,
     private invoiceService: InvoiceService,
@@ -552,12 +554,14 @@ export class AddEditComponent implements OnInit {
     }
 
     if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
+      // this.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = this.adapter.setLocale('en-US');
     } else if (settings.dateDDMMYY === true) {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = 'dd-mm-yy'
+      // this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
       console.log(this.formatedDate);

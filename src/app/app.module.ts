@@ -148,7 +148,7 @@ export function getAuthServiceConfigs() {
   providers: [
     EmailService,
     CONSTANTS,
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
     {
       provide: AuthServiceConfig,

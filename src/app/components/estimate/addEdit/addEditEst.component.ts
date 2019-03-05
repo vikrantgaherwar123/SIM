@@ -22,6 +22,7 @@ import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster'
 import { DatePipe } from '@angular/common';
 import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
 
 
 @Component({
@@ -111,6 +112,7 @@ export class AddEditEstComponent implements OnInit {
 
 
   constructor(private CONST: CONSTANTS, public router: Router,
+    private adapter: DateAdapter<any>,
     public toasterService: ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
@@ -375,12 +377,14 @@ export class AddEditEstComponent implements OnInit {
     }
 
     if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
+      // this.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = this.adapter.setLocale('en-US');
     } else if (settings.dateDDMMYY === true) {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = 'dd-mm-yy'
+      // this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
     }
 
     if (this.settings.date_format === 'dd-mm-yy') {
