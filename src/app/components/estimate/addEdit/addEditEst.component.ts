@@ -22,6 +22,7 @@ import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster'
 import { DatePipe } from '@angular/common';
 import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
 
 
 @Component({
@@ -120,6 +121,7 @@ export class AddEditEstComponent implements OnInit {
     private productService: ProductService,
     private datePipe: DatePipe,
     private store: Store<AppState>,
+    private adapter: DateAdapter<any>,
     private titleService: Title
   ) {
     this.toasterService = toasterService
@@ -365,13 +367,16 @@ export class AddEditEstComponent implements OnInit {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
 
+     // Date format selection with locale
     if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
+      // this.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = this.adapter.setLocale('en-US');
     } else if (settings.dateDDMMYY === true) {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
+      // this.settings.date_format = 'dd-mm-yy'
     }
 
     if (this.settings.date_format === 'dd-mm-yy') {

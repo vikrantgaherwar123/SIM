@@ -6,6 +6,7 @@ import { setting } from '../../../interface'
 import { SettingService } from '../../../services/setting.service'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
 
 @Component({
   selector: 'app-primary',
@@ -34,7 +35,8 @@ export class PrimaryComponent implements OnInit {
   constructor(private CONST: CONSTANTS,
     public toasterService : ToasterService,
     private settingService: SettingService,
-    private titleService: Title
+    private titleService: Title,
+    private adapter: DateAdapter<any>
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -180,7 +182,9 @@ export class PrimaryComponent implements OnInit {
 
         if (!this.activeSettings.dateDDMMYY) {
           // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
+          this.adapter.setLocale('en-GB');
         } else if (this.activeSettings.dateDDMMYY) {
+          this.adapter.setLocale('en-US');
           // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
         }
 

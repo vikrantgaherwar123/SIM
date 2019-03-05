@@ -61,8 +61,6 @@ import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
-
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -70,6 +68,17 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 // Social login config
+export const DateFormat = {
+  parse: {
+    dateInput: 'input',
+    },
+    display: {
+    dateInput: 'DD-MMM-YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'MM/DD/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+    }
+  };
 export function getAuthServiceConfigs() {
   const FB_APP_ID = environment.FB_APP_ID
   const G_APP_ID = environment.G_APP_ID
@@ -84,6 +93,7 @@ export function getAuthServiceConfigs() {
       provider: new GoogleLoginProvider(G_APP_ID)
     }
   ])
+  
 }
 
 @NgModule({
@@ -148,8 +158,10 @@ export function getAuthServiceConfigs() {
   providers: [
     EmailService,
     CONSTANTS,
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
+    // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    // { provide: MAT_DATE_FORMATS, useValue: DateFormat },
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs
@@ -158,4 +170,7 @@ export function getAuthServiceConfigs() {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+  
+ }

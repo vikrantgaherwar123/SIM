@@ -25,6 +25,8 @@ import { AppState } from '../../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Title }     from '@angular/platform-browser';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { DateAdapter } from '@angular/material';
 
 @Component({
   selector: 'app-invoice',
@@ -115,6 +117,7 @@ export class AddEditComponent implements OnInit {
   disabledDescription: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
+    private adapter: DateAdapter<any>,
     private route: ActivatedRoute,
     public toasterService: ToasterService,
     private invoiceService: InvoiceService,
@@ -253,7 +256,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.listItems = []
     }
   }
-
 
   editInit(invId) {
     //tax and discount position according to settings changed
@@ -538,13 +540,16 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.taxList = []
     }
 
+    // Date format selection with locale
     if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = this.adapter.setLocale('en-US'); 
+      // this.settings.date_format = 'mm-dd-yy'
     } else if (settings.dateDDMMYY === true) {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
+      // this.settings.date_format = 'dd-mm-yy'
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
       
