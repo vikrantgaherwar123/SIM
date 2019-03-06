@@ -606,6 +606,15 @@ export class AddEditComponent implements OnInit {
     if(this.productList.length < 1) {
       this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
+        for (let i = 0; i < this.productList.length; i++) {
+          if(!this.productList[i].prodName){
+            this.productList.splice(i, 1);
+          }
+          var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+          if (tempProduct === "") {
+            this.productList.splice(i, 1);
+          }
+        }
         this.productListLoading = false;
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
@@ -878,6 +887,7 @@ export class AddEditComponent implements OnInit {
   // Product Functions
   setProductFilter() {
       var obj = {};
+      
       for (var i = 0, len = this.productList.length; i < len; i++)
       obj[this.productList[i]['prodName']] = this.productList[i];
       this.productList = new Array();
@@ -889,6 +899,7 @@ export class AddEditComponent implements OnInit {
         map(name => name ? this._filterProd(name) : this.productList.slice())
       )
   }
+  
 
   private _filterProd(value: string): product[] {
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))

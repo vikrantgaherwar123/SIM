@@ -378,6 +378,7 @@ export class AddEditEstComponent implements OnInit {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
 
+     // Date format selection with locale
     if (settings.dateDDMMYY === false) {
       // this.settings.date_format = 'mm-dd-yy'
       this.settings.date_format = this.adapter.setLocale('en-US');
@@ -491,7 +492,6 @@ export class AddEditEstComponent implements OnInit {
           }
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
-          console.log(client);
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;

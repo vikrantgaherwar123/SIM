@@ -95,7 +95,7 @@ select {
   color: red;
 }
 .inputWithIcon input[type=text]{
-  padding-left: 40px;
+  padding-left: 15px;
 }
 .inputWithIcon{
   position: relative;
@@ -104,7 +104,7 @@ select {
   position: absolute;
   left: 0;
   top: 5px;
-  padding: 9px 5px;
+  padding: 9px 20px;
   color: #aaa;
   transition: .3s;
 }
@@ -140,4 +140,3 @@ select {
   background: #ffffff;
   border-bottom: none !important;
 }
-

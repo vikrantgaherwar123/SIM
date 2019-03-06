@@ -405,11 +405,6 @@ export class BatchuploadComponent implements OnInit {
           this.repeatativeProductName = ''
         }
 
-
-
-
-
-
         if (status && proStatus) {
           //add required input params for api call
           this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);

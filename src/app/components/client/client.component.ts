@@ -135,7 +135,7 @@ export class ClientComponent implements OnInit {
           let index, storeIndex
           index = self.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           self.store.select('client').subscribe(clients => {
-            storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           })
 
           if (index == -1) {  // add
