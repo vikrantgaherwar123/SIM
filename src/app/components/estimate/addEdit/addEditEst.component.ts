@@ -276,10 +276,12 @@ export class AddEditEstComponent implements OnInit {
           for(let i=0;i<this.activeEstimate.listItems.length;i++){
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
+            this.settings.taxFlagLevel = 0;
             this.setTaxOnItem = true;
           }
           this.showDiscountRate = this.activeEstimate.listItems[i].discount;
           if(this.showDiscountRate!==0){
+            this.settings.discountFlagLevel = 1;
             this.showDiscountRateFlag = false;
             this.setDiscountOnItem = true;
           }

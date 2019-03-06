@@ -66,6 +66,8 @@ export class ViewEstComponent implements OnInit {
   showBackground: boolean = false;
   hideTaxLabel: boolean;
   hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  isTaxPresent: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -350,11 +352,13 @@ export class ViewEstComponent implements OnInit {
         if(this.activeEst.alstQuotProduct[i].discountRate === 0){
           this.hideTaxLabel = true;
         }else{
+          this.isDiscountPresent = true;
           this.hideTaxLabel = false;
         }
         if(this.activeEst.alstQuotProduct[i].taxRate === 0){
           this.hideDiscountLabel = true;
         }else{
+          this.isTaxPresent = true;
           this.hideDiscountLabel = false;
         }
       }

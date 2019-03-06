@@ -182,12 +182,12 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || setTaxOnItem === true">
+                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0"> <!--|| setTaxOnItem === true-->
                       <div class="text-center">
                         {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || setDiscountOnItem === true">
+                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 "> <!--|| setDiscountOnItem === true-->
                       <div class="text-center">
                         {{item.discount | number:'2.'}}
                       </div>

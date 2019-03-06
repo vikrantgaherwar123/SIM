@@ -218,7 +218,7 @@
                             <img src="/assets/images/product-icon/ic_normal_rate.png">
                           </span>
                           <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*"
-                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()"
+                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}"
                           />
                         </div>
                       </div>

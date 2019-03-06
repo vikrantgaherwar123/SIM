@@ -62,6 +62,8 @@ export class ViewComponent implements OnInit {
   disableDateText: boolean = false;
   hideTaxLabel: boolean;
   hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  isTaxPresent: boolean;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -339,11 +341,13 @@ export class ViewComponent implements OnInit {
         if(this.activeInv.listItems[i].discountRate === 0){
           this.hideDiscountLabel = true;
         }else{
+          this.isDiscountPresent = true;
           this.hideDiscountLabel = false;
         }
         if(this.activeInv.listItems[i].tax_rate === 0){
           this.hideTaxLabel = true;
         }else{
+          this.isTaxPresent = true;
           this.hideTaxLabel = false;
         }
       }

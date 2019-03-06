@@ -232,14 +232,14 @@ export class AddEditComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = true;
-    }else{
       this.showTaxRateFlag = false;
+      this.showTaxRate = 0;
+    }else{
+      this.showTaxRateFlag = true;
     }
     if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = true;
-    }else{
       this.showDiscountRateFlag = false;
+      this.showDiscountRate = 0;
     }
 
 
@@ -1050,7 +1050,12 @@ export class AddEditComponent implements OnInit {
         this.activeItem.tax_rate = 0
       } else if(this.settings.taxFlagLevel === 0){ //when tax on item selected from settings
         this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
-        this.activeItem.total += this.activeItem.tax_amount
+        if(this.activeItem.discount_amount){
+          this.activeItem.tax_amount = ((this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount) * this.activeItem.tax_rate/100;
+          this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount +  this.activeItem.tax_amount;
+        }else{
+          this.activeItem.total += this.activeItem.tax_amount
+        }
       }
     }
   }
@@ -1416,7 +1421,7 @@ export class AddEditComponent implements OnInit {
     // localStorage.setItem('deleteinvoiceId', "1" )
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
-    this.edit = false;
+    // this.edit = false;
     this.router.navigate(['/invoice/add'])
   }
 

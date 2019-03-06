@@ -415,7 +415,7 @@
                 <!-- Tax discount list -->
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true && activeInvoice.discount_on_item === 2 ">
+                    <div *ngIf="settings.discountFlagLevel === 0 &&  activeInvoice.discount_on_item===2">
                       <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
