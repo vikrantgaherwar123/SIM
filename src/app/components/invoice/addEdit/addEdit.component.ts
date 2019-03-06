@@ -232,14 +232,14 @@ export class AddEditComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = true;
-    }else{
       this.showTaxRateFlag = false;
+      this.showTaxRate = 0;
+    }else{
+      this.showTaxRateFlag = true;
     }
     if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = true;
-    }else{
       this.showDiscountRateFlag = false;
+      this.showDiscountRate = 0;
     }
 
 
@@ -255,6 +255,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.listItems = []
     }
   }
+
 
   editInit(invId) {
     //tax and discount position according to settings changed
@@ -407,8 +408,7 @@ export class AddEditComponent implements OnInit {
                   tax_rate: this.activeEstimate.listItems[i].taxRate,
                   total: this.activeEstimate.listItems[i].price,
                   unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-                  unit: this.activeEstimate.listItems[i].unit,
-                  
+                  unit: this.activeEstimate.listItems[i].unit
                 })
               }
               this.activeEstimate.listItems = temp
@@ -553,7 +553,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.taxList = []
     }
 
-    // Date format selection with locale
     if (settings.dateDDMMYY === false) {
       // this.settings.date_format = 'mm-dd-yy'
       this.settings.date_format = this.adapter.setLocale('en-US');
@@ -565,6 +564,7 @@ export class AddEditComponent implements OnInit {
       this.settings.date_format = this.adapter.setLocale('en-GB');
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
+      console.log(this.formatedDate);
       
     }
 
@@ -606,6 +606,15 @@ export class AddEditComponent implements OnInit {
     if(this.productList.length < 1) {
       this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
+        for (let i = 0; i < this.productList.length; i++) {
+          if(!this.productList[i].prodName){
+            this.productList.splice(i, 1);
+          }
+          var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+          if (tempProduct === "") {
+            this.productList.splice(i, 1);
+          }
+        }
         this.productListLoading = false;
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
@@ -878,6 +887,7 @@ export class AddEditComponent implements OnInit {
   // Product Functions
   setProductFilter() {
       var obj = {};
+      
       for (var i = 0, len = this.productList.length; i < len; i++)
       obj[this.productList[i]['prodName']] = this.productList[i];
       this.productList = new Array();
@@ -889,6 +899,7 @@ export class AddEditComponent implements OnInit {
         map(name => name ? this._filterProd(name) : this.productList.slice())
       )
   }
+  
 
   private _filterProd(value: string): product[] {
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
@@ -952,6 +963,8 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
+    console.log(this.addItem);
+    
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
@@ -1203,6 +1216,7 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
+        console.log();
       }
       
 

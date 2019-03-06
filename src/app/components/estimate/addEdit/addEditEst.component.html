@@ -141,19 +141,19 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabelAdd" class="bld w-100 text-center" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                     </td>
-                    <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
+                    <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                       <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="rate" disabled value="Tax (%)" />
                     </td>
-                    <td width="10%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
+                    <td width="9%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="rate" disabled
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
-                    <td width="10%">
+                    <td width="9%">
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                     </td>
-                    <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
-                    <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>
+                    <td width="5%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Edit</td>
+                    <td width="6%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Delete</td>
                   </tr>
                 </thead>
 
@@ -242,7 +242,7 @@
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" class="btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0">
+                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" style="margin-top: 26px;"> 
                         Add Item
                       </button>
                     </td>
@@ -257,9 +257,9 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                       <div class="input-group">
                         <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
-                          [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          [(ngModel)]="activeItem.tax_rate" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
-                          <span class="input-group-text p-0">%</span>
+                          <span class="input-group-text p-0" style="width: 22px;">%</span>
                         </div>
                       </div>
                       <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
@@ -268,9 +268,9 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                       <div class="input-group">
                         <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0
-                          max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
-                          <span class="input-group-text p-0">%</span>
+                          <span class="input-group-text p-0" style="width: 22px;">%</span>
                         </div>
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
@@ -279,7 +279,7 @@
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                       <div class="form-group">
                         <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
-                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
+                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;"
                           convert-decimal onfocus="this.select()" />
                       </div>
                     </td>
@@ -342,7 +342,7 @@
                   <div class="form-group" style="margin-top: 10px;">
                     <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
                       <div *ngIf="term.terms !=undefined" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
-                        <span style="word-wrap: break-word">{{term.terms}}</span>
+                        <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms}}</span>
                       </div>
                       <div *ngIf="term.terms !=undefined" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
                         <a class="closeicon show float-right">

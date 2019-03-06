@@ -123,7 +123,8 @@
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
                             <input type="text" class="form-control" placeholder="mm/dd/yyyy" required
-                              [formControl]="invoiceDate" matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
+                              [formControl]="invoiceDate" 
+                              matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
                             <!-- <input class="form-control" name="formatedDate" [ngModelOptions]="{standalone: true}" matInput [matDatepicker]="picker" (click)="picker.open()"> -->
                             <mat-datepicker #picker></mat-datepicker>
@@ -225,37 +226,37 @@
                     <thead>
                       <tr class="hd">
                         <td width="20%">
-                          <input style="margin-left: 10px;" type="text" id="itemLable" class="bld w-100 text-left" disabled
+                          <input style="margin-left: 10px;font-size: 12.5px !important;" type="text" id="itemLable" class="bld w-100 text-left" disabled
                             value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}"
                           />
                         </td>
                         <td width="10%">
-                          <input type="text" id="itemQtyLabel" class="bld w-100 text-center" name="quantity" disabled
+                          <input type="text" style="font-size: 12.5px !important;" id="itemQtyLabel" class="bld w-100 text-center" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}"
                           />
                         </td>
                         <td width="10%">
-                          <input type="text" id="itemRateLabel" class="bld w-100 text-center" name="rate" disabled
+                          <input type="text" style="font-size: 12.5px !important;" id="itemRateLabel" class="bld w-100 text-center" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="10%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
-                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
+                        <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
+                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled style="font-size: 12.5px !important;"
                             value="Tax (%)"
                           />
                         </td>
-                        <td width="10%" *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0">
+                        <td width="9%"  *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0">
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
-                            value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
+                            value="{{settings.discount ? settings.discount : 'Discount'}} (%)" style="font-size: 12.5px !important;"
                           />
                         </td>
-                        <td width="10%">
-                          <input type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
+                        <td width="9%">
+                          <input style="font-size: 12.5px !important;" type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Edit</td>
-                        <td width="4%" class="text-center" style="font-family: inherit; font-weight:100">Delete</td>  
+                        <td  width="5%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Edit</td>
+                        <td width="6%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Delete</td>  
                       </tr>
                     </thead>
 
@@ -363,10 +364,10 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
-                              [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                              [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" style="border-right: none !important"
                             />
                             <div class="input-group-append">
-                              <span class="input-group-text p-0">%</span>
+                              <span class="input-group-text p-0" style="width: 22px;">%</span>
                             </div>
                           </div>
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
@@ -375,10 +376,10 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0 max=100
-                              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()"
+                              [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" style="border-right: none !important"
                             />
                             <div class="input-group-append">
-                              <span class="input-group-text p-0">%</span>
+                              <span class="input-group-text p-0" style="width: 22px;">%</span>
                             </div>
                           </div>
                           <!-- <div class="text-right">{{activeItem.discount_amount}}</div>            -->
@@ -388,11 +389,11 @@
                           [class.no-border-last]="last"
                         >
                           <div class="form-group">
-                            <input type="number" step="any" class="form-control text_center height_40" 
+                            <input type="number" step="any" class="form-control text_center height_40"
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
-                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;"  disabled
+                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
-                            <button type="button"  class="btn save_btn btn-raised add_new_btn" style="margin-left: -305px;" (click)="addEditInvoiceItem();"
+                            <button type="button"  class="btn save_btn btn-raised add_new_btn" style="margin-left: -295px;" (click)="addEditInvoiceItem();"
                           >Add Item
                           </button>
                             
@@ -414,7 +415,7 @@
                 <!-- Tax discount list -->
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel === 0 && showDiscountRateFlag === true && activeInvoice.discount_on_item === 2 ">
+                    <div *ngIf="settings.discountFlagLevel === 0 &&  activeInvoice.discount_on_item===2">
                       <a class="inline" (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                       </a>
@@ -463,7 +464,7 @@
                       <div class="form-group" style="margin-top: 10px;">
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
                           <div class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
-                            <span style="word-wrap: break-word">{{term.terms}}</span>
+                            <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms}}</span>
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)" style="cursor:pointer;">
                             <a class="closeicon show float-right">

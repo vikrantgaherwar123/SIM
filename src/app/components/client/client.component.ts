@@ -135,19 +135,21 @@ export class ClientComponent implements OnInit {
           let index, storeIndex
           index = self.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           self.store.select('client').subscribe(clients => {
-            storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           })
 
           if (index == -1) {  // add
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
+            this.ngOnInit();
           } else if(self.activeClient.enabled !== 0){// delete
            
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)
             
             this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+            this.ngOnInit();
           }
             if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
@@ -155,6 +157,7 @@ export class ClientComponent implements OnInit {
               //console.log(this.clientList[index]);
               
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
+              this.ngOnInit();
             }
           self.errors = {}
           // self.activeClient = <client>{}

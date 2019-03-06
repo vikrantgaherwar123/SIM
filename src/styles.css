@@ -26,7 +26,7 @@ b, body, p, button {
 }
 input[type=text], input[type=password] {
   font-family: quicksand_regular !important;
-  font-size: 13.5px !important;
+  font-size: 12.5px !important;
   font-style: normal;
   font-weight: 100 !important;
 }
@@ -59,7 +59,7 @@ input[type=text], input[type=password] {
   border: #d1e5f8 solid 0px !important;
   box-shadow: none !important;
   -moz-box-shadow: none !important;
-  border-radius: 6px !important;
+  border-radius: 2px !important;
 }
 .button :focus{ outline: none ; box-shadow:none !important;} 
 .btn-custom-2 {
@@ -246,7 +246,7 @@ textarea {
   overflow: auto;
   resize: vertical;
   font-weight: 100 !important;
-  font-size: 14px !important;
+  font-size: 12.5px !important;
 }
 .height_40
 {
@@ -454,7 +454,7 @@ option {
 }
 .save_btn
 {
-  border-radius: 6px !important;
+  border-radius: 2px !important;
   /* box-shadow: 0 5px 0 0 #1678cd !important; */
   background: #0299ff;
   height: 42px !important;
@@ -722,6 +722,43 @@ option {
   box-shadow: none!important;
   margin-top: 32px;
 }
+.input-group-text {
+  display: flex;
+  align-items: center;
+  padding: .375rem .75rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 800 !important;
+  background-color: white !important;
+  border: 1px solid #ced4da;
+  border-radius: 0px !important;
+}
+.cdk-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+  display: flex;
+  max-height: 100%;
+  width: 425px !important;
+}
+.mat-calendar-body-label{
+  font-size: 14px;
+  font-weight: 500;
+  color: white !important;
+}
+select{
+  /* font-family: quicksand_book !important; */
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 800 !important;
+  padding: 2px 0px 0px 17px !important;
+}
 
 @media (min-width: 1440px)
 {
@@ -734,11 +771,4 @@ option {
 .client_arrow {
   left: -45px !important;
 }
-}
-select{
-      /* font-family: quicksand_book !important; */
-      font-size: 14px !important;
-      font-style: normal;
-      font-weight: 800 !important;
-      padding: 2px 0px 0px 17px !important;
 }

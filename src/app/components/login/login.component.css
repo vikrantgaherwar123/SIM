@@ -2,22 +2,22 @@
   margin-top: 8%;
 }
 .info-container {
-  padding: 4%;
-  margin: 45px 0px;
-  background-color: #d8d8d8;
+  padding: 1%;
+  margin: 32px 0px;
+  background-color: #f2f2f2;
 }
 .info-container img {
-  width: 263px;
+  width: 377px;
   height: auto;
   margin-top: 22px;
 }
 .info-container p {
-  padding: 0 10%;
+  padding: 0 1%;
   margin-top: 2%;
-  font-size: 14px;
+  font-size: 12px !important;
 }
 .login-form-container {
-  padding: 10%;
+  padding: 13%;
   background-color: #176cc1;
 }
 .lock-image{

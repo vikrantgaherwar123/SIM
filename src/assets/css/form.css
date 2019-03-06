@@ -29,7 +29,7 @@
 }
 .filter-box {
 	background: #ffffff;
-	border-bottom: 1px solid #d2d2d2;
+	/* border-bottom: 1px solid #d2d2d2; */
 }
 .back-add-list {
 	font-size: 15px;
@@ -40,6 +40,7 @@
 	display: table;
 	color: #707780;
 	border-bottom: 1px solid #e9e9e9;
+	margin-top: -7px;
 }
 .list-btn {
 	width: 38px;
