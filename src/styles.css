@@ -360,17 +360,18 @@ hr {
 }
 /* select */
 .selectdiv:after {
-    content: '\f078';
-    font: normal normal normal 17px/1 FontAwesome;
-    right: 25px;
-    top: -5px;
-    height: 24px;
-    font-size: 15px;
-    padding: 15px 0px 0px 8px;
-    position: absolute;
-    pointer-events: none;
-    font-weight: normal;
-    color: #aaaaaa;
+  content: '\f078';
+  font: normal normal normal 17px/1 FontAwesome;
+  right: 25px;
+  top: -3px;
+  height: 24px;
+  -webkit-text-stroke: 1px white;
+  font-size: 16px;
+  padding: 15px 0px 0px 8px;
+  position: absolute;
+  pointer-events: none;
+  font-weight: normal;
+  color: #808080;
   }
   /* .price {
     display: inline-block;

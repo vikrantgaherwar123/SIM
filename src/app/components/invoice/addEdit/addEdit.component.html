@@ -350,7 +350,9 @@
                             />
                           </div>
                           
-                          
+                          <button type="button" style="margin-top: 20px;" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
+                            Add Item
+                          </button>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
@@ -391,9 +393,10 @@
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
-                            <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
+                            <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
-                          </button>
+                          </button> -->
+                          
                             
                           </div>
                         </td>
@@ -769,7 +772,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" style="width: 307px;" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
+        <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
         </button> 
         <!-- recently added invoice -->
         <div class="back list-shadow">

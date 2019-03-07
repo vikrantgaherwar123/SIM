@@ -142,6 +142,9 @@ select {
   background: #ffffff;
   border-bottom: none !important;
 }
+.search_btn{
+  width: 307px;
+}
 .border_white{
   border-right: 1px solid white;
 }
@@ -155,6 +158,9 @@ select {
     color: #aaa;
     transition: .3s;
 }
+.search_btn{
+  width: 290px;
+}
 }
 @media (min-width: 1366px)
 {
@@ -165,5 +171,6 @@ select {
     padding: 9px 17px;
     color: #aaa;
     transition: .3s;
-}
+  }
+  
 }
