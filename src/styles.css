@@ -760,7 +760,8 @@ select{
   /* font-family: quicksand_book !important; */
   font-size: 14px !important;
   font-style: normal;
-  font-weight: 800 !important;
+  font-weight: 100 !important;
+  font-family: quicksand_regular !important;
   padding: 2px 0px 0px 17px !important;
 }
 .hide_client_border{

@@ -269,10 +269,10 @@
                           value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                         >
                       </td>
-                      <td width="10%" *ngIf="hideTaxLabel === false">
+                      <td width="10%" *ngIf="hideTaxLabel === false || isTaxPresent === true">
                         <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
                       </td>
-                      <td width="10%" *ngIf="hideDiscountLabel === false">
+                      <td width="10%" *ngIf="hideDiscountLabel === false || isDiscountPresent === true">
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
@@ -310,12 +310,12 @@
                           {{item.rate | number:'2.'}}
                         </div>
                       </td>
-                      <td *ngIf="item.tax_rate && hideTaxLabel === false" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
+                      <td *ngIf="item.tax_rate || hideTaxLabel === false ||isTaxPresent ===true" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                         <div class="text-center">
                           {{item.tax_rate | number:'2.'}}
                         </div>
                       </td>
-                      <td *ngIf="item.discountRate && hideDiscountLabel === false" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
+                      <td *ngIf="item.discountRate || hideDiscountLabel === false || isDiscountPresent === true" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                         <div class="text-center">
                           {{item.discountRate | number:'2.'}} 
                         </div>

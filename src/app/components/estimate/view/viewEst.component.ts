@@ -66,6 +66,8 @@ export class ViewEstComponent implements OnInit {
   showBackground: boolean = false;
   hideTaxLabel: boolean;
   hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  isTaxPresent: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -136,7 +138,6 @@ export class ViewEstComponent implements OnInit {
         this.showBackground = true;
         this.openSearchClientModal()
       }
-      
     })
   
     // show date as per format changed
@@ -144,11 +145,6 @@ export class ViewEstComponent implements OnInit {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-
-    // make invoice list empty if clients not selected in dropdown
-    // if (this.estimateQueryForm.client.value === null) {
-    //   this.estimateList = []
-    // }
 
     // dropdown settings
     this.dropdownSettings = {
@@ -166,28 +162,16 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
-   // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+  //  // Set Active invoice whenever invoice list changes
   //  this.store.select('estimate').subscribe(estimates => {
   //   this.estimateList = estimates
-  //   if(this.estimateList.length < 1){
-  //     this.estListLoader = true
-  //     this.estimateService.fetch().subscribe((response: any) => {
-  //       this.estListLoader = false
-  //       var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-  //       this.store.dispatch(new estimateActions.add(records))
-  //       this.estimateList = records
-  //         if(this.estimateId){
-  //           this.setActiveEst(this.estimateId)
-  //         }
-  //         else{
-  //           this.setActiveEst()
-  //         }
-  //     })
-  //   }
-  //   else{
-  //       this.setActiveEst()
-  //   }
+  //   this.setActiveEst();
+  //   // if(this.InvoiceId){
+  //   //   this.setActiveInv(this.InvoiceId)
+  //   //   this.closeSearchModel();
+  //   // }
   // })
+   
   }
 
   onItemSelect(item: any) {
@@ -320,20 +304,20 @@ export class ViewEstComponent implements OnInit {
 
     this.estListLoader = true
     this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-      this.estListLoader = false
       if (response.status === 200) {
+        this.estListLoader = false
         this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
         // Set Active invoice whenever invoice list changes
         this.store.select('estimate').subscribe(estimates => {
           this.estimateList = estimates
+          this.setActiveEst();
           // if(this.InvoiceId){
           //   this.setActiveInv(this.InvoiceId)
           //   this.closeSearchModel();
           // }
         })
-        this.setActiveEst();
       }
-      this.estListLoader = false
+      
     })
   }
 
@@ -345,17 +329,32 @@ export class ViewEstComponent implements OnInit {
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
-    if(this.activeEst.alstQuotProduct){
+    if(this.activeEst !== undefined){
       for(let i = 0;i<this.activeEst.alstQuotProduct.length; i++){
+        // if(this.activeEst.alstQuotProduct[i].discount !== undefined || 
+        //   this.activeEst.alstQuotProduct[i].tax_rate !== undefined || 
+        //   this.activeEst.alstQuotProduct[i].total !== undefined ||
+        //   this.activeEst.alstQuotProduct[i].product_name !== undefined ){
+        //   this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+        //   this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+        //   this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+        // }
         if(this.activeEst.alstQuotProduct[i].discountRate === 0){
           this.hideTaxLabel = true;
         }else{
+          this.isDiscountPresent = true;
           this.hideTaxLabel = false;
         }
         if(this.activeEst.alstQuotProduct[i].taxRate === 0){
           this.hideDiscountLabel = true;
         }else{
+          this.isTaxPresent = true;
           this.hideDiscountLabel = false;
+        }
+      }
+      for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
+        if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){
+          this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
         }
       }
     }

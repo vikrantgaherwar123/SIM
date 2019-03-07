@@ -29,3 +29,6 @@
   width: 40px;
   height: auto;
 }
+.box_red{
+  border-color:red;
+}

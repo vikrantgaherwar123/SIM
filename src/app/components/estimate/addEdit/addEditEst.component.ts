@@ -202,17 +202,19 @@ export class AddEditEstComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = false;
       this.showTaxRate = 0;
-    }else{
-      this.showTaxRateFlag = true;
+    }
+    // condition for disable tax 
+    else if(this.settings.taxFlagLevel === 2){
+      this.showTaxRateFlag = false;
     }
     if(this.settings.discountFlagLevel === 0){
       this.showDiscountRateFlag = false;
       this.showDiscountRate = 0;
     }
-    if(this.settings.discountFlagLevel === 2){
-     this.disableTaxDiscount = true
+    // condition for disable discount 
+    else if(this.settings.discountFlagLevel === 2){
+      this.showDiscountRateFlag = false;
     }
 
 
@@ -227,19 +229,7 @@ export class AddEditEstComponent implements OnInit {
 
   editInit(estId) {
 
-    //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
-      this.showTaxRateFlag = false;
-    }else{
-      this.showTaxRateFlag = true;
-    }
-    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
-      this.showDiscountRateFlag = false;
-      this.showDiscountField = true;
-    }else{
-      this.showDiscountRateFlag = true;
-      this.showDiscountField = false;
-    }
+   
 
     
     //to view updated or viewed estimate in view page
@@ -280,18 +270,38 @@ export class AddEditEstComponent implements OnInit {
           for(let i=0;i<this.activeEstimate.listItems.length;i++){
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
-            this.setTaxOnItem = true;
+            this.settings.taxFlagLevel = 0;
+            // this.setTaxOnItem = true;
           }
           this.showDiscountRate = this.activeEstimate.listItems[i].discount;
           if(this.showDiscountRate!==0){
+            this.settings.discountFlagLevel = 1;
             this.showDiscountRateFlag = false;
-            this.setDiscountOnItem = true;
+            this.activeEstimate.discount_on_item = 1;
+            // this.setDiscountOnItem = true;
           }
           }
+        }
+
+        //tax and discount position according to settings changed
+        if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
+          this.showTaxRateFlag = false;
+        } else {
+          this.activeEstimate.tax_on_item = 2
+          this.showTaxRateFlag = true;
+        }
+        if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
+          this.showDiscountRateFlag = false;
+          this.showDiscountField = true;
+        } else {
+          this.activeEstimate.discount_on_item = 2
+          this.showDiscountRateFlag = true;
+          this.showDiscountField = false;
         }
         //hide discount and tax fields when bill settings is selected
         if (this.activeEstimate.discount !== 0) {
           this.settings.discountFlagLevel = 0;
+          this.activeEstimate.discount_on_item = 0;
         }
         if (this.activeEstimate.tax_rate !== 0) {
           this.settings.taxFlagLevel = 1;
@@ -930,7 +940,12 @@ export class AddEditEstComponent implements OnInit {
         this.activeItem.tax_rate = 0
       } else {
         this.activeItem.tax_amount = (this.activeItem.rate * this.activeItem.tax_rate / 100) * this.activeItem.quantity
-        this.activeItem.total += this.activeItem.tax_amount
+        if(this.activeItem.discount_amount){
+          this.activeItem.tax_amount = ((this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount) * this.activeItem.tax_rate/100;
+          this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount +  this.activeItem.tax_amount;
+        }else{
+          this.activeItem.total += this.activeItem.tax_amount
+        }
       }
     }
   }
@@ -1092,8 +1107,9 @@ export class AddEditEstComponent implements OnInit {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
-            } else {
+            } else{
               // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              // this.edit = false;
             }
           })
         } else {

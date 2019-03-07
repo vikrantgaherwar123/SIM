@@ -62,6 +62,8 @@ export class ViewComponent implements OnInit {
   disableDateText: boolean = false;
   hideTaxLabel: boolean;
   hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  isTaxPresent: boolean;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -136,6 +138,15 @@ export class ViewComponent implements OnInit {
       } else {
         this.openSearchClientModal()
       }
+
+      // Set Active invoice whenever invoice list changes
+      this.store.select('invoice').subscribe(invoices => {
+        this.invoiceList = invoices
+        if (this.InvoiceId) {
+          this.setActiveInv(this.InvoiceId)
+          this.closeSearchModel();
+        }
+      })
 
     })
 
@@ -259,14 +270,7 @@ export class ViewComponent implements OnInit {
   }
 
   showSelectedInvoices(client) {
-    // Set Active invoice whenever invoice list changes
-    this.store.select('invoice').subscribe(invoices => {
-      this.invoiceList = invoices
-      if (this.InvoiceId) {
-        this.setActiveInv(this.InvoiceId)
-        this.closeSearchModel();
-      }
-    })
+    
     this.invoiceQueryForm.client = client;
     this.SearchInvoice()
     $('#search-client').modal('hide')
@@ -319,10 +323,14 @@ export class ViewComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
       if (response.status === 200) {
+        this.invListLoader = false
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('invoice').subscribe(invoices => {
+          this.invoiceList = invoices
+        })
         this.setActiveInv()
       }
-      this.invListLoader = false
+      
     })
   }
 
@@ -334,20 +342,22 @@ export class ViewComponent implements OnInit {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }
     //display label and values if tax on item & discount on item selected and values are there
-    if(this.activeInv.listItems){
+    if(this.activeInv !== undefined){
       for(let i = 0;i<this.activeInv.listItems.length; i++){
         if(this.activeInv.listItems[i].discountRate === 0){
           this.hideDiscountLabel = true;
         }else{
+          this.isDiscountPresent = true;
           this.hideDiscountLabel = false;
         }
         if(this.activeInv.listItems[i].tax_rate === 0){
           this.hideTaxLabel = true;
         }else{
+          this.isTaxPresent = true;
           this.hideTaxLabel = false;
         }
       }
-    }
+
     //display label and values if tax on Bill & discount on Bill selected and values are there
     if(this.activeInv.discount > 0){
       this.hideDiscountLabel = true;
@@ -356,7 +366,7 @@ export class ViewComponent implements OnInit {
     if(this.activeInv.tax_rate > 0){
       this.hideTaxLabel = true;
     }
-
+    }
     this.setActiveClient()
   }
 

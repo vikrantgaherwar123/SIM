@@ -242,16 +242,14 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 || settings.discountFlagLevel !== 2">
-                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled style="font-size: 12.5px !important;"
-                            value="Tax (%)"
-                          />
-                        </td>
-                        <td width="9%"  *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
-                            value="{{settings.discount ? settings.discount : 'Discount'}} (%)" style="font-size: 12.5px !important;"
-                          />
-                        </td>
+                          <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                            <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled style="font-size: 12.5px !important;"
+                              style="font-size: 12.5px !important;" value="Tax (%)" />
+                          </td>
+                          <td width="9%" *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
+                            <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount" disabled
+                              value="{{settings.discount ? settings.discount : 'Discount'}} (%)" style="font-size: 12.5px !important;" />
+                          </td>
                         <td width="9%">
                           <input style="font-size: 12.5px !important;" type="text" id="itemAmtLabelAdd" class="bld w-100 text-center" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
@@ -287,16 +285,16 @@
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                          <div class="text-center">
-                            {{item.tax_rate | number:'2.'}}
-                          </div>
-                        </td>
-                        <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                          <div class="text-center">
-                            {{item.discount | number:'2.'}}
-                          </div>
-                        </td>
+                          <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
+                            <div class="text-center">
+                              {{item.tax_rate | number:'2.'}}
+                            </div>
+                          </td>
+                          <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
+                            <div class="text-center">
+                              {{item.discount | number:'2.'}}
+                            </div>
+                          </td>
                         <td [class.no-border-last]="last" style="position: unset !important;" >
                           <div class="text-center">
                             {{item.total | number:'2.'}}
@@ -362,20 +360,18 @@
                             />
                           </div>
                         </td>
-
-                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
-                          <div class="input-group">
-                            <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
-                              [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()" style="border-right: none !important"
-                            />
-                            <div class="input-group-append">
-                              <span class="input-group-text p-0" style="width: 22px;">%</span>
+                          <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                            <div class="input-group">
+                              <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
+                                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                                style="border-right: none !important" />
+                              <div class="input-group-append">
+                                <span class="input-group-text p-0" style="width: 22px;">%</span>
+                              </div>
                             </div>
-                          </div>
-                          <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
-                        </td>
-
-                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0">
+                            <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
+                          </td>
+                        <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0 max=100
                               [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" style="border-right: none !important"
@@ -393,7 +389,7 @@
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text_center height_40"
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
-                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;background-color: #eaeaea !important;"  disabled.btn-custom-1
+                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
                             <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
@@ -428,8 +424,10 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}}+
                       </a>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2"><!--&& showTaxRateFlag === true -->
-                      <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
+                    <div *ngIf="showTaxRateFlag === true">
+                      <div *ngIf="settings.taxFlagLevel === 1 && activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2">
+                        <a class="inline" (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</a>
+                      </div>
                     </div>
                     <div *ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined">
                       <a class="inline" (click)="activeInvoice.adjustment = 0">
@@ -771,7 +769,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices
+        <button type="button" style="width: 307px;" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
         </button> 
         <!-- recently added invoice -->
         <div class="back list-shadow">
@@ -785,7 +783,7 @@
           </div>
     
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
           <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
