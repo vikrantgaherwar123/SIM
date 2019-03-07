@@ -9,6 +9,7 @@
 }
 input, textarea {
   margin-bottom: 2px;
+  margin-top: 0px !important;
 }
 .bld {
   margin: 2px 0;
@@ -84,6 +85,7 @@ select {
 }
 .inputWithIcon input[type=text]{
   padding-left: 15px;
+  /* border-right: white; */
 }
 .inputWithIcon{
   position: relative;
@@ -138,4 +140,7 @@ select {
 .filter-box[_ngcontent-c5] {
   background: #ffffff;
   border-bottom: none !important;
+}
+.border_white{
+  border-right: 1px solid white;
 }

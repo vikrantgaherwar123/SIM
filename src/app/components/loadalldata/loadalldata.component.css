@@ -213,3 +213,28 @@
 	background-image: none !important;
 	background-size: 1rem 1rem;
 }
+#client_records{
+	background-color: red !important
+}
+.light_blue {
+	color: #605e5e!important;
+	background-color: #c6e8ff !important;
+	border-radius: 23px;
+}
+.bar_color{
+	background-color: #0299ff !important;
+	margin-top: 2px;
+	border-radius: 23px;
+	height: 6px;
+}
+.span_text{
+	float: right;
+	font-size: 11px;
+	margin-top: 16px;
+	font-family: quicksand_regular;
+	color: #605e5e;
+	letter-spacing: 0.5px;
+}
+.bottom_mrg{
+	margin-bottom: 44px;
+}

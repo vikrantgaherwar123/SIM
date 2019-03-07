@@ -25,11 +25,12 @@
                         </span>
 
                         <div class="input-group pl-0 inputWithIcon">
-                          <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input" placeholder="Search & Select Client"
+                          <input type="text" id="bill-to-input" style="height: 40px !important;" [ngClass]="{ 'border_white': billingTo.value }" class="form-control billing-input" placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <i class="client_arrow fa fa-chevron-down " aria-hidden="true"></i>
+                            <img src="assets/images/down-arrow64.png" style="width: 14px;margin-left: -12px;height: 14px;">
+                            <!-- <i class="client_arrow fa fa-chevron-down " aria-hidden="true"></i> -->
                           </span>
                           
                           <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
@@ -39,7 +40,8 @@
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
 
                           <div class="input-group-append">
-                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()">X</a>
+                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()"><img src="assets/images/grey_cross.png" style="height: 16px;
+                              width: 16px;"></a>
                           </div>
                            
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
@@ -103,7 +105,7 @@
                           <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
                             && invNumberForm.invoiceNumber.$error.required"
                           >
-                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0"
+                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0" style="margin-top: 0px !important;"
                               [(ngModel)]="activeInvoice.invoice_number" [ngClass]="{ 'box_red': invoiceFlag === true}" (keyup)="invoiceNoChanged($event)" required onfocus="this.select()"
                             />
                             <span *ngIf="activeInvoice.invoice_number === '' " class="fa fa-info-circle errspan"></span> <!--show error icon if no invoice number-->
