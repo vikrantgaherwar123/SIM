@@ -29,7 +29,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <img src="assets/images/down-arrow64.png" style="width: 14px;margin-left: -12px;height: 14px;">
+                            <img class="client_arrow" src="assets/images/down-arrow64.png">
                             <!-- <i class="client_arrow fa fa-chevron-down " aria-hidden="true"></i> -->
                           </span>
                           

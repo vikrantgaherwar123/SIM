@@ -713,6 +713,9 @@ option {
 }
 .client_arrow {
   left: -30px !important;
+  width: 14px;
+  margin-left: -12px;
+  height: 14px;
 }
 .add_new_btn{
   width: 104px !important;
@@ -779,3 +782,5 @@ select{
   left: -45px !important;
 }
 }
+
+

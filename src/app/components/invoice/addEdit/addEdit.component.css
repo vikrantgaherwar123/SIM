@@ -144,3 +144,14 @@ select {
 .border_white{
   border-right: 1px solid white;
 }
+@media (min-width: 1280px) and (min-width:720px)
+{
+  .downArrowIcon{
+    position: absolute;
+    left: 359px;
+    top: -1px;
+    padding: 9px 17px;
+    color: #aaa;
+    transition: .3s;
+}
+}
