@@ -138,10 +138,6 @@ export class ViewEstComponent implements OnInit {
         this.showBackground = true;
         this.openSearchClientModal()
       }
-
-
-      
-      
     })
   
     // show date as per format changed
@@ -149,11 +145,6 @@ export class ViewEstComponent implements OnInit {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
     })
-
-    // make invoice list empty if clients not selected in dropdown
-    // if (this.estimateQueryForm.client.value === null) {
-    //   this.estimateList = []
-    // }
 
     // dropdown settings
     this.dropdownSettings = {
@@ -171,28 +162,16 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
-   // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
+  //  // Set Active invoice whenever invoice list changes
   //  this.store.select('estimate').subscribe(estimates => {
   //   this.estimateList = estimates
-  //   if(this.estimateList.length < 1){
-  //     this.estListLoader = true
-  //     this.estimateService.fetch().subscribe((response: any) => {
-  //       this.estListLoader = false
-  //       var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-  //       this.store.dispatch(new estimateActions.add(records))
-  //       this.estimateList = records
-  //         if(this.estimateId){
-  //           this.setActiveEst(this.estimateId)
-  //         }
-  //         else{
-  //           this.setActiveEst()
-  //         }
-  //     })
-  //   }
-  //   else{
-  //       this.setActiveEst()
-  //   }
+  //   this.setActiveEst();
+  //   // if(this.InvoiceId){
+  //   //   this.setActiveInv(this.InvoiceId)
+  //   //   this.closeSearchModel();
+  //   // }
   // })
+   
   }
 
   onItemSelect(item: any) {
@@ -258,15 +237,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
-    // Set Active invoice whenever invoice list changes
-    this.store.select('estimate').subscribe(estimates => {
-      this.estimateList = estimates
-      this.setActiveEst();
-      // if(this.InvoiceId){
-      //   this.setActiveInv(this.InvoiceId)
-      //   this.closeSearchModel();
-      // }
-    })
+    
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')
@@ -333,12 +304,20 @@ export class ViewEstComponent implements OnInit {
 
     this.estListLoader = true
     this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-      this.estListLoader = false
       if (response.status === 200) {
+        this.estListLoader = false
         this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-        
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+          this.setActiveEst();
+          // if(this.InvoiceId){
+          //   this.setActiveInv(this.InvoiceId)
+          //   this.closeSearchModel();
+          // }
+        })
       }
-      this.estListLoader = false
+      
     })
   }
 

@@ -323,17 +323,21 @@ export class ViewComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
       if (response.status === 200) {
+        this.invListLoader = false
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-        // this.setActiveInv()
+        this.store.select('invoice').subscribe(invoices => {
+          this.invoiceList = invoices
+        })
+        this.setActiveInv()
       }
-      this.invListLoader = false
+      
     })
   }
 
   setActiveInv(invId: string = '') {
     this.closeSearchModel();
     if (!invId || invId === "null") {
-      this.activeInv = this.invoiceList[0];
+      this.activeInv = this.invoiceList[this.invoiceList.length - 1];
     } else {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     }

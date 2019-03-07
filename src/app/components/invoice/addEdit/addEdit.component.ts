@@ -103,8 +103,8 @@ export class AddEditComponent implements OnInit {
   showQuantity: any;
   showPrice: any;
   showDiscountedRate: any;
-  showTaxRateFlag: any;
-  showDiscountRateFlag: any;
+  showTaxRateFlag: boolean = true;
+  showDiscountRateFlag: boolean = true;
   invoiceListLoading: boolean;
   estimateListLoading: boolean;
   tncLoading: boolean;
@@ -232,18 +232,20 @@ export class AddEditComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = false;
       this.showTaxRate = 0;
-    }else{
-      this.showTaxRateFlag = true;
+    }
+    // condition for disable tax 
+    else if(this.settings.taxFlagLevel === 2){
+      this.showTaxRateFlag = false;
     }
     if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = false;
       this.showDiscountRate = 0;
     }
-
-
-
+    // condition for disable discount 
+    else if(this.settings.discountFlagLevel === 2){
+      this.showDiscountRateFlag = false;
+    }
+    
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -308,19 +310,19 @@ export class AddEditComponent implements OnInit {
           }
         }
         //tax and discount position according to settings changed
-        if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
-          this.showTaxRateFlag = false;
-        } else {
-          // tax on bill
-          this.showTaxRateFlag = true;
-        }
-        if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
-          this.showDiscountRateFlag = false;
-        } else {
-          //discount on bill
-          this.activeInvoice.discount_on_item = 2
-          this.showDiscountRateFlag = true;
-        }
+        // if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
+        //   this.showTaxRateFlag = false;
+        // } else {
+        //   // tax on bill
+        //   this.showTaxRateFlag = true;
+        // }
+        // if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
+        //   this.showDiscountRateFlag = false;
+        // } else {
+        //   //discount on bill
+        //   this.activeInvoice.discount_on_item = 2
+        //   this.showDiscountRateFlag = true;
+        // }
         //hide discount and tax fields when bill settings is selected
         if (this.activeInvoice.discount !== 0) {
           this.settings.discountFlagLevel = 0;
@@ -892,8 +894,8 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
+    
       var obj = {};
-      
       for (var i = 0, len = this.productList.length; i < len; i++)
       obj[this.productList[i]['prodName']] = this.productList[i];
       this.productList = new Array();
@@ -908,6 +910,16 @@ export class AddEditComponent implements OnInit {
   
 
   private _filterProd(value: string): product[] {
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if(!this.productList[i].prodName){
+        this.productList.splice(i, 1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i, 1);
+      }
+    }
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 

@@ -201,14 +201,19 @@ export class AddEditEstComponent implements OnInit {
   addInit() {
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = false;
       this.showTaxRate = 0;
-    }else{
-      this.showTaxRateFlag = true;
+    }
+    // condition for disable tax 
+    else if(this.settings.taxFlagLevel === 2){
+      this.showTaxRateFlag = false;
     }
     if(this.settings.discountFlagLevel === 0){
       this.showDiscountRateFlag = false;
       this.showDiscountRate = 0;
+    }
+    // condition for disable discount 
+    else if(this.settings.discountFlagLevel === 2){
+      this.showDiscountRateFlag = false;
     }
 
 
@@ -934,7 +939,12 @@ export class AddEditEstComponent implements OnInit {
         this.activeItem.tax_rate = 0
       } else {
         this.activeItem.tax_amount = (this.activeItem.rate * this.activeItem.tax_rate / 100) * this.activeItem.quantity
-        this.activeItem.total += this.activeItem.tax_amount
+        if(this.activeItem.discount_amount){
+          this.activeItem.tax_amount = ((this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount) * this.activeItem.tax_rate/100;
+          this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount +  this.activeItem.tax_amount;
+        }else{
+          this.activeItem.total += this.activeItem.tax_amount
+        }
       }
     }
   }
@@ -1096,10 +1106,9 @@ export class AddEditEstComponent implements OnInit {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
-            } else {
-              response.estimateList[0] = response.quotationList[0];
-              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
-              this.edit = false;
+            } else{
+              // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              // this.edit = false;
             }
           })
         } else {
