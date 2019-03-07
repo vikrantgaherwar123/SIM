@@ -750,6 +750,7 @@ export class AddEditComponent implements OnInit {
   }else{
     this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
+        
         this.clientListLoading = false
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
@@ -901,6 +902,15 @@ export class AddEditComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.prodName),
         map(name => name ? this._filterProd(name) : this.productList.slice())
       )
+      for (let i = 0; i < this.productList.length; i++) {
+        if(!this.productList[i].prodName){
+          this.productList.splice(i, 1);
+        }
+        var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+        if (tempProduct === "") {
+          this.productList.splice(i, 1);
+        }
+      }
   }
   
 

@@ -242,7 +242,7 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                           />
                         </td>
-                        <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0">
+                        <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 || settings.discountFlagLevel !== 2">
                           <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled style="font-size: 12.5px !important;"
                             value="Tax (%)"
                           />
@@ -334,11 +334,11 @@
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;"
+                                style="margin-top: 3px;height: 55px !important;"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                               <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;"
+                                style="margin-top: 3px;height: 55px !important;"
                                 placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
@@ -395,7 +395,7 @@
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
-                            <button type="button"  class="btn save_btn btn-raised add_new_btn" style="margin-left: -295px;" (click)="addEditInvoiceItem();"
+                            <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
                           </button>
                             
@@ -1014,7 +1014,7 @@
         <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
           Close
         </button>
-        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn"
+        <button type="button" id="saveClientButton" style="border-radius: 1px;" class="btn btn-success width20btn"
           [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)"
         >
           Edit Item

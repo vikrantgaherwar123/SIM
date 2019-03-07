@@ -109,6 +109,7 @@ export class AddEditEstComponent implements OnInit {
   recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
+  disableTaxDiscount: boolean = false
 
 
   constructor(private CONST: CONSTANTS, public router: Router,
@@ -209,6 +210,9 @@ export class AddEditEstComponent implements OnInit {
     if(this.settings.discountFlagLevel === 0){
       this.showDiscountRateFlag = false;
       this.showDiscountRate = 0;
+    }
+    if(this.settings.discountFlagLevel === 2){
+     this.disableTaxDiscount = true
     }
 
 
@@ -762,7 +766,7 @@ export class AddEditEstComponent implements OnInit {
       }
     });
     this.productList = uniqueProducts;
-    //remove whitespaces from clientlist
+    //remove whitespaces from productList
     for (let i = 0; i < this.productList.length; i++) {
       if(!this.productList[i].prodName){
         this.productList.splice(i, 1);
@@ -1089,7 +1093,7 @@ export class AddEditEstComponent implements OnInit {
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
             } else {
-              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
             }
           })
         } else {
