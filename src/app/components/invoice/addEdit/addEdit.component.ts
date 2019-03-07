@@ -258,19 +258,7 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
-    //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
-      this.showTaxRateFlag = false;
-    }else{
-      // tax on bill
-      this.showTaxRateFlag = true;
-    }
-    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
-      this.showDiscountRateFlag = false;
-    }else{
-      //discount on bill
-      this.showDiscountRateFlag = true;
-    }
+    
 
     
     //to view updated or viewed invoice in view page
@@ -282,6 +270,9 @@ export class AddEditComponent implements OnInit {
     this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
       if(invoice.records !== null) {
+        //deleted these objects bcz input was mismatcing for adding while deleting
+        delete invoice.records[0].client
+        delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
 
@@ -316,9 +307,24 @@ export class AddEditComponent implements OnInit {
             }
           }
         }
+        //tax and discount position according to settings changed
+        if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
+          this.showTaxRateFlag = false;
+        } else {
+          // tax on bill
+          this.showTaxRateFlag = true;
+        }
+        if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
+          this.showDiscountRateFlag = false;
+        } else {
+          //discount on bill
+          this.activeInvoice.discount_on_item = 2
+          this.showDiscountRateFlag = true;
+        }
         //hide discount and tax fields when bill settings is selected
         if (this.activeInvoice.discount !== 0) {
           this.settings.discountFlagLevel = 0;
+          this.activeInvoice.discount_on_item = 0;
         }
         if (this.activeInvoice.tax_rate !== 0) {
           this.settings.taxFlagLevel = 1;
@@ -1430,9 +1436,10 @@ export class AddEditComponent implements OnInit {
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
     // localStorage.setItem('deleteinvoiceId', "1" )
+    // this.edit = false;
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
-    // this.edit = false;
+    
     this.router.navigate(['/invoice/add'])
   }
 
@@ -1449,6 +1456,7 @@ export class AddEditComponent implements OnInit {
     this.addItem.reset('')
     this.dueDate.reset()
     this.activeInvoice = <invoice>{}
+    // this.activeClient = <client>{}
 
     // Invoice Number
     if (!isNaN(parseInt(this.settings.invNo))) {

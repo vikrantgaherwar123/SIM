@@ -223,19 +223,7 @@ export class AddEditEstComponent implements OnInit {
 
   editInit(estId) {
 
-    //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
-      this.showTaxRateFlag = false;
-    }else{
-      this.showTaxRateFlag = true;
-    }
-    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
-      this.showDiscountRateFlag = false;
-      this.showDiscountField = true;
-    }else{
-      this.showDiscountRateFlag = true;
-      this.showDiscountField = false;
-    }
+   
 
     
     //to view updated or viewed estimate in view page
@@ -277,19 +265,37 @@ export class AddEditEstComponent implements OnInit {
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
             this.settings.taxFlagLevel = 0;
-            this.setTaxOnItem = true;
+            // this.setTaxOnItem = true;
           }
           this.showDiscountRate = this.activeEstimate.listItems[i].discount;
           if(this.showDiscountRate!==0){
             this.settings.discountFlagLevel = 1;
             this.showDiscountRateFlag = false;
-            this.setDiscountOnItem = true;
+            this.activeEstimate.discount_on_item = 1;
+            // this.setDiscountOnItem = true;
           }
           }
+        }
+
+        //tax and discount position according to settings changed
+        if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
+          this.showTaxRateFlag = false;
+        } else {
+          this.activeEstimate.tax_on_item = 2
+          this.showTaxRateFlag = true;
+        }
+        if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
+          this.showDiscountRateFlag = false;
+          this.showDiscountField = true;
+        } else {
+          this.activeEstimate.discount_on_item = 2
+          this.showDiscountRateFlag = true;
+          this.showDiscountField = false;
         }
         //hide discount and tax fields when bill settings is selected
         if (this.activeEstimate.discount !== 0) {
           this.settings.discountFlagLevel = 0;
+          this.activeEstimate.discount_on_item = 0;
         }
         if (this.activeEstimate.tax_rate !== 0) {
           this.settings.taxFlagLevel = 1;
@@ -1091,7 +1097,9 @@ export class AddEditEstComponent implements OnInit {
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.remove(index))
             } else {
+              response.estimateList[0] = response.quotationList[0];
               self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              this.edit = false;
             }
           })
         } else {

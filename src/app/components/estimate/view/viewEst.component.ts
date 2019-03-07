@@ -138,6 +138,9 @@ export class ViewEstComponent implements OnInit {
         this.showBackground = true;
         this.openSearchClientModal()
       }
+
+
+      
       
     })
   
@@ -255,7 +258,15 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
-    
+    // Set Active invoice whenever invoice list changes
+    this.store.select('estimate').subscribe(estimates => {
+      this.estimateList = estimates
+      this.setActiveEst();
+      // if(this.InvoiceId){
+      //   this.setActiveInv(this.InvoiceId)
+      //   this.closeSearchModel();
+      // }
+    })
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')
@@ -325,15 +336,7 @@ export class ViewEstComponent implements OnInit {
       this.estListLoader = false
       if (response.status === 200) {
         this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-        // Set Active invoice whenever invoice list changes
-        this.store.select('estimate').subscribe(estimates => {
-          this.estimateList = estimates
-          // if(this.InvoiceId){
-          //   this.setActiveInv(this.InvoiceId)
-          //   this.closeSearchModel();
-          // }
-        })
-        this.setActiveEst();
+        
       }
       this.estListLoader = false
     })
@@ -347,8 +350,16 @@ export class ViewEstComponent implements OnInit {
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
-    if(this.activeEst.alstQuotProduct){
+    if(this.activeEst !== undefined){
       for(let i = 0;i<this.activeEst.alstQuotProduct.length; i++){
+        // if(this.activeEst.alstQuotProduct[i].discount !== undefined || 
+        //   this.activeEst.alstQuotProduct[i].tax_rate !== undefined || 
+        //   this.activeEst.alstQuotProduct[i].total !== undefined ||
+        //   this.activeEst.alstQuotProduct[i].product_name !== undefined ){
+        //   this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+        //   this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+        //   this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+        // }
         if(this.activeEst.alstQuotProduct[i].discountRate === 0){
           this.hideTaxLabel = true;
         }else{
@@ -360,6 +371,11 @@ export class ViewEstComponent implements OnInit {
         }else{
           this.isTaxPresent = true;
           this.hideDiscountLabel = false;
+        }
+      }
+      for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
+        if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){
+          this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
         }
       }
     }
