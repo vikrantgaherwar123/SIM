@@ -37,64 +37,90 @@ export class LoadalldataComponent implements OnInit {
     private settingService: SettingService,
     private productService: ProductService,
     private store: Store<AppState>) {
-
-
-// loader script
-      $(function() {
-        // all clients
-        var client = 0;
-        var interval_client = setInterval(function() {
-          client += 10;
-            $("#client_records")
-            .css("width", client + "%")
-            .attr("aria-valuenow", client)
-            .text("Client Loading " + client + " % Complete");
-            if (client >= 100)
-                clearInterval(interval_client);
-        }, 900);
-
-
-        var product = 0;
-        var interval_product = setInterval(function() {
-          product += 20;
-            $("#product_records")
-            .css("width", product + "%")
-            .attr("aria-valuenow", product)
-            // .text("Products Loading" + product + "% Complete");
-            .text("Products Loading " + product + " % Complete");
-            if (product >= 100)
-                clearInterval(interval_product);
-        }, 1000);
-
-        var term = 0;
-        var interval_terms = setInterval(function() {
-          term += 20;
-            $("#term_records")
-            .css("width", term + "%")
-            .attr("aria-valuenow", term)
-            .text("Terms and Conditions Loading " + term + " % Complete");
-            if (term >= 100)
-                clearInterval(interval_terms);
-        }, 500);
-
-        var setting = 0;
-        var interval_setting = setInterval(function() {
-          setting += 20;
-            $("#setting_records")
-            .css("width", setting + "%")
-            .attr("aria-valuenow", setting)
-            .text("Settings Loading " + setting + " % Complete");
-            if (setting >= 100)
-                clearInterval(interval_setting);
-        }, 800);
-      });
      }
-
-     
 
   ngOnInit() {
     this.fetchBasicData();
+    this.clients();
+    this.products();
+    this.terms();
+    this.settings();
     
+  }
+  clients() {
+    var elem = document.getElementById("clients");   
+    var count_client = document.getElementById("counting_client");
+    var width = 20;
+    var id = setInterval(frame, 70);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        width++; 
+        elem.style.width = width + '%'; 
+        count_client.innerHTML = width * 1  + '%';
+        count_client.style.fontSize = '25px';
+        count_client.style.color = '#605e5e';
+        count_client.style.marginTop = '20px';
+        count_client.style.fontFamily = 'font-family: quicksand_bold;';
+      }
+    }
+  }
+
+  products(){
+    var elem = document.getElementById("products");   
+    var count_product = document.getElementById("counting_product");
+    var width = 35;
+    var id = setInterval(frame, 70);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        width++; 
+        elem.style.width = width + '%';
+        count_product.innerHTML = width * 1  + '%';
+        count_product.style.color = '#605e5e';
+        count_product.style.fontSize = '25px';
+        count_product.style.fontFamily = 'font-family: quicksand_bold;';
+      }
+    }
+  }
+  terms(){
+    var elem = document.getElementById("terms");   
+    var count_terms = document.getElementById("counting_terms");
+    var width = 30;
+    var id = setInterval(frame, 70);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        width++; 
+        elem.style.width = width + '%';
+        count_terms.innerHTML = width * 1  + '%';
+        count_terms.style.color = '#605e5e';
+        count_terms.style.fontSize = '25px';
+        count_terms.style.fontFamily = 'font-family: quicksand_bold;';
+      }
+    }
+  }
+
+  settings(){
+    var elem = document.getElementById("settings");   
+    var count_setting = document.getElementById("counting_setting");
+    var width = 40;
+    var id = setInterval(frame, 70);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        width++; 
+        elem.style.width = width + '%';
+        count_setting.innerHTML = width * 1  + '%';
+        count_setting.style.color = '#605e5e';
+        count_setting.style.fontSize = '25px';
+        count_setting.style.fontFamily = 'font-family: quicksand_bold;';
+      }
+    }
   }
 
   fetchBasicData() {
@@ -133,7 +159,7 @@ export class LoadalldataComponent implements OnInit {
       console.log("estimate fetched");
         
       }
-        this.router.navigate(['/invoice/add'])
+      this.router.navigate(['/invoice/add'])
     })
   }
    
