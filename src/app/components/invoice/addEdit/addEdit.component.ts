@@ -36,7 +36,10 @@ import { DateAdapter } from '@angular/material';
 })
 export class AddEditComponent implements OnInit {
 
+  invoiceId
+
   activeInvoice: invoice = <invoice>{}
+  activeInv: invoice
   estimateDate = new FormControl()
   invoiceDate = new FormControl()
   private dueDate = new FormControl()
@@ -114,6 +117,7 @@ export class AddEditComponent implements OnInit {
   InvoiceNumber: string;
   recentInvoiceList: any = [];
   disabledDescription: boolean = false;
+  viewTodaysInvoice: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -616,11 +620,11 @@ export class AddEditComponent implements OnInit {
       this.productService.fetch().subscribe((response: response) => {
         for (let i = 0; i < this.productList.length; i++) {
           if(!this.productList[i].prodName){
-            this.productList.splice(i, 1);
+            this.productList.splice(i);
           }
           var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
           if (tempProduct === "") {
-            this.productList.splice(i, 1);
+            this.productList.splice(i);
           }
         }
         this.productListLoading = false;
@@ -643,16 +647,7 @@ export class AddEditComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          //remove whitespaces from clientlist
-          for (let i = 0; i < this.clientList.length; i++) {
-            if(!this.clientList[i].name){
-              this.clientList.splice(i, 1);
-            }
-            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-            if (tempClient === "") {
-              this.clientList.splice(i, 1);
-            }
-          }
+          this.removeEmptyNameClients();
           var obj = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -770,16 +765,7 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.clientList = uniqueClients;
-          //remove whitespaces from clientlist
-          for (let i = 0; i < this.clientList.length; i++) {
-            if(!this.clientList[i].name){
-              this.clientList.splice(i, 1);
-            }
-            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-            if (tempClient === "") {
-              this.clientList.splice(i, 1);
-            }
-          }
+          this.removeEmptyNameClients();
         }
         this.setClientFilter()
         
@@ -789,6 +775,19 @@ export class AddEditComponent implements OnInit {
 
    private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
+  }
+
+  removeEmptyNameClients(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i);
+      }
+    }
   }
 
   selectedClientChange(client) {
@@ -910,14 +909,14 @@ export class AddEditComponent implements OnInit {
   
 
   private _filterProd(value: string): product[] {
-    //remove whitespaces from clientlist
+    //remove whitespaces from productlist
     for (let i = 0; i < this.productList.length; i++) {
       if(!this.productList[i].prodName){
-        this.productList.splice(i, 1);
+        this.productList.splice(i);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {
-        this.productList.splice(i, 1);
+        this.productList.splice(i);
       }
     }
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
@@ -1577,5 +1576,28 @@ export class AddEditComponent implements OnInit {
   // CURRENTLY USELESS FUNCTIONS
   log(a) {
     console.log(a)
+  }
+
+  //todays invoices functionality
+  setActiveInv(invId: string = '') {
+    this.viewTodaysInvoice = true;
+    this.invoiceId = invId;
+    if (!invId || invId === "null") {
+      this.activeInv = this.invoiceList[this.invoiceList.length - 1];
+    } else {
+      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+    }
+    this.setActiveClient()
+  }
+
+  setActiveClient() {
+    if (this.activeInv) {
+      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+      if (client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
+    }
   }
 }

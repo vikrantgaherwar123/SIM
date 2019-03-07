@@ -1,7 +1,7 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-      <div id="msgInv" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" *ngIf="viewTodaysInvoice == false" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
           class="create-invoice" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
         >
@@ -93,6 +93,7 @@
                       </div>
                     </div>
                   </div>
+                  
 
                   <!-- Invoice Number and Dates -->
                   <div class="col-12 col-sm-5 pr-0" id="invDataAdd">
@@ -766,6 +767,9 @@
           </div>
         </form>
       </div>
+      <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
+        <app-todays-invoice [invId]="invoiceId"></app-todays-invoice>
+      </div>
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
@@ -789,7 +793,7 @@
           <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
            
             <div *ngFor="let invoice of invoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
-            border-bottom: 1px solid #d2d2d2;margin: -1px  0px 0px 4px;">
+            border-bottom: 1px solid #d2d2d2;margin: -1px  0px 0px 4px;" (click)="setActiveInv(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ invoice.created_date | date: 'dd MMM' }}
               </div>
