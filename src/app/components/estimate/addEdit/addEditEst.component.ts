@@ -109,8 +109,6 @@ export class AddEditEstComponent implements OnInit {
   recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
-  disableTaxDiscount: boolean = false
-
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -228,10 +226,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
-
-   
-
-    
     //to view updated or viewed estimate in view page
     // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate
@@ -649,7 +643,7 @@ export class AddEditEstComponent implements OnInit {
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
       if(!this.clientList[i].name){
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
@@ -765,7 +759,7 @@ export class AddEditEstComponent implements OnInit {
     //remove whitespaces from productList
     for (let i = 0; i < this.productList.length; i++) {
       if(!this.productList[i].prodName){
-        this.productList.splice(i);
+        this.productList.splice(i,1);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {

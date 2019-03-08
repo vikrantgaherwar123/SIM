@@ -20,6 +20,7 @@ export class TodaysInvoiceComponent implements OnInit {
   public settings: any
 
   activeInv: invoice
+  addedInvoice: any
   invoiceListLoading: boolean;
   clientListLoading: boolean;
   constructor(private store: Store<AppState>,
@@ -28,35 +29,39 @@ export class TodaysInvoiceComponent implements OnInit {
     private settingService: SettingService
     ) {
     this.settings = JSON.parse(localStorage.getItem('user')).setting
+    store.select('client').subscribe(clients => this.clientList = clients)
    }
 
   ngOnInit() {
+    if(this.clientList.length < 1){
     this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptySpaces();
       })
-    console.log(this.invoiceId);
+    }
+    this.fetchInvoiceDetail();
+  }
+
+  fetchInvoiceDetail(){
     this.invoiceListLoading = true;
     this.invoiceService.fetchById([this.invoiceId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
-      if(invoice.records !== null) {
+      if (invoice.records !== null) {
         this.activeInv = invoice.records[0];
         this.setActiveClient();
       }
-      })
-      
+    })
   }
 
   setActiveClient() {
-    if (this.activeInv) {
-      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
-      if (client) {
-        this.activeClient = client
-      } else {
-        this.activeClient = null
-      }
+    
+    var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+    if (client) {
+      this.activeClient = client
+    } else {
+      this.activeClient = null
     }
   }
 
