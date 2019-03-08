@@ -360,17 +360,18 @@ hr {
 }
 /* select */
 .selectdiv:after {
-    content: '\f078';
-    font: normal normal normal 17px/1 FontAwesome;
-    right: 25px;
-    top: -5px;
-    height: 24px;
-    font-size: 15px;
-    padding: 15px 0px 0px 8px;
-    position: absolute;
-    pointer-events: none;
-    font-weight: normal;
-    color: #aaaaaa;
+  content: '\f078';
+  font: normal normal normal 17px/1 FontAwesome;
+  right: 25px;
+  top: -3px;
+  height: 24px;
+  -webkit-text-stroke: 1px white;
+  font-size: 16px;
+  padding: 15px 0px 0px 8px;
+  position: absolute;
+  pointer-events: none;
+  font-weight: normal;
+  color: #808080;
   }
   /* .price {
     display: inline-block;
@@ -713,6 +714,9 @@ option {
 }
 .client_arrow {
   left: -30px !important;
+  width: 14px;
+  margin-left: -12px;
+  height: 14px;
 }
 .add_new_btn{
   width: 104px !important;
@@ -757,7 +761,8 @@ select{
   /* font-family: quicksand_book !important; */
   font-size: 14px !important;
   font-style: normal;
-  font-weight: 800 !important;
+  font-weight: 100 !important;
+  font-family: quicksand_regular !important;
   padding: 2px 0px 0px 17px !important;
 }
 .hide_client_border{
@@ -779,3 +784,5 @@ select{
   left: -45px !important;
 }
 }
+
+

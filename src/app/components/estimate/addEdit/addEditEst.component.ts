@@ -109,6 +109,7 @@ export class AddEditEstComponent implements OnInit {
   recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
+  disableTaxDiscount: boolean = false
 
 
   constructor(private CONST: CONSTANTS, public router: Router,

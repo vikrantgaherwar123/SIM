@@ -29,7 +29,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <img src="assets/images/down-arrow64.png" style="width: 14px;margin-left: -12px;height: 14px;">
+                            <img class="client_arrow" src="assets/images/down-arrow64.png">
                             <!-- <i class="client_arrow fa fa-chevron-down " aria-hidden="true"></i> -->
                           </span>
                           
@@ -244,7 +244,7 @@
                           />
                         </td>
                           <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                            <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
+                            <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled style="font-size: 12.5px !important;"
                               style="font-size: 12.5px !important;" value="Tax (%)" />
                           </td>
                           <td width="9%" *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
@@ -333,11 +333,11 @@
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;"
+                                style="margin-top: 3px;height: 55px !important;"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
                               <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;"
+                                style="margin-top: 3px;height: 55px !important;"
                                 placeholder="Description" onfocus="this.select()"
                               ></textarea>
                             </div>
@@ -351,7 +351,9 @@
                             />
                           </div>
                           
-                          
+                          <button type="button" style="margin-top: 20px;" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
+                            Add Item
+                          </button>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
@@ -390,11 +392,12 @@
                           <div class="form-group">
                             <input type="number" step="any" class="form-control text_center height_40"
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
-                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;background-color: #eaeaea !important;"  disabled.btn-custom-1
+                              name="itemTotal" [(ngModel)]="activeItem.total" style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
-                            <button type="button"  class="btn save_btn btn-raised add_new_btn" style="margin-left: -295px;" (click)="addEditInvoiceItem();"
+                            <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
-                          </button>
+                          </button> -->
+                          
                             
                           </div>
                         </td>
@@ -773,7 +776,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Show All Invoices
+        <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
         </button> 
         <!-- recently added invoice -->
         <div class="back list-shadow">
@@ -787,7 +790,7 @@
           </div>
     
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
           <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
@@ -1016,7 +1019,7 @@
         <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
           Close
         </button>
-        <button type="button" id="saveClientButton" class="btn  btn-raised  btn-success width20btn"
+        <button type="button" id="saveClientButton" style="border-radius: 1px;" class="btn btn-success width20btn"
           [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)"
         >
           Edit Item

@@ -19,8 +19,9 @@ select {
   /* font-family: quicksand_book !important; */
   font-size: 14px !important;
   font-style: normal;
-  font-weight: 800 !important;
+  font-weight: 100 !important;
   padding: 3px 12px !important;
+  font-family: quicksand_regular !important;
 }
 .set-color {
   color: #2196f3 !important;
@@ -142,6 +143,35 @@ select {
   background: #ffffff;
   border-bottom: none !important;
 }
+.search_btn{
+  width: 307px;
+}
 .border_white{
   border-right: 1px solid white;
+}
+@media (min-width: 1280px)
+{
+  .downArrowIcon{
+    position: absolute;
+    left: 359px;
+    top: -1px;
+    padding: 9px 17px;
+    color: #aaa;
+    transition: .3s;
+}
+.search_btn{
+  width: 290px;
+}
+}
+@media (min-width: 1366px)
+{
+  .downArrowIcon{
+    position: absolute;
+    left: 386px;
+    top: -1px;
+    padding: 9px 17px;
+    color: #aaa;
+    transition: .3s;
+  }
+  
 }

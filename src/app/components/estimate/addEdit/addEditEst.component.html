@@ -93,7 +93,7 @@
               <div class="col-12 col-sm-5" id="estDataAdd">
                 <div class="row"> 
                   <!-- Estimate Number and Dates -->
-                  <div class="col-6 offset-md-2 col-md-4" style="margin-top: 5px;">
+                  <div class="col-6 offset-md-2 col-md-4" style="margin-top: 1px;">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
                   </div>
                   <div class="col-6">
@@ -109,7 +109,7 @@
                   </div>
                 </div>
 
-                <div class="row" style="margin-top: 5px;">
+                <div class="row" style="margin-top: 1px;">
                   <div class="col-6 offset-md-2 col-md-4">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
@@ -280,7 +280,7 @@
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                       <div class="form-group">
                         <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
-                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;"
+                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;border: 0px solid #ced4da !important"
                           convert-decimal onfocus="this.select()" />
                       </div>
                     </td>
@@ -588,8 +588,8 @@
 
       <!-- Previous Estimates Button -->
       <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/estimate/view'])">
-          Show All Estimates
+        <button type="button" class="btn2 btn2-primary btn2-lg raised search_btn" (click)="router.navigate(['/estimate/view'])">
+          Search For Estimates
         </button>
 
         <!-- recently added Estimate -->
@@ -600,7 +600,7 @@
           </div>
     
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
           <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
