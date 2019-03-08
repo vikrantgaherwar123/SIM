@@ -448,7 +448,7 @@ input::placeholder {
 }
 /* dropdown option */
 option {
-  font-weight: 800 !important;
+  /* font-weight: 800 !important; */
   display: block !important;
   white-space: pre !important;
   height: 5.2em !important;
