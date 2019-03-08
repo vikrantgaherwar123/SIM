@@ -62,6 +62,7 @@ import { Title }     from '@angular/platform-browser';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
+import { TodaysInvoiceComponent } from './components/todays-invoice/todays-invoice.component';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -118,6 +119,7 @@ export function getAuthServiceConfigs() {
     BatchuploadComponent,
     SupportComponent,
     LoadalldataComponent,
+    TodaysInvoiceComponent,
   ],
   imports: [
     ProgressBarModule,

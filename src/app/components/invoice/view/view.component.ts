@@ -125,11 +125,13 @@ export class ViewComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        this.removeEmptySpaces();
         this.dropdownList = this.clientList;
-        this.store.dispatch(new clientActions.add(response.records))
+        // this.store.dispatch(new clientActions.add(response.records))
       }
       )
     } else {
+      this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -149,21 +151,6 @@ export class ViewComponent implements OnInit {
       })
 
     })
-
-
-
-    //if empty invoice then all fetch from api to find latest and oldest invoice date
-    // if(this.invoiceList.length < 1){
-    //   this.invoiceListLoading = true;
-    //   this.invoiceService.fetch().subscribe((response: any) => {
-    //   this.invoiceListLoading = false;
-    //   this.invoiceList = response.records
-    //   var mindate = this.invoiceList[0].created_date;
-    //   var maxdate = this.invoiceList[this.invoiceList.length-1].created_date;
-    //   console.log(mindate);
-    //   console.log(maxdate);
-    //   })
-    //   }
 
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
@@ -195,6 +182,20 @@ export class ViewComponent implements OnInit {
     if (this.invoiceQueryForm.dateRange.start.value || this.invoiceQueryForm.dateRange.end.value !== event.value) {
       this.itemSelected = 'Custom'
     }
+  }
+
+  removeEmptySpaces(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i);
+      }
+    }
+    
   }
   showItem(item) {
     var curr = new Date;

@@ -115,20 +115,12 @@ export class ViewEstComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        //remove whitespaces from clientlist
-        for (let i = 0; i < this.clientList.length; i++) {
-          if(!this.clientList[i].name){
-            this.clientList.splice(i, 1);
-          }
-          var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-          if (tempClient === "") {
-            this.clientList.splice(i, 1);
-          }
-        }
+        this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
       })
     } else {
+      this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -162,16 +154,6 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
-  //  // Set Active invoice whenever invoice list changes
-  //  this.store.select('estimate').subscribe(estimates => {
-  //   this.estimateList = estimates
-  //   this.setActiveEst();
-  //   // if(this.InvoiceId){
-  //   //   this.setActiveInv(this.InvoiceId)
-  //   //   this.closeSearchModel();
-  //   // }
-  // })
-   
   }
 
   onItemSelect(item: any) {
@@ -187,6 +169,19 @@ export class ViewEstComponent implements OnInit {
   public onDate(event): void {
     if (this.estimateQueryForm.dateRange.start.value || this.estimateQueryForm.dateRange.end.value !== event.value) {
       this.itemSelected = 'Custom'
+    }
+  }
+
+  removeEmptySpaces(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i);
+      }
     }
   }
   showItem(item) {
@@ -311,10 +306,6 @@ export class ViewEstComponent implements OnInit {
         this.store.select('estimate').subscribe(estimates => {
           this.estimateList = estimates
           this.setActiveEst();
-          // if(this.InvoiceId){
-          //   this.setActiveInv(this.InvoiceId)
-          //   this.closeSearchModel();
-          // }
         })
       }
       
@@ -331,14 +322,7 @@ export class ViewEstComponent implements OnInit {
     }
     if(this.activeEst !== undefined){
       for(let i = 0;i<this.activeEst.alstQuotProduct.length; i++){
-        // if(this.activeEst.alstQuotProduct[i].discount !== undefined || 
-        //   this.activeEst.alstQuotProduct[i].tax_rate !== undefined || 
-        //   this.activeEst.alstQuotProduct[i].total !== undefined ||
-        //   this.activeEst.alstQuotProduct[i].product_name !== undefined ){
-        //   this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
-        //   this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
-        //   this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
-        // }
+
         if(this.activeEst.alstQuotProduct[i].discountRate === 0){
           this.hideTaxLabel = true;
         }else{

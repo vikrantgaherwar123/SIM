@@ -492,16 +492,7 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          //remove whitespaces from clientlist
-           for (let i = 0; i < this.clientList.length; i++) {
-            if(!this.clientList[i].name){
-              this.clientList.splice(i, 1);
-            }
-            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-            if (tempClient === "") {
-              this.clientList.splice(i, 1);
-            }
-          }
+          this.removeEmptyNameClients();
           //findout shipping address of selected client from clientlist
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
           if(client){
@@ -614,16 +605,7 @@ export class AddEditEstComponent implements OnInit {
         }
       });
       this.clientList = uniqueClients;
-      //remove whitespaces from clientlist
-      for (let i = 0; i < this.clientList.length; i++) {
-        if (!this.clientList[i].name) {
-          this.clientList.splice(i, 1);
-        }
-        var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-        if (tempClient === "") {
-          this.clientList.splice(i, 1);
-        }
-      }
+      this.removeEmptyNameClients();
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -636,16 +618,7 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-           //remove whitespaces from clientlist
-           for (let i = 0; i < this.clientList.length; i++) {
-            if(!this.clientList[i].name){
-              this.clientList.splice(i, 1);
-            }
-            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-            if (tempClient === "") {
-              this.clientList.splice(i, 1);
-            }
-          }
+          this.removeEmptyNameClients();
           var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -670,6 +643,19 @@ export class AddEditEstComponent implements OnInit {
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
+  }
+
+  removeEmptyNameClients(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i);
+      }
+    }
   }
 
   selectedClientChange(client) {
@@ -779,11 +765,11 @@ export class AddEditEstComponent implements OnInit {
     //remove whitespaces from productList
     for (let i = 0; i < this.productList.length; i++) {
       if(!this.productList[i].prodName){
-        this.productList.splice(i, 1);
+        this.productList.splice(i);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {
-        this.productList.splice(i, 1);
+        this.productList.splice(i);
       }
     }
 
@@ -1056,11 +1042,7 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.termsAndConditions.forEach(tnc => {
       temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc)}) //, unique_key_fk_quotation: this.activeEstimate.unique_identifier 
     })
-  //   for(let i = 0;i<temp.length; i++){
-  //   if(temp[i].terms_condition === undefined){
-  //     temp.splice(i,1);
-  //   }
-  // }
+  
     this.activeEstimate.termsAndConditions = temp
 
 
@@ -1115,12 +1097,6 @@ export class AddEditEstComponent implements OnInit {
         } else {
           self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
         }
-
-        // Update settings
-        // if (!this.edit) {
-        //   this.updateSettings()
-        // }
-
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit) {
