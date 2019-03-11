@@ -20,6 +20,7 @@ export class TodaysInvoiceComponent implements OnInit {
   public settings: any
 
   activeInv: invoice
+  addedInvoice: any
   invoiceListLoading: boolean;
   clientListLoading: boolean;
   constructor(private store: Store<AppState>,
@@ -40,26 +41,27 @@ export class TodaysInvoiceComponent implements OnInit {
         this.removeEmptySpaces();
       })
     }
-    console.log(this.invoiceId);
+    this.fetchInvoiceDetail();
+  }
+
+  fetchInvoiceDetail(){
     this.invoiceListLoading = true;
     this.invoiceService.fetchById([this.invoiceId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
-      if(invoice.records !== null) {
+      if (invoice.records !== null) {
         this.activeInv = invoice.records[0];
         this.setActiveClient();
       }
-      })
-      
+    })
   }
 
   setActiveClient() {
-    if (this.activeInv) {
-      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
-      if (client) {
-        this.activeClient = client
-      } else {
-        this.activeClient = null
-      }
+    
+    var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
+    if (client) {
+      this.activeClient = client
+    } else {
+      this.activeClient = null
     }
   }
 

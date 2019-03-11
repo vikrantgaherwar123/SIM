@@ -188,11 +188,11 @@ export class ViewComponent implements OnInit {
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
       if(!this.clientList[i].name){
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
     }
     

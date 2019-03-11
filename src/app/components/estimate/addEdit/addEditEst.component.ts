@@ -226,10 +226,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
-
-   
-
-    
     //to view updated or viewed estimate in view page
     // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate

@@ -777,7 +777,7 @@ export class AddEditComponent implements OnInit {
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
       if(!this.clientList[i].name){
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
@@ -889,26 +889,24 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
-    
-      var obj = {};
-      for (var i = 0, len = this.productList.length; i < len; i++)
+    var obj = {};
+    for (var i = 0, len = this.productList.length; i < len; i++)
       obj[this.productList[i]['prodName']] = this.productList[i];
-      this.productList = new Array();
-      for (var key in obj)
+    this.productList = new Array();
+    for (var key in obj)
       this.productList.push(obj[key]);
-      this.filteredProducts = this.addItem.valueChanges.pipe(
-        startWith<string | product>(''),
-        map(value => typeof value === 'string' ? value : value.prodName),
-        map(name => name ? this._filterProd(name) : this.productList.slice())
-      )
-      
+    this.filteredProducts = this.addItem.valueChanges.pipe(
+      startWith<string | product>(''),
+      map(value => typeof value === 'string' ? value : value.prodName),
+      map(name => name ? this._filterProd(name) : this.productList.slice())
+    )
   }
   
 
   private _filterProd(value: string): product[] {
     for (let i = 0; i < this.productList.length; i++) {
-      if(!this.productList[i].prodName){
-        this.productList.splice(i,1);
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {

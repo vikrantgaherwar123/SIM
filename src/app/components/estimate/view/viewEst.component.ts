@@ -180,7 +180,7 @@ export class ViewEstComponent implements OnInit {
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
     }
   }

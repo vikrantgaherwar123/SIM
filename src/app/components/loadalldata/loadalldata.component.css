@@ -238,14 +238,7 @@
 .bottom_mrg{
 	margin-bottom: 44px;
 }
-.header-container[_ngcontent-c0] {
-	position: fixed;
-	top: 0;
-	margin-top: -7px !important;
-	z-index: 1030;
-	width: 100%;
-}
-/* loading dots */
+/* loading dots  */
 
 .loading:after {
   content: ' .';
