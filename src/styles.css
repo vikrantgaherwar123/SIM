@@ -30,6 +30,13 @@ input[type=text], input[type=password] {
   font-style: normal;
   font-weight: 100 !important;
 }
+.border-hover{
+  border-color: none;
+}
+.border-hover :hover{
+  border-color: purple;
+  background-color: yellow;
+}
 .font-custom-bold {
   font-family: quicksand_bold !important;
   font-weight: normal !important;

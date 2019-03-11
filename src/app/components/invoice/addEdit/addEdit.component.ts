@@ -264,9 +264,6 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
-    
-
-    
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
@@ -281,8 +278,6 @@ export class AddEditComponent implements OnInit {
         delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-
-
         
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
@@ -906,29 +901,22 @@ export class AddEditComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.prodName),
         map(name => name ? this._filterProd(name) : this.productList.slice())
       )
-      for (let i = 0; i < this.productList.length; i++) {
-        if(!this.productList[i].prodName){
-          this.productList.splice(i, 1);
-        }
-        var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-        if (tempProduct === "") {
-          this.productList.splice(i, 1);
-        }
-      }
+      
   }
   
 
   private _filterProd(value: string): product[] {
-    //remove whitespaces from productlist
     for (let i = 0; i < this.productList.length; i++) {
       if(!this.productList[i].prodName){
-        this.productList.splice(i);
+        this.productList.splice(i,1);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {
         this.productList.splice(i);
       }
     }
+    
+    //remove whitespaces from productlist
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 

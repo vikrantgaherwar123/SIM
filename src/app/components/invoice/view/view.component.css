@@ -3,6 +3,7 @@
 .query-container {
   position: fixed;
   padding: 2px 15px;
+  height: 45px;
   top: 75px;
   z-index: 1000;
   background: #F9F9F9;

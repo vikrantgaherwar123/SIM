@@ -2,6 +2,7 @@
 
 .query-container {
   position: fixed;
+  height: 45px;
   padding: 2px 15px;
   top: 75px;
   z-index: 1000;

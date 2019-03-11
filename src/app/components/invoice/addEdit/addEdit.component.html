@@ -125,7 +125,7 @@
                       <div class="col-8">
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
-                            <input type="text" class="form-control" placeholder="mm/dd/yyyy" required
+                            <input type="text" class="form-control border-hover" placeholder="mm/dd/yyyy" required
                               [formControl]="invoiceDate" 
                               matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
@@ -438,12 +438,14 @@
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
                     </div>
-                    <div  class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
+                    <div *ngIf="activeInvoice.taxList">
+                    <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                       <a *ngIf="!activeInvoice.taxList[taxIndex]"
                         (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}"
                       >
                         {{tax.taxName}}+
                       </a>
+                    </div>
                     </div>
                   </div>
                 </div>

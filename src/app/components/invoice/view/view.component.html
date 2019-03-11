@@ -1,4 +1,4 @@
-<div class="row main-wrapper">
+<div class="row main-wrapper" id="hovereffect">
   <!-- Invoice query bar -->
   <div class="col-12 query-container">
       <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
@@ -38,7 +38,7 @@
     
             <div class="col-12 col-md-2">
               <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn" style="margin-bottom: 6px;margin-right: -58px;"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-top: -4px;height: 34px !important;margin-right: -72px;"
               >
                 Change
               </button>
@@ -277,7 +277,7 @@
                           disabled
                         >
                       </td>
-                      <td width="4%">
+                      <td width="5%">
                         <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-center" style="text-align:right;" disabled
                           value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                         >

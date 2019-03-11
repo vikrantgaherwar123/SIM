@@ -176,7 +176,7 @@ export class ViewEstComponent implements OnInit {
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
       if(!this.clientList[i].name){
-        this.clientList.splice(i);
+        this.clientList.splice(i,1);
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
@@ -282,11 +282,13 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
+    this.removeEmptySpaces();
     if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }
 
+  
   fetchEstimates(query = null) {
     // Fetch estimates with given query
     if (query == null) {

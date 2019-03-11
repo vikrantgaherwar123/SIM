@@ -17,8 +17,8 @@ import {ToasterModule, ToasterService} from 'angular2-toaster';
 import { ActivatedRoute, Router } from '@angular/router';
 import { client } from 'src/app/interface';
 import { response as apiRespo } from '../../interface'
-
 import { setStorage } from 'src/app/globalFunctions';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
 
 @Component({
   selector: 'app-loadalldata',
@@ -40,88 +40,9 @@ export class LoadalldataComponent implements OnInit {
      }
 
   ngOnInit() {
-    this.fetchBasicData();
-    this.clients();
-    this.products();
-    this.terms();
-    this.settings();
     
   }
-  clients() {
-    var elem = document.getElementById("clients");   
-    var count_client = document.getElementById("counting_client");
-    var width = 20;
-    var id = setInterval(frame, 70);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-      } else {
-        width++; 
-        elem.style.width = width + '%'; 
-        count_client.innerHTML = width * 1  + '%';
-        count_client.style.fontSize = '25px';
-        count_client.style.color = '#605e5e';
-        count_client.style.marginTop = '20px';
-        count_client.style.fontFamily = 'font-family: quicksand_bold;';
-      }
-    }
-  }
-
-  products(){
-    var elem = document.getElementById("products");   
-    var count_product = document.getElementById("counting_product");
-    var width = 35;
-    var id = setInterval(frame, 70);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-      } else {
-        width++; 
-        elem.style.width = width + '%';
-        count_product.innerHTML = width * 1  + '%';
-        count_product.style.color = '#605e5e';
-        count_product.style.fontSize = '25px';
-        count_product.style.fontFamily = 'font-family: quicksand_bold;';
-      }
-    }
-  }
-  terms(){
-    var elem = document.getElementById("terms");   
-    var count_terms = document.getElementById("counting_terms");
-    var width = 30;
-    var id = setInterval(frame, 70);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-      } else {
-        width++; 
-        elem.style.width = width + '%';
-        count_terms.innerHTML = width * 1  + '%';
-        count_terms.style.color = '#605e5e';
-        count_terms.style.fontSize = '25px';
-        count_terms.style.fontFamily = 'font-family: quicksand_bold;';
-      }
-    }
-  }
-
-  settings(){
-    var elem = document.getElementById("settings");   
-    var count_setting = document.getElementById("counting_setting");
-    var width = 40;
-    var id = setInterval(frame, 70);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-      } else {
-        width++; 
-        elem.style.width = width + '%';
-        count_setting.innerHTML = width * 1  + '%';
-        count_setting.style.color = '#605e5e';
-        count_setting.style.fontSize = '25px';
-        count_setting.style.fontFamily = 'font-family: quicksand_bold;';
-      }
-    }
-  }
+  
 
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
@@ -144,7 +65,7 @@ export class LoadalldataComponent implements OnInit {
       }
       if(estimateResponse.records){
       }
-      this.router.navigate(['/invoice/add'])
+      // this.router.navigate(['/invoice/add'])
     })
   }
    

@@ -69,17 +69,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 // Social login config
-export const DateFormat = {
-  parse: {
-    dateInput: 'input',
-    },
-    display: {
-    dateInput: 'DD-MMM-YYYY',
-    monthYearLabel: 'MMMM YYYY',
-    dateA11yLabel: 'MM/DD/YYYY',
-    monthYearA11yLabel: 'MMMM YYYY',
-    }
-  };
 export function getAuthServiceConfigs() {
   const FB_APP_ID = environment.FB_APP_ID
   const G_APP_ID = environment.G_APP_ID

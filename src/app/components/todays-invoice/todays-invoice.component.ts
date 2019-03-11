@@ -28,15 +28,18 @@ export class TodaysInvoiceComponent implements OnInit {
     private settingService: SettingService
     ) {
     this.settings = JSON.parse(localStorage.getItem('user')).setting
+    store.select('client').subscribe(clients => this.clientList = clients)
    }
 
   ngOnInit() {
+    if(this.clientList.length < 1){
     this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptySpaces();
       })
+    }
     console.log(this.invoiceId);
     this.invoiceListLoading = true;
     this.invoiceService.fetchById([this.invoiceId]).subscribe((invoice: any) => {
