@@ -28,6 +28,9 @@ export class SupportComponent implements OnInit {
  
   clientListLoading: boolean = false;
   orgMail: any;
+  orgName
+  subject: string = "Support Mail"
+  queryMessage
   user: any;
   
 
@@ -52,20 +55,17 @@ export class SupportComponent implements OnInit {
       message: ['', Validators.required],
     });
   }
-  sendMail(name, email, message) {
-    this.emailService.sendEmail(name, email, message).subscribe(success => {
-     
-      console.log(success);
-    }, error => {
-    });
-  }
+  
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Support');
     this.browser_details();
-    
   }
-  
+
+  sendMail() {
+    this.emailService.sendEmail(this.orgMail, this.orgName, this.subject, this.queryMessage)
+  } 
+
   browser_details() {
     // 'use strict';
     

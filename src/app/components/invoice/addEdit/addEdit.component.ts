@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core'
 import { DatePipe } from '@angular/common';
+import { Store } from '@ngrx/store'
+import {ToasterService} from 'angular2-toaster';
+import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
 import { response, client, invoice, terms, setting, product, addEditEstimate } from '../../../interface'
@@ -15,17 +21,15 @@ import { ClientService } from '../../../services/client.service'
 import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
-import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
 
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import {ToasterService} from 'angular2-toaster';
+
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Title }     from '@angular/platform-browser';
-import { DateAdapter } from '@angular/material';
+
 
 @Component({
   selector: 'app-invoice',
@@ -201,11 +205,40 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+
+    this.getTodaysInvoices();
+    
+}
+
+  getTodaysInvoices(){
     //getting arraylist of recenlty added invoices 
     this.store.select('recentInvoices').subscribe(invoices => {
       this.invoiceList = invoices
+      var start = new Date();
+      start.setHours(0, 0, 0, 0);
+      if (this.invoiceList.length < 1) {
+        var query = {
+          clientIdList: null,
+          startTime: start.getTime(),
+          endTime: new Date().getTime()
+        }
+        // this.invListLoader = true
+        this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
+          return interval(5000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        })).subscribe((response: any) => {
+          if (response.status === 200) {
+            // this.invListLoader = false
+            this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+            this.store.select('invoice').subscribe(invoices => {
+              this.invoiceList = invoices
+            })
+          }
+        }, err => console.log(err))
+      }
     })
-}
+  }
 
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -264,16 +297,17 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
-    
-
-    
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceListLoading = true;
-    this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+    this.invoiceService.fetchById([invId]).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
       if(invoice.records !== null) {
         //deleted these objects bcz input was mismatcing for adding while deleting
@@ -533,7 +567,8 @@ export class AddEditComponent implements OnInit {
         // this.router.navigate(['/invoice/view'])
       }
       return false
-    })
+    },
+    err => console.log(err));
   }
 
   commonSettingsInit() {
@@ -617,16 +652,12 @@ export class AddEditComponent implements OnInit {
     // Fetch Products if not in store
     if(this.productList.length < 1) {
       this.productListLoading = true;
-      this.productService.fetch().subscribe((response: response) => {
-        for (let i = 0; i < this.productList.length; i++) {
-          if(!this.productList[i].prodName){
-            this.productList.splice(i);
-          }
-          var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-          if (tempProduct === "") {
-            this.productList.splice(i);
-          }
-        }
+      this.productService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
+        this.removeEmptyProducts();
         this.productListLoading = false;
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
@@ -634,7 +665,8 @@ export class AddEditComponent implements OnInit {
           )))
           this.setProductFilter()
         } 
-      })
+      },
+      err => console.log(err));  
     } else {
       this.setProductFilter()
     }
@@ -642,7 +674,11 @@ export class AddEditComponent implements OnInit {
     // Fetch Clients if not in store
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.clientListLoading = false
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
@@ -662,7 +698,8 @@ export class AddEditComponent implements OnInit {
         }
         this.setClientFilter()
         
-      })
+      },err => console.log(err));
+      
     } else {
       this.setClientFilter()
     }
@@ -670,21 +707,29 @@ export class AddEditComponent implements OnInit {
     // Fetch Terms if not in store
     if(this.termList.length < 1 && !this.edit) {
       this.tncLoading = true;
-      this.termConditionService.fetch().subscribe((response: response) => {
+      this.termConditionService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.tncLoading = false;
          //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
+      },err => console.log(err))
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
 
     // Fetch Settings every time
     this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
+    this.settingService.fetch().pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       this.settingsLoading = false;
       if (response.settings !== null) {
         setStorage(response.settings)
@@ -734,7 +779,7 @@ export class AddEditComponent implements OnInit {
     } else {
       this.activeInvoice.invoice_number = this.tempInvNo.toString();
     }
-    })
+    },err => console.log(err))
     
   }
 
@@ -749,7 +794,11 @@ export class AddEditComponent implements OnInit {
       )
   }else{
     this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         
         this.clientListLoading = false
         if (response.records) {
@@ -770,7 +819,7 @@ export class AddEditComponent implements OnInit {
         }
         this.setClientFilter()
         
-      })
+      },err => console.log(err))
   }
 }
 
@@ -858,7 +907,11 @@ export class AddEditComponent implements OnInit {
 
       $('#saveClientButton').attr("disabled", 'true')
       this.clientListLoading = true
-      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
+      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: any) => {
         if (response.status === 200) {
           let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
           this.store.dispatch(new clientActions.add([tempClient]))
@@ -875,7 +928,7 @@ export class AddEditComponent implements OnInit {
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
-      })
+      },err => console.log(err))
     }else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
@@ -890,6 +943,19 @@ export class AddEditComponent implements OnInit {
     this.activeClient = {}
     this.activeInvoice.unique_key_fk_client = null
     this.billingTo.reset('')
+  }
+
+  removeEmptyProducts(){
+    //remove whitespaces from productlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i);
+      }
+    }
   }
 
   // Product Functions
@@ -909,16 +975,7 @@ export class AddEditComponent implements OnInit {
   
 
   private _filterProd(value: string): product[] {
-    //remove whitespaces from productlist
-    for (let i = 0; i < this.productList.length; i++) {
-      if (!this.productList[i].prodName) {
-        this.productList.splice(i);
-      }
-      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-      if (tempProduct === "") {
-        this.productList.splice(i);
-      }
-    }
+    this.removeEmptyProducts();
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -935,7 +992,11 @@ export class AddEditComponent implements OnInit {
       unit: add_product.unit ? add_product.unit : ""
     }
 
-    this.productService.add([product]).subscribe((result: any) => {
+    this.productService.add([product]).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((result: any) => {
       if (result.status === 200) {
         var temp = this.productService.changeKeysForStore(result.productList[0])
         this.store.dispatch(new productActions.add([temp]))
@@ -951,7 +1012,7 @@ export class AddEditComponent implements OnInit {
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
-    })
+    },err => console.log(err))
   }
 
   editInvoiceItem(index) {
@@ -1109,7 +1170,11 @@ export class AddEditComponent implements OnInit {
 
       this.termConditionService.add([
         this.termConditionService.changeKeysForApi(this.addTermModal)
-      ]).subscribe((response: any) => {
+      ]).pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: any) => {
         if (response.status === 200) {
           var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
           this.store.dispatch(new termActions.add([temp]))
@@ -1129,7 +1194,7 @@ export class AddEditComponent implements OnInit {
           //alert(response.message)
           this.toasterService.pop('failure', 'Network error');
         }
-      })
+      },err => console.log(err))
     }
   }
 
@@ -1315,6 +1380,8 @@ export class AddEditComponent implements OnInit {
       return false
     }
 
+    
+
     if (this.activeInvoice.listItems.length == 0 || !status) {
       this.toasterService.pop('failure', 'You haven\'t added item');
       return false
@@ -1377,10 +1444,22 @@ export class AddEditComponent implements OnInit {
       }
 
     var self = this
-    // console.log(this.activeInvoice);
-    // return false
+    //make tax & discount 0 when disable button selecetd from primary settings
+    for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+      if(this.settings.taxFlagLevel === 2){
+        this.activeInvoice.listItems[i].tax_rate = 0;
+      }
+  
+      if(this.settings.discountFlagLevel === 2){
+        this.activeInvoice.listItems[i].discount = 0;
+      }
+    }
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
-    this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
+    this.invoiceService.add([this.activeInvoice]).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
       } else if (result.status === 200) {
@@ -1427,7 +1506,8 @@ export class AddEditComponent implements OnInit {
         }
       }
       $('#invSubmitBtn').removeAttr('disabled')
-    })
+    },
+    err => console.log(err))
   }
   // validate user if he removes invoice number and try to save invoice 
   else {                    
@@ -1515,7 +1595,11 @@ export class AddEditComponent implements OnInit {
     }
     // settings1.androidSettings.invNo = this.tempInvNo
 
-    this.settingService.add(settings1).subscribe((response: any) => {})
+    this.settingService.add(settings1).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {},err => console.log(err))
   }
 
   // Payment Functions

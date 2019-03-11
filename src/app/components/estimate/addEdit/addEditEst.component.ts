@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
 import { Router, ActivatedRoute, NavigationStart  } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
+import { ToasterService } from 'angular2-toaster'
+import { DatePipe } from '@angular/common';
+import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
+import { Store } from '@ngrx/store'
+
 import { CONSTANTS } from '../../../constants'
 import { response, addEditEstimate, estimate , client, terms, setting, product } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
@@ -13,16 +21,12 @@ import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
 
-import { Store } from '@ngrx/store'
 import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import { ToasterService } from 'angular2-toaster'
-import { DatePipe } from '@angular/common';
-import { Title }     from '@angular/platform-browser';
-import { DateAdapter } from '@angular/material';
+
 
 
 @Component({
@@ -231,7 +235,11 @@ export class AddEditEstComponent implements OnInit {
     // Fetch selected estimate
     this.commonSettingsInit()
 
-    this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
+    this.estimateService.fetchById([estId]).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
@@ -317,12 +325,16 @@ export class AddEditEstComponent implements OnInit {
           }
           this.activeEstimate.termsAndConditions = temp
         } else if (this.termList.length < 1) {
-          this.termConditionService.fetch().subscribe((response: response) => {
+          this.termConditionService.fetch().pipe(retryWhen(_ => {
+            return interval(2000).pipe(
+              flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+            )
+          })).subscribe((response: response) => {
             if (response.termsAndConditionList) {
               this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
             }
             this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-          })
+          },err => console.log(err))
         } else {
           this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
         }
@@ -362,7 +374,7 @@ export class AddEditEstComponent implements OnInit {
         this.toasterService.pop('failure', 'Invalid estimate id');
         this.router.navigate(['/estimate/view'])
       }
-    })
+    },err => console.log(err))
   }
 
   commonSettingsInit() {
@@ -463,7 +475,11 @@ export class AddEditEstComponent implements OnInit {
   fetchCommonData() {
     // Fetch Products if not in store
     if (this.productList.length < 1) {
-      this.productService.fetch().subscribe((response: response) => {
+      this.productService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         if (response.records != null) {
           this.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
             (prod.enabled == 0 && prod.prodName !== undefined)
@@ -472,7 +488,7 @@ export class AddEditEstComponent implements OnInit {
         } else {
           this.setProductFilter()
         }
-      })
+      },err => console.log(err))
     } else {
       this.setProductFilter()
     }
@@ -480,7 +496,11 @@ export class AddEditEstComponent implements OnInit {
     // Fetch Clients if not in store
     if (this.allClientList.length < 1) {
       this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.clientListLoading = false
         
         if (response.records) {
@@ -508,7 +528,7 @@ export class AddEditEstComponent implements OnInit {
         }
         this.setClientFilter()
         
-      })
+      },err => console.log(err))
     } else {
       
       this.setClientFilter()
@@ -517,13 +537,17 @@ export class AddEditEstComponent implements OnInit {
     // Fetch Terms if not in store
     if (this.termList.length < 1 && !this.edit) {
       this.tncLoading = false;
-      this.termConditionService.fetch().subscribe((response: response) => {
+      this.termConditionService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.tncLoading = true;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
+      },err => console.log(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
     }
@@ -531,7 +555,11 @@ export class AddEditEstComponent implements OnInit {
 
     //Fetch Settings every time
     this.settingsLoading = false;
-    this.settingService.fetch().subscribe((response: any) => {
+    this.settingService.fetch().pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       this.settingsLoading = true;
       if (response.settings !== null) {
         setStorage(response.settings)
@@ -581,7 +609,8 @@ export class AddEditEstComponent implements OnInit {
     //     this.activeEstimate.estimate_number = this.tempEstNo.toString();
     //   }
     // }
-    })
+    },err => console.log(err)
+    )
   }
 
   // Client Functions
@@ -607,7 +636,11 @@ export class AddEditEstComponent implements OnInit {
       )
   }else{
     this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.clientListLoading = false;
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
@@ -631,7 +664,8 @@ export class AddEditEstComponent implements OnInit {
           )
         }
         // this.setClientFilter()
-      })
+      },err => console.log(err)
+      )
   }
 }
 
@@ -718,7 +752,11 @@ export class AddEditEstComponent implements OnInit {
       this.clientListLoading = true
 
       $('#saveClientButton').attr("disabled", 'disabled')
-      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
+      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: any) => {
         if (response.status === 200) {
           this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
           this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
@@ -734,7 +772,8 @@ export class AddEditEstComponent implements OnInit {
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
-      })
+      },err => console.log(err)
+      )
     }else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
@@ -865,7 +904,11 @@ export class AddEditEstComponent implements OnInit {
       unit: add_product.unit ? add_product.unit : ""
     }
 
-    this.productService.add([product]).subscribe((result: any) => {
+    this.productService.add([product]).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((result: any) => {
       if (result.status === 200) {
         var temp = this.productService.changeKeysForStore(result.productList[0])
         this.store.dispatch(new productActions.add([temp]))
@@ -880,7 +923,8 @@ export class AddEditEstComponent implements OnInit {
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
-    })
+    },err => console.log(err)
+    )
   }
 
   closeEditItemModal() {
@@ -950,7 +994,11 @@ export class AddEditEstComponent implements OnInit {
 
       this.termConditionService.add([
         this.termConditionService.changeKeysForApi(this.addTermModal)
-      ]).subscribe((response: any) => {
+      ]).pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: any) => {
         if (response.status === 200) {
           var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
           this.store.dispatch(new termActions.add([temp]))
@@ -969,7 +1017,8 @@ export class AddEditEstComponent implements OnInit {
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
           this.toasterService.pop('failure', 'Error occured');
         }
-      })
+      },err => console.log(err)
+      )
     }
   }
 
@@ -1072,7 +1121,11 @@ export class AddEditEstComponent implements OnInit {
 
     var self = this
     if(this.activeEstimate.estimate_number !=="" && this.activeEstimate.created_date){
-    this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
+    this.estimateService.add([this.activeEstimate]).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       if (response.status !== 200) {
         //alert('Couldnt save Estimate')
         this.toasterService.pop('failure', 'Error occured')
@@ -1109,7 +1162,8 @@ export class AddEditEstComponent implements OnInit {
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
-    })
+    },err => console.log(err)
+    )
   }
   // validate user if he removes invoice number and try to save invoice 
   else {                    
@@ -1251,6 +1305,11 @@ export class AddEditEstComponent implements OnInit {
     }
     // settings1.androidSettings.estNo = this.tempEstNo
 
-    this.settingService.add(settings1).subscribe((response: any) => { })
+    this.settingService.add(settings1).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => { },err => console.log(err)
+    )
   }
 }
