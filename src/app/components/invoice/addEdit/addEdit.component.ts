@@ -1442,7 +1442,11 @@ export class AddEditComponent implements OnInit {
       }
     }
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
+  
     this.invoiceService.add([this.activeInvoice]).pipe(retryWhen(_ => {
+      // for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
+      //   this.activeInvoice.termsAndConditions[j].terms = this.activeInvoice.termsAndConditions[j].terms_condition
+      // }
       return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
@@ -1463,11 +1467,6 @@ export class AddEditComponent implements OnInit {
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
-
-        // Update settings
-        // if(!this.edit) {
-        //   this.updateSettings()
-        // }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {

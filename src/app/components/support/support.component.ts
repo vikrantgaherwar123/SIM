@@ -64,8 +64,8 @@ export class SupportComponent implements OnInit {
 
   sendMail() {
     this.emailService.sendEmail(this.orgMail, this.orgName, this.subject,
-        this.queryMessage+''+this.osName+''+this.osVersion+''+this.browserName+''+this.browserVersion+''+
-        this.vendor+''+this.platform).subscribe(
+        'OS Name: '+this.osName+'\n OS Version: '+this.osVersion+'\n Broswer Name: '+this.browserName+'\n Browser Version: '+this.browserVersion+'\n Vendor: '+
+        this.vendor+'\n User Agent'+this.userAgent+'\n App Version: '+this.appVersion+'\n Platform: '+this.platform + '\n Message: ' + this.queryMessage).subscribe(
         (res) => {
             console.log(res);
         },
