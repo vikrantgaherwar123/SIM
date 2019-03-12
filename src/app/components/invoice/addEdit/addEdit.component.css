@@ -149,6 +149,23 @@ select {
 .border_white{
   border-right: 1px solid white;
 }
+.center{
+  height: 52px;
+  margin-top: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: -34px; */
+  opacity: unset;
+  margin-bottom: 6px;
+}
+.title{
+  text-align: center;
+  color: #0299ff;
+  font-weight: bold;
+  margin-top: -16px;
+  font-family: quicksand_bold;
+}
 @media (min-width: 1280px)
 {
   .downArrowIcon{

@@ -1254,23 +1254,19 @@
 <!-- Error MODAL starts -->
 <div id="error-message" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-           Error Encountered
-      </h4>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -1rem -1rem auto;">
-        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
-      </button>
+<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
+  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
+    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo">
     </div>
     <div class="modal-body">
-      <h3>No Internet Connection.Make sure your wifi or cellular data is turned on and try again !!!</h3>
+      <h3 class="title">Connection Lost !</h3>
+      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="close btn btn-raised btn-custom-1" 
-      data-dismiss="modal" aria-label="Close" style="opacity: unset;">
-        Ok
+    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
+      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
+      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+        OK
       </button>
      
     </div>
