@@ -10,6 +10,11 @@
               </h5>
             </div>
             <div class="col-12" style="margin-bottom: 10px;">
+              <div class="form-group">
+                <input type="text" id="CurrPass" name="orgName" class="form-control"
+                  [(ngModel)]="orgName" onfocus="this.select()"
+                />
+              </div>
                 <div class="form-group">
                   <input type="text" id="CurrPass" name="orgMail" class="form-control"
                     [(ngModel)]="orgMail" onfocus="this.select()"
@@ -21,6 +26,7 @@
               <div class="form-group">
                 <textarea type="text" name="queryMessage" class="form-control mCustomScrollbar style-3"
                   placeholder="Your Query" style="height: auto !important;" onfocus="this.select()"
+                  [(ngModel)] = "queryMessage"
                 ></textarea>
               </div>
             </div>
@@ -45,7 +51,7 @@
             
             <div style="margin: 0 auto; max-width: 300px">
               <button type="submit" id="bankingDetailSubmit" style="width: 300px;border: none !important;"
-                class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold"
+                class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold" (click)="sendMail()"
                
               >
                 SAVE

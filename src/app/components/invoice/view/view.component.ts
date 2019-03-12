@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router'
+import { Title } from '@angular/platform-browser';
+import { Observable } from 'rxjs'
+import { FormControl } from '@angular/forms'
+import { Store } from '@ngrx/store'
 import { InvoiceService } from '../../../services/invoice.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
 import { response, invoice, client } from '../../../interface'
-import { Observable } from 'rxjs'
-import { FormControl } from '@angular/forms'
 
-import { Store } from '@ngrx/store'
 import * as invoiceActions from '../../../actions/invoice.action'
 import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
-import { Router, ActivatedRoute } from '@angular/router'
-import { Title } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-view',
@@ -122,13 +125,17 @@ export class ViewComponent implements OnInit {
     this.dropdownList = [];
     if (this.clientList.length < 1) {
       this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         // this.store.dispatch(new clientActions.add(response.records))
-      }
+      },err => console.log(err)
       )
     } else {
       this.removeEmptySpaces();
@@ -153,10 +160,14 @@ export class ViewComponent implements OnInit {
     })
 
     // show date as per format changed
-    this.settingService.fetch().subscribe((response: any) => {
+    this.settingService.fetch().pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
-    })
+    },err => console.log(err))
 
     // dropdown settings
     this.dropdownSettings = {
@@ -322,7 +333,11 @@ export class ViewComponent implements OnInit {
     }
 
     this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
+    this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
@@ -332,7 +347,7 @@ export class ViewComponent implements OnInit {
         this.setActiveInv()
       }
       
-    })
+    },err => console.log(err))
   }
 
   setActiveInv(invId: string = '') {
@@ -389,7 +404,11 @@ export class ViewComponent implements OnInit {
       $('#previewBtn').attr('disabled', 'disabled')
     }
 
-    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).subscribe((response: any) => {
+    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       var file = new Blob([response], { type: 'application/pdf' })
 
       var a = window.document.createElement('a')
@@ -404,7 +423,7 @@ export class ViewComponent implements OnInit {
         window.open(a.toString())
         $('#previewBtn').removeAttr('disabled')
       }
-    })
+    },err => console.log(err))
   }
 
   getFileName() {

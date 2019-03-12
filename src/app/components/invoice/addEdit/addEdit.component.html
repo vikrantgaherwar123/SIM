@@ -772,10 +772,374 @@
           </div>
         </form>
       </div>
+      <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <app-todays-invoice [invId]="invoiceId"></app-todays-invoice>
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
+          <!-- Buttons -->
+          <div class="row">
+            <div class="col-12">
+              <button id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)"
+                data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
+                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
+                <img src="assets/images/buttons-icon/pencil-edit-button16.png"
+                  style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                Edit
+              </button>
+              <button id="downloadBtn" type="button" (click)="downloadInvoice('download')"
+                data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
+                class="btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
+                <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
+                Download
+              </button>
+              <button id="previewBtn" type="button" (click)="downloadInvoice('preview')"
+                data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
+                <img src="assets/images/buttons-icon/view16.png">
+                Preview
+              </button>
+            </div>
+          </div>
+        
+          <!-- Title -->
+          <div class="text-right px-1">
+            <span class="c-name" type="text" id="title" name="title" *ngIf="settings.mTvInvoice">
+              {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}}
+            </span>
+            <span class="c-name" type="text" id="titleelse" name="title" *ngIf="!settings.mTvInvoice">
+              {{'INV_LABEL' | translate}}
+            </span>
+          </div>
+        
+          <!-- Invoice Details -->
+          <div class="row mb-2">
+            <div class="col-12 col-sm-7" id="clientData" name="clientData">
+              <div class="row">
+                <div class="col-12" style="width: 88%;">
+                  <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
+                    {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}}
+                  </span>
+                  <div *ngIf="activeClient" class="font-custom-bold"
+                    style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
+                    {{activeClient.name}}
+                  </div>
+                </div>
+        
+                <div class="col-12">
+                  <div class="row" id="addressBar" name="addressBar">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <span type="text" id="BillAddress" class="adr bill-to font-custom-bold">
+                        Address
+                      </span>
+                      <div *ngIf="activeClient" class="address-render color_grey">{{activeClient.addressLine1}}</div>
+                      <div *ngIf="activeClient" class="color_grey">
+                        <!--activeClient.email-->
+                        Email: {{activeClient.email}}
+                      </div>
+                      <div *ngIf="activeClient" class="color_grey">
+                        <!--activeClient.number-->
+                        Contact No: {{activeClient.number}}
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
+                        {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+                      </span>
+                      <div class="address-render color_grey">{{activeInv.shipping_address}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-5" id="invData" name="invData">
+              <div class="row">
+                <div class="offset-md-2 col-md-4 col-sm-6 ">
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}}
+                  </span>
+                </div>
+                <div class="col-sm-6 color_grey">
+                  {{ activeInv.invoice_number  }}
+                </div>
+              </div>
+        
+              <div class="row">
+                <div class="offset-md-2 col-md-4 col-sm-6 ">
+                  <span class="font-custom-bold text-left w-100">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}}
+                    Date</span>
+                </div>
+                <div class="col-sm-6 color_grey">
+                  {{activeInv.created_date}}
+                </div>
+              </div>
+        
+              <div class="row">
+                <div class="offset-md-2 col-sm-6 col-md-4">
+                  <span class="font-custom-bold text-left w-100">Reference</span>
+                </div>
+                <div class="col-sm-6 color_grey">
+                  <span style="word-wrap: break-word"> {{activeInv.reference}}</span>
+                </div>
+              </div>
+        
+              <div class="row">
+                <div class="offset-md-2 col-xs-6 col-md-4">
+                  <span
+                    class="font-custom-bold text-left w-100">{{settings.mTvDueDate ? settings.mTvDueDate : 'Due Date'}}</span>
+                </div>
+                <div class="col-sm-6 color_grey">
+                  {{activeInv.due_date}}
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Items Table -->
+          <div class="row mb-3">
+            <div class="col-md-12 lineItemDiv">
+              <table table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped"
+                style="table-layout: fixed">
+                <thead>
+                  <tr class="hd font-custom-bold">
+                    <td width="20%">
+                      <input type="text" id="itemDescLabel" class="bld w-100 text-left" disabled style="margin-left: 10px;"
+                        value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
+                    </td>
+                    <td width="10%">
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-center" disabled
+                        value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
+                    </td>
+                    <td width="10%">
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-center" disabled
+                        value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
+                    </td>
+                    <td width="10%">
+                      <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
+                    </td>
+                    <td width="10%">
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center"
+                        value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
+                    </td>
+                    <td width="4%">
+                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-center" style="text-align:right;"
+                        disabled value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}">
+                    </td>
+                  </tr>
+                </thead>
+        
+                <tbody class="lineItems"> 
+                  <tr class="row-item" *ngFor="let item of activeInv.listItems; let last = last">
+                    <td [class.no-border-last]="last">
+                      <div class="">
+                        <div class="form-group">
+                          <div *ngIf="item" class="text-left product-color"
+                            style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                            {{item.productName}}
+                          </div>
+                          <div class="text-left text-truncate view_desc">
+                            {{item.description}}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+        
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div class="text-center">
+                        {{item.qty | number:'2.'}}
+                      </div>
+                    </td>
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div class="text-center">
+                        {{item.rate | number:'2.'}}
+                      </div>
+                    </td>
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                      <!--activeInv.tax_on_item == 0-->
+                      <div class="text-center">
+                        {{item.tax_rate | number:'2.'}}
+                      </div>
+                    </td>
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                      <!--activeInv.discount_on_item == 1-->
+                      <div class="text-center">
+                        {{item.discountRate | number:'2.'}}
+                      </div>
+                    </td>
+                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div class="text-center">
+                        {{item.price | number:'2.'}}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        
+          <!-- Bottom  -->
+          <div class="row">
+            <!-- Terms And Conditions -->
+            <div class="col-6 term-row">
+              <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
+                <span class="bld">
+                  {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
+                </span>
+              </div>
+              <div class="col-md-12 px-0 margin-top-8" style="margin-top: 10px;">
+                <ul  class=" col-sm-12 list-unstyled">
+                  <li class="row" *ngFor="let term of activeInv.termsAndConditions">
+                    <div class="col-md-12 margin-bottom-5px">
+                      <span style="word-wrap: break-word;color: #a4a4a4;">{{term.terms}}</span>
+                      <br /></div>
+                  </li>
+                </ul>
+                <div class="col-md-12" *ngIf="activeInv.termsAndConditions?.length < 1">
+                  <h4>No terms added</h4>
+                </div>
+              </div>
+            </div>
+        
+            <!-- Calculations -->
+            <div class="col-6">
+              <!-- Total -->
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
+                <div class="col-6 text-left">
+                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
+                </div>
+                <div class="col-6 text-right">
+                  <span
+                    class="font-custom-bold price">{{activeInv.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                </div>
+              </div>
+        
+              <!-- Discount -->
+              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
+                <div class="col-5 discount-tax-label">
+                  <span style="text-align: left;vertical-align: bottom;"
+                    class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
+                  <div *ngIf="!isRate" class="inline font-custom">
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
+                  </div>
+                  <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
+                </div>
+                <div class="col-7">
+                  <div class="text-right">
+                    <div *ngIf="!activeInv.discountFlag == 0">
+                      {{activeInv.percentageValue | number:'2.'}}
+                    </div>
+                    <div class="price" *ngIf="!activeInv.discountFlag == 1">
+                      {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Tax -->
+              <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
+                <div class="col-4 discount-tax-label">
+                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
+                </div>
+                <div class="col-8 ">
+                  <div class="text-right">
+                    {{activeInv.tax_amount | number:'1.1-2'}}
+                  </div>
+                </div>
+              </div>
+        
+              <!-- TaxList -->
+              <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
+                <div class="col-4 discount-tax-label">
+                  <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
+                    {{tax.taxName}}</div>
+                  <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                </div>
+                <div class="col-8 ">
+                  <div class="text-right">
+                    {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Shipping -->
+              <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
+                <div class="col-4 discount-tax-label">
+                  <div class="inline" style="text-align: left;vertical-align: bottom;">
+                    {{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                </div>
+                <div class="col-8 ">
+                  <div class="text-right">
+                    {{activeInv.shipping_charges | number:'1.1-2'}}
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Adjustment -->
+              <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
+                <div class="col-4 discount-tax-label">
+                  <div class="inline" style="text-align: left; vertical-align: bottom;">
+                    {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="text-right">
+                    {{activeInv.adjustment | number:'1.1-2'}}
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Gross Total -->
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
+                <div class="col-6 text-left">
+                  <span class="font-custom-bold">
+                    {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
+                  </span>
+                </div>
+                <div class="col-6 text-right">
+                  <span
+                    class="font-custom-bold price">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                </div>
+              </div>
+        
+              <!-- Paid -->
+              <div class="row mx-0" style="padding-top: 10px;padding-bottom: 10px;">
+                <div class="col-6 text-left">
+                  <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
+                </div>
+                <div class="col-6 text-right">
+                  <span
+                    class="font-custom price">{{paidAmount()|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                </div>
+              </div>
+              <!-- Payment -->
+              <hr *ngIf="paidAmount()">
+              <div *ngFor="let item of activeInv.payments" class="top_bot_mr_10 pay_clr">
+                <div class="row mx-0">
+                  <div class="col-6 text-left label_color">
+                    <span class="font-custom">{{item.dateOfPayment | date}}</span>
+                  </div>
+                  <div class="col-6 text-right pad_rg_5" style="margin-left: -10px;">
+                    <span
+                      class="font-custom price">{{item.paidAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Balance -->
+              <div class="row mx-0 balance-row" style="padding: 6.5px 0px;">
+                <div class="col-6 text-left">
+                  <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
+                </div>
+                <div class="col-6 text-right">
+                  <span
+                    class="bld price">{{activeInv.balance|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Calculations -->
+        
+          </div>
+        </form>
       </div>
-
+      <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
         <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
@@ -795,9 +1159,10 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: auto;border-top: 1px solid #d2d2d2;">
            
-            <div *ngFor="let invoice of invoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
+            *ngFor="let invoice of invoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
             border-bottom: 1px solid #d2d2d2;margin: -1px  0px 0px 4px;" (click)="setActiveInv(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 {{ invoice.created_date | date: 'dd MMM' }}

@@ -1,18 +1,22 @@
 import { Component, OnInit } from '@angular/core'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router'
+import { Observable } from 'rxjs'
+import { FormControl } from '@angular/forms'
+
+import { Store } from '@ngrx/store'
+
 import { EstimateService } from '../../../services/estimate.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
 
 import { response, estimate, client } from '../../../interface'
-import { Observable } from 'rxjs'
-import { FormControl } from '@angular/forms'
 
-import { Store } from '@ngrx/store'
 import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
-import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-view',
@@ -112,13 +116,18 @@ export class ViewEstComponent implements OnInit {
     this.dropdownList = [];
     if (this.clientList.length < 1) {
       this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
-      })
+      },err => console.log(err)
+      )
     } else {
       this.removeEmptySpaces();
       this.dropdownList = this.clientList;
@@ -133,10 +142,15 @@ export class ViewEstComponent implements OnInit {
     })
   
     // show date as per format changed
-    this.settingService.fetch().subscribe((response: any) => {
+    this.settingService.fetch().pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
-    })
+    },err => console.log(err)
+    )
 
     // dropdown settings
     this.dropdownSettings = {
@@ -300,7 +314,11 @@ export class ViewEstComponent implements OnInit {
     }
 
     this.estListLoader = true
-    this.estimateService.fetchByQuery(query).subscribe((response: any) => {
+    this.estimateService.fetchByQuery(query).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       if (response.status === 200) {
         this.estListLoader = false
         this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
@@ -311,7 +329,8 @@ export class ViewEstComponent implements OnInit {
         })
       }
       
-    })
+    },err => console.log(err)
+    )
   }
 
   setActiveEst(estId: string = '') {
@@ -369,7 +388,11 @@ export class ViewEstComponent implements OnInit {
       $('#previewBtn').attr('disabled', 'disabled')
     }
 
-    this.estimateService.fetchPdf(this.activeEst.unique_identifier).subscribe((response: any) => {
+    this.estimateService.fetchPdf(this.activeEst.unique_identifier).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       var file = new Blob([response], { type: 'application/pdf' })
 
       var a = window.document.createElement('a')
@@ -384,7 +407,8 @@ export class ViewEstComponent implements OnInit {
         window.open(a.toString())
         $('#previewBtn').removeAttr('disabled')
       }
-    })
+    },err => console.log(err)
+    )
   }
 
   getFileName() {
