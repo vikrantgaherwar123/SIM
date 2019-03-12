@@ -148,6 +148,12 @@ select {
 .search_btn{
   width: 307px;
 }
+.client_arrow {
+  left: -30px !important;
+  width: 14px;
+  margin-left: 14px;
+  height: 14px;
+}
 @media (min-width: 1366px)
 {
   .downArrowIcon{
@@ -160,11 +166,23 @@ select {
 }
 
 }
+@media (min-width: 1440px)
+{
+.client_arrow {
+  left: -4px !important;
+}
+}
+@media (min-width: 1326px)
+{
+.client_arrow {
+  left: -45px !important;
+}
+}
 @media (min-width: 1280px)
 {
   .downArrowIcon{
     position: absolute;
-    left: 365px;
+    left: 362px;
     top: -1px;
     padding: 9px 17px;
     color: #aaa;
