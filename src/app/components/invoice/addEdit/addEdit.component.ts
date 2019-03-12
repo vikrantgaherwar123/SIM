@@ -4,6 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
+import {ToasterService} from 'angular2-toaster';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
+
+
 import { CONSTANTS } from '../../../constants'
 import { response, client, invoice, terms, setting, product, addEditEstimate } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
@@ -22,10 +30,6 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import {ToasterService} from 'angular2-toaster';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Title }     from '@angular/platform-browser';
-import { DateAdapter } from '@angular/material';
 
 @Component({
   selector: 'app-invoice',
@@ -163,14 +167,14 @@ export class AddEditComponent implements OnInit {
     $(document).ready(function () {
       $('.save').on('click', function () {
         var $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+        var loadingText = 'Saving...<i class="fa fa-circle-o-notch fa-spin"></i>';
         if ($(this).html() !== loadingText) {
           $this.data('original-text', $(this).html());
           $this.html(loadingText);
         }
         setTimeout(function () {
           $this.html($this.data('original-text'));
-        }, 4);
+        }, 800);
       });
     })
     // save button processing script ends
@@ -278,7 +282,6 @@ export class AddEditComponent implements OnInit {
         delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-        
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
           var temp = []
@@ -432,9 +435,6 @@ export class AddEditComponent implements OnInit {
                 }
               }
             }
-    
-    
-    
             // Change TnC keys compatible
             if (this.activeEstimate.termsAndConditions) {
               temp = []
@@ -571,14 +571,11 @@ export class AddEditComponent implements OnInit {
       this.settings.date_format = this.adapter.setLocale('en-GB');
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
-      console.log(this.formatedDate);
-      
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
     }
     //  this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
-    // console.log(settings.currencyInText);
 
     // Currency Dropdown
     if (settings.currencyText) {
@@ -587,8 +584,6 @@ export class AddEditComponent implements OnInit {
     else {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
-
-    
     if (settings) {
       this.activeInvoice.tax_on_item = 2
       this.activeInvoice.discount_on_item = 2
@@ -613,15 +608,7 @@ export class AddEditComponent implements OnInit {
     if(this.productList.length < 1) {
       this.productListLoading = true;
       this.productService.fetch().subscribe((response: response) => {
-        for (let i = 0; i < this.productList.length; i++) {
-          if(!this.productList[i].prodName){
-            this.productList.splice(i);
-          }
-          var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-          if (tempProduct === "") {
-            this.productList.splice(i);
-          }
-        }
+        this.removeEmptyProducts();
         this.productListLoading = false;
         if (response.records != null) {
           self.store.dispatch(new productActions.add(response.records.filter((prod: any) =>
@@ -667,7 +654,6 @@ export class AddEditComponent implements OnInit {
       this.tncLoading = true;
       this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = false;
-         //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
@@ -802,7 +788,6 @@ export class AddEditComponent implements OnInit {
       this.activeClient = temp
       this.activeInvoice.unique_key_fk_client = temp.uniqueKeyClient
     } else {
-      //console.log("clients",this.clients)
       if(this.activeClient) {
         this.activeClient = {}
       }
@@ -887,6 +872,19 @@ export class AddEditComponent implements OnInit {
     this.billingTo.reset('')
   }
 
+  removeEmptyProducts(){
+    //remove whitespaces from productlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i);
+      }
+    }
+  }
+
   // Product Functions
   setProductFilter() {
     var obj = {};
@@ -904,17 +902,7 @@ export class AddEditComponent implements OnInit {
   
 
   private _filterProd(value: string): product[] {
-    for (let i = 0; i < this.productList.length; i++) {
-      if (!this.productList[i].prodName) {
-        this.productList.splice(i);
-      }
-      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-      if (tempProduct === "") {
-        this.productList.splice(i);
-      }
-    }
-    
-    //remove whitespaces from productlist
+    this.removeEmptyProducts();
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -976,7 +964,6 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-    console.log(this.addItem);
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
@@ -1234,7 +1221,6 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
-        console.log();
       }
       
 
@@ -1324,7 +1310,7 @@ export class AddEditComponent implements OnInit {
       return false
     }
 
-    $('#invSubmitBtn').attr('disabled', 'disabled')
+    // $('#invSubmitBtn').attr('disabled', 'disabled')
     this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
     
 
@@ -1376,7 +1362,11 @@ export class AddEditComponent implements OnInit {
     // console.log(this.activeInvoice);
     // return false
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
-    this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
+    this.invoiceService.add([this.activeInvoice]).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 2 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
       } else if (result.status === 200) {
@@ -1415,15 +1405,16 @@ export class AddEditComponent implements OnInit {
          else {
           //set recently added invoice list in local storage
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
         }
       }
-      $('#invSubmitBtn').removeAttr('disabled')
-    })
+      //  $('#invSubmitBtn').removeAttr('disabled')
+    }
+    , err => this.openErrorModal()
+    )
   }
   // validate user if he removes invoice number and try to save invoice 
   else {                    
@@ -1564,10 +1555,12 @@ export class AddEditComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
-
-  // save button processing script
-  
-  
+  // error modal
+  openErrorModal() {
+    $('#error-message').modal('show')
+    $('#error-message').on('shown.bs.modal', (e) => {
+    })
+  }
 
   // CURRENTLY USELESS FUNCTIONS
   log(a) {

@@ -172,6 +172,7 @@ export class AddEditEstComponent implements OnInit {
         }
       }
     }
+    
     //getting arraylist of recenlty added estimates 
     this.store.select('recentEstimates').subscribe(estimates => {
       this.estimateList = estimates
