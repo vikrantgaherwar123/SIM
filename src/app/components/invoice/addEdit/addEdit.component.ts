@@ -1422,6 +1422,7 @@ export class AddEditComponent implements OnInit {
 
     for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
       this.activeInvoice.termsAndConditions[j].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+      // this.activeInvoice.termsAndConditions[j].terms = this.activeInvoice.termsAndConditions[j].terms_
     }
 
     if(this.activeInvoice.taxList) {
