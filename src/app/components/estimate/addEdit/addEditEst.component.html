@@ -26,7 +26,7 @@
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
                           >
                           <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                              <img src="assets/images/down-arrow64.png" style="width: 14px;margin-left: -12px;height: 14px;">
+                              <img src="assets/images/down-arrow64.png" class="client_arrow">
                             </span>
                           
                           <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
@@ -316,10 +316,12 @@
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                   </a>
                 </div>
+                <div *ngIf="activeEstimate.taxList">
                 <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                   <a *ngIf="!activeEstimate.taxList[taxIndex]" (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
                     {{tax.taxName}}+
                   </a>
+                </div>
                 </div>
               </div>
             </div>
@@ -896,7 +898,7 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: auto;border-top: 1px solid #d2d2d2;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
             *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;

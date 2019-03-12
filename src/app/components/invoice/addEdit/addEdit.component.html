@@ -125,7 +125,7 @@
                       <div class="col-8">
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
-                            <input type="text" class="form-control" placeholder="mm/dd/yyyy" required
+                            <input type="text" class="form-control border-hover" placeholder="mm/dd/yyyy" required
                               [formControl]="invoiceDate" 
                               matInput [matDatepicker]="picker" (click)="picker.open()" onfocus="this.select()"             
                             >
@@ -438,12 +438,14 @@
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                       </a>
                     </div>
-                    <div  class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
+                    <div *ngIf="activeInvoice.taxList">
+                    <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                       <a *ngIf="!activeInvoice.taxList[taxIndex]"
                         (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}"
                       >
                         {{tax.taxName}}+
                       </a>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1157,7 +1159,7 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: inherit;border-top: 1px solid #d2d2d2;">
+          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: auto;border-top: 1px solid #d2d2d2;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
             *ngFor="let invoice of invoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
@@ -1613,3 +1615,27 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="error-message" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
+  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
+    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
+    </div>
+    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
+      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
+      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+        OK
+      </button>
+     
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

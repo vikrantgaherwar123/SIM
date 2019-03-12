@@ -22,7 +22,6 @@ export class HeaderComponent implements OnInit {
   toggleSideNavBar() {
     this.instance._toggleSidebar()
   }
-
   logout() {
     localStorage.clear()
     window.location.reload()

@@ -28,9 +28,6 @@ import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-
-
 @Component({
   selector: 'app-invoice',
   templateUrl: './addEdit.component.html',
@@ -168,14 +165,14 @@ export class AddEditComponent implements OnInit {
     $(document).ready(function () {
       $('.save').on('click', function () {
         var $this = $(this);
-        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> Saving...';
+        var loadingText = 'Saving...<i class="fa fa-circle-o-notch fa-spin"></i>';
         if ($(this).html() !== loadingText) {
           $this.data('original-text', $(this).html());
           $this.html(loadingText);
         }
         setTimeout(function () {
           $this.html($this.data('original-text'));
-        }, 4);
+        }, 800);
       });
     })
     // save button processing script ends
@@ -319,9 +316,6 @@ export class AddEditComponent implements OnInit {
         delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-
-
-        
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
           var temp = []
@@ -475,9 +469,6 @@ export class AddEditComponent implements OnInit {
                 }
               }
             }
-    
-    
-    
             // Change TnC keys compatible
             if (this.activeEstimate.termsAndConditions) {
               temp = []
@@ -615,14 +606,11 @@ export class AddEditComponent implements OnInit {
       this.settings.date_format = this.adapter.setLocale('en-GB');
       this.formatedDate = new Date;
       this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
-      console.log(this.formatedDate);
-      
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
     }
     //  this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
-    // console.log(settings.currencyInText);
 
     // Currency Dropdown
     if (settings.currencyText) {
@@ -631,8 +619,6 @@ export class AddEditComponent implements OnInit {
     else {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
-
-    
     if (settings) {
       this.activeInvoice.tax_on_item = 2
       this.activeInvoice.discount_on_item = 2
@@ -717,7 +703,6 @@ export class AddEditComponent implements OnInit {
         )
       })).subscribe((response: response) => {
         this.tncLoading = false;
-         //console.log(response)
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
@@ -860,7 +845,6 @@ export class AddEditComponent implements OnInit {
       this.activeClient = temp
       this.activeInvoice.unique_key_fk_client = temp.uniqueKeyClient
     } else {
-      //console.log("clients",this.clients)
       if(this.activeClient) {
         this.activeClient = {}
       }
@@ -1045,7 +1029,6 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-    console.log(this.addItem);
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
@@ -1307,7 +1290,6 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
-        console.log();
       }
       
 
@@ -1511,9 +1493,10 @@ export class AddEditComponent implements OnInit {
           self.addInit()
         }
       }
-      // $('#invSubmitBtn').removeAttr('disabled')
-    },
-    err => console.log(err))
+      //  $('#invSubmitBtn').removeAttr('disabled')
+    }
+    , err => this.openErrorModal()
+    )
   }
   // validate user if he removes invoice number and try to save invoice 
   else {                    
@@ -1658,10 +1641,12 @@ export class AddEditComponent implements OnInit {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
-
-  // save button processing script
-  
-  
+  // error modal
+  openErrorModal() {
+    $('#error-message').modal('show')
+    $('#error-message').on('shown.bs.modal', (e) => {
+    })
+  }
 
   // CURRENTLY USELESS FUNCTIONS
   log(a) {

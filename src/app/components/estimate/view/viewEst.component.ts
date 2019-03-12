@@ -296,11 +296,13 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
+    this.removeEmptySpaces();
     if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }
 
+  
   fetchEstimates(query = null) {
     // Fetch estimates with given query
     if (query == null) {

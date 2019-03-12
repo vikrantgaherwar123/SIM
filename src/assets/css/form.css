@@ -1,5 +1,6 @@
 /* Assets form CSS */
 .main-wrapper {
+	background-color: #ededed;
 	overflow-x: hidden;
 	min-height: 88vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);

@@ -21,7 +21,6 @@ import { AppState } from '../../app.state'
 
 import { client } from 'src/app/interface';
 import { response as apiRespo } from '../../interface'
-
 import { setStorage } from 'src/app/globalFunctions';
 
 
@@ -67,7 +66,7 @@ export class LoadalldataComponent implements OnInit {
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
     this.clientService.fetch().pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     }))
@@ -79,9 +78,8 @@ export class LoadalldataComponent implements OnInit {
         err => console.log(err)
       )
 
-
     this.productService.fetch().pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     }))
@@ -93,9 +91,8 @@ export class LoadalldataComponent implements OnInit {
         err => console.log(err)
       )
 
-
     this.termConditionService.fetch().pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     }))
@@ -106,9 +103,8 @@ export class LoadalldataComponent implements OnInit {
         },
         err => console.log(err))
 
-
     this.settingService.fetch().pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     }))
@@ -119,7 +115,6 @@ export class LoadalldataComponent implements OnInit {
         },
         err => console.log(err))
 
-
     this.invoiceService.fetch().pipe(retryWhen(_ => {
       return interval(5000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
@@ -129,7 +124,6 @@ export class LoadalldataComponent implements OnInit {
         result => this.invoiceRecords = result,
         err => console.log(err))
 
-
     this.estimateService.fetch().pipe(retryWhen(_ => {
       return interval(5000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
@@ -138,7 +132,6 @@ export class LoadalldataComponent implements OnInit {
       .subscribe(
         result => this.estimateRecords = result,
         err => console.log(err))
-
   }
 
   loadClients() {
