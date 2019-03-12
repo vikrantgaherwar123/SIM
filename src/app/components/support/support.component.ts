@@ -63,7 +63,12 @@ export class SupportComponent implements OnInit {
   }
 
   sendMail() {
-    this.emailService.sendEmail(this.orgMail, this.orgName, this.subject, this.queryMessage)
+    this.emailService.sendEmail(this.orgMail, this.orgName, this.subject, this.queryMessage).subscribe(
+        (res) => {
+            console.log(res);
+        },
+        err => console.log(err)
+    );
   } 
 
   browser_details() {

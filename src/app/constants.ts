@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class CONSTANTS {
   // BASE_URL: string = 'http://www.simpleinvoiceweb.com/invoice_backend/rest/v1/';
   BASE_URL: string = 'http://206.189.130.217/invoice_backend/rest/v1/';
-  // BASE_URL: string = 'http://192.168.0.47:8082/invoice_backend/rest/v1/';
+  // BASE_URL: string = 'http://192.168.0.20:8082/invoice_backend/rest/v1/';
 
   COUNTRIES: Array<{
     id: number,

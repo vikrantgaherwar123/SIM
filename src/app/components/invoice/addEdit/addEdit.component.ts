@@ -122,6 +122,7 @@ export class AddEditComponent implements OnInit {
   recentInvoiceList: any = [];
   disabledDescription: boolean = false;
   viewTodaysInvoice: boolean = false;
+  viewNextInvoice: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -207,8 +208,11 @@ export class AddEditComponent implements OnInit {
     })
 
     this.getTodaysInvoices();
+    // this.fetchInvoiceDetail();
     
 }
+
+  
 
   getTodaysInvoices(){
     //getting arraylist of recenlty added invoices 
@@ -1395,7 +1399,7 @@ export class AddEditComponent implements OnInit {
       return false
     }
 
-    $('#invSubmitBtn').attr('disabled', 'disabled')
+    // $('#invSubmitBtn').attr('disabled', 'disabled')
     this.activeInvoice.organization_id = parseInt(this.user.user.orgId)
     
 
@@ -1498,14 +1502,15 @@ export class AddEditComponent implements OnInit {
          else {
           //set recently added invoice list in local storage
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-
+          console.log(this.activeInvoice.termsAndConditions);
+           
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
         }
       }
-      $('#invSubmitBtn').removeAttr('disabled')
+      // $('#invSubmitBtn').removeAttr('disabled')
     },
     err => console.log(err))
   }
@@ -1663,6 +1668,18 @@ export class AddEditComponent implements OnInit {
   }
 
   //todays invoices functionality
+
+  // fetchInvoiceDetail() {
+  //   this.invoiceListLoading = true;
+  //   this.invoiceService.fetchById([this.invoiceId]).subscribe((invoice: any) => {
+  //     this.invoiceListLoading = false;
+  //     if (invoice.records !== null) {
+  //       this.activeInv = invoice.records[0];
+  //       this.setActiveClient();
+  //     }
+  //   })
+  // }
+
   setActiveInv(invId: string = '') {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
@@ -1674,7 +1691,47 @@ export class AddEditComponent implements OnInit {
     this.setActiveClient()
   }
 
+
+  paidAmount() {
+    var temp = 0
+    if (this.activeInv.payments) {
+      this.activeInv.payments.forEach((payment: any) => {
+        temp += parseFloat(payment.paidAmount)
+      })
+    }
+
+    return temp
+  }
+
+  removeEmptySpaces(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
+    
+  }
+
   setActiveClient() {
+      if (this.clientList.length < 1) {
+        this.clientListLoading = true
+        this.clientService.fetch().pipe(retryWhen(_ => {
+          return interval(5000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        })).subscribe((response: response) => {
+          this.clientListLoading = false
+          this.clientList = response.records;
+          this.removeEmptySpaces();
+        },err => console.log(err)
+        )
+      }
+
     if (this.activeInv) {
       var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeInv.unique_key_fk_client)[0]
       if (client) {
@@ -1683,5 +1740,59 @@ export class AddEditComponent implements OnInit {
         this.activeClient = null
       }
     }
+  }
+
+  goEdit(invId) {
+    this.router.navigate([`invoice/edit/${invId}`])
+  }
+
+  downloadInvoice(type) {
+    if (type == "download") {
+      $('#downloadBtn').attr('disabled', 'disabled')
+    } else if (type == "preview") {
+      $('#previewBtn').attr('disabled', 'disabled')
+    }
+
+    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
+      var file = new Blob([response], { type: 'application/pdf' })
+
+      var a = window.document.createElement('a')
+      a.href = window.URL.createObjectURL(file)
+
+      document.body.appendChild(a)
+      if (type == "download") {
+        a.download = this.getFileName()
+        a.click()
+        $('#downloadBtn').removeAttr('disabled')
+      } else if (type == "preview") {
+        window.open(a.toString())
+        $('#previewBtn').removeAttr('disabled')
+      }
+    },err => console.log(err))
+  }
+
+  getFileName() {
+    var d = new Date()
+
+    var day = d.getDate() <= 9 ? '0' + d.getDate() : d.getDate()
+    var month = d.toString().split(' ')[1]
+    var year = d.getFullYear()
+    var time = getTime()
+
+    function getTime() {
+      var hour = d.getHours() < 13 ? d.getHours().toString() : (d.getHours() - 12).toString()
+      hour = parseInt(hour) < 10 ? '0' + hour : hour
+      var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+      return hour + min
+    }
+
+    var ampm = d.getHours() < 12 ? 'AM' : 'PM';
+
+    var invoiceNumber = this.activeInv.invoice_number.replace('/', '')
+    return 'INVPDF_' + invoiceNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
   }
 }

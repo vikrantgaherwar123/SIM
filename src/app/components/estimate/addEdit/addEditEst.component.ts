@@ -41,6 +41,7 @@ export class AddEditEstComponent implements OnInit {
 
 
   estimateList: estimate[]
+  activeEst: estimate
   activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
@@ -113,6 +114,8 @@ export class AddEditEstComponent implements OnInit {
   recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
+  viewTodaysEstimate: boolean = false;
+  estListLoader: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -176,9 +179,42 @@ export class AddEditEstComponent implements OnInit {
         }
       }
     }
-    //getting arraylist of recenlty added estimates 
+    // //getting arraylist of recenlty added estimates 
+    // this.store.select('recentEstimates').subscribe(estimates => {
+    //   this.estimateList = estimates
+    // })
+    this.getTodaysestimates();
+    // this.fetchInvoiceDetail();
+  }
+
+
+  getTodaysestimates(){
+    //getting arraylist of recenlty added invoices 
     this.store.select('recentEstimates').subscribe(estimates => {
       this.estimateList = estimates
+      var start = new Date();
+      start.setHours(0, 0, 0, 0);
+      if (this.estimateList.length < 1) {
+        var query = {
+          clientIdList: null,
+          startTime: start.getTime(),
+          endTime: new Date().getTime()
+        }
+        // this.invListLoader = true
+        this.estimateService.fetchByQuery(query).pipe(retryWhen(_ => {
+          return interval(5000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        })).subscribe((response: any) => {
+          if (response.status === 200) {
+            // this.invListLoader = false
+            this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+            this.store.select('estimate').subscribe(estimates => {
+              this.estimateList = estimates
+            })
+          }
+        }, err => console.log(err))
+      }
     })
   }
 
@@ -1311,5 +1347,117 @@ export class AddEditEstComponent implements OnInit {
       )
     })).subscribe((response: any) => { },err => console.log(err)
     )
+  }
+
+
+  //todays estimates functionality
+
+  setActiveEst(estId: string = '') {
+    this.viewTodaysEstimate = true;
+    this.estimateId = estId;
+    if (!estId || estId === "null") {
+      this.activeEst = this.estimateList[this.estimateList.length - 1];
+    } else {
+      this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    }
+    this.setActiveClient()
+  }
+ 
+  removeEmptySpaces(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
+    
+  }
+
+  setActiveClient() {
+    if (this.clientList.length < 1) {
+      this.clientListLoading = true
+      this.clientService.fetch().pipe(retryWhen(_ => {
+        return interval(5000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      })).subscribe((response: response) => {
+        this.clientListLoading = false
+        this.clientList = response.records;
+        this.removeEmptySpaces();
+      },err => console.log(err)
+      )
+    }
+
+    if (this.activeEst) {
+      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
+      if (client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
+    }
+  }
+
+  goEdit(estId) {
+    this.router.navigate([`estimate/edit/${estId}`])
+  }
+
+  makeInvoice() {
+    this.router.navigate([`invoice/edit/${this.activeEst.unique_identifier}`])
+  }
+
+  downloadEstimate(type) {
+    if (type == "download") {
+      $('#downloadBtn').attr('disabled', 'disabled')
+    } else if (type == "preview") {
+      $('#previewBtn').attr('disabled', 'disabled')
+    }
+
+    this.estimateService.fetchPdf(this.activeEst.unique_identifier).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
+      var file = new Blob([response], { type: 'application/pdf' })
+
+      var a = window.document.createElement('a')
+      a.href = window.URL.createObjectURL(file)
+
+      document.body.appendChild(a)
+      if (type == "download") {
+        a.download = this.getFileName()
+        a.click()
+        $('#downloadBtn').removeAttr('disabled')
+      } else if (type == "preview") {
+        window.open(a.toString())
+        $('#previewBtn').removeAttr('disabled')
+      }
+    },err => console.log(err)
+    )
+  }
+
+  getFileName() {
+    var d = new Date()
+
+    var day = d.getDate() <= 9 ? '0' + d.getDate() : d.getDate()
+    var month = d.toString().split(' ')[1]
+    var year = d.getFullYear()
+    var time = getTime()
+
+    function getTime() {
+      var hour = d.getHours() < 13 ? d.getHours().toString() : (d.getHours() - 12).toString()
+      hour = parseInt(hour) < 10 ? '0' + hour : hour
+      var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+      return hour + min
+    }
+
+    var ampm = d.getHours() < 12 ? 'AM' : 'PM';
+
+    var estimateNumber = this.activeEst.quetationNo.replace('/', '')
+    return 'ESTPDF_' + estimateNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
   }
 }
