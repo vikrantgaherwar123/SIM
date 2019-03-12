@@ -941,7 +941,7 @@ export class AddEditComponent implements OnInit {
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {
-        this.productList.splice(i);
+        this.productList.splice(i,1);
       }
     }
   }
@@ -1366,8 +1366,6 @@ export class AddEditComponent implements OnInit {
       return false
     }
 
-    
-
     if (this.activeInvoice.listItems.length == 0 || !status) {
       this.toasterService.pop('failure', 'You haven\'t added item');
       return false
@@ -1463,11 +1461,6 @@ export class AddEditComponent implements OnInit {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
 
-        // Update settings
-        // if(!this.edit) {
-        //   this.updateSettings()
-        // }
-          
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit) {
           this.toasterService.pop('success', 'invoice Updated successfully');
@@ -1670,8 +1663,11 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = invId;
     if (!invId || invId === "null") {
       this.activeInv = this.invoiceList[this.invoiceList.length - 1];
+      console.log(this.activeInv);
     } else {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+      console.log(this.activeInv);
+      
     }
     this.setActiveClient()
   }
