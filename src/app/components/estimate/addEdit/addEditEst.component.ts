@@ -1189,8 +1189,6 @@ export class AddEditEstComponent implements OnInit {
         } else{
           //add recently added esimate in store
           self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
-          
-         
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()

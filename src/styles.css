@@ -24,7 +24,7 @@ b, body, p, button {
   font-style: normal;
   font-weight: 800 !important;
 }
-input[type=text], input[type=password] {
+input[type=text], input[type=password],select {
   font-family: quicksand_regular !important;
   font-size: 12.5px !important;
   font-style: normal;
@@ -400,7 +400,6 @@ display: none;
   /* Add some styling */
   display: block;
   width: 100%;
-  max-width: 320px;
   height: 50px;
   float: right;
   margin: 5px 0px;
@@ -563,11 +562,11 @@ option {
 }
 .add_client_btn
 {
-  margin-top: 0px;
-  margin-bottom: 7px;
+  margin-top: 1px;
+  margin-bottom: 1px;
   height: 44px;
-  position: fixed;
-  width: 31%;
+  position: relative;
+  width:100%;
   background-color: #0299ff !important;
   border-color: #0299ff !important;
   z-index: 99;
@@ -757,7 +756,7 @@ option {
   z-index: 1000;
   display: flex;
   max-height: 100%;
-  width: 425px !important;
+  /* width: 425px !important; */
 }
 .mat-calendar-body-label{
   font-size: 14px;
@@ -771,6 +770,22 @@ select{
   font-weight: 100 !important;
   font-family: quicksand_regular !important;
   padding: 2px 0px 0px 17px !important;
+}
+.filtersubmit {
+  position: relative !important;
+  z-index: 1;
+  left: -60px;
+  top: 1px;
+  font-size: 22px;
+  color: #7B7B7B;
+  cursor:pointer;
+  width: 0;
+}
+.hr_line{
+  border-right: 1px solid #d6d7d7;
+  padding: -2px;
+  margin-bottom: 7px;
+  height: 42px;
 }
 .hide_client_border{
   border-right: white; 

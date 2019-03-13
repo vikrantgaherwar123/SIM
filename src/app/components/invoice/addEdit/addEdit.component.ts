@@ -176,6 +176,8 @@ export class AddEditComponent implements OnInit {
       });
     })
     // save button processing script ends
+
+   
   }
   
   displayWith(disp): string | undefined {
@@ -1663,7 +1665,6 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = invId;
     if (!invId || invId === "null") {
       this.activeInv = this.invoiceList[this.invoiceList.length - 1];
-      console.log(this.activeInv);
     } else {
       this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
       console.log(this.activeInv);
