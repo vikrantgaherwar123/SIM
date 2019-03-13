@@ -15,9 +15,11 @@ import * as clientActions from '../../actions/client.action'
 import * as productActions from '../../actions/product.action'
 import * as termActions from '../../actions/terms.action'
 import { AppState } from '../../app.state'
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 import { AuthService as socialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angular-6-social-login'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
 
 interface response {
   status: number
@@ -45,6 +47,11 @@ export class LoginComponent implements OnInit {
   errorMessage: string = ''
   forgetFlag: boolean = false
   forgetMail: string = ''
+  clientsCompleted: boolean;
+  productsCompleted: boolean;
+  termsCompleted: boolean;
+  settingsCompleted: boolean;
+  loginLoader: boolean;
 
   constructor(
     private authService: AuthService,
@@ -61,12 +68,12 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
-     var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
+    var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
     $('#sidebar, #content').addClass('active')
 
-    if(user) {
+    if (user) {
       $("#login-btn").prop("disabled", true)
       this.loggingIn = true
       this.validateToken(user.access_token, user.user.orgId, user)
@@ -76,7 +83,8 @@ export class LoginComponent implements OnInit {
   loginUser(event) {
     event.preventDefault()
     $("#login-btn").prop("disabled", true)
-    this.loggingIn = true
+    this.loginLoader = true;
+
 
     this.authService.login(this.user).subscribe((response: response) => {
       if (response.status === 200) {
@@ -104,20 +112,20 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  socialSignIn(socialPlatform : string) {
+  socialSignIn(socialPlatform: string) {
     let socialPlatformProvider
-    if(socialPlatform == "facebook"){
+    if (socialPlatform == "facebook") {
       socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID
-    }else if(socialPlatform == "google"){
+    } else if (socialPlatform == "google") {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID
     }
 
     this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-      var creds = {access_token: userData.idToken, provider: userData.provider}
+      var creds = { access_token: userData.idToken, provider: userData.provider }
       this.authService.socialLogin(creds).subscribe((response: any) => {
-        if(response.status == 410) {
+        if (response.status == 410) {
           console.log(response.message)
-        } else if(response.status == 200) {
+        } else if (response.status == 200) {
           const access = response.login_info.access_token
           const ids = parseInt(response.login_info.user.orgId)
 
@@ -133,7 +141,7 @@ export class LoginComponent implements OnInit {
       if (response2.status === 200) {
         var tempOrgId = response.login_info ? response.login_info.user.orgId : response.user.orgId;
 
-        if(response.login_info) {
+        if (response.login_info) {
           delete response.login_info.user;
         } else {
           response.login_info = {}
@@ -171,7 +179,7 @@ export class LoginComponent implements OnInit {
       if (response.status === 200) {
         this.errorMessage = 'Please check  your email to reset password!'
         this.forgetMail = ''
-      }else {
+      } else {
         this.errorMessage = "This email address is not registered with us."
       }
     })
@@ -179,25 +187,69 @@ export class LoginComponent implements OnInit {
 
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
-    $.when(this.clientService.fetch().toPromise(),
-      this.productService.fetch().toPromise(),
-      this.termsService.fetch().toPromise(),
-      this.settingService.fetch().toPromise()
-    ).done((clientResponse: apiRespo, productResponse: apiRespo, termResponse: apiRespo, settingResponse: any) => {
-      this.store.dispatch(new clientActions.add(clientResponse.records))
-      if(productResponse.records){
-      this.store.dispatch(new productActions.add(productResponse.records.filter(prod => prod.enabled == 0)))
-      }
-      if(termResponse.termsAndConditionList){
-      this.store.dispatch(new termActions.add(termResponse.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-      }else{
-      let addProductTemp = [];
-      this.store.dispatch(new termActions.add(addProductTemp));
-      }
-      setStorage(settingResponse.settings)
-      $('#userLogout').show()
-      $('#userLogout span').html(this.authenticated.registered_email)
-      this.router.navigate(['/load'])
-    })
+    this.clientService.fetch().pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    }))
+      .subscribe(
+        (result: any) => {
+          this.store.dispatch(new clientActions.add(result.records))
+          this.clientsCompleted = true;
+          this.navigateToAdd();
+        },
+        err => console.log(err)
+      ),
+      this.productService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      }))
+        .subscribe(
+          (result: any) => {
+            this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
+            this.productsCompleted = true;
+            this.navigateToAdd();
+          },
+          err => console.log(err)
+        ),
+      this.termsService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      }))
+        .subscribe(
+          (result: any) => {
+            this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+            this.termsCompleted = true;
+            this.navigateToAdd();
+          },
+          err => console.log(err)
+        ),
+      this.settingService.fetch().pipe(retryWhen(_ => {
+        return interval(2000).pipe(
+          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        )
+      }))
+        .subscribe(
+          (result: any) => {
+            setStorage(result.settings)
+            if (result.settings) {
+              this.settingsCompleted = true;
+              this.navigateToAdd();
+            }
+          }, err => console.log(err)
+        )
+    $('#userLogout').show()
+    $('#userLogout span').html(this.authenticated.registered_email)
+  }
+
+  navigateToAdd() {
+    if (this.settingsCompleted && this.termsCompleted && this.clientsCompleted && this.productsCompleted === true) {
+      this.loggingIn = true
+      setTimeout(() => {
+        this.router.navigate(['/invoice/add']);
+      }, 2000);  //5s
+    }
   }
 }

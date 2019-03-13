@@ -888,12 +888,12 @@
         </button>
 
         <!-- recently added Estimate -->
+        <button type="button" class="btn2 btn2-primary btn2-lg raised search_btn" (click)="viewTodaysEstimate = false;estimateId = '';activeClient = {}">
+          Add New Estimate
+        </button>
         <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
-           
-           
           </div>
-    
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>

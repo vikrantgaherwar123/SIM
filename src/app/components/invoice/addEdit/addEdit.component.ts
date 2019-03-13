@@ -120,6 +120,7 @@ export class AddEditComponent implements OnInit {
   disabledDescription: boolean = false;
   viewTodaysInvoice: boolean = false;
   viewNextInvoice: boolean;
+  invListLoader: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -203,44 +204,8 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-
-    this.getTodaysInvoices();
-    // this.fetchInvoiceDetail();
-    
+    this.fetchInvoices();
 }
-
-  
-
-  getTodaysInvoices(){
-    //getting arraylist of recenlty added invoices 
-    this.store.select('recentInvoices').subscribe(invoices => {
-      this.invoiceList = invoices
-      var start = new Date();
-      start.setHours(0, 0, 0, 0);
-      if (this.invoiceList.length < 1) {
-        var query = {
-          clientIdList: null,
-          startTime: start.getTime(),
-          endTime: new Date().getTime()
-        }
-        // this.invListLoader = true
-        this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
-          return interval(5000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-          )
-        })).subscribe((response: any) => {
-          if (response.status === 200) {
-            // this.invListLoader = false
-            this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-            this.store.select('invoice').subscribe(invoices => {
-              this.invoiceList = invoices
-            })
-          }
-        }, err => console.log(err))
-      }
-    })
-  }
-
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
     if(input > 100){
@@ -656,7 +621,7 @@ export class AddEditComponent implements OnInit {
           this.setProductFilter()
         } 
       },
-      err => console.log(err));  
+      err => this.openErrorModal())
     } else {
       this.setProductFilter()
     }
@@ -688,7 +653,7 @@ export class AddEditComponent implements OnInit {
         }
         this.setClientFilter()
         
-      },err => console.log(err));
+      },err => this.openErrorModal())
       
     } else {
       this.setClientFilter()
@@ -707,7 +672,7 @@ export class AddEditComponent implements OnInit {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      },err => console.log(err))
+      },err => this.openErrorModal())
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
@@ -768,7 +733,7 @@ export class AddEditComponent implements OnInit {
     } else {
       this.activeInvoice.invoice_number = this.tempInvNo.toString();
     }
-    },err => console.log(err))
+    },err => this.openErrorModal())
     
   }
 
@@ -808,7 +773,7 @@ export class AddEditComponent implements OnInit {
         }
         this.setClientFilter()
         
-      },err => console.log(err))
+      },err => this.openErrorModal())
   }
 }
 
@@ -1181,7 +1146,7 @@ export class AddEditComponent implements OnInit {
           //alert(response.message)
           this.toasterService.pop('failure', 'Network error');
         }
-      },err => console.log(err))
+      },err => this.openErrorModal())
     }
   }
 
@@ -1480,10 +1445,8 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else {
-          //set recently added invoice list in local storage
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          console.log(this.activeInvoice.termsAndConditions);
-           
+          //set recently added invoice list in store
+          this.fetchInvoices();
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1652,28 +1615,43 @@ export class AddEditComponent implements OnInit {
 
   //todays invoices functionality
 
-  // fetchInvoiceDetail() {
-  //   this.invoiceListLoading = true;
-  //   this.invoiceService.fetchById([this.invoiceId]).subscribe((invoice: any) => {
-  //     this.invoiceListLoading = false;
-  //     if (invoice.records !== null) {
-  //       this.activeInv = invoice.records[0];
-  //       this.setActiveClient();
-  //     }
-  //   })
-  // }
+  fetchInvoices() {
+    // Fetch invoices with given query
+    this.store.select('invoice').subscribe(invoices => {
+      this.invoiceList = invoices
+    })
+    if(this.invoiceList.length < 1){
+    var start = new Date();
+    start.setHours(0, 0, 0, 0);
+    var  query = {
+        clientIdList: null,
+        startTime: start.getTime(),
+        endTime: new Date().getTime()
+      }
+
+    this.invListLoader = true
+    this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
+      return interval(5000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.invListLoader = false
+        this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('invoice').subscribe(invoices => {
+          this.invoiceList = invoices
+        })
+      }
+      
+    },err => this.openErrorModal())
+  }
+  }
 
   setActiveInv(invId: string = '') {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
-    if (!invId || invId === "null") {
-      this.activeInv = this.invoiceList[this.invoiceList.length - 1];
-      console.log(this.activeInv);
-    } else {
-      this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
-      console.log(this.activeInv);
-      
-    }
+    this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+    
     this.setActiveClient()
   }
 
@@ -1714,7 +1692,7 @@ export class AddEditComponent implements OnInit {
           this.clientListLoading = false
           this.clientList = response.records;
           this.removeEmptySpaces();
-        },err => console.log(err)
+        },err => this.openErrorModal()
         )
       }
 

@@ -329,7 +329,7 @@
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" class="mCustomScrollbar style-3"
                               (optionSelected)="fillItemDetails()"
                             >
-                              <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
+                            <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
@@ -1145,16 +1145,17 @@
         <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
         </button> 
         <!-- recently added invoice -->
+        <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
+        </button> 
         <div class="back list-shadow">
           <div class="col-12 px-0 filter-box">
-           
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
               <!-- <div class="form-group label-floating">
                 <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
               </div> -->
-            </div>
+            </div>           
           </div>
-    
+
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
