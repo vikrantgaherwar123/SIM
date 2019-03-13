@@ -93,10 +93,10 @@ select {
   position: relative;
 }
 .inputWithIcon i{
-  position: absolute;
-  left: 0;
-  top: 5px;
-  padding: 9px 20px;
+  left: -44px;
+  top: 0px;
+  font-size: 22px;
+  padding: 10px 13px;
   color: #aaa;
   transition: .3s;
 }

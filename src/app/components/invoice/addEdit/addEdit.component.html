@@ -25,34 +25,36 @@
                         </span>
 
                         <div class="input-group pl-0 inputWithIcon">
-                          <input type="text" id="bill-to-input" style="height: 40px !important;" [ngClass]="{ 'border_white': billingTo.value }" class="form-control billing-input" placeholder="Search & Select Client"
+                          <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
                             matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                           >
-                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                            <img class="client_arrow" src="assets/images/down-arrow64.png">
-                            <!-- <i class="client_arrow fa fa-chevron-down " aria-hidden="true"></i> -->
-                          </span>
+                          <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                          <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                          <!-- <img *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" src="assets/images/grey_cross.png" style="height: 16px;
+                            width: 16px;"> -->
                           
-                          <!--<i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                          <!-- <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
                           <span *ngIf="disableIcon === true" class="downArrowIcon">
                           <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
                           </span>
                           <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
 
-                          <div class="input-group-append">
+                          <!-- <div class="input-group-append">
                             <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()"><img src="assets/images/grey_cross.png" style="height: 16px;
                               width: 16px;"></a>
-                          </div>
+                          </div> -->
                            
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                             autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
                           >
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
-                            </button>
+                            
+                              <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                                class="btn btn-primary add_client_btn">
+                                <i class="fa fa-plus"></i>
+                                Add New Client
+                              </button>
+                        
                             <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                               {{client.name}}
                             </mat-option>
@@ -321,7 +323,7 @@
                       <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="text" name="product-name" class="form-control billing-input" onfocus="this.select()"
+                            <input type="text" name="product-name" class="form-control billing-input" tabindex="1" onfocus="this.select()"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}" matInput [formControl]="addItem" [matAutocomplete]="auto" required
                             >
                             <span *ngIf="ifProductEmpty === true && addItem !==null" class="fa fa-info-circle errspan help-block"></span>
@@ -332,7 +334,7 @@
                             <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
-                              <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                              <textarea *ngIf="disabledDescription==false" id="descId"  tabindex="7" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;height: 55px !important;"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
@@ -346,26 +348,26 @@
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" name="itemQty" id="qty" step="any" class="form-control text_center height_40" min="0"
+                            <input type="number" name="itemQty" id="qty" step="any" tabindex="2" class="form-control text_center height_40" min="0"
                               [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
                           
-                          <button type="button" style="margin-top: 20px;" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
+                          <button type="button" style="margin-top: 20px;" tabindex="8" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
                             Add Item
                           </button>
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" name="itemRate" step="any" class="form-control text_center height_40" min=0
+                            <input type="number" name="itemRate" step="any" tabindex="3" class="form-control text_center height_40" min=0
                               [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" required
                             />
                           </div>
                         </td>
                           <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
                             <div class="input-group">
-                              <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
+                              <input type="number" name="itemTaxRate" tabindex="4" class="form-control  text_center height_40" min=0 max=100
                                 [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                                 style="border-right: none !important" />
                               <div class="input-group-append">
@@ -376,7 +378,7 @@
                           </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
                           <div class="input-group">
-                            <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0 max=100
+                            <input type="number" name="itemDiscountRate" tabindex="5" class="form-control text_center height_40" min=0 max=100
                               [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" style="border-right: none !important"
                             />
                             <div class="input-group-append">
@@ -390,7 +392,7 @@
                           [class.no-border-last]="last"
                         >
                           <div class="form-group">
-                            <input type="number" step="any" class="form-control text_center height_40"
+                            <input type="number" step="any" tabindex="6" class="form-control text_center height_40"
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
@@ -1142,8 +1144,13 @@
       <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3">
-        <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="router.navigate(['/invoice/view'])">Search For Invoices
-        </button> 
+        <div class="row">
+          <div class="col-1"></div>
+          <button type="button" style="width: 100%;background-color: #ededed !important" class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold" (click)="router.navigate(['/invoice/view'])">Search For Invoices 
+            <i class="fa fa-search" style="padding: 12px;"></i>
+          </button> 
+        <div class="col-1"></div>
+      </div>
         <!-- recently added invoice -->
         <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
         </button> 
@@ -1160,24 +1167,24 @@
             <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: auto;border-top: 1px solid #d2d2d2;">
+          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-            *ngFor="let invoice of invoiceList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
-              <div class="col-2 list-date font-custom-bold fontsize13">
+              <div class="col-2 list-date font-custom-bold fontsize13 hr_line">
                 {{ invoice.created_date | date: 'dd MMM' }}
               </div>
     
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                    <h5 class="fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5 font-custom-book fontsize13">
+                  <div class="col-5" style="font-size: 9px;">
                     {{ invoice.invoice_number }}
                   </div>
-                  <div class="col-6 text-right font-custom-bold fontsize12">
+                  <div class="col-6 text-right fontsize12" style="font-size: 12px;">
                     {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>

@@ -1,15 +1,26 @@
 <div class="header row mx-0">
-  <div class="col-5">
+  <div class="col-8">
     <div class="row">
-      <div class="col-3 col-md-1 sidebar-switch-icon" (click)="toggleSideNavBar()">
-        <img src="assets/images/menu32.png" alt="icon" style="width: 28px; height: 28px">
-      </div>
-      <div class="logo col-10 d-none d-md-block">
-        <img src="assets/images/logo_header.png" alt="icon" style="width: auto; height: 50px">
-      </div>
-    </div>
-  </div>
-  <div class="col-7">
+    
+        <div class="col-1">
+          <img src="assets/images/sim_logo.png" (click)="toggleSideNavBar()" alt="icon" style="margin-left: -15px;;width: auto; height: 56px">
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list"><a (click)="router.navigate(['invoice/add'])"><span><img src="assets/images/invoice_n.png" alt="logo" /> Invoices</span></a></h5>
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list"><a  (click)="router.navigate(['estimate/add'])"><span><img src="assets/images/estimet_n.png" alt="logo" />Estimates</span> </a></h5>
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list"><a (click)="router.navigate(['/product'])"><span><img src="assets/images/product_n.png" alt="logo" />Products</span> </a></h5>
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list"><a (click)="router.navigate(['/setting/primary'])"><span><img src="assets/images/setting_n.png" alt="logo" />Settings</span></a></h5>
+        </div>
+       </div> 
+   
+</div>
+  <div class="col-4">
     <div id="userLogout" class="row py-3">
       <div class="col-10 col-sm-11 welcome-user d-none d-sm-block">
         Welcome, <span style="font-family: quicksand_bold;">{{email}}</span>

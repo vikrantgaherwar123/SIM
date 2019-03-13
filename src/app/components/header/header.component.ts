@@ -22,6 +22,12 @@ export class HeaderComponent implements OnInit {
   toggleSideNavBar() {
     this.instance._toggleSidebar()
   }
+  toggle(location) {
+    if (!(window.location.pathname).includes('/login')) {
+      $('#sidebar, #content').toggleClass('active')
+    }
+    this.router.navigate([location])
+  }
   logout() {
     localStorage.clear()
     window.location.reload()
