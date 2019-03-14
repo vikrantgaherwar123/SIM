@@ -11,7 +11,7 @@ export class HeaderComponent implements OnInit {
   @Input() instance
   email
 
-  constructor(private router: Router) {
+  constructor(public router: Router) {
     var user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
     this.email = (user && user.registered_email) ? user.registered_email : 'user'
   }

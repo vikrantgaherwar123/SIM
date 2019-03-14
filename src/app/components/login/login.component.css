@@ -148,3 +148,13 @@
     box-shadow: inset 0px 0px 0px 30px #7ac142;
   }
 }
+.center{
+  height: 52px;
+  margin-top: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: -34px; */
+  opacity: unset;
+  margin-bottom: 6px;
+}

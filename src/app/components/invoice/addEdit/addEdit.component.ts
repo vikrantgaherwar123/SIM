@@ -610,7 +610,7 @@ export class AddEditComponent implements OnInit {
     if(this.productList.length < 1) {
       this.productListLoading = true;
       this.productService.fetch().pipe(retryWhen(_ => {
-        return interval(5000).pipe(
+        return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: response) => {
@@ -632,7 +632,7 @@ export class AddEditComponent implements OnInit {
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(5000).pipe(
+        return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: response) => {
@@ -665,7 +665,7 @@ export class AddEditComponent implements OnInit {
     if(this.termList.length < 1 && !this.edit) {
       this.tncLoading = true;
       this.termConditionService.fetch().pipe(retryWhen(_ => {
-        return interval(5000).pipe(
+        return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: response) => {
@@ -682,7 +682,7 @@ export class AddEditComponent implements OnInit {
     // Fetch Settings every time
     this.settingsLoading = true;
     this.settingService.fetch().pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     })).subscribe((response: any) => {
@@ -751,7 +751,7 @@ export class AddEditComponent implements OnInit {
   }else{
     this.clientListLoading = true
       this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(5000).pipe(
+        return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: response) => {
@@ -863,8 +863,8 @@ export class AddEditComponent implements OnInit {
       $('#saveClientButton').attr("disabled", 'true')
       this.clientListLoading = true
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).pipe(retryWhen(_ => {
-        return interval(5000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        return interval(2000).pipe(
+          flatMap(count => count == 1 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: any) => {
         if (response.status === 200) {
@@ -883,7 +883,7 @@ export class AddEditComponent implements OnInit {
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
-      },err => console.log(err))
+      },err => this.openErrorModal())
     }else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
@@ -948,8 +948,8 @@ export class AddEditComponent implements OnInit {
     }
 
     this.productService.add([product]).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      return interval(2000).pipe(
+        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
       )
     })).subscribe((result: any) => {
       if (result.status === 200) {
@@ -1125,8 +1125,8 @@ export class AddEditComponent implements OnInit {
       this.termConditionService.add([
         this.termConditionService.changeKeysForApi(this.addTermModal)
       ]).pipe(retryWhen(_ => {
-        return interval(5000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        return interval(2000).pipe(
+          flatMap(count => count == 1 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: any) => {
         if (response.status === 200) {
@@ -1413,7 +1413,7 @@ export class AddEditComponent implements OnInit {
       //   this.activeInvoice.termsAndConditions[j].terms = this.activeInvoice.termsAndConditions[j].terms_condition
       // }
       return interval(2000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
       )
     })).subscribe((result: any) => {
       if (result.status !== 200) {
@@ -1547,8 +1547,8 @@ export class AddEditComponent implements OnInit {
     // settings1.androidSettings.invNo = this.tempInvNo
 
     this.settingService.add(settings1).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      return interval(2000).pipe(
+        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
       )
     })).subscribe((response: any) => {},err => console.log(err))
   }
@@ -1633,8 +1633,8 @@ export class AddEditComponent implements OnInit {
 
     this.invListLoader = true
     this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      return interval(2000).pipe(
+        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
       )
     })).subscribe((response: any) => {
       if (response.status === 200) {
@@ -1686,16 +1686,11 @@ export class AddEditComponent implements OnInit {
   setActiveClient() {
       if (this.clientList.length < 1) {
         this.clientListLoading = true
-        this.clientService.fetch().pipe(retryWhen(_ => {
-          return interval(5000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-          )
-        })).subscribe((response: response) => {
+        this.clientService.fetch().subscribe((response: response) => {
           this.clientListLoading = false
           this.clientList = response.records;
           this.removeEmptySpaces();
-        },err => this.openErrorModal()
-        )
+        })
       }
 
     if (this.activeInv) {
@@ -1720,8 +1715,8 @@ export class AddEditComponent implements OnInit {
     }
 
     this.invoiceService.fetchPdf(this.activeInv.unique_identifier).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      return interval(2000).pipe(
+        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
       )
     })).subscribe((response: any) => {
       var file = new Blob([response], { type: 'application/pdf' })

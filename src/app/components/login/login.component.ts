@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
   termsCompleted: boolean;
   settingsCompleted: boolean;
   loginLoader: boolean;
+  loggedInSuccess: boolean;
 
   constructor(
     private authService: AuthService,
@@ -68,6 +69,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
+
     var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
@@ -81,6 +83,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser(event) {
+    this.loggingIn = true
     event.preventDefault()
     $("#login-btn").prop("disabled", true)
     this.loginLoader = true;
@@ -88,6 +91,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.user).subscribe((response: response) => {
       if (response.status === 200) {
+        this.loginLoader = false;
+        this.loggedInSuccess = true;
         this.errorMessage = ''
 
         const access = response.login_info.access_token
@@ -95,7 +100,10 @@ export class LoginComponent implements OnInit {
 
         // Validate token
         this.validateToken(access, ids, response)
-      } else {
+      } 
+      else {
+        this.loggedInSuccess = false;
+        this.loginLoader = false;
         if (response.status == 410) {
           console.log('purchase error');
         } else {
@@ -106,7 +114,8 @@ export class LoginComponent implements OnInit {
           $("#login-btn").prop("disabled", false)
 
           this.errorMessage = response.message
-          this.loggingIn = false
+          // this.loggingIn = false
+          // this.openErrorModal()
         }
       }
     })
@@ -185,71 +194,74 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
+
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
-    this.clientService.fetch().pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-      )
-    }))
-      .subscribe(
-        (result: any) => {
-          this.store.dispatch(new clientActions.add(result.records))
-          this.clientsCompleted = true;
-          this.navigateToAdd();
-        },
-        err => console.log(err)
-      ),
-      this.productService.fetch().pipe(retryWhen(_ => {
+    if (this.loggedInSuccess) {
+      this.clientService.fetch().pipe(retryWhen(_ => {
         return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       }))
         .subscribe(
           (result: any) => {
-            this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
-            this.productsCompleted = true;
+            this.store.dispatch(new clientActions.add(result.records))
+            this.clientsCompleted = true;
             this.navigateToAdd();
           },
-          err => console.log(err)
-        ),
-      this.termsService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      }))
-        .subscribe(
-          (result: any) => {
-            this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-            this.termsCompleted = true;
-            this.navigateToAdd();
-          },
-          err => console.log(err)
-        ),
-      this.settingService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      }))
-        .subscribe(
-          (result: any) => {
-            setStorage(result.settings)
-            if (result.settings) {
-              this.settingsCompleted = true;
+          err => this.openErrorModal()),
+        this.productService.fetch().pipe(retryWhen(_ => {
+          return interval(2000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        }))
+          .subscribe(
+            (result: any) => {
+              this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
+              this.productsCompleted = true;
               this.navigateToAdd();
-            }
-          }, err => console.log(err)
-        )
-    $('#userLogout').show()
-    $('#userLogout span').html(this.authenticated.registered_email)
+            },
+            err => this.openErrorModal()),
+        this.termsService.fetch().pipe(retryWhen(_ => {
+          return interval(2000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        }))
+          .subscribe(
+            (result: any) => {
+              this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+              this.termsCompleted = true;
+              this.navigateToAdd();
+            },
+            err => this.openErrorModal()),
+        this.settingService.fetch().pipe(retryWhen(_ => {
+          return interval(2000).pipe(
+            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+          )
+        }))
+          .subscribe(
+            (result: any) => {
+              setStorage(result.settings)
+              if (result.settings) {
+                this.settingsCompleted = true;
+                this.navigateToAdd();
+              }
+            }, err => this.openErrorModal())
+      $('#userLogout').show()
+
+      $('#userLogout span').html(this.authenticated.registered_email)
+    }
   }
 
   navigateToAdd() {
     if (this.settingsCompleted && this.termsCompleted && this.clientsCompleted && this.productsCompleted === true) {
-      this.loggingIn = true
-      setTimeout(() => {
         this.router.navigate(['/invoice/add']);
-      }, 2000);  //5s
     }
   }
 }
