@@ -297,7 +297,7 @@ button.add-line-item-button {
 }
 .item .list-date {
 	text-align: center;
-	padding: 5px 5px 5px 8px;
+	padding: 0px 5px 5px 8px;
 }
 .lineItemDiv {
 	margin-top: 14px;
