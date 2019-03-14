@@ -1,5 +1,65 @@
 @import '../../../../assets/css/form.css';
 
+/* setting css starts*/
+.edit-setting .taxradio label,.edit-setting .discountradio label{
+  text-align: center !important;
+}
+.edit-setting .taxradio input[type=radio], .edit-setting .discountradio input[type=radio],
+.date-format input[type=radio], .country-radio input[type=radio]{
+  display:none;
+}
+.edit-setting input[type=radio]:checked + label {
+  outline: 0;
+  color:#fff;
+  background-color: #2196f3;
+}
+.edit-setting input[type=radio] + label {
+  display: inline-block;
+  margin: -2px;
+  padding: 5px 12px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  color: #2196f3;
+  text-align: center;
+  font-size: 14px;
+  width: 114px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #2196f3;
+  transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+
+}
+.edit-setting .taxradio label.taxonitem,.edit-setting .discountradio label.discountonitem{
+  border-top-left-radius:3px;
+  border-bottom-left-radius:3px;
+}
+.edit-setting .taxradio label:last-child,.edit-setting .discountradio label:last-child{
+  border-top-right-radius:3px;
+  border-bottom-right-radius:3px;
+  border-left:0
+}
+.date-format input[type=radio] + label {
+  display:inline-block !important;
+  padding: 0 0 0 0px !important;
+  background:url("/assets/images/unchecked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+.date-format input[type=radio]:checked + label {
+  background:url("/assets/images/checked24.png") no-repeat !important;
+  height: 20px !important;
+  width: 20px !important;
+  display:inline-block !important;
+  background-size: 100% !important;
+  border: none !important;
+  margin: 0px 2px 0px 0px !important;
+}
+/* setting css  ends*/
+
 .forget-pass-form .form-group {
   width: 300px !important;
 }
@@ -44,4 +104,29 @@ input.ng-dirty.ng-invalid {
   margin-left: -132px;
   margin-top: 13px;
   margin-bottom: 13px;
+}
+.step_text{
+  padding: 4px 1px 2px 12px;
+  color: #1f96f2;
+  font-size: 12px;
+  font-family: quicksand_bold !important;
+}
+.steps_div{
+  background-color:#f5f6fa;
+  margin-left: 13px;
+  border-left: 4px solid #0295ff;
+  border-radius: 2px;
+  height: 72px;
+}
+.client_label{
+  font-size: 12px;
+  font-family: quicksand_bold!important;
+  color: #7a7575;
+  line-height: 15px;
+}
+.span_text{
+  font-size: 11px;
+  color: #7e7e7e;
+  padding: 20px;
+  font-family: quicksand_regular !important;
 }
