@@ -5,22 +5,22 @@
         <img src="assets/images/sim_logo.png" (click)="toggleSideNavBar()" alt="icon"
           style="margin-left: -15px;;width: auto; height: 53px">
       </div>
-      <div id="navbar" class="row">
+      <div id="myDIV" class="row">
         <div class="d-sm-flex">
-          <h5 class="menu_list"><a (click)="router.navigate(['invoice/add'])"><span class="span_text"><img src="assets/images/invoice_n.png" class="nav_img"
-                  alt="logo" /> Invoices</span></a></h5>
+          <h5 class="menu_list"><button class="navbtn active" (click)="router.navigate(['invoice/add'])"><span class="span_text"><img src="assets/images/invoice_n.png" class="nav_img"
+            alt="logo" /> Invoices</span></button></h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><a (click)="router.navigate(['estimate/add'])"><span class="span_text"><img src="assets/images/estimet_n.png" class="nav_img"
-                  alt="logo" />Estimates</span> </a></h5>
+          <h5 class="menu_list"><button class="navbtn" (click)="router.navigate(['estimate/add'])"><span class="span_text"><img src="assets/images/estimet_n.png" class="nav_img"
+            alt="logo" />Estimates</span></button></h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><a (click)="router.navigate(['/product'])"><span class="span_text"><img src="assets/images/product_n.png" class="nav_img"
-                  alt="logo" />Products</span> </a></h5>
+          <h5 class="menu_list"><button class="navbtn" (click)="router.navigate(['/product'])"><span class="span_text"><img src="assets/images/product_n.png" class="nav_img"
+            alt="logo" />Products</span> </button></h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><a (click)="router.navigate(['/setting/primary'])"><span class="span_text"><img class="nav_img"
-                  src="assets/images/setting_n.png" alt="logo"  />Settings</span ></a></h5>
+          <h5 class="menu_list"><button class="navbtn" (click)="router.navigate(['/setting/primary'])"><span class="span_text"><img class="nav_img"
+            src="assets/images/setting_n.png" alt="logo"  />Settings</span ></button></h5>
         </div>
       </div>
     </div>

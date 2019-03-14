@@ -1660,7 +1660,7 @@ export class AddEditComponent implements OnInit {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
-
+    //if discount and tax on bill is selected
     if(this.activeInv.discount !==0){
       this.hideDiscountLabel = true;
       for(var i=0;i<this.activeInv.listItems.length;i++){

@@ -22,7 +22,7 @@ import { LoadalldataComponent } from './components/loadalldata/loadalldata.compo
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/load', pathMatch: 'full' },
+  { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
