@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
-
+    $('#navbar').hide()
     var user: response = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
 
     // Hide sidebar if active
@@ -172,6 +172,7 @@ export class LoginComponent implements OnInit {
 
         $('#logoutBtn').removeClass("hide")
         $('#logoutBtn').addClass("show")
+       
       } else {
         $("#login-btn").prop("disabled", false)
         this.errorMessage = response.message

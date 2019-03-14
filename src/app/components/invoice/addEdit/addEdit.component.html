@@ -1,5 +1,5 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main">
+  <div class="col-12" id="main" style="padding-top: 3px !important;">
     <div class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
@@ -776,7 +776,7 @@
       </div>
       <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back" style="margin-top: 12px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
@@ -913,10 +913,10 @@
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-center" disabled
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="10%">
+                    <td *ngIf="hideTaxLabel == false" width="10%">
                       <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
                     </td>
-                    <td width="10%">
+                    <td *ngIf="hideDiscountLabel == false" width="10%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center"
                         value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
@@ -953,13 +953,13 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="item.tax_rate!==0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <!--activeInv.tax_on_item == 0-->
                       <div class="text-center">
                         {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="item.discountRate!==0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <!--activeInv.discount_on_item == 1-->
                       <div class="text-center">
                         {{item.discountRate | number:'2.'}}
@@ -1143,28 +1143,33 @@
       </div>
       <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
-      <div class="col-12 col-md-3">
+      <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px">
+        <div class="row" style="padding-top: 18px;padding-bottom: 4px;">
+          <div class="col-1"></div>
+          <button type="button" style="width: 100%;background-color: #ededed !important;color: #0299ff !important;
+          border: #0299ff solid 2px !important;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+            (click)="router.navigate(['/invoice/view'])">Search For Invoices
+            <i class="fa fa-search" style="padding: 12px;"></i>
+          </button>
+          <div class="col-1"></div>
+        </div>
         <div class="row">
           <div class="col-1"></div>
-          <button type="button" style="width: 100%;background-color: #ededed !important" class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold" (click)="router.navigate(['/invoice/view'])">Search For Invoices 
-            <i class="fa fa-search" style="padding: 12px;"></i>
-          </button> 
-        <div class="col-1"></div>
-      </div>
+          <button *ngIf="viewTodaysInvoice == true" type="button" style="width: 100%;color: #0299ff !important;
+          border: #0299ff solid 2px !important;background-color: #ededed !important;margin-top: 5px;margin-bottom: 10px;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+            (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
+            <i class="fa fa-plus" style="padding: 12px;margin-left: 18px;"></i>
+          </button>
+          <div class="col-1"></div>
+        </div>
         <!-- recently added invoice -->
-        <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';resetCreateInvoice()">Add New Invoice
-        </button> 
-        <div class="back list-shadow">
-          <div class="col-12 px-0 filter-box">
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box">
-              <!-- <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
-              </div> -->
-            </div>           
-          </div>
-
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
+        <!-- <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
+        </button>  -->
+        <div class="row" style="margin-top: 14px;">
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
+           {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
@@ -1227,8 +1232,8 @@
             <div class="row">
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" name="name" class="form-control add-client-input-custom"
-                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
+                  <input tabindex="1" type="text" name="name" class="form-control add-client-input-custom"
+                    [(ngModel)]="addClientModal.name" placeholder="Organization Name" required 
                   />
                   <!-- <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
                     <span *ngIf="clientform.name.$error.required">Required</span>

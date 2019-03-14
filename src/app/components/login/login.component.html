@@ -108,7 +108,7 @@
     
     <div *ngIf="loggingIn" class="login-form-container">
       <div class="login-form">
-        <div *ngIf="loginLoader && loggingIn && loggedInSuccess">
+        <div *ngIf="loginLoader && loggingIn">
           <i class='fa fa-spinner fa-spin' style="position: inherit;"></i>Logging In...
         </div>
         <div *ngIf="loggedInSuccess == false && loginLoader == false">

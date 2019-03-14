@@ -121,6 +121,8 @@ export class AddEditComponent implements OnInit {
   viewTodaysInvoice: boolean = false;
   viewNextInvoice: boolean;
   invListLoader: boolean;
+  hideDiscountLabel: boolean = false;
+  hideTaxLabel: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -192,6 +194,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    $('#navbar').show()
     // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
@@ -267,6 +270,10 @@ export class AddEditComponent implements OnInit {
   editInit(invId) {
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
+    console.log(this.settings.taxFlagLevel === 1);
+    console.log(this.settings.discountFlagLevel === 1);
+
+    
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
@@ -967,7 +974,7 @@ export class AddEditComponent implements OnInit {
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
-    },err => console.log(err))
+    },err =>this.openErrorModal())
   }
 
   editInvoiceItem(index) {
@@ -1653,6 +1660,19 @@ export class AddEditComponent implements OnInit {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+
+    if(this.activeInv.discount !==0){
+      this.hideDiscountLabel = true;
+      for(var i=0;i<this.activeInv.listItems.length;i++){
+        this.activeInv.listItems[i].discountRate = 0;
+      }
+    }
+    if(this.activeInv.tax_rate !==0){
+      this.hideTaxLabel = true;
+      for(var i=0;i<this.activeInv.listItems.length;i++){
+        this.activeInv.listItems[i].tax_rate = 0;
+      }
+    }
     
     this.setActiveClient()
   }
