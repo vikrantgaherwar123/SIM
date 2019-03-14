@@ -9,7 +9,7 @@ export class EmailService {
    constructor(private http: Http) { }
 
   sendEmail(email,name, subject, message) {
-    const uri = 'http://206.189.130.217/invoice_backend/rest/v1/support/sendemail';
+    const uri = 'http://192.168.0.20:8082/invoice_backend/rest/v1/support/sendemail';
     const httpOptions = {
       headers: new Headers({
         'Content-Type':  'application/x-www-form-urlencoded'

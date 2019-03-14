@@ -68,6 +68,7 @@ export class AddEditEstComponent implements OnInit {
   private allClientList: client[]
   activeClient: client = <client>{}
   clientListLoading: boolean
+  estimateListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   addClientModal: any = {}
@@ -179,44 +180,9 @@ export class AddEditEstComponent implements OnInit {
         }
       }
     }
-    // //getting arraylist of recenlty added estimates 
-    // this.store.select('recentEstimates').subscribe(estimates => {
-    //   this.estimateList = estimates
-    // })
-    this.getTodaysestimates();
-    // this.fetchInvoiceDetail();
+    this.fetchEstimates();
   }
 
-
-  getTodaysestimates(){
-    //getting arraylist of recenlty added invoices 
-    this.store.select('recentEstimates').subscribe(estimates => {
-      this.estimateList = estimates
-      var start = new Date();
-      start.setHours(0, 0, 0, 0);
-      if (this.estimateList.length < 1) {
-        var query = {
-          clientIdList: null,
-          startTime: start.getTime(),
-          endTime: new Date().getTime()
-        }
-        // this.invListLoader = true
-        this.estimateService.fetchByQuery(query).pipe(retryWhen(_ => {
-          return interval(5000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-          )
-        })).subscribe((response: any) => {
-          if (response.status === 200) {
-            // this.invListLoader = false
-            this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-            this.store.select('estimate').subscribe(estimates => {
-              this.estimateList = estimates
-            })
-          }
-        }, err => console.log(err))
-      }
-    })
-  }
 
   dataChanged(input) {
     if (input > 100) {
@@ -833,12 +799,12 @@ export class AddEditEstComponent implements OnInit {
     this.productList = uniqueProducts;
     //remove whitespaces from productList
     for (let i = 0; i < this.productList.length; i++) {
-      if(!this.productList[i].prodName){
+      if (!this.productList[i].prodName) {
         this.productList.splice(i,1);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
       if (tempProduct === "") {
-        this.productList.splice(i);
+        this.productList.splice(i,1);
       }
     }
 
@@ -1188,7 +1154,9 @@ export class AddEditEstComponent implements OnInit {
           this.router.navigate([`estimate/view/${this.estimateId}`])
         } else{
           //add recently added esimate in store
-          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          // self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          
+         this.fetchEstimates();
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1347,34 +1315,47 @@ export class AddEditEstComponent implements OnInit {
     )
   }
 
+  // error modal
+  openErrorModal() {
+    $('#error-message').modal('show')
+    $('#error-message').on('shown.bs.modal', (e) => {
+    })
+  }
+
 
   //todays estimates functionality
+
+  fetchEstimates() {
+    // Fetch estimates with given query
+      var start = new Date();
+      start.setHours(0, 0, 0, 0);
+      var query = {
+        clientIdList: null,
+        startTime: start.getTime(),
+        endTime: new Date().getTime()
+      }
+
+    this.estListLoader = true
+    this.estimateService.fetchByQuery(query).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.estListLoader = false
+        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+        })
+      }
+    },err => this.openErrorModal());
+  }
 
   setActiveEst(estId: string = '') {
     this.viewTodaysEstimate = true;
     this.estimateId = estId;
-    if (!estId || estId === "null") {
-      this.activeEst = this.estimateList[this.estimateList.length - 1];
-    } else {
-      this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
-    }
+    this.estimateListLoading = true;
+    this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     this.setActiveClient()
   }
  
-  removeEmptySpaces(){
-    //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
-      }
-    }
-    
-  }
-
   setActiveClient() {
     if (this.clientList.length < 1) {
       this.clientListLoading = true
@@ -1385,7 +1366,7 @@ export class AddEditEstComponent implements OnInit {
       })).subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.removeEmptySpaces();
+        this.removeEmptyNameClients();
       },err => console.log(err)
       )
     }

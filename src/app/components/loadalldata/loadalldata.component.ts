@@ -31,11 +31,6 @@ import { setStorage } from 'src/app/globalFunctions';
 })
 export class LoadalldataComponent implements OnInit {
   private clientList: client[]
-  clientsCount: number;
-  productsCount: number;
-  termsCount: number;
-  invoiceCount: number;
-  estimateCount: number;
   clientsCompleted: boolean = false;
   productsCompleted: boolean = false;
   termsCompleted: boolean = false;

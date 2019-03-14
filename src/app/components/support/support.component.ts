@@ -41,12 +41,12 @@ export class SupportComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
     // console.log(this.user);
-    {
-        this.createForm();
+      {
+          this.createForm();
       }
-    
-    
-   }
+
+
+  }
 
    createForm() {
     this.angForm = this.fb.group({
@@ -63,7 +63,9 @@ export class SupportComponent implements OnInit {
   }
 
   sendMail() {
-    this.emailService.sendEmail(this.orgMail, this.orgName, this.subject, this.queryMessage).subscribe(
+    this.emailService.sendEmail(this.orgMail, this.orgName, this.subject,
+        'OS Name: '+this.osName+'\n OS Version: '+this.osVersion+'\n Broswer Name: '+this.browserName+'\n Browser Version: '+this.browserVersion+'\n Vendor: '+
+        this.vendor+'\n User Agent'+this.userAgent+'\n App Version: '+this.appVersion+'\n Platform: '+this.platform + '\n Message: ' + this.queryMessage).subscribe(
         (res) => {
             console.log(res);
         },

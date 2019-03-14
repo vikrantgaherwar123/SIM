@@ -1,5 +1,5 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main">
+  <div class="col-12" id="main" style="padding-top: 3px !important;">
     <div class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
@@ -331,7 +331,7 @@
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith" class="mCustomScrollbar style-3"
                               (optionSelected)="fillItemDetails()"
                             >
-                              <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
+                            <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
                               <textarea *ngIf="disabledDescription==false" id="descId"  tabindex="7" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
@@ -776,7 +776,7 @@
       </div>
       <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back" style="margin-top: 12px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
@@ -1143,26 +1143,32 @@
       </div>
       <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
-      <div class="col-12 col-md-3">
+      <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;">
+        <div class="row" style="padding-top: 18px;padding-bottom: 4px;">
+          <div class="col-1"></div>
+          <button type="button" style="width: 100%;background-color: #ededed !important;color: #0299ff !important;
+          border: #0299ff solid 2px !important;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+            (click)="router.navigate(['/invoice/view'])">Search For Invoices
+            <i class="fa fa-search" style="padding: 12px;"></i>
+          </button>
+          <div class="col-1"></div>
+        </div>
         <div class="row">
           <div class="col-1"></div>
-          <button type="button" style="width: 100%;background-color: #ededed !important" class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold" (click)="router.navigate(['/invoice/view'])">Search For Invoices 
-            <i class="fa fa-search" style="padding: 12px;"></i>
-          </button> 
-        <div class="col-1"></div>
-      </div>
+          <button *ngIf="viewTodaysInvoice == true" type="button" style="width: 100%;color: #0299ff !important;
+          border: #0299ff solid 2px !important;background-color: #ededed !important;margin-top: 5px;margin-bottom: 10px;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+            (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
+            <i class="fa fa-plus" style="padding: 12px;margin-left: 18px;"></i>
+          </button>
+          <div class="col-1"></div>
+        </div>
         <!-- recently added invoice -->
-        <div class="list-shadow">
-          <div class="col-12 px-0 filter-box">
-           
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 search-box" style="margin: 8px 0 7px 0;">
-              <!-- <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="invSearchTerm" name="invoiceFilterTerm" placeholder="Search invoices" />
-              </div> -->
-            </div>
-          </div>
-    
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="background-color: #f9f9f9 !important;">
+        <!-- <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
+        </button>  -->
+        <div class="row" style="margin-top: 14px;">
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
            {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
