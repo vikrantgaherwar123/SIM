@@ -76,7 +76,7 @@ input[type=text], input[type=password],select {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   -moz-box-shadow: none !important;
-  border-radius: 6px !important;
+  border-radius: 2px !important;
 }
 .btn.btn-raised {
   padding: 6px 12px !important;

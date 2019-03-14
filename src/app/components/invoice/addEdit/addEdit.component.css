@@ -167,6 +167,13 @@ select {
   margin-top: -16px;
   font-family: quicksand_bold;
 }
+.side_btn{
+  width: 100%;
+    background-color: #ededed !important;
+    color: #0299ff !important;
+    border: #0299ff solid 2px !important;
+    border-radius: 6px !important;
+}
 @media (min-width: 1280px)
 {
   .downArrowIcon{

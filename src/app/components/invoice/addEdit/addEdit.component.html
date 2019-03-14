@@ -1143,24 +1143,22 @@
       </div>
       <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
-      <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;">
-        <div class="row" style="padding-top: 18px;padding-bottom: 4px;">
+      <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
+        <div class="row" style="padding-top: 12px;padding-bottom: 4px;">
           <div class="col-1"></div>
-          <button type="button" style="width: 100%;background-color: #ededed !important;color: #0299ff !important;
-          border: #0299ff solid 2px !important;"
-            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+          <button type="button" 
+            class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
-            <i class="fa fa-search" style="padding: 12px;"></i>
+            <i class="fa fa-search" style="padding: 12px 0px;"></i>
           </button>
           <div class="col-1"></div>
         </div>
         <div class="row">
           <div class="col-1"></div>
-          <button *ngIf="viewTodaysInvoice == true" type="button" style="width: 100%;color: #0299ff !important;
-          border: #0299ff solid 2px !important;background-color: #ededed !important;margin-top: 5px;margin-bottom: 10px;"
-            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold"
+          <button *ngIf="viewTodaysInvoice == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
             (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
-            <i class="fa fa-plus" style="padding: 12px;margin-left: 18px;"></i>
+            <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
           <div class="col-1"></div>
         </div>
@@ -1232,7 +1230,7 @@
             <div class="row">
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" name="name" class="form-control add-client-input-custom"
+                  <input type="text" name="name" tabindex="-1" class="form-control add-client-input-custom"
                     [(ngModel)]="addClientModal.name" placeholder="Organization Name" required
                   />
                   <!-- <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
