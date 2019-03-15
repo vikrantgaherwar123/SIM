@@ -5,7 +5,7 @@
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator"
           class="create-invoice" (ngSubmit)="save(invoiceGeneratorAdd.valid)"
         >
-          <div class="shadow back p-4">
+          <div class="back p-4">
             <div class="col-12">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
@@ -776,7 +776,7 @@
       </div>
       <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back" style="margin-top: 12px;">
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back" style="margin-top: 12px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
