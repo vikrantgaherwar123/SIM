@@ -13,6 +13,17 @@
   color:#fff;
   background-color: #2196f3;
 }
+.edit-setting input[type=radio] + label + span {
+  outline: 0;
+  color:#fff;
+  background-color: #2196f3;
+}
+.edit-setting input[type=radio]:checked + label + span {
+  outline: 0;
+  color:#fff;
+  background-color: #fff;
+}
+
 .edit-setting input[type=radio] + label {
   display: inline-block;
   margin: -2px;
@@ -117,6 +128,7 @@ input.ng-dirty.ng-invalid {
   border-left: 4px solid #0295ff;
   border-radius: 2px;
   height: 72px;
+  margin-top: 4px;
 }
 .client_label{
   font-size: 12px;
@@ -129,4 +141,7 @@ input.ng-dirty.ng-invalid {
   color: #7e7e7e;
   padding: 20px;
   font-family: quicksand_regular !important;
+}
+.file_icon{
+  height: 16px;
 }

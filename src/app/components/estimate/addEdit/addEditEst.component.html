@@ -15,49 +15,41 @@
             <div class="row">
               <div class="col-sm-7 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
+
                       <!-- Billing To -->
                       <div class="col-10">
-                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
-                        </span>
-
-                        <div class="input-group pl-0 inputWithIcon">
-                          <input type="text" id="bill-to-input" style="height: 40px !important;" [ngClass]="{ 'border_white': billingTo.value }" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
-                          >
-                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                              <img src="assets/images/down-arrow64.png" class="client_arrow">
-                            </span>
-                          
-                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="shippingChange === true" class="downArrowIcon">
-                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                          <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                            {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                           </span>
-                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
-
-                          <div class="input-group-append">
-                              <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()"><img src="assets/images/grey_cross.png" style="height: 16px;
-                                width: 16px;"></a>
-                            </div>
-                           
-                          <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                          <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
-                            autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
-                          >
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
-                            </button>
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
-                              {{client.name}}
-                            </mat-option>
-                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
-                              Add Client {{billingTo.value}}
-                            </mat-option>
-                          </mat-autocomplete>
+  
+                          <div class="input-group pl-0 inputWithIcon">
+                            <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
+                              matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
+                            >
+                            <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                            
+                            <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
+                            <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                              autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
+                            >
+                              
+                                <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                                  class="btn btn-primary add_client_btn">
+                                  <i class="fa fa-plus"></i>
+                                  Add New Client
+                                </button>
+                          
+                              <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
+                                {{client.name}}
+                              </mat-option>
+                              <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                                Add Client {{billingTo.value}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </div>
                         </div>
-                      </div>
+                      
 
                       <!-- <div class="col-2" style="padding-top: 30px;">
                         <span>

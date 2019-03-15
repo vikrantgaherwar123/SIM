@@ -16,12 +16,12 @@
                     <input type="radio" id="taxonItem" name="taxon" checked
                       >
                     <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
-                      Client
+                      <i class="fa fa-check-circle"></i> Client
                     </label>
                 
                     <input type="radio" id="taxonBill" name="taxon">
                     <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                      Product
+                      <span><i class="fa fa-check-circle"></i></span> Product
                     </label>
                   </div>
                 </div>
@@ -35,19 +35,19 @@
                         <span class="client_label">Choose File Format</span>
                       </div>
                       <div class="col-9 row" style="padding: 20px;">
-                        <div class="col-3">
+                        <div class="col-3" style="margin-left: -4px;">
                           <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
-                            CSV
+                            <img src="assets/images/settings/csv.png" class="file_icon">CSV
                           </button>
                         </div>
                         <div class="col-3" style="margin-left: 20px;">
                           <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
-                            XLS
+                            <img src="assets/images/settings/xls.png" class="file_icon">XLS
                           </button>
                         </div>
                         <div class="col-3" style="margin-left: 20px;">
                           <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeAddClientModal()">
-                            XLSX
+                            <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                           </button>
                         </div>
                       </div>
@@ -86,6 +86,72 @@
         </form>
       </div>
    
+  </div>
+  <div class="row">
+    <table width="100%" class="table 
+            table-responsive" style="padding: 32px 0px 0px 0px;">
+              <thead style="background-color: #0299ff;border-color: #0299ff;color: white">
+                <tr class="hd">
+                  <td width="1%" scope="col">Sr.no</td>
+                  <td width="10%" scope="col">Organization</td>
+                  <td width="10%" scope="col">Contact Person</td>
+                  <td width="10%" scope="col">Address Line 1</td>
+                  <td width="10%" scope="col">Address Line 2</td>
+                  <td width="10%" scope="col">Address Line 3</td>
+                  <td width="10%" scope="col">Business Id</td>
+                  <td width="10%" scope="col">Business Detail</td>
+                  <td width="10%" scope="col">Contact No</td>
+                  <td width="10%" scope="col">Email Id</td>
+                  <td width="10%" scope="col">Shipping Address</td>
+                  <td width="2%" scope="col">Remove</td>
+                </tr>
+              </thead>
+              <div>
+              <tbody style="border: 1px solid;">
+                <tr *ngFor="let item of clientRecords; let in = index">
+                  <td>{{in+1}}</td>
+                  <td>
+                    <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }" onfocus="this.select()"
+                      [(ngModel)]="item.name" required />
+                    <!--[ngClass]="{disabledField: !customEnableDate}"-->
+                  </td>
+                  <td>
+                    <input type="text" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.contactPersonName" />
+                  </td>
+                  <td>
+                    <input type="text" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine1" />
+                  </td>
+                  <td>
+                    <input type="text" name="addressLine2-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine2" />
+                  </td>
+                  <td>
+                    <input type="text" name="addressLine3-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.addressLine3" />
+                  </td>
+                  <td>
+                    <input type="text" name="businessId-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.businessId" />
+                  </td>
+                  <td>
+                    <input type="text" name="businessDetail-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.businessDetail" />
+                  </td>
+                  <td>
+                    <input type="text" name="number-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.number" />
+                  </td>
+                  <td>
+                    <input type="text" name="email-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.email" />
+                  </td>
+                  <td>
+                    <input type="text" name="shippingAddress-{{in}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.shippingAddress" />
+                  </td>
+                  <td>
+                    <span class="table-remove">
+                      <button type="button" mdbBtn color="danger" rounded="true" size="sm" class="my-0 no_btn" (click)="remove(in)"><img
+                          src="../assets/images/delete_in_dark_grey.png" style="height: 28px;"></button>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </div>
+            </table>
   </div>
 </div>
 
