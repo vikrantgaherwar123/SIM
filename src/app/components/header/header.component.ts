@@ -11,12 +11,27 @@ export class HeaderComponent implements OnInit {
   @Input() instance
   email
 
-  constructor(private router: Router) {
+  constructor(public router: Router) {
     var user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
     this.email = (user && user.registered_email) ? user.registered_email : 'user'
+    // var $buttons = jQuery('button');
+    // $buttons.on('click', function () {
+    //   jQuery(this).toggleClass('active').siblings('button').removeClass('active');
+    // })
+    
   }
 
   ngOnInit() {
+    // Add active class to the current button (highlight it)
+    var header = document.getElementById("myDIV");
+    var btns = header.getElementsByClassName("navbtn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+      });
+    }
   }
 
   toggleSideNavBar() {

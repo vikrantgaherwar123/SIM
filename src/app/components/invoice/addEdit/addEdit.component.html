@@ -913,10 +913,10 @@
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-center" disabled
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="10%">
+                    <td  width="10%"><!--*ngIf="hideTaxLabel == false"-->
                       <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)" disabled>
                     </td>
-                    <td width="10%">
+                    <td  width="10%"><!--*ngIf="hideDiscountLabel == false"-->
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center"
                         value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
@@ -1144,7 +1144,7 @@
       <!--Todays Invoice Ends-->
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
-        <div class="row" style="padding-top: 12px;padding-bottom: 4px;">
+        <div class="row" style="padding-top: 20px;padding-bottom: 4px;">
           <div class="col-1"></div>
           <button type="button" 
             class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"

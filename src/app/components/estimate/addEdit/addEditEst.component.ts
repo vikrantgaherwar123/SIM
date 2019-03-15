@@ -238,7 +238,7 @@ export class AddEditEstComponent implements OnInit {
     this.commonSettingsInit()
 
     this.estimateService.fetchById([estId]).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     })).subscribe((estimate: any) => {
@@ -1336,7 +1336,11 @@ export class AddEditEstComponent implements OnInit {
       }
 
     this.estListLoader = true
-    this.estimateService.fetchByQuery(query).subscribe((response: any) => {
+    this.estimateService.fetchByQuery(query).pipe(retryWhen(_ => {
+      return interval(2000).pipe(
+        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+      )
+    })).subscribe((response: any) => {
       if (response.status === 200) {
         this.estListLoader = false
         this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
@@ -1360,7 +1364,7 @@ export class AddEditEstComponent implements OnInit {
     if (this.clientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(5000).pipe(
+        return interval(2000).pipe(
           flatMap(count => count == 3 ? throwError("Giving up") : of(count))
         )
       })).subscribe((response: response) => {
@@ -1397,7 +1401,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.estimateService.fetchPdf(this.activeEst.unique_identifier).pipe(retryWhen(_ => {
-      return interval(5000).pipe(
+      return interval(2000).pipe(
         flatMap(count => count == 3 ? throwError("Giving up") : of(count))
       )
     })).subscribe((response: any) => {
