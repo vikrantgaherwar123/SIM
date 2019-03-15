@@ -145,3 +145,24 @@ input.ng-dirty.ng-invalid {
 .file_icon{
   height: 16px;
 }
+input[type=text], input[type=password], select {
+  font-family: quicksand_regular !important;
+  font-size: 12.5px !important;
+  font-style: normal;
+  font-weight: 100 !important;
+  border-color: #bbd0e5 !important;
+}
+.table td, .table th {
+  padding: 0px;
+  vertical-align: top;
+  /* border-top: 1px solid #dee2e6; */
+}
+.table td, .table th {
+  border-top: 0px solid #dee2e6 !important;
+}
+.form-control[readonly] {
+  background-color: #fff !important;
+}
+.td_header{
+  color: black;
+}
