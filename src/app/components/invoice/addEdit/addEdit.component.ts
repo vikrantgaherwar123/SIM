@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store'
 import {ToasterService} from 'angular2-toaster';
 import { Title }     from '@angular/platform-browser';
-import { DateAdapter } from '@angular/material';
+import { DateAdapter, MatAutocomplete } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
@@ -36,7 +36,7 @@ import { AppState } from '../../../app.state'
   
 })
 export class AddEditComponent implements OnInit {
-
+  @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
   invoiceId
 
   activeInvoice: invoice = <invoice>{}
@@ -747,6 +747,7 @@ export class AddEditComponent implements OnInit {
   }
 
   // Client Functions
+  
   setClientFilter() {
     // Filter for client autocomplete
     if(this.clientList){
@@ -922,12 +923,21 @@ export class AddEditComponent implements OnInit {
 
   // Product Functions
   setProductFilter() {
+    // filter productlist to avoid duplicates
     var obj = {};
-    for (var i = 0, len = this.productList.length; i < len; i++)
-      obj[this.productList[i]['prodName']] = this.productList[i];
-    this.productList = new Array();
-    for (var key in obj)
-      this.productList.push(obj[key]);
+    //You can filter based on Id or Name based on the requirement
+    var uniqueProducts = this.productList.filter(function (item) {
+      if(item.prodName){
+      if (obj.hasOwnProperty(item.prodName)) {
+        return false;
+      } else {
+        obj[item.prodName] = true;
+        return true;
+      }
+    }
+    });
+    this.productList = uniqueProducts;
+    this.removeEmptyProducts();
     this.filteredProducts = this.addItem.valueChanges.pipe(
       startWith<string | product>(''),
       map(value => typeof value === 'string' ? value : value.prodName),
@@ -937,7 +947,6 @@ export class AddEditComponent implements OnInit {
   
 
   private _filterProd(value: string): product[] {
-    this.removeEmptyProducts();
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -1268,6 +1277,9 @@ export class AddEditComponent implements OnInit {
       
 
       this.activeInvoice.discount = gross_amount * discountFactor
+      //remove digits after two decimal
+      var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
+      this.activeInvoice.discount = parseFloat(value);
       deductions += this.activeInvoice.discount
     } else {
       if(!isNaN(this.activeInvoice.discount)) {
@@ -1285,6 +1297,9 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.tax_rate / 100
       )
       this.activeInvoice.tax_amount = additions
+      //remove digits after two decimal
+      var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
+      this.activeInvoice.tax_amount = parseFloat(value);
     }
 
     // Multiple Taxes
@@ -1298,7 +1313,7 @@ export class AddEditComponent implements OnInit {
           }
           this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions) / 100 * this.activeInvoice.taxList[i].percentage
           //remove digits after two decimal
-          var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 6)
+          var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
           this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
           temp_tax_amount += this.activeInvoice.taxList[i].calculateValue
         } 
@@ -1626,10 +1641,7 @@ export class AddEditComponent implements OnInit {
 
   fetchInvoices() {
     // Fetch invoices with given query
-    this.store.select('invoice').subscribe(invoices => {
-      this.invoiceList = invoices
-    })
-    if(this.invoiceList.length < 1){
+    
     var start = new Date();
     start.setHours(0, 0, 0, 0);
     var  query = {
@@ -1653,7 +1665,6 @@ export class AddEditComponent implements OnInit {
       }
       
     },err => this.openErrorModal())
-  }
   }
 
   setActiveInv(invId: string = '') {

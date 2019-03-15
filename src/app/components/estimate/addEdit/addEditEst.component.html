@@ -17,47 +17,50 @@
                     <div class="row">
                       <!-- Billing To -->
                       <div class="col-10">
-                        <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
-                          {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
-                        </span>
-
-                        <div class="input-group pl-0 inputWithIcon">
-                          <input type="text" id="bill-to-input" style="height: 40px !important;" [ngClass]="{ 'border_white': billingTo.value }" class="form-control billing-input" placeholder="Search & Select Client"
-                            matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit;" (click)="closeAddClientModal()"
-                          >
-                          <span class="downArrowIcon" [ngClass]="{ 'hide_dropdown': billingTo.value }">
-                              <img src="assets/images/down-arrow64.png" class="client_arrow">
-                            </span>
-                          
-                          <!--<i *ngIf="shippingChange === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="shippingChange === true" class="downArrowIcon">
-                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                          <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                            {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                           </span>
-                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
-
-                          <div class="input-group-append">
+  
+                          <div class="input-group pl-0 inputWithIcon">
+                            <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
+                              matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
+                            >
+                            <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                            <!-- <img *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" src="assets/images/grey_cross.png" style="height: 16px;
+                              width: 16px;"> -->
+                            
+                            <!-- <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
+                            <span *ngIf="disableIcon === true" class="downArrowIcon">
+                            <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
+                            </span>
+                            <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
+  
+                            <!-- <div class="input-group-append">
                               <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()"><img src="assets/images/grey_cross.png" style="height: 16px;
                                 width: 16px;"></a>
-                            </div>
-                           
-                          <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                          <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
-                            autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
-                          >
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
-                            </button>
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
-                              {{client.name}}
-                            </mat-option>
-                            <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
-                              Add Client {{billingTo.value}}
-                            </mat-option>
-                          </mat-autocomplete>
+                            </div> -->
+                             
+                            <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
+                            <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                              autoActiveFirstOption (optionSelected)="selectedClientChange($event)"  id="style-3"
+                            >
+                              
+                                <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                                  class="btn btn-primary add_client_btn">
+                                  <i class="fa fa-plus"></i>
+                                  Add New Client
+                                </button>
+                          
+                              <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
+                                {{client.name}}
+                              </mat-option>
+                              <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                                Add Client {{billingTo.value}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </div>
                         </div>
-                      </div>
 
                       <!-- <div class="col-2" style="padding-top: 30px;">
                         <span>
@@ -219,7 +222,7 @@
                     <td [class.no-border-last]="last">
                       <div class="form-group">
                         <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
-                          matInput [formControl]="addItem" [matAutocomplete]="auto">
+                          tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                           (optionSelected)="fillItemDetails()">
                           <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
@@ -227,7 +230,7 @@
                         </mat-autocomplete>
                         <div class="custom-description">
                           <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
-                             [(ngModel)]="activeItem.description" placeholder="Description"
+                             [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
                             onfocus="this.select()"></textarea>
                           <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;height: 69px !important;"
@@ -239,10 +242,10 @@
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
                       <div class="form-group">
-                        <input type="number" name="itemQty" id="qty" step="any" class="form-control text_center  height_40"
+                        <input type="number" tabindex="2" name="itemQty" id="qty" step="any" class="form-control text_center  height_40"
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
-                      <button type="button" class="btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
+                      <button type="button" tabindex="7" class="btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
                         [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" style="margin-top: 26px;"> 
                         Add Item
                       </button>
@@ -250,14 +253,14 @@
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
                       <div class="form-group">
-                        <input type="number" name="itemRate" step="any" class="form-control text_center  height_40" min="0.01"
+                        <input type="number" tabindex="3" name="itemRate" step="any" class="form-control text_center  height_40" min="0.01"
                           [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
                       <div class="input-group">
-                        <input type="number" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
+                        <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_center height_40" min=0 max=100
                           [(ngModel)]="activeItem.tax_rate" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
@@ -268,7 +271,7 @@
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0  && showDiscountRateFlag == true ">
                       <div class="input-group">
-                        <input type="number" name="itemDiscountRate" class="form-control text_center height_40" min=0
+                        <input type="number" tabindex="5" name="itemDiscountRate" class="form-control text_center height_40" min=0
                           max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
@@ -882,23 +885,41 @@
       <!--Todays Estimate Ends-->
 
       <!-- Previous Estimates Button -->
-      <div class="col-12 col-md-3">
-        <button type="button" class="btn2 btn2-primary btn2-lg raised search_btn" (click)="router.navigate(['/estimate/view'])">
+      <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
+        <!-- <button type="button" class="btn2 btn2-primary btn2-lg raised search_btn" (click)="router.navigate(['/estimate/view'])">
           Search For Estimates
-        </button>
+          <i class="fa fa-search" style="padding: 12px 0px;"></i>
+        </button> -->
+        <div class="row" style="padding-top: 20px;padding-bottom: 4px;">
+            <div class="col-1"></div>
+            <button type="button" 
+              class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+              (click)="router.navigate(['/estimate/view'])">Search For Estimates
+              <i class="fa fa-search" style="padding: 12px 0px;"></i>
+            </button>
+            <!-- Previous Invoices Button ends -->
+            <div class="col-1"></div>
+          </div>
+
+          <div class="row">
+              <div class="col-1"></div>
+              <button *ngIf="viewTodaysEstimate == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
+                class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+                (click)="viewTodaysEstimate = false;estimateId = '';resetCreateInvoice()">Add New Estimate
+                <i class="fa fa-plus" style="padding: 12px 0px"></i>
+              </button>
+              <div class="col-1"></div>
+            </div>
 
         <!-- recently added Estimate -->
-        <button type="button" class="btn2 btn2-primary btn2-lg raised search_btn" (click)="viewTodaysEstimate = false;estimateId = '';resetFormControls()">
-          Add New Estimate
-        </button>
-        <div class="back list-shadow">
-          <div class="col-12 px-0 filter-box">
-          </div>
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">{{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
+        
+        <div class="row" style="margin-top: 14px;">
+         
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
+            {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 back mCustomScrollbar style-3" style="overflow-y: auto;border-top: 1px solid #d2d2d2;">
+          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
             *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
@@ -991,7 +1012,7 @@
             <div class="row">
               <div class="col-6" style="padding-right: 23px;">
                 <div class="form-group" [class.has-error]="(clientform.submitted && clientform.errors)">
-                  <input type="text" name="name" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.name"
+                  <input type="text" tabindex="-1" name="name" class="form-control add-client-input-custom" [(ngModel)]="addClientModal.name"
                     placeholder="Organization Name" required onfocus="this.select()" />
                   <div class="form-error" *ngIf="(clientform.submitted && clientform.errors)">
                     <span *ngIf="clientform.name">Required</span>

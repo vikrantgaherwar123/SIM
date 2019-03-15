@@ -70,11 +70,15 @@
   background-color: #f9f9f9 !important;
   cursor: pointer;
   font-size: 18px;
+  padding: 0px 8px 8px 0px;
 }
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
   color: #0292f3;
   border-bottom: 3px solid #0298fe;
+  
+}
+.active{
   padding: 0px 8px 8px 0px;
 }

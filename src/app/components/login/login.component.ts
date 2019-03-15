@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
   settingsCompleted: boolean;
   loginLoader: boolean;
   loggedInSuccess: boolean;
+  loggedInFailed: boolean;
 
   constructor(
     private authService: AuthService,
@@ -67,6 +68,8 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loggedInSuccess = false;
+    this.loggedInFailed = false;
     this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
     $('#navbar').hide()
@@ -102,8 +105,8 @@ export class LoginComponent implements OnInit {
         this.validateToken(access, ids, response)
       } 
       else {
-        this.loggedInSuccess = false;
         this.loginLoader = false;
+        this.loggedInFailed = true;
         if (response.status == 410) {
           console.log('purchase error');
         } else {

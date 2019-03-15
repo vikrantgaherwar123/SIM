@@ -24,11 +24,12 @@
     </div>
   </div>
   <div class="col-md-4 px-0" style="max-width: 28.333333% !important;margin-top: 1%;">
-    <div *ngIf="loggingIn == false" class="login-form-container">
+    <div class="login-form-container">
       <img src="assets/images/login/lg.png" class="lock-image img-fluid">
 
       <div class="login-form" *ngIf="!forgetFlag">
-        <form name="form" (ngSubmit)="loginUser($event)">
+        <div *ngIf="loggedInSuccess == false" [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
+        <form name="form"  (ngSubmit)="loginUser($event)">
           <div class="form-group" style="margin-bottom: 8px;">
             <i class="fa fa-envelope"></i>
             <input type="text" class="login-input" name="email"
@@ -64,6 +65,7 @@
             </button>
           </div>
         </form>
+        
         <div id="or-div">
           <div id="h2-div"><span>Or</span></div>
         </div>
@@ -80,6 +82,50 @@
           </a>
         </div>
       </div>
+      <div *ngIf="loginLoader && loggingIn">
+          <h3 class="loggingInBtn">Logging In...</h3>
+        </div>
+      <div *ngIf="loggingIn">
+          <h5 *ngIf="loggedInSuccess">
+            Logged In Successfully..
+          </h5>
+            <div *ngIf="loggedInSuccess" >
+              <div class="bottom_mrg">
+                <span id="counting_client" style="font-family: quicksand_bold !important;"></span>
+                <span [ngClass]="{loading: clientsCompleted == false}" style="font-size: 20px">Clients Loading</span>
+                <input type="checkbox" [checked]="clientsCompleted == true"/>
+              </div>
+              <div class="bottom_mrg">
+                  <span id="counting_product" style="font-family: quicksand_bold !important;"></span>
+                  <span [ngClass]="{loading: productsCompleted == false}" style="font-size: 20px">Products Loading</span>
+                  <input type="checkbox" [checked]="productsCompleted == true"/>
+              </div>
+              <div class="bottom_mrg">
+                  <span id="counting_terms" style="font-family: quicksand_bold !important;"></span>
+                  <span [ngClass]="{loading: termsCompleted == false}" style="font-size: 20px">Terms And Conditions Loading</span>
+                  <input type="checkbox" [checked]="termsCompleted == true"/>
+              </div>
+              <div class="bottom_mrg">
+                  <span id="counting_setting" style="font-family: quicksand_bold !important;"></span>
+                  <span [ngClass]="{loading: settingsCompleted == false}" style="font-size: 20px">Settings Loading</span>
+                  <input type="checkbox" [checked]="settingsCompleted == true"/>
+              </div>
+            </div>
+
+      </div>
+      
+      </div>
+      <div *ngIf="loggedInFailed == true">
+          <i class="fa fa-exclamation-triangle"></i> Login Failed
+          <button (click)="loggedInFailed=false;loggingIn = false">Retry</button>
+        </div>
+      
+
+      <!-- <div *ngIf="loginLoader && loggingIn">
+          <div>
+            <h3 class="loggingInBtn">Logging In...</h3>
+          </div>
+        </div> -->
 
       <div class="login-form" *ngIf="forgetFlag">
         <div class="col-md-12">
@@ -106,47 +152,17 @@
       </div>
     </div>
     
-    <div *ngIf="loggingIn" class="login-form-container">
+
+
+
+
+
+    <!-- <div *ngIf="loggingIn" class="login-form-container">
       <div class="login-form">
-        <div *ngIf="loginLoader && loggingIn">
-          <i class='fa fa-spinner fa-spin' style="position: inherit;"></i>Logging In...
-        </div>
-        <div *ngIf="loggedInSuccess == false && loginLoader == false">
-          <i class="fa fa-exclamation-triangle"></i> Login Failed
-          <button (click)="loggingIn = false">Retry</button>
-        </div>
-
-      <h5 *ngIf="loggedInSuccess"><svg class="checkmark" viewBox="0 0 52 52">
-          <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
-          <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-        </svg>Logged In Successfully.. </h5>
-      
-
-      <div *ngIf="loggedInSuccess" >
-        <div class="bottom_mrg">
-          <span id="counting_client" style="font-family: quicksand_bold !important;"></span>
-          <span [ngClass]="{loading: clientsCompleted == false}" style="font-size: 20px">Clients Loading</span>
-          <input type="checkbox" [checked]="clientsCompleted == true"/>
-        </div>
-        <div class="bottom_mrg">
-            <span id="counting_product" style="font-family: quicksand_bold !important;"></span>
-            <span [ngClass]="{loading: productsCompleted == false}" style="font-size: 20px">Products Loading</span>
-            <input type="checkbox" [checked]="productsCompleted == true"/>
-        </div>
-        <div class="bottom_mrg">
-            <span id="counting_terms" style="font-family: quicksand_bold !important;"></span>
-            <span [ngClass]="{loading: termsCompleted == false}" style="font-size: 20px">Terms And Conditions Loading</span>
-            <input type="checkbox" [checked]="termsCompleted == true"/>
-        </div>
-        <div class="bottom_mrg">
-            <span id="counting_setting" style="font-family: quicksand_bold !important;"></span>
-            <span [ngClass]="{loading: settingsCompleted == false}" style="font-size: 20px">Settings Loading</span>
-            <input type="checkbox" [checked]="settingsCompleted == true"/>
-        </div>
-      </div>
-      
+        
+        
     </div>
-  </div>
+    </div> -->
   </div>
 </div>
 

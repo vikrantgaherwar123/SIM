@@ -55,7 +55,7 @@
                                 Add New Client
                               </button>
                         
-                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
+                            <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)" [value]="client">
                               {{client.name}}
                             </mat-option>
                             <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
@@ -334,7 +334,7 @@
                             <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)" [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
                             <div class="custom-description">
-                              <textarea *ngIf="disabledDescription==false" id="descId"  tabindex="7" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                              <textarea *ngIf="disabledDescription==false" id="descId"  tabindex="6" name="description_{{index}}" class="black form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;height: 55px !important;"
                                 [(ngModel)]="activeItem.description"  placeholder="Description" onfocus="this.select()"
                               ></textarea>
@@ -353,7 +353,7 @@
                             />
                           </div>
                           
-                          <button type="button" style="margin-top: 20px;" tabindex="8" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
+                          <button type="button" style="margin-top: 20px;" tabindex="7" class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem()"> 
                             Add Item
                           </button>
                         </td>
@@ -392,7 +392,7 @@
                           [class.no-border-last]="last"
                         >
                           <div class="form-group">
-                            <input type="number" step="any" tabindex="6" class="form-control text_center height_40"
+                            <input type="number" step="any" class="form-control text_center height_40"
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total" style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"  disabled.btn-custom-1
                             />
@@ -1142,6 +1142,8 @@
         </form>
       </div>
       <!--Todays Invoice Ends-->
+
+
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
         <div class="row" style="padding-top: 20px;padding-bottom: 4px;">
@@ -1151,6 +1153,7 @@
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <i class="fa fa-search" style="padding: 12px 0px;"></i>
           </button>
+          <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
         <div class="row">
@@ -1162,9 +1165,10 @@
           </button>
           <div class="col-1"></div>
         </div>
+
+
         <!-- recently added invoice -->
-        <!-- <button type="button"class="search_btn btn2 btn2-primary btn2-lg raised" (click)="viewTodaysInvoice = false;invoiceId = '';activeClient = {}">Add New Invoice
-        </button>  -->
+        
         <div class="row" style="margin-top: 14px;">
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
            {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today

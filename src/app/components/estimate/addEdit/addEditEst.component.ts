@@ -171,15 +171,7 @@ export class AddEditEstComponent implements OnInit {
         this.addInit()
       }
     })
-    for (let i = 0; i < this.productList.length; i++) {
-      if (this.productList[i].prodName == "") {
-        var product = this.productList[i];
-        var index = this.productList.indexOf(product)
-        if (index > -1) {
-          this.productList.splice(index, 1);
-        }
-      }
-    }
+    
     this.fetchEstimates();
   }
 
@@ -487,9 +479,10 @@ export class AddEditEstComponent implements OnInit {
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
-        } else {
-          this.setProductFilter()
         }
+        //  else {
+        //   this.setProductFilter()
+        // }
       },err => console.log(err))
     } else {
       this.setProductFilter()
@@ -789,17 +782,19 @@ export class AddEditEstComponent implements OnInit {
     var obj = {};
     //You can filter based on Id or Name based on the requirement
     var uniqueProducts = this.productList.filter(function (item) {
+      if(item.prodName){
       if (obj.hasOwnProperty(item.prodName)) {
         return false;
       } else {
         obj[item.prodName] = true;
         return true;
       }
+    }
     });
     this.productList = uniqueProducts;
     //remove whitespaces from productList
     for (let i = 0; i < this.productList.length; i++) {
-      if (!this.productList[i].prodName) {
+      if (this.productList[i].prodName == undefined) {
         this.productList.splice(i,1);
       }
       var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
@@ -1211,6 +1206,9 @@ export class AddEditEstComponent implements OnInit {
       }
 
       this.activeEstimate.discount = gross_amount * discountFactor
+      //remove digits after two decimal
+      var value = this.activeEstimate.discount.toString().substring(0, this.activeEstimate.discount.toString().indexOf(".") + 3);
+      this.activeEstimate.discount = parseFloat(value);
       deductions += this.activeEstimate.discount
     } else {
       if (isNaN(this.activeEstimate.discount)) {
@@ -1238,7 +1236,7 @@ export class AddEditEstComponent implements OnInit {
           }
           this.activeEstimate.taxList[i].calculateValue = (this.activeEstimate.gross_amount - deductions) / 100 * this.activeEstimate.taxList[i].percentage
           //remove digits after two decimal
-          var b = this.activeEstimate.taxList[i].calculateValue.toString().substring(0, this.activeEstimate.taxList[i].toString().indexOf(".") + 6);
+          var b = this.activeEstimate.taxList[i].calculateValue.toString().substring(0, this.activeEstimate.taxList[i].toString().indexOf(".") + 5);
           this.activeEstimate.taxList[i].calculateValue = parseFloat(b);
           temp_tax_amount += this.activeEstimate.taxList[i].calculateValue
         }
@@ -1246,6 +1244,9 @@ export class AddEditEstComponent implements OnInit {
       additions += temp_tax_amount
     }
     this.activeEstimate.tax_amount = additions
+    //remove digits after two decimal
+    var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
+    this.activeEstimate.tax_amount = parseFloat(value);
 
     // Shipping
     if (isNaN(this.activeEstimate.shipping_charges)) {

@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     // Add active class to the current button (highlight it)
-    var header = document.getElementById("myDIV");
+    var header = document.getElementById("navbar");
     var btns = header.getElementsByClassName("navbtn");
     for (var i = 0; i < btns.length; i++) {
       btns[i].addEventListener("click", function () {
