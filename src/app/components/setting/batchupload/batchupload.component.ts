@@ -12,9 +12,10 @@ import * as productActions from '../../../actions/product.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import * as XLSX from 'xlsx';
-import { empty } from 'rxjs';
+import { empty, interval, throwError, of } from 'rxjs';
 import { IfStmt } from '@angular/compiler';
 import { Title }     from '@angular/platform-browser';
+import { flatMap, retryWhen, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-batchupload',
@@ -39,6 +40,14 @@ export class BatchuploadComponent implements OnInit {
   clientListLoading: boolean;
   productListLoading: boolean;
   repeatativeProductName: string;
+  errorOccured: boolean;
+  unitErrorOccured: boolean;
+  rateErrorOccured: boolean;
+  taxErrorOccured: boolean;
+  showClientDiv: boolean = false;
+  showProductDiv: boolean = false;
+  make_blur_disable : boolean = false;
+
   incomingfile(event) {
     if (event.target.files[0]) {
       this.file = event.target.files[0];
@@ -48,6 +57,7 @@ export class BatchuploadComponent implements OnInit {
         this.showProductsTable = false
       }
     }
+    this.Upload();
   }
 
   // client starts
@@ -110,12 +120,8 @@ export class BatchuploadComponent implements OnInit {
   }
 
   Upload() {
-    // if(this.worksheet1.A1.v === ' '){
-    //   console.log('remove spaces');
-    // }
-    // else{
-      
-    // }
+    //make blur steps disable
+    this.make_blur_disable = true;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -221,14 +227,14 @@ export class BatchuploadComponent implements OnInit {
           this.worksheet1.A1 = "prodName";
         }
         else{
-          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "unit"
+          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "prodName"
         }
 
         if(this.worksheet1.B1 === undefined){
           this.worksheet1.B1 = "unit";
         }
         else{
-          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "prodName"
+          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "unit"
         }
 
         if(this.worksheet1.C1 === undefined){
@@ -319,9 +325,11 @@ export class BatchuploadComponent implements OnInit {
           this.clientRecords[i].modifiedDate = d.getTime()
           //add all addresses in a single object and send it to api to show those all addr in client view mode
           this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
-          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ +(?= )/g, '');
-          if (this.clientRecords[i].name !== ' ') {
-            this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
+          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
+          if (this.clientRecords[i].name !== '') {
+            this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).pipe(
+              catchError(e => throwError(this.errorHandler(e))
+            )).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
                 let index, storeIndex
@@ -406,6 +414,19 @@ export class BatchuploadComponent implements OnInit {
         }
 
         if (status && proStatus) {
+          //flag set to highlite user if he enters wrong input
+          if(isNaN(this.productRecords[i].unit)){
+            this.unitErrorOccured = true;
+            this.toasterService.pop('failure', 'Unit must be numeric !');
+          }
+          if(isNaN(this.productRecords[i].rate)){
+            this.rateErrorOccured = true;
+            this.toasterService.pop('failure', 'Rate must be numeric !');
+          }
+          if(isNaN(this.productRecords[i].taxRate)){
+            this.taxErrorOccured = true;
+            this.toasterService.pop('failure', 'Tax Rate must be numeric !');
+          }
           //add required input params for api call
           this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
           this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
@@ -414,7 +435,10 @@ export class BatchuploadComponent implements OnInit {
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
           this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ +(?= )/g, '');
           if (this.productRecords[i].prodName !== ' ') {
-            this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
+            this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])])
+            .pipe(
+              catchError(e => throwError(this.errorHandler(e))
+            )).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
                 let index, storeIndex
@@ -438,7 +462,7 @@ export class BatchuploadComponent implements OnInit {
                 //console.log(response.error)
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            })
+            });
           } else {
             this.toasterService.pop('failure', 'Product name required!');
           }
@@ -448,6 +472,31 @@ export class BatchuploadComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  showClient()
+  {
+    this.showClientDiv = true
+    this.showProductDiv = false
+  }
+  showProduct()
+  {
+    this.showProductDiv = true
+    this.showClientDiv = false
+  }
+
+  clearData(){
+    this.make_blur_disable = false;
+    this.showClientsTable = false;
+    this.showProductsTable = false;
+    this.clientRecords = [];
+    this.productRecords = []
+  }
+
+  errorHandler(error){
+    if(error){
+     this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
     }
   }
   remove(index) {

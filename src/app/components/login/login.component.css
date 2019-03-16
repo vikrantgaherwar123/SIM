@@ -159,10 +159,19 @@
   margin-bottom: 6px;
 }
 .loginOpacity{
-  opacity: .2;
+  opacity: .1;
 }
 .loggingInBtn{
-  border-radius: 12px;
-  border: 3px solid #f9f9f9;
-  padding: 0px 0px 1px 35px;
+  font-size: 18px !important;
+    font-family: quicksand_bold !important;
+    color: #2096f3;
+    border: none;
+    padding: 11px 68px 11px 68px;
+    border-radius: 11px;
+    position: relative;
+    top: -281px;
+    border: 1px solid #f3f3f3;
+    padding: -18px;
+    text-align: center;
+    background-color: #ffffff;
 }

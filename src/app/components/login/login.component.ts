@@ -246,7 +246,7 @@ export class LoginComponent implements OnInit {
             err => this.openErrorModal()),
         this.settingService.fetch().pipe(retryWhen(_ => {
           return interval(2000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
+            flatMap(count => count == 1 ? throwError("Giving up") : of(count))
           )
         }))
           .subscribe(
