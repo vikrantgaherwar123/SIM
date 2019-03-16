@@ -82,13 +82,11 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-
-      
-      
   }
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
+    this.showClient();
     this.clientListLoading = true
     if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -119,9 +117,27 @@ export class BatchuploadComponent implements OnInit {
     }
   }
 
+  showClient()
+  {
+    this.showClientDiv = true
+    this.showProductDiv = false
+  }
+  showProduct()
+  {
+    this.showProductDiv = true
+    this.showClientDiv = false
+  }
+
   Upload() {
-    //make blur steps disable
     this.make_blur_disable = true;
+    // if(this.worksheet1.A1.v === ' '){
+    //   console.log('remove spaces');
+    // }
+    // else{
+      
+    // }
+    this.showClientsOrProducts = true;
+    this.showClientsTable = true;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -269,6 +285,14 @@ export class BatchuploadComponent implements OnInit {
     fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
   }
 
+  clearData(){
+    this.make_blur_disable = false;
+    this.showClientsTable = false;
+    this.showProductsTable = false;
+    this.clientRecords = [];
+    this.productRecords = []
+    this.showClient();
+  }
 
 
   save(status, edit) {
@@ -473,25 +497,6 @@ export class BatchuploadComponent implements OnInit {
         }
       }
     }
-  }
-
-  showClient()
-  {
-    this.showClientDiv = true
-    this.showProductDiv = false
-  }
-  showProduct()
-  {
-    this.showProductDiv = true
-    this.showClientDiv = false
-  }
-
-  clearData(){
-    this.make_blur_disable = false;
-    this.showClientsTable = false;
-    this.showProductsTable = false;
-    this.clientRecords = [];
-    this.productRecords = []
   }
 
   errorHandler(error){

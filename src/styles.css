@@ -324,7 +324,7 @@ textarea {
 .dis_tax_label
 {
   border: none !important;
-  width: 166px !important;
+  /* width: 166px !important; */
   margin-left: -16px !important;
   text-align: right !important;
 }

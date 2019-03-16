@@ -77,8 +77,8 @@
 .active, .navbtn:hover {
   color: #0292f3;
   border-bottom: 3px solid #0298fe;
-  
 }
 .active{
   padding: 0px 8px 8px 0px;
+
 }
