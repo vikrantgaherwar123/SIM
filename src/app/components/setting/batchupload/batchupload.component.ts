@@ -39,6 +39,9 @@ export class BatchuploadComponent implements OnInit {
   clientListLoading: boolean;
   productListLoading: boolean;
   repeatativeProductName: string;
+  showClientDiv: boolean = false;
+  showProductDiv: boolean = false;
+  make_blur_disable : boolean = false;
   incomingfile(event) {
     if (event.target.files[0]) {
       this.file = event.target.files[0];
@@ -48,6 +51,7 @@ export class BatchuploadComponent implements OnInit {
         this.showProductsTable = false
       }
     }
+    this.Upload();
   }
 
   // client starts
@@ -76,6 +80,7 @@ export class BatchuploadComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
+    this.showClient();
     this.clientListLoading = true
     if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -106,13 +111,27 @@ export class BatchuploadComponent implements OnInit {
     }
   }
 
+  showClient()
+  {
+    this.showClientDiv = true
+    this.showProductDiv = false
+  }
+  showProduct()
+  {
+    this.showProductDiv = true
+    this.showClientDiv = false
+  }
+
   Upload() {
+    this.make_blur_disable = true;
     // if(this.worksheet1.A1.v === ' '){
     //   console.log('remove spaces');
     // }
     // else{
       
     // }
+    this.showClientsOrProducts = true;
+    this.showClientsTable = true;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -218,14 +237,14 @@ export class BatchuploadComponent implements OnInit {
           this.worksheet1.A1 = "prodName";
         }
         else{
-          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "unit"
+          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "prodName"
         }
 
         if(this.worksheet1.B1 === undefined){
           this.worksheet1.B1 = "unit";
         }
         else{
-          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "prodName"
+          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "unit"
         }
 
         if(this.worksheet1.C1 === undefined){
@@ -260,6 +279,13 @@ export class BatchuploadComponent implements OnInit {
     fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
   }
 
+  clearData(){
+    this.make_blur_disable = false;
+    this.showClientsTable = false;
+    this.showProductsTable = false;
+    this.clientRecords = [];
+    this.productRecords = []
+  }
 
 
   save(status, edit) {

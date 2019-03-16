@@ -33,7 +33,7 @@
   color: #2196f3;
   text-align: center;
   font-size: 14px;
-  width: 114px;
+  /* width: 92px; */
   vertical-align: middle;
   cursor: pointer;
   background-color: #ffffff;
@@ -93,8 +93,8 @@ input.ng-dirty.ng-invalid {
 
 .dropzone-drop-area {
   border: dashed 2px grey;
-  width: 40%;
-  min-height: 120px;
+  width: 100%;
+  min-height: 275px;
   box-sizing: border-box;
   padding: 6px;
   display: flex;
@@ -127,7 +127,7 @@ input.ng-dirty.ng-invalid {
   margin-left: 13px;
   border-left: 4px solid #0295ff;
   border-radius: 2px;
-  height: 72px;
+  height: 60px;
   margin-top: 4px;
 }
 .client_label{
@@ -144,6 +144,13 @@ input.ng-dirty.ng-invalid {
 }
 .file_icon{
   height: 16px;
+}
+.file_text{
+  color: #0299ff !important;
+  font-family: quicksand_bold !important;
+  font-size: 12px;
+  height: 28px !important;
+  /* padding: 6px 10px 5px 10px !important; */
 }
 input[type=text], input[type=password], select {
   font-family: quicksand_regular !important;
@@ -164,5 +171,28 @@ input[type=text], input[type=password], select {
   background-color: #fff !important;
 }
 .td_header{
-  color: black;
+  color: #515151;
+  
+}
+input[type=text] {
+  padding: 3px !important;
+  font-family: quicksand_regular !important;
+  font-size: 11.5px !important;
+  font-style: normal;
+  font-weight: 100 !important;
+  border-color: #bbd0e5 !important;
+}
+.main-wrapper{
+  background-color: #ededed;
+  overflow-x: hidden;
+  min-height: 2px;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+.give_opacity{
+  opacity: .5;
+  pointer-events: none;
+}
+.col_3_label{
+  padding: 7px 2px 6px 13px;
+    line-height: 14px;
 }
