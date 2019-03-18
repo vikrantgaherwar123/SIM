@@ -417,7 +417,7 @@ export class BatchuploadComponent implements OnInit {
         this.activeProduct = this.productRecords[i];
         var proStatus = true
         // If adding or editing product, make sure product with same name doesnt exist
-        if (this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+        if (this.activeProduct.prodName) {    
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
@@ -442,6 +442,10 @@ export class BatchuploadComponent implements OnInit {
             }
           }
           this.repeatativeProductName = ''
+        }
+        else{
+          
+          status = false
         }
 
         if (status && proStatus) {
@@ -501,6 +505,9 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Product name already exists.');
           }
+          else if(!status){
+            this.toasterService.pop('failure', 'Product Name Required');
+          }
         }
       }
     }
@@ -515,9 +522,17 @@ export class BatchuploadComponent implements OnInit {
     this.clientRecords.splice(index, 1);
   }
 
-  removespaceRow(index) {
-    if(this.clientRecords.i === ' ')
-    this.clientRecords.splice(index, 1);
+  removeEmptyProducts(){
+    //remove whitespaces from productlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i,1);
+      }
+    }
   }
 
   productRemove(index) {
