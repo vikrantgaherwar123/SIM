@@ -166,7 +166,7 @@
     font-family: quicksand_bold !important;
     color: #2096f3;
     border: none;
-    padding: 11px 68px 11px 68px;
+    padding: 11px 45px 11px 45px;
     border-radius: 11px;
     position: relative;
     top: -281px;
@@ -174,4 +174,8 @@
     padding: -18px;
     text-align: center;
     background-color: #ffffff;
+}
+.loading_text{
+  font-size: 14px;
+  font-family: quicksand_bold !important;
 }

@@ -388,9 +388,6 @@ export class BatchuploadComponent implements OnInit {
                 this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
               }
               else {
-                // self.errors = [response.error]
-                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-                //console.log(response.error)
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
             })
@@ -486,9 +483,6 @@ export class BatchuploadComponent implements OnInit {
                 this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
               }
               else {
-                // self.errors = [response.error]
-                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-                //console.log(response.error)
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
             });

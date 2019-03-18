@@ -1,7 +1,7 @@
 .header {
   border-bottom: 2px solid #e3e3e3;
   background-color: #f9f9f9;
-  height: 50px;
+  height: 56px;
   /* padding-top: 10px;
   padding-bottom: 12px; */
 }
@@ -77,9 +77,9 @@
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
   color: #0292f3;
-  border-bottom: 3px solid #0298fe;
+  /* border-bottom: 3px solid #0298fe; */
 }
 .active{
   padding: 0px 8px 8px 0px;
-
+  border-bottom: 3px solid #0298fe;
 }
