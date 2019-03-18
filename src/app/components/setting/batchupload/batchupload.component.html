@@ -13,20 +13,19 @@
                 <span class="client_label">Choose Client Or Product</span>
               </div>
               <div class="col-1"></div>
-              <div class="col-7">
-                <div class="row taxradio" style="margin-top: 15px;">
-                  <input type="radio" id="client" name="fileType" checked (click)="showClient()">
-                  <label for="client" class="taxonitem fontsize13 border-right-none font-custom-bold">
-                    <i class="fa fa-check-circle"></i> Client
-                  </label>
+                <div class="col-7">
+                  <div class="row taxradio" style="margin-top: 15px;">
+                    <input type="radio" id="client" name="fileType" checked (click)="showClient()">
+                    <label for="client" class="taxonitem fontsize13 border-right-none font-custom-bold">
+                      <i class="fa fa-check-circle"></i> Client
+                    </label>
 
-                  <input type="radio" id="product" name="fileType" (click)="showProduct()">
-                  <label for="product" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                    <span><i class="fa fa-check-circle"></i></span> Product
-                  </label>
+                    <input type="radio" id="product" name="fileType" (click)="showProduct()">
+                    <label for="product" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                      <span><i class="fa fa-check-circle"></i></span> Product
+                    </label>
+                  </div>
                 </div>
-              </div>
-
             </div>
           </div>
           <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
@@ -229,12 +228,24 @@
         </tbody>
    
     </table>
+
+    <!-- dropdown container -->
     <div class="row" *ngIf="make_blur_disable == false">
         <div class="col-1"></div>
         <div class="col-10">
-          <input type="file" id="input-file-now" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
-            placeholder="Upload file" accept=".xlsx, .xls, .csv" class="file-upload dropzone-container dropzone-drop-area"
-            required />
+            <form action="../../plugins/dropzone/upload.php" id="myDropzone" class="dropzone" method="post" enctype="multipart/form-data">
+              <div class="dz-message">
+                  <div class="drag-icon-cph">
+                      <i class="material-icons">touch_app</i>
+                  </div>
+                  <h3>Drop files here or click to upload.</h3>
+                  <em>(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</em>
+              </div>
+              <div class="fallback">
+                  <input name="file" type="file" multiple />
+              </div>
+          </form>
+
         </div>
         <div class="col-1"></div>
       </div>

@@ -405,15 +405,7 @@ export class BatchuploadComponent implements OnInit {
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
-            // for (let i = 0; i < this.productList.length; i++) {
-            //   if (!this.productList[i].prodName) {
-            //     this.productList.splice(i,1);
-            //   }
-            //   var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
-            //   if (tempProduct === "") {
-            //     this.productList.splice(i,1);
-            //   }
-            // }
+            
             if(this.productList[p].prodName){
             tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
             }
@@ -451,7 +443,7 @@ export class BatchuploadComponent implements OnInit {
           if(this.productRecords[i].prodName){
           this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
           }
-          if (this.productRecords[i].prodName !== ' ') {
+          if (this.productRecords[i].prodName !== '') {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
