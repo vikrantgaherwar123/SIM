@@ -13,16 +13,17 @@
   color:#fff;
   background-color: #2196f3;
 }
-.edit-setting input[type=radio] + label + span {
+.edit-setting[_ngcontent-c5] input[type=radio]:checked + label i {
   outline: 0;
-  color:#fff;
+  color: #fcfeff;
   background-color: #2196f3;
 }
-.edit-setting input[type=radio]:checked + label + span {
+.edit-setting[_ngcontent-c5] input[type=radio] + label i {
   outline: 0;
-  color:#fff;
-  background-color: #fff;
+  color: white;
+  background-color: #ffffff;
 }
+
 
 .edit-setting input[type=radio] + label {
   display: inline-block;
@@ -92,11 +93,11 @@ input.ng-dirty.ng-invalid {
 }
 
 .dropzone-drop-area {
-  border: dashed 2px grey;
+  border: dashed 2px #52a6fe;
   width: 100%;
-  min-height: 275px;
+  min-height: 460px;
   box-sizing: border-box;
-  padding: 6px;
+  /* padding: 6px; */
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -104,6 +105,8 @@ input.ng-dirty.ng-invalid {
   flex-wrap: wrap;
   cursor: pointer;
   position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .no_btn{
   border: none;
@@ -125,7 +128,7 @@ input.ng-dirty.ng-invalid {
 .steps_div{
   background-color:#f5f6fa;
   margin-left: 13px;
-  border-left: 4px solid #0295ff;
+  /* border-left: 4px solid #0295ff; */
   border-radius: 2px;
   height: 60px;
   margin-top: 4px;
@@ -177,7 +180,7 @@ input[type=text], input[type=password], select {
 input[type=text] {
   padding: 3px !important;
   font-family: quicksand_regular !important;
-  font-size: 11.5px !important;
+  font-size: 14px !important;
   font-style: normal;
   font-weight: 100 !important;
   border-color: #bbd0e5 !important;
@@ -205,8 +208,12 @@ input[type=text] {
   border-left: 2px solid #bbd0e5 !important;
   border-bottom: 2px solid #bbd0e5 !important;
   border-right: 1px solid #bbd0e5 !important;
-  padding: 4px 4px 0px 24px !important;
+  padding: 4px 4px 0px 15px !important;
 }
 .hg_20{
   height: 16px;
+}
+.verticle_line{
+  border-left: 4px solid #0295ff;
+  border-radius: 36px;
 }
