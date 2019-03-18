@@ -131,12 +131,7 @@ export class BatchuploadComponent implements OnInit {
 
   Upload() {
     this.make_blur_disable = true;
-    // if(this.worksheet1.A1.v === ' '){
-    //   console.log('remove spaces');
-    // }
-    // else{
-      
-    // }
+    
     this.showClientsOrProducts = true;
     this.showClientsTable = true;
     let fileReader = new FileReader();
@@ -444,7 +439,6 @@ export class BatchuploadComponent implements OnInit {
           this.repeatativeProductName = ''
         }
         else{
-          
           status = false
         }
 
@@ -452,15 +446,15 @@ export class BatchuploadComponent implements OnInit {
           //flag set to highlite user if he enters wrong input
           if(isNaN(this.productRecords[i].unit)){
             this.unitErrorOccured = true;
-            this.toasterService.pop('failure', 'Unit must be numeric !');
+            // this.toasterService.pop('failure', 'Unit must be numeric !');
           }
           if(isNaN(this.productRecords[i].rate)){
             this.rateErrorOccured = true;
-            this.toasterService.pop('failure', 'Rate must be numeric !');
+            // this.toasterService.pop('failure', 'Rate must be numeric !');
           }
           if(isNaN(this.productRecords[i].taxRate)){
             this.taxErrorOccured = true;
-            this.toasterService.pop('failure', 'Tax Rate must be numeric !');
+            // this.toasterService.pop('failure', 'Tax Rate must be numeric !');
           }
           //add required input params for api call
           this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);

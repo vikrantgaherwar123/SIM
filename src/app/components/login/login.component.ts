@@ -70,6 +70,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.loggedInSuccess = false;
     this.loggedInFailed = false;
+    this.loginLoader = false;
     this.titleService.setTitle('Simple Invoice | Login');
     $('#userLogout').hide()
     $('#navbar').hide()
