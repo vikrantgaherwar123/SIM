@@ -58,9 +58,16 @@ export class DashboardComponent implements OnInit {
             }
             localStorage.setItem('user', JSON.stringify(cookie))
           }
-        })
+        },error => this.openErrorModal())
       }
     }
+    })
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
 

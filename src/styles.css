@@ -712,9 +712,7 @@ option {
   margin-top: -1px !important;
   box-shadow: none !important;
 }
-.save{
 
-}
 .box_red{
   border-color:red;
 }
@@ -805,6 +803,17 @@ select{
 .client_arrow {
   left: -45px !important;
 }
+}
+
+.center{
+  height: 52px;
+  margin-top: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: -34px; */
+  opacity: unset;
+  margin-bottom: 6px;
 }
 
 

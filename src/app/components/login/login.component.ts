@@ -212,48 +212,28 @@ export class LoginComponent implements OnInit {
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
     if (this.loggedInSuccess) {
-      this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      }))
-        .subscribe(
+      this.clientService.fetch().subscribe(
           (result: any) => {
             this.store.dispatch(new clientActions.add(result.records))
             this.clientsCompleted = true;
             this.navigateToAdd();
           },
           err => this.openErrorModal()),
-        this.productService.fetch().pipe(retryWhen(_ => {
-          return interval(2000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-          )
-        }))
-          .subscribe(
+        this.productService.fetch().subscribe(
             (result: any) => {
               this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
               this.productsCompleted = true;
               this.navigateToAdd();
             },
             err => this.openErrorModal()),
-        this.termsService.fetch().pipe(retryWhen(_ => {
-          return interval(2000).pipe(
-            flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-          )
-        }))
-          .subscribe(
+        this.termsService.fetch().subscribe(
             (result: any) => {
               this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
               this.termsCompleted = true;
               this.navigateToAdd();
             },
             err => this.openErrorModal()),
-        this.settingService.fetch().pipe(retryWhen(_ => {
-          return interval(2000).pipe(
-            flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-          )
-        }))
-          .subscribe(
+        this.settingService.fetch().subscribe(
             (result: any) => {
               setStorage(result.settings)
               if (result.settings) {
