@@ -123,15 +123,22 @@ select {
 }
 
 /* css - tejaswini */
+.inputWithIcon i {
+  left: -54px !important;
+  top: 0px;
+  font-size: 20px;
+  padding: 9px 20px;
+  color: #aaa;
+  transition: .3s;
+}
+
 .label_color
 {
   color: #aaaaaa;
   margin-top: 6px;
   margin-left: -4px;
 }
-.hide_dropdown {
-  display :none;
-}
+
 .box_red{
   border-color:red;
 }
@@ -163,6 +170,14 @@ select {
   /* margin-top: -34px; */
   opacity: unset;
   margin-bottom: 6px;
+}
+
+.side_btn{
+  width: 100%;
+    background-color: #ededed !important;
+    color: #0299ff !important;
+    border: #0299ff solid 2px !important;
+    border-radius: 6px !important;
 }
 @media (min-width: 1366px)
 {

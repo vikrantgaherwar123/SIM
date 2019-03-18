@@ -158,3 +158,20 @@
   opacity: unset;
   margin-bottom: 6px;
 }
+.loginOpacity{
+  opacity: .1;
+}
+.loggingInBtn{
+  font-size: 18px !important;
+    font-family: quicksand_bold !important;
+    color: #2096f3;
+    border: none;
+    padding: 11px 68px 11px 68px;
+    border-radius: 11px;
+    position: relative;
+    top: -281px;
+    border: 1px solid #f3f3f3;
+    padding: -18px;
+    text-align: center;
+    background-color: #ffffff;
+}
