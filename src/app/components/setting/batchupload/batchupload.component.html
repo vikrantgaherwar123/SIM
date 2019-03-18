@@ -15,12 +15,12 @@
               <div class="col-1"></div>
               <div class="col-7">
                 <div class="row taxradio" style="margin-top: 15px;">
-                  <input type="radio" id="taxonItem" name="taxon" checked (click)="showClient()">
+                  <input type="radio" id="clientbtn" name="taxon" checked (click)="showClient()">
                   <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
                     <i class="fa fa-check-circle"></i> Client
                   </label>
 
-                  <input type="radio" id="taxonBill" name="taxon" (click)="showProduct()">
+                  <input type="radio" id="productbtn" name="taxon" (click)="showProduct()">
                   <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
                     <span><i class="fa fa-check-circle"></i></span> Product
                   </label>
@@ -90,7 +90,7 @@
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable == false}">
             <span class="step_text">Step 4
               <span class="span_text">This is dummy text </span>
             </span>

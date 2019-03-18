@@ -117,7 +117,10 @@ export class LoginComponent implements OnInit {
           $("#login-btn").prop("disabled", false)
 
           this.errorMessage = response.message
-          // this.loggingIn = false
+          if(this.errorMessage){
+            this.loggedInFailed = false;
+          }
+          
           // this.openErrorModal()
         }
       }

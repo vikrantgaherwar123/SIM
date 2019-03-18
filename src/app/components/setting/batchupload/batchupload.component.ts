@@ -86,6 +86,7 @@ export class BatchuploadComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
+    //get client option selected initially
     this.showClient();
     this.clientListLoading = true
     if (this.clientList) {
@@ -166,13 +167,15 @@ export class BatchuploadComponent implements OnInit {
       
 
       if (clientName === "organizationname*") {
+        //get client btn selected if client file selected
+        $("#clientbtn").click()
         this.showClientsTable = true;
         this.showProductsTable = false;
         //get address of header
-        if(this.worksheet1.A1 === undefined){
+        if (this.worksheet1.A1 === undefined) {
           this.worksheet1.A1 = "name";
         }
-        else{
+        else {
           this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
         }
 
@@ -235,6 +238,8 @@ export class BatchuploadComponent implements OnInit {
         //header ends for clients
       }
       if (productName === "productname*") {
+        //get client btn selected if product file selected
+        $("#productbtn").click()
 
         this.showClientsTable = false;
         this.showProductsTable = true;
@@ -290,8 +295,10 @@ export class BatchuploadComponent implements OnInit {
     this.showClientsTable = false;
     this.showProductsTable = false;
     this.clientRecords = [];
-    this.productRecords = []
+    this.productRecords = [];
     this.showClient();
+    //get client btn selected after clear clicked
+    $( "#clientbtn" ).click()
   }
 
 
@@ -457,8 +464,8 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.productRecords[i].modifiedDate = d.getTime()
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ +(?= )/g, '');
-          if (this.productRecords[i].prodName !== ' ') {
+          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
+          if (this.productRecords[i].prodName !== '') {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])])
             .pipe(
               catchError(e => throwError(this.errorHandler(e))

@@ -30,7 +30,7 @@
       
       <div class="login-form" *ngIf="!forgetFlag">
        
-        <div *ngIf="loggedInSuccess == false && loggedInFailed == false" [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
+        <div *ngIf="loggedInSuccess == false && loggedInFailed == false || errorMessage" [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
         <form name="form"  (ngSubmit)="loginUser($event)">
           <div class="form-group" style="margin-bottom: 8px;">
             <i class="fa fa-envelope"></i>
@@ -85,7 +85,7 @@
         </div>
       </div>
       
-      <div *ngIf="loggingIn && !loginLoader && !loggedInFailed">
+      <div *ngIf="loggingIn && !loginLoader && !loggedInFailed && !errorMessage">
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
