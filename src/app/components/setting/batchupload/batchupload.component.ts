@@ -401,10 +401,19 @@ export class BatchuploadComponent implements OnInit {
         this.activeProduct = this.productRecords[i];
         var proStatus = true
         // If adding or editing product, make sure product with same name doesnt exist
-        if (this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+        if (this.activeProduct.prodName) {    
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
+            // for (let i = 0; i < this.productList.length; i++) {
+            //   if (!this.productList[i].prodName) {
+            //     this.productList.splice(i,1);
+            //   }
+            //   var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+            //   if (tempProduct === "") {
+            //     this.productList.splice(i,1);
+            //   }
+            // }
             if(this.productList[p].prodName){
             tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '')
             }
@@ -427,6 +436,10 @@ export class BatchuploadComponent implements OnInit {
           }
           this.repeatativeProductName = ''
         }
+        else{
+          
+          status = false
+        }
 
         if (status && proStatus) {
           //add required input params for api call
@@ -435,7 +448,9 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.productRecords[i].modifiedDate = d.getTime()
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ +(?= )/g, '');
+          if(this.productRecords[i].prodName){
+          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
+          }
           if (this.productRecords[i].prodName !== ' ') {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
@@ -469,6 +484,9 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Product name already exists.');
           }
+          else if(!status){
+            this.toasterService.pop('failure', 'Product Name Required');
+          }
         }
       }
     }
@@ -477,9 +495,17 @@ export class BatchuploadComponent implements OnInit {
     this.clientRecords.splice(index, 1);
   }
 
-  removespaceRow(index) {
-    if(this.clientRecords.i === ' ')
-    this.clientRecords.splice(index, 1);
+  removeEmptyProducts(){
+    //remove whitespaces from productlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i,1);
+      }
+    }
   }
 
   productRemove(index) {
