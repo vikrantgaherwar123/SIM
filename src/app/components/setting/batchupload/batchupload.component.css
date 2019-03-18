@@ -13,16 +13,17 @@
   color:#fff;
   background-color: #2196f3;
 }
-.edit-setting input[type=radio] + label + span {
+.edit-setting[_ngcontent-c5] input[type=radio]:checked + label i {
   outline: 0;
-  color:#fff;
+  color: #fcfeff;
   background-color: #2196f3;
 }
-.edit-setting input[type=radio]:checked + label + span {
+.edit-setting[_ngcontent-c5] input[type=radio] + label i {
   outline: 0;
-  color:#fff;
-  background-color: #fff;
+  color: white;
+  background-color: #ffffff;
 }
+
 
 .edit-setting input[type=radio] + label {
   display: inline-block;
