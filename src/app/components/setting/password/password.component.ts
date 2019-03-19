@@ -41,10 +41,17 @@ export class PasswordComponent implements OnInit {
           this.toasterService.pop('failure','Something went wrong')
           this.authService.validateToken(this.user.access_token , this.user.user.orgId);
         }
-      })
+      },error => this.openErrorModal())
     } else {
       //alert('Invalid password!')
       this.toasterService.pop('failure','Invalid Password')
     }
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 }

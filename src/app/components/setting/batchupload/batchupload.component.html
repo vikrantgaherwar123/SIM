@@ -121,7 +121,7 @@
  
   <div class="col-12" style="margin-top: 10px;height: 500px;padding-left: 0px;padding-right: 0px;">
     <!-- clients records table -->
-    <table width="100%" *ngIf="showClientsTable && file !== undefined" class="table">
+    <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
       <thead>
         <tr>
           <td style="width: 50px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
@@ -185,13 +185,12 @@
                 [(ngModel)]="item.shippingAddress" />
             </td>
           </tr>
-
+          <button class="btn btn-default" type="button" (click)="addClientFieldValue()">Add</button>
         </tbody>
-    
     </table>
 
     <!-- products record table -->
-    <table width="100%" *ngIf="showProductsTable && file !==undefined" class="table">
+    <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
       <thead>
         <tr>
           <td style="width: 58px;background-color: white;font-family: quicksand_bold !important;"><input type="text" class="form-control td_header" readonly />
@@ -232,7 +231,9 @@
             <td>
                 <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.productCode" />
             </td>
+            
           </tr>
+          <button class="btn btn-default" type="button" (click)="addProductFieldValue()">Add</button>
         </tbody>
    
     </table>
@@ -245,7 +246,10 @@
             placeholder="Upload file" accept=".xlsx, .xls, .csv" class="file-upload dropzone-container dropzone-drop-area"
             required />
         </div>
-        <div class="col-1"></div>
+        <div class="col-1">
+          <button class="btn btn-default" type="button" (click)="addProductFieldValue()">Add Product</button>
+          <button class="btn btn-default" type="button" (click)="addClientFieldValue()">Add Client</button>
+        </div>
       </div>
   </div>
   

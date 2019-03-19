@@ -66,7 +66,7 @@ export class ProductComponent implements OnInit {
           this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
           this.productList = response.records.filter(prod => prod.enabled == 0)
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.productListLoading = false
     }
@@ -169,7 +169,7 @@ export class ProductComponent implements OnInit {
         // $('#saveProBtn1').button('reset')
         // $('#updateProBtn').button('reset')
         // $('#updateProBtn1').button('reset')
-      })
+      },error => this.openErrorModal())
     } else {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');
@@ -247,6 +247,13 @@ export class ProductComponent implements OnInit {
 
   batchUpload() {
     this.router.navigate(['/product/batch/'])
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   loadMore() {
