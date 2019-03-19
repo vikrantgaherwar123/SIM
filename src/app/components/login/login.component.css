@@ -148,6 +148,36 @@
     box-shadow: inset 0px 0px 0px 30px #7ac142;
   }
 }
+/* dot loading */
+/* loading dots */
+
+.loading:after {
+  content: ' .';
+  animation: dots 1s steps(5, end) infinite;
+  font-size: 20px;
+}
+  
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);}
+  40% {
+    color: white;
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);}
+  60% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 rgba(0,0,0,0);}
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 white;}}
+
 .center{
   height: 52px;
   margin-top: 12px;
@@ -178,4 +208,8 @@
 .loading_text{
   font-size: 14px;
   font-family: quicksand_bold !important;
+}
+.loading_tick_img{
+  height: 14px;
+  padding: 0px 10px;
 }

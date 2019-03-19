@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string = ''
   forgetFlag: boolean = false
   forgetMail: string = ''
-  clientsCompleted: boolean;
+  clientsCompleted: boolean = false;
   productsCompleted: boolean;
   termsCompleted: boolean;
   settingsCompleted: boolean;
@@ -219,9 +219,9 @@ export class LoginComponent implements OnInit {
       }))
         .subscribe(
           (result: any) => {
-            this.store.dispatch(new clientActions.add(result.records))
-            this.clientsCompleted = true;
-            this.navigateToAdd();
+              this.store.dispatch(new clientActions.add(result.records))
+              this.clientsCompleted = true;
+              this.navigateToAdd();
           },
           err => this.openErrorModal()),
         this.productService.fetch().pipe(retryWhen(_ => {

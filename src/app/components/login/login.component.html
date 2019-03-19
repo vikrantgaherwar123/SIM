@@ -1,5 +1,6 @@
 <div class="row mt-4">
-  <div class="col-md-7 pr-0" style="margin-left: 5%;">
+  <div class="col-md-1"></div>
+  <div class="col-md-6 pr-0">
     <!-- <div id="login-left-inner" class="row" style="padding: 0 0 20px 0; background-color: #f2f2f2">
       <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 40px; font-weight: 1000">Simple Invoice Manager</h1>
       <h3 class="sub-heading" style="margin-top: 0; font-size: 15px; ; color: #364b5e">Make Professional Invoices <br> from your mobile</h3>
@@ -23,7 +24,7 @@
       </p>
     </div>
   </div>
-  <div class="col-md-4 px-0" style="max-width: 28.333333% !important;margin-top: 1%;">
+  <div class="col-md-4 px-0" style="margin-top: 1%;">
 
     <div class="login-form-container">
       <img src="assets/images/login/lg.png" class="lock-image img-fluid">
@@ -95,8 +96,11 @@
             <div *ngIf="loggedInSuccess" style="text-align: left;padding-left: 10px;" >
               <div class="bottom_mrg">
                 <span id="counting_client"></span>
-                <span class="loading_text" [ngClass]="{loading: clientsCompleted == false}">Loading Clients </span>
-                <input type="checkbox" [checked]="clientsCompleted == true"/>
+                <span class="loading_text" [ngClass]="{loading: clientsCompleted == false}">Loading Clients
+                 </span>
+                <!-- <input type="checkbox" [checked]="clientsCompleted == true"/> -->
+                <img *ngIf="clientsCompleted == true" src="assets/images/login/checked.png" class="loading_tick_img">
+                <img *ngIf="clientsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
               </div>
               <div class="bottom_mrg">
                   <span id="counting_product"></span>
@@ -193,7 +197,7 @@
     </div>
     </div> -->
   </div>
-  
+  <div class="col-md-1"></div>
 </div>
 
 <!-- Error MODAL starts -->
