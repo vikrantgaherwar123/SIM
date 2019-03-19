@@ -278,11 +278,7 @@ export class AddEditComponent implements OnInit {
     this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceListLoading = true;
-    this.invoiceService.fetchById([invId]).pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((invoice: any) => {
+    this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
       if(invoice.records !== null) {
         //deleted these objects bcz input was mismatcing for adding while deleting
@@ -465,7 +461,7 @@ export class AddEditComponent implements OnInit {
                 }
                 this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
                 this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-              })
+              },error => this.openErrorModal())
             } else {
               this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
               this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
@@ -531,13 +527,13 @@ export class AddEditComponent implements OnInit {
             this.toasterService.pop('failure', 'Invalid estimate id');
             this.router.navigate(['/estimate/view'])
           }
-        })
+        },error => this.openErrorModal())
         // this.toasterService.pop('failure', 'Invalid invoice id!');
         // this.router.navigate(['/invoice/view'])
       }
       return false
     },
-    err => console.log(err));
+    err => this.openErrorModal());
   }
 
   commonSettingsInit() {
@@ -616,11 +612,7 @@ export class AddEditComponent implements OnInit {
     // Fetch Products if not in store
     if(this.productList.length < 1) {
       this.productListLoading = true;
-      this.productService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: response) => {
+      this.productService.fetch().subscribe((response: response) => {
         this.removeEmptyProducts();
         this.productListLoading = false;
         if (response.records != null) {
@@ -638,11 +630,7 @@ export class AddEditComponent implements OnInit {
     // Fetch Clients if not in store
     if(this.allClientList.length < 1) {
       this.clientListLoading = true
-      this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: response) => {
+      this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
@@ -671,11 +659,7 @@ export class AddEditComponent implements OnInit {
     // Fetch Terms if not in store
     if(this.termList.length < 1 && !this.edit) {
       this.tncLoading = true;
-      this.termConditionService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: response) => {
+      this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = false;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
@@ -688,11 +672,7 @@ export class AddEditComponent implements OnInit {
 
     // Fetch Settings every time
     this.settingsLoading = true;
-    this.settingService.fetch().pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((response: any) => {
+    this.settingService.fetch().subscribe((response: any) => {
       this.settingsLoading = false;
       if (response.settings !== null) {
         setStorage(response.settings)
@@ -758,11 +738,7 @@ export class AddEditComponent implements OnInit {
       )
   }else{
     this.clientListLoading = true
-      this.clientService.fetch().pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 3 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: response) => {
+      this.clientService.fetch().subscribe((response: response) => {
         
         this.clientListLoading = false
         if (response.records) {
@@ -870,11 +846,7 @@ export class AddEditComponent implements OnInit {
 
       $('#saveClientButton').attr("disabled", 'true')
       this.clientListLoading = true
-      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: any) => {
+      this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
           let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
           this.store.dispatch(new clientActions.add([tempClient]))
@@ -963,11 +935,7 @@ export class AddEditComponent implements OnInit {
       unit: add_product.unit ? add_product.unit : ""
     }
 
-    this.productService.add([product]).pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((result: any) => {
+    this.productService.add([product]).subscribe((result: any) => {
       if (result.status === 200) {
         var temp = this.productService.changeKeysForStore(result.productList[0])
         this.store.dispatch(new productActions.add([temp]))
@@ -1140,11 +1108,7 @@ export class AddEditComponent implements OnInit {
 
       this.termConditionService.add([
         this.termConditionService.changeKeysForApi(this.addTermModal)
-      ]).pipe(retryWhen(_ => {
-        return interval(2000).pipe(
-          flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-        )
-      })).subscribe((response: any) => {
+      ]).subscribe((response: any) => {
         if (response.status === 200) {
           var temp = this.termConditionService.changeKeysForStore(response.termsAndConditionList[0])
           this.store.dispatch(new termActions.add([temp]))
@@ -1430,14 +1394,7 @@ export class AddEditComponent implements OnInit {
     }
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
   
-    this.invoiceService.add([this.activeInvoice]).pipe(retryWhen(_ => {
-      // for (var j = 0; j < this.activeInvoice.termsAndConditions.length; j++) {
-      //   this.activeInvoice.termsAndConditions[j].terms = this.activeInvoice.termsAndConditions[j].terms_condition
-      // }
-      return interval(2000).pipe(
-        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((result: any) => {
+    this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
       } else if (result.status === 200) {
@@ -1568,11 +1525,7 @@ export class AddEditComponent implements OnInit {
     }
     // settings1.androidSettings.invNo = this.tempInvNo
 
-    this.settingService.add(settings1).pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((response: any) => {},err => console.log(err))
+    this.settingService.add(settings1).subscribe((response: any) => {},err => console.log(err))
   }
 
   // Payment Functions
@@ -1651,11 +1604,7 @@ export class AddEditComponent implements OnInit {
       }
 
     this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((response: any) => {
+    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
         this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
@@ -1745,11 +1694,7 @@ export class AddEditComponent implements OnInit {
       $('#previewBtn').attr('disabled', 'disabled')
     }
 
-    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).pipe(retryWhen(_ => {
-      return interval(2000).pipe(
-        flatMap(count => count == 1 ? throwError("Giving up") : of(count))
-      )
-    })).subscribe((response: any) => {
+    this.invoiceService.fetchPdf(this.activeInv.unique_identifier).subscribe((response: any) => {
       var file = new Blob([response], { type: 'application/pdf' })
 
       var a = window.document.createElement('a')
@@ -1764,7 +1709,7 @@ export class AddEditComponent implements OnInit {
         window.open(a.toString())
         $('#previewBtn').removeAttr('disabled')
       }
-    },err => console.log(err))
+    },err => this.openErrorModal())
   }
 
   getFileName() {

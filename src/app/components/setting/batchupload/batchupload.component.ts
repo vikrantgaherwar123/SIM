@@ -349,13 +349,15 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.clientRecords[i].deviceCreatedDate = d.getTime()
           this.clientRecords[i].modifiedDate = d.getTime()
+
           //add all addresses in a single object and send it to api to show those all addr in client view mode
-          this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          if(this.clientRecords[i].addressLine1){ //if any adrr is there 
+            this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          }
+          
           this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
           if (this.clientRecords[i].name !== '') {
-            this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).pipe(
-              catchError(e => throwError(this.errorHandler(e))
-            )).subscribe((response: any) => {
+            this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
                 let index, storeIndex
@@ -366,22 +368,10 @@ export class BatchuploadComponent implements OnInit {
                 })
 
                 if (index == -1) {  // add
-                  // this if condn and for loop is used to not add existing org name but right nw its not working
-                  var OrgName = response.clientList[0].name.toLowerCase();
-                  if (this.clientList) {
-                    for (let i = 0; i < this.clientList.length; i++) {
-                      this.list = this.clientList[i].name.toLowerCase();
-                      if (this.list[i] == OrgName) {
-                        this.toasterService.pop('failure', 'Client Already Exists !!!');
-                        this.duplicateOrgName = false;
-                      }
-                    }
-                    if (this.duplicateOrgName == true) {
-                      this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-                      this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-                      this.toasterService.pop('success', 'Clients Saved Successfully !!!');
-                    }
-                  }
+                  // var OrgName = response.clientList[0].name.toLowerCase();
+                  this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+                  this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
+                  // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -390,7 +380,7 @@ export class BatchuploadComponent implements OnInit {
               else {
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            })
+            },err => this.openErrorModal())
 
           } else {
             this.toasterService.pop('failure', 'Organization name required!');
@@ -399,6 +389,10 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
           }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.clientRecords.length-1)){
+          this.showClientSuccessAdd()
         }
       }
     }
@@ -443,15 +437,15 @@ export class BatchuploadComponent implements OnInit {
           //flag set to highlite user if he enters wrong input
           if(isNaN(this.productRecords[i].unit)){
             this.unitErrorOccured = true;
-            // this.toasterService.pop('failure', 'Unit must be numeric !');
+            this.toasterService.pop('failure', 'Unit must be numeric !');
           }
           if(isNaN(this.productRecords[i].rate)){
             this.rateErrorOccured = true;
-            // this.toasterService.pop('failure', 'Rate must be numeric !');
+            this.toasterService.pop('failure', 'Rate must be numeric !');
           }
           if(isNaN(this.productRecords[i].taxRate)){
             this.taxErrorOccured = true;
-            // this.toasterService.pop('failure', 'Tax Rate must be numeric !');
+            this.toasterService.pop('failure', 'Tax Rate must be numeric !');
           }
           //add required input params for api call
           this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
@@ -461,10 +455,7 @@ export class BatchuploadComponent implements OnInit {
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
           this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
           if (this.productRecords[i].prodName !== '') {
-            this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])])
-            .pipe(
-              catchError(e => throwError(this.errorHandler(e))
-            )).subscribe((response: any) => {
+            this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
                 let index, storeIndex
@@ -485,7 +476,8 @@ export class BatchuploadComponent implements OnInit {
               else {
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            });
+            },error => this.openErrorModal()
+            );
           } else {
             this.toasterService.pop('failure', 'Product name required!');
           }
@@ -497,14 +489,28 @@ export class BatchuploadComponent implements OnInit {
             this.toasterService.pop('failure', 'Product Name Required');
           }
         }
+        //show only one toaster instead of multiple
+        if(i == (this.productRecords.length-1)){
+          this.showProductSuccessAdd()
+        }
       }
     }
   }
 
+  showClientSuccessAdd(){
+    this.toasterService.pop('success', 'CLients added successfully !!!');
+  }
+
+  showProductSuccessAdd(){
+    this.toasterService.pop('success', 'Products added successfully !!!');
+  }
+
   errorHandler(error){
     if(error){
-     this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
+    //  this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
     }
+    console.log(error);
+    
   }
   remove(index) {
     this.clientRecords.splice(index, 1);
@@ -525,6 +531,13 @@ export class BatchuploadComponent implements OnInit {
 
   productRemove(index) {
     this.productRecords.splice(index, 1);
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
 }

@@ -62,7 +62,7 @@ export class ClientComponent implements OnInit {
           this.clientList = response.records.filter(cli => cli.enabled == 0)
           
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
      }   
@@ -175,13 +175,21 @@ export class ClientComponent implements OnInit {
           //console.log(response.error)
           this.toasterService.pop('failure', 'Some error occurred, please try again!');
         }
-      })
+      },error => this.openErrorModal())
     } else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
       }
     }
   }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
+
   emptyField(input){
     if(input.target.value !== ''){
       this.emptyClient = false

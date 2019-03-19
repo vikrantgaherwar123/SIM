@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
-import { HttpClientModule, HttpClient } from '@angular/common/http'
+import { HttpClientModule, HttpClient ,HTTP_INTERCEPTORS } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
 import * as $ from 'jquery'
@@ -24,7 +24,7 @@ import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
 import { recentInvoice } from './reducers/recentInvoice.reducer'
 import { recentEstimate } from './reducers/recentEstimate.reducer'
-
+import { HttpErrorInterceptor } from './error-handler';
 
 import { globalReducer } from './reducers/globals.reducer'
 
@@ -147,6 +147,11 @@ export function getAuthServiceConfigs() {
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    {
+    provide: HTTP_INTERCEPTORS,
+     useClass: HttpErrorInterceptor,
+     multi: true
+    },
     EmailService,
     CONSTANTS,
     // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
