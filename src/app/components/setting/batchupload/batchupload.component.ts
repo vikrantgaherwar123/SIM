@@ -349,8 +349,12 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.clientRecords[i].deviceCreatedDate = d.getTime()
           this.clientRecords[i].modifiedDate = d.getTime()
+
           //add all addresses in a single object and send it to api to show those all addr in client view mode
-          this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          if(this.clientRecords[i].addressLine1){ //if any adrr is there 
+            this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          }
+          
           this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
           if (this.clientRecords[i].name !== '') {
             this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
@@ -364,22 +368,10 @@ export class BatchuploadComponent implements OnInit {
                 })
 
                 if (index == -1) {  // add
-                  // this if condn and for loop is used to not add existing org name but right nw its not working
-                  var OrgName = response.clientList[0].name.toLowerCase();
-                  if (this.clientList) {
-                    for (let i = 0; i < this.clientList.length; i++) {
-                      this.list = this.clientList[i].name.toLowerCase();
-                      if (this.list[i] == OrgName) {
-                        this.toasterService.pop('failure', 'Client Already Exists !!!');
-                        this.duplicateOrgName = false;
-                      }
-                    }
-                    if (this.duplicateOrgName == true) {
-                      this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-                      this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-                      this.toasterService.pop('success', 'Clients Saved Successfully !!!');
-                    }
-                  }
+                  // var OrgName = response.clientList[0].name.toLowerCase();
+                  this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+                  this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
+                  // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -400,6 +392,10 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
           }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.clientRecords.length-1)){
+          this.showClientSuccessAdd()
         }
       }
     }
@@ -499,8 +495,20 @@ export class BatchuploadComponent implements OnInit {
             this.toasterService.pop('failure', 'Product Name Required');
           }
         }
+        //show only one toaster instead of multiple
+        if(i == (this.productRecords.length-1)){
+          this.showProductSuccessAdd()
+        }
       }
     }
+  }
+
+  showClientSuccessAdd(){
+    this.toasterService.pop('success', 'CLients added successfully !!!');
+  }
+
+  showProductSuccessAdd(){
+    this.toasterService.pop('success', 'Products added successfully !!!');
   }
 
   errorHandler(error){
