@@ -1329,6 +1329,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   goEdit(estId) {
+    this.viewTodaysEstimate = false;
     this.router.navigate([`estimate/edit/${estId}`])
   }
 
@@ -1381,5 +1382,13 @@ export class AddEditEstComponent implements OnInit {
 
     var estimateNumber = this.activeEst.quetationNo.replace('/', '')
     return 'ESTPDF_' + estimateNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
+  }
+
+  addNewEstimate(){
+    this.viewTodaysEstimate = false;
+    this.estimateId = '';
+    this.activeClient = <client>{}
+    this.shippingAddress = null;
+    // this.router.navigate(['/invoice/add'])
   }
 }
