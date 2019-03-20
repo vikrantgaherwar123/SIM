@@ -417,7 +417,7 @@ export class BatchuploadComponent implements OnInit {
           }
         }
         //show only one toaster instead of multiple
-        if(i == (this.clientRecords.length-1)){
+        if(i == (this.clientRecords.length-1) && status){
           this.showClientSuccessAdd()
         }
       }
@@ -518,7 +518,7 @@ export class BatchuploadComponent implements OnInit {
           }
         }
         //show only one toaster instead of multiple
-        if(i == (this.productRecords.length-1)){
+        if(i == (this.productRecords.length-1) && status){
           this.showProductSuccessAdd()
         }
       }
