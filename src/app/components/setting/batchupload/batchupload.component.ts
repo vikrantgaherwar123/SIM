@@ -47,6 +47,7 @@ export class BatchuploadComponent implements OnInit {
   showClientDiv: boolean = false;
   showProductDiv: boolean = false;
   make_blur_disable : boolean = false;
+  
 
   incomingfile(event) {
     if (event.target.files[0]) {

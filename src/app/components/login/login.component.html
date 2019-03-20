@@ -1,6 +1,6 @@
 <div class="row mt-4">
-  <div class="col-md-1"></div>
-  <div class="col-md-6 pr-0">
+  <div class="col-md-1" style="max-width: 3.333333% !important;"></div>
+  <div class="col-md-7 pr-0">
     <!-- <div id="login-left-inner" class="row" style="padding: 0 0 20px 0; background-color: #f2f2f2">
       <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 40px; font-weight: 1000">Simple Invoice Manager</h1>
       <h3 class="sub-heading" style="margin-top: 0; font-size: 15px; ; color: #364b5e">Make Professional Invoices <br> from your mobile</h3>
@@ -13,150 +13,174 @@
       </div>
     </div> -->
     <div class="info-container text-center">
-        <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 30px; font-weight: 1000">Simple Invoice Manager</h1>
-        <h3 class="sub-heading" style="margin-top: 0; font-size: 15px; ; color: #364b5e">Make Professional Invoices <br> from your mobile</h3>
+      <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 30px; font-weight: 1000">Simple
+        Invoice Manager</h1>
+      <h3 class="sub-heading" style="margin-top: 0; font-size: 15px; ; color: #364b5e">Make Professional Invoices <br>
+        from your mobile</h3>
       <img src="assets/images/login/web_banner.png" class="">
       <p>
-        Simple Invoice Manager is a complete suite for all your invoicing needs, right from sending estimates to invoices,
-        recording a payment to finally issuing a payment receipt to your client. Its simple yet feature-rich designs will
-        get you going in minutes. Professionally designed templates will help you stand out of competetion and cloud-backed 
+        Simple Invoice Manager is a complete suite for all your invoicing needs, right from sending estimates to
+        invoices,
+        recording a payment to finally issuing a payment receipt to your client. Its simple yet feature-rich designs
+        will
+        get you going in minutes. Professionally designed templates will help you stand out of competetion and
+        cloud-backed
         infrastructure will help you collaborate with your team.
       </p>
     </div>
   </div>
-  <div class="col-md-4 px-0" style="margin-top: 1%;">
+  <div class="col-md-4 px-0" style="padding-right: 47px !important;">
 
     <div class="login-form-container">
       <img src="assets/images/login/lg.png" class="lock-image img-fluid">
-      
+
       <div class="login-form" *ngIf="!forgetFlag">
-       
-        <div *ngIf="loggedInSuccess == false && loggedInFailed == false || errorMessage" [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
-        <form name="form"  (ngSubmit)="loginUser($event)">
-          <div class="form-group" style="margin-bottom: 8px;">
-            <i class="fa fa-envelope"></i>
-            <input type="text" class="login-input" name="email"
-              [(ngModel)]="user.userName" autocomplete="off" placeholder="Email"
-            >
-          </div>
-          <div style="min-height: 15px;">
-            <span *ngIf="errorMessage" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
-              <img src="assets/images/exclamation16.png" style="width: 12px;margin-top: -3px;">
-              {{errorMessage}}
-            </span>
-          </div>
-          <div class="form-group">
-            <i class="fa fa-key"></i>
-            <input type="password" class="login-input" name="password" style="margin-top: -6px;"
-              [(ngModel)]="user.password" placeholder="Password" required autocomplete="off"
-            >
-          </div>
-          <div id="rem-for">
-            <div class="padl0 pull-left">
-              <input type="checkbox" id="remember">
+
+        <div *ngIf="loggedInSuccess == false && loggedInFailed == false || errorMessage"
+          [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
+          <form name="form" (ngSubmit)="loginUser($event)">
+            <div class="form-group" style="margin-bottom: 8px;">
+              <i class="fa fa-envelope"></i>
+              <input type="text" class="login-input" name="email" [(ngModel)]="user.userName" autocomplete="off"
+                placeholder="Email">
+            </div>
+            <div style="min-height: 15px;">
+              <span *ngIf="errorMessage" class="font-custom-bold" style="color: #ff0000; font-size: 11px">
+                <img src="assets/images/exclamation16.png" style="width: 12px;margin-top: -3px;">
+                {{errorMessage}}
+              </span>
+            </div>
+            <div class="form-group">
+              <i class="fa fa-key"></i>
+              <input type="password" class="login-input" name="password" style="margin-top: -6px;"
+                [(ngModel)]="user.password" placeholder="Password" required autocomplete="off">
+            </div>
+            <div id="rem-for">
+              <div class="padl0 pull-left">
+                <input type="checkbox" id="remember">
                 <label class="font-custom-bold fontsize12" style="vertical-align: text-top;" for="remember"></label>
                 Remember me
+              </div>
+              <a class="pull-right" (click)="forgetFlag=true">Forgot Password?</a>
             </div>
-            <a class="pull-right" (click)="forgetFlag=true">Forgot Password?</a>
-          </div>
-  
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="form-group">
-            <button type="submit" id="login-btn" name="login-btn">
-              <span>Login </span>
-            </button>
-          </div>
-        </form>
-        
-        <div id="or-div">
-          <div id="h2-div"><span>Or</span></div>
-        </div>
-        <div class="social-login-container text-center">
-          <a type="button" id="fbbtn" name="fbbtn" style="cursor: pointer"
-            (click)="socialSignIn('facebook')"
-          >
-            <img src="assets/images/login/fb.png">
-          </a>
-          <a type="button" id="googlebtn" name="googlebtn" style="cursor: pointer"
-            (click)="socialSignIn('google')"
-          >
-            <img src="assets/images/login/gplus.png">
-          </a>
-        </div>
-      </div>
-      
-      <div *ngIf="loggingIn && loggedInSuccess  && !loginLoader && !loggedInFailed && !errorMessage">
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <button style="font-size: 18px !important;font-family: quicksand_bold !important; color: #2096f3;border: none;background-color: #ffffff">Logged in successfully ! </button>
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          
-            <div *ngIf="loggedInSuccess" style="text-align: left;padding-left: 10px;" >
-              <div class="bottom_mrg">
-                <span id="counting_client"></span>
-                <span class="loading_text" [ngClass]="{loading: clientsCompleted == false}">Loading Clients
-                 </span>
-                <!-- <input type="checkbox" [checked]="clientsCompleted == true"/> -->
-                <img *ngIf="clientsCompleted == true" src="assets/images/login/checked.png" class="loading_tick_img">
-                <img *ngIf="clientsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
-              </div>
-              <div class="bottom_mrg">
-                  <span id="counting_product"></span>
-                  <span class="loading_text" [ngClass]="{loading: productsCompleted == false}">Loading Products </span>
-                  <input type="checkbox" [checked]="productsCompleted == true"/>
-              </div>
-              <div class="bottom_mrg">
-                  <span id="counting_terms"></span>
-                  <span class="loading_text" [ngClass]="{loading: termsCompleted == false}" >Loading Terms And Conditions </span>
-                  <input type="checkbox" [checked]="termsCompleted == true"/>
-              </div>
-              <div class="bottom_mrg">
-                  <span id="counting_setting"></span>
-                  <span class="loading_text" [ngClass]="{loading: settingsCompleted == false}">Loading Settings </span>
-                  <input type="checkbox" [checked]="settingsCompleted == true"/>
-              </div>
-            </div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-            <div class="clearfix">&nbsp;</div>
-          
-            <button  type="submit" id="login-btn" name="login-btn" style="background-color: #fb6706 !important;">
-                <span>Retry</span>
-            </button>
-      </div>
 
-
-
-      <div class='container' *ngIf="loggedInFailed == true">
-        <form name="form"  (ngSubmit)="loginUser($event)">
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="clearfix">&nbsp;</div>
-          <div class="form-group" style="text-align: center;">
-              <button style="font-size: 18px !important;font-family: quicksand_bold !important; color: #2096f3;border: none;background-color: #ffffff">Login Failed ! </button>
-              <div class="clearfix">&nbsp;</div>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                standard dummy text ever since the 1500s
-              </p>
-            <div>
-              <button (click)="loggedInFailed=false;loggingIn = false" type="submit" id="login-btn" name="login-btn">
-                <span>Retry</span>
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="form-group">
+              <button type="submit" id="login-btn" name="login-btn">
+                <span>Login </span>
               </button>
             </div>
+          </form>
+
+          <div id="or-div">
+            <div id="h2-div"><span>Or</span></div>
           </div>
-        </form>
+          <div class="social-login-container text-center">
+            <a type="button" id="fbbtn" name="fbbtn" style="cursor: pointer" (click)="socialSignIn('facebook')">
+              <img src="assets/images/login/fb.png">
+            </a>
+            <a type="button" id="googlebtn" name="googlebtn" style="cursor: pointer" (click)="socialSignIn('google')">
+              <img src="assets/images/login/gplus.png">
+            </a>
+          </div>
+        </div>
+
+        <div *ngIf="loggingIn && loggedInSuccess  && !loginLoader && !loggedInFailed && !errorMessage">
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <div
+            style="text-align: center;font-size: 18px !important;font-family: quicksand_bold !important; color: #000000;border: none;background-color: #ffffff">Logged
+            in successfully ! </div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+
+          <div *ngIf="loggedInSuccess" style="line-height: 33px;text-align: left;padding-left: 10px;font-size: 25px;">
+            <div class="bottom_mrg">
+              <span class="loading_text">Loading Clients
+                <span *ngIf="clientsLoading" [ngClass]="{loading: clientsLoading}">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </span>
+              <img *ngIf="clientsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+              <img *ngIf="clientsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+            </div>
+            <div class="bottom_mrg">
+              <span class="loading_text">Loading Products
+                <span *ngIf="productLoading" [ngClass]="{loading: productLoading}">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </span>
+              <img *ngIf="productsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+              <img *ngIf="productsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+            </div>
+            <div class="bottom_mrg">
+              <span class="loading_text">Loading Terms And Conditions
+                <span *ngIf="termsLoading" [ngClass]="{loading: termsLoading}">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </span>
+              <img *ngIf="termsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+              <img *ngIf="termsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+            </div>
+            <div class="bottom_mrg">
+              <span class="loading_text">Loading Settings
+                <span *ngIf="settingsLoading" [ngClass]="{loading: settingsLoading}">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </span>
+              <img *ngIf="settingsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+              <img *ngIf="settingsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+            </div>
+          </div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <button type="submit" id="login-btn" name="login-btn"
+            style="box-shadow: none;background-color: #fe664e !important;">
+            <span>Retry</span>
+          </button>
+        </div>
+
+        <div class='container' *ngIf="loggedInFailed == true">
+          <form name="form" (ngSubmit)="loginUser($event)">
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="form-group" style="text-align: center;">
+              <button
+                style="font-size: 18px !important;font-family: quicksand_bold !important; color: #2096f3;border: none;background-color: #ffffff">Login
+                Failed ! </button>
+              <div class="clearfix">&nbsp;</div>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's
+                standard dummy text ever since the 1500s
+              </p>
+              <div class="clearfix">&nbsp;</div>
+              <div class="clearfix">&nbsp;</div>
+              <div class="clearfix">&nbsp;</div>
+              <div>
+                <button (click)="loggedInFailed=false;loggingIn = false" type="submit" id="login-btn" name="login-btn">
+                  <span>Retry</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      </div>
-      
+
       <div class="login-form" *ngIf="forgetFlag">
         <div class="col-md-12">
           <div class="font-custom-book" style="margin-top:42.5px;font-weight: 900;font-size: 11px;text-align:center">
@@ -165,7 +189,8 @@
           <form name="forgetForm" #forgetForm="ngForm" (ngSubmit)="forgetPassword(forgetForm)">
             <div class="form-group input--with-icon">
               <i class="fa fa-envelope input-icons"></i>
-              <input type="email" class="login-input" name="email" [(ngModel)]="forgetMail" required autocomplete="off" placeholder="Email">
+              <input type="email" class="login-input" name="email" [(ngModel)]="forgetMail" required autocomplete="off"
+                placeholder="Email">
             </div>
             <div style="text-align: center" class="margin-bottom-5px" *ngIf="errorMessage">
               <span class="font-custom-bold" style="color: #ff8000; font-size: 11px">{{errorMessage}}</span>
@@ -181,45 +206,38 @@
       </div>
     </div>
     <div style="text-align: center;" *ngIf="loginLoader && loggingIn">
-        <button class="loggingInBtn">Logging
-          In... </button>
-      </div>
-    
-
-
-
-
-
+      <button class="loggingInBtn">Logging
+        In... </button>
+    </div>
     <!-- <div *ngIf="loggingIn" class="login-form-container">
       <div class="login-form">
-        
-        
     </div>
     </div> -->
   </div>
-  <div class="col-md-1"></div>
+  <div class="col-md-1" style="max-width: 3.333333% !important;"></div>
 </div>
 
 <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
+    <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
+      <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
         <img class="center" src="assets/images/connection_lost.png" alt="logo">
-    </div>
-    <div class="modal-body">
-      <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
-    </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
-        OK
-      </button>
-     
+      </div>
+      <div class="modal-body">
+        <h3 class="title">Connection Lost !</h3>
+        <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again
+          !!!</p>
+      </div>
+      <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
+        <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold"
+          data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+          OK
+        </button>
+
+      </div>
     </div>
   </div>
-</div>
 </div>
 <!-- Error MODAL ends -->

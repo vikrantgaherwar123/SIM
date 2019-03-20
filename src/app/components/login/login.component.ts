@@ -47,13 +47,17 @@ export class LoginComponent implements OnInit {
   errorMessage: string = ''
   forgetFlag: boolean = false
   forgetMail: string = ''
-  clientsCompleted: boolean = false;
-  productsCompleted: boolean;
+  clientsCompleted: boolean;
+  productsCompleted: boolean ;
   termsCompleted: boolean;
   settingsCompleted: boolean;
   loginLoader: boolean;
   loggedInSuccess: boolean;
   loggedInFailed: boolean;
+  clientsLoading: boolean;
+  productLoading: boolean;
+  termsLoading: boolean;
+  settingsLoading: boolean;
 
   constructor(
     private authService: AuthService,
@@ -84,6 +88,10 @@ export class LoginComponent implements OnInit {
       this.loggingIn = true
       this.validateToken(user.access_token, user.user.orgId, user)
     }
+    this.clientsLoading = true;
+    this.productLoading = true;
+    this.settingsLoading = true;
+    this.termsLoading = true;
   }
 
   loginUser(event) {
@@ -212,34 +220,60 @@ export class LoginComponent implements OnInit {
   fetchBasicData() {
     // Fetch clients, products, terms and settings, store them and redirect to invoice page
     if (this.loggedInSuccess) {
+      
       this.clientService.fetch().subscribe(
           (result: any) => {
+             if(result){
+              this.clientsLoading = false;
               this.store.dispatch(new clientActions.add(result.records))
               this.clientsCompleted = true;
               this.navigateToAdd();
+             }
+             else{
+              this.clientsCompleted = false;
+             }
           },
           err => this.openErrorModal()),
-        this.productService.fetch().subscribe(
+
+            this.productService.fetch().subscribe(
             (result: any) => {
-              this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
-              this.productsCompleted = true;
-              this.navigateToAdd();
+              this.productLoading = false;
+              if(result){
+                this.productLoading = false;
+                this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
+                this.productsCompleted = true;
+                this.navigateToAdd(); 
+              }
+              else{
+                this.productsCompleted = false;
+              }
             },
             err => this.openErrorModal()),
-        this.termsService.fetch().subscribe(
+
+            this.termsService.fetch().subscribe(
             (result: any) => {
-              this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-              this.termsCompleted = true;
-              this.navigateToAdd();
-            },
-            err => this.openErrorModal()),
-        this.settingService.fetch().subscribe(
-            (result: any) => {
-              setStorage(result.settings)
-              if (result.settings) {
-                this.settingsCompleted = true;
+              if(result){
+                this.termsLoading = false;
+                this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+                this.termsCompleted = true;
                 this.navigateToAdd();
               }
+              else{
+                this.termsCompleted = false;
+              }
+            },
+            err => this.openErrorModal()),
+
+            this.settingService.fetch().subscribe(
+            (result: any) => {
+            if (result.settings) {
+              this.settingsLoading = false;
+              setStorage(result.settings)
+                this.settingsCompleted = true;
+                this.navigateToAdd();
+            }else{
+              this.settingsCompleted = false;
+            }
             }, err => this.openErrorModal())
       $('#userLogout').show()
 
@@ -249,7 +283,7 @@ export class LoginComponent implements OnInit {
 
   navigateToAdd() {
     if (this.settingsCompleted && this.termsCompleted && this.clientsCompleted && this.productsCompleted === true) {
-        // this.router.navigate(['/invoice/add']);
+      this.router.navigate(['/invoice/add']);
     }
   }
 }

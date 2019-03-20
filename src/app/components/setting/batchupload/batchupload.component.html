@@ -17,12 +17,12 @@
               <div class="col-7">
                 <div class="row taxradio" style="margin-top: 15px;">
                   <input type="radio" id="clientbtn" name="fileType" checked (click)="showClient()">
-                  <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold">
+                  <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold" style="width: 92px;">
                     <i class="fa fa-check-circle"></i> Client
                   </label>
 
                   <input type="radio" id="productbtn" name="fileType" (click)="showProduct()">
-                  <label for="productbtn" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                  <label for="productbtn" class="taxonbill fontsize13 border-left-right-none font-custom-bold" style="width: 92px;">
                     <span><i class="fa fa-check-circle"></i></span> Product
                   </label>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="col-3 col_3_label">
                   <span class="client_label">Choose File Format</span>
                 </div>
-                <div class="col-9 row" style="padding: 13px 2px 2px 5px;">
+                <div class="col-9 row" style="padding: 15px 2px 2px 2px;">
                     <a href="../../../assets/excel_files/clients.csv" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
                       style="color: #0299ff !important;font-family: quicksand_bold !important;">
                       <img src="assets/images/settings/csv.png" class="file_icon">CSV
@@ -82,13 +82,13 @@
             <div class="row steps_div">
               <div class="verticle_line"></div>
               <div class="col-4 col_3_label">
-                <span class="client_label">Drag File To Upload</span>
+                <span class="client_label">Drag File<br/> To Upload</span>
               </div>
               <div class="col-2" style="padding: 19px 2px 2px 24px;">
                 <span class="client_label">Or</span>
               </div>
-              <div class="col-4" style="padding: 9px 0px 0px 33px;">
-                <label  class="btn btn-raised btn-custom-1 width20btn" style="width: 94px;color: #0299ff !important;font-family: quicksand_bold !important;">Upload
+              <div class="col-4" style="padding: 15px 2px 2px 2px;">
+                <label  class="btn btn-raised btn-custom-1 width20btn upload_btn">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
               </div>
@@ -239,11 +239,16 @@
 
     <!-- dropdown -->
     <div class="row" *ngIf="make_blur_disable == false" style="background-color: white;">
+      <img src="assets/images/batch_background.png" class="img" style="width: 100%;opacity:.6;margin-left: 16px;">
         <div class="col-1"></div>
-        <div class="col-10">
-          <input type="file" id="input-file-now" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
-            placeholder="Upload file" accept=".xlsx, .xls, .csv" class="file-upload dropzone-container dropzone-drop-area"
-            required />
+        <div class="col-10 image-upload">
+            <label for="file-input" class="file-upload dropzone-container dropzone-drop-area">
+                <img src="http://goo.gl/pB9rpQ"/>
+                <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
+                placeholder="Upload file" accept=".xlsx, .xls, .csv"
+                required style="display:none"/>
+            </label>
+         
         </div>
         <div class="col-1"></div>
       </div>

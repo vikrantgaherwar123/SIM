@@ -12,6 +12,7 @@
   outline: 0;
   color:#fff;
   background-color: #2196f3;
+  width: 85px;
 }
 .edit-setting[_ngcontent-c5] input[type=radio]:checked + label i {
   outline: 0;
@@ -216,4 +217,21 @@ input[type=text] {
 .verticle_line{
   border-left: 4px solid #0295ff;
   border-radius: 36px;
+}
+.upload_btn{
+  width: 94px;
+  height: 30px;
+  color: #0299ff !important;
+  font-family: quicksand_bold !important;
+  padding: 3px 2px 2px 2px !important;
+}
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload img
+{
+    width: 80px;
+    cursor: pointer;
 }
