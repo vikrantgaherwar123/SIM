@@ -51,11 +51,18 @@ export class CustomFieldComponent implements OnInit {
         this.appSettings = response.settings.appSettings
         this.activeSetting = this.appSettings.androidSettings ? {...this.appSettings.androidSettings} : <setting>{}
       }
-    })
+    },error => this.openErrorModal())
   }
 
   cancel() {
     window.history.back()
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   save(valid) {
@@ -75,7 +82,7 @@ export class CustomFieldComponent implements OnInit {
           alert (response.message)
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
         }
-      })
+      },error => this.openErrorModal())
     }
   }
 }

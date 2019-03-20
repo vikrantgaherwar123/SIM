@@ -52,7 +52,7 @@ export class TncComponent implements OnInit {
       this.tncLoading = false
       this.tncs = response.termsAndConditionList.filter(ter => ter.enabled == 0)
       this.store.dispatch(new tncActions.add(this.tncs))
-    })
+    },error => this.openErrorModal())
   }
 
   save(status) {
@@ -101,8 +101,15 @@ export class TncComponent implements OnInit {
           //notifications.showError({message: result.message, hideDelay: 1500,hide: true})
           alert(response.message)
         }
-      })
+      },error => this.openErrorModal())
     }
+  }
+
+   // error modal
+   openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   add() {

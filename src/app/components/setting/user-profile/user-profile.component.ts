@@ -84,7 +84,7 @@ export class UserProfileComponent implements OnInit {
       } else {
         $('#signImgCont').css('background-image', `url(${this.signImgUrl}?random=${tempRandom})`)
       }
-    })
+    },error => this.openErrorModal())
   }
  
   getRandomInt(min, max) {
@@ -100,12 +100,21 @@ export class UserProfileComponent implements OnInit {
        this.toasterService.pop('success','Saved Successfully')
        //alert(response.message)
        $('#profileSubmitBtn').removeAttr('disabled')
-     }, (err) => {
-       console.log('errrr', err)
-     })
+     }, 
+    //  (err) => {
+    //    console.log('errrr', err)
+    //  }
+    error => this.openErrorModal())
    }
    else{
      this.toasterService.pop('failure','Company Name required')
    }
  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
 }

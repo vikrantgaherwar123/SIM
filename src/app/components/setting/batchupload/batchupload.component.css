@@ -96,7 +96,7 @@ input.ng-dirty.ng-invalid {
 .dropzone-drop-area {
   border: dashed 2px #52a6fe;
   width: 100%;
-  min-height: 460px;
+  min-height: 260px;
   box-sizing: border-box;
   /* padding: 6px; */
   display: flex;
@@ -106,7 +106,7 @@ input.ng-dirty.ng-invalid {
   flex-wrap: wrap;
   cursor: pointer;
   position: relative;
-  margin-top: 10px;
+  margin-top: 95px;
   margin-bottom: 10px;
 }
 .no_btn{
@@ -232,6 +232,8 @@ input[type=text] {
 
 .image-upload img
 {
-    width: 80px;
-    cursor: pointer;
+  width: 80px;
+  cursor: pointer;
+  /* padding: 10px; */
+  margin: 10px 2px 36px 112px;
 }

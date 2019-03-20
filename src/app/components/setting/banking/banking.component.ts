@@ -59,7 +59,7 @@ export class BankingComponent implements OnInit {
         this.appSettings = response.settings.appSettings
         this.activeSetting = this.appSettings.androidSettings ? {...this.appSettings.androidSettings} : <setting>{}
       }
-    })
+    },error => this.openErrorModal())
 
     this.orgService.fetch().subscribe((response: any) => this.org = response.record)
   }
@@ -79,7 +79,7 @@ export class BankingComponent implements OnInit {
           alert (response.message)
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
         }
-      })
+      },error => this.openErrorModal())
 
       this.orgService.add(this.org).subscribe((response: any) => {
         if (response.status === 200) {
@@ -88,7 +88,14 @@ export class BankingComponent implements OnInit {
           // notifications.showSuccess({message: response.data.message, hideDelay: 1500, hide: true});
         }
         $('#bankingDetailSubmit').removeAttr('disable')
-      })
+      },error => this.openErrorModal())
     }
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 }

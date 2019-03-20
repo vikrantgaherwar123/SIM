@@ -62,7 +62,7 @@ export class PrimaryComponent implements OnInit {
 
         this.activeCountry = this.countries.filter(country => country.id == this.activeSettings.countryIndex)[0]
       }
-    })
+    },error => this.openErrorModal())
   }
 
   dynamicSort(property) {
@@ -204,7 +204,7 @@ export class PrimaryComponent implements OnInit {
         alert (response.message)
         // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
       }
-    })
+    },error => this.openErrorModal())
   }
 
   // Setter Functions
@@ -248,6 +248,13 @@ export class PrimaryComponent implements OnInit {
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
     }
+  }
+
+   // error modal
+   openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   setCountry(countryId) {

@@ -25,8 +25,8 @@ import { flatMap, retryWhen, catchError } from 'rxjs/operators';
 export class BatchuploadComponent implements OnInit {
   arrayBuffer: any;
   file: File;
-  clientRecords: any;
-  productRecords: any;
+  clientRecords: Array<any> = [];
+  productRecords: Array<any> = [];
   errors: {};
   worksheet1: XLSX.WorkSheet;
   private activeClient = <client>{}
@@ -47,7 +47,10 @@ export class BatchuploadComponent implements OnInit {
   showClientDiv: boolean = false;
   showProductDiv: boolean = false;
   make_blur_disable : boolean = false;
-  
+  private fieldArray: Array<any> = [];
+  private newAttribute: any = {};
+  addProductManually: boolean = false;
+  addClientManually: boolean = false;
 
   incomingfile(event) {
     if (event.target.files[0]) {
@@ -98,7 +101,7 @@ export class BatchuploadComponent implements OnInit {
           this.clientList = response.records.filter(cli => cli.enabled == 0)
 
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
     }
@@ -113,24 +116,40 @@ export class BatchuploadComponent implements OnInit {
           this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
           this.productList = response.records.filter(prod => prod.enabled == 0)
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.productListLoading = false
     }
   }
 
-  showClient()
-  {
+  addProductFieldValue() {
+    this.addProductManually = true;
+    this.make_blur_disable = true;
+    this.productRecords.push(this.newAttribute)
+    //get client btn selected if product file selected
+    $("#productbtn").click()
+  }
+
+  addClientFieldValue() {
+    this.addClientManually = true;
+    this.make_blur_disable = true;
+    this.clientRecords.push(this.newAttribute)
+    //get client btn selected if client file selected
+    $("#clientbtn").click()
+  }
+
+  showClient(){
     this.showClientDiv = true
     this.showProductDiv = false
   }
-  showProduct()
-  {
+
+  showProduct(){
     this.showProductDiv = true
     this.showClientDiv = false
   }
 
   Upload() {
+    //make save and clear btn disable
     this.make_blur_disable = true;
     
     this.showClientsOrProducts = true;
@@ -295,6 +314,9 @@ export class BatchuploadComponent implements OnInit {
     this.showClient();
     //get client btn selected after clear clicked
     $( "#clientbtn" ).click()
+    //manually add options
+    this.addClientManually = false;
+    this.addProductManually = false;
   }
 
 
@@ -307,7 +329,7 @@ export class BatchuploadComponent implements OnInit {
         var proStatus = true
 
         // If adding or editing client, make sure client with same name doesnt already exist
-        if (!this.activeClient.enabled) {
+        if (!this.activeClient.enabled && this.activeClient.name) {
           var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
           // If empty spaces
@@ -339,6 +361,9 @@ export class BatchuploadComponent implements OnInit {
             }
           }
           this.repeatativeClientName = ''
+        }
+        else{
+          status = false
         }
 
 
@@ -381,7 +406,7 @@ export class BatchuploadComponent implements OnInit {
               else {
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            },err => this.openErrorModal())
+            })
 
           } else {
             this.toasterService.pop('failure', 'Organization name required!');
@@ -390,9 +415,12 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
           }
+          else if(!status){
+            this.toasterService.pop('failure', 'Product Name Required');
+          }
         }
         //show only one toaster instead of multiple
-        if(i == (this.clientRecords.length-1)){
+        if(i == (this.clientRecords.length-1) && status){
           this.showClientSuccessAdd()
         }
       }
@@ -468,7 +496,6 @@ export class BatchuploadComponent implements OnInit {
                 if (index == -1) {  // add
                   this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
                   this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
-                  this.toasterService.pop('success', 'Product added successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -477,7 +504,7 @@ export class BatchuploadComponent implements OnInit {
               else {
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            },error => this.openErrorModal()
+            }
             );
           } else {
             this.toasterService.pop('failure', 'Product name required!');
@@ -491,7 +518,7 @@ export class BatchuploadComponent implements OnInit {
           }
         }
         //show only one toaster instead of multiple
-        if(i == (this.productRecords.length-1)){
+        if(i == (this.productRecords.length-1) && status){
           this.showProductSuccessAdd()
         }
       }
@@ -506,13 +533,15 @@ export class BatchuploadComponent implements OnInit {
     this.toasterService.pop('success', 'Products added successfully !!!');
   }
 
-  errorHandler(error){
-    if(error){
-    //  this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
-    }
-    console.log(error);
+  // errorHandler(error){
+  //   if(error){
+  //   //  this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
+  //   }
+  //   console.log(error);
     
-  }
+  // }
+
+  
   remove(index) {
     this.clientRecords.splice(index, 1);
   }
