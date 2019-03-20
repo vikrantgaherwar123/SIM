@@ -185,7 +185,7 @@
                 [(ngModel)]="item.shippingAddress" />
             </td>
           </tr>
-          <button class="btn btn-default" type="button" (click)="addClientFieldValue()">Add</button>
+          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
         </tbody>
     </table>
 
@@ -233,7 +233,7 @@
             </td>
             
           </tr>
-          <button class="btn btn-default" type="button" (click)="addProductFieldValue()">Add</button>
+          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
         </tbody>
    
     </table>
@@ -247,8 +247,7 @@
             required />
         </div>
         <div class="col-1">
-          <button class="btn btn-default" type="button" (click)="addProductFieldValue()">Add Product</button>
-          <button class="btn btn-default" type="button" (click)="addClientFieldValue()">Add Client</button>
+          <button class="btn btn-default" type="button" (click)="openManuallyAddField()">Add Manulaly</button>
         </div>
       </div>
   </div>
