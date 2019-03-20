@@ -1,17 +1,7 @@
 <div class="row mt-4">
   <div class="col-md-1" style="max-width: 3.333333% !important;"></div>
   <div class="col-md-7 pr-0">
-    <!-- <div id="login-left-inner" class="row" style="padding: 0 0 20px 0; background-color: #f2f2f2">
-      <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 40px; font-weight: 1000">Simple Invoice Manager</h1>
-      <h3 class="sub-heading" style="margin-top: 0; font-size: 15px; ; color: #364b5e">Make Professional Invoices <br> from your mobile</h3>
-      <div>
-       
-        <img src="assets/images/login/web_banner.png" id="img-left-main" style="width: 50%; margin: 2%">
-      </div>
-      <div class="col-md-12" style="font-size: 11px; padding-right: 4%; color: #364b5e">
-        Simple Invoice Manager is a complete suite for all your invoicing needs, right from sending estimates to invoices, recording a payment to finally issuing a payment receipt to your client. Its simple yet feature-rich designs will get you going in minutes. Professionally designed templates will help you stand out of competetion and cloud-backed infrastructure will help you collaborate with your team
-      </div>
-    </div> -->
+    
     <div class="info-container text-center">
       <h1 class="heading-left-align" style="color: #0780d2; font-size: 30px; margin-top: 30px; font-weight: 1000">Simple
         Invoice Manager</h1>
@@ -96,49 +86,57 @@
           <div class="clearfix">&nbsp;</div>
 
           <div *ngIf="loggedInSuccess" style="line-height: 33px;text-align: left;padding-left: 10px;font-size: 25px;">
-            <div class="bottom_mrg">
-              <span class="loading_text">Loading Clients
+            <div class="bottom_mrg row">
+              <span class="loading_text col-10">Loading Clients
                 <span *ngIf="clientsLoading" [ngClass]="{loading: clientsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
+              <span class="col-1 sm_tik_img">
               <img *ngIf="clientsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
               <img *ngIf="clientsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              </span>
             </div>
-            <div class="bottom_mrg">
-              <span class="loading_text">Loading Products
+            <div class="bottom_mrg row">
+              <span class="loading_text col-10">Loading Products
                 <span *ngIf="productLoading" [ngClass]="{loading: productLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <img *ngIf="productsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
-              <img *ngIf="productsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              <span class="col-1 sm_tik_img">
+                <img *ngIf="productsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+                <img *ngIf="productsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              </span>
             </div>
-            <div class="bottom_mrg">
-              <span class="loading_text">Loading Terms And Conditions
+            <div class="bottom_mrg row">
+              <span class="loading_text col-10">Loading Terms & Conditions
                 <span *ngIf="termsLoading" [ngClass]="{loading: termsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <img *ngIf="termsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
-              <img *ngIf="termsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              <span class="col-1 sm_tik_img">
+                <img *ngIf="termsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+                <img *ngIf="termsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              </span>
             </div>
-            <div class="bottom_mrg">
-              <span class="loading_text">Loading Settings
+            <div class="bottom_mrg row">
+              <span class="loading_text col-10">Loading Settings
                 <span *ngIf="settingsLoading" [ngClass]="{loading: settingsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <img *ngIf="settingsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
-              <img *ngIf="settingsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              <span class="col-1 sm_tik_img">
+                <img *ngIf="settingsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
+                <img *ngIf="settingsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
+              </span>
             </div>
           </div>
           <div class="clearfix">&nbsp;</div>

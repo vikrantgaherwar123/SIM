@@ -1262,8 +1262,8 @@ export class AddEditComponent implements OnInit {
       )
       this.activeInvoice.tax_amount = additions
       //remove digits after two decimal
-      var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
-      this.activeInvoice.tax_amount = parseFloat(value);
+      // var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
+      // this.activeInvoice.tax_amount = parseFloat(value);
     }
 
     // Multiple Taxes
