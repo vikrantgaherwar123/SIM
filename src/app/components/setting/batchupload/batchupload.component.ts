@@ -92,6 +92,7 @@ export class BatchuploadComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
     //get client option selected initially
     this.showClient();
+    this.backgroundTable();
     this.clientListLoading = true
     if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -122,20 +123,41 @@ export class BatchuploadComponent implements OnInit {
     }
   }
 
-  addProductFieldValue() {
-    this.addProductManually = true;
-    this.make_blur_disable = true;
-    this.productRecords.push(this.newAttribute)
-    //get client btn selected if product file selected
-    $("#productbtn").click()
+  backgroundTable(){
+    for(let i=0;i< 20;i++){
+      this.fieldArray.push([]);
+    }  
+  }
+  
+
+  addFieldValues() {
+    if(this.showClientDiv){
+      this.clientRecords.push([])
+    }else if(this.showProductDiv){
+      this.productRecords.push([])
+    }
   }
 
-  addClientFieldValue() {
-    this.addClientManually = true;
-    this.make_blur_disable = true;
-    this.clientRecords.push(this.newAttribute)
+  openManuallyAddField(){
+    if(this.showClientDiv){
+      this.addClientManually = true;
+      this.make_blur_disable = true;
+      for(let i=0;i< 20;i++){
+        this.clientRecords.push([]);
+      }  
     //get client btn selected if client file selected
     $("#clientbtn").click()
+    }
+    else if(this.showProductDiv){
+      this.addProductManually = true;
+      this.make_blur_disable = true;
+      for(let i=0;i< 20;i++){
+        this.productRecords.push([]);
+      }  
+      //get client btn selected if product file selected
+      $("#productbtn").click()
+    }
+
   }
 
   showClient(){
@@ -329,8 +351,9 @@ export class BatchuploadComponent implements OnInit {
         var proStatus = true
 
         // If adding or editing client, make sure client with same name doesnt already exist
-        if (!this.activeClient.enabled && this.activeClient.name) {
+        if (!this.activeClient.enabled && this.activeClient.name ) {
           var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+          status = true
 
           // If empty spaces
           if (!tempClientName) {
@@ -361,12 +384,10 @@ export class BatchuploadComponent implements OnInit {
             }
           }
           this.repeatativeClientName = ''
+        }else{
+          status = false;
         }
-        else{
-          status = false
-        }
-
-
+        
         if (status && proStatus) {
           //add required input params for api call
           this.clientRecords[i].enabled = 0;
@@ -397,7 +418,7 @@ export class BatchuploadComponent implements OnInit {
                   // var OrgName = response.clientList[0].name.toLowerCase();
                   this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
                   this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-                  // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
+                  this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -414,15 +435,17 @@ export class BatchuploadComponent implements OnInit {
         } else {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
+          }else if(!status){
+            this.toasterService.pop('failure', 'Client name should not be empty');
           }
           else if(!status){
             this.toasterService.pop('failure', 'Product Name Required');
           }
         }
-        //show only one toaster instead of multiple
-        if(i == (this.clientRecords.length-1) && status){
-          this.showClientSuccessAdd()
-        }
+        // //show only one toaster instead of multiple
+        // if(i == (this.clientRecords.length-1) && status){
+        //   this.toasterService.pop('success', 'CLients added successfully !!!');
+        // }
       }
     }
 
@@ -432,8 +455,9 @@ export class BatchuploadComponent implements OnInit {
         this.activeProduct = this.productRecords[i];
         var proStatus = true
         // If adding or editing product, make sure product with same name doesnt exist
-        if (this.activeProduct.prodName) {    
+        if (this.activeProduct.prodName && this.activeProduct.prodName) {    
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
+          status = true;
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
             if(this.productList[p].prodName){
@@ -464,15 +488,15 @@ export class BatchuploadComponent implements OnInit {
 
         if (status && proStatus) {
           //flag set to highlite user if he enters wrong input
-          if(isNaN(this.productRecords[i].unit)){
+          if(isNaN(this.productRecords[i].unit) && this.productRecords[i].unit !== undefined){
             this.unitErrorOccured = true;
             this.toasterService.pop('failure', 'Unit must be numeric !');
           }
-          if(isNaN(this.productRecords[i].rate)){
+          if(isNaN(this.productRecords[i].rate) && this.productRecords[i].rate !== undefined){
             this.rateErrorOccured = true;
             this.toasterService.pop('failure', 'Rate must be numeric !');
           }
-          if(isNaN(this.productRecords[i].taxRate)){
+          if(isNaN(this.productRecords[i].taxRate) && this.productRecords[i].taxRate !==undefined){
             this.taxErrorOccured = true;
             this.toasterService.pop('failure', 'Tax Rate must be numeric !');
           }
@@ -496,6 +520,7 @@ export class BatchuploadComponent implements OnInit {
                 if (index == -1) {  // add
                   this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
                   this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
+                  this.toasterService.pop('success', 'CLients added successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -517,10 +542,10 @@ export class BatchuploadComponent implements OnInit {
             this.toasterService.pop('failure', 'Product Name Required');
           }
         }
-        //show only one toaster instead of multiple
-        if(i == (this.productRecords.length-1) && status){
-          this.showProductSuccessAdd()
-        }
+        // //show only one toaster instead of multiple
+        // if(i == (this.productRecords.length-1) && status){
+        //   this.showProductSuccessAdd()
+        // }
       }
     }
   }
