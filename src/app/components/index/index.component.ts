@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
 
 @Component({
   selector: 'app-root',
