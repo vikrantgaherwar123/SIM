@@ -1324,16 +1324,26 @@ export class AddEditEstComponent implements OnInit {
       if(!this.activeEst.alstQuotProduct[i].price){
         this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
       }
-      if(this.activeEst.alstQuotProduct[i].taxRate){
-        this.showTaxOnItem = true;
-      }else{
-        this.showTaxOnItem = false;
+      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+          this.activeEst.alstQuotProduct[i].taxRate = 0;
       }
-      if(this.activeEst.alstQuotProduct[i].discountRate){
-        this.showDiscountOnItem = true;
-      }else{
-        this.showDiscountOnItem = false;
+      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+          this.activeEst.alstQuotProduct[i].discountRate = 0;
       }
+      // if(this.activeEst.alstQuotProduct[i].taxRate){
+      //   this.showTaxOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
+      // }else{
+      //   this.showTaxOnItem = false;
+      // }
+      // if(this.activeEst.alstQuotProduct[i].discountRate){
+      //   this.showDiscountOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
+      // }else{
+      //   this.showDiscountOnItem = false;
+      // }
     }
 
     for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){

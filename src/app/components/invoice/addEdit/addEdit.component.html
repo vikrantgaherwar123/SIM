@@ -952,12 +952,10 @@
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
                     <td width="10%">
-                      <!--*ngIf="hideTaxLabel == false"-->
                       <input type="text" id="taxLabel" class="bld w-100 text-center" name="rate" value="Tax (%)"
                         disabled>
                     </td>
                     <td width="10%">
-                      <!--*ngIf="hideDiscountLabel == false"-->
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-center"
                         value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
@@ -995,7 +993,7 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
                       <!--activeInv.tax_on_item == 0-->
                       <div class="text-center">
                         {{item.tax_rate | number:'2.'}}
