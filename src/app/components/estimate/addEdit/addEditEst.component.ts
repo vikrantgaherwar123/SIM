@@ -106,13 +106,12 @@ export class AddEditEstComponent implements OnInit {
   showTaxRateFlag: boolean;
   showDiscountRateFlag: boolean;
   showDiscountRate: number;
-  setTaxOnItem: boolean;
-  setDiscountOnItem: boolean;
+  showTaxOnItem: boolean = false;
+  showDiscountOnItem: boolean = false;
   showDiscountField: boolean;
   tncLoading: boolean;
   settingsLoading: boolean;
   estimateId: any;
-  recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
   viewTodaysEstimate: boolean = false;
@@ -1308,22 +1307,8 @@ export class AddEditEstComponent implements OnInit {
     this.estimateId = estId;
     this.estimateListLoading = true;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
-    this.setActiveClient()
-  }
- 
-  setActiveClient() {
-    if (this.clientList.length < 1) {
-      this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
-        this.clientListLoading = false
-        this.clientList = response.records;
-        this.removeEmptyNameClients();
-      },err => this.openErrorModal()
-      )
-    }
-
-    if (this.activeEst) {
-      for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
+    if(this.activeEst){
+    for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
       if(!this.activeEst.alstQuotProduct[i].productName){
         this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
       }
@@ -1339,12 +1324,50 @@ export class AddEditEstComponent implements OnInit {
       if(!this.activeEst.alstQuotProduct[i].price){
         this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
       }
+      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+          this.activeEst.alstQuotProduct[i].taxRate = 0;
+      }
+      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+          this.activeEst.alstQuotProduct[i].discountRate = 0;
+      }
+      // if(this.activeEst.alstQuotProduct[i].taxRate){
+      //   this.showTaxOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
+      // }else{
+      //   this.showTaxOnItem = false;
+      // }
+      // if(this.activeEst.alstQuotProduct[i].discountRate){
+      //   this.showDiscountOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
+      // }else{
+      //   this.showDiscountOnItem = false;
+      // }
     }
+
     for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
       if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
         this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
       }
     }
+  }
+    this.setActiveClient()
+  }
+ 
+  setActiveClient() {
+    if (this.clientList.length < 1) {
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        this.clientList = response.records;
+        this.removeEmptyNameClients();
+      },err => this.openErrorModal()
+      )
+    }
+
+    if (this.activeEst) {
+    
       var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
       if (client) {
         this.activeClient = client

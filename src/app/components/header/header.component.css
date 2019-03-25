@@ -42,7 +42,7 @@
   font-family: quicksand_bold !important;
 }
 .nav_img{
-  height: 26px;
+  height: 22px;
   padding-right: 2px;
 }
 
@@ -52,7 +52,7 @@
   background-color: #f9f9f9;
   cursor: pointer;
   font-size: 18px;
-  padding: 14px 7px 13px 5px;
+  padding: 18px 7px 13px 5px;
 }
 .menu_list :hover{
   background-color: #d0e4f7;

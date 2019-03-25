@@ -123,6 +123,8 @@ export class AddEditComponent implements OnInit {
   invListLoader: boolean;
   hideDiscountLabel: boolean = false;
   hideTaxLabel: boolean = false;
+  showTodaysTaxRate: boolean;
+  showTodaysDiscountRate: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -1624,18 +1626,29 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     //if discount and tax on bill is selected
-    if(this.activeInv.discount !==0){
-      this.hideDiscountLabel = true;
+    if(this.activeInv.discount){
       for(var i=0;i<this.activeInv.listItems.length;i++){
         this.activeInv.listItems[i].discountRate = 0;
       }
     }
-    if(this.activeInv.tax_rate !==0){
-      this.hideTaxLabel = true;
+    if(this.activeInv.tax_rate){
       for(var i=0;i<this.activeInv.listItems.length;i++){
         this.activeInv.listItems[i].tax_rate = 0;
       }
     }
+    
+    //  for(let i=0;i<this.activeInv.listItems.length;i++){
+    //   if(this.activeInv.listItems[i].tax_rate){
+    //     this.showTodaysTaxRate = true;
+    //   }else if(this.activeInv.listItems[i].tax_rate == 0 || undefined){
+    //     this.showTodaysTaxRate = false;
+    //   }
+    //   if(this.activeInv.listItems[i].discountRate){
+    //     this.showTodaysDiscountRate = true;
+    //   }else if(this.activeInv.listItems[i].discountRate == 0 || undefined){
+    //     this.showTodaysDiscountRate = false;
+    //   }
+    //  }
     
     this.setActiveClient()
   }

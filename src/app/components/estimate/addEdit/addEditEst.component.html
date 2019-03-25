@@ -728,12 +728,12 @@
                         {{item.rate}}
                       </div>
                     </td>
-                    <td *ngIf="item.taxRate || hideTaxLabel === false || isTaxPresent ===true" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.taxRate}}
                       </div>
                     </td>
-                    <td *ngIf="item.discountRate || hideDiscountLabel === false || isDiscountPresent === true"  [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountRate}}
                       </div>

@@ -58,15 +58,15 @@
   margin: 0px 2px 0px 0px !important;
 }
 .dropbtn {
-  width: 170px;
-  color: #1a73cc;
-  padding: 6px;
-  /* background: #d0e4f7; */
-  border-radius: 3px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 16px !important;
-  height: 32px;
+  width: 180px;
+    color: #2196f3;
+    padding: 6px;
+    border-radius: 3px;
+    border: 1px solid #2196f3;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px !important;
+    height: 35px;
 }
 .edit-setting .country-code input[type=radio] + label {
   min-height: 32px;
