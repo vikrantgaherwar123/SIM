@@ -82,7 +82,7 @@
             <div class="row steps_div">
               <div class="verticle_line"></div>
               <div class="col-4 col_3_label">
-                <span class="client_label">Drag File<br/> To Upload</span>
+                <span class="client_label">Drag File<br/> To <br/>Upload</span>
               </div>
               <div class="col-2" style="padding: 19px 2px 2px 24px;">
                 <span class="client_label">Or</span>
@@ -124,10 +124,10 @@
     <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
       <thead>
         <tr>
-          <td style="width: 50px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
+          <td style="width: 20px !important;background-color: white;"><input type="text" class="form-control td_header" readonly />
           </td>
           <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
-          <td style="width: 180px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
+          <td style="width: 190px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
           <td style="width: 126px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact Person" readonly /></td>
           <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 1" readonly /></td>
           <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 2" readonly /></td>
@@ -141,7 +141,7 @@
       </thead>
         <tbody>
           <tr *ngFor="let item of clientRecords; let in = index">
-            <td class="number_tag" style="padding: 2px 4px 0px 10px !important;width: 20px;">
+            <td class="number_tag" style="padding: 2px 4px 0px 8px !important;width: 20px !important;">
               <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
             </td>
             <td style="width: 20px;" class="number_tag">{{in+1}}</td>
@@ -185,10 +185,14 @@
                 [(ngModel)]="item.shippingAddress" />
             </td>
           </tr>
-          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
+          
         </tbody>
+        <div>
+            <button class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 4px 15px 4px 15px !important;
+            font-size: 16px !important;" type="button" (click)="addFieldValues()">Add</button>
+          </div>
     </table>
-
+    
     <!-- products record table -->
     <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
       <thead>
@@ -206,7 +210,7 @@
       </thead>
         <tbody>
           <tr *ngFor="let item of productRecords; let i = index">
-            <td class="number_tag" style="padding: 4px 4px 0px 18px !important;">
+            <td class="number_tag" style="padding: 4px 4px 0px 8px !important;">
               <img class="hg_20" (click)="productRemove(i)" src="assets/images/grey_cross.png">
             </td>
             <td class="number_tag">
@@ -233,7 +237,7 @@
             </td>
             
           </tr>
-          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
+          <button class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2" type="button" (click)="addFieldValues()">Add</button>
         </tbody>
    
     </table>
@@ -243,10 +247,10 @@
       <!-- <img src="assets/images/batch_background.png" class="img" style="position: absolute;width: 100%;opacity:.3;margin-left: 16px;"> -->
       <!-- empty client table -->
       
-      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.3;">
+      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:0.1;">
         <thead>
           <tr>
-            <td style="width: 50px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
+            <td style="width: 30px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
             </td>
             <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
             <td style="width: 180px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
@@ -263,10 +267,10 @@
         </thead>
           <tbody>
             <tr *ngFor="let item of fieldArray; let in = index">
-              <td class="number_tag" style="padding: 2px 4px 0px 10px !important;width: 20px;">
+              <td class="number_tag" style="padding: 2px 4px 0px 16px !important;width: 20px;">
                 <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
               </td>
-              <td style="width: 20px;" class="number_tag">{{in+1}}</td>
+              <td style="width: 10px;" class="number_tag">{{in+1}}</td>
               <td>
                 <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }"
                   onfocus="this.select()" required /> </td>
@@ -309,7 +313,7 @@
             </tr>
           </tbody>
       </table>
-    
+      
       <!-- empty product table -->
       
       <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.3;">
@@ -362,8 +366,8 @@
     <div class="col-2"></div>
     <div class="col-3 image-upload">
         <label for="file-input" class="file-upload dropzone-container dropzone-drop-area">
-          <div>
-            <img src="assets/images/upload_o.png"/>
+          <div class="drop_icon_div">
+            <img src="assets/images/upload_o.png" style="height: 40px;"/>
           </div>
           <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
             placeholder="Upload file" accept=".xlsx, .xls, .csv"
