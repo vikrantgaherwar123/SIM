@@ -114,14 +114,14 @@
                 <label class="col-12 col-md-3 font-custom-bold fontsize18">Currency Pattern </label>
                 <div class="col-12 col-md-3 dropdown">
                   <div id="dropdownMenuButton" class="dropbtn" data-toggle="dropdown">
-                    Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    {{activePatternNumber}} <i class="fa fa-caret-down" aria-hidden="true"></i>
                   </div>
-                  <!-- <select>Currency
-                    <option>1,000,000.00</option>
-                    <option>1,00,00,000.00</option>
-                    <option>1.000.000,00</option>
-                    <option>1.00.00.000,00</option>
-                    <option>1 000 000,00</option>
+                  <!-- <select class="dropbtn"> Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <option (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</option>
+                    <option (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</option>
+                    <option (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</option>
+                    <option (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</option>
+                    <option (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</option>
                   </select> -->
                   <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>

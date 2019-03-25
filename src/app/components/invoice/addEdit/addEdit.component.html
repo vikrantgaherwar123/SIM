@@ -602,36 +602,36 @@
                     </div>
 
                     <!-- tax -->
-                    <div class="row mr_right mr_0" *ngIf="activeInvoice.tax_on_item===1">
-                      <div class="col-4 discount-tax-label pr-0 ">
-                        <div style="text-align: left;vertical-align: bottom;">
-                          <div class="d-inline font-custom">Tax (%)</div>
+                    <div class="row mr_right mr_0" *ngIf="activeInvoice.tax_on_item === 1">
+                        <div class="col-4 discount-tax-label pr-0">
+                          <span style="text-align: left;vertical-align: bottom;" class="inline">
+                              Tax (%)
+                          </span>
+                         
                         </div>
-                      </div>
-
-                      <div class="col-8 pr-0">
-                        <form #form_tax_input="ngForm" name="form_tax_input">
-                          <div class="input-group pr-0 col-12">
-                            <input type="number" id="tax_input" name="tax_input" class="form-control col-3" step="any"
-                              min="0.00" max="100" required style="color: #aaaaaa;margin-left: -15px;margin-right: 5px;"
-                              [(ngModel)]="activeInvoice.tax_rate" (ngModelChange)="changeTax($event)"
-                              (keyup)="calculateInvoice()" onfocus="this.select()" />
-                            <input type="number" id="tax_input" name="tax_input"
-                              class="col-9 form-control text_center height_40 dis_tax_label" readonly
-                              placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()"
-                              style="background-color:#eaeaea" />
-
-                            <!-- <div class="input-group-addon set-color">%</div>-->
-                            <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector"
-                                (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                      
+                        <div class="col-8 pr-0">
+                          <form #form_discount="ngForm" name="form_discount">
+                            <div class="input-group addon-input">
+                                <input type="number" id="tax_input" name="tax_input" class="form-control col-3"
+                                step="any"min="0.00" max="100" required style="color: #aaaaaa;"
+                                [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onfocus="this.select()"
+                              />
+                              <input type="number" id="tax_inputs" name="tax_inputs" class="col-9 form-control text_center height_40 dis_tax_label" 
+                              placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" style="background-color:#eaeaea"
+                            />
+                      
+                              
+                              <div class="input-group-addon pr-0 remove-button">
+                                <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
+                                  <!--activeInvoice.tax_amount-->
+                                  <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </form>
+                          </form>
+                        </div>
                       </div>
-                    </div>
 
                     <!-- Tax list -->
                     <div class="row mr_right mr_0" *ngFor="let tax of activeInvoice.taxList; let taxIndex = index">

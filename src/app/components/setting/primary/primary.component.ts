@@ -31,6 +31,7 @@ export class PrimaryComponent implements OnInit {
     setting: any
   }
   settings: any;
+  activePatternNumber: string = "Pattern";
 
   constructor(private CONST: CONSTANTS,
     public toasterService : ToasterService,
@@ -227,22 +228,27 @@ export class PrimaryComponent implements OnInit {
       case "###,###,###.00":
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
+        this.activePatternNumber = "1,000,000.00"
         break
       case "##,##,##,###.00":
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
+        this.activePatternNumber = "1,00,00,000.00"
         break
       case "###.###.###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = "."
+        this.activePatternNumber = "1.000.000,00"
         break
       case "##.##.##.###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = "."
+        this.activePatternNumber = "1.00.00.000,00"
         break
       case "### ### ###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = " "
+        this.activePatternNumber = "1 000 000,00"
         break
       default:
         this.activeSettings.decimalSeperator = "."

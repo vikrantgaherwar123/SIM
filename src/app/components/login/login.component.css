@@ -29,7 +29,7 @@
 }
 .login-form {
   background-color: #ffffff;
-  padding: 12px 20px
+  padding: 12px 13px
 }
 .social-login-container a {
   width: 66%;
@@ -128,7 +128,7 @@
     background-color: #ffffff;
 }
 .loading_text{
-  font-size: 15px;
+  font-size: 14px;
   font-family: quicksand_bold !important;
   color:#2096f3;
 }
@@ -136,7 +136,12 @@
   height: 14px;
   float: right;
   margin-top: 4px;
-  margin-right: 3px;
+  /* margin-right: 3px; */
+}
+.sm_tik_img{
+  background-color: #d8eafc;
+  padding: 1px 5px 0px 3px;
+  height: 25px;
 }
 /* testing */
 @keyframes blink {
