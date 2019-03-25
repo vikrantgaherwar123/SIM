@@ -689,10 +689,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="hideTaxLabel === false || isTaxPresent === true">
+                    <td width="17%" *ngIf="showTaxOnItem === true">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="hideDiscountLabel ===false || isDiscountPresent === true">
+                    <td width="17%" *ngIf="showDiscountOnItem === true">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
