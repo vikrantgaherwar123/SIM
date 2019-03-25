@@ -36,7 +36,7 @@
                   <input type="radio" id="taxonBill" name="taxon"
                     (click)="activeSettings.taxFlagLevel=1" [checked]="activeSettings.taxFlagLevel==1"
                   >
-                  <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                  <label for="taxonBill" style="border-left: none;" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
                     TAX ON BILL
                   </label>
 
@@ -58,7 +58,7 @@
                   <input type="radio" id="discountonitem" name="discounton"
                     (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
                   >
-                  <label for="discountonitem"
+                  <label for="discountonitem" 
                     class="discountonitem fontsize13 border-right-none font-custom-bold" style="text-transform:uppercase"
                   >
                   {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
@@ -68,7 +68,7 @@
                     (click)="activeSettings.discountFlagLevel=0" [checked]="activeSettings.discountFlagLevel==0"
                   >
                   <label for="discountonBill"
-                    class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="text-transform:uppercase"
+                    class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="border-left: none;text-transform:uppercase"
                   >
                   {{settings.discount ? settings.discount : 'Discount'}} ON BILL
                   </label>

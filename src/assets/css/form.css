@@ -2,7 +2,7 @@
 .main-wrapper {
 	background-color: #ededed;
 	overflow-x: hidden;
-	min-height: 88vh;
+	min-height: 90vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
@@ -297,7 +297,7 @@ button.add-line-item-button {
 }
 .item .list-date {
 	text-align: center;
-	padding: 0px 5px 5px 8px;
+	padding: 6px 4px 5px 8px;
 }
 .lineItemDiv {
 	margin-top: 14px;

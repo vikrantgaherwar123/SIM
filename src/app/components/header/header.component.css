@@ -31,56 +31,40 @@
 }
 .menu_list{
   font-size: 14px;
-  padding: 11px 0px 0px 8px;
+  padding: 1px 0px 1px 2px;
   font-weight: bold;
 }
 .span_text{
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 800;
+  padding: 4px;
   font-family: quicksand_bold !important;
 }
 .nav_img{
-  height: 26px;
+  height: 22px;
   padding-right: 2px;
 }
-/*navigation underline*/
-/* .navHover:link {
-  text-decoration: none;
-}
 
-.navHover:visited {
-  text-decoration: none;
-}
-
-.navHover:hover {
-  text-decoration: underline;
-}
-
-.navHover:active {
-  text-decoration: underline;
-} */
-/* button:hover, button:focus, button:active, button:visited, .active { 
-    text-decoration: underline;
-    color:#000;
-} */
 .navbtn {
   border: none;
   outline: none;
-  /* background-color: #f1f1f1; */
-  background-color: #f9f9f9 !important;
+  background-color: #f9f9f9;
   cursor: pointer;
   font-size: 18px;
-  padding: 0px 8px 8px 0px;
+  padding: 18px 7px 13px 5px;
+}
+.menu_list :hover{
+  background-color: #d0e4f7;
+  /* border-radius: 20px; */
 }
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
   color: #0292f3;
-  /* border-bottom: 3px solid #0298fe; */
 }
 .active{
-  padding: 0px 8px 16px 0px;
+  /* padding: 0px 8px 16px 0px; */
   border-bottom: 3px solid #0298fe;
 }
 .menu_img{
@@ -89,6 +73,23 @@
   height: 50px;
   cursor: pointer;
 }
-.menu_img :hover{
-background-color: red;
+
+.hvr_img {
+  position: relative;
+  width: 50%;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #0292f3;
+}
+
+.hvr_img:hover .overlay {
+  opacity: 0.25;
 }
