@@ -496,54 +496,54 @@
                     </div>
                   </div>
 
-                <!-- Shipping -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
-                  <div class="col-4 discount-tax-label label_color">
-                    <div class="inline" style="text-align: left;vertical-align: bottom;">
-                      <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}(+) -->
-                      {{settings.shipping ? settings.shipping : 'Shipping'}} (+)
+                  <!-- Shipping -->
+                  <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
+                    <div class="col-4 discount-tax-label ">
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">
+                        {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
+                      </div>
                     </div>
-                  </div>
-
-                  <div class="col-8 pr-0">
-                    <form #form_shipping_input="ngForm" name="form_shipping_input">
-                      <div class="input-group pr-0">
-                        <input type="number" name="shipping_input" class="form-control" step="any" min="0.00" required
-                          onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                  
+                    <div class="col-8 pr-0">
+                      <form #form_shipping_input="ngForm" name="form_shipping_input">
+                        <div class="input-group pr-0">
+                          <input type="number" name="shipping_input" class="form-control" step="any" min="0.00" required
+                            onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
+                  
+                          <div class="input-group-addon pr-0 remove-button">
+                            <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
+                              <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <!-- Adjustment -->
-                <div class="row mr_right mr_0" *ngIf="activeEstimate.adjustment !== undefined">
-                  <div class="col-4 discount-tax-label pr-0 label_color">
-                    <div style="text-align: left;vertical-align: bottom;">
-                      <!-- {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-) -->
-                      Adjustment
+                      </form>
                     </div>
                   </div>
-
-                  <div class="col-8 pr-0">
-                    <form #adjst_input="ngForm" name="adjst_input">
-                      <div class="input-group pr-0">
-                        <input type="number" name="tax_input" class="form-control" step="any" required onfocus="this.select()"
-                          [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()" />
-                        <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
-                          </div>
-                        </div>
-                      </div>
-                    </form>
+                
+               <!-- testing -->
+              <div class="row mr_right mr_0" *ngIf="activeEstimate.adjustment !== undefined">
+                <div class="col-4 discount-tax-label pr-0 ">
+                  <div style="text-align: left;vertical-align: bottom;">
+                    {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
                   </div>
                 </div>
-
+              
+                <div class="col-8 pr-0">
+                  <form #form_tax_input="ngForm" name="form_tax_input">
+                    <div class="input-group pr-0">
+                      <input type="number" name="tax_input" class="form-control" step="any" required onfocus="this.select()"
+                        [(ngModel)]="activeEstimate.adjustment" (keyup)="calculateEstimate()" />
+              
+                      <!-- <div class="input-group-addon set-color">%</div>-->
+                      <div class="input-group-addon pr-0 remove-button">
+                        <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
+                          <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
                 <!-- Grand Total -->
                 <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px !important;">
                   <div class="col-6 text-left">
