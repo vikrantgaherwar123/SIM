@@ -1389,6 +1389,6 @@ export class AddEditEstComponent implements OnInit {
     this.estimateId = '';
     this.activeClient = <client>{}
     this.shippingAddress = null;
-    // this.router.navigate(['/invoice/add'])
+    this.router.navigate(['/estimate/add'])
   }
 }

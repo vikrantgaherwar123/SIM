@@ -1738,6 +1738,6 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = '';
     this.activeClient = {};
     this.shippingAddress = null;
-    // this.router.navigate(['/invoice/add'])
+    this.router.navigate(['/invoice/add'])
   }
 }
