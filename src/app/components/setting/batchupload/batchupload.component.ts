@@ -51,6 +51,7 @@ export class BatchuploadComponent implements OnInit {
   private newAttribute: any = {};
   addProductManually: boolean = false;
   addClientManually: boolean = false;
+  cleientSaved: boolean;
 
   incomingfile(event) {
     if (event.target.files[0]) {
@@ -92,6 +93,8 @@ export class BatchuploadComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
     //get client option selected initially
     this.showClient();
+
+    //faded background table
     this.backgroundTable();
     this.clientListLoading = true
     if (this.clientList) {
@@ -418,7 +421,8 @@ export class BatchuploadComponent implements OnInit {
                   // var OrgName = response.clientList[0].name.toLowerCase();
                   this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
                   this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-                  this.toasterService.pop('success', 'Clients Saved Successfully !!!');
+                  this.cleientSaved = true;
+                  // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -435,17 +439,18 @@ export class BatchuploadComponent implements OnInit {
         } else {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
-          }else if(!status){
+          }
+          // else if(!status){
+          //   this.toasterService.pop('failure', 'Client name should not be empty');
+          // }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.clientRecords.length-1)){
+          this.toasterService.pop('success', 'Clients added successfully !!!');
+          if(!status){
             this.toasterService.pop('failure', 'Client name should not be empty');
           }
-          else if(!status){
-            this.toasterService.pop('failure', 'Product Name Required');
-          }
         }
-        // //show only one toaster instead of multiple
-        // if(i == (this.clientRecords.length-1) && status){
-        //   this.toasterService.pop('success', 'CLients added successfully !!!');
-        // }
       }
     }
 
@@ -520,7 +525,7 @@ export class BatchuploadComponent implements OnInit {
                 if (index == -1) {  // add
                   this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
                   this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
-                  this.toasterService.pop('success', 'CLients added successfully !!!');
+                  // this.toasterService.pop('success', 'CLients added successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
@@ -538,20 +543,19 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Product name already exists.');
           }
-          else if(!status){
+          // else if(!status){
+          //   this.toasterService.pop('failure', 'Product Name Required');
+          // }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.productRecords.length-1)){
+          this.toasterService.pop('success', 'Products added successfully !!!');
+          if(!status){
             this.toasterService.pop('failure', 'Product Name Required');
           }
         }
-        // //show only one toaster instead of multiple
-        // if(i == (this.productRecords.length-1) && status){
-        //   this.showProductSuccessAdd()
-        // }
       }
     }
-  }
-
-  showClientSuccessAdd(){
-    this.toasterService.pop('success', 'CLients added successfully !!!');
   }
 
   showProductSuccessAdd(){

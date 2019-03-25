@@ -209,6 +209,10 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+    //get other invoices which are not deleted 
+    this.store.select('invoice').subscribe(invoices => {
+      this.invoiceList = invoices
+    })
     this.fetchInvoices();
 }
   //restrict user to write more than 100 value in pecrentage of discount   
@@ -1404,7 +1408,7 @@ export class AddEditComponent implements OnInit {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             if (result.invoiceList[0].deleted_flag == 1) {
               self.store.dispatch(new invoiceActions.remove(index))
-            } else {
+            } else if(this.activeInvoice.deleted_flag !== 1 ) {
               self.store.dispatch(new invoiceActions.edit({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
             }
           })
@@ -1413,19 +1417,18 @@ export class AddEditComponent implements OnInit {
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
-        if(this.edit) {
+        if(this.edit && this.activeInvoice.deleted_flag !== 1) {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
           // this.router.navigate(['/invoice/add'])
         }
-         else {
+         else if(this.activeInvoice.deleted_flag !== 1) {
           //set recently added invoice list in store
           this.fetchInvoices();
           this.toasterService.pop('success', 'Invoice saved successfully');
@@ -1456,11 +1459,8 @@ export class AddEditComponent implements OnInit {
   
   deleteInvoice() {
     this.activeInvoice.deleted_flag = 1
-    // localStorage.setItem('deleteinvoiceId', "1" )
-    // this.edit = false;
     this.save(true)
     this.toasterService.pop('success', 'Invoice Deleted successfully');
-    
     this.router.navigate(['/invoice/add'])
   }
 
@@ -1594,26 +1594,29 @@ export class AddEditComponent implements OnInit {
 
   fetchInvoices() {
     // Fetch invoices with given query
-    
-    var start = new Date();
-    start.setHours(0, 0, 0, 0);
-    var  query = {
+
+    if (this.invoiceList.length < 1) {
+
+      var start = new Date();
+      start.setHours(0, 0, 0, 0);
+      var query = {
         clientIdList: null,
         startTime: start.getTime(),
         endTime: new Date().getTime()
       }
 
-    this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
-      if (response.status === 200) {
-        this.invListLoader = false
-        this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('invoice').subscribe(invoices => {
-          this.invoiceList = invoices
-        })
-      }
-      
-    },err => this.openErrorModal())
+      this.invListLoader = true
+      this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
+        if (response.status === 200) {
+          this.invListLoader = false
+          this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+          this.store.select('invoice').subscribe(invoices => {
+            this.invoiceList = invoices
+          })
+        }
+
+      }, err => this.openErrorModal())
+    }
   }
 
   setActiveInv(invId: string = '') {
@@ -1738,6 +1741,6 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = '';
     this.activeClient = {};
     this.shippingAddress = null;
-    // this.router.navigate(['/invoice/add'])
+    this.router.navigate(['/invoice/add'])
   }
 }

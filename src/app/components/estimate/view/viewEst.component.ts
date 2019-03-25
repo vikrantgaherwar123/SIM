@@ -136,6 +136,12 @@ export class ViewEstComponent implements OnInit {
         this.openSearchClientModal()
       }
     })
+
+    // Set Active invoice whenever invoice list changes
+    this.store.select('estimate').subscribe(estimates => {
+      this.estimateList = estimates
+      this.setActiveEst(this.estimateId);
+    })
   
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {

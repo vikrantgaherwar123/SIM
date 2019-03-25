@@ -171,6 +171,10 @@ export class AddEditEstComponent implements OnInit {
         this.addInit()
       }
     })
+    //get other estimates which are not deleted 
+    this.store.select('estimate').subscribe(estimates => {
+      this.estimateList = estimates
+    })
     
     this.fetchEstimates();
   }
@@ -1099,11 +1103,10 @@ export class AddEditEstComponent implements OnInit {
         }
 
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
-        if (this.edit) {
+        if (this.edit && this.activeEstimate.deleted_flag !== 1) {
            this.toasterService.pop('success', 'Estimate updated successfully');
-          // this.router.navigate(['/estimate/view'])
           this.router.navigate([`estimate/view/${this.estimateId}`])
-        } else {
+        } else if(this.activeEstimate.deleted_flag !== 1) {
           //add recently added esimate in store
           this.fetchEstimates();
           this.toasterService.pop('success', 'Estimate saved successfully');
@@ -1132,11 +1135,9 @@ export class AddEditEstComponent implements OnInit {
 
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
-    // localStorage.setItem('deleteEstimateId', "1" )
-    // this.estimateDelete = false;
     this.save(true)
     this.toasterService.pop('success', 'estimate Deleted successfully');
-    // this.closeDeleteEstimateModal();
+    this.router.navigate(['/estimate/add']);
   }
 
 
@@ -1278,6 +1279,8 @@ export class AddEditEstComponent implements OnInit {
 
   fetchEstimates() {
     // Fetch estimates with given query
+
+    if (this.estimateList.length < 1) {
       var start = new Date();
       start.setHours(0, 0, 0, 0);
       var query = {
@@ -1286,17 +1289,18 @@ export class AddEditEstComponent implements OnInit {
         endTime: new Date().getTime()
       }
 
-    this.estListLoader = true
-    this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-      if (response.status === 200) {
-        this.estListLoader = false
-        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-        // Set Active invoice whenever invoice list changes
-        this.store.select('estimate').subscribe(estimates => {
-          this.estimateList = estimates
-        })
-      }
-    },err => this.openErrorModal());
+      this.estListLoader = true
+      this.estimateService.fetchByQuery(query).subscribe((response: any) => {
+        if (response.status === 200) {
+          this.estListLoader = false
+          this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+          // Set Active invoice whenever invoice list changes
+          this.store.select('estimate').subscribe(estimates => {
+            this.estimateList = estimates
+          })
+        }
+      }, err => this.openErrorModal());
+    }
   }
 
   setActiveEst(estId: string = '') {
@@ -1319,6 +1323,28 @@ export class AddEditEstComponent implements OnInit {
     }
 
     if (this.activeEst) {
+      for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
+      if(!this.activeEst.alstQuotProduct[i].productName){
+        this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+      }
+      if(!this.activeEst.alstQuotProduct[i].qty){
+        this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+      }
+      if(!this.activeEst.alstQuotProduct[i].taxRate){
+        this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+      }
+      if(!this.activeEst.alstQuotProduct[i].discountRate){
+        this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+      }
+      if(!this.activeEst.alstQuotProduct[i].price){
+        this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+      }
+    }
+    for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
+      if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
+        this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
+      }
+    }
       var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
       if (client) {
         this.activeClient = client
@@ -1389,6 +1415,6 @@ export class AddEditEstComponent implements OnInit {
     this.estimateId = '';
     this.activeClient = <client>{}
     this.shippingAddress = null;
-    // this.router.navigate(['/invoice/add'])
+    this.router.navigate(['/estimate/add'])
   }
 }

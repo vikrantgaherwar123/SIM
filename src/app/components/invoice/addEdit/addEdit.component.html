@@ -1189,7 +1189,7 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
-        <div class="row" style="padding-top: 20px;padding-bottom: 4px;">
+        <div class="row" style="padding-top: 15px;padding-bottom: 4px;">
           <div class="col-1"></div>
           <button type="button" class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
@@ -1202,7 +1202,7 @@
           <div class="col-1"></div>
           <button *ngIf="viewTodaysInvoice == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
             class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
-            (click)="addNewInvoice();router.navigate(['/invoice/add'])">Add New Invoice
+            (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
           <div class="col-1"></div>
@@ -1223,10 +1223,10 @@
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
-              <div class="col-2 list-date font-custom-bold fontsize13 hr_line">
-                {{ invoice.created_date | date: 'dd MMM' }}
+              <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
+                <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                <span style="color: #8c9299;font-size: 10px;">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
-
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">

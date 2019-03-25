@@ -225,13 +225,11 @@ input[type=text] {
   font-family: quicksand_bold !important;
   padding: 3px 2px 2px 2px !important;
 }
-.image-upload > input
-{
-    display: none;
+.image-upload > input{
+  display: none;
 }
 
-.image-upload img
-{
+.image-upload img{
   cursor: pointer;
   border: dashed 2px #52a6fe;
   border-radius: 40px;
