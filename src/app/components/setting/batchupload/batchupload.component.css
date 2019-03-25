@@ -232,8 +232,8 @@ input[type=text] {
 
 .image-upload img
 {
-  width: 80px;
   cursor: pointer;
-  /* padding: 10px; */
+  border: dashed 2px #52a6fe;
+  border-radius: 40px;
   margin: 10px 2px 36px 112px;
 }
