@@ -1104,7 +1104,7 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit && this.activeEstimate.deleted_flag !== 1) {
            this.toasterService.pop('success', 'Estimate updated successfully');
-          this.router.navigate([`estimate/view/${this.estimateId}`])
+          // this.router.navigate([`estimate/view/${this.estimateId}`])
         } else if(this.activeEstimate.deleted_flag !== 1) {
           //add recently added esimate in store
           this.fetchEstimates();
