@@ -1477,7 +1477,7 @@ export class AddEditComponent implements OnInit {
     this.addItem.reset('')
     this.dueDate.reset()
     this.activeInvoice = <invoice>{}
-    // this.activeClient = <client>{}
+    this.activeClient = <client>{}
 
     // Invoice Number
     if (!isNaN(parseInt(this.settings.invNo))) {
@@ -1731,5 +1731,13 @@ export class AddEditComponent implements OnInit {
 
     var invoiceNumber = this.activeInv.invoice_number.replace('/', '')
     return 'INVPDF_' + invoiceNumber + '_' + day + month + year + '_' + time + ampm + '.pdf';
+  }
+
+  addNewInvoice(){
+    this.viewTodaysInvoice = false;
+    this.invoiceId = '';
+    this.activeClient = {};
+    this.shippingAddress = null;
+    // this.router.navigate(['/invoice/add'])
   }
 }

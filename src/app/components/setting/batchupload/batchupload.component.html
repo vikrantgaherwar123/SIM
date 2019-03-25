@@ -362,8 +362,10 @@
     <div class="col-2"></div>
     <div class="col-3 image-upload">
         <label for="file-input" class="file-upload dropzone-container dropzone-drop-area">
-            <img src="http://goo.gl/pB9rpQ"/>
-            <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
+          <div>
+            <img src="assets/images/upload_o.png"/>
+          </div>
+          <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
             placeholder="Upload file" accept=".xlsx, .xls, .csv"
             required style="display:none"/>
         </label>
@@ -388,7 +390,7 @@
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
-        <button class="save btn save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manulaly</button>
+        <button class="save btn save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manually</button>
     </div>
     <div class="col-1"></div>
   </div>

@@ -143,7 +143,7 @@
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
-          <button type="submit" id="login-btn" name="login-btn"
+          <button *ngIf="loginFailed" type="submit" id="login-btn" name="login-btn" (click)="fetchBasicData()"
             style="box-shadow: none;background-color: #fe664e !important;">
             <span>Retry</span>
           </button>

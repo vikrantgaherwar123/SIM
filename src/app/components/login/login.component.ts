@@ -19,7 +19,7 @@ import { Title } from '@angular/platform-browser';
 
 import { AuthService as socialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angular-6-social-login'
 import { retryWhen, flatMap } from 'rxjs/operators';
-import { interval, throwError, of } from 'rxjs';
+import { interval, throwError, of, Observable } from 'rxjs';
 
 interface response {
   status: number
@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit {
   productLoading: boolean;
   termsLoading: boolean;
   settingsLoading: boolean;
+  loginFailed: boolean;
 
   constructor(
     private authService: AuthService,
@@ -133,7 +134,7 @@ export class LoginComponent implements OnInit {
           // this.openErrorModal()
         }
       }
-    })
+    },err => this.openErrorModal())
   }
 
   socialSignIn(socialPlatform: string) {
@@ -156,7 +157,7 @@ export class LoginComponent implements OnInit {
           // Validate token
           this.validateToken(access, ids, response)
         }
-      })
+      },err => this.openErrorModal())
     })
   }
 
@@ -196,7 +197,7 @@ export class LoginComponent implements OnInit {
         this.loggingIn = false
         this.router.navigate(['/login'])
       }
-    })
+    },err => this.openErrorModal())
   }
 
   forgetPassword() {
@@ -207,11 +208,12 @@ export class LoginComponent implements OnInit {
       } else {
         this.errorMessage = "This email address is not registered with us."
       }
-    })
+    },err => this.openErrorModal())
   }
 
   // error modal
   openErrorModal() {
+    this.loginFailed = true;
     $('#errormessage').modal('show')
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
@@ -279,6 +281,15 @@ export class LoginComponent implements OnInit {
 
       $('#userLogout span').html(this.authenticated.registered_email)
     }
+  }
+
+  // Error Handler
+  private handleError<T> (operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+ 
+      console.error(error); // log to console instead
+      return of(result as T);
+    };
   }
 
   navigateToAdd() {
