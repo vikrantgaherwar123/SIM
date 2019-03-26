@@ -79,6 +79,8 @@
         <div *ngIf="loggingIn && loggedInSuccess  && !loginLoader && !loggedInFailed && !errorMessage">
           <div class="clearfix">&nbsp;</div>
           <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
+          <div class="clearfix">&nbsp;</div>
           <div
             style="text-align: center;font-size: 18px !important;font-family: quicksand_bold !important; color: #000000;border: none;background-color: #ffffff">Logged
             in successfully ! </div>
@@ -87,53 +89,53 @@
 
           <div *ngIf="loggedInSuccess" style="line-height: 33px;text-align: left;padding-left: 10px;font-size: 25px;">
             <div class="bottom_mrg row">
-              <span class="loading_text col-10">Loading Clients
+              <span class="loading_text col-10" [ngClass]="{txt_orange: clientsCompleted == false}">Loading Clients
                 <span *ngIf="clientsLoading" [ngClass]="{loading: clientsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <span class="col-1 sm_tik_img">
+              <span class="col-1 sm_tik_img_blue" [ngClass]="{sm_tik_img_orange: clientsCompleted == false}">
               <img *ngIf="clientsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
               <img *ngIf="clientsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
               </span>
             </div>
             <div class="bottom_mrg row">
-              <span class="loading_text col-10">Loading Products
+              <span class="loading_text col-10" [ngClass]="{txt_orange: productsCompleted == false}">Loading Products
                 <span *ngIf="productLoading" [ngClass]="{loading: productLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <span class="col-1 sm_tik_img">
+              <span class="col-1 sm_tik_img_blue" [ngClass]="{sm_tik_img_orange: productsCompleted == false}">
                 <img *ngIf="productsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
                 <img *ngIf="productsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
               </span>
             </div>
             <div class="bottom_mrg row">
-              <span class="loading_text col-10">Loading Terms & Conditions
+              <span class="loading_text col-10" [ngClass]="{txt_orange: termsCompleted == false}">Loading Terms & Conditions
                 <span *ngIf="termsLoading" [ngClass]="{loading: termsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <span class="col-1 sm_tik_img">
+              <span class="col-1 sm_tik_img_blue" [ngClass]="{sm_tik_img_orange: termsCompleted == false}">
                 <img *ngIf="termsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
                 <img *ngIf="termsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
               </span>
             </div>
             <div class="bottom_mrg row">
-              <span class="loading_text col-10">Loading Settings
+              <span class="loading_text col-10" [ngClass]="{txt_orange: settingsCompleted == false}">Loading Settings
                 <span *ngIf="settingsLoading" [ngClass]="{loading: settingsLoading}">
                   <span>.</span>
                   <span>.</span>
                   <span>.</span>
                 </span>
               </span>
-              <span class="col-1 sm_tik_img">
+              <span class="col-1 sm_tik_img_blue" [ngClass]="{sm_tik_img_orange: settingsCompleted == false}">
                 <img *ngIf="settingsCompleted" src="assets/images/login/checked.png" class="loading_tick_img">
                 <img *ngIf="settingsCompleted == false" src="assets/images/login/cross.png" class="loading_tick_img">
               </span>

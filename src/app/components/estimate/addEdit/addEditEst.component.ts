@@ -1378,7 +1378,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   goEdit(estId) {
-    this.viewTodaysEstimate = false;
+    this.viewTodaysEstimate = true;
     this.router.navigate([`estimate/edit/${estId}`])
   }
 

@@ -45,6 +45,18 @@
   height: 22px;
   padding-right: 2px;
 }
+.dropdown-toggle::after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: .255em;
+  vertical-align: .255em;
+  content: none !important;
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
+}
 
 .navbtn {
   border: none;
@@ -92,4 +104,49 @@
 
 .hvr_img:hover .overlay {
   opacity: 0.25;
+}
+.dropdown-menu {
+  z-index: 1000;
+  float: left;
+  min-width: 10rem;
+  padding: .0rem 0 !important;
+  margin: 1.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+}
+.mat-option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  line-height: 48px;
+  height: 46px !important;
+  padding: 0 16px;
+  text-align: left;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+  outline: 0;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.dropdown-menu>li>a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400 !important;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+  font-family: quicksand_bold !important;
+  font-size: 14px !important;
 }

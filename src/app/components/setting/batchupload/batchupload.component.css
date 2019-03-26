@@ -95,10 +95,11 @@ input.ng-dirty.ng-invalid {
 
 .dropzone-drop-area {
   border: dashed 2px #c4c4c4;
-  width: 250px;
-  min-height: 220px;
+  width: 500px;
+  min-height: 400px;
   box-sizing: border-box;
-  /* padding: 6px; */
+  background-color: white;
+  opacity: 0.9;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -106,7 +107,7 @@ input.ng-dirty.ng-invalid {
   flex-wrap: wrap;
   cursor: pointer;
   position: relative;
-  margin-top: 105px;
+  margin-top: 58px;
   margin-bottom: 10px;
 }
 .no_btn{
@@ -240,4 +241,15 @@ input[type=text] {
   margin: 0 auto;
   padding: 14px;
   border-radius: 40px;
+}
+.add_manually{
+  font-size: 18px !important;
+  padding: 6px 40px 6px 40px !important;
+  height: 48px !important;
+}
+.or{
+  padding: 165px;
+  text-align: center;
+  font-size: 26px;
+  font-family: quicksand_bold !important;
 }

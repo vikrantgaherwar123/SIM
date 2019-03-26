@@ -1596,9 +1596,7 @@ export class AddEditComponent implements OnInit {
 
   fetchInvoices() {
     // Fetch invoices with given query
-
     if (this.invoiceList.length < 1) {
-
       var start = new Date();
       start.setHours(0, 0, 0, 0);
       var query = {

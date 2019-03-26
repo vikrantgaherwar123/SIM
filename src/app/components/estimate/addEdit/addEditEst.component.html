@@ -4,7 +4,7 @@
       <div id="msgInv" *ngIf="viewTodaysEstimate == false" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
         <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
           (ngSubmit)="save(estimateGeneratorAdd.valid)">
-          <div class="shadow back p-5">
+          <div class="shadow back p-5" style="border-radius: 2px;">
             <div class="vtop text-right">
               <span class="c-name" type="text" id="titleAdd" name="title">
                 {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
@@ -159,7 +159,7 @@
                           <div class="text-left product-color" style="margin-left: 10px;">
                             {{item.product_name}}
                           </div>
-                          <pre class="text-left selected-items" style="font-size: 11px; color: #a4a4a4;margin-left: 10px;">
+                          <pre class="text-left selected-items mCustomScrollbar style-3" style="font-size: 11px; color: #a4a4a4;margin-left: 10px;">
                             {{item.description}}
                           </pre>
                         </div>
@@ -218,11 +218,11 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="form-control" elastic style="margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
                              [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
                             onfocus="this.select()"></textarea>
                           <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;"
+                                style="margin-top: 3px;height: 69px !important;overflow-y: auto !important;"
                                 placeholder="Description" onfocus="this.select()"
                           ></textarea>
                         </div>
@@ -587,7 +587,7 @@
 
       <!--Toays Estimate Starts-->
       <div *ngIf="viewTodaysEstimate == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
+        <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back" style="border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-md-12">
@@ -714,7 +714,7 @@
                       <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
                         {{item.productName}}
                       </div>
-                      <div class="text-left">
+                      <div class="text-left mCustomScrollbar style-3" >
                         {{item.description}}
                       </div>
                     </td>
@@ -884,10 +884,9 @@
           Search For Estimates
           <i class="fa fa-search" style="padding: 12px 0px;"></i>
         </button> -->
-        <div class="row" style="padding-top: 16px;padding-bottom: 4px;">
-            <div class="col-1"></div>
+        <div class="row" style="padding-top: 16px;padding-bottom: 4px;margin:0 auto;">
             <button type="button" 
-              class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+              class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
               (click)="router.navigate(['/estimate/view'])">Search For Estimates
               <i class="fa fa-search" style="padding: 12px 0px;"></i>
             </button>
@@ -896,14 +895,13 @@
           </div>
 
           <div class="row">
-              <div class="col-1"></div>
-              <button *ngIf="viewTodaysEstimate == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-                class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
-                (click)="addNewEstimate()">Add New Estimate
-                <i class="fa fa-plus" style="padding: 12px 0px"></i>
-              </button>
-              <div class="col-1"></div>
-            </div>
+            <button *ngIf="viewTodaysEstimate == true" type="button" style="margin:0 auto;margin-top: 5px;margin-bottom: 4px;"
+              class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn" (click)="addNewEstimate()">Add New
+              Estimate
+              <i class="fa fa-plus" style="padding: 12px 0px"></i>
+            </button>
+            <div class="col-1"></div>
+          </div>
 
         <!-- recently added Estimate -->
         
@@ -916,7 +914,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
-            *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+            *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ estimate.createDate  | date: 'dd' }}</span><br />
@@ -1043,7 +1041,7 @@
           </div>
 
           <div class="col-12">
-            <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
+            <div class="form-group add-client-input-width" style="padding-right: 12px;overflow-y: auto;" [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1" class="form-control"
                 placeholder="Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
             </div>
@@ -1052,7 +1050,7 @@
           <div class="col-12">
             <div class="form-group add-client-input-width" style="padding-right: 12px;" [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress" class="form-control"
-                placeholder="{{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="max-height: 69px; height: 69px;" onfocus="this.select()"></textarea>
+                placeholder="{{settings.shipping ? settings.shipping : 'Shipping'}} Address" style="max-height: 69px; height: 69px;overflow-y: auto;" onfocus="this.select()"></textarea>
             </div>
           </div>
 
@@ -1110,8 +1108,8 @@
 
             <div class="col-12">
               Description:
-              <textarea [(ngModel)]="activeItem.description" name="description" class="form-control" placeholder="Description"
-                select-on-click style="height: 69px !important;" onfocus="this.select()"></textarea>
+              <textarea [(ngModel)]="activeItem.description" name="description" class="form-control mCustomScrollbar style-3" placeholder="Description"
+                select-on-click style="height: 69px !important;overflow-y: auto;" onfocus="this.select()"></textarea>
             </div>
 
             <div class="col-12">
@@ -1180,7 +1178,7 @@
             <div class="col-12">
               <div class="form-group">
                 <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required elastic
+                  placeholder="Add term & Condition" style="height: 69px !important;overflow-y: auto;" onfocus="this.select()" required elastic
                 ></textarea>
               </div>
             </div>

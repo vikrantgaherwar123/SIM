@@ -792,6 +792,32 @@ select{
   border-right: 1px solid white;
 }
 
+/* image hover border */
+.img_hover { 
+  border: 0px solid white; 
+} 
+.img_hover:hover { 
+  background-color: #d0e4f7;
+} 
+
+.swap-on-hover img {
+  position: absolute;
+  border: 1px solid #0298fe; 
+  top:0;
+  left:0;
+	overflow: hidden;
+	/* Sets the width and height for the images*/
+	width: 400px;
+	height: 400px;
+}
+.swap-on-hover .swap-on-hover__front-image {
+  z-index: 9999;
+  transition: opacity .1s linear;
+  cursor: pointer;
+}
+.swap-on-hover:hover > .swap-on-hover__front-image{
+  opacity: 0;
+}
 @media (min-width: 1440px)
 {
 .client_arrow {

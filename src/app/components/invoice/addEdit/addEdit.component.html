@@ -5,7 +5,7 @@
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator" class="create-invoice"
           (ngSubmit)="save(invoiceGeneratorAdd.valid)">
-          <div class="back p-4">
+          <div class="back p-4 shadow" style="border-radius: 2px;">
             <div class="col-12">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
@@ -52,11 +52,10 @@
                             (optionSelected)="selectedClientChange($event)" id="style-3">
 
                             <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
+                              class="btn btn-primary add_client_btn" style="position: fixed;width: auto;">
+                              <i class="fa fa-plus"></i>Add New Client
                             </button>
-
+                            
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
                               [value]="client">
@@ -296,7 +295,7 @@
                         </td>
                         <td [class.no-border-last]="last">
                           <div class="text-center">
-                            {{item.quantity | number:'2.'}}
+                            {{item.quantity | number:'1.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
@@ -323,14 +322,14 @@
                           <div class="text-center">
                             <a class="closeicon show" title="Edit Row"
                               (click)="editInvoiceItem(index);disabledDescription = true">
-                              <img src="assets/images/edit_blue.png" class="del" style="height:20px;">
+                              <img src="assets/images/edit_blue.png" class="del img_hover" style="height:20px;">
                             </a>
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
                           <div class="text-center">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/delete_dark.png" class="del" class="hg_20"
+                              <img src="assets/images/delete_dark.png" class="hg_20 img_hover"
                                 style="margin-bottom: 7px;">
                             </a>
                           </div>
@@ -339,7 +338,7 @@
 
                       <!-- Select Item for invoice input -->
                       <tr *ngIf="disableProductText === true" class="row-item"
-                        style="background-color: white !important;">
+                        style="background-color: white !important;box-shadow: 0 5px 3px -3px #eaf7ff, 0 8px 10px 1px #eaf7ff, 0 7px 2px 2px #eaf7ff !important">
                         <td [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="text" name="product-name" class="form-control billing-input" tabindex="1"
@@ -359,11 +358,11 @@
                               <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
                                 name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;" [(ngModel)]="activeItem.description"
+                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
                                 placeholder="Description" onfocus="this.select()"></textarea>
                               <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;" placeholder="Description"
+                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" placeholder="Description"
                                 onfocus="this.select()"></textarea>
                             </div>
                           </div>
@@ -433,7 +432,7 @@
                         </td>
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
-                            alt="logo" style="height: 24px;margin-top: 2px;">
+                            alt="logo" style="height: 24px;margin-top: 2px;" class="img_hover">
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
@@ -493,7 +492,7 @@
                         {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                       </span>
                       <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
-                        <img src="assets/images/add16.png" alt="logo"
+                        <img src="assets/images/add16.png" alt="logo" class="img_hover"
                           style="vertical-align: initial;height:10px; margin-right: 3px;" />
                         Add Terms
                       </a>
@@ -508,8 +507,14 @@
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)"
                             style="cursor:pointer;">
                             <a class="closeicon show float-right">
-                              <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color"
-                                alt="" class="hg_16">
+                              <!-- <img src="assets/images/cross.png" Title="Delete Term" class="img_hover hg_16 del set-color"
+                                alt=""> -->
+                                <figure class="swap-on-hover">
+                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="img_hover hg_16 del set-color swap-on-hover__front-image"
+                                    alt="">
+                                    <img src="assets/images/cross_blue.png" Title="Delete Term" class="hg_16 del set-color swap-on-hover__back-image"
+                                    alt="">
+                                 </figure>
                             </a>
                           </div>
                         </div>
@@ -593,7 +598,7 @@
                                                             balance=activeInvoice.gross_amount">
                                 <!--activeInvoice.tax_amount-->
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
-                                  class="hg_20 cross_label_img">
+                                  class="img_hover hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -625,7 +630,7 @@
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
                                   <!--activeInvoice.tax_amount-->
-                                  <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                                  <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="img_hover hg_20 cross_label_img">
                                 </div>
                               </div>
                             </div>
@@ -657,7 +662,7 @@
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
                                 (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -685,7 +690,7 @@
                               <div class="addon selector padr0"
                                 (click)="activeInvoice.shipping_charges = undefined;calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
-                                  class="hg_20 cross_label_img">
+                                  class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>
                           </div>
@@ -714,7 +719,7 @@
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
                                 (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>
                           </div>
@@ -762,7 +767,7 @@
                           <span
                             class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                           <img src="assets/images/grey_cross.png" (click)="deleteInstallment(in)" Title="Delete" alt=""
-                            class="hg_20 cross_label_img">
+                            class="hg_20 cross_label_img img_hover">
                         </div>
                       </div>
 
@@ -809,8 +814,8 @@
       </div>
       <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back"
-          style="margin-top: 12px;">
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
+          style="margin-top: 12px;border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
@@ -1187,19 +1192,17 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
-        <div class="row" style="padding-top: 15px;padding-bottom: 4px;">
-          <div class="col-1"></div>
-          <button type="button" class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+        <div class="row" style="padding-top: 15px;padding-bottom: 4px;margin:0 auto;">
+          <button type="button" class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <i class="fa fa-search" style="padding: 12px 0px;"></i>
           </button>
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
-        <div class="row">
-          <div class="col-1"></div>
+        <div class="row" style="margin:0 auto;">
           <button *ngIf="viewTodaysInvoice == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+            class="col-11 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
@@ -1216,10 +1219,10 @@
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
+          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
@@ -1228,7 +1231,8 @@
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                    <h5 class="fontsize13" style="font-family: quicksand_bold !important;
+                    font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
                   <div class="col-5" style="font-size: 9px;">
                     {{ invoice.invoice_number }}
@@ -1266,7 +1270,7 @@
           Add New Client
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
       <div class="modal-body">
@@ -1317,7 +1321,7 @@
             <div class="form-group add-client-input-width"
               [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
-                class="form-control mCustomScrollbar style-3" placeholder="Address" style="height: 69px !important;"
+                class="form-control mCustomScrollbar style-3" placeholder="Address" style="overflow-y: auto !important;height: 69px !important;"
                 onfocus="this.select()"></textarea>
             </div>
           </div>
@@ -1327,7 +1331,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress"
                 class="form-control mCustomScrollbar style-3" placeholder=" Shipping Address"
-                style="height: 69px !important;" onfocus="this.select()"></textarea>
+                style="height: 69px !important;overflow-y: auto !important" onfocus="this.select()"></textarea>
             </div>
           </div>
 
@@ -1371,7 +1375,7 @@
           Edit Item
         </h4>
         <button type="button" class="close" aria-label="Close" (click)="closeItemModel()">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
       <div class="modal-body">
@@ -1388,7 +1392,7 @@
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description"
                 class="form-control mCustomScrollbar style-3" placeholder="Description" onfocus="this.select()"
-                select-on-click style="height: 69px !important;"></textarea>
+                select-on-click style="height: 69px !important;overflow-y: auto !important"></textarea>
             </div>
 
             <div class="col-12">
@@ -1451,7 +1455,7 @@
           Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
 
@@ -1540,7 +1544,7 @@
           Add Payment
         </h4>
         <a class="pull-right" (click)="closeAddPaymentModal()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </a>
       </div>
       <div class="modal-body">
@@ -1655,7 +1659,7 @@
   <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
     <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
       <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo" class="img_hover">
       </div>
       <div class="modal-body">
         <h3 class="title">Connection Lost !</h3>

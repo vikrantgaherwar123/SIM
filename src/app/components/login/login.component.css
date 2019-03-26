@@ -132,14 +132,22 @@
   font-family: quicksand_bold !important;
   color:#2096f3;
 }
+.txt_orange{
+  color: #fe664e;
+}
 .loading_tick_img{
   height: 14px;
   float: right;
   margin-top: 4px;
   /* margin-right: 3px; */
 }
-.sm_tik_img{
+.sm_tik_img_blue{
   background-color: #d8eafc;
+  padding: 1px 5px 0px 3px;
+  height: 25px;
+}
+.sm_tik_img_orange{
+  background-color: #feebe8;
   padding: 1px 5px 0px 3px;
   height: 25px;
 }

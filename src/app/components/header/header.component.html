@@ -42,9 +42,24 @@
         Welcome, <span style="font-family: quicksand_bold;">{{email}}</span>
       </div> -->
       <div class="col-2 col-sm-1 offset-10 offset-sm-0 pl-0 text-right float-right">
-        <a (click)="logout()" Title="Logout">
-          <img src="assets/images/logout.png" alt="icon" style="width: auto; height: 15px">
-        </a>
+        
+        <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+         <a Title="Logout">
+            <img src="assets/images/user-symbol.png" alt="icon" style="width: auto; height: 34px">
+          </a>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-right" style="left: 90px !important;">
+          <li class="mat-option ng-star-inserted">
+            <a>Profile</a>
+          </li>
+          <li class="mat-option ng-star-inserted">
+            <a>Change Password</a>
+          </li>
+          <li class="mat-option ng-star-inserted">
+            <a (click)="logout()">Logout</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
