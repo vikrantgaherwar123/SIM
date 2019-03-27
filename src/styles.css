@@ -591,7 +591,7 @@ option {
   padding-left: 3px;
 }
 .form-control[readonly] {
-  background-color: #eaeaea !important;
+  /* background-color: #eaeaea !important; */
   opacity: 1;
 }
 /* checkbox */
@@ -812,6 +812,10 @@ select{
   z-index: 9999;
   transition: opacity 0s linear;
   cursor: pointer;
+}
+.verticle_line{
+  border-left: 4px solid #0295ff;
+  border-radius: 36px;
 }
 
 .swap-on-hover:hover > .swap-on-hover__front-image{

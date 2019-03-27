@@ -65,6 +65,7 @@
   cursor: pointer;
   font-size: 18px;
   padding: 18px 7px 13px 5px;
+  margin-left: 10px;
 }
 .menu_list :hover{
   background-color: #d0e4f7;
@@ -151,4 +152,18 @@
   white-space: nowrap;
   font-family: quicksand_bold !important;
   font-size: 14px !important;
+}
+.menu_bar{
+  background-color: #0299ff;
+  height: 56px;
+  padding: 18px;
+  margin-left: -15px;
+  width: 62px;
+  font-size: 20px;
+}
+.menu_icon{
+  color: white;
+  -webkit-text-stroke: 2.2px #0299ff;
+  font-size: 32px;
+  line-height: 2px;
 }

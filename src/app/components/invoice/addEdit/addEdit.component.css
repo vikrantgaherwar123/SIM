@@ -29,7 +29,7 @@ select {
 }
 .add, .del {
   height: 18px;
-  margin-top: -6px;
+  margin-top: -4px;
 }
 .del {
   background-position: -404px -214px;
@@ -169,6 +169,10 @@ select {
 .dropdown-toggle::after{
   font-size: 24px !important;
   margin-top: 8px !important;
+}
+.form-control:disabled, .form-control[readonly] {
+  background-color: white;
+  opacity: 1;
 }
 @media (min-width: 1280px)
 {

@@ -37,3 +37,8 @@
 .box_red{
   border-color:red;
 }
+.mCustomScrollbar{
+  max-height: 452px !important;
+  overflow-y: scroll;
+  height: auto;
+}
