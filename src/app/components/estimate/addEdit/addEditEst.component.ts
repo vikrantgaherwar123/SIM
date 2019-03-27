@@ -116,6 +116,9 @@ export class AddEditEstComponent implements OnInit {
   discountFlag: any;
   viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
+  isDeleted: boolean = false;
+  noProductSelected: boolean;
+  noClientSelected: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -170,10 +173,7 @@ export class AddEditEstComponent implements OnInit {
         this.addInit()
       }
     })
-    //get other estimates which are not deleted 
-    this.store.select('estimate').subscribe(estimates => {
-      this.estimateList = estimates
-    })
+   
     
     this.fetchEstimates();
   }
@@ -657,6 +657,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   selectedClientChange(client) {
+    this.noClientSelected = false;
     this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
     var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
@@ -795,7 +796,7 @@ export class AddEditEstComponent implements OnInit {
   addEditEstimateItem(uid = null) {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
-
+    
     if(this.activeItem.product_name ===null ){
       this.ifProductEmpty = true;
       this.toasterService.pop('failure', 'Product Name can not be empty');
@@ -1001,6 +1002,7 @@ export class AddEditEstComponent implements OnInit {
 
   // Estimate Functions
   fillItemDetails(prod = null) {
+    this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     this.activeItem = {
@@ -1018,13 +1020,15 @@ export class AddEditEstComponent implements OnInit {
 
   save(status) {
     if (!this.activeEstimate.unique_key_fk_client) {
+      this.noClientSelected = true;
       this.toasterService.pop('failure', 'Client not selected');
       $('#bill-to-input').select()
       return false
     }
 
     if (this.activeEstimate.listItems.length == 0 || !status) {
-      alert('You haven\'t added item')
+      this.noProductSelected = true;  // show red box
+      this.toasterService.pop('failure','You haven\'t added item')
       return false
     }
 
@@ -1090,8 +1094,10 @@ export class AddEditEstComponent implements OnInit {
         if (this.edit) {
           this.store.select('estimate').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
-            if (response.quotationList[0].deleted_flag == 1) {
+            if (response.quotationList[0].deleted_flag == 1 && this.isDeleted == false) {
               self.store.dispatch(new estimateActions.remove(index))
+              this.toasterService.pop('success', 'estimate Deleted successfully');
+              this.isDeleted = true;
             } else{
               // self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
               // this.edit = false;
@@ -1104,10 +1110,10 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
         if (this.edit && this.activeEstimate.deleted_flag !== 1) {
            this.toasterService.pop('success', 'Estimate updated successfully');
-          this.router.navigate([`estimate/view/${this.estimateId}`])
+          // this.router.navigate([`estimate/view/${this.estimateId}`])
         } else if(this.activeEstimate.deleted_flag !== 1) {
           //add recently added esimate in store
-          this.fetchEstimates();
+          // this.fetchEstimates();
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1135,7 +1141,7 @@ export class AddEditEstComponent implements OnInit {
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
     this.save(true)
-    this.toasterService.pop('success', 'estimate Deleted successfully');
+    
     this.router.navigate(['/estimate/add']);
   }
 
@@ -1279,7 +1285,6 @@ export class AddEditEstComponent implements OnInit {
   fetchEstimates() {
     // Fetch estimates with given query
 
-    if (this.estimateList.length < 1) {
       var start = new Date();
       start.setHours(0, 0, 0, 0);
       var query = {
@@ -1299,7 +1304,6 @@ export class AddEditEstComponent implements OnInit {
           })
         }
       }, err => this.openErrorModal());
-    }
   }
 
   setActiveEst(estId: string = '') {

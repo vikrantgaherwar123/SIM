@@ -210,7 +210,8 @@
                   <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
                       <div class="form-group">
-                        <input type="text" name="product-name" class="form-control billing-input" placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
+                        <input type="text" name="product-name" class="form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
+                        placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
                           tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                           (optionSelected)="fillItemDetails()">
@@ -570,10 +571,10 @@
 
                 <!-- Save -->
                 <div class="col-12 px-0 mt-2">
-                  <button type="submit" id="estSubmitBtn" [disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"
+                  <button type="submit" id="estSubmitBtn" 
                     class="save btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
                     SAVE
-                  </button>
+                  </button><!--[disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"-->
                   <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
                     style="margin-right: 8px;" (click)="deleteEstimate()">
                     DELETE
@@ -895,13 +896,14 @@
           </div>
 
           <div class="row">
-            <button *ngIf="viewTodaysEstimate == true" type="button" style="margin:0 auto;margin-top: 5px;margin-bottom: 4px;"
-              class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn" (click)="addNewEstimate()">Add New
-              Estimate
-              <i class="fa fa-plus" style="padding: 12px 0px"></i>
-            </button>
-            <div class="col-1"></div>
-          </div>
+              <div class="col-1"></div>
+              <button *ngIf="viewTodaysEstimate == true || edit" type="button" style="margin-top: 5px;margin-bottom: 4px;"
+                class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+                (click)="addNewEstimate()">Add New Estimate
+                <i class="fa fa-plus" style="padding: 12px 0px"></i>
+              </button>
+              <div class="col-1"></div>
+            </div>
 
         <!-- recently added Estimate -->
         

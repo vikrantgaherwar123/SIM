@@ -342,7 +342,7 @@
                         <td [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="text" name="product-name" class="form-control billing-input" tabindex="1"
-                              onfocus="this.select()"
+                              onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
                               matInput [formControl]="addItem" [matAutocomplete]="auto" required>
                             <span *ngIf="ifProductEmpty === true && addItem !==null"
@@ -794,11 +794,11 @@
                         Add Payment
                       </button>
 
-                      <button type="submit" id="invSubmitBtn" [disabled]="activeInvoice.listItems?.length == 0"
+                      <button type="submit" id="invSubmitBtn" 
                         class="save btn save_btn btn-raised width25btn pull-right font-weight-bold"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
                         Save
-                      </button>
+                      </button><!--[disabled]="activeInvoice.listItems?.length == 0"-->
                       <button type="submit" *ngIf="edit" [disabled]="activeInvoice.listItems?.length == 0"
                         class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
                         style="margin-right: 8px;" (click)="deleteInvoice()">
@@ -1200,9 +1200,10 @@
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
-        <div class="row" style="margin:0 auto;">
-          <button *ngIf="viewTodaysInvoice == true" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-            class="col-11 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+        <div class="row">
+          <div class="col-1"></div>
+          <button *ngIf="viewTodaysInvoice == true || edit" type="button" style="margin-top: 5px;margin-bottom: 4px;"
+            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
