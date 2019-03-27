@@ -28,12 +28,12 @@ select {
   color: #2196f3 !important;
 }
 .add, .del {
-  height: 21px;
+  height: 18px;
   margin-top: -6px;
 }
 .del {
   background-position: -404px -214px;
-  width: 20px;
+  width: 18px;
 }
 
 .add-item-button {

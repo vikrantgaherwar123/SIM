@@ -798,23 +798,22 @@ select{
 } 
 .img_hover:hover { 
   background-color: #d0e4f7;
+  border: 1px solid #0299ff; 
 } 
-
 .swap-on-hover img {
   position: absolute;
-  border: 1px solid #0298fe; 
   top:0;
-  left:0;
+  left:40px;
 	overflow: hidden;
-	/* Sets the width and height for the images*/
 	width: 400px;
 	height: 400px;
 }
 .swap-on-hover .swap-on-hover__front-image {
   z-index: 9999;
-  transition: opacity .1s linear;
+  transition: opacity 0s linear;
   cursor: pointer;
 }
+
 .swap-on-hover:hover > .swap-on-hover__front-image{
   opacity: 0;
 }
