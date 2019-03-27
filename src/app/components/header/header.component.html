@@ -9,13 +9,13 @@
       </div>
       <div id="navbar" class="row">
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/invoice/add'" [routerLink]="['/invoice/add']" class="navbtn active">
+          <h5 class="menu_list"><button [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
               <span class="span_text"><img src="assets/images/invoice_n.png" class="nav_img" alt="logo" /> Invoices</span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/estimate/add'" [routerLink]="['/estimate/add']" class="navbtn">
+          <h5 class="menu_list"><button [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
               <span class="span_text"><img src="assets/images/estimet_n.png" class="nav_img" alt="logo" />Estimates</span>
             </button>
           </h5>

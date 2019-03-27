@@ -100,8 +100,6 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
-  keepGoing: boolean;
-  estimateDelete: boolean;
   showTaxRate: number;
   showTaxRateFlag: boolean;
   showDiscountRateFlag: boolean;
@@ -117,8 +115,8 @@ export class AddEditEstComponent implements OnInit {
   viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
   isDeleted: boolean = false;
-  noProductSelected: boolean;
-  noClientSelected: boolean;
+  noProductSelected: boolean = false;
+  noClientSelected: boolean = false;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -1284,14 +1282,21 @@ export class AddEditEstComponent implements OnInit {
 
   fetchEstimates() {
     // Fetch estimates with given query
+    var start = new Date();
+    var d = new Date(start),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    var date = [year, month, day].join('-');
 
-      var start = new Date();
-      start.setHours(0, 0, 0, 0);
-      var query = {
-        clientIdList: null,
-        startTime: start.getTime(),
-        endTime: new Date().getTime()
-      }
+    var query = {
+      clientIdList: null,
+      startTime: date,
+      endTime: date
+    }
+
 
       this.estListLoader = true
       this.estimateService.fetchByQuery(query).subscribe((response: any) => {

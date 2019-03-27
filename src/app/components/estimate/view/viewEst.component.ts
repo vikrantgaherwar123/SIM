@@ -266,12 +266,26 @@ export class ViewEstComponent implements OnInit {
   }
 
 
+  //this fun is formating selected date in string for api input
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+
   // Search Estimate Functions
   SearchEstimate() {
     var query = {
       clientIdList: [],
-      startTime: 0,
-      endTime: 0
+      startTime: "",
+      endTime: ""
     }
     // this.estimateQueryForm.client = this.searchService.getUserData()
     if (this.estimateQueryForm.client.value && this.estimateQueryForm.client.value.length > 0) {
@@ -285,12 +299,16 @@ export class ViewEstComponent implements OnInit {
       // this.estimateQueryForm.client.reset([{ name: 'All' }])
     }
     if (this.estimateQueryForm.dateRange.start.value) {
-      query.startTime = this.estimateQueryForm.dateRange.start.value.getTime()
+
+      query.startTime = this.formatDate(this.estimateQueryForm.dateRange.start.value);
     }
+
     if (this.estimateQueryForm.dateRange.end.value) {
-      query.endTime = this.estimateQueryForm.dateRange.end.value.getTime()
+
+      query.endTime = this.formatDate(this.estimateQueryForm.dateRange.end.value);
+
     } else {
-      query.endTime = new Date().getTime()
+      query.endTime = this.formatDate(new Date());
     }
     this.store.dispatch(new globalActions.add({ estimateQueryForm: this.estimateQueryForm }))
     this.fetchEstimates(query)
@@ -313,8 +331,8 @@ export class ViewEstComponent implements OnInit {
     if (query == null) {
       query = {
         clientIdList: null,
-        startTime: 0,
-        endTime: new Date().getTime()
+        startTime: "",
+        endTime: this.formatDate(new Date())
       }
     }
 

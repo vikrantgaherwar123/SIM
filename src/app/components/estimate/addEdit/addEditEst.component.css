@@ -217,3 +217,12 @@ select {
   width: 290px;
 }
 }
+
+.addLabelBackroundColor{
+  color: white;
+  background-color: #2096f3
+}
+.removeaddLabelBackroundColor{
+  color: #118dfa;
+  background-color: #d3eafd !important
+}

@@ -274,7 +274,7 @@
                       <div class="form-group">
                         <input type="number" step="any" class="form-control text_center height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
                           name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;border: 0px solid #ced4da !important"
-                          convert-decimal onfocus="this.select()" />
+                          convert-decimal onfocus="this.select()" readonly />
                       </div>
                     </td>
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
@@ -291,29 +291,29 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 &&  activeEstimate.discount_on_item===2 ">
+                <div *ngIf="settings.discountFlagLevel === 0 "><!--&&  activeEstimate.discount_on_item===2 -->
                   <a class="inline" (click)="discountFlag=1;activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </a>
                 </div>
-                <div *ngIf="activeEstimate.shipping_charges === undefined">
+                <div ><!--*ngIf="activeEstimate.shipping_charges === undefined"-->
                   <a class="inline" (click)="activeEstimate.shipping_charges = 0">
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                   </a>
                 </div>
-                <div *ngIf="settings.taxFlagLevel === 1 && activeEstimate.tax_on_item === 2"> <!--activeEstimate.tax_rate === 0 || -->
+                <div *ngIf="settings.taxFlagLevel === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
                   <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
                 </div>
-                <div *ngIf="activeEstimate.adjustment === undefined">
+                <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
                   <a class="inline" (click)="activeEstimate.adjustment = 0">
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                   </a>
                 </div>
                 <div *ngIf="activeEstimate.taxList">
                 <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
-                  <a *ngIf="!activeEstimate.taxList[taxIndex]" (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                  <a (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
                     {{tax.taxName}}+
-                  </a>
+                  </a><!--*ngIf="!activeEstimate.taxList[taxIndex]" -->
                 </div>
                 </div>
               </div>
@@ -336,10 +336,13 @@
                 <div class="col-12 px-0" style="font-size: 13px;">
                   <div class="form-group" style="margin-top: 10px;">
                     <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
-                      <div *ngIf="term.terms !=undefined" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms}}</span>
                       </div>
-                      <div *ngIf="term.terms !=undefined" class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
+                      <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                        <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
+                      </div>
+                      <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)" style="cursor:pointer;">
                         <a class="closeicon show float-right">
                           <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color" alt="" class="hg_16">
                         </a>
