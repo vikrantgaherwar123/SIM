@@ -292,28 +292,33 @@
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
                 <div *ngIf="settings.discountFlagLevel === 0 "><!--&&  activeEstimate.discount_on_item===2 -->
-                  <a class="inline" (click)="discountFlag=1;activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
+                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.discount_on_item===2 , 'removeaddLabelBackroundColor':activeEstimate.discount_on_item === 0}"
+                   (click)="discountFlag=1;activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
-                  </a>
+                  </span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.shipping_charges === undefined"-->
-                  <a class="inline" (click)="activeEstimate.shipping_charges = 0">
+                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.shipping_charges === undefined , 'removeaddLabelBackroundColor':activeEstimate.shipping_charges === 0}"
+                   (click)="activeEstimate.shipping_charges = 0">
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
-                  </a>
+                </span>
                 </div>
                 <div *ngIf="settings.taxFlagLevel === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
-                  <a class="inline" (click)="activeEstimate.tax_on_item=1">Tax+</a>
+                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.tax_on_item === 2 , 'removeaddLabelBackroundColor':activeEstimate.tax_on_item === 1}"
+                   (click)="activeEstimate.tax_on_item=1">Tax+</span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
-                  <a class="inline" (click)="activeEstimate.adjustment = 0">
+                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.adjustment === undefined, 'removeaddLabelBackroundColor':activeEstimate.adjustment === 0}"
+                   (click)="activeEstimate.adjustment = 0">
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
-                  </a>
+                </span>
                 </div>
                 <div *ngIf="activeEstimate.taxList">
                 <div class="inline" *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
-                  <a (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                  <span [ngClass]="{'addLabelBackroundColor':!activeEstimate.taxList[taxIndex], 'removeaddLabelBackroundColor':activeEstimate.taxList[taxIndex] }"
+                  (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
                     {{tax.taxName}}+
-                  </a><!--*ngIf="!activeEstimate.taxList[taxIndex]" -->
+                </span><!--*ngIf="!activeEstimate.taxList[taxIndex]" -->
                 </div>
                 </div>
               </div>
