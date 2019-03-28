@@ -51,11 +51,11 @@
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
 
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                            <span *ngIf="openClientModal === false" (click)="openAddClientModal()"
                               class="btn btn-primary add_client_btn">
                               <i class="fa fa-plus"></i>
                               Add New Client
-                            </button>
+                            </span>
 
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"

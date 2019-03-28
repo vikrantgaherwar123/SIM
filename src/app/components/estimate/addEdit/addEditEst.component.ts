@@ -1282,33 +1282,42 @@ export class AddEditEstComponent implements OnInit {
 
   fetchEstimates() {
     // Fetch estimates with given query
+
     var start = new Date();
-    var d = new Date(start),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-    var date = [year, month, day].join('-');
+    start.setHours(0, 0, 0, 0);
+    var  query = {
+        startTime: start.getTime(),
+        endTime: new Date().getTime(),
+        serviceIdentifier: 0
+      }
 
-    var query = {
-      clientIdList: null,
-      startTime: date,
-      endTime: date
-    }
+    // var start = new Date();
+    // var d = new Date(start),
+    //   month = '' + (d.getMonth() + 1),
+    //   day = '' + d.getDate(),
+    //   year = d.getFullYear();
+    // if (month.length < 2) month = '0' + month;
+    // if (day.length < 2) day = '0' + day;
+    // var date = [year, month, day].join('-');
+
+    // var query = {
+    //   clientIdList: null,
+    //   startTime: date,
+    //   endTime: date
+    // }
 
 
-      this.estListLoader = true
-      this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-        if (response.status === 200) {
-          this.estListLoader = false
-          this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-          // Set Active invoice whenever invoice list changes
-          this.store.select('estimate').subscribe(estimates => {
-            this.estimateList = estimates
-          })
-        }
-      }, err => this.openErrorModal());
+    this.estListLoader = true
+    this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.estListLoader = false
+        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+        })
+      }
+    }, err => this.openErrorModal());
   }
 
   setActiveEst(estId: string = '') {
