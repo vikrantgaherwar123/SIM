@@ -207,10 +207,16 @@ select {
 }
 
 .addLabelBackroundColor{
-  color: white;
-  background-color: #2096f3
+  color: #118dfa;
+  background-color: #d3eafd;
+  border-radius: 4px;
+  padding: 2px 4px 4px 6px;
+  margin-top: 5px;
 }
 .removeaddLabelBackroundColor{
-  color: #118dfa;
-  background-color: #d3eafd !important
+  color: white;
+  background-color: #2096f3;
+  border-radius: 4px;
+  padding: 2px 4px 4px 6px;
+  margin-top: 5px;
 }

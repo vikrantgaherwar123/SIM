@@ -809,7 +809,7 @@ select{
 	height: 400px;
 }
 .swap-on-hover .swap-on-hover__front-image {
-  z-index: 9999;
+  z-index: 99;
   transition: opacity 0s linear;
   cursor: pointer;
 }
