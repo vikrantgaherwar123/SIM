@@ -154,12 +154,8 @@
   font-size: 14px !important;
 }
 .menu_bar{
-  background-color: #0299ff;
-  height: 56px;
-  padding: 18px;
-  margin-left: -15px;
-  width: 62px;
-  font-size: 20px;
+  padding: 16px;
+  margin-left: -13px;
 }
 .menu_icon{
   color: white;

@@ -1232,15 +1232,15 @@
                 <span style="color: #8c9299;font-size: 10px;">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
               <div class="col-10">
-                <div class="row">
-                  <div class="col-12">
+                <div class="row" style="line-height: 7px;">
+                  <div class="col-12" style="padding: 3px 4px 0px 14px;">
                     <h5 class="fontsize13" style="font-family: quicksand_bold !important;
                     font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5" style="font-size: 9px;">
+                  <div class="col-5 today_txt">
                     {{ invoice.invoice_number }}
                   </div>
-                  <div class="col-6 text-right fontsize12" style="font-size: 12px;">
+                  <div class="col-6 text-right fontsize12 today_txt">
                     {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>

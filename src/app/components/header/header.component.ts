@@ -10,6 +10,7 @@ export class HeaderComponent implements OnInit {
 
   @Input() instance
   email
+  openSidebar: boolean = false;
 
   constructor(public router: Router) {
     var user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.openSidebar = true;
     // Add active class to the current button (highlight it)
     var header = document.getElementById("navbar");
     var btns = header.getElementsByClassName("navbtn");
@@ -35,6 +37,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSideNavBar() {
+    this.openSidebar = false;
     this.instance._toggleSidebar()
   }
   toggle(location) {

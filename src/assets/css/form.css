@@ -226,7 +226,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   text-align: right;
   margin: 0 auto;
 }
-.ngx-datepicker-container[_ngcontent-c4] {
+.ngx-datepicker-container{
   position: absolute;
   top: 0;
   left: 15px;
