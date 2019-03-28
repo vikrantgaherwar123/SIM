@@ -150,6 +150,7 @@ input.ng-dirty.ng-invalid {
 .file_icon{
   height: 16px;
   margin-right: 4px;
+  margin-bottom: 4px;
 }
 .file_text{
   color: #0299ff !important;
@@ -240,8 +241,8 @@ input[type=text] {
 .drop_icon_div{
   border:dashed 2px #c4c4c4;
   margin: 0 auto;
-  padding: 14px;
-  border-radius: 40px;
+  padding: 30px;
+  border-radius: 58px;
   margin: 10px 2px 36px 173px;
 }
 .add_manually{
@@ -272,4 +273,7 @@ input[type=text] {
   margin-top: -157px;
   text-align: center;
   color: black;
+}
+.checking :hover{
+  background-color: red;
 }

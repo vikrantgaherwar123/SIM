@@ -821,6 +821,9 @@ select{
 .swap-on-hover:hover > .swap-on-hover__front-image{
   opacity: 0;
 }
+.text_right{
+  text-align: right;
+}
 @media (min-width: 1440px)
 {
 .client_arrow {

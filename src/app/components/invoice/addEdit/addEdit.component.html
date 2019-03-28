@@ -244,29 +244,29 @@
                         </td>
                         <td width="10%">
                           <input type="text" style="font-size: 12.5px !important;" id="itemQtyLabel"
-                            class="bld w-100" name="quantity" disabled
+                            class="bld w-100 text_right" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}" />
                         </td>
                         <td width="10%">
-                          <input type="text" style="font-size: 12.5px !important;" id="itemRateLabel"
-                            class="bld w-100" name="rate" disabled
+                          <input type="text " style="font-size: 12.5px !important;" id="itemRateLabel"
+                            class="bld w-100 text_right" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                         </td>
                         <td width="9%"
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                          <input type="text" id="itemTaxLabel" class="bld w-100" name="tax-rate" disabled
+                          <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="tax-rate" disabled
                             style="font-size: 12.5px !important;" style="font-size: 12.5px !important;"
                             value="Tax (%)" />
                         </td>
                         <td width="9%"
                           *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 " name="discount"
+                          <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="discount"
                             disabled value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                             style="font-size: 12.5px !important;" />
                         </td>
                         <td width="9%">
                           <input style="font-size: 12.5px !important;" type="text" id="itemAmtLabelAdd"
-                            class="bld w-100" name="amount" disabled
+                            class="bld w-100 text_right" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                         </td>
                         <td width="5%" class="text-center"
@@ -283,38 +283,38 @@
                         <td [class.no-border-last]="last">
                           <div class="">
                             <div class="form-group" style="margin-bottom: -12px;margin-top: 8px;">
-                              <div class="text-left product-color" style="margin-left: 10px;">
+                              <div class="product-color" style="margin-left: 10px;">
                                 {{item.product_name}}
                               </div>
                               <div>
-                                <pre class="text-left selected-items mCustomScrollbar style-3"
+                                <pre class="selected-items mCustomScrollbar style-3"
                                   style="margin-left: 10px;font-family: quicksand_regular !important;">{{item.description}}</pre>
                               </div>
                             </div>
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
-                          <div class="">
+                          <div class="text_right">
                             {{item.quantity | number:'1.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
-                          <div class="">
+                          <div class="text_right">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                          <div class="">
+                          <div class="text_right">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                          <div class="">
+                          <div class="text_right">
                             {{item.discount | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
-                          <div class="">
+                          <div class="text_right">
                             {{item.total | number:'2.'}}
                           </div>
                         </td>
@@ -329,7 +329,7 @@
                         <td [class.no-border-last]="last">
                           <div class="text-center">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/delete_dark.png" class="hg_20 img_hover"
+                              <img src="assets/images/cross.png" class="hg_20 img_hover"
                                 style="margin-bottom: 7px;">
                             </a>
                           </div>
@@ -338,9 +338,11 @@
 
                       <!-- Select Item for invoice input -->
                       <tr *ngIf="disableProductText === true" class="row-item"
-                        style="background-color: white !important; box-shadow: 0 17px 22px 6px #e4e1e1">
+                        style="background-color: white !important;
+                        box-shadow: 0 10px 17px 10px #e4e1e1;
+                        border-left: 4px solid #0299ff;">
                         <td [class.no-border-last]="last">
-                          <div class="form-group" style="border-left: 4px solid #0299ff;padding-right: -2px;padding-left: 4px;
+                          <div class="form-group" style="padding-right: -2px;padding-left: 4px;
                           border-radius: 2px;">
                             <input type="text" name="product-name" class="form-control billing-input" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
@@ -372,7 +374,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" tabindex="2"
-                              class="form-control  height_40" min="0" [(ngModel)]="activeItem.quantity"
+                              class="form-control height_40 text_right" min="0" [(ngModel)]="activeItem.quantity"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
 
@@ -386,7 +388,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" tabindex="3"
-                              class="form-control height_40" min=0 [(ngModel)]="activeItem.rate"
+                              class="form-control height_40 text_right" min=0 [(ngModel)]="activeItem.rate"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
                         </td>
@@ -394,7 +396,7 @@
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" tabindex="4"
-                              class="form-control  height_40" min=0 max=100
+                              class="form-control height_40 text_right" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
@@ -407,7 +409,7 @@
                           *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" tabindex="5"
-                              class="form-control height_40" min=0 max=100 [(ngModel)]="activeItem.discount"
+                              class="form-control height_40 text_right" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
@@ -419,7 +421,7 @@
 
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" step="any" class="form-control height_40" readonly
+                            <input type="number" step="any" class="form-control height_40 text_right" readonly
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total"
                               style="border: 0px solid #ced4da !important;background-color: #f2f1f1 !important;"

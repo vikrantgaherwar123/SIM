@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toggleSideNavBar();
     // Add active class to the current button (highlight it)
     var header = document.getElementById("navbar");
     var btns = header.getElementsByClassName("navbtn");

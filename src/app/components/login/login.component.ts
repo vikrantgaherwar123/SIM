@@ -188,7 +188,6 @@ export class LoginComponent implements OnInit {
 
         $('#logoutBtn').removeClass("hide")
         $('#logoutBtn').addClass("show")
-       
       } else {
         $("#login-btn").prop("disabled", false)
         this.errorMessage = response.message

@@ -1,5 +1,5 @@
 .sidebar-nav {
-  height: 100vh;
+  height: 80vh;
   width: 65px;
   position: fixed;
   top: 56px;
@@ -8,6 +8,7 @@
 .sidebar-nav > .menu-item-wrapper {
   cursor: pointer;
   display: block;
+  padding-top: 22px;
   /* border-bottom: 1px solid #e9ecf2; */
   margin: 0;
 }
