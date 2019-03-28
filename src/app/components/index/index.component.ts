@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
-import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
+import { Router } from "@angular/router"
+
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,9 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
   styleUrls: ['./index.component.css']
 })
 export class AppComponent {
+
+  constructor(public router: Router) {
+  }
   public self = this
   private _toggleSidebar() {
     if (!(window.location.pathname).includes('/login')) {

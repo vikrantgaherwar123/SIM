@@ -99,13 +99,12 @@ export class AddEditComponent implements OnInit {
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
-  noClientSelected: boolean;
+  noClientSelected: boolean = false;
   showTaxRate: any;
   showDiscountRate: any;
   showProduct: any;
   showDescription: any;
   showQuantity: any;
-  showPrice: any;
   showDiscountedRate: any;
   showTaxRateFlag: boolean = true;
   showDiscountRateFlag: boolean = true;
@@ -126,7 +125,7 @@ export class AddEditComponent implements OnInit {
   showTodaysTaxRate: boolean;
   showTodaysDiscountRate: boolean;
   isDeleted: boolean = false;
-  noProductSelected: boolean;
+  noProductSelected: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -1603,25 +1602,32 @@ export class AddEditComponent implements OnInit {
 
   fetchInvoices() {
     // Fetch invoices with given query
-      var start = new Date();
-      start.setHours(0, 0, 0, 0);
-      var query = {
-        clientIdList: null,
-        startTime: start.getTime(),
-        endTime: new Date().getTime()
+    var start = new Date();
+    var d = new Date(start),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    var date = [year, month, day].join('-');
+
+    var query = {
+      clientIdList: null,
+      startTime: date,
+      endTime: date
+    }
+
+    this.invListLoader = true
+    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.invListLoader = false
+        this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('invoice').subscribe(invoices => {
+          this.invoiceList = invoices
+        })
       }
 
-      this.invListLoader = true
-      this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
-        if (response.status === 200) {
-          this.invListLoader = false
-          this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
-          this.store.select('invoice').subscribe(invoices => {
-            this.invoiceList = invoices
-          })
-        }
-
-      }, err => this.openErrorModal())
+    }, err => this.openErrorModal())
   }
 
   setActiveInv(invId: string = '') {
