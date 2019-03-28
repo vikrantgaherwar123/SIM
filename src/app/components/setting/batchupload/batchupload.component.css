@@ -94,11 +94,12 @@ input.ng-dirty.ng-invalid {
 }
 
 .dropzone-drop-area {
-  border: dashed 2px #52a6fe;
-  width: 100%;
-  min-height: 260px;
+  border: dashed 2px #c4c4c4;
+  width: 600px;
+  min-height: 450px;
   box-sizing: border-box;
-  /* padding: 6px; */
+  background-color: white;
+  opacity: 0.5;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -106,7 +107,7 @@ input.ng-dirty.ng-invalid {
   flex-wrap: wrap;
   cursor: pointer;
   position: relative;
-  margin-top: 95px;
+  margin-top: 58px;
   margin-bottom: 10px;
 }
 .no_btn{
@@ -148,12 +149,13 @@ input.ng-dirty.ng-invalid {
 }
 .file_icon{
   height: 16px;
+  margin-right: 4px;
 }
 .file_text{
   color: #0299ff !important;
   font-family: quicksand_bold !important;
   font-size: 12px;
-  height: 28px !important;
+  height: 30px !important;
   /* padding: 6px 10px 5px 10px !important; */
 }
 input[type=text], input[type=password], select {
@@ -188,7 +190,7 @@ input[type=text] {
 }
 .main-wrapper{
   background-color: #ededed;
-  overflow-x: hidden;
+  /* overflow-x: none !important; */
   min-height: 2px;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
@@ -220,10 +222,10 @@ input[type=text] {
 }
 .upload_btn{
   width: 94px;
-  height: 30px;
+  height: 42px;
   color: #0299ff !important;
   font-family: quicksand_bold !important;
-  padding: 3px 2px 2px 2px !important;
+  padding: 7px 2px 2px 2px !important;
 }
 .image-upload > input{
   display: none;
@@ -231,8 +233,43 @@ input[type=text] {
 
 .image-upload img{
   cursor: pointer;
-  border: dashed 2px #52a6fe;
+  height: 40px;
   border-radius: 40px;
-  margin: 10px 2px 36px 112px;
+  /* margin: 10px 2px 36px 112px; */
 }
-
+.drop_icon_div{
+  border:dashed 2px #c4c4c4;
+  margin: 0 auto;
+  padding: 14px;
+  border-radius: 40px;
+  margin: 10px 2px 36px 173px;
+}
+.add_manually{
+  font-size: 16px !important;
+  padding: 6px 40px 6px 40px !important;
+  height: 62px !important;
+  width: 250px;
+}
+.or{
+  /* padding: 165px; */
+  text-align: center;
+  font-size: 26px;
+  font-family: quicksand_regular !important;
+}
+.main-wrapper{
+  background-color: #ededed;
+  overflow-x: unset;
+  min-height: 90vh;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+.fa-check-circle:before {
+    content: "\f058";
+    margin-left: -28px;
+}
+.drag_txt{
+  margin-left: 90px;
+  font-size: 18px;
+  margin-top: -157px;
+  text-align: center;
+  color: black;
+}

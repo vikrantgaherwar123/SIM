@@ -28,13 +28,14 @@ select {
   color: #2196f3 !important;
 }
 .add, .del {
-  height: 21px;
-  margin-top: -6px;
+  height: 18px;
+  margin-top: -4px;
 }
 .del {
   background-position: -404px -214px;
-  width: 20px;
+  width: 18px;
 }
+
 .add-item-button {
   margin-bottom: 10px;
   margin-top: 3px;
@@ -169,6 +170,15 @@ select {
   font-size: 24px !important;
   margin-top: 8px !important;
 }
+.form-control:disabled, .form-control[readonly] {
+  background-color: white;
+  opacity: 1;
+}
+.today_txt{
+  font-size: 13px;
+  font-family: quicksand_bold !important;
+  color: #787e83;
+}
 @media (min-width: 1280px)
 {
   .downArrowIcon{
@@ -197,10 +207,16 @@ select {
 }
 
 .addLabelBackroundColor{
-  color: white;
-  background-color: #2096f3
+  color: #118dfa;
+  background-color: #d3eafd;
+  border-radius: 4px;
+  padding: 2px 4px 4px 6px;
+  margin-top: 5px;
 }
 .removeaddLabelBackroundColor{
-  color: #118dfa;
-  background-color: #d3eafd !important
+  color: white;
+  background-color: #2096f3;
+  border-radius: 4px;
+  padding: 2px 4px 4px 6px;
+  margin-top: 5px;
 }

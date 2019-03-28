@@ -11,11 +11,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
-
 import { SocialLoginModule, AuthServiceConfig,
   GoogleLoginProvider, FacebookLoginProvider
 } from "angular-6-social-login"
-
 import { StoreModule } from '@ngrx/store'
 import { clientReducer } from './reducers/client.reducer'
 import { productReducer } from './reducers/product.reducer'
@@ -25,12 +23,9 @@ import { invoiceReducer } from './reducers/invoice.reducer'
 import { recentInvoice } from './reducers/recentInvoice.reducer'
 import { recentEstimate } from './reducers/recentEstimate.reducer'
 import { HttpErrorInterceptor } from './error-handler';
-
 import { globalReducer } from './reducers/globals.reducer'
-
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
-
 import { AppComponent } from './components/index/index.component'
 import { HeaderComponent } from './components/header/header.component'
 import { AppRoutingModule } from './/app-routing.module'

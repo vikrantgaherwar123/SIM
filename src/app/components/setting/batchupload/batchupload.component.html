@@ -1,4 +1,4 @@
-<div style="background-color: #ededed;height: 88vh;">
+<div style="background-color: #ededed;height: 88vh;width:1400px">
 <div class="row main-wrapper">
   <div class="col-12" style="padding-left: 0px;padding-right: 0px;">
     <div class="back" style="height:95px">
@@ -10,20 +10,19 @@
             </span>
             <div class="row steps_div">
               <div class="verticle_line"></div>
-              <div class="col-3 col_3_label">
-                <span class="client_label">Choose Client Or Product</span>
+              <div class="col-4 col_3_label">
+                <span class="client_label">Choose <br />Client Or <br />Product</span>
               </div>
-              <div class="col-1"></div>
-              <div class="col-7">
+              <div class="col-7" style="padding: 2px 0px 0px 37px;">
                 <div class="row taxradio" style="margin-top: 15px;">
                   <input type="radio" id="clientbtn" name="fileType" checked (click)="showClient()">
-                  <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold" style="width: 92px;">
-                    <i class="fa fa-check-circle"></i> Client
+                  <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold" style="width: 95px;">
+                    <i class="fa fa-check-circle"></i> <span>Client</span>
                   </label>
 
                   <input type="radio" id="productbtn" name="fileType" (click)="showProduct()">
                   <label for="productbtn" class="taxonbill fontsize13 border-left-right-none font-custom-bold" style="width: 92px;">
-                    <span><i class="fa fa-check-circle"></i></span> Product
+                    <span><i class="fa fa-check-circle" style="margin-left: 10px;"></i></span> <span>Product</span>
                   </label>
                 </div>
               </div>
@@ -36,9 +35,9 @@
               <div class="row steps_div" *ngIf="showClientDiv == true">
                 <div class="verticle_line"></div>
                 <div class="col-3 col_3_label">
-                  <span class="client_label">Choose File Format</span>
+                  <span class="client_label">Choose File<br> Format</span>
                 </div>
-                <div class="col-9 row" style="padding: 15px 2px 2px 2px;">
+                <div class="col-9 row" style="padding: 15px 0px 0px 9px;">
                     <a href="../../../assets/excel_files/clients.csv" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
                       style="color: #0299ff !important;font-family: quicksand_bold !important;">
                       <img src="assets/images/settings/csv.png" class="file_icon">CSV
@@ -58,7 +57,7 @@
                 <div class="col-3 col_3_label">
                   <span class="client_label">Choose File Format</span>
                 </div>
-                <div class="col-9 row" style="padding: 13px 2px 2px 5px">
+                <div class="col-9 row" style="padding: 13px 2px 2px 10px">
                     <a href="../../../assets/excel_files/products.csv" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
                     style="color: #0299ff !important;font-family: quicksand_bold !important;">
                     <img src="assets/images/settings/csv.png" class="file_icon">CSV
@@ -81,13 +80,13 @@
             </span>
             <div class="row steps_div">
               <div class="verticle_line"></div>
-              <div class="col-4 col_3_label">
+              <div class="col-4 col_3_label" style="padding:14px 3px 6px 13px">
                 <span class="client_label">Drag File<br/> To Upload</span>
               </div>
               <div class="col-2" style="padding: 19px 2px 2px 24px;">
                 <span class="client_label">Or</span>
               </div>
-              <div class="col-4" style="padding: 15px 2px 2px 2px;">
+              <div class="col-4" style="padding: 9px 2px 2px 60px">
                 <label  class="btn btn-raised btn-custom-1 width20btn upload_btn">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
@@ -98,17 +97,17 @@
             <span class="step_text">Step 4
               <span class="span_text">This is dummy text </span>
             </span>
-            <div class="row steps_div">
+            <div class="row steps_div" style="width: 322px;">
               <div class="verticle_line"></div>
               <div style="padding: 8px 2px;">
                 <button type="button" (click)="clearData()"
                   class="btn btn-raised save_btn btn-custom-1 width25btn pull-right font-weight-bold ml-2"
                   style="width: 94px;color: #0299ff !important;font-family: quicksand_bold !important;">
-                  CLEAR
+                  Clear
                 </button>
                 <button type="button" style="width: 94px;" (click)="save(f.valid,0)" type="button" id="saveClientBtn1"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
-                  SAVE
+                  Save
                 </button>
               </div>
             </div>
@@ -119,15 +118,15 @@
 
   </div>
  
-  <div class="col-12" style="margin-top: 10px;padding-left: 0px;padding-right: 0px;height: 500px;">
+  <div class="col-12" style="margin-top: 10px;padding-left: 0px;padding-right: 0px;height: 628px;">
     <!-- clients records table -->
     <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
       <thead>
         <tr>
-          <td style="width: 50px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
+          <td style="width: 20px !important;background-color: white;"><input type="text" class="form-control td_header" readonly />
           </td>
           <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
-          <td style="width: 180px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
+          <td style="width: 190px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
           <td style="width: 126px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact Person" readonly /></td>
           <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 1" readonly /></td>
           <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 2" readonly /></td>
@@ -141,7 +140,7 @@
       </thead>
         <tbody>
           <tr *ngFor="let item of clientRecords; let in = index">
-            <td class="number_tag" style="padding: 2px 4px 0px 10px !important;width: 20px;">
+            <td class="number_tag" style="padding: 2px 4px 0px 8px !important;width: 20px !important;">
               <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
             </td>
             <td style="width: 20px;" class="number_tag">{{in+1}}</td>
@@ -185,10 +184,14 @@
                 [(ngModel)]="item.shippingAddress" />
             </td>
           </tr>
-          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
+          
         </tbody>
+        <div>
+            <button class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 4px 15px 4px 15px !important;
+            font-size: 16px !important;" type="button" (click)="addFieldValues()">Add</button>
+          </div>
     </table>
-
+    
     <!-- products record table -->
     <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
       <thead>
@@ -206,7 +209,7 @@
       </thead>
         <tbody>
           <tr *ngFor="let item of productRecords; let i = index">
-            <td class="number_tag" style="padding: 4px 4px 0px 18px !important;">
+            <td class="number_tag" style="padding: 4px 4px 0px 8px !important;">
               <img class="hg_20" (click)="productRemove(i)" src="assets/images/grey_cross.png">
             </td>
             <td class="number_tag">
@@ -233,7 +236,7 @@
             </td>
             
           </tr>
-          <button class="btn btn-default" type="button" (click)="addFieldValues()">Add</button>
+          <button class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2" type="button" (click)="addFieldValues()">Add</button>
         </tbody>
    
     </table>
@@ -243,10 +246,10 @@
       <!-- <img src="assets/images/batch_background.png" class="img" style="position: absolute;width: 100%;opacity:.3;margin-left: 16px;"> -->
       <!-- empty client table -->
       
-      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.3;">
+      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:0.1;">
         <thead>
           <tr>
-            <td style="width: 50px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
+            <td style="width: 30px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
             </td>
             <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
             <td style="width: 180px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
@@ -263,10 +266,10 @@
         </thead>
           <tbody>
             <tr *ngFor="let item of fieldArray; let in = index">
-              <td class="number_tag" style="padding: 2px 4px 0px 10px !important;width: 20px;">
+              <td class="number_tag" style="padding: 2px 4px 0px 16px !important;width: 20px;">
                 <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
               </td>
-              <td style="width: 20px;" class="number_tag">{{in+1}}</td>
+              <td style="width: 10px;" class="number_tag">{{in+1}}</td>
               <td>
                 <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }"
                   onfocus="this.select()" required /> </td>
@@ -309,10 +312,10 @@
             </tr>
           </tbody>
       </table>
-    
+      
       <!-- empty product table -->
       
-      <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.3;">
+      <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.1;">
         <thead>
           <tr>
             <td style="width: 58px;background-color: white;font-family: quicksand_bold !important;"><input type="text" class="form-control td_header" readonly />
@@ -359,40 +362,42 @@
       </table>
   </div>
   <div *ngIf="make_blur_disable == false" class="row">
-    <div class="col-2"></div>
-    <div class="col-3 image-upload">
-        <label for="file-input" class="file-upload dropzone-container dropzone-drop-area">
-          <div>
-            <img src="assets/images/upload_o.png"/>
-          </div>
+    <div class="col-5 image-upload">
+        <label for="file-input" class="file-upload dropzone-container dropzone-drop-area" style="margin: 45px auto 0 38px;">
+            <div class="drop_icon_div" style="margin: 0 auto;">
+              <img src="assets/images/upload_o.png" style="height: 40px;"/>
+            </div>
           <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
             placeholder="Upload file" accept=".xlsx, .xls, .csv"
             required style="display:none"/>
+            <br />
         </label>
+        <div class="drag_txt">Drag File To Upload</div>
+    </div>
+    <div class="col-2" style="margin-top: 10px;text-align: center">
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
+      <div class="clearfix">&nbsp;</div>
      
+      <span class="or">or</span>
     </div>
-    <div class="col-3">
+    <div class="col-5" style="padding-top:99px;margin-left: -122px;text-align: center;">
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-     
-      <span style="padding: 154px;text-align: center;font-size: 20px;font-family: quicksand_bold !important;">or</span>
+        <button class="save add_manually btn save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manually</button>
     </div>
-    <div class="col-4" style="padding-top:100px">
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-        <button class="save btn save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manually</button>
-    </div>
-    <div class="col-1"></div>
   </div>
         
   </div>
@@ -415,7 +420,7 @@ data-backdrop="static" data-keyboard="false">
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
       <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;opacity: unset;">
         OK
       </button>
      

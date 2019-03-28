@@ -5,7 +5,7 @@
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator" class="create-invoice"
           (ngSubmit)="save(invoiceGeneratorAdd.valid)">
-          <div class="back p-4">
+          <div class="back p-4 shadow" style="border-radius: 2px;">
             <div class="col-12">
               <div class="vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
@@ -51,12 +51,11 @@
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
 
-                            <span *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>
-                              Add New Client
-                            </span>
-
+                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                              class="btn btn-primary add_client_btn" style="position: fixed;width: auto;">
+                              <i class="fa fa-plus"></i>Add New Client
+                            </button>
+                            
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
                               [value]="client">
@@ -245,29 +244,29 @@
                         </td>
                         <td width="10%">
                           <input type="text" style="font-size: 12.5px !important;" id="itemQtyLabel"
-                            class="bld w-100 text-center" name="quantity" disabled
+                            class="bld w-100" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}" />
                         </td>
                         <td width="10%">
                           <input type="text" style="font-size: 12.5px !important;" id="itemRateLabel"
-                            class="bld w-100 text-center" name="rate" disabled
+                            class="bld w-100" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                         </td>
                         <td width="9%"
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                          <input type="text" id="itemTaxLabel" class="bld w-100 text-center" name="tax-rate" disabled
+                          <input type="text" id="itemTaxLabel" class="bld w-100" name="tax-rate" disabled
                             style="font-size: 12.5px !important;" style="font-size: 12.5px !important;"
                             value="Tax (%)" />
                         </td>
                         <td width="9%"
                           *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 text-center" name="discount"
+                          <input type="text" id="itemDiscountLabel" class="bld w-100 " name="discount"
                             disabled value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                             style="font-size: 12.5px !important;" />
                         </td>
                         <td width="9%">
                           <input style="font-size: 12.5px !important;" type="text" id="itemAmtLabelAdd"
-                            class="bld w-100 text-center" name="amount" disabled
+                            class="bld w-100" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                         </td>
                         <td width="5%" class="text-center"
@@ -295,27 +294,27 @@
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
-                          <div class="text-center">
-                            {{item.quantity | number:'2.'}}
+                          <div class="">
+                            {{item.quantity | number:'1.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
-                          <div class="text-center">
+                          <div class="">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                          <div class="text-center">
+                          <div class="">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                          <div class="text-center">
+                          <div class="">
                             {{item.discount | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
-                          <div class="text-center">
+                          <div class="">
                             {{item.total | number:'2.'}}
                           </div>
                         </td>
@@ -323,14 +322,14 @@
                           <div class="text-center">
                             <a class="closeicon show" title="Edit Row"
                               (click)="editInvoiceItem(index);disabledDescription = true">
-                              <img src="assets/images/edit_blue.png" class="del" style="height:20px;">
+                              <img src="assets/images/edit_blue.png" class="del img_hover" style="height:20px;">
                             </a>
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
                           <div class="text-center">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/delete_dark.png" class="del" class="hg_20"
+                              <img src="assets/images/delete_dark.png" class="hg_20 img_hover"
                                 style="margin-bottom: 7px;">
                             </a>
                           </div>
@@ -339,9 +338,10 @@
 
                       <!-- Select Item for invoice input -->
                       <tr *ngIf="disableProductText === true" class="row-item"
-                        style="background-color: white !important;">
+                        style="background-color: white !important; box-shadow: 0 17px 22px 6px #e4e1e1">
                         <td [class.no-border-last]="last">
-                          <div class="form-group">
+                          <div class="form-group" style="border-left: 4px solid #0299ff;padding-right: -2px;padding-left: 4px;
+                          border-radius: 2px;">
                             <input type="text" name="product-name" class="form-control billing-input" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
@@ -359,20 +359,20 @@
                               <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
                                 name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;" [(ngModel)]="activeItem.description"
+                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
                                 placeholder="Description" onfocus="this.select()"></textarea>
                               <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;" placeholder="Description"
+                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" placeholder="Description"
                                 onfocus="this.select()"></textarea>
                             </div>
                           </div>
-                        </td>
+                        </td> 
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemQty" id="qty" step="any" tabindex="2"
-                              class="form-control text_center height_40" min="0" [(ngModel)]="activeItem.quantity"
+                              class="form-control  height_40" min="0" [(ngModel)]="activeItem.quantity"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
 
@@ -386,7 +386,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group">
                             <input type="number" name="itemRate" step="any" tabindex="3"
-                              class="form-control text_center height_40" min=0 [(ngModel)]="activeItem.rate"
+                              class="form-control height_40" min=0 [(ngModel)]="activeItem.rate"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
                         </td>
@@ -394,7 +394,7 @@
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
                           <div class="input-group">
                             <input type="number" name="itemTaxRate" tabindex="4"
-                              class="form-control  text_center height_40" min=0 max=100
+                              class="form-control  height_40" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
@@ -407,7 +407,7 @@
                           *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
                           <div class="input-group">
                             <input type="number" name="itemDiscountRate" tabindex="5"
-                              class="form-control text_center height_40" min=0 max=100 [(ngModel)]="activeItem.discount"
+                              class="form-control height_40" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
@@ -419,10 +419,10 @@
 
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <div class="form-group">
-                            <input type="number" step="any" class="form-control text_center height_40" readonly
+                            <input type="number" step="any" class="form-control height_40" readonly
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total"
-                              style="border: 0px solid #ced4da !important;background-color: #eaeaea !important;"
+                              style="border: 0px solid #ced4da !important;background-color: #f2f1f1 !important;"
                               disabled.btn-custom-1 />
                             <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
@@ -433,7 +433,7 @@
                         </td>
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
-                            alt="logo" style="height: 24px;margin-top: 2px;">
+                            alt="logo" style="height: 24px;margin-top: 2px;" class="img_hover">
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
@@ -451,7 +451,7 @@
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold"
                     style="padding-bottom: 8px;">
                     <div *ngIf="settings.discountFlagLevel === 0"> <!-- &&  activeInvoice.discount_on_item===2-->
-                      <span class="inline"  [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
+                      <span class="inline" [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
                         (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
                     </span>
@@ -498,7 +498,7 @@
                         {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                       </span>
                       <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
-                        <img src="assets/images/add16.png" alt="logo"
+                        <img src="assets/images/add16.png" alt="logo" class="img_hover"
                           style="vertical-align: initial;height:10px; margin-right: 3px;" />
                         Add Terms
                       </a>
@@ -507,8 +507,9 @@
                     <div class="col-12 px-0" style="font-size: 13px;">
                       <div class="form-group" style="margin-top: 10px;">
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
-                          <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
-                            <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms}}</span>
+                          <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
+                            <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
+                          <hr style="width: 403px;margin-top: 6px !important;">
                           </div>
                           <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                             <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
@@ -516,8 +517,14 @@
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)"
                             style="cursor:pointer;">
                             <a class="closeicon show float-right">
-                              <img src="assets/images/delete_in_grey.png" Title="Delete Term" class="del set-color"
-                                alt="" class="hg_16">
+                              <!-- <img src="assets/images/cross.png" Title="Delete Term" class="img_hover hg_16 del set-color"
+                                alt=""> -->
+                                <div class="swap-on-hover">
+                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="hg_16 del set-color swap-on-hover__front-image"
+                                    alt="">
+                                    <img src="assets/images/cross_blue.png" Title="Delete Term" class="img_hover hg_16 del set-color swap-on-hover__back-image"
+                                    alt="">
+                                </div>
                             </a>
                           </div>
                         </div>
@@ -587,13 +594,13 @@
                               (ngModelChange)="dataChanged($event)" onfocus="this.select()" style="color: #aaaaaa;" />
                             <input type="number" id="discount_input" name="discount_input" class="col-3 form-control"
                               min="0.00" [max]="100" step="any" *ngIf="activeInvoice.percentage_flag == 0"
-                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
+                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="margin-right: 20px;"
                               onfocus="this.select()" />
 
                             <input type="number" id="discount_input" name="discount_input"
-                              class="form-control text_center height_40 dis_tax_label col-9"
+                              class="form-control height_40 dis_tax_label col-9"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
-                              style="background-color: #eaeaea;" readonly />
+                              readonly />
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector" (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
                                 activeInvoice.percentage_value=0;activeInvoice.discount=0;calculateInvoice();
@@ -601,7 +608,7 @@
                                 balance=activeInvoice.gross_amount">
                                 <!--activeInvoice.tax_amount-->
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
-                                  class="hg_20 cross_label_img">
+                                  class="img_hover hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -622,18 +629,18 @@
                           <form #form_discount="ngForm" name="form_discount">
                             <div class="input-group addon-input">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control col-3"
-                                step="any"min="0.00" max="100" required style="color: #aaaaaa;"
+                                step="any"min="0.00" max="100" required style="color: #aaaaaa;margin-right: 20px;"
                                 [(ngModel)]="activeInvoice.tax_rate" (keyup)="calculateInvoice()" onfocus="this.select()"
                               />
-                              <input type="number" id="tax_inputs" name="tax_inputs" class="col-9 form-control text_center height_40 dis_tax_label" 
-                              placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" style="background-color:#eaeaea"
+                              <input type="number" id="tax_inputs" name="tax_inputs" class="col-9 form-control height_40 dis_tax_label" 
+                              placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()"
                             />
                       
                               
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
                                   <!--activeInvoice.tax_amount-->
-                                  <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                                  <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="img_hover hg_20 cross_label_img">
                                 </div>
                               </div>
                             </div>
@@ -654,18 +661,18 @@
                           <div class="input-group pr-0 col-12">
                             <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" step="any" min="0.00"
                               max="100" class="form-control col-3"
-                              style="color: #aaaaaa;margin-left: -15px;margin-right: 5px;" [(ngModel)]="tax.percentage"
+                              style="color: #aaaaaa;margin-left: -15px;margin-right: 20px;" [(ngModel)]="tax.percentage"
                               (keyup)="calculateInvoice()" onfocus="this.select()" />
                             <input type="number" id="tax_input_list{{taxIndex}}" name="tax_Listinput"
-                              class="col-9 form-control text_center height_40 dis_tax_label"
+                              class="col-9 form-control height_40 dis_tax_label"
                               [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()"
-                              style="background-color:#eaeaea;margin-right: -5px;" readonly />
+                              style="margin-right: -5px;" readonly />
 
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
                                 (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img">
                               </div>
                             </div>
                           </div>
@@ -693,7 +700,7 @@
                               <div class="addon selector padr0"
                                 (click)="activeInvoice.shipping_charges = undefined;calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
-                                  class="hg_20 cross_label_img">
+                                  class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>
                           </div>
@@ -722,7 +729,7 @@
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
                                 (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
-                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                                <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>
                           </div>
@@ -770,7 +777,7 @@
                           <span
                             class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                           <img src="assets/images/grey_cross.png" (click)="deleteInstallment(in)" Title="Delete" alt=""
-                            class="hg_20 cross_label_img">
+                            class="hg_20 cross_label_img img_hover">
                         </div>
                       </div>
 
@@ -817,8 +824,8 @@
       </div>
       <!--Toays Invoice Starts-->
       <div *ngIf="viewTodaysInvoice == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back"
-          style="margin-top: 12px;">
+        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
+          style="margin-top: 12px;border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
@@ -1195,23 +1202,20 @@
 
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
-        <div class="row" style="padding-top: 15px;padding-bottom: 4px;">
-          <div class="col-1"></div>
-          <button type="button" class="col-10 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+        <div class="row" style="padding-top: 15px;padding-bottom: 4px;margin:0 auto;">
+          <button type="button" class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <i class="fa fa-search" style="padding: 12px 0px;"></i>
           </button>
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
-        <div class="row">
-          <div class="col-1"></div>
+        <div class="row" style="margin: 0 auto;">
           <button *ngIf="viewTodaysInvoice == true || edit" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-            class="col-10 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+            class="col-11 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
-          <div class="col-1"></div>
         </div>
 
 
@@ -1224,24 +1228,25 @@
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
+          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 7px;
+              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span style="color: #8c9299;font-size: 10px;">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
               <div class="col-10">
-                <div class="row">
-                  <div class="col-12">
-                    <h5 class="fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                <div class="row" style="line-height: 7px;">
+                  <div class="col-12" style="padding: 3px 4px 0px 14px;">
+                    <h5 class="fontsize13" style="font-family: quicksand_bold !important;
+                    font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5" style="font-size: 9px;">
+                  <div class="col-5 today_txt">
                     {{ invoice.invoice_number }}
                   </div>
-                  <div class="col-6 text-right fontsize12" style="font-size: 12px;">
+                  <div class="col-6 text-right fontsize12 today_txt">
                     {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>
@@ -1274,7 +1279,7 @@
           Add New Client
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
       <div class="modal-body">
@@ -1325,7 +1330,7 @@
             <div class="form-group add-client-input-width"
               [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.addressLine1" name="addressLine1"
-                class="form-control mCustomScrollbar style-3" placeholder="Address" style="height: 69px !important;"
+                class="form-control mCustomScrollbar style-3" placeholder="Address" style="overflow-y: auto !important;height: 69px !important;"
                 onfocus="this.select()"></textarea>
             </div>
           </div>
@@ -1335,7 +1340,7 @@
               [class.has-error]="(clientform.submitted && clientform.errors)">
               <textarea elastic [(ngModel)]="addClientModal.shippingAddress" name="shippingAddress"
                 class="form-control mCustomScrollbar style-3" placeholder=" Shipping Address"
-                style="height: 69px !important;" onfocus="this.select()"></textarea>
+                style="height: 69px !important;overflow-y: auto !important" onfocus="this.select()"></textarea>
             </div>
           </div>
 
@@ -1379,7 +1384,7 @@
           Edit Item
         </h4>
         <button type="button" class="close" aria-label="Close" (click)="closeItemModel()">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
       <div class="modal-body">
@@ -1396,7 +1401,7 @@
               Description:
               <textarea [(ngModel)]="activeItem.description" name="description"
                 class="form-control mCustomScrollbar style-3" placeholder="Description" onfocus="this.select()"
-                select-on-click style="height: 69px !important;"></textarea>
+                select-on-click style="height: 69px !important;overflow-y: auto !important"></textarea>
             </div>
 
             <div class="col-12">
@@ -1459,7 +1464,7 @@
           Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </button>
       </div>
 
@@ -1548,7 +1553,7 @@
           Add Payment
         </h4>
         <a class="pull-right" (click)="closeAddPaymentModal()" style="margin-top: 6px;">
-          <img src="assets/images/cross16.png" alt="logo">
+          <img src="assets/images/cross16.png" alt="logo" class="img_hover">
         </a>
       </div>
       <div class="modal-body">
@@ -1663,7 +1668,8 @@
   <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
     <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
       <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo" class="img_hover" style="height: 28px;
+        margin: 0 auto;">
       </div>
       <div class="modal-body">
         <h3 class="title">Connection Lost !</h3>

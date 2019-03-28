@@ -14,7 +14,8 @@
 }
 .edit-setting input[type=radio] + label {
   display: inline-block;
-  /* margin: -2px; */
+  font-family: quicksand_regular !important;
+  font-weight: bold !important;
   padding: 5px 12px;
   margin-bottom: 5px;
   line-height: 20px;
