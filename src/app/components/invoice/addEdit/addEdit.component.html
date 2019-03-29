@@ -286,10 +286,11 @@
                               <div class="text-left product-color" style="margin-left: 10px;">
                                 {{item.product_name}}
                               </div>
-                              <div>
-                                <pre class="text-left selected-items mCustomScrollbar style-3"
-                                  style="margin-left: 10px;font-family: quicksand_regular !important;">{{item.description}}</pre>
+                              <div class="moreDiscr" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
+                                <pre class="text-left selected-items"
+                                  style="margin-left: 10px;font-family: quicksand_regular !important;overflow: hidden">{{item.description}}</pre><!-- mCustomScrollbar style-3-->
                               </div>
+                              <a (click)="hideme[index] = !hideme[index]">{{ hideme[item.description] ? 'Show less': 'Show More' }}</a>
                             </div>
                           </div>
                         </td>

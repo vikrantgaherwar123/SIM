@@ -206,6 +206,8 @@ select {
   
 }
 
+
+
 .addLabelBackroundColor{
   color: #118dfa;
   background-color: #d3eafd;
@@ -219,4 +221,23 @@ select {
   border-radius: 4px;
   padding: 2px 4px 4px 6px;
   margin-top: 5px;
+}
+
+.comment {
+	width: 400px;
+	background-color: #f0f0f0;
+	margin: 10px;
+}
+a {
+	color: #0254EB
+}
+a:visited {
+	color: #0254EB
+}
+a.morelink {
+	text-decoration:none;
+	outline: none;
+}
+.morecontent span {
+	display: none;
 }

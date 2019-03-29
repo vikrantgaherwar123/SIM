@@ -844,5 +844,17 @@ select{
   opacity: unset;
   margin-bottom: 6px;
 }
+/* added by vikrant */
+.moreDiscr {
+  font-size: 16px;
+  line-height: 16px;
+  height: 32px;
+  /* overflow: hidden; */
+}
+
+.show {
+  /* overflow: scroll; */
+  height: auto;
+}
 
 

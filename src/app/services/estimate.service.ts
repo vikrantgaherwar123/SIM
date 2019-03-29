@@ -14,8 +14,8 @@ export class EstimateService {
   private user: {
     access_token: string
   }
-  fetchByQueryUrl = '';
-  fetchTodaysInvEst = ''
+  private fetchByQueryUrl = '';
+  private fetchTodaysInvEst = ''
 
   constructor(private http: HttpClient, private CONST: CONSTANTS) {
     this.fetchUrl = `${CONST.BASE_URL}estimate/pull/quotation`

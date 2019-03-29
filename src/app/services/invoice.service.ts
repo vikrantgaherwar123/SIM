@@ -13,6 +13,7 @@ export class InvoiceService {
   private fetchByQueryUrl = ''
   private addUrl = ''
   private fetchPdfUrl = ''
+  private fetchTodaysInvEst = ''
   private user: {
     access_token: string
   }
@@ -21,6 +22,7 @@ export class InvoiceService {
     this.fetchUrl = `${CONST.BASE_URL}invoice_data/pull/invoice`
     this.fetchByIdUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/byId`
     this.fetchByQueryUrl = `${CONST.BASE_URL}invoice_data/pull/invoice/cientId`
+    this.fetchTodaysInvEst = `${CONST.BASE_URL}invoice_data/pull/today's/invoicesOrestimates`
     this.addUrl = `${CONST.BASE_URL}invoice_data/add/invoice`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/invoice/`
 
@@ -59,6 +61,18 @@ export class InvoiceService {
     }
 
     return this.http.post(this.fetchByQueryUrl, query, headers)
+  }
+
+
+  fetchTodaysData(query) {
+    const headers = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "accessToken": this.user.access_token
+      })
+    }
+
+    return this.http.post(this.fetchTodaysInvEst, query, headers)
   }
 
   add(invoice) {
