@@ -198,6 +198,7 @@ input:checked + .slider:before {
 .inline {
   margin-right: 10px;
   float: left;
+  padding: 4px 8px 6px 11px;
 }
 .loader {
   left: 50%;
@@ -277,9 +278,9 @@ textarea {
 	border-radius: 100px;
 }
 /* table row background color-bootstrap */
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f3f3f3 !important
-}
+/* .table-striped tbody tr:nth-of-type(odd) { */
+  /* background-color: #f3f3f3 !important */
+/* } */
 .padding_20
 {
   padding-left: 20px !important;
@@ -824,6 +825,26 @@ select{
 .text_right{
   text-align: right;
 }
+.moreDiscr {
+  font-size: 16px;
+  line-height: 16px;
+  height: 32px;
+  overflow: hidden;
+}
+
+.show {
+  /* overflow: scroll; */
+  height: auto;
+}
+/* error modal css */
+.title{
+  text-align: center;
+  color: #0299ff;
+  font-weight: bold;
+  margin-top: -16px;
+  font-family: quicksand_bold;
+}
+
 @media (min-width: 1440px)
 {
 .client_arrow {

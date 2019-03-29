@@ -20,7 +20,9 @@
 }
 .sidebar-nav > .menu-item-wrapper >.menu-parent:hover {
   /* background: #bae3ff; */
-  border-left: 4px solid #176cc1;
+  /* border-left: 4px solid #176cc1; */
+  border-left: none;
+
 }
 .sidebar-nav > .menu-item-wrapper a {
   text-decoration: none;

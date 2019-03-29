@@ -37,19 +37,14 @@
                 <div class="col-3 col_3_label">
                   <span class="client_label">Choose File<br> Format</span>
                 </div>
-                <div class="col-9 row" style="padding: 15px 0px 0px 9px;">
-                   <div class="checking"> 
-                     <a href="../../../assets/excel_files/clients.csv" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                      >
+                <div class="col-9 row" style="padding: 15px 0px 0px 21px;">
+                    <a href="../../../assets/excel_files/clients.csv" download  class="btn btn-default btn-lg">
                       <img src="assets/images/settings/csv.png" class="file_icon">CSV
                     </a>
-                  </div>
-                    <a href="../../../assets/excel_files/clients.xls" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                      style="color: #0299ff !important;font-family: quicksand_bold !important;">
+                    <a href="../../../assets/excel_files/clients.xls" download class="btn btn-default btn-lg">
                       <img src="assets/images/settings/xls.png" class="file_icon">XLS
                     </a>
-                    <a href="../../../assets/excel_files/clients.xlsx" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                      style="color: #0299ff !important;font-family: quicksand_bold !important;">
+                    <a href="../../../assets/excel_files/clients.xlsx" download class="btn btn-default btn-lg">
                       <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                     </a>
                 </div>
@@ -59,17 +54,14 @@
                 <div class="col-3 col_3_label">
                   <span class="client_label">Choose File Format</span>
                 </div>
-                <div class="col-9 row" style="padding: 13px 2px 2px 10px">
-                    <a href="../../../assets/excel_files/products.csv" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                    style="color: #0299ff !important;font-family: quicksand_bold !important;">
+                <div class="col-9 row" style="padding: 13px 2px 2px 21px">
+                    <a href="../../../assets/excel_files/products.csv" download class="btn btn-default btn-lg">
                     <img src="assets/images/settings/csv.png" class="file_icon">CSV
                   </a>
-                  <a href="../../../assets/excel_files/products.xls" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                    style="color: #0299ff !important;font-family: quicksand_bold !important;">
+                  <a href="../../../assets/excel_files/products.xls" download class="btn btn-default btn-lg">
                     <img src="assets/images/settings/xls.png" class="file_icon">XLS
                   </a>
-                  <a href="../../../assets/excel_files/products.xlsx" download class="file_text btn btn-raised save_btn btn-custom-1 pull-right font-weight-bold ml-2"
-                    style="color: #0299ff !important;font-family: quicksand_bold !important;">
+                  <a href="../../../assets/excel_files/products.xlsx" download class="btn btn-default btn-lg">
                     <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                   </a>
                 </div>
@@ -88,8 +80,9 @@
               <div class="col-2" style="padding: 19px 2px 2px 24px;">
                 <span class="client_label">Or</span>
               </div>
-              <div class="col-4" style="padding: 9px 2px 2px 60px">
-                <label  class="btn btn-raised btn-custom-1 width20btn upload_btn">Upload
+              <div class="col-4" style="padding: 9px 2px 2px 55px">
+                <label class="btn btn-raised btn-custom-1 width20btn upload_btn" style="height: 42px;
+                padding: 11px 8px !important;">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
               </div>
@@ -414,18 +407,19 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
   <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
     <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
+      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;opacity: unset;">
+      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;margin: 0 auto;">
         OK
       </button>
-     
+
     </div>
   </div>
 </div>

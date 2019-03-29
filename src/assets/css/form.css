@@ -150,8 +150,9 @@ a.more {
 }
 
 .form-group .input-group .input-group-addon, .input-group .input-group-addon {
-	padding-right: 6px;
+	padding-right: 1px;
 	padding-left: 0;
+	width: 37px;
 }
 .input-group-addon {
 	padding: 6px 12px;

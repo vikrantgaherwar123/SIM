@@ -1,5 +1,8 @@
 @import '../../../../assets/css/form.css';
-
+a, a:hover, a:focus {
+	color: none;
+	cursor: pointer;
+}
 /* setting css starts*/
 .edit-setting .taxradio label,.edit-setting .discountradio label{
   text-align: center !important;
@@ -274,6 +277,44 @@ input[type=text] {
   text-align: center;
   color: black;
 }
-.checking :hover{
-  background-color: red;
+/* hover */
+.btn {
+  display: inline-block;
+  padding: 4px 8px;
+  height: 32px;
+  margin-left: 6px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn:hover
+{
+  background-image:none !important;
+  background-color:#bae3ff !important;
+}
+::-moz-selection { /* Code for Firefox */
+  color: red;
+  background: yellow;
+}
+
+::selection {
+  color: red;
+  background: yellow;
+}
+.btn-default{
+  color: #333;
+  background-color: #ddf1ff;
 }
