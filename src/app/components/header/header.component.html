@@ -15,38 +15,46 @@
       </div>
       <div  class="row">
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
-              <span class="span_text"><img src="assets/images/invoice_n.png" class="nav_img" alt="logo" /> <span>Invoices</span></span>
+          <h5 class="menu_list">
+            <button (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
+              <span class="span_text"><img src="{{invSrc}}" class="nav_img" alt="logo" /> <span>Invoices</span></span>
+            </button>
+          </h5>
+        </div>
+        <div class="d-sm-flex"  >
+          <h5 class="menu_list">
+            <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()" [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
+              <span class="span_text">
+                <img src="{{estSrc}}" class="nav_img" alt="" />
+                Estimates</span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
-              <span class="span_text"><img src="assets/images/estimet_n.png" class="nav_img" alt="logo" />Estimates</span>
-            </button>
-          </h5>
-        </div>
-        <div class="d-sm-flex">
-            <h5 class="menu_list"><button [class.active]="router.url==='/client'" [routerLink]="['/client']"class="navbtn">
-                <span class="span_text"><img src="assets/images/client_img.png" class="nav_img" alt="logo" />Clients</span>
+            <h5 class="menu_list">
+              <button (mouseover)="onClientHover()" (mouseleave)="offClientHover()" [class.active]="router.url==='/client'" [routerLink]="['/client']"class="navbtn">
+                <span class="span_text"><img src="{{clientSrc}}" class="nav_img" alt="logo" />Clients</span>
               </button>
             </h5>
           </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
-              <span class="span_text"><img src="assets/images/product_n.png" class="nav_img" alt="logo" />Products</span>
+          <h5 class="menu_list">
+            <button  (mouseover)="onProductHover()" (mouseleave)="offProductHover()" [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
+              <span class="span_text"><img src="{{productSrc}}" class="nav_img" alt="logo" />Products</span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list"><button [class.active]="router.url==='/setting/primary'" [routerLink]="['/setting/primary']" class="navbtn">
-              <span class="span_text"><img class="nav_img" src="assets/images/setting_n.png" alt="logo" />Settings</span>
+          <h5 class="menu_list">
+            <button (mouseover)="onSettingHover()" (mouseleave)="offSettingHover()" [class.active]="router.url==='/setting/primary'" [routerLink]="['/setting/primary']" class="navbtn">
+              <span class="span_text"><img class="nav_img" src="{{settingSrc}}" alt="logo" />Settings</span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
-            <h5 class="menu_list"><button [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn">
-                <span class="span_text"><img class="nav_img" src="assets/images/batch_upload.png" alt="logo" />Batch Upload</span>
+            <h5 class="menu_list">
+              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn">
+                <span class="span_text"><img class="nav_img" src="{{BatchSrc}}" alt="logo" />Batch Upload</span>
               </button>
             </h5>
           </div>
