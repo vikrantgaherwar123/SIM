@@ -981,7 +981,6 @@ export class AddEditComponent implements OnInit {
   }
 
   addEditInvoiceItem(uid = null) {
-    this.showMore();
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
     
@@ -1046,9 +1045,6 @@ export class AddEditComponent implements OnInit {
     }
     }
   }
-  }
-  showMore(): any {
-    throw new Error("Method not implemented.");
   }
 
   closeItemModel() {

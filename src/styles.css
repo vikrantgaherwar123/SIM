@@ -832,17 +832,27 @@ select{
   overflow: hidden;
 }
 
-.show {
-  /* overflow: scroll; */
-  height: auto;
-}
+
 /* error modal css */
 .title{
   text-align: center;
   color: #0299ff;
   font-weight: bold;
-  margin-top: -16px;
+  margin-top: -15px;
   font-family: quicksand_bold;
+  font-size: 25px;
+}
+.erroe_para{
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: 13px !important;
+  text-align: center;
+  margin-bottom: 22px;
+}
+.error_logo{
+  height: 44px;
+  margin: 2px auto;
+  margin-top: 18px;
 }
 
 @media (min-width: 1440px)
@@ -859,12 +869,11 @@ select{
 }
 
 .center{
-  height: 52px;
+  height: 46px;
   margin-top: 12px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* margin-top: -34px; */
   opacity: unset;
   margin-bottom: 6px;
 }
