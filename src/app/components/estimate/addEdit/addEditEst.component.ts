@@ -59,6 +59,7 @@ export class AddEditEstComponent implements OnInit {
   editTerms: boolean = true
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
+  hideme = []
 
   last
   index

@@ -290,7 +290,7 @@
                                 <pre class="text-left selected-items"
                                   style="margin-left: 10px;font-family: quicksand_regular !important;overflow: hidden">{{item.description}}</pre><!-- mCustomScrollbar style-3-->
                               </div>
-                              <a (click)="hideme[index] = !hideme[index]">{{ hideme[item.description] ? 'Show less': 'Show More' }}</a>
+                              <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span>
                             </div>
                           </div>
                         </td>

@@ -848,8 +848,17 @@ select{
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
-  height: 32px;
-  /* overflow: hidden; */
+  height: 46px;
+  overflow: hidden;
+}
+
+.morebtn{
+  background-color: white;
+  border-radius: 5px;
+  font-size: 11px;
+  float: right;
+  cursor: pointer;
+  font-family: quicksand_bold !important;
 }
 
 .show {

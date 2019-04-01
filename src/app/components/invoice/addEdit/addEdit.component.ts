@@ -241,12 +241,6 @@ export class AddEditComponent implements OnInit {
     }
   }
 
-  // showMore(index){
-  //   Object.keys(this.hideme).forEach(h => {
-  //     this.hideme[h] = false;
-  //   });
-  //   this.hideme[index] = true;
-  // }
   
   addInit() {
     //tax and discount position according to settings changed
