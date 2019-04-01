@@ -884,5 +884,35 @@ background-color: none;
   opacity: unset;
   margin-bottom: 6px;
 }
+/* added by vikrant */
+.moreDiscr {
+  font-size: 16px;
+  line-height: 16px;
+  height: 52px;
+  overflow: hidden;
+}
+
+.morebtn{
+  background-color: white;
+  border-radius: 5px;
+  font-size: 11px;
+  float: right;
+  cursor: pointer;
+  font-family: quicksand_bold !important;
+}
+
+.show {
+  /* overflow: scroll; */
+  height: auto;
+}
+
+.item_box_shadow{
+  background-color: white !important;
+  border-left: 3px solid #0299ff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
+  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+}
 
 

@@ -59,6 +59,7 @@ export class AddEditEstComponent implements OnInit {
   editTerms: boolean = true
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
+  hideme = []
 
   last
   index
@@ -117,6 +118,7 @@ export class AddEditEstComponent implements OnInit {
   isDeleted: boolean = false;
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
+  errorMessage: any;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -321,7 +323,7 @@ export class AddEditEstComponent implements OnInit {
               this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
             }
             this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-          },err => this.openErrorModal())
+          },err => this.openErrorModal(err))
         } else {
           this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
         }
@@ -361,7 +363,7 @@ export class AddEditEstComponent implements OnInit {
         this.toasterService.pop('failure', 'Invalid estimate id');
         this.router.navigate(['/estimate/view'])
       }
-    },err => this.openErrorModal())
+    },err => this.openErrorModal(err))
   }
 
   commonSettingsInit() {
@@ -472,7 +474,7 @@ export class AddEditEstComponent implements OnInit {
         //  else {
         //   this.setProductFilter()
         // }
-      },err => this.openErrorModal())
+      },err => this.openErrorModal(err))
     } else {
       this.setProductFilter()
     }
@@ -508,7 +510,7 @@ export class AddEditEstComponent implements OnInit {
         }
         this.setClientFilter()
         
-      },err => this.openErrorModal())
+      },err => this.openErrorModal(err))
     } else {
       
       this.setClientFilter()
@@ -523,7 +525,7 @@ export class AddEditEstComponent implements OnInit {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
         this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      },err => this.openErrorModal())
+      },err => this.openErrorModal(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
     }
@@ -581,7 +583,7 @@ export class AddEditEstComponent implements OnInit {
     //     this.activeEstimate.estimate_number = this.tempEstNo.toString();
     //   }
     // }
-    },err => this.openErrorModal()
+    },err => this.openErrorModal(err)
     )
   }
 
@@ -632,7 +634,7 @@ export class AddEditEstComponent implements OnInit {
           )
         }
         // this.setClientFilter()
-      },err => this.openErrorModal()
+      },err => this.openErrorModal(err)
       )
   }
 }
@@ -737,7 +739,7 @@ export class AddEditEstComponent implements OnInit {
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
-      },err => this.openErrorModal()
+      },err => this.openErrorModal(err)
       )
     }else {
       if (!proStatus) {
@@ -886,7 +888,7 @@ export class AddEditEstComponent implements OnInit {
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
-    },err => this.openErrorModal()
+    },err => this.openErrorModal(err)
     )
   }
 
@@ -976,7 +978,7 @@ export class AddEditEstComponent implements OnInit {
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
           this.toasterService.pop('failure', 'Error occured');
         }
-      },err => this.openErrorModal()
+      },err => this.openErrorModal(err)
       )
     }
   }
@@ -1119,7 +1121,7 @@ export class AddEditEstComponent implements OnInit {
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
-    },err => this.openErrorModal()
+    },err => this.openErrorModal(err)
     )
   }
   // validate user if he removes invoice number and try to save invoice 
@@ -1266,12 +1268,13 @@ export class AddEditEstComponent implements OnInit {
     }
     // settings1.androidSettings.estNo = this.tempEstNo
 
-    this.settingService.add(settings1).subscribe((response: any) => { },err => this.openErrorModal()
+    this.settingService.add(settings1).subscribe((response: any) => { },err => this.openErrorModal(err)
     )
   }
 
   // error modal
-  openErrorModal() {
+  openErrorModal(err) {
+    this.errorMessage = err
     $('#error-message').modal('show')
     $('#error-message').on('shown.bs.modal', (e) => {
     })
@@ -1282,33 +1285,42 @@ export class AddEditEstComponent implements OnInit {
 
   fetchEstimates() {
     // Fetch estimates with given query
+
     var start = new Date();
-    var d = new Date(start),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-    var date = [year, month, day].join('-');
+    start.setHours(0, 0, 0, 0);
+    var  query = {
+        startDate: start.getTime(),
+        endDate: new Date().getTime(),
+        serviceIdentifier: true
+      }
 
-    var query = {
-      clientIdList: null,
-      startTime: date,
-      endTime: date
-    }
+    // var start = new Date();
+    // var d = new Date(start),
+    //   month = '' + (d.getMonth() + 1),
+    //   day = '' + d.getDate(),
+    //   year = d.getFullYear();
+    // if (month.length < 2) month = '0' + month;
+    // if (day.length < 2) day = '0' + day;
+    // var date = [year, month, day].join('-');
+
+    // var query = {
+    //   clientIdList: null,
+    //   startTime: date,
+    //   endTime: date
+    // }
 
 
-      this.estListLoader = true
-      this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-        if (response.status === 200) {
-          this.estListLoader = false
-          this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-          // Set Active invoice whenever invoice list changes
-          this.store.select('estimate').subscribe(estimates => {
-            this.estimateList = estimates
-          })
-        }
-      }, err => this.openErrorModal());
+    this.estListLoader = true
+    this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.estListLoader = false
+        this.store.dispatch(new estimateActions.reset(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+        })
+      }
+    }, err => this.openErrorModal(err));
   }
 
   setActiveEst(estId: string = '') {
@@ -1371,7 +1383,7 @@ export class AddEditEstComponent implements OnInit {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptyNameClients();
-      },err => this.openErrorModal()
+      },err => this.openErrorModal(err)
       )
     }
 
@@ -1417,7 +1429,7 @@ export class AddEditEstComponent implements OnInit {
         window.open(a.toString())
         $('#previewBtn').removeAttr('disabled')
       }
-    },err => this.openErrorModal()
+    },err => this.openErrorModal(err)
     )
   }
 

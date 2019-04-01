@@ -73,6 +73,7 @@ export class AddEditComponent implements OnInit {
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   addClientModal: any = {}
+  hideme = []
 
   private productList: product[]
   activeItem: any = {
@@ -126,6 +127,7 @@ export class AddEditComponent implements OnInit {
   showTodaysDiscountRate: boolean;
   isDeleted: boolean = false;
   noProductSelected: boolean = false;
+  show: false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -238,6 +240,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
+
   
   addInit() {
     //tax and discount position according to settings changed
@@ -975,7 +978,7 @@ export class AddEditComponent implements OnInit {
       unit: product.unit,
       rate: product.rate,
       tax_rate: product.taxRate,
-      discount: 0.00
+      discount: 0.00,
     }
     this.calculateTotal()
   }
@@ -1003,6 +1006,7 @@ export class AddEditComponent implements OnInit {
         // Edit Item from Invoice
         var index = this.activeInvoice.listItems.findIndex(it => it.unique_identifier == uid)
         this.activeInvoice.listItems[index] = this.activeItem
+
         $('#edit-item').modal('hide')
       }
       this.addItem.reset('')
@@ -1601,25 +1605,18 @@ export class AddEditComponent implements OnInit {
   fetchInvoices() {
     // Fetch invoices with given query
     var start = new Date();
-    var d = new Date(start),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-    var date = [year, month, day].join('-');
-
-    var query = {
-      clientIdList: null,
-      startTime: date,
-      endTime: date
-    }
+    start.setHours(0, 0, 0, 0);
+    var  query = {
+        startDate: start.getTime(),
+        endDate: new Date().getTime(),
+        serviceIdentifier: false
+      }
 
     this.invListLoader = true
-    this.invoiceService.fetchByQuery(query).subscribe((response: any) => {
+    this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.reset(response.records ? response.records.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
         this.store.select('invoice').subscribe(invoices => {
           this.invoiceList = invoices
         })

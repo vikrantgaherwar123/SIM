@@ -14,12 +14,14 @@ export class EstimateService {
   private user: {
     access_token: string
   }
-  fetchByQueryUrl = '';
+  private fetchByQueryUrl = '';
+  private fetchTodaysInvEst = ''
 
   constructor(private http: HttpClient, private CONST: CONSTANTS) {
     this.fetchUrl = `${CONST.BASE_URL}estimate/pull/quotation`
     this.fetchByIdUrl = `${CONST.BASE_URL}estimate/pull/estimate/byId`
     this.fetchByQueryUrl = `${CONST.BASE_URL}estimate/pull/estimate/clientId`
+    this.fetchTodaysInvEst = `${CONST.BASE_URL}invoice_data/pull/today's/invoicesOrestimates`
     this.fetchPdfUrl = `${CONST.BASE_URL}pdf/estimate/`
     this.addUrl = `${CONST.BASE_URL}estimate/add-estimate`
     
@@ -58,6 +60,18 @@ export class EstimateService {
     }
 
     return this.http.post(this.fetchByQueryUrl, query, headers)
+  }
+
+  fetchTodaysData(query){
+    const headers = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "accessToken": this.user.access_token
+      })
+    }
+
+    return this.http.post(this.fetchTodaysInvEst, query, headers)
+
   }
 
   add(estimate) {

@@ -1,63 +1,48 @@
- <div id="log"></div>
-<div class="row main-wrapper">
-    <div class="col-12" id="main">
-      <div style="margin: 0px auto; max-width:1000px;" class="back">
+<div class="col-md-4 row main-wrapper" style="background-color: #ffffff !important;">
+    <div class="col-12" id="main" style="background-color: #ffffff !important;">
+      <div style="margin: 44px auto; max-width:1000px;" class="back">
         <form class="shadow" name="userForm" #form="ngForm">
-          <div align="center" class="custom-field-form" style="padding: 15px">
-            <div class="col-12" style="margin-bottom: 10px;">
+          <div align="center" class="custom-field-form shadow formBackground">
+            <div class="row" style="margin-bottom: 10px;padding: 9px 0px 7px 292px;border-bottom: 1px solid;">
               <h5 class=" form-header font-custom-bold" style="margin-top: 0px;">
                Support
               </h5>
             </div>
+            <div style="padding-top: 13px;">
+              <p class="noteText">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to.
+              </p>
+            </div>
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
-                <input type="text" id="CurrPass" name="orgName" class="form-control"
-                  [(ngModel)]="orgName" onfocus="this.select()"
+                <input type="text" id="CurrPass" name="orgName" class="form-control" style="padding: 20px;margin-bottom: 25px;"
+                  [(ngModel)]="orgName" onfocus="this.select()" placeholder="Name"
                 />
               </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <input type="text" id="CurrPass" name="orgMail" class="form-control"
-                    [(ngModel)]="orgMail" onfocus="this.select()"
+                    [(ngModel)]="orgMail" onfocus="this.select()" placeholder="Email"
                   />
-                </div>
+                </div> -->
               </div>
   
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
                 <textarea type="text" name="queryMessage" class="form-control mCustomScrollbar style-3"
-                  placeholder="Your Query" style="height: auto !important;" onfocus="this.select()"
+                  placeholder="Your Query" style="margin-bottom: 25px;height: 165px !important;" onfocus="this.select()"
                   [(ngModel)] = "queryMessage"
                 ></textarea>
               </div>
             </div>
-            <input type="text"  name="osname" class="form-control" [(ngModel)]="osName"
-              onfocus="this.select()" />
-              <input type="text"  name="osversion" class="form-control" [(ngModel)]="osVersion"
-              onfocus="this.select()" /> 
-               <input type="text"  name="browsername" class="form-control" [(ngModel)]="browserName"
-              onfocus="this.select()" />
-              <input type="text"  name="browserversion" class="form-control" [(ngModel)]="browserVersion"
-              onfocus="this.select()" />
-
-              <input type="text"  name="userAgent" class="form-control" [(ngModel)]="userAgent"
-              onfocus="this.select()" />
-              <input type="text"  name="appVersion" class="form-control" [(ngModel)]="appVersion"
-              onfocus="this.select()" />
-              <input type="text"  name="platform" class="form-control" [(ngModel)]="platform"
-              onfocus="this.select()" />
-              <input type="text"  name="vendor" class="form-control" [(ngModel)]="vendor"
-              onfocus="this.select()" />
-                  
-            
-            <div style="margin: 0 auto; max-width: 300px">
-              <button type="submit" id="bankingDetailSubmit" style="width: 300px;border: none !important;"
-                class="save_btn btn-raised font-weight-bold ml-2 font-custom-bold" (click)="sendMail()"
-               
-              >
-                SAVE
+            <div>
+              <button type="submit" id="bankingDetailSubmit" style="width: 323px;border: none !important;"
+                class="save_btn btn-raised font-weight-bold font-custom-bold" (click)="sendMail()">
+                Send
               </button>
-              <!-- <button type="button" (click)="mailing(orgMail.value)">send Mail</button> -->
             </div>
+              
+              <!-- <button type="button" (click)="mailing(orgMail.value)">send Mail</button> -->
+            
           </div>
         </form>
       </div>

@@ -284,10 +284,11 @@
                               <div class="product-color" style="margin-left: 10px;">
                                 {{item.product_name}}
                               </div>
-                              <div>
-                                <pre class="selected-items article style-3" id="demo"
-                                  style="margin-left: 10px;font-family: quicksand_regular !important;">{{item.description}}</pre>
+                              <div class="moreDiscr" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
+                                <pre class="text-left selected-items"
+                                  style="margin-left: 10px;font-family: quicksand_regular !important;overflow: hidden">{{item.description}}</pre>
                               </div>
+                              <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span>
                             </div>
                           </div>
                         </td>

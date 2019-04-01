@@ -184,14 +184,7 @@ select {
   border-left: 6px solid green;
   height: 500px;
 }
-.item_box_shadow{
-  background-color: white !important;
-  border-left: 4px solid #0299ff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
-  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);
-}
+
 a {
 	color: #0254EB
 }
@@ -237,6 +230,8 @@ a.morelink {
   
 }
 
+
+
 .addLabelBackroundColor{
   color: #118dfa;
   background-color: #d3eafd;
@@ -247,5 +242,24 @@ a.morelink {
   color: white;
   background-color: #2096f3;
   padding: 2px 4px 4px 6px;
-  /* margin-top: 5px; */
+  margin-top: 5px;
+}
+
+.comment {
+	width: 400px;
+	background-color: #f0f0f0;
+	margin: 10px;
+}
+a {
+	color: #0254EB
+}
+a:visited {
+	color: #0254EB
+}
+a.morelink {
+	text-decoration:none;
+	outline: none;
+}
+.morecontent span {
+	display: none;
 }
