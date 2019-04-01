@@ -198,6 +198,7 @@ input:checked + .slider:before {
 .inline {
   margin-right: 10px;
   float: left;
+  padding: 4px 8px 6px 11px;
 }
 .loader {
   left: 50%;
@@ -277,9 +278,9 @@ textarea {
 	border-radius: 100px;
 }
 /* table row background color-bootstrap */
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f3f3f3 !important
-}
+/* .table-striped tbody tr:nth-of-type(odd) { */
+  /* background-color: #f3f3f3 !important */
+/* } */
 .padding_20
 {
   padding-left: 20px !important;
@@ -821,6 +822,39 @@ select{
 .swap-on-hover:hover > .swap-on-hover__front-image{
   opacity: 0;
 }
+.text_right{
+  text-align: right;
+}
+.moreDiscr {
+  font-size: 16px;
+  line-height: 16px;
+  height: 32px;
+  overflow: hidden;
+}
+
+
+/* error modal css */
+.title{
+  text-align: center;
+  color: #0299ff;
+  font-weight: bold;
+  margin-top: -15px;
+  font-family: quicksand_bold;
+  font-size: 25px;
+}
+.erroe_para{
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: 13px !important;
+  text-align: center;
+  margin-bottom: 22px;
+}
+.error_logo{
+  height: 44px;
+  margin: 2px auto;
+  margin-top: 18px;
+}
+
 @media (min-width: 1440px)
 {
 .client_arrow {
@@ -835,12 +869,11 @@ select{
 }
 
 .center{
-  height: 52px;
+  height: 46px;
   margin-top: 12px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* margin-top: -34px; */
   opacity: unset;
   margin-bottom: 6px;
 }
@@ -848,7 +881,7 @@ select{
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
-  height: 46px;
+  height: 52px;
   overflow: hidden;
 }
 
@@ -864,6 +897,15 @@ select{
 .show {
   /* overflow: scroll; */
   height: auto;
+}
+
+.item_box_shadow{
+  background-color: white !important;
+  border-left: 3px solid #0299ff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
+  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);
 }
 
 

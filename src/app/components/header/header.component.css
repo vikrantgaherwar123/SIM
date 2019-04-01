@@ -33,6 +33,7 @@
   font-size: 14px;
   padding: 1px 0px 1px 2px;
   font-weight: bold;
+  margin-left: -11px;
 }
 .span_text{
   text-transform: uppercase;
@@ -43,7 +44,7 @@
 }
 .nav_img{
   height: 22px;
-  padding-right: 2px;
+  /* padding-right: 2px; */
 }
 .dropdown-toggle::after {
   display: inline-block;
@@ -115,7 +116,7 @@
   margin: 1.125rem 0 0;
   font-size: 1rem;
   color: #212529;
-  top: -13px !important;
+  top: -5px !important;
   left: 46px !important;
   text-align: left;
   list-style: none;
@@ -166,4 +167,5 @@
 }
 .make_bg_blue{
   background-color:#0299ff;
+  width: 66px;
 }

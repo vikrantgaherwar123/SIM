@@ -51,10 +51,12 @@
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
 
-                            <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn" style="position: fixed;width: auto;">
+                            <div class="col-4">
+                              <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
+                              class="btn btn-primary add_client_btn" style="position: fixed;max-width: 32%;">
                               <i class="fa fa-plus"></i>Add New Client
                             </button>
+                            </div>
                             
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
@@ -244,29 +246,29 @@
                         </td>
                         <td width="10%">
                           <input type="text" style="font-size: 12.5px !important;" id="itemQtyLabel"
-                            class="bld w-100" name="quantity" disabled
+                            class="bld w-100 text_right" name="quantity" disabled
                             value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}" />
                         </td>
                         <td width="10%">
-                          <input type="text" style="font-size: 12.5px !important;" id="itemRateLabel"
-                            class="bld w-100" name="rate" disabled
+                          <input type="text " style="font-size: 12.5px !important;" id="itemRateLabel"
+                            class="bld w-100 text_right" name="rate" disabled
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                         </td>
                         <td width="9%"
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                          <input type="text" id="itemTaxLabel" class="bld w-100" name="tax-rate" disabled
+                          <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="tax-rate" disabled
                             style="font-size: 12.5px !important;" style="font-size: 12.5px !important;"
                             value="Tax (%)" />
                         </td>
                         <td width="9%"
                           *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
-                          <input type="text" id="itemDiscountLabel" class="bld w-100 " name="discount"
+                          <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="discount"
                             disabled value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                             style="font-size: 12.5px !important;" />
                         </td>
                         <td width="9%">
                           <input style="font-size: 12.5px !important;" type="text" id="itemAmtLabelAdd"
-                            class="bld w-100" name="amount" disabled
+                            class="bld w-100 text_right" name="amount" disabled
                             value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                         </td>
                         <td width="5%" class="text-center"
@@ -283,39 +285,39 @@
                         <td [class.no-border-last]="last">
                           <div class="">
                             <div class="form-group" style="margin-bottom: -12px;margin-top: 8px;">
-                              <div class="text-left product-color" style="margin-left: 10px;">
+                              <div class="product-color" style="margin-left: 10px;">
                                 {{item.product_name}}
                               </div>
                               <div class="moreDiscr" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
                                 <pre class="text-left selected-items"
-                                  style="margin-left: 10px;font-family: quicksand_regular !important;overflow: hidden">{{item.description}}</pre><!-- mCustomScrollbar style-3-->
+                                  style="margin-left: 10px;font-family: quicksand_regular !important;overflow: hidden">{{item.description}}</pre>
                               </div>
                               <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span>
                             </div>
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
-                          <div class="">
+                          <div class="text_right">
                             {{item.quantity | number:'1.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
-                          <div class="">
+                          <div class="text_right">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
-                          <div class="">
+                          <div class="text_right">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
-                          <div class="">
+                          <div class="text_right">
                             {{item.discount | number:'2.'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
-                          <div class="">
+                          <div class="text_right">
                             {{item.total | number:'2.'}}
                           </div>
                         </td>
@@ -330,7 +332,7 @@
                         <td [class.no-border-last]="last">
                           <div class="text-center">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/delete_dark.png" class="hg_20 img_hover"
+                              <img src="assets/images/cross.png" class="hg_20 img_hover"
                                 style="margin-bottom: 7px;">
                             </a>
                           </div>
@@ -338,11 +340,12 @@
                       </tr>
 
                       <!-- Select Item for invoice input -->
-                      <tr *ngIf="disableProductText === true" class="row-item"
-                        style="background-color: white !important; box-shadow: 0 17px 22px 6px #e4e1e1">
+                      <tr *ngIf="disableProductText === true" class="row-item item_box_shadow">
                         <td [class.no-border-last]="last">
-                          <div class="form-group" style="border-left: 4px solid #0299ff;padding-right: -2px;padding-left: 4px;
-                          border-radius: 2px;">
+
+                          <div class="form-group" style="padding-right: -2px;padding-left: 4px;
+                          border-radius: 2px;padding: 4px 2px;">
+                        <div class="v1"></div>
                             <input type="text" name="product-name" class="form-control billing-input" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
@@ -360,24 +363,24 @@
                               <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
                                 name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
+                                style="margin-top: 3px;height: 55px !important;border-top: 1px solid white;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
                                 placeholder="Description" onfocus="this.select()"></textarea>
                               <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" placeholder="Description"
+                                style="margin-top: 3px;height: 55px !important;border-top: 1px solid white;overflow-y: auto !important;" placeholder="Description"
                                 onfocus="this.select()"></textarea>
                             </div>
                           </div>
                         </td> 
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
-                          <div class="form-group">
+                          <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" name="itemQty" id="qty" step="any" tabindex="2"
-                              class="form-control  height_40" min="0" [(ngModel)]="activeItem.quantity"
+                              class="form-control height_40 text_right" min="0" [(ngModel)]="activeItem.quantity"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
 
-                          <button type="button" style="margin-top: 20px;" tabindex="7"
+                          <button type="button" style="margin-top: 14px;" tabindex="7"
                             class="btn save_btn btn-raised add_new_btn add_item_mr_discount"
                             (click)="addEditInvoiceItem()">
                             Add Item
@@ -385,42 +388,42 @@
                         </td>
 
                         <td style="vertical-align: top;" [class.no-border-last]="last">
-                          <div class="form-group">
+                          <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" name="itemRate" step="any" tabindex="3"
-                              class="form-control height_40" min=0 [(ngModel)]="activeItem.rate"
+                              class="form-control height_40 text_right" min=0 [(ngModel)]="activeItem.rate"
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
                           *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                          <div class="input-group">
+                          <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemTaxRate" tabindex="4"
-                              class="form-control  height_40" min=0 max=100
+                              class="form-control height_40 text_right" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
-                              <span class="input-group-text p-0" style="width: 22px;">%</span>
+                              <span class="input-group-text p-0" style="width: 22px;border-left: none;">%</span>
                             </div>
                           </div>
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
                           *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
-                          <div class="input-group">
+                          <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemDiscountRate" tabindex="5"
-                              class="form-control height_40" min=0 max=100 [(ngModel)]="activeItem.discount"
+                              class="form-control height_40 text_right" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
                               style="border-right: none !important" />
                             <div class="input-group-append">
-                              <span class="input-group-text p-0" style="width: 22px;">%</span>
+                              <span class="input-group-text p-0" style="width: 22px;border-left: none;">%</span>
                             </div>
                           </div>
                           <!-- <div class="text-right">{{activeItem.discount_amount}}</div>            -->
                         </td>
 
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                          <div class="form-group">
-                            <input type="number" step="any" class="form-control height_40" readonly
+                          <div class="form-group" style="padding: 4px 2px;">
+                            <input type="number" step="any" class="form-control height_40 text_right" readonly
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total"
                               style="border: 0px solid #ced4da !important;background-color: #f2f1f1 !important;"
@@ -428,13 +431,14 @@
                             <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
                           </button> -->
-
-
                           </div>
                         </td>
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
+                          
+                        </td>
+                        <td style="vertical-align: top;text-align: center; position: relative !important;" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
-                            alt="logo" style="height: 24px;margin-top: 2px;" class="img_hover">
+                            alt="logo" style="margin-top: 2px;" class="hg_20">
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
@@ -508,11 +512,11 @@
                     <div class="col-12 px-0" style="font-size: 13px;">
                       <div class="form-group" style="margin-top: 10px;">
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
-                          <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
+                          <div *ngIf="term.terms" class="col-12 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
                             <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
-                          <hr style="width: 403px;margin-top: 6px !important;">
+                            <hr style="width: 403px;margin-top: 6px !important;">
                           </div>
-                          <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                          <div *ngIf="!term.terms" class="col-12 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                             <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
                           </div>
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)"
@@ -1204,9 +1208,9 @@
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3" style="border-left: 1px solid #cecece;margin-top: -3px;">
         <div class="row" style="padding-top: 15px;padding-bottom: 4px;margin:0 auto;">
-          <button type="button" class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+          <button type="button" style="padding: 14px;" class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
-            <i class="fa fa-search" style="padding: 12px 0px;"></i>
+            <img src="assets/images/search64.png" alt="logo" style="width: 14px;">
           </button>
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
@@ -1669,16 +1673,15 @@
   <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
     <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
       <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo" class="img_hover" style="height: 28px;
-        margin: 0 auto;">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
       </div>
       <div class="modal-body">
         <h3 class="title">Connection Lost !</h3>
-        <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again
+        <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
           !!!</p>
       </div>
       <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-        <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold"
+        <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
           data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
           OK
         </button>

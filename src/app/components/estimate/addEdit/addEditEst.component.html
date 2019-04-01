@@ -1,7 +1,7 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-      <div id="msgInv" *ngIf="viewTodaysEstimate == false" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" *ngIf="viewTodaysEstimate == false" style="padding-right: 13px;" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
         <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
           (ngSubmit)="save(estimateGeneratorAdd.valid)">
           <div class="shadow back p-5" style="border-radius: 2px;">
@@ -209,7 +209,7 @@
                   </tr>
 
                   <!-- Select Item for estimate input -->
-                  <tr *ngIf="disableProductText === true" class="row-item" style="background-color: white !important;">
+                  <tr *ngIf="disableProductText === true" class="row-item item_box_shadow" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
                       <div class="form-group">
                         <input type="text" name="product-name" class="form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
@@ -616,7 +616,7 @@
       </div>
 
       <!--Toays Estimate Starts-->
-      <div *ngIf="viewTodaysEstimate == true" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
+      <div *ngIf="viewTodaysEstimate == true" style="padding-right: 13px;" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back" style="border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
@@ -1287,18 +1287,19 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
   <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
     <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
+      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
-     
+
     </div>
   </div>
 </div>

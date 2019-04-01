@@ -25,6 +25,12 @@
     </div>
   </div>
 
+  <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/client') || isActive('/client/batch') }">
+    <div class="menu-parent btn" (click)="toggle('/client');">
+      <a><span><img src="assets/images/menu-logo/client_logo.png" alt="logo" /></span></a>
+    </div>
+  </div>
+
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/product') || isActive('/product/batch') }">
     <div class="menu-parent btn" (click)="toggle('/product');">
       <a><span><img src="assets/images/menu-logo/product_logo.png" alt="logo" /></span></a>
@@ -40,6 +46,12 @@
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/support') }">
     <div class="menu-parent btn" (click)="toggle('/support')">
       <a><span><img src="assets/images/menu-logo/setting_logo.png" alt="logo" /></span></a>
+    </div>
+  </div>
+ 
+  <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/setting/batchUpload') || isActive('/product/batch') }">
+    <div class="menu-parent btn" (click)="toggle('/setting/batchUpload')">
+      <a><span><img src="assets/images/menu-logo/batch_logo.png" alt="logo" /></span></a>
     </div>
   </div>
  

@@ -1,5 +1,5 @@
 .sidebar-nav {
-  height: 100vh;
+  height: 80vh;
   width: 65px;
   position: fixed;
   top: 56px;
@@ -8,6 +8,7 @@
 .sidebar-nav > .menu-item-wrapper {
   cursor: pointer;
   display: block;
+  padding-top: 22px;
   /* border-bottom: 1px solid #e9ecf2; */
   margin: 0;
 }
@@ -19,7 +20,9 @@
 }
 .sidebar-nav > .menu-item-wrapper >.menu-parent:hover {
   /* background: #bae3ff; */
-  border-left: 4px solid #176cc1;
+  /* border-left: 4px solid #176cc1; */
+  border-left: none;
+
 }
 .sidebar-nav > .menu-item-wrapper a {
   text-decoration: none;

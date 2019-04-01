@@ -150,8 +150,9 @@ a.more {
 }
 
 .form-group .input-group .input-group-addon, .input-group .input-group-addon {
-	padding-right: 6px;
+	padding-right: 1px;
 	padding-left: 0;
+	width: 37px;
 }
 .input-group-addon {
 	padding: 6px 12px;
@@ -332,7 +333,7 @@ button.add-line-item-button {
 	font-size: 11px;
 	word-wrap: break-word;
 	max-height: 80px;
-	white-space: pre-line;
+	white-space: normal;
 	color: #a4a4a4;
 }
 .selected-items-display

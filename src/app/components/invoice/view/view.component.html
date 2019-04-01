@@ -91,7 +91,7 @@
               <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} 
             </div>
   
-            <div *ngIf = "activeInv" class="col-12 px-0 back mCustomScrollbar style-3">
+            <div *ngIf = "activeInv" class="col-12 px-0 back mCustomScrollbar style-3" style="max-height: 500px;">
               <!-- <div *ngIf="invListLoader">
                 <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
               </div> -->
@@ -124,8 +124,8 @@
                 </a>
               </div>
             </div>
-            <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
-              <img src="assets/images/no_data_found.png" style="width: 324px;">
+            <div *ngIf="!activeInv" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
+              <img src="assets/images/no_data_found.png" style="width: 255px;">
             </div>
           </div>
         </div>
@@ -488,8 +488,8 @@
             </div>
           </form>
         </div>
-        <div *ngIf="!activeInv"><!--invoiceList.length<1 && !invoiceListLoader-->
-          <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
+        <div *ngIf="!activeInv" style="margin: 0 auto;"><!--invoiceList.length<1 && !invoiceListLoader-->
+          <img src="assets/images/no_data_found.png" class="conn_lost_img" >
         </div>
       </div>
     </div>
@@ -604,18 +604,19 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
   <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
     <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
+      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="save btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
-     
+
     </div>
   </div>
 </div>

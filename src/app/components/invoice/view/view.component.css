@@ -212,6 +212,11 @@ svg {
   pointer-events: none;
   opacity: 0.4; 
 }
+.conn_lost_img{
+  width: 325px;
+  margin-top: 122px;
+  margin-right: 77px;
+}
 @media (min-width: 576px)
 {
 .modal-dialog {
