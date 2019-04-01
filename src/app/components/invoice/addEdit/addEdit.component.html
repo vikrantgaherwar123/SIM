@@ -50,14 +50,10 @@
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3"
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
-
-                            <div class="col-4">
                               <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
-                              class="btn btn-primary add_client_btn" style="position: fixed;max-width: 32%;">
+                              class="btn btn-primary add_client_btn">
                               <i class="fa fa-plus"></i>Add New Client
                             </button>
-                            </div>
-                            
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
                               [value]="client">
@@ -437,7 +433,7 @@
                         </td>
                         <td style="vertical-align: top;text-align: center; position: relative !important;" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
-                            alt="logo" style="margin-top: 2px;" class="hg_20">
+                            alt="logo" style="margin-top: 2px;" class="hg_20 img_hover">
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
@@ -524,9 +520,9 @@
                               <!-- <img src="assets/images/cross.png" Title="Delete Term" class="img_hover hg_16 del set-color"
                                 alt=""> -->
                                 <div class="swap-on-hover">
-                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="hg_16 del set-color swap-on-hover__front-image"
+                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="hg_16 del set-color swap-on-hover__front-image secondimage"
                                     alt="">
-                                    <img src="assets/images/cross_blue.png" Title="Delete Term" class="img_hover hg_16 del set-color swap-on-hover__back-image"
+                                    <img src="assets/images/cross_blue.png" Title="Delete Term" class="hg_16 del set-color swap-on-hover__back-image"
                                     alt="">
                                 </div>
                             </a>

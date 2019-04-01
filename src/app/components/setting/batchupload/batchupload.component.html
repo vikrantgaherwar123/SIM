@@ -81,7 +81,7 @@
                 <span class="client_label">Or</span>
               </div>
               <div class="col-4" style="padding: 9px 2px 2px 55px">
-                <label class="btn btn-raised btn-custom-1 width20btn upload_btn" style="height: 42px;
+                <label class="btn btn-default btn-lg upload_btn" style="height: 42px;
                 padding: 11px 8px !important;">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
@@ -360,7 +360,7 @@
     <div class="col-5 image-upload">
         <label for="file-input" class="file-upload dropzone-container dropzone-drop-area" style="margin: 45px auto 0 38px;">
             <div class="drop_icon_div" style="margin: 0 auto;">
-              <img src="assets/images/upload_o.png" style="height: 40px;"/>
+              <img src="assets/images/upload_o.png" style="height: 60px;"/>
             </div>
           <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
             placeholder="Upload file" accept=".xlsx, .xls, .csv"
@@ -407,16 +407,16 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
   <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
     <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again
+      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
       <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;margin: 0 auto;">
+        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
 

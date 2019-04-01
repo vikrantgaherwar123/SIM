@@ -798,7 +798,7 @@ select{
   border: 0px solid white; 
 } 
 .img_hover:hover { 
-  background-color: #d0e4f7;
+  /* background-color: #d0e4f7; */
   border: 1px solid #0299ff; 
 } 
 .swap-on-hover img {
@@ -814,6 +814,13 @@ select{
   transition: opacity 0s linear;
   cursor: pointer;
 }
+.secondimage{
+background-color: none;
+}
+.secondimage :hover{
+  background-color: red ;
+  }
+
 .verticle_line{
   border-left: 4px solid #0295ff;
   border-radius: 36px;
