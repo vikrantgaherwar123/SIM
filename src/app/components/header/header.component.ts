@@ -4,10 +4,10 @@ import { Router } from "@angular/router"
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
-  host: {
-    '(document:click)': 'onClick($event)',
-  },
+  styleUrls: ['./header.component.css']
+  // host: {
+  //   '(document:click)': 'onClick($event)',
+  // },
 })
 export class HeaderComponent implements OnInit {
 
@@ -31,11 +31,11 @@ export class HeaderComponent implements OnInit {
     
   }
 
-  onClick(event) {
-    if (!this._eref.nativeElement.contains(event.target)) {// or some similar check
-    !this.instance._toggleSidebar();
-    }
-   }
+  // onClick(event) {
+  //   if (!this._eref.nativeElement.contains(event.target)) {// or some similar check
+  //   !this.instance._toggleSidebar();
+  //   }
+  //  }
 
   ngOnInit() {
     // Add active class to the current button (highlight it)
@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit {
         this.className += " active";
       });
     }
+    //change header image on hover
     this.offEstHover();
     this.offInvHover();
     this.offProductHover();
