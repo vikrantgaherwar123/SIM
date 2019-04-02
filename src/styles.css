@@ -896,6 +896,8 @@ background-color: none;
   background-color: white;
   border-radius: 5px;
   font-size: 11px;
+  width: 36px;
+  padding-left: 4px;
   float: right;
   cursor: pointer;
   font-family: quicksand_bold !important;
