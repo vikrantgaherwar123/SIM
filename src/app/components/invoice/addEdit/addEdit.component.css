@@ -153,13 +153,7 @@ select {
   border-right: 1px solid white;
 }
 
-.title{
-  text-align: center;
-  color: #0299ff;
-  font-weight: bold;
-  margin-top: -16px;
-  font-family: quicksand_bold;
-}
+
 .side_btn{
   width: 100%;
     background-color: #ededed !important;
@@ -175,11 +169,7 @@ select {
   background-color: white;
   opacity: 1;
 }
-.today_txt{
-  font-size: 13px;
-  font-family: quicksand_bold !important;
-  color: #787e83;
-}
+
 .vl{
   border-left: 6px solid green;
   height: 500px;
@@ -237,6 +227,7 @@ a.morelink {
   background-color: #d3eafd;
   padding: 2px 4px 4px 6px;
   /* margin-top: 5px; */
+  display: inline-block;
 }
 .removeaddLabelBackroundColor{
   color: white;

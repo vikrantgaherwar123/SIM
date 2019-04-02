@@ -60,7 +60,7 @@ import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DAT
 import { TodaysInvoiceComponent } from './components/todays-invoice/todays-invoice.component';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
 // Social login config
@@ -163,5 +163,4 @@ export function getAuthServiceConfigs() {
 })
 
 export class AppModule {
-  
  }
