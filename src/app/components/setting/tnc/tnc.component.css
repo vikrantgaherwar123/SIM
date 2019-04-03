@@ -1,10 +1,10 @@
 @import '../../../../assets/css/form.css';
 
 .blue {
-  background:#1678cd;
+  /* background:#1678cd; */
   height:120px;
   margin: -9px -20px 0px -20px;
-  box-shadow: 0 -1px 3px 0 #666
+  /* box-shadow: 0 -1px 3px 0 #666 */
 }
 
 .term-list-show {
@@ -15,4 +15,11 @@
 .pre_term{
   font-family: quicksand_regular!important;
   font-size: 13.5px!important;
+}
+.tncContainer{
+  margin-top: -99px;
+  height: auto;
+  padding-right: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
 }

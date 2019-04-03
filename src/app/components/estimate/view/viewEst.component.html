@@ -121,91 +121,6 @@
 
   <div class="py-3 w-100" style="padding-top: 74px !important;">
     <div class="row mx-0">
-      <!-- Estimate List -->
-      <div class="col-12 col-sm-3 pr-0">
-        <div class="back list-shadow">
-          <div class="col-12 px-0 filter-box">
-            <div class="col-12">
-              <div class="row mx-0">
-                <div class="col-6 pl-0" style="padding-top: 15px;">
-                  <a (click)="router.navigate(['estimate/add'])" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
-                  </a>
-                </div>
-                <div class="col-6 px-0" style="padding-top: 15px;">
-                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="pull-right list-btn cus-img">
-                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li [class.active]="estSortTerm=='createDate'">
-                      <a (click)="estSortTerm='createDate'">By Date</a>
-                    </li>
-                    <li [class.active]="estSortTerm=='quetationNo'">
-                      <a (click)="estSortTerm='quetationNo'">By Est No.</a>
-                    </li>
-                    <li [class.active]="estSortTerm=='balance'">
-                      <a (click)="estSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
-                    </li>
-                    <li [class.active]="estSortTerm=='amount'">
-                      <a (click)="estSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 search-box">
-              <div class="form-group label-floating">
-                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}}" />
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
-          </div>
-          
-
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="max-height: 500px;">
-            <!-- <div style="background-color: #fff;" *ngIf="estListLoader">
-              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-            </div> -->
-            <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
-            <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
-              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
-              (click)="setActiveEst(estimate.unique_identifier)">
-              <div class="col-2 list-date font-custom-bold fontsize13">
-                {{ estimate.createDate | date: 'dd MMM' }}
-              </div>
-
-              <div class="col-10">
-                <div class="row">
-                  <div class="col-12">
-                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
-                  </div>
-                  <div class="col-5 font-custom-book fontsize13">
-                    #{{ estimate.quetationNo }}
-                  </div>
-                  <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
-                    'symbol'):'1.2-2' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="!activeEst" class="no-data-messsage">
-              <img src="assets/images/no_data_found.png" style="width: 324px;">
-            </div>
-            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
-              <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
-                Click to view more >>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-
       <!-- View Estimate -->
       <div  class="col-12 col-sm-9 item-form">
       <div id="estMain" name="estMain" *ngIf="activeEst"> <!--activeEst-->
@@ -312,16 +227,16 @@
                       <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
+                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
+                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
                     <td width="17%" *ngIf="hideTaxLabel === false || isTaxPresent === true">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100" value="Tax (%)" disabled>
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
                     <td width="17%" *ngIf="hideDiscountLabel ===false || isDiscountPresent === true">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -498,12 +413,94 @@
           </div>
         </form>
       </div>
-      <div *ngIf="estimateList?.length < 1 && !activeEst">
+      <div *ngIf="estimateList?.length < 1 && !activeEst" style="text-align: center;">
         <!--estimateList.length<1 && !invoiceListLoader-->
-        <img src="assets/images/no_data_found.png" style="padding: 2px 0px 0px 152px;">
+        <img src="assets/images/no_data_found.png" class="conn_lost_img">
       </div>
       </div>
-      
+      <!-- Estimate List -->
+      <div class="col-12 col-sm-3 pr-0">
+        <div class="back_change list-shadow side_list" style="margin-top: -30px;">
+          <div class="col-12 px-0 filter-box">
+            <div class="col-12">
+              <div class="row mx-0">
+                <div class="col-6 pl-0" style="padding-top: 15px;">
+                  <a (click)="router.navigate(['estimate/add'])" title="Add New" class="pull-left list-btn cus-img">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
+                  </a>
+                </div>
+                <div class="col-6 px-0" style="padding-top: 15px;">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="pull-right list-btn cus-img">
+                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li [class.active]="estSortTerm=='createDate'">
+                      <a (click)="estSortTerm='createDate'">By Date</a>
+                    </li>
+                    <li [class.active]="estSortTerm=='quetationNo'">
+                      <a (click)="estSortTerm='quetationNo'">By Est No.</a>
+                    </li>
+                    <li [class.active]="estSortTerm=='balance'">
+                      <a (click)="estSortTerm='balance'">By {{settings.balance ? settings.balance : 'Balance'}}</a>
+                    </li>
+                    <li [class.active]="estSortTerm=='amount'">
+                      <a (click)="estSortTerm='amount'">By {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="estSearchTerm" name="estimateFilterTerm" placeholder="Search {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
+          </div>
+          
+
+          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-x: hidden;">
+            <!-- <div style="background-color: #fff;" *ngIf="estListLoader">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div> -->
+            <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
+              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
+              (click)="setActiveEst(estimate.unique_identifier)">
+              <div class="col-2 list-date font-custom-bold fontsize13">
+                {{ estimate.createDate | date: 'dd MMM' }}
+              </div>
+
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                  </div>
+                  <div class="col-5 font-custom-book fontsize13">
+                    #{{ estimate.quetationNo }}
+                  </div>
+                  <div class="col-6 text-right font-custom-bold fontsize12">
+                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
+                    'symbol'):'1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!activeEst" class="no-data-messsage">
+              <img src="assets/images/no_data_found.png" style="width: 225px;">
+            </div>
+            <div *ngIf="estimateList" class="col-12 px-0" [class.list-shadow]="estimateList?.length > estDispLimit">
+              <a (click)="loadMore()" class="more btn" *ngIf="estimateList?.length > estDispLimit">
+                Click to view more >>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

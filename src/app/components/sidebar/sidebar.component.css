@@ -1,5 +1,5 @@
 .sidebar-nav {
-  height: 80vh;
+  height: 100vh;
   width: 65px;
   position: fixed;
   top: 56px;
@@ -20,8 +20,8 @@
 }
 .sidebar-nav > .menu-item-wrapper >.menu-parent:hover {
   /* background: #bae3ff; */
-  /* border-left: 4px solid #176cc1; */
-  border-left: none;
+  border-left: 4px solid #fff;
+  /* border-left: none; */
 
 }
 .sidebar-nav > .menu-item-wrapper a {

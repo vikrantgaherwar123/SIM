@@ -4,31 +4,45 @@
 
 
 /* Fonts */
-@font-face {
-  font-family: HelveticaNeue;
-  src: url('./assets/fonts/HelveticaNeue.otf')
+/* @font-face {
+  font-family: quicksand_regular;
+  src: url('./assets/fonts/Quicksand-Regular.otf')
 }
 @font-face {
   font-family: HelveticaNeue-Medium;
   src: url('./assets/fonts/HelveticaNeue-Medium.otf')
 }
 @font-face {
-  font-family: HelveticaNeue-Bold;
+  font-family: quicksand_bold;
+  src: url('./assets/fonts/Quicksand-Bold.otf')
+} */
+@font-face {
+  font-family: helvetica_bold;
   src: url('./assets/fonts/HelveticaNeue-Bold.otf')
+}
+@font-face {
+  font-family: helvetica_regular;
+  src: url('./assets/fonts/HelveticaNeue.otf')
+}
+@font-face {
+  font-family: helvetica_light;
+  src: url('./assets/fonts/HelveticaNeue-Light.otf')
 }
 
 
 b, body, p, button {
-  font-family: HelveticaNeue !important;
+  font-family: helvetica_regular !important;
   font-size: 13.5px !important;
   font-style: normal;
-  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  /* font-weight: 800 !important; */
 }
 input[type=text], input[type=password],select {
-  font-family: HelveticaNeue !important;
-  font-size: 12.5px !important;
+  font-family: helvetica_regular!important;
+  font-size: 13.5px !important;
   font-style: normal;
   font-weight: 100 !important;
+  letter-spacing: 0.5px;
 }
 .border-hover{
   border-color: none;
@@ -38,11 +52,12 @@ input[type=text], input[type=password],select {
   background-color: yellow;
 }
 .font-custom-bold {
-  font-family: HelveticaNeue-Bold !important;
+  font-family: helvetica_regular !important;
   font-weight: normal !important;
+  letter-spacing: 0.5px;
 }
 .font-custom-book {
-  font-family: HelveticaNeue-Medium !important;
+  font-family: helvetica_regular !important;
   font-weight: lighter;
 }
 .ng-sidebar {
@@ -82,7 +97,7 @@ input[type=text], input[type=password],select {
   padding: 6px 12px !important;
   border-radius: 2px;
 }
-body .btn-group-raised .btn:not(.btn-link), body .btn-group-raised .input-group-btn .btn:not(.btn-link), body .btn.btn-raised:not(.btn-link), body .input-group-btn .btn.btn-raised:not(.btn-link) {
+body .btn-group-raised .btn:not(.btn-link), body .btn-group-raised .input-group-btn .btn:not(.btn-link), body .input-group-btn .btn.btn-raised:not(.btn-link) {
   -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
 }
@@ -198,7 +213,15 @@ input:checked + .slider:before {
 .inline {
   margin-right: 10px;
   float: left;
-  padding: 4px 8px 6px 11px;
+  padding: 3px 6px 4px 6px;
+  margin-bottom: 8px;
+}
+.label_span{
+  width: 98px;
+  text-align: center;
+}
+.mrg_right_20{
+  margin-right: -2px;
 }
 .loader {
   left: 50%;
@@ -222,7 +245,7 @@ input[type=number] {
 }
 
 .mat-option {
-  font-family: HelveticaNeue;
+  font-family: helvetica_regular;
   font-size: 14px;
   color: rgba(0,0,0,.87);
   /* border-bottom: 1px solid #c8c8c8; */
@@ -254,7 +277,7 @@ textarea {
   overflow: auto;
   resize: vertical;
   font-weight: 100 !important;
-  font-size: 12.5px !important;
+  font-size: 13.5px !important;
 }
 .height_40
 {
@@ -326,7 +349,7 @@ textarea {
 {
   border: none !important;
   /* width: 166px !important; */
-  margin-left: -16px !important;
+  margin-left: 16px !important;
   text-align: right !important;
 }
 .cross_label_img
@@ -467,6 +490,9 @@ option {
   background: #0299ff;
   height: 42px !important;
   color: white !important;
+}
+.save_btn:hover{
+  background: #0290f0;
 }
 .view_desc
 {
@@ -726,10 +752,17 @@ option {
 .add_new_btn{
   width: 104px !important;
   height: 36px !important;
-  background-color: #bae3ff!important;
+  background-color: #ddf1ff !important;
   color: #0299ff!important;
   box-shadow: none!important;
   margin-top: 32px;
+}
+.change_bg{
+  background-color: #ddf1ff !important;
+  color: #0299ff!important;
+}
+.change_bg:hover{
+  background-color:#bae3ff !important;
 }
 .input-group-text {
   display: flex;
@@ -742,7 +775,7 @@ option {
   color: #495057;
   text-align: center;
   white-space: nowrap;
-  font-weight: 800 !important;
+  /* font-weight: 800 !important; */
   background-color: white !important;
   border: 1px solid #ced4da;
   border-radius: 0px !important;
@@ -767,7 +800,7 @@ select{
   font-size: 14px !important;
   font-style: normal;
   font-weight: 100 !important;
-  font-family: HelveticaNeue !important;
+  font-family: helvetica_regular !important;
   padding: 2px 0px 0px 17px !important;
 }
 .filtersubmit {
@@ -798,7 +831,7 @@ select{
   border: 0px solid white; 
 } 
 .img_hover:hover { 
-  background-color: #d0e4f7;
+  /* background-color: #d0e4f7; */
   border: 1px solid #0299ff; 
 } 
 .swap-on-hover img {
@@ -814,6 +847,13 @@ select{
   transition: opacity 0s linear;
   cursor: pointer;
 }
+.secondimage{
+background-color: none;
+}
+.secondimage :hover{
+  background-color: red ;
+  }
+
 .verticle_line{
   border-left: 4px solid #0295ff;
   border-radius: 36px;
@@ -832,8 +872,37 @@ select{
   overflow: hidden;
 }
 
-
-/* error modal css */
+.td_empty{
+  width: 30px;
+  background-color: white;width: 20px;
+}
+.number_tag_dropdown{
+  padding: 2px 4px 0px 16px !important;
+  width: 20px;
+}
+.empty_prod_tbl{
+  position: absolute;
+  opacity:0.5
+}
+/* error modal classes */
+.mod_dialog{
+  max-width: 435px !important;
+  margin-top: 135px !important;
+}
+.mod_content{
+  border: 0px solid rgba(0,0,0,.2) !important;
+  border-radius: 1px !important;
+}
+.mod_header{
+  border-bottom: 0px solid #e9ecef !important;
+}
+.mod_footer{
+  border-top: 0px solid #e9ecef !important;
+}
+.mod_close_btn{
+  margin-top: -34px !important;
+  opacity: unset !important;
+}
 .title{
   text-align: center;
   color: #0299ff;
@@ -842,19 +911,34 @@ select{
   font-family: HelveticaNeue-Bold;
   font-size: 25px;
 }
-.erroe_para{
+.error_para{
   padding-left: 25px;
   padding-right: 25px;
   font-size: 13px !important;
-  text-align: center;
+  text-align: center !important;
   margin-bottom: 22px;
 }
 .error_logo{
-  height: 44px;
+  height: 44px !important;
   margin: 2px auto;
   margin-top: 18px;
+  text-align: center !important;
 }
-
+/* side list */
+.side_list{
+  height: 500px;
+  margin-top: -9px;
+}
+.last_td{
+  text-align: right;
+  padding-right: 12px !important;
+}
+.header_menu_text{
+  margin-left: 2px;
+}
+.edit_delete_icon{
+  margin-top: -5px;
+}
 @media (min-width: 1440px)
 {
 .client_arrow {
@@ -877,7 +961,10 @@ select{
   opacity: unset;
   margin-bottom: 6px;
 }
-/* show more and less description */
+.back_change{
+  background: #ededed;
+}
+/* added by vikrant */
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
@@ -888,10 +975,34 @@ select{
 .morebtn{
   background-color: white;
   border-radius: 5px;
-  font-size: 11px;
+  font-size: 9px;
+  width: 30px;
+  padding-left: 4px;
   float: right;
+  margin-bottom: 10px;
+  margin-top: -12px;
   cursor: pointer;
-  font-family: HelveticaNeue-Bold !important;
+}
+.all_terms{
+  word-wrap: break-word;
+  font-size: 12.5px;
+  color:black !important
+}
+.term_hr{
+  width: 403px;
+  margin-top: 6px !important;
+}
+.add_term{
+  color:#2196f3 !important;
+}
+.add_term:hover{
+  color: #4c4c4c !important;
+}
+.add_term_image
+{
+  vertical-align: initial;
+  height:10px; 
+  margin-right: 3px;
 }
 
 .show {
@@ -911,7 +1022,7 @@ select{
 /* Header css */
 
 .user-logout h6 span {
-  font-family: HelveticaNeue-Bold;
+  font-family: helvetica_regular !important;
 }
 
 .span_text{
@@ -919,7 +1030,7 @@ select{
   font-size: 11px;
   font-weight: 800;
   padding: 4px;
-  font-family: HelveticaNeue-Bold !important;
+  font-family: helvetica_regular !important;
 }
 
 .dropdown-menu>li>a {
@@ -930,7 +1041,7 @@ select{
   line-height: 1.42857143;
   color: #333;
   white-space: nowrap;
-  font-family: HelveticaNeue-Bold !important;
+  font-family: helvetica_regular !important;
   font-size: 14px !important;
 }
 
@@ -946,6 +1057,23 @@ select{
   font-size: 13px;
   font-family: quicksand_bold !important;
   color: #787e83;
+}
+.selectedSetting{
+  color: #0294ff;
+  font-size: 18px;
+  background-color: #ebf3fb;
+
+}
+.label_div{
+  font-size: 15px;
+  padding: 19px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+.settingForm{
+  height:591px  !important;
+  text-align: center;
 }
 
 

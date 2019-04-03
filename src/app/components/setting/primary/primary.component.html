@@ -1,6 +1,27 @@
-<div class="row main-wrapper">
-  <div class="col-12 col-md-10" id="main">
-    <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
+<div class="row main-wrapper" >
+    <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
+      <form class="form-horizontal back shadow settingForm"  #addTaxesForm="ngForm" enctype="multipart/form-data">
+        <div class="row mx-0">
+          <div class="row">
+              <div class="label_div" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                <span>Primary settings</span>
+              </div>
+              <div class="label_div" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+                <span>Custom Field Name</span>
+              </div>
+              <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+                <span>Banking Datails</span>
+              </div>
+              <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+                <span>Terms & Conditions</span>
+              </div>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  <div class="col-12 col-md-9" id="main">
+    <form class="form-horizontal" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
       <div class="row mx-0">
         <div class="col-12 mt-2">
           <div class="col-9 pull-left fontsize18">
@@ -19,7 +40,7 @@
       </div>
 
       <div class="row mx-0 pb-5">
-        <div class="col-12 back mt-1 edit-setting">
+        <div class="col-12 mt-1 edit-setting">
           <div class="width85">
             <!-- Tax -->
             <div class="form-group pt-2">
@@ -282,18 +303,19 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
   <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
     <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-        <img class="center" src="assets/images/connection_lost.png" alt="logo">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again !!!</p>
+      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold" 
-      data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
-     
+
     </div>
   </div>
 </div>

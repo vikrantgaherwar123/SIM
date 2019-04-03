@@ -33,7 +33,14 @@
   font-weight: bold;
   margin-left: -11px;
 }
-
+.span_text{
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px;
+  font-family: helvetica_regular;
+}
 .nav_img{
   height: 22px;
   /* padding-right: 2px; */
@@ -61,7 +68,7 @@
   margin-left: 10px;
 }
 .menu_list :hover{
-  background-color: #d0e4f7;
+  background-color: #dcf0fe;
   /* border-radius: 20px; */
 }
 

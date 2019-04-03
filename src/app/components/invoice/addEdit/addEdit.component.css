@@ -22,15 +22,20 @@ select {
   font-size: 14px !important;
   font-style: normal;
   font-weight: 100 !important;
-  padding: 3px 12px !important;
-  font-family: quicksand_regular !important;
+  padding: 0px 12px !important;
+  font-family: helvetica_regular !important;
+}
+.selected_description{
+  margin-left: 10px;
+  font-family: helvetica_regular !important;
+  overflow: hidden
 }
 .set-color {
   color: #2196f3 !important;
 }
 .add, .del {
   height: 18px;
-  margin-top: -4px;
+  margin-top: -14px;
 }
 .del {
   background-position: -404px -214px;
@@ -47,8 +52,8 @@ select {
 .bld {
   margin: 2px 0;
 }
-.bld, .terms {
-  font-weight: 700;
+.terms {
+  /* font-weight: 700; */
   font-size: 14px;
 }
 .mat-form-field-infix {
@@ -156,10 +161,17 @@ select {
 
 .side_btn{
   width: 100%;
-    background-color: #ededed !important;
-    color: #0299ff !important;
-    border: #0299ff solid 2px !important;
-    border-radius: 6px !important;
+  letter-spacing: 0.5px;
+  /* background-color: #ededed !important; */
+  color: #0299ff !important;
+  border: 2px solid #0299ff !important;
+  border-radius: 6px !important;
+  margin-top: 16px;
+  background-color: #ededed !important;
+}
+.side_btn:hover{
+  border: 2px solid #cecece !important;
+  /* color: #ededed !important; */
 }
 .dropdown-toggle::after{
   font-size: 24px !important;
@@ -169,7 +181,11 @@ select {
   background-color: white;
   opacity: 1;
 }
-
+.today_txt{
+  font-size: 13px;
+  font-family: helvetica_regular !important;
+  color: #787e83;
+}
 .vl{
   border-left: 6px solid green;
   height: 500px;
@@ -192,6 +208,23 @@ a.morelink {
 	width: 400px;
 	background-color: #f0f0f0;
 	margin: 10px;
+}
+.search_div{
+  border-left: 1px solid #cecece;
+  margin-top: -3px;
+}
+.add_invoice{
+  margin-top: 5px;
+  margin-bottom: 4px;
+}
+.search_btn_div{
+  padding-top: 15px;
+  padding-bottom: 4px;
+  margin:0 auto;
+}
+.fa-plus:before {
+  content: "\f067";
+  -webkit-text-stroke: 0.3px #e0dede !important;
 }
 @media (min-width: 1280px)
 {
@@ -220,20 +253,14 @@ a.morelink {
   
 }
 
-
-
 .addLabelBackroundColor{
-  color: #118dfa;
-  background-color: #d3eafd;
-  padding: 2px 4px 4px 6px;
-  /* margin-top: 5px; */
-  display: inline-block;
-}
-.removeaddLabelBackroundColor{
   color: white;
   background-color: #2096f3;
-  padding: 2px 4px 4px 6px;
-  margin-top: 5px;
+  border-radius: 2px;
+}
+.removeaddLabelBackroundColor{
+  color: #118dfa;
+  background-color: #d3eafd !important
 }
 
 .comment {

@@ -7,6 +7,7 @@ import { SettingService } from '../../../services/setting.service'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
 import { DateAdapter } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-primary',
@@ -34,6 +35,7 @@ export class PrimaryComponent implements OnInit {
   activePatternNumber: string = "Pattern";
 
   constructor(private CONST: CONSTANTS,
+    public router: Router,
     public toasterService : ToasterService,
     private settingService: SettingService,
     private titleService: Title,

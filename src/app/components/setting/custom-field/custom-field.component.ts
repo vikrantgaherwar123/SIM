@@ -9,6 +9,7 @@ import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-custom-field',
@@ -27,6 +28,7 @@ export class CustomFieldComponent implements OnInit {
   activeSetting: setting = <setting>{}
 
   constructor(private settingService: SettingService,
+    public router: Router,
     public toasterService : ToasterService,
     private titleService: Title,
      private store: Store<AppState>) {

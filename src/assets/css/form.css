@@ -1,13 +1,13 @@
 /* Assets form CSS */
 .main-wrapper {
-	background-color: #ededed;
+	background-color: #eff0f1;
 	overflow-x: hidden;
 	min-height: 90vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
   position: relative;
-  background-color: #ededed;
+  background-color: #eff0f1;
   padding-top: 12px;
   padding-bottom: 10px;
 }
@@ -24,12 +24,13 @@
 }
 .list-shadow {
 	/* display: inline-block; */
-	box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
-	-webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+	/* box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5); */
+	/* -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5); */
+	border-left: 1px solid #cecece;
 }
 .filter-box {
-	background: #ffffff;
+	background: #ededed;
 	/* border-bottom: 1px solid #d2d2d2; */
 }
 .back-add-list {
@@ -57,7 +58,9 @@
 .filter-box input {
 	background: #ffffff url(../images/list-icon/search16.png) no-repeat 10px;
 	padding-left: 35px;
-	height: 36px;
+	height: 36px !important;
+	color: black;
+	margin-bottom: 20px;
 }
 a, a:hover, a:focus {
 	color: #2196f3 !important;
@@ -107,7 +110,7 @@ a, a:hover, a:focus {
 	font-weight: 400;
 	z-index: 2;
 	padding: 10px;
-	background: #ffffff;
+	background: #ededed;
 }
 .no-border-last {
   border-bottom: none !important;
@@ -173,6 +176,7 @@ a.more {
 	border-radius: 0px;
 	height: 29px !important;
 	color: #666666;
+	letter-spacing: 0.5px;
 }
 .form-error {
 	color: #D9534F;
@@ -221,7 +225,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 }
 .c-name {
   font-size: 40px;
-  font-family: quicksand_bold;
+  font-family: helvetica_regular;
   width: 100%;
   margin-left: 20px;
   text-align: right;
@@ -235,14 +239,19 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 }
 .hd td {
 	border-bottom: 1px solid #ddd;
+	letter-spacing: 0.5px !important;
 }
 .hd td, .hd td input {
 	background-color: #666;
+	letter-spacing: 0.5px !important;
 	border: none;
 	color: #fff;
+	font-size: 13.5px !important;
+  font-family: helvetica_light !important;
 }
 .hd td input {
 	/* text-align: right; */
+	letter-spacing: 0.5px !important;
 	border: 1px solid #666;
 }
 .row-item td {

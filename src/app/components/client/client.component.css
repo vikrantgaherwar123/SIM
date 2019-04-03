@@ -42,3 +42,9 @@
   overflow-y: scroll;
   height: auto;
 }
+.filter-box input{
+	background: #ffffff url(/assets/images/list-icon/search16.png) no-repeat 10px;
+}
+.filter-box{
+	background: #ffffff;
+}

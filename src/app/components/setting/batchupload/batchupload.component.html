@@ -1,8 +1,8 @@
-<div style="background-color: #ededed;height: 88vh;width:1400px">
+<div class="main_bg">
 <div class="row main-wrapper">
-  <div class="col-12" style="padding-left: 0px;padding-right: 0px;">
+  <div class="col-12 bg_12">
     <div class="back" style="height:95px">
-      <form class="shadow form-horizontal back edit-setting" #f="ngForm" name="userForm" style="height: 95px;">
+      <form class="shadow form-horizontal back edit-setting form_hg" #f="ngForm" name="userForm">
         <div class="row">
           <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
             <span class="step_text">Step 1
@@ -38,13 +38,13 @@
                   <span class="client_label">Choose File<br> Format</span>
                 </div>
                 <div class="col-9 row" style="padding: 15px 0px 0px 21px;">
-                    <a href="../../../assets/excel_files/clients.csv" download  class="btn btn-default btn-lg">
+                    <a href="../../../assets/excel_files/clients.csv" download  class="change_bg download_btn btn btnd pull-left font-weight-bold">
                       <img src="assets/images/settings/csv.png" class="file_icon">CSV
                     </a>
-                    <a href="../../../assets/excel_files/clients.xls" download class="btn btn-default btn-lg">
+                    <a href="../../../assets/excel_files/clients.xls" download class="change_bg download_btn btn btnd  pull-left font-weight-bold">
                       <img src="assets/images/settings/xls.png" class="file_icon">XLS
                     </a>
-                    <a href="../../../assets/excel_files/clients.xlsx" download class="btn btn-default btn-lg">
+                    <a href="../../../assets/excel_files/clients.xlsx" download class="change_bg download_btn btn btnd pull-left font-weight-bold">
                       <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                     </a>
                 </div>
@@ -55,13 +55,13 @@
                   <span class="client_label">Choose File Format</span>
                 </div>
                 <div class="col-9 row" style="padding: 13px 2px 2px 21px">
-                    <a href="../../../assets/excel_files/products.csv" download class="btn btn-default btn-lg">
+                    <a href="../../../assets/excel_files/products.csv" download class="change_bg download_btn btn btnd pull-left font-weight-bold">
                     <img src="assets/images/settings/csv.png" class="file_icon">CSV
                   </a>
-                  <a href="../../../assets/excel_files/products.xls" download class="btn btn-default btn-lg">
+                  <a href="../../../assets/excel_files/products.xls" download class="change_bg download_btn btn btnd pull-left font-weight-bold">
                     <img src="assets/images/settings/xls.png" class="file_icon">XLS
                   </a>
-                  <a href="../../../assets/excel_files/products.xlsx" download class="btn btn-default btn-lg">
+                  <a href="../../../assets/excel_files/products.xlsx" download class="change_bg download_btn btn btnd pull-left font-weight-bold">
                     <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                   </a>
                 </div>
@@ -81,8 +81,7 @@
                 <span class="client_label">Or</span>
               </div>
               <div class="col-4" style="padding: 9px 2px 2px 55px">
-                <label class="btn btn-raised btn-custom-1 width20btn upload_btn" style="height: 42px;
-                padding: 11px 8px !important;">Upload
+                <label class="change_bg btn btn-default btn-lg upload_btn">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
               </div>
@@ -96,8 +95,8 @@
               <div class="verticle_line"></div>
               <div style="padding: 8px 2px;">
                 <button type="button" (click)="clearData()"
-                  class="btn btn-raised save_btn btn-custom-1 width25btn pull-right font-weight-bold ml-2"
-                  style="width: 94px;color: #0299ff !important;font-family: quicksand_bold !important;">
+                  class="clear_btn change_bg btn btn-raised save_btn btn-custom-1 width25btn pull-right font-weight-bold ml-2"
+                  >
                   Clear
                 </button>
                 <button type="button" style="width: 94px;" (click)="save(f.valid,0)" type="button" id="saveClientBtn1"
@@ -110,32 +109,31 @@
         </div>
       </form>
     </div>
-
   </div>
  
-  <div class="col-12" style="margin-top: 10px;padding-left: 0px;padding-right: 0px;height: 628px;">
+  <div class="col-12 client_div">
     <!-- clients records table -->
     <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
       <thead>
         <tr>
-          <td style="width: 20px !important;background-color: white;"><input type="text" class="form-control td_header" readonly />
+          <td class="client_td"><input type="text" class="form-control td_header" readonly />
           </td>
-          <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
-          <td style="width: 190px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
-          <td style="width: 126px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact Person" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 1" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 2" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 3" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Business Id" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Business Detail" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact No" readonly /></td>
-          <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Email Id" readonly /></td>
-          <td style="width: 134px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Shipping Address" readonly /></td>
+          <td style="width: 45px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
+          <td style="width: 190px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
+          <td style="width: 126px;"><input type="text" class="form-control td_header" value="Contact Person" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 1" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 2" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 3" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Id" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Detail" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Contact No" readonly /></td>
+          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Email Id" readonly /></td>
+          <td style="width: 134px;"><input type="text" class="form-control td_header" value="Shipping Address" readonly /></td>
         </tr>
       </thead>
         <tbody>
           <tr *ngFor="let item of clientRecords; let in = index">
-            <td class="number_tag" style="padding: 2px 4px 0px 8px !important;width: 20px !important;">
+            <td class="number_tag number_tag_cross" >
               <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
             </td>
             <td style="width: 20px;" class="number_tag">{{in+1}}</td>
@@ -182,8 +180,7 @@
           
         </tbody>
         <div>
-            <button class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 4px 15px 4px 15px !important;
-            font-size: 16px !important;" type="button" (click)="addFieldValues()">Add</button>
+            <button class="btn save_btn btn-raised pull-right font-weight-bold ml-2 add_btn add_btn" type="button" (click)="addFieldValues()">Add</button>
           </div>
     </table>
     
@@ -191,20 +188,20 @@
     <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
       <thead>
         <tr>
-          <td style="width: 58px;background-color: white;font-family: quicksand_bold !important;"><input type="text" class="form-control td_header" readonly />
+          <td class="product_td"><input type="text" class="form-control td_header" readonly />
           </td>
-          <td style="width: 58px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Sr.no" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Product Name" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Unit" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Description" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Rate" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Tax Rate" readonly /></td>
-          <td><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Product Code" readonly /></td>
+          <td style="width: 58px;"><input type="text"  class="form-control td_header" value="Sr.no" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Product Name" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Unit" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Description" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Rate" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Tax Rate" readonly /></td>
+          <td><input type="text" class="form-control td_header" value="Product Code" readonly /></td>
         </tr>
       </thead>
         <tbody>
           <tr *ngFor="let item of productRecords; let i = index">
-            <td class="number_tag" style="padding: 4px 4px 0px 8px !important;">
+            <td class="number_tag product_cross">
               <img class="hg_20" (click)="productRemove(i)" src="assets/images/grey_cross.png">
             </td>
             <td class="number_tag">
@@ -238,30 +235,27 @@
 
     <!-- dropdown -->
     <div class="row">
-      <!-- <img src="assets/images/batch_background.png" class="img" style="position: absolute;width: 100%;opacity:.3;margin-left: 16px;"> -->
-      <!-- empty client table -->
-      
-      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:0.1;">
+      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
         <thead>
           <tr>
-            <td style="width: 30px;background-color: white;width: 20px;"><input type="text" class="form-control td_header" readonly />
+            <td class="td_empty"><input type="text" class="form-control td_header" readonly />
             </td>
-            <td style="width: 45px;"><input style="font-family: quicksand_bold !important;" type="text" class="form-control td_header" value="Sr.no" readonly /></td>
-            <td style="width: 180px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Organization Name" readonly /></td>
-            <td style="width: 126px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact Person" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 1" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 2" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Address Line 3" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Business Id" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Business Detail" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Contact No" readonly /></td>
-            <td style="width: 120px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Email Id" readonly /></td>
-            <td style="width: 134px;"><input type="text" style="font-family: quicksand_bold !important;" class="form-control td_header" value="Shipping Address" readonly /></td>
+            <td style="width: 45px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
+            <td style="width: 180px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
+            <td style="width: 126px;"><input type="text" class="form-control td_header" value="Contact Person" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 1" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 2" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 3" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Id" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Detail" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Contact No" readonly /></td>
+            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Email Id" readonly /></td>
+            <td style="width: 134px;"><input type="text" class="form-control td_header" value="Shipping Address" readonly /></td>
           </tr>
         </thead>
           <tbody>
             <tr *ngFor="let item of fieldArray; let in = index">
-              <td class="number_tag" style="padding: 2px 4px 0px 16px !important;width: 20px;">
+              <td class="number_tag number_tag_dropdown">
                 <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
               </td>
               <td style="width: 10px;" class="number_tag">{{in+1}}</td>
@@ -307,10 +301,8 @@
             </tr>
           </tbody>
       </table>
-      
       <!-- empty product table -->
-      
-      <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;opacity:.1;">
+      <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
         <thead>
           <tr>
             <td style="width: 58px;background-color: white;font-family: quicksand_bold !important;"><input type="text" class="form-control td_header" readonly />
@@ -355,12 +347,13 @@
           </tbody>
      
       </table>
-  </div>
-  <div *ngIf="make_blur_disable == false" class="row">
+    </div>
+    <div *ngIf="make_blur_disable == false" class="transparent_div"></div>
+  <div *ngIf="make_blur_disable == false" class="row" style="margin-top: -39%;">
     <div class="col-5 image-upload">
         <label for="file-input" class="file-upload dropzone-container dropzone-drop-area" style="margin: 45px auto 0 38px;">
             <div class="drop_icon_div" style="margin: 0 auto;">
-              <img src="assets/images/upload_o.png" style="height: 40px;"/>
+              <img src="assets/images/upload_o.png" style="height: 60px;"/>
             </div>
           <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
             placeholder="Upload file" accept=".xlsx, .xls, .csv"
@@ -391,7 +384,7 @@
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
-        <button class="save add_manually btn save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manually</button>
+        <button class="save add_manually save_btn btn-raised center font-weight-bold" type="button" (click)="openManuallyAddField()">Add Manually</button>
     </div>
   </div>
         
@@ -404,19 +397,19 @@
 <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
-      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p style="padding-left:25px;padding-right:25px">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_para">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;margin: 0 auto;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center font-weight-bold"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 

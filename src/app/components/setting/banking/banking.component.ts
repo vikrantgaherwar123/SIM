@@ -10,6 +10,7 @@ import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-banking',
@@ -31,6 +32,7 @@ export class BankingComponent implements OnInit {
   settings: setting;
 
   constructor(private settingService: SettingService,
+    public router: Router,
     public toasterService : ToasterService,
     private orgService: OrganisationService,
     private titleService: Title,

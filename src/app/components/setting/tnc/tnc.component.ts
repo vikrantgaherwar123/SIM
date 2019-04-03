@@ -11,6 +11,7 @@ import * as tncActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tnc',
@@ -34,6 +35,7 @@ export class TncComponent implements OnInit {
   settings: setting;
 
   constructor(private tncService: TermConditionService,
+    public router: Router,
     public toasterService : ToasterService,
     private titleService: Title,
     private store: Store<AppState>
