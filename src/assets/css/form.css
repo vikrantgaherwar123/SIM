@@ -1,13 +1,13 @@
 /* Assets form CSS */
 .main-wrapper {
-	background-color: #ededed;
+	background-color: #eff0f1;
 	overflow-x: hidden;
 	min-height: 90vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
   position: relative;
-  background-color: #ededed;
+  background-color: #eff0f1;
   padding-top: 12px;
   padding-bottom: 10px;
 }

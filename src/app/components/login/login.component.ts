@@ -295,7 +295,6 @@ export class LoginComponent implements OnInit {
 
   navigateToAdd() {
     if (this.settingsCompleted && this.termsCompleted && this.clientsCompleted && this.productsCompleted === true) {
-      
        this.router.navigate(['/invoice/add']);
     }
   }

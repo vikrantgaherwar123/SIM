@@ -886,22 +886,22 @@ background-color: none;
 }
 /* error modal classes */
 .mod_dialog{
-  max-width: 435px;
-  margin-top: 135px;
+  max-width: 435px !important;
+  margin-top: 135px !important;
 }
 .mod_content{
-  border: 0px solid rgba(0,0,0,.2);
-  border-radius: 1px;
+  border: 0px solid rgba(0,0,0,.2) !important;
+  border-radius: 1px !important;
 }
 .mod_header{
-  border-bottom: 0px solid #e9ecef;
+  border-bottom: 0px solid #e9ecef !important;
 }
 .mod_footer{
-  border-top: 0px solid #e9ecef;
+  border-top: 0px solid #e9ecef !important;
 }
 .mod_close_btn{
-  margin-top: -34px;
-  opacity: unset;
+  margin-top: -34px !important;
+  opacity: unset !important;
 }
 .title{
   text-align: center;
@@ -915,13 +915,14 @@ background-color: none;
   padding-left: 25px;
   padding-right: 25px;
   font-size: 13px !important;
-  text-align: center;
+  text-align: center !important;
   margin-bottom: 22px;
 }
 .error_logo{
-  height: 44px;
+  height: 44px !important;
   margin: 2px auto;
   margin-top: 18px;
+  text-align: center !important;
 }
 /* side list */
 .side_list{
