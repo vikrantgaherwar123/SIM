@@ -9,7 +9,7 @@
               <div class="row">
                 <div class="col-3" style="padding-top: 15px;">
                   <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="/assets/images/list-icon/add-plus-button24.png" class="plus_list">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 text-center px-0" style="padding-top: 15px;" >
@@ -21,7 +21,7 @@
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
                   >
-                    <img alt="logo" Title="Search By" src="/assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+                    <img alt="logo" Title="Search By" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='prodName'">
@@ -54,7 +54,7 @@
             >
               <div class="row item product-list">
                 <div class="col-2 pl-1">
-                  <img src="../assets/images/list-icon/pro.png"
+                  <img src="assets/images/list-icon/pro.png"
                     style="vertical-align: middle;width: 36px; height: 36px;"
                   >
                 </div>
@@ -77,7 +77,7 @@
                 </div>
   
                 <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
-                  <img src="/assets/images/next12.png" style="padding-top: 16px;">
+                  <img src="assets/images/next12.png" style="padding-top: 16px;">
                 </div>
               </div>
             </div>
@@ -115,7 +115,7 @@
                   <button type="button" *ngIf="viewMode" (click)="editThis(product)"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit
@@ -162,7 +162,7 @@
                       <div class="form-group" [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_prod_name.png">
+                            <img src="assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
                           <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
                             class="form-control" maxlength="45" onfocus="this.select()" required
@@ -179,7 +179,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_product_code_grey.png">
+                            <img src="assets/images/product-icon/ic_product_code_grey.png">
                           </span>
                           <input type="text" name="productCode" id="productCode"
                             class="form-control" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Code"
@@ -193,7 +193,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_unit.png">
+                            <img src="assets/images/product-icon/ic_normal_unit.png">
                           </span>
                           <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
                             [(ngModel)]="activeProduct.unit" onfocus="this.select()"
@@ -215,7 +215,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_rate.png">
+                            <img src="assets/images/product-icon/ic_normal_rate.png">
                           </span>
                           <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*"
                             [(ngModel)]="activeProduct.rate" required onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}"
@@ -228,7 +228,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
+                            <img src="assets/images/product-icon/ic_normal_tax_rate.png">
                           </span>
                           <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
                             [(ngModel)]="activeProduct.taxRate" onfocus="this.select()"
@@ -257,7 +257,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_prod_name.png">
+                          <img src="assets/images/product-icon/ic_normal_prod_name.png">
                           {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -268,7 +268,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class=" col-6 client-view-label ">
-                          <img src="/assets/images/product-icon/ic_product_code_grey.png">
+                          <img src="assets/images/product-icon/ic_product_code_grey.png">
                           {{settings.productCode ? settings.productCode : 'Products Code'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -279,7 +279,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_unit.png">
+                          <img src="assets/images/product-icon/ic_normal_unit.png">
                           Unit:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -290,7 +290,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_description.png">
+                          <img src="assets/images/product-icon/ic_normal_description.png">
                           Description:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold" style="text-align: justify;">{{activeProduct.discription}}</div>
@@ -299,7 +299,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_rate.png">
+                          <img src="assets/images/product-icon/ic_normal_rate.png">
                           {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -310,7 +310,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
+                          <img src="assets/images/product-icon/ic_normal_tax_rate.png">
                           Tax Rate:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -328,7 +328,7 @@
                   <button type="button" (click)="editThis(product)" *ngIf="viewMode"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit

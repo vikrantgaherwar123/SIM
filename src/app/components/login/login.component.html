@@ -22,7 +22,10 @@
   <div class="col-md-4 px-0" style="padding-right: 47px !important;">
 
     <div class="login-form-container">
-      <img src="assets/images/login/lg.png" class="lock-image img-fluid">
+      <img *ngIf="!loginLoader && !loggingIn && !loggedInFailed && !loggedInSuccess || !loginDone" src="assets/images/login/lg.png" class="lock-image img-fluid">
+      <img *ngIf="loginDone && loginLoader && loggingIn" src="assets/images/login/lg_load.png" class="lock-image img-fluid">
+      <img *ngIf="loggedInFailed" src="assets/images/login/lg_failed.png" class="lock-image img-fluid">
+      <img *ngIf="loggedInSuccess" src="assets/images/login/lg_done.png" class="lock-image img-fluid">
 
       <div class="login-form" *ngIf="!forgetFlag">
 
@@ -151,7 +154,7 @@
           </button>
         </div>
 
-        <div class='container' *ngIf="loggedInFailed == true">
+        <div class='container' *ngIf="loggedInFailed">
           <form name="form" (ngSubmit)="loginUser($event)">
             <div class="clearfix">&nbsp;</div>
             <div class="clearfix">&nbsp;</div>

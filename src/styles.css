@@ -9,8 +9,8 @@
   src: url('./assets/fonts/Quicksand-Regular.otf')
 }
 @font-face {
-  font-family: quicksand_book;
-  src: url('./assets/fonts/Quicksand_Dash.otf')
+  font-family: HelveticaNeue-Medium;
+  src: url('./assets/fonts/HelveticaNeue-Medium.otf')
 }
 @font-face {
   font-family: quicksand_bold;
@@ -147,7 +147,7 @@ a:hover, a:active, a:focus, a:visited {
   line-height: 1.42857143;
   color: #333;
   white-space: nowrap;
-  font-family: quicksand_regular !important;
+  font-family: HelveticaNeue !important;
   font-size: 14px !important;
 }
 .total-color {
@@ -490,6 +490,9 @@ option {
   background: #0299ff;
   height: 42px !important;
   color: white !important;
+}
+.save_btn:hover{
+  background: #0290f0;
 }
 .view_desc
 {
@@ -905,7 +908,7 @@ background-color: none;
   color: #0299ff;
   font-weight: bold;
   margin-top: -15px;
-  font-family: quicksand_bold;
+  font-family: HelveticaNeue-Bold;
   font-size: 25px;
 }
 .error_para{
@@ -1014,5 +1017,46 @@ background-color: none;
   -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
   -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);
 }
+
+/* Header css */
+
+.user-logout h6 span {
+  font-family: helvetica_regular !important;
+}
+
+.span_text{
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px;
+  font-family: helvetica_regular !important;
+}
+
+.dropdown-menu>li>a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400 !important;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+  font-family: helvetica_regular !important;
+  font-size: 14px !important;
+}
+
+/* addEdit css */
+.title{
+  text-align: center;
+  color: #0299ff;
+  font-weight: bold;
+  margin-top: -16px;
+  font-family: quicksand_bold;
+}
+.today_txt{
+  font-size: 13px;
+  font-family: quicksand_bold !important;
+  color: #787e83;
+}
+
 
 

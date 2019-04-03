@@ -158,13 +158,7 @@ select {
   border-right: 1px solid white;
 }
 
-.title{
-  text-align: center;
-  color: #0299ff;
-  font-weight: bold;
-  margin-top: -16px;
-  font-family: quicksand_bold;
-}
+
 .side_btn{
   width: 100%;
   letter-spacing: 0.5px;
@@ -227,6 +221,10 @@ a.morelink {
   padding-top: 15px;
   padding-bottom: 4px;
   margin:0 auto;
+}
+.fa-plus:before {
+  content: "\f067";
+  -webkit-text-stroke: 0.3px #e0dede !important;
 }
 @media (min-width: 1280px)
 {

@@ -138,10 +138,10 @@ export class ViewEstComponent implements OnInit {
     })
 
     // Set Active invoice whenever invoice list changes
-    this.store.select('estimate').subscribe(estimates => {
-      this.estimateList = estimates
-      this.setActiveEst(this.estimateId);
-    })
+    // this.store.select('estimate').subscribe(estimates => {
+    //   this.estimateList = estimates
+    //   this.setActiveEst(this.estimateId);
+    // })
   
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
@@ -251,7 +251,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
-    
+    this.estimateList = [];          //to clear background data when clicked on search button
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')

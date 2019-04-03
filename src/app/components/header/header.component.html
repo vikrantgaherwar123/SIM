@@ -76,14 +76,14 @@
         </div>
         <ul class="dropdown-menu dropdown-menu-right" style="top: -6px !important;
         left: 46px!important">
-          <li class="mat-option ng-star-inserted">
-            <a (click)="toggle('/setting/userProfile')">Profile</a>
+          <li (click)="toggle('/setting/userProfile')" class="mat-option ng-star-inserted">
+            <a >Profile</a>
           </li>
-          <li class="mat-option ng-star-inserted">
-            <a (click)="toggle('/setting/password')">Change Password</a>
+          <li (click)="toggle('/setting/password')" class="mat-option ng-star-inserted">
+            <a >Change Password</a>
           </li>
-          <li class="mat-option ng-star-inserted">
-            <a (click)="logout()">Logout</a>
+          <li (click)="logout()" class="mat-option ng-star-inserted">
+            <a >Logout</a>
           </li>
         </ul>
       </div>

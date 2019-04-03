@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
   termsLoading: boolean;
   settingsLoading: boolean;
   loginFailed: boolean;
+  loginDone: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -96,6 +97,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser(event) {
+    this.loginDone = true;
     this.loggingIn = true
     event.preventDefault()
     $("#login-btn").prop("disabled", true)
@@ -293,6 +295,7 @@ export class LoginComponent implements OnInit {
 
   navigateToAdd() {
     if (this.settingsCompleted && this.termsCompleted && this.clientsCompleted && this.productsCompleted === true) {
+      
        this.router.navigate(['/invoice/add']);
     }
   }

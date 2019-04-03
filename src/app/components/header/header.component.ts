@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit {
         this.className += " active";
       });
     }
+    //change header image on hover
     this.offEstHover();
     this.offInvHover();
     this.offProductHover();
