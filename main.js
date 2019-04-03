@@ -9,8 +9,11 @@ function createWindow () {
     height: 728,
     backgroundColor: '#ffffff',
     icon: `file://${__dirname}/dist/simpleInvoiceManagerWeb/assets/logo.png`,
+
+
+    //for electron app run
     webPreferences: {
-      allowEval: false // This is the key!
+      allowEval: false, // This is the key!
   }
   })
 

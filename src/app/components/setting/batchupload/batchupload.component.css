@@ -58,7 +58,7 @@ a, a:hover, a:focus {
 .date-format input[type=radio] + label {
   display:inline-block !important;
   padding: 0 0 0 0px !important;
-  background:url("/assets/images/unchecked24.png") no-repeat !important;
+  background:url("../../../../assets/images/unchecked24.png") no-repeat !important;
   height: 20px !important;
   width: 20px !important;
   background-size: 100% !important;
@@ -66,7 +66,7 @@ a, a:hover, a:focus {
   margin: 0px 2px 0px 0px !important;
 }
 .date-format input[type=radio]:checked + label {
-  background:url("/assets/images/checked24.png") no-repeat !important;
+  background:url("../../../../assets/images/checked24.png") no-repeat !important;
   height: 20px !important;
   width: 20px !important;
   display:inline-block !important;
