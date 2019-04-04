@@ -6,7 +6,10 @@
           > -->
           <!-- <img src="assets/images/menu32.png" alt="icon" style="width: 28px; height: 28px"> -->
           <div class="menu_bar" [ngClass]="{'make_bg_blue': showVar}" (click)="toggleSideNavBar()">
-            <img src="{{ showVar ? 'assets/images/menu-logo/menu_white.png' : 'assets/images/menu-logo/menu_black.png'}}" class="nav_img" alt="logo" />
+            <div class="img_hover menu_hover_div">
+              <img src="{{ showVar ? 'assets/images/menu-logo/cross_white.png' : 'assets/images/menu-logo/menu_black.png'}}"
+                class="nav_img" alt="logo" />
+            </div>
             <!-- <img *ngIf="openSidebar == false" src="assets/images/menu-logo/menu_white.png" class="nav_img" alt="logo" /> -->
           </div>
 

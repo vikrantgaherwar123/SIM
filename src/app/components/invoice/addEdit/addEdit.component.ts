@@ -128,6 +128,7 @@ export class AddEditComponent implements OnInit {
   isDeleted: boolean = false;
   noProductSelected: boolean = false;
   show: false;
+  makeCheckboxChecked : boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -197,6 +198,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    this.makeCheckboxChecked = true;
     $('#navbar').show()
     // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
@@ -1128,7 +1130,7 @@ export class AddEditComponent implements OnInit {
 
           $('#addtermbtn').removeAttr('disabled')
           // notifications.showSuccess({ message: response.data.message, hideDelay: 1500, hide: true })
-          $('#add-terms').modal('hide')
+          // $('#add-terms').modal('hide')
         } else {
           $('#addtermbtn').removeAttr('disabled')
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })

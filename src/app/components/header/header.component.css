@@ -71,6 +71,12 @@
   background-color: #dcf0fe;
   /* border-radius: 20px; */
 }
+.menu_hover_div{
+  padding: 5px 9px 9px 13px;
+  margin-left: -4px;
+  margin-top: -7px;
+}
+
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {

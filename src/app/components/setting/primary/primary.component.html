@@ -1,43 +1,4 @@
 <div class="row main-wrapper">
-    <div class="col-12 col-md-2" id="main">
-      <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
-        <div class="row mx-0">
-          <div class="col-12 mt-2">
-            <div class="col-9 pull-left fontsize18">
-              <h4 class="form-header inline font-custom-bold mt-1">
-                <i class="fa fa-gear"></i> Primary settings
-              </h4>
-            </div>
-    
-           
-          </div>
-        </div>
-    
-        <div class="row mx-0 pb-5">
-          <div class="col-12 back mt-1 edit-setting">
-            <div class="width85">
-              <!-- Tax -->
-              
-              <!-- Additional Taxes -->
-              <div class="row pt-2">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18 text-left">
-                  <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
-                </label>
-                <div class="col-9 px-0">
-                  <div class="row mx-0">
-                    <div class="col-12 col-md-4" id="additionalTax{{index}}"
-                      *ngFor="let taxNames of activeSettings.alstTaxName; let index = index">
-                      <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
-                        [(ngModel)]="taxNames.taxName" required onfocus="this.select()" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
   <div class="col-12 col-md-10" id="main">
     <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
       <div class="row mx-0">
