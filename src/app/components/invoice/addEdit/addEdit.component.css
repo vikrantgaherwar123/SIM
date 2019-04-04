@@ -92,6 +92,7 @@ select {
   position: relative;
   z-index: 2;
   color: red;
+  height: 14px;
 }
 .inputWithIcon input[type=text]{
   padding-left: 15px;
@@ -107,7 +108,9 @@ select {
   padding: 10px 13px;
   color: #aaa;
   transition: .3s;
+  padding: 9px 28px 8px 15px !important;
 }
+
 .inputWithIcon input[type=text]:focus + i {
   color: dodgerblue;
 }
@@ -226,6 +229,7 @@ a.morelink {
   content: "\f067";
   -webkit-text-stroke: 0.3px #e0dede !important;
 }
+
 @media (min-width: 1280px)
 {
   .downArrowIcon{
@@ -258,9 +262,15 @@ a.morelink {
   background-color: #2096f3;
   border-radius: 2px;
 }
+.addLabelBackroundColor:hover{
+  background: #0290f0;
+}
 .removeaddLabelBackroundColor{
   color: #118dfa;
-  background-color: #d3eafd !important
+  background-color: #ddf1ff !important;
+}
+.removeaddLabelBackroundColor:hover{
+  background-color: #d3eafd !important;
 }
 
 .comment {
@@ -280,4 +290,11 @@ a.morelink {
 }
 .morecontent span {
 	display: none;
+}
+
+.select_item_cross{
+  text-align: right !important;
+  padding-right: 12px !important;
+  vertical-align: top !important;
+  position: relative !important;
 }

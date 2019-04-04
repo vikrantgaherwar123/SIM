@@ -29,30 +29,18 @@
                             class="form-control billing-input" placeholder="Search & Select Client" matInput
                             [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
                             (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }">
-                          <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                          <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()"
-                            style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
-                          <!-- <img *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" src="assets/images/grey_cross.png" style="height: 16px;
-                            width: 16px;"> -->
-
-                          <!-- <i *ngIf="disableIcon === true" class="fa fa-search" aria-hidden="true" style="padding: 9px 15px;"></i>
-                          <span *ngIf="disableIcon === true" class="downArrowIcon">
-                          <i style="left: -30px !important;" class="fa fa-chevron-down " aria-hidden="true"></i>
-                          </span>
-                          <a id="back2Top" title="Back to top" href="#">&#10148;</a>  -->
-
-                          <!-- <div class="input-group-append">
-                            <a *ngIf="!edit && billingTo.value" class="input-group-text" id="basic-addon2" (click)="closeAddClientModal()"><img src="assets/images/grey_cross.png" style="height: 16px;
-                              width: 16px;"></a>
-                          </div> -->
-
+                          <div>
+                              <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                              <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()"
+                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                          </div>
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3"
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
                               <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
                               class="btn btn-primary add_client_btn">
-                              <i class="fa fa-plus"></i>Add New Client
+                              <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;Add New Client
                             </button>
                             <mat-option style="color: #2c3e59"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
@@ -66,13 +54,6 @@
                           </mat-autocomplete>
                         </div>
                       </div>
-
-                      <!-- <div class="col-2" style="padding-top: 30px;">
-                        <span>
-                          <i *ngIf="clientListLoading" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
-                        </span>
-                      </div> -->
-
                       <!-- Address and Shipping Address -->
                       <div id="addressBarAdd" name="addressBar" class="col-12"
                         style="margin-bottom: 15px;padding-top: 16px;">
@@ -344,8 +325,10 @@
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
                               matInput [formControl]="addItem" [matAutocomplete]="auto" required>
-                            <span *ngIf="ifProductEmpty === true && addItem !==null"
-                              class="fa fa-info-circle errspan help-block"></span>
+                              <img src="assets/images/exclamation-mark.png"  class="errspan help-block" *ngIf="ifProductEmpty === true && addItem !==null">
+
+                            <!-- <span *ngIf="ifProductEmpty === true && addItem !==null"
+                              class="fa fa-info-circle errspan help-block"></span> -->
 
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               class="mCustomScrollbar style-3" (optionSelected)="fillItemDetails()">
@@ -376,7 +359,7 @@
                               (keyup)="calculateTotal()" onfocus="this.select()" required />
                           </div>
 
-                          <button type="button" style="margin-top: 14px;" tabindex="7"
+                          <button type="button" style="margin-top: 10px;" tabindex="7"
                             class="change_bg btn save_btn btn-raised add_new_btn add_item_mr_discount"
                             (click)="addEditInvoiceItem()">
                             Add Item
@@ -432,7 +415,7 @@
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           
                         </td>
-                        <td style="vertical-align: top;text-align: center; position: relative !important;" [class.no-border-last]="last">
+                        <td class="select_item_cross" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
                             alt="logo" style="margin-top: 2px;" class="hg_20 img_hover">
                           <!--(click)="activeInvoice.listItems=undefined"-->
@@ -461,7 +444,7 @@
                       <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.shipping_charges === undefined , 'removeaddLabelBackroundColor':activeInvoice.shipping_charges === 0}"
                        (click)="activeInvoice.shipping_charges = 0">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
-                        {{settings.shipping ? settings.shipping : 'Shipping'}}+
+                        {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
                     </div>
                     <div *ngIf="showTaxRateFlag === true">
@@ -1452,73 +1435,60 @@
 <!-- ADD TERMS MODAL -->
 <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"
   data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-md term_popup_modal" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+           {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
+        </div>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <img src="assets/images/cross16.png" alt="logo" class="img_hover">
-        </button>
+        </button> -->
       </div>
 
-      <div class="modal-body">
-        <form name="termForm" #termForm="ngForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 69px !important;" onfocus="this.select()" required
-                  elastic></textarea>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="checkbox pull-left">
-                <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
-                  [(ngModel)]="addTermModal.setDefault"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                > -->
-                <div class="inline">Default?</div>
+      <div class="modal-body term_modal_body">
+        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" style="height: 70px;" id="addPaymentLabel">
+          <form name="termForm" #termForm="ngForm">
+            <div class="row">
+              <div class="col-1">
                 <label class="check">
-                  <div>
-                    <input type="checkbox" id="addtermcheck" name="setDefault" [(ngModel)]="addTermModal.setDefault"
-                      checked class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()">
-                    <span class="checkmark" style="left: 78px;"></span>
+                  <div class="checkbox default_checkbox">
+                    <input type="checkbox" [checked]="addTermModal.setDefault" id="addtermcheck" name="setDefault"
+                      class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()">
+                    <span class="checkmark default_checkbox_span"></span>
                   </div>
                 </label>
-                <!-- <label class="inline" for="addtermcheck"></label> -->
-
+                <div class="default_text">Make<br /> Default</div>
               </div>
-              <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
-                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)">
-                SAVE
-              </button>
-
+              <div class="col-10">
+                <textarea name="term" class="mCustomScrollbar style-3 add_term_input textarea_term" [(ngModel)]="addTermModal.terms" placeholder="Add term & Condition"
+                  onfocus="this.select()" required elastic></textarea>
+              </div>
+              <div class="col-1">
+                
+                <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
+                  class="btn add_term_btn btn-raised pull-right font-weight-bold ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
+                  (click)="saveTerm(termForm.valid)">
+                  <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
-          Please Select Terms
+            
+          </form>
         </h5>
 
-        <div class="col-12 terms_border">
-          <div class="col-12 mCustomScrollbar style-3">
+        <div class="row terms_border">
+          <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;">
             <div class="item termlist row product-list" id="term1{{index}}"
               *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index"
               [class.selected]="selectedTerm == index">
               <div class="col-12 px-0">
                 <div class="row">
                   <div class="col-md-1 px-0">
-                    <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
-                      (change)="addRemoveTermsFromInvoice(term)"
-                      [checked]="isTermInInvoice(term)"
-                    /> -->
-                    <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                    
                     <label class="check">
                       <div class="col-1">
-                        <input type="checkbox" id="termcheck{{index}}" name="term"
+                        <input type="checkbox" id="termcheck{{index}}" name="term" style="margin-left: 5px;"
                           (change)="addRemoveTermsFromInvoice(term)" [checked]="isTermInInvoice(term)" />
                         <span class="checkmark"></span>
                       </div>
@@ -1533,7 +1503,14 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer"></div>
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+            CANCEL
+        </button>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="close save_btn btn pull-right width10btn ml-2 font-custom-bold">
+            DONE
+        </button>
+      </div>
     </div>
   </div>
 </div>

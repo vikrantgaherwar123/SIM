@@ -369,8 +369,8 @@ input[type=text] {
   font-family: quicksand_bold !important;
 }
 .transparent_div{
-  opacity: .6;
+  opacity: .8;
   height: 608px;  
   position: relative;
-  background-color: white;
+  background-color: #e2e2e2;
 }
