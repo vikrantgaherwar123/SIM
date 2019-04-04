@@ -24,11 +24,11 @@
     <form class="form-horizontal" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
       <div class="row mx-0">
         <div class="col-12 mt-2">
-          <div class="col-9 pull-left fontsize18">
+          <!-- <div class="col-9 pull-left fontsize18">
             <h4 class="form-header inline font-custom-bold mt-1">
               <i class="fa fa-gear"></i> Primary settings
             </h4>
-          </div>
+          </div> -->
 
           <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
           class="btn save_btn btn-raised pull-right font-weight-bold ml-2 width12perbtn"
@@ -43,9 +43,9 @@
         <div class="col-12 mt-1 edit-setting">
           <div class="width85">
             <!-- Tax -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Tax</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText ">Tax</label>
                 <div class="col-12 col-md-9 taxradio">
                   <input type="radio" id="taxonItem" name="taxon"
                     (click)="activeSettings.taxFlagLevel=0" [checked]="activeSettings.taxFlagLevel==0"
@@ -72,15 +72,15 @@
             </div>
 
             <!-- Discount -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">{{settings.discount ? settings.discount : 'Discount'}} </label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">{{settings.discount ? settings.discount : 'Discount'}} </label>
                 <div class="col-12 col-md-9 discountradio">
                   <input type="radio" id="discountonitem" name="discounton"
                     (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
                   >
                   <label for="discountonitem" 
-                    class="discountonitem fontsize13 border-right-none font-custom-bold" style="text-transform:uppercase"
+                    class="discountonitem fontsize13 border-right-none font-custom-bold"
                   >
                   {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
                   </label>
@@ -107,12 +107,12 @@
             </div>
 
             <!-- Date Format -->
-            <div class="form-group pt-2 date-format">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Date Format</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Date Format</label>
                 <div class="col-12 col-md-9">
-                  <div class="row">
-                    <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
+                  <div>
+                    <!-- <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
                       <input type="radio" id="ddMMyyyy" name="dateFormat"
                         [checked]="activeSettings.dateDDMMYY" (click)="setDateFormat('dd-mm-yy')"
                       />
@@ -123,6 +123,19 @@
                         [checked]="activeSettings.dateMMDDYY" (click)="setDateFormat('mm-dd-yy')"
                       />
                       <label for="MMddyyyy"></label>MM-DD-YYYY
+                    </div> -->
+                    <div class="row col-md-9 discountradio">
+                        <input type="radio" id="ddMMyyyy" name="dateFormat" (click)="setDateFormat('dd-mm-yy')"
+                          [checked]="activeSettings.dateDDMMYY">
+                        <label for="ddMMyyyy" class="discountonitem fontsize13 border-right-none font-custom-bold">
+                          DD-MM-YYYY
+                        </label>
+                        <input type="radio" id="MMddyyyy" name="dateFormat" (click)="setDateFormat('mm-dd-yy')"
+                          [checked]="activeSettings.dateMMDDYY">
+                        <label for="MMddyyyy" class="discountonbill fontsize13 border-left-right-none font-custom-bold"
+                          style="border-left: none;text-transform:uppercase">
+                          MM-DD-YYYY
+                        </label>
                     </div>
                   </div>
                 </div>
@@ -130,9 +143,9 @@
             </div>
 
             <!-- Currency Pattern -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Currency Pattern </label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Currency Pattern </label>
                 <div class="col-12 col-md-3 dropdown">
                   <div id="dropdownMenuButton" class="dropbtn" data-toggle="dropdown">
                     {{activePatternNumber}} <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -156,9 +169,9 @@
             </div>
 
             <!-- Currency Symbol -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2 labelText">
                   Currency Symbol
                 </label>
                 <div class="col-12 col-md-3">
@@ -197,9 +210,9 @@
             </div>
 
             <!-- Additional Taxes -->
-            <div class="row pt-2">
-              <label class="col-12 col-md-3 font-custom-bold fontsize18 text-left">
-                <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
+            <div class="row labelSpacing">
+              <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">
+                <button class="btn save_btn btn-raised pull-right ml-2 width12perbtn" data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</button>
               </label>
               <div class="col-9 px-0">
                 <div class="row mx-0">

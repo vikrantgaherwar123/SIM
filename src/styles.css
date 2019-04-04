@@ -1071,6 +1071,10 @@ background-color: none;
   width: 100%;
   cursor: pointer;
 }
+
+.label_div:hover{
+  background-color: #ebf3fb;
+}
 .settingForm{
   height:591px  !important;
   text-align: center;

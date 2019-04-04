@@ -25,7 +25,7 @@
   width:159px;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   border: 1px solid #2196f3;
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
 
@@ -68,6 +68,7 @@
     text-align: center;
     font-size: 16px !important;
     height: 35px;
+    background-color: #ffffff;
 }
 .edit-setting .country-code input[type=radio] + label {
   min-height: 32px;
@@ -89,5 +90,13 @@
 }
 .edit-setting .country-code input[type=radio]:checked + label{
   background-color: #d0e4f7;
+}
+
+.labelText{
+  text-align: right;
+}
+
+.labelSpacing{
+  padding-top: 14px !important;
 }
 
