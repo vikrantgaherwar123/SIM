@@ -736,18 +736,41 @@
                     </div>
 
                     <!-- Paid Amount -->
-                    <div class="top_bot_mr_10">
+                    <div class="paidBackground">
                       <div class="row mx-0">
                         <div class="col-6 text-left">
-                          <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
+                          <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
+
+                            <a class="paidArrow fa fa-angle-down" data-toggle="collapse" href="#collapseExample" role="button"
+                              aria-expanded="false" aria-controls="collapseExample">
+                            </a>
+                          
+                            <div class="row collapse" id="collapseExample">
+                              <div class="col-5">
+                                <input type="text" />
+                              </div>
+                              <div class="col-3">
+                                <input type="text" />
+                              </div>
+                              <div class="col-2">
+                                <input type="text" />
+                              </div>
+                            </div>
+                          </span>
+                          
+                            
+                          
+                          
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;">
                           <span
                             class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
                       </div>
+                      
+                      
                     </div>
-                    <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)">
+                    <!-- <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)"> -->
                     <div *ngFor="let item of activeInvoice.payments; let in = index" class="top_bot_mr_10 pay_clr">
                       <div class="row mx-0">
                         <div class="col-6 text-left label_color">
@@ -763,6 +786,7 @@
                       </div>
 
                     </div>
+                    
 
                     <!-- Balance -->
                     <div class="col-12 balance-row">
@@ -1453,7 +1477,7 @@
               <div class="col-1">
                 <label class="check">
                   <div class="checkbox default_checkbox">
-                    <input type="checkbox" [checked]="addTermModal.setDefault" id="addtermcheck" name="setDefault"
+                    <input type="checkbox" (change)="changeCheckbox()" [(ngModel)]="defaultChecked" id="addtermcheck" name="setDefault"
                       class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()">
                     <span class="checkmark default_checkbox_span"></span>
                   </div>

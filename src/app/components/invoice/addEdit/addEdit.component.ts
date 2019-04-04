@@ -128,7 +128,7 @@ export class AddEditComponent implements OnInit {
   isDeleted: boolean = false;
   noProductSelected: boolean = false;
   show: false;
-  makeCheckboxChecked : boolean;
+  defaultChecked: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -198,7 +198,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    this.makeCheckboxChecked = true;
+    this.addTermModal.setDefault = true;
     $('#navbar').show()
     // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
@@ -1098,8 +1098,18 @@ export class AddEditComponent implements OnInit {
 
   // Term Functions
   openAddTermModal() {
+    this.defaultChecked = true;
     this.addTermModal = {}
+    this.addTermModal.setDefault = true;
     $('#add-terms').modal('show')
+  }
+  //toggle checked box for terms
+  changeCheckbox() {
+    if (this.defaultChecked) {
+      this.addTermModal.setDefault = true;
+    }else{
+      delete this.addTermModal.setDefault;
+    }
   }
   
 

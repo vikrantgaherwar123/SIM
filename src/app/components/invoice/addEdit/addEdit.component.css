@@ -298,3 +298,16 @@ a.morelink {
   vertical-align: top !important;
   position: relative !important;
 }
+.paidArrow{
+  color: #cccccc;
+  cursor:pointer;
+}
+
+.paidBackground
+{
+  padding-bottom: 15px;
+  padding-top: 1px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  margin-bottom: 10px;
+}
