@@ -237,9 +237,21 @@ select {
 
 .addLabelBackroundColor{
   color: white;
-  background-color: #2096f3
+  background-color: #2096f3;
+  border-radius: 2px;
+}
+.addLabelBackroundColor:hover{
+  background: #0290f0;
 }
 .removeaddLabelBackroundColor{
   color: #118dfa;
-  background-color: #d3eafd !important
+  background-color: #ddf1ff !important;
+}
+.removeaddLabelBackroundColor:hover{
+  background-color: #d3eafd !important;
+}
+.select_cross_icon{
+  vertical-align: top; 
+  position: relative !important;
+  text-align: center;
 }

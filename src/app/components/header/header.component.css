@@ -67,20 +67,23 @@
   padding: 18px 7px 13px 5px;
   margin-left: 10px;
 }
-.menu_list :hover{
-  background-color: #dcf0fe;
-  /* border-radius: 20px; */
-}
+
 .menu_hover_div{
   padding: 5px 9px 9px 13px;
   margin-left: -4px;
   margin-top: -7px;
 }
+.menu_hover_div:hover{
+  padding: 5px 9px 9px 13px;
+  margin-left: -4px;
+  margin-top: -7px;
+  border:2px solid #0298fe;
+}
 
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
-  color: #0292f3;
+  color: #9a999a;
 }
 .active{
   /* padding: 0px 8px 16px 0px; */

@@ -22,7 +22,7 @@
         </div>
   <div class="col-9" id="main" style="padding-top:0">
     <div class="blue"></div>
-    <div ><!--style="margin: 0px auto; max-width:1000px;"-->
+    <div class="back"><!--style="margin: 0px auto; max-width:1000px;"-->
       <div class="col-12 item-list padtop20 form-horizontal tncContainer"
       >
         <!-- HEADER -->
@@ -33,7 +33,7 @@
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
-                class="save_btn btn-raised pull-right font-weight-bold" style="border: none !important;padding: 6px 19px 4px 24px;"
+                class="save_btn btn-raised pull-right" style="border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
                 Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
@@ -111,7 +111,7 @@
               <label for="set_default">Default?</label>
             </div>
             <button type="submit" id="addtermButton" title="save"
-            class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+            class="btn save_btn btn-raised width25btn pull-right ml-2"
               (click)="save(addtermpopup.valid);" [disabled]="!addtermpopup.valid"
             >
               {{activeTnc.uniqueKeyTerms ? 'Update' : 'Save'}}
@@ -137,7 +137,7 @@ data-backdrop="static" data-keyboard="false">
         !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+      <button type="button" class="btn save_btn btn-raised width25btn center"
         data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>

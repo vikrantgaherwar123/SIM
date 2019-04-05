@@ -82,7 +82,7 @@
                   <label for="discountonitem" 
                     class="discountonitem fontsize13 border-right-none font-custom-bold"
                   >
-                  {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
+                  {{settings.discount ? settings.discount : 'DISCOUNT'}} ON ITEM
                   </label>
 
                   <input type="radio" id="discountonBill" name="discounton"
@@ -91,7 +91,7 @@
                   <label for="discountonBill"
                     class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="border-left: none;text-transform:uppercase"
                   >
-                  {{settings.discount ? settings.discount : 'Discount'}} ON BILL
+                  {{settings.discount ? settings.discount : 'DISCOUNT'}} ON BILL
                   </label>
 
                   <input type="radio" id="discountdisabled" name="discounton"
@@ -148,7 +148,7 @@
                 <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Currency Pattern </label>
                 <div class="col-12 col-md-3 dropdown">
                   <div id="dropdownMenuButton" class="dropbtn" data-toggle="dropdown">
-                    {{activePatternNumber}} <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    {{activePatternNumber}} <i class="fa fa-caret-down pattern_icon" aria-hidden="true"></i>
                   </div>
                   <!-- <select class="dropbtn"> Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
                     <option (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</option>
@@ -177,7 +177,7 @@
                 <div class="col-12 col-md-3">
                   <span style="font-size: 11px;color: #2e2e2e;">Select Country</span>
                   <div class="form-group" *ngIf="countries?.length>0">
-                    <select name="country-symbol" class="form-control" style="width:171px; height:31px; border-radius:4px;"
+                    <select name="country-symbol" class="form-control country_select bd_none"
                       [ngModel]='activeSettings.countryIndex' (change)="setCountry($event.target.value)"
                     >
                       <option [value]="country.id" *ngFor="let country of countries; let index = index">
@@ -188,7 +188,7 @@
                 </div>
 
                 <div class="col-12 col-md-5 country-code country-radio ">
-                  <div class="row">
+                  <div class="row" style="margin-top: 4px;">
                     <div class="col-5 text-center px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Symbol</div>
                       <input type="radio" id="currencySymbol" name="currenySymbol" [checked]="activeSettings.currencySymbol"
@@ -196,7 +196,7 @@
                       >
                       <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
                     </div>
-                    <div class="col-1 mt-3 px-0 text-center">or</div>
+                    <div class="col-2 mt-3 px-0 text-center">or</div>
                     <div class="col-5 text-center px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
                       <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
@@ -212,15 +212,15 @@
             <!-- Additional Taxes -->
             <div class="row labelSpacing">
               <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">
-                <button class="btn save_btn btn-raised pull-right ml-2 width12perbtn" data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</button>
+                <button class="btn save_btn btn-raised pull-right ml-2 width12perbtn add_tax_btn" data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</button>
               </label>
               <div class="col-9 px-0">
                 <div class="row mx-0">
                   <div class="col-12 col-md-4" id="additionalTax{{index}}"
                     *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
                   >
-                    <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
-                      [(ngModel)]="taxNames.taxName" required onfocus="this.select()"
+                    <input class="form-control bd_none" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
+                      [(ngModel)]="taxNames.taxName" required onfocus="this.select()" style="margin-bottom: 10px;"
                     />
                   </div>
                 </div>

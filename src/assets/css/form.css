@@ -329,7 +329,7 @@ button.add-line-item-button {
 }
 .width85 {
 	width: 85%;
-	margin: 0 auto;
+	/* margin: 0 auto; */
 }
 .fontsize18 {
 	font-size: 18px !important;

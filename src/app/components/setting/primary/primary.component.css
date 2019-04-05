@@ -14,15 +14,15 @@
 }
 .edit-setting input[type=radio] + label {
   display: inline-block;
-  font-family: quicksand_regular !important;
+  font-family: helvetica_regular!important;
   font-weight: bold !important;
   padding: 5px 12px;
   margin-bottom: 5px;
-  line-height: 20px;
+  line-height: 28px;
   color: #2196f3;
   text-align: center;
   font-size: 14px;
-  width:159px;
+  width:164px;
   vertical-align: middle;
   cursor: pointer;
   /* background-color: #ffffff; */
@@ -59,22 +59,24 @@
   margin: 0px 2px 0px 0px !important;
 }
 .dropbtn {
-  width: 180px;
-    color: #2196f3;
-    padding: 6px;
-    border-radius: 3px;
-    border: 1px solid #2196f3;
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px !important;
-    height: 35px;
-    background-color: #ffffff;
+  width: 164px;
+  color: #2196f3;
+  text-align: left !important;
+  padding: 6px 2px 2px 13px;
+  border-radius: 3px;
+  border: 1px solid #2196f3;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px !important;
+  height: 40px;
+  background-color: #ffffff;
 }
 .edit-setting .country-code input[type=radio] + label {
   min-height: 32px;
   display: inline-block;
   margin: 0px !important;
   padding: 5px 12px;
+  background-color: white;
   margin-bottom: 5px;
   line-height: 20px;
   color: #2196f3;
@@ -89,7 +91,12 @@
   font-family: quicksand_bold;
 }
 .edit-setting .country-code input[type=radio]:checked + label{
-  background-color: #d0e4f7;
+  background-color: #ffffff;
+  height: 38px !important;
+}
+.edit-setting .country-code input[type=radio] + label{
+  background-color: #ffffff;
+  height: 38px !important;
 }
 
 .labelText{
@@ -99,4 +106,26 @@
 .labelSpacing{
   padding-top: 14px !important;
 }
-
+.country_select{
+  width:171px !important; 
+  height:31px !important; 
+  border-radius:4px;
+  height: 38px !important;
+}
+.pattern_icon{
+  float: right;
+  padding: 3px 7px;
+}
+.fa-caret-down:before {
+  content: '\f078' !important;
+  font: normal normal normal 17px/1 FontAwesome !important;
+  font-size: 14px;
+  -webkit-text-stroke: 0.8px white;
+}
+.bd_none{
+  background-color: #eff0f1 !important;
+}
+.add_tax_btn{
+  width: 162px;
+  font-size: 17px !important;
+}

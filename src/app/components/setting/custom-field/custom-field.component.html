@@ -21,7 +21,7 @@
           </form>
         </div>
   <div class="col-9" id="main">
-    <div ><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
+    <div class="back"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
       <form class="form-horizontal" name="userForm" #form="ngForm" style="min-height: 1106px;">
         <div class="custom-field-form">
           <div style="padding-top: 25px;">
@@ -31,7 +31,7 @@
               </div>
 
               <div class="col-12" style="margin-bottom: 10px;">
-                <span style="font-size: 11px;" class="font-weight-bold">
+                <span style="font-size: 11px;">
                   Customize field name as they appear on your PDF
                 </span>
               </div>
@@ -235,7 +235,7 @@
                     CANCEL
                   </button>
                   <button type="submit" id="customSubmit" (click)="save(form.valid)"
-                    class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2" style="height: 29px !important;padding-top: 4px !important;"
+                    class="btn save_btn btn-raised width25btn pull-right ml-2" style="height: 29px !important;padding-top: 4px !important;"
                   >
                     SAVE
                   </button>
@@ -263,7 +263,7 @@ data-backdrop="static" data-keyboard="false">
         !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+      <button type="button" class="btn save_btn btn-raised width25btn center"
         data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
