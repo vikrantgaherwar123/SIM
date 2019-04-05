@@ -677,7 +677,7 @@ option {
   border-bottom: 1px solid #d4d4d4;
 }
 .terms_border{
-  padding: 20px 15px 0px 15px;
+  padding: 5px 15px 0px 15px;
   /* border: 1px solid #d4d4d4; */
 }
 .textarea_term{
@@ -778,7 +778,6 @@ option {
   color: #495057;
   text-align: center;
   white-space: nowrap;
-  /* font-weight: 800 !important; */
   background-color: white !important;
   border: 1px solid #ced4da;
   border-radius: 0px !important;
@@ -1028,15 +1027,6 @@ background-color: none;
 .user-logout h6 span {
   font-family: helvetica_regular !important;
 }
-
-.span_text{
-  text-transform: uppercase;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px;
-  font-family: helvetica_regular !important;
-}
-
 .dropdown-menu>li>a {
   display: block;
   padding: 3px 20px;
@@ -1055,11 +1045,11 @@ background-color: none;
   color: #0299ff;
   font-weight: bold;
   margin-top: -16px;
-  font-family: quicksand_bold;
+  font-family: helvetica_regular;
 }
 .today_txt{
   font-size: 13px;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular !important;
   color: #787e83;
 }
 .selectedSetting{
@@ -1129,6 +1119,7 @@ background-color: none;
 }
 textarea{
   outline: none !important;
+  font-family: helvetica_regular !important;
 }
 .add_to_list_btn{
   padding: 6px 28px !important;
@@ -1142,5 +1133,28 @@ textarea{
   opacity: .7 !important;
   pointer-events: none;
 }
+/* payment installment section */
+.payment_row{
+  /* padding: 10px 16px 0px 10px; */
+  border-left: 4px solid #0299ff;
+  border-top: 1px solid #cecece;
+  margin-top: 10px;
+}
+.paidArrow{
+  color: #cccccc;
+  cursor:pointer;
+}
 
+.paidBackground
+{
+  padding-top: 1px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  margin-bottom: 10px;
+}
+.add_btn{
+  width: auto !important;
+  height: auto !important;
+  font-size: 12px !important;
+}
 

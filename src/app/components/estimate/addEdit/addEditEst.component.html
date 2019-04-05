@@ -145,8 +145,8 @@
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text_right" name="amount" disabled
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                     </td>
-                    <td width="5%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Edit</td>
-                    <td width="6%" class="text-center" style="font-family: inherit; font-weight:100;font-size: 12.5px !important;">Delete</td>
+                    <td width="5%" class="text-center">Edit</td>
+                    <td width="6%" class="text-center">Delete</td>
                   </tr>
                 </thead>
 
@@ -280,7 +280,10 @@
                       </div>
                     </td>
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross.png" alt="logo" style="height: 24px;margin-top: 2px;">
+                    </td>
+                    <td class="select_cross_icon" [class.no-border-last]="last">
+                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross.png" alt="logo"
+                        style="height: 24px;margin-top: 2px;">
                     </td>
                   </tr>
                   <button *ngIf="disableProductText === false" type="button" style="width: 130px !important;" class="change_bg btn save_btn btn-raised add_new_btn"
@@ -379,10 +382,10 @@
 
                 <div class="row mr_right mr_0" *ngIf="activeEstimate.discount_on_item === 0 ">
                   <div class="col-4 discount-tax-label pr-0">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">
+                    <span style="text-align: left;vertical-align: bottom;">
                       {{settings.discount ? settings.discount : 'Discount'}}
                     </span>
-                    <div *ngIf="activeEstimate.percentage_flag == 0" style="color: #aaaaaa;" class="inline font-custom">
+                    <div *ngIf="activeEstimate.percentage_flag == 0" class="inline font-custom">
                       ({{mysymbols}})
                     </div>
                 
@@ -445,7 +448,7 @@
                 <!-- Tax -->
                 <div class="row mr_right mr_0" *ngIf="activeEstimate.tax_on_item===1">
                   <div class="col-4 discount-tax-label pr-0">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">
+                    <span style="text-align: left;vertical-align: bottom;">
                       Tax (%)
                     </span>
                 
@@ -505,7 +508,7 @@
                   <!-- Shipping -->
                   <div class="row mr_right mr_0" *ngIf="activeEstimate.shipping_charges !== undefined">
                     <div class="col-4 discount-tax-label ">
-                      <div class="inline" style="text-align: left;vertical-align: bottom;">
+                      <div style="text-align: left;vertical-align: bottom;">
                         {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
                       </div>
                     </div>
@@ -577,10 +580,10 @@
                 <!-- Save -->
                 <div class="col-12 px-0 mt-2">
                   <button type="submit" id="estSubmitBtn" 
-                    class="save btn save_btn btn-raised width25btn pull-right font-weight-bold" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
+                    class="save btn save_btn btn-raised width25btn pull-right" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
                     SAVE
                   </button><!--[disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"-->
-                  <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                  <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn"
                     style="margin-right: 8px;" (click)="deleteEstimate()">
                     DELETE
                   </button>
@@ -598,22 +601,22 @@
           <div class="row">
             <div class="col-md-12">
               <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
+                class="btn save_btn btn-raised width25btn pull-right ml-2 width12perbtn" title="Edit">
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadEstimate('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
+                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn" title="Download">
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
               <button id="previewBtn" type="button" (click)="downloadEstimate('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn" title="Preview">
                 <img src="assets/images/buttons-icon/view16.png">
                 Preview
               </button>
               <button id="previewBtn" type="button" (click)="makeInvoice()" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Preview">
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn" title="Preview">
                 Make Invoice
               </button>
             </div>
@@ -707,7 +710,7 @@
                     <td width="17%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
-                    <td width="18%">
+                    <td width="18%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
@@ -744,7 +747,7 @@
                         {{item.discountRate}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text-right">
                         {{item.price}}
                       </div>
@@ -888,7 +891,7 @@
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
             <button type="button" 
-              class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+              class="col-11 side_btn btn btnd btn-custom-2 no-border-radius"
               (click)="router.navigate(['/estimate/view'])">Search For Estimates
               <i class="fa fa-search" style="padding: 12px 0px;"></i>
             </button>
@@ -897,7 +900,7 @@
 
           <div class="row" style="margin: 0 auto;">
               <button *ngIf="viewTodaysEstimate == true || edit" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-                class="col-11 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn"
+                class="col-11 btn btnd btn-custom-2 no-border-radius side_btn"
                 (click)="addNewEstimate()">Add New Estimate
                 <i class="fa fa-plus" style="padding: 12px 0px"></i>
               </button>
@@ -1203,7 +1206,7 @@
                 
               </div>
               <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn save_btn btn-raised pull-right font-weight-bold ml-2" style="padding: 6px 28px !important;"
+                class="btn save_btn btn-raised pull-right ml-2" style="padding: 6px 28px !important;"
                 [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
               >
                 SAVE
@@ -1265,7 +1268,7 @@ data-backdrop="static" data-keyboard="false">
         !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+      <button type="button" class="btn save_btn btn-raised width25btn center"
         data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>

@@ -435,10 +435,10 @@
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold"
                     style="padding-bottom: 8px;">
                     <div *ngIf="settings.discountFlagLevel === 0"> <!-- &&  activeInvoice.discount_on_item===2-->
-                      <a class="inline" [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
+                      <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
                         (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}}+
-                    </a>
+                    </span>
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
                       <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.shipping_charges === undefined , 'removeaddLabelBackroundColor':activeInvoice.shipping_charges === 0}"
@@ -532,7 +532,7 @@
                     <!-- Discounts -->
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.discount_on_item === 0">
                       <div class="col-4 discount-tax-label pr-0">
-                        <span style="text-align: left;vertical-align: bottom;" class="inline">
+                        <span style="text-align: left;vertical-align: bottom;">
                           {{settings.discount ? settings.discount : 'Discount'}}
                         </span>
                         <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;">
@@ -600,7 +600,7 @@
                     <!-- tax -->
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.tax_on_item === 1">
                         <div class="col-4 discount-tax-label pr-0">
-                          <span style="text-align: left;vertical-align: bottom;" class="inline">
+                          <span style="text-align: left;vertical-align: bottom;">
                               Tax (%)
                           </span>
                          
@@ -664,7 +664,7 @@
                     <!-- Shipping -->
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.shipping_charges !== undefined">
                       <div class="col-4 discount-tax-label ">
-                        <div class="inline" style="text-align: left;vertical-align: bottom;">
+                        <div style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
                         </div>
                       </div>
@@ -737,41 +737,43 @@
 
                     <!-- Paid Amount -->
                     <div class="paidBackground">
-                      <div class="row mx-0">
+                      <div class="row mx-0" style="margin-top: 6px;">
                         <div class="col-6 text-left">
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
-
-                            <a class="paidArrow fa fa-angle-down" data-toggle="collapse" href="#collapseExample" role="button"
+                            <a class="paidArrow fa fa-angle-down" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
                             </a>
-                          
-                            <div class="row collapse" id="collapseExample">
-                              <div class="col-5">
-                                <input type="text" />
-                              </div>
-                              <div class="col-3">
-                                <input type="text" />
-                              </div>
-                              <div class="col-2">
-                                <input type="text" />
-                              </div>
-                            </div>
-                          </span>
-                          
                             
-                          
-                          
+                          </span>
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;">
                           <span
-                            class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                        </div>
+                        <div class="row mx-0 payment_row">
+                          <div class="row collapse" id="collapseExample" style="margin: 10px -7px 12px;">
+                            <div class="col-4">
+                                <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
+                                [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
+                              <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
+                            </div>
+                            <div class="col-6">
+                                <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
+                                class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
+                                [(ngModel)]="addPaymentModal.paid_amount"
+                                placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 207px;font-size: 13px;" />
+                            </div>
+                            <div class="col-2">
+                              <button type="button" style="font-size:12px !important" class="add_btn btn btn-raised btn-custom-1 width20btn pull-right" (click)="addPaymentInModalPaymentList();">
+                                Add
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      
-                      
                     </div>
                     <!-- <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)"> -->
-                    <div *ngFor="let item of activeInvoice.payments; let in = index" class="top_bot_mr_10 pay_clr">
+                    <div *ngFor="let item of activeInvoice.payments; let i = index" class="top_bot_mr_10 pay_clr">
                       <div class="row mx-0">
                         <div class="col-6 text-left label_color">
                           <span class="font-custom">{{item.date_of_payment | date}}</span>
@@ -780,7 +782,7 @@
                         <div class="col-6 text-right pad_rg_5">
                           <span
                             class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                          <img src="assets/images/grey_cross.png" (click)="deleteInstallment(in)" Title="Delete" alt=""
+                          <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
                             class="hg_20 cross_label_img img_hover">
                         </div>
                       </div>

@@ -120,7 +120,6 @@ a.more {
 	margin: 0;
 	width: 100%;
 	font-size: 15px;
-	font-family: quicksand_bold_oblique;
 	padding: 10px;
 	background: #ffffff !important;
 	color: #0c82df !important;
@@ -329,7 +328,7 @@ button.add-line-item-button {
 }
 .width85 {
 	width: 85%;
-	margin: 0 auto;
+	/* margin: 0 auto; */
 }
 .fontsize18 {
 	font-size: 18px !important;

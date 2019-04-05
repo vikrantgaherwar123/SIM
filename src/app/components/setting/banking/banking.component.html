@@ -21,7 +21,7 @@
         </form>
       </div>
   <div class="col-9" id="main">
-    <div><!--style="margin: 0px auto; max-width:1000px;" -->
+    <div class="back"><!--style="margin: 0px auto; max-width:1000px;" -->
       <form class="shadow" name="userForm" #form="ngForm">
         <div align="center" class="custom-field-form" style="padding: 15px">
           <div class="col-12" style="margin-bottom: 10px;">
@@ -32,16 +32,8 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
-              class="payment-detail-input" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
-              style="width: 300px;
-                padding: 0px;
-                margin: 13px 0 0 0;
-                display: inline;
-                border-top: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: 1px #CCCCCC solid;
-              "
+              class="payment-detail-input form-control" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
+              style="width: 300px;"
             >
           </div>
 

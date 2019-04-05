@@ -13,7 +13,7 @@
   border-bottom: #ccc solid 1px;
 }
 .pre_term{
-  font-family: quicksand_regular!important;
+  font-family: helvetica_regular!important;
   font-size: 13.5px!important;
 }
 .tncContainer{
@@ -22,4 +22,13 @@
   padding-right: 30px;
   padding-right: 30px;
   padding-bottom: 30px;
+}
+.checkmark {
+  position: absolute;
+  top: 1px;
+  left: 10px !important;
+  height: 18px;
+  width: 18px;
+  background-color: white;
+  border: 1px solid #0299ff;
 }

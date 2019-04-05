@@ -128,7 +128,7 @@ input.ng-dirty.ng-invalid {
   padding: 4px 1px 2px 12px;
   color: #1f96f2;
   font-size: 12px;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular!important;
 }
 .steps_div{
   background-color:#f5f6fa;
@@ -140,7 +140,7 @@ input.ng-dirty.ng-invalid {
 }
 .client_label{
   font-size: 12px;
-  font-family: quicksand_bold!important;
+  font-family: helvetica_regular!important;
   color: #7a7575;
   line-height: 15px;
 }
@@ -148,7 +148,7 @@ input.ng-dirty.ng-invalid {
   font-size: 11px;
   color: #7e7e7e;
   padding: 12px;
-  font-family: quicksand_regular !important;
+  font-family: helvetica_regular!important;
 }
 .file_icon{
   height: 16px;
@@ -157,13 +157,13 @@ input.ng-dirty.ng-invalid {
 }
 .file_text{
   color: #0299ff !important;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular!important;
   font-size: 12px;
   height: 30px !important;
   /* padding: 6px 10px 5px 10px !important; */
 }
 input[type=text], input[type=password], select {
-  font-family: quicksand_regular !important;
+  font-family: helvetica_regular !important;
   font-size: 12.5px !important;
   font-style: normal;
   font-weight: 100 !important;
@@ -186,7 +186,7 @@ input[type=text], input[type=password], select {
 }
 input[type=text] {
   padding: 3px !important;
-  font-family: quicksand_regular !important;
+  font-family: helvetica_regular!important;
   font-size: 14px !important;
   font-style: normal;
   font-weight: 100 !important;
@@ -228,7 +228,7 @@ input[type=text] {
   width: 94px;
   height: 42px;
   color: #0299ff !important;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular!important;
   padding: 7px 2px 2px 2px !important;
   height: 42px !important;
   padding: 11px 8px !important;
@@ -266,7 +266,7 @@ input[type=text] {
   /* padding: 165px; */
   text-align: center;
   font-size: 26px;
-  font-family: quicksand_regular !important;
+  font-family: helvetica_regular!important;
 }
 .main-wrapper{
   background-color: #ededed;
@@ -308,15 +308,14 @@ input[type=text] {
   border-radius: 4px;
 }
 
-::-moz-selection { /* Code for Firefox */
-  color: red;
+/* ::-moz-selection { 
   background: yellow;
 }
 
 ::selection {
   color: red;
   background: yellow;
-}
+} */
 .btn-default{
   color: #333;
   background-color: #ddf1ff;
@@ -352,7 +351,7 @@ input[type=text] {
 .product_td{
   width: 58px;
   background-color: white;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular!important;
 }
 .product_cross{
   padding: 4px 4px 0px 8px !important;
@@ -366,7 +365,7 @@ input[type=text] {
 .clear_btn{
   width: 94px !important;
   color: #0299ff !important;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular!important;
 }
 .transparent_div{
   opacity: .8;
