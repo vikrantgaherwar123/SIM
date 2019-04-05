@@ -47,7 +47,6 @@
   padding: 10px 36px;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 800;
   border-radius: 2px;
   width: 188px !important;
   padding: 9px 0px 11px 16px;
@@ -88,7 +87,6 @@
 .nav li .dropdown-menu button {
   width: 170px;
   padding: 2px 0px 6px 4px;
-  font-weight: bold !important;
   border: 1px solid #bcbaba;
   border-radius: 4px;
   margin-top: 10px;

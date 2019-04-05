@@ -437,7 +437,7 @@
                     <div *ngIf="settings.discountFlagLevel === 0"> <!-- &&  activeInvoice.discount_on_item===2-->
                       <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
                         (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
-                        {{settings.discount ? settings.discount : 'Discount'}}+
+                        {{settings.discount ? settings.discount : 'Discount'}} &nbsp;+
                     </span>
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
@@ -451,14 +451,14 @@
                       <div
                         *ngIf="settings.taxFlagLevel === 1 "> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
                         <span  class="inline label_span" [ngClass]="{'addLabelBackroundColor':settings.taxFlagLevel === 1 , 'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 1}"
-                         (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax+</span>
+                         (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
                       </div>
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.adjustment === null || activeInvoice.adjustment === undefined ,
                        'removeaddLabelBackroundColor':activeInvoice.adjustment === 0}"
                        (click)="activeInvoice.adjustment = 0">
-                        {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
+                        {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
                     <div *ngIf="activeInvoice.taxList">
@@ -466,7 +466,7 @@
                         <span class="inline label_span"[ngClass]="{'addLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
                         'removeaddLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
                           (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
-                          {{tax.taxName}}+
+                          {{tax.taxName}} &nbsp;+
                       </span> <!--*ngIf="!activeInvoice.taxList[taxIndex]"-->
                       </div>
                     </div>
@@ -596,14 +596,12 @@
                         </form>
                       </div>
                     </div>
-
                     <!-- tax -->
                     <div class="row mr_right mr_0" *ngIf="activeInvoice.tax_on_item === 1">
                         <div class="col-4 discount-tax-label pr-0">
                           <span style="text-align: left;vertical-align: bottom;">
                               Tax (%)
                           </span>
-                         
                         </div>
                       
                         <div class="col-8 pr-0">
@@ -616,8 +614,6 @@
                               <input type="number" id="tax_inputs" name="tax_inputs" class="col-9 form-control height_40 dis_tax_label" 
                               placeholder="00.000" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()"
                             />
-                      
-                              
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
                                   <!--activeInvoice.tax_amount-->
@@ -764,15 +760,11 @@
                                 placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 207px;font-size: 13px;" />
                             </div>
                             <div class="col-2">
-                              <button type="button" style="font-size:12px !important" class="add_btn btn btn-raised btn-custom-1 width20btn pull-right" (click)="addPaymentInModalPaymentList();"
+                              <button type="button" class="change_bg add_payment_btn add_btn btn btn-raised btn-custom-1 width20btn pull-right" (click)="addPaymentInModalPaymentList();"
                               [disabled]="!addPaymentModal.paid_amount || addPaymentModal.paid_amount > addPaymentModal.balance">
                                 Add
                               </button>
                             </div>
-                            <button type="button" style="font-size:12px !important" class="add_btn btn btn-raised btn-custom-1 width20btn pull-right" (click)="addPaymentsInInvoice()"
-                            [disabled]="!addPaymentModal.paid_amount || addPaymentModal.paid_amount > addPaymentModal.balance">
-                              Add all
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -791,10 +783,7 @@
                             class="hg_20 cross_label_img img_hover">
                         </div>
                       </div>
-
                     </div>
-                    
-
                     <!-- Balance -->
                     <div class="col-12 balance-row">
                       <div class="row mx-0">
@@ -811,11 +800,10 @@
                     <!-- Payment and Save buttons -->
                     <div class="col-12 px-0 mt-2">
                       <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
-                        class="change_bg btn btnd btn-custom-1 btn-raised pull-left"
-                        (click)="openAddPaymentModal()">
+                        class="btn_width_auto change_bg btn btnd btn-custom-1 btn-raised pull-left"
+                        (click)="openAddPaymentModal()" style="width: auto !important;">
                         Add Payment
                       </button>
-
                       <button type="submit" id="invSubmitBtn" 
                         class="save btn save_btn btn-raised width25btn pull-right"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
@@ -824,7 +812,7 @@
                       <button type="submit" *ngIf="edit" [disabled]="activeInvoice.listItems?.length == 0"
                         class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn"
                         style="margin-right: 8px;" (click)="deleteInvoice()">
-                        DELETE
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -843,20 +831,20 @@
             <div class="col-12">
               <button id="editBtn" type="button" (click)="goEdit(activeInv.unique_identifier)"
                 data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2 width12perbtn" title="Edit">
+                class="btn save_btn btn-raised width25btn pull-right ml-2 width12perbtn" title="Edit">
                 <img src="assets/images/buttons-icon/pencil-edit-button16.png"
                   style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadInvoice('download')"
                 data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
+                class="change_bg btn-custom-1 no-border-radius pull-right ml-2 width12perbtn" title="Download">
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
               <button id="previewBtn" type="button" (click)="downloadInvoice('preview')"
                 data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn"
                 title="Preview">
                 <img src="assets/images/buttons-icon/view16.png">
                 Preview
@@ -1215,16 +1203,16 @@
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
-          <button type="button" style="padding: 14px;" class="col-11 side_btn btn btnd btn-custom-2 no-border-radius font-weight-bold"
+          <button type="button" style="padding: 14px;" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
-            <img src="assets/images/search64.png" alt="logo" style="width: 14px;">
+            <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
         <div class="row" style="margin: 0 auto;">
           <button *ngIf="viewTodaysInvoice == true || edit" type="button"
-            class="col-11 btn btnd btn-custom-2 no-border-radius font-weight-bold side_btn add_invoice"
+            class="col-12 btn btnd btn-custom-2 no-border-radius side_btn add_invoice"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
@@ -1498,7 +1486,7 @@
               <div class="col-1">
                 
                 <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
-                  class="btn add_term_btn btn-raised pull-right font-weight-bold ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
+                  class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
                   (click)="saveTerm(termForm.valid)">
                   <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
                 </button>
@@ -1534,12 +1522,13 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer item-form">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-            CANCEL
+         Cancel
         </button>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close save_btn btn pull-right width10btn ml-2 font-custom-bold">
-            DONE
+        <button type="submit" class="save btn save_btn btn-raised width25btn pull-right" data-dismiss="modal"
+          aria-label="Close">
+          Done
         </button>
       </div>
     </div>
@@ -1679,7 +1668,7 @@
           !!!</p>
       </div>
       <div class="modal-footer mod_footer">
-        <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center font-weight-bold"
+        <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
           data-dismiss="modal" aria-label="Close">
           OK
         </button>

@@ -1,18 +1,4 @@
-<nav  class="sidebar-nav font-custom-bold" id="userLogout">
-
-  <!-- <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/dashboard') }">
-    <div class="menu-parent btn" (click)="toggle('/dashboard')">
-      <a><span><img src="assets/images/menu-logo/invoice_logo.png" alt="logo" /></span> </a>
-    </div>
-  </div>
-
-  <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/client') || isActive('/client/batch') }">
-    <div (click)="toggle('/client');" class="menu-parent btn ">
-      <a><span><img src="assets/images/client_n.png" alt="logo" /></span></a>
-    </div>
-  </div>
-   -->
-
+<nav  class="sidebar-nav font-custom-bold" [class.sidebar-nav-out]="router.url==='/login'" id="userLogout">
   <div class="menu-item-wrapper" ng-class="{ active_nav : isActive('/invoice/view/0') || isActive('/invoice') || isActive('/invoice/edit/:invoiceId') }">
     <div class="menu-parent btn" (click)="toggle('/invoice');">
       <a><span>

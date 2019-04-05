@@ -77,7 +77,8 @@
   padding: 5px 9px 9px 13px;
   margin-left: -4px;
   margin-top: -7px;
-  border:2px solid #0298fe;
+  border:2px solid #1a73cc;
+  border-radius: 5px;
 }
 
 

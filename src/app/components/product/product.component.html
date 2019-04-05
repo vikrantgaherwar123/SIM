@@ -122,33 +122,33 @@
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
                   *ngIf="viewMode"  (click)="openDeleteProductModal()">
-                   DELETE
+                   Delete
                  </button>
                   <div class="rightDivBtns">
                     <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="createMode" 
                     >
-                      SAVE
+                      Save
                     </button>
                     <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="editMode" [disabled]="!f.valid"
                     >
                      
-                      UPDATE
+                      Update
                     </button>
                     <button type="button" id="cancleProBtn" (click)="cancelThis()"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
                       *ngIf="editMode"
                     >
-                      CANCEL
+                      Cancel
                     </button>
                     <button type="button" id="clearProBtn" (click)="clearThis()"
                       class="btn btn-custom-1 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
                       *ngIf="createMode"
                     >
-                      CLEAR
+                      Clear
                     </button>
                   </div>
                 </div>
@@ -335,30 +335,30 @@
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
                    *ngIf="viewMode"  (click)="openDeleteProductModal()">
-                    DELETE
+                    Delete
                   </button>
                   <div class="rightDivBtns">
                     <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="createMode"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
-                      SAVE
+                      Save
                     </button>
                     <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="editMode"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
-                      UPDATE
+                      Update
                     </button>
                     <button type="button" (click)="cancelThis()" *ngIf="editMode"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
                     >
-                      CANCEL
+                      Cancel
                     </button>
                     <button type="button" (click)="clearThis()" *ngIf="createMode"
-                      class="btn btn-custom-1 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
+                      class="change_bg btn btn-custom-1 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
                     >
-                      CLEAR
+                      Clear
                     </button>
                   </div>
                 </div>

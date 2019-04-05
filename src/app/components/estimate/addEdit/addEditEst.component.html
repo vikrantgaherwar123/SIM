@@ -13,11 +13,11 @@
 
             <!-- Estimate Details Header -->
             <div class="row">
-              <div class="col-sm-7 px-0" id="clientDataAdd" name="clientData">
+              <div class="col-sm-6 px-0" id="clientDataAdd" name="clientData">
                     <div class="row">
 
                       <!-- Billing To -->
-                      <div class="col-10">
+                      <div class="col-11">
                           <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
                             {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                           </span>
@@ -82,7 +82,7 @@
                     </div>
                   </div>
 
-              <div class="col-12 col-sm-5" id="estDataAdd">
+              <div class="col-12 col-sm-6" id="estDataAdd">
                 <div class="row"> 
                   <!-- Estimate Number and Dates -->
                   <div class="col-6 offset-md-2 col-md-4" style="margin-top: 1px;">
@@ -238,7 +238,7 @@
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" style="margin-top: 26px;"> 
+                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" style="margin-top: 23px;"> 
                         Add Item
                       </button>
                     </td>
@@ -338,8 +338,10 @@
                     {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                   </span>
                   <a (click)="openAddTermModal()" class="pull-right" data-original-title="Add " title="Add Term">
-                    <img src="assets/images/add16.png" alt="logo" style="vertical-align: initial;height:10px; margin-right: 3px;" />
-                    Add Terms
+                    <span class="add_term">
+                      <i class="fa fa-plus" style="margin-right: 5px;"></i>
+                      <span>Add Terms</span>
+                    </span>
                   </a>
                 </div>
 
@@ -581,11 +583,11 @@
                 <div class="col-12 px-0 mt-2">
                   <button type="submit" id="estSubmitBtn" 
                     class="save btn save_btn btn-raised width25btn pull-right" data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
-                    SAVE
+                    Save
                   </button><!--[disabled]="!activeEstimate.listItems || activeEstimate.listItems.length == 0"-->
                   <button type="submit" *ngIf="edit" class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn"
                     style="margin-right: 8px;" (click)="deleteEstimate()">
-                    DELETE
+                    Delete
                   </button>
                 </div>
               </div>
@@ -1165,93 +1167,89 @@
 <!-- ADD TERMS MODAL -->
 <div id="add-terms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"
   data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-          Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <img src="assets/images/cross16.png" alt="logo">
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <form name="termForm" #termForm="ngForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <textarea name="term" class="form-control" [(ngModel)]="addTermModal.terms"
-                  placeholder="Add term & Condition" style="height: 69px !important;overflow-y: auto;" onfocus="this.select()" required elastic
-                ></textarea>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="checkbox pull-left">
-                <!-- <input type="checkbox" id="addtermcheck" name="setDefault"
-                  [(ngModel)]="addTermModal.setDefault"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                > -->
-                <div class="inline">Default?</div>
+  <div class="modal-dialog modal-md term_popup_modal" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+             {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
+          </div>
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="assets/images/cross16.png" alt="logo" class="img_hover">
+          </button> -->
+        </div>
+  
+        <div class="modal-body term_modal_body">
+          <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" style="height: 70px;" id="addPaymentLabel">
+            <form name="termForm" #termForm="ngForm">
+              <div class="row">
+                <div class="col-1">
                   <label class="check">
-                    <div>
-                        <input type="checkbox" id="addtermcheck" name="setDefault"
-                        [(ngModel)]="addTermModal.setDefault" checked
-                        class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()"
-                      >
-                      <span class="checkmark" style="left: 78px;"></span>
+                    <div class="checkbox default_checkbox">
+                      <input type="checkbox" (change)="changeCheckbox()" [(ngModel)]="defaultChecked" id="addtermcheck" name="setDefault"
+                        class="ng-pristine ng-valid ng-touched modal-checkbox" onfocus="this.select()">
+                      <span class="checkmark default_checkbox_span"></span>
                     </div>
                   </label>
-                <!-- <label class="inline" for="addtermcheck"></label> -->
-                
+                  <div class="default_text">Make<br /> Default</div>
+                </div>
+                <div class="col-10">
+                  <textarea name="term" class="mCustomScrollbar style-3 add_term_input textarea_term" [(ngModel)]="addTermModal.terms" placeholder="Add term & Condition"
+                    onfocus="this.select()" required elastic></textarea>
+                </div>
+                <div class="col-1">
+                  
+                  <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
+                    class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
+                    (click)="saveTerm(termForm.valid)">
+                    <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
+                  </button>
+                </div>
               </div>
-              <button type="button" id="addtermbtn" name="addtermbtn" title="save"
-                class="btn save_btn btn-raised pull-right ml-2" style="padding: 6px 28px !important;"
-                [disabled]="!termForm.valid" (click)="saveTerm(termForm.valid)" 
-              >
-                SAVE
-              </button>
               
-            </div>
-          </div>
-        </form>
-        <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" id="addPaymentLabel">
-          Please Select Terms
-        </h5>
-
-        <div class="col-12 terms_border">
-          <div class="col-12 mCustomScrollbar style-3">
-            <div class="item termlist row product-list" id="term1{{index}}"
-             *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index" 
-              [class.selected]="selectedTerm == index"
-            >
-              <div class="col-12 px-0">
-                <div class="row">
-                  <div class="col-md-1 px-0">
-                    <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
-                      (change)="addRemoveTermsFromInvoice(term)"
-                      [checked]="isTermInInvoice(term)"
-                    /> -->
-                    <!-- <label class="" for="termcheck{{$index}}"></label> -->
-                    <label class="check">
-                      <div class="col-1">
-                        <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)" [checked]="isTermInEstimate(term)" />
-                        <span class="checkmark"></span>
-                      </div>
-                    </label>
-                  </div>
-                  <div class="col-md-9 pl-0">
-                    <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
+            </form>
+          </h5>
+  
+          <div class="row terms_border">
+            <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;">
+              <div class="item termlist row product-list" id="term1{{index}}"
+                *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index"
+                [class.selected]="selectedTerm == index">
+                <div class="col-12 px-0">
+                  <div class="row">
+                    <div class="col-md-1 px-0">
+                      <!-- <input type="checkbox" id="termcheck{{index}}" name="term"
+                                   (change)="addRemoveTermsFromInvoice(term)"
+                                   [checked]="isTermInInvoice(term)"
+                                 /> -->
+                      <!-- <label class="" for="termcheck{{$index}}"></label> -->
+                      <label class="check">
+                        <div class="col-1">
+                          <input type="checkbox" id="termcheck{{index}}" name="term" (change)="addRemoveTermsFromEstimate(term)"
+                            [checked]="isTermInEstimate(term)" />
+                          <span class="checkmark"></span>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="col-md-9 pl-0">
+                      <span style="vertical-align: top;word-break: break-all;"> {{term.terms}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="modal-footer item-form">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+           Cancel
+          </button>
+          <button type="submit" class="save btn save_btn btn-raised width25btn pull-right" data-dismiss="modal"
+            aria-label="Close">
+            Done
+          </button>
+        </div>
       </div>
-      <div class="modal-footer"></div>
     </div>
-  </div>
 </div>
 
 <!-- Error MODAL starts -->
