@@ -115,21 +115,20 @@
 }
 .loggingInBtn{
   font-size: 18px !important;
-    font-family: quicksand_bold !important;
-    color: #2096f3;
-    border: none;
-    padding: 11px 45px 11px 45px;
-    border-radius: 11px;
-    position: relative;
-    top: -281px;
-    border: 1px solid #f3f3f3;
-    padding: -18px;
-    text-align: center;
-    background-color: #ffffff;
+  color: #2096f3;
+  border: none;
+  padding: 11px 45px 11px 45px;
+  border-radius: 11px;
+  position: relative;
+  top: -281px;
+  border: 1px solid #f3f3f3;
+  padding: -18px;
+  text-align: center;
+  background-color: #ffffff;
 }
 .loading_text{
   font-size: 14px;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular !important;
   color:#2096f3;
 }
 .txt_orange{
@@ -158,6 +157,11 @@
   top: 56px;
   background-color: #ffffff !important;
 }
+.main_heading{
+  color: #0780d2; 
+  font-size: 30px; 
+  margin-top: 30px;
+}
 /* testing */
 @keyframes blink {
   0% {
@@ -185,4 +189,12 @@
 
 .loading span:nth-child(3) {
   animation-delay: .4s;
+}
+.log_success{
+  text-align: center;
+  font-size: 18px !important;
+  font-family: helvetica_regular !important;
+  color: #000000;
+  border: none;
+  background-color: #ffffff
 }
