@@ -119,6 +119,7 @@ export class AddEditEstComponent implements OnInit {
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
   errorMessage: any;
+  defaultChecked: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -941,8 +942,19 @@ export class AddEditEstComponent implements OnInit {
 
   // Terms Functions
   openAddTermModal() {
+    this.defaultChecked = true;
     this.addTermModal = {}
+    this.addTermModal.setDefault = true;
     $('#add-terms').modal('show')
+  }
+
+  //toggle checked box for terms
+  changeCheckbox() {
+    if (this.defaultChecked) {
+      this.addTermModal.setDefault = true;
+    }else{
+      delete this.addTermModal.setDefault;
+    }
   }
 
   saveTerm(status) {
