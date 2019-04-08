@@ -211,7 +211,7 @@ input[type=text] {
 }
 .number_tag{
   width: 50px;
-  background-color: white;
+  background-color: white; 
   border-left: 2px solid #bbd0e5 !important;
   border-bottom: 2px solid #bbd0e5 !important;
   border-right: 1px solid #bbd0e5 !important;

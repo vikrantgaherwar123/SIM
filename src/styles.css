@@ -228,6 +228,7 @@ input:checked + .slider:before {
   margin-bottom: 8px;
 }
 .label_span{
+  cursor: pointer;
   text-align: center;
 }
 .mrg_right_20{
@@ -1051,6 +1052,15 @@ background-color: none;
 }
 
 /* addEdit css */
+.errspan {
+  float: right;
+  margin-right: 6px;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  color: red;
+  height: 14px;
+}
 .title{
   text-align: center;
   color: #0299ff;
@@ -1071,8 +1081,8 @@ background-color: none;
 }
 .label_div{
   font-size: 15px;
-  padding: 19px;
-  text-align: center;
+  padding: 14px 37px;
+  text-align: left;
   width: 100%;
   cursor: pointer;
 }
@@ -1167,5 +1177,8 @@ textarea{
   width: auto !important;
   height: auto !important;
   font-size: 12px !important;
+}
+.input_border_color{
+  border-color: #dfebfb;
 }
 

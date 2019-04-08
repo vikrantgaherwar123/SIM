@@ -2,8 +2,8 @@
   <div class="menu-item-wrapper" ng-class="{ active_nav : isActive('/invoice/view/0') || isActive('/invoice') || isActive('/invoice/edit/:invoiceId') }">
     <div class="menu-parent btn" (click)="toggle('/invoice');">
       <a><span>
-        <img *ngIf="router.url === '/invoice/add'" src="assets/images/menu-logo/invoice_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/invoice/add'" src="assets/images/menu-logo/invoiceSidegray.png" alt="logo" />
+        <img *ngIf="router.url === '/invoice/add'" src="/assets/images/menu-logo/invoice_logo.png" alt="logo" />
+        <img *ngIf="router.url !== '/invoice/add'" src="/assets/images/menu-logo/invoiceSidegray.png" alt="logo" />
 
       </span> </a>
     </div>

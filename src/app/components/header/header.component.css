@@ -1,6 +1,6 @@
 .header {
   border-bottom: 2px solid #e3e3e3;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   height: 56px;
   /* padding-top: 10px;
   padding-bottom: 12px; */
@@ -42,7 +42,7 @@
   font-family: helvetica_regular;
 }
 .nav_img{
-  height: 22px;
+  height: 20px;
   /* padding-right: 2px; */
 }
 .dropdown-toggle::after {
@@ -78,13 +78,13 @@
   margin-left: -4px;
   margin-top: -7px;
   border:2px solid #1a73cc;
-  border-radius: 5px;
+  /* border-radius: 5px; */
 }
 
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
-  color: #9a999a;
+  color: #3399ff; /*#9a999a*/
 }
 .active{
   /* padding: 0px 8px 16px 0px; */

@@ -8,7 +8,7 @@
   background: #fff;
   margin-top: 12px;
   margin-right: -14px;
-  box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
+  /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24); */
 }
 input, textarea {
   margin-bottom: 2px;
@@ -85,15 +85,7 @@ select {
   background-color: #DDF;
   color: #000;
 }
-.errspan {
-  float: right;
-  margin-right: 6px;
-  margin-top: -20px;
-  position: relative;
-  z-index: 2;
-  color: red;
-  height: 14px;
-}
+
 .inputWithIcon input[type=text]{
   padding-left: 15px;
   /* border-right: white; */
