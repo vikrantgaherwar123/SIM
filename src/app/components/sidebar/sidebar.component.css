@@ -5,11 +5,17 @@
   top: 56px;
   background-color: #0299ff;
 }
+.sidebar-nav-out{
+  height: 80vh;
+  width: 65px;
+  position: fixed;
+  top: 56px;
+  background-color: #0299ff;
+}
 .sidebar-nav > .menu-item-wrapper {
   cursor: pointer;
   display: block;
   padding-top: 22px;
-  /* border-bottom: 1px solid #e9ecf2; */
   margin: 0;
 }
 .sidebar-nav > .menu-item-wrapper > .menu-parent {
@@ -19,10 +25,7 @@
   width: 100%;
 }
 .sidebar-nav > .menu-item-wrapper >.menu-parent:hover {
-  /* background: #bae3ff; */
   border-left: 4px solid #fff;
-  /* border-left: none; */
-
 }
 .sidebar-nav > .menu-item-wrapper a {
   text-decoration: none;

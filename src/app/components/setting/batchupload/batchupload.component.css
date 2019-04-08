@@ -14,15 +14,15 @@ a, a:hover, a:focus {
 .edit-setting input[type=radio]:checked + label {
   outline: 0;
   color:#fff;
-  background-color: #2196f3;
+  background-color: #1a73cc;
   width: 85px;
 }
-.edit-setting[_ngcontent-c5] input[type=radio]:checked + label i {
+.edit-setting input[type=radio]:checked + label i {
   outline: 0;
   color: #fcfeff;
-  background-color: #2196f3;
+  background-color: #1a73cc;
 }
-.edit-setting[_ngcontent-c5] input[type=radio] + label i {
+.edit-setting input[type=radio] + label i {
   outline: 0;
   color: white;
   background-color: #ffffff;
@@ -35,14 +35,14 @@ a, a:hover, a:focus {
   padding: 5px 12px;
   margin-bottom: 5px;
   line-height: 20px;
-  color: #2196f3;
+  color: #1a73cc;
   text-align: center;
   font-size: 14px;
   /* width: 92px; */
   vertical-align: middle;
   cursor: pointer;
   background-color: #ffffff;
-  border: 1px solid #2196f3;
+  border: 1px solid #1a73cc;
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
 
 }
@@ -244,7 +244,7 @@ input[type=text] {
   /* margin: 10px 2px 36px 112px; */
 }
 .drop_icon_div{
-  border:dashed 2px #c4c4c4;
+  border:dashed 3px #c4c4c4;
   margin: 0 auto;
   padding: 26px;
   border-radius: 58px;
@@ -254,13 +254,12 @@ input[type=text] {
   font-size: 16px !important;
   padding: 6px 40px 6px 40px !important;
   height: 62px !important;
-  width: 250px;
+  width: 250px !important;
   border: none;
 }
 .add_manually:hover{
-  background: #fff;
-  color: #2196f3 !important;
-  border:2px solid #2196f3 !important;
+  background: #1e81e3;
+  color: #fff !important;
 }
 .or{
   /* padding: 165px; */
@@ -363,7 +362,6 @@ input[type=text] {
   box-shadow: 0 0px 0px 0 rgba(0,0,0,.16), 0 0px 0px 0 rgba(0,0,0,.12);
 }
 .clear_btn{
-  width: 94px !important;
   color: #0299ff !important;
   font-family: helvetica_regular!important;
 }

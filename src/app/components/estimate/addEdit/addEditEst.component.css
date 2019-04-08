@@ -234,24 +234,33 @@ select {
   width: 290px;
 }
 }
-
 .addLabelBackroundColor{
   color: white;
-  background-color: #2096f3;
+  background-color: #1a73cc;
   border-radius: 2px;
 }
 .addLabelBackroundColor:hover{
-  background: #0290f0;
+  background: #1a73cc;
 }
 .removeaddLabelBackroundColor{
-  color: #118dfa;
-  background-color: #ddf1ff !important;
+  color: #1a73cc;
+  background-color: #d6e8fa !important;
 }
 .removeaddLabelBackroundColor:hover{
-  background-color: #d3eafd !important;
+  background-color: #d6e8fa !important;
 }
 .select_cross_icon{
   vertical-align: top; 
   position: relative !important;
   text-align: center;
+}
+.checkmark {
+  position: absolute;
+  top: 1px;
+  left: 13px;
+  width: 18px;
+  border: 1px solid #0299ff;
+}
+.checkmark:hover{
+  background-color: #d6e8fa !important;
 }

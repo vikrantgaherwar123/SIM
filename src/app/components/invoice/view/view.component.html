@@ -5,7 +5,7 @@
           <div class="row">
             <div class="col-md-9">
               <span>Showing results for:</span> <img src="assets/images/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span style="color: black;font-family: quicksand_bold !important;">
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span>
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
                 <span *ngIf="invoiceQueryForm.client.value">
                     {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
@@ -22,11 +22,11 @@
                <span  style="color:#0299ff">{{itemSelected}} :</span>
               <span *ngIf="disableDateText === false">
                 <span 
-                  style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
+                  style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
                               invoiceQueryForm.dateRange.start.value.getDate() + '-' +
                               (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-                            }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{invoiceQueryForm.dateRange.end.value ?
+                            }}</span> TO <span>{{invoiceQueryForm.dateRange.end.value ?
                               invoiceQueryForm.dateRange.end.value.getDate() + '-' +
                               (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.end.value.getFullYear() : 0
