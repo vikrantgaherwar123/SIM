@@ -760,7 +760,7 @@
                                 placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 207px;font-size: 13px;" />
                             </div>
                             <div class="col-2">
-                              <button type="button" style="font-size:12px !important" class="add_btn btn btn-raised btn-custom-1 width20btn pull-right" (click)="addPaymentInModalPaymentList();">
+                              <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
                                 Add
                               </button>
                             </div>
@@ -777,9 +777,12 @@
                         </div>
                         <div class="col-6 text-right pad_rg_5">
                           <span
-                            class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                          </span>
+                          <div>
                           <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
                             class="hg_20 cross_label_img img_hover">
+                          </div>
                         </div>
                       </div>
                     </div>

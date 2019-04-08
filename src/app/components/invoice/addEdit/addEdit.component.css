@@ -301,4 +301,10 @@ a.morelink {
 .filtersubmit:hover{
   color: #1a73cc;
 }
+.addPaid_btn{
+  font-size: 12px !important;
+  height: 30px !important;
+  width: 50px !important;
+  padding-bottom: 5px !important;
+}
 
