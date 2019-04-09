@@ -10,7 +10,7 @@
 .edit-setting input[type=radio]:checked + label {
   outline: 0;
   color:#fff;
-  background-color: #2196f3;
+  background-color: #1a73cc; /*2196f3*/
 }
 .edit-setting input[type=radio] + label {
   display: inline-block;
@@ -19,14 +19,14 @@
   padding: 5px 12px;
   margin-bottom: 5px;
   line-height: 28px;
-  color: #2196f3;
+  color: #1a73cc;/*2196f3*/
   text-align: center;
   font-size: 14px;
   width:164px;
   vertical-align: middle;
   cursor: pointer;
   /* background-color: #ffffff; */
-  border: 1px solid #2196f3;
+  border: 1px solid #1a73cc; /*2196f3*/
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
 
 }
@@ -60,11 +60,11 @@
 }
 .dropbtn {
   width: 164px;
-  color: #2196f3;
+  color: #1a73cc;/*2196f3*/
   text-align: left !important;
   padding: 6px 2px 2px 13px;
   border-radius: 3px;
-  border: 1px solid #2196f3;
+  border: 1px solid #1a73cc; /*2196f3*/
   cursor: pointer;
   text-align: center;
   font-size: 16px !important;
@@ -79,7 +79,7 @@
   background-color: white;
   margin-bottom: 5px;
   line-height: 20px;
-  color: #2196f3;
+  color: #1a73cc;/*2196f3*/
   text-align: center;
   font-size: 14px;
   width: 150px;
@@ -126,6 +126,6 @@
   background-color: #eff0f1 !important;
 }
 .add_tax_btn{
-  width: 162px;
-  font-size: 12px !important;
+  width: 162px !important;
+  font-size: 15px !important;
 }

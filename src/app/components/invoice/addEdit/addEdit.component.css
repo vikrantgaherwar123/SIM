@@ -154,20 +154,7 @@ select {
 }
 
 
-.side_btn{
-  width: 100%;
-  letter-spacing: 0.5px;
-  /* background-color: #ededed !important; */
-  color: #1a73cc !important;
-  border: 2px solid #1a73cc !important;
-  border-radius: 6px !important;
-  margin-top: 16px;
-  background-color: #ededed !important;
-}
-.side_btn:hover{
-  border: 2px solid #cecece !important;
-  /* color: #ededed !important; */
-}
+
 .dropdown-toggle::after{
   font-size: 24px !important;
   margin-top: 8px !important;
@@ -206,7 +193,7 @@ a.morelink {
 }
 .search_div{
   border-left: 1px solid #cecece;
-  margin-top: -3px;
+  margin-top: -17px;
 }
 .add_invoice{
   margin-top: 5px;
@@ -256,13 +243,16 @@ a.morelink {
 }
 .addLabelBackroundColor:hover{
   background: #1a73cc;
+  border-radius: 2px;
 }
 .removeaddLabelBackroundColor{
   color: #1a73cc;
   background-color: #d6e8fa !important;
+  border-radius: 2px;
 }
 .removeaddLabelBackroundColor:hover{
   background-color: #d6e8fa !important;
+  border-radius: 2px;
 }
 
 .comment {

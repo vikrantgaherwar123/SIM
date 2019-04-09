@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(public router: Router,private _eref: ElementRef) {
     var user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
-    this.email = (user && user.registered_email) ? user.registered_email : 'user'
+    // this.email = (user && user.registered_email) ? user.registered_email : 'user'
     // var $buttons = jQuery('button');
     // $buttons.on('click', function () {
     //   jQuery(this).toggleClass('active').siblings('button').removeClass('active');

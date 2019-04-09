@@ -69,10 +69,10 @@ export function getAuthServiceConfigs() {
   const G_APP_ID = environment.G_APP_ID
 
   return new AuthServiceConfig([
-    {
-      id: FacebookLoginProvider.PROVIDER_ID,
-      provider: new FacebookLoginProvider(FB_APP_ID)
-    },
+    // {
+    //   id: FacebookLoginProvider.PROVIDER_ID,
+    //   provider: new FacebookLoginProvider(FB_APP_ID)
+    // },
     {
       id: GoogleLoginProvider.PROVIDER_ID,
       provider: new GoogleLoginProvider(G_APP_ID)

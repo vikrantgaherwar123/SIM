@@ -416,8 +416,8 @@
                           
                         </td>
                         <td class="select_item_cross" [class.no-border-last]="last">
-                          <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross.png"
-                            alt="logo" style="margin-top: 2px;" class="hg_20 img_hover">
+                          <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross_grey.png"
+                            alt="logo" style="margin-top: 2px;" class="hg_20 img_hover"><!--assets/images/cross.png-->
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>
@@ -435,13 +435,13 @@
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold"
                     style="padding-bottom: 8px;">
                     <div *ngIf="settings.discountFlagLevel === 0"> <!-- &&  activeInvoice.discount_on_item===2-->
-                      <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.discount_on_item===2 , 'removeaddLabelBackroundColor':activeInvoice.discount_on_item===0}"
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.discount_on_item===2 , 'addLabelBackroundColor':activeInvoice.discount_on_item===0}"
                         (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
                         {{settings.discount ? settings.discount : 'Discount'}} &nbsp;+
                     </span>
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.shipping_charges === undefined , 'removeaddLabelBackroundColor':activeInvoice.shipping_charges === 0}"
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.shipping_charges === undefined , 'addLabelBackroundColor':activeInvoice.shipping_charges === 0}"
                        (click)="activeInvoice.shipping_charges = 0">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
@@ -450,21 +450,21 @@
                     <div *ngIf="showTaxRateFlag === true">
                       <div
                         *ngIf="settings.taxFlagLevel === 1 "> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
-                        <span  class="inline label_span" [ngClass]="{'addLabelBackroundColor':settings.taxFlagLevel === 1 , 'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 1}"
+                        <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':settings.taxFlagLevel === 1 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
                          (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
                       </div>
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'addLabelBackroundColor':activeInvoice.adjustment === null || activeInvoice.adjustment === undefined ,
-                       'removeaddLabelBackroundColor':activeInvoice.adjustment === 0}"
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.adjustment === null || activeInvoice.adjustment === undefined ,
+                       'addLabelBackroundColor':activeInvoice.adjustment === 0}"
                        (click)="activeInvoice.adjustment = 0">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
                     <div *ngIf="activeInvoice.taxList">
                       <div  *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
-                        <span class="inline label_span"[ngClass]="{'addLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
-                        'removeaddLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
+                        <span class="inline label_span"[ngClass]="{'removeaddLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
+                        'addLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
                           (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
                           {{tax.taxName}} &nbsp;+
                       </span> <!--*ngIf="!activeInvoice.taxList[taxIndex]"-->
@@ -504,7 +504,7 @@
                             <a class="closeicon show float-right">
                               <!-- <img src="assets/images/cross.png" Title="Delete Term" class="img_hover hg_16 del set-color"
                                 alt=""> -->
-                                    <img src="assets/images/cross.png" Title="Delete Term" class="img_hover del set-color"
+                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="img_hover del set-color"
                                     alt="">
                             </a>
                           </div>
@@ -736,7 +736,7 @@
                       <div class="row mx-0" style="margin-top: 6px;">
                         <div class="col-6 text-left">
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
-                            <a class="paidArrow fa fa-angle-down" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
+                            <a class="paidArrow fa fa-angle-down" style="color: #666666 !important;" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
                             </a>
                             
@@ -779,10 +779,8 @@
                           <span
                             class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                           </span>
-                          <div>
                           <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
                             class="hg_20 cross_label_img img_hover">
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -801,11 +799,11 @@
 
                     <!-- Payment and Save buttons -->
                     <div class="col-12 px-0 mt-2">
-                      <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
+                      <!-- <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
                         class="btn_width_auto change_bg btn btnd btn-custom-1 btn-raised pull-left"
                         (click)="openAddPaymentModal()" style="width: auto !important;">
                         Add Payment
-                      </button>
+                      </button> -->
                       <button type="submit" id="invSubmitBtn" 
                         class="save btn save_btn btn-raised width25btn pull-right"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">
@@ -1205,7 +1203,8 @@
       <!-- Previous Invoices Button -->
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
-          <button type="button" style="padding: 14px;" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
+          
+          <button type="button" style="padding: 14px;margin-top: 28px !important" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>

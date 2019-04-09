@@ -1,69 +1,77 @@
 <nav  class="sidebar-nav font-custom-bold" [class.sidebar-nav-out]="router.url==='/login'" id="userLogout">
   <div class="menu-item-wrapper" ng-class="{ active_nav : isActive('/invoice/view/0') || isActive('/invoice') || isActive('/invoice/edit/:invoiceId') }">
     <div class="menu-parent btn" (click)="toggle('/invoice');">
-      <a><span>
-        <img *ngIf="router.url === '/invoice/add'" src="/assets/images/menu-logo/invoice_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/invoice/add'" src="/assets/images/menu-logo/invoiceSidegray.png" alt="logo" />
-
-      </span> </a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/invoice_logo.png" alt="logo" /><!--*ngIf="router.url === '/invoice/add'"-->
+          <!-- <img *ngIf="router.url !== '/invoice/add'" src="assets/images/menu-logo/invoiceSidegray.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav : isActive('/estimate/view/0') || isActive('/estimate') || isActive('/estimate/edit/:estimateId') }">
     <div class="menu-parent btn" (click)="toggle('/estimate/add');">
-      <a><span>
-        <img *ngIf="router.url === '/estimate/add'" src="assets/images/menu-logo/estimate_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/estimate/add'" src="assets/images/menu-logo/estimetHeaderGray.png" alt="logo" />
-
-      </span> </a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/estimate_logo.png" alt="logo" /><!--*ngIf="router.url === '/estimate/add'"-->
+          <!-- <img *ngIf="router.url !== '/estimate/add'" src="assets/images/menu-logo/estimetHeaderGray.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/client') || isActive('/client/batch') }">
     <div class="menu-parent btn" (click)="toggle('/client');">
-      <a><span>
-        <img *ngIf="router.url === '/client'" src="assets/images/menu-logo/client_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/client'" src="assets/images/menu-logo/client_img_grey.png" alt="logo" />
-
-      </span></a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/client_logo.png" alt="logo" /><!--*ngIf="router.url === '/client'"-->
+          <!-- <img *ngIf="router.url !== '/client'" src="assets/images/menu-logo/client_img_grey.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/product') || isActive('/product/batch') }">
     <div class="menu-parent btn" (click)="toggle('/product');">
-      <a><span>
-        <img *ngIf="router.url === '/product'" src="assets/images/menu-logo/product_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/product'" src="assets/images/menu-logo/productGrayHead.png" alt="logo" />
-
-      </span></a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/product_logo.png" alt="logo" /><!--*ngIf="router.url === '/product'"-->
+          <!-- <img *ngIf="router.url !== '/product'" src="assets/images/menu-logo/productGrayHead.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
   
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/setting/primary') || isActive('/product/batch') }">
     <div class="menu-parent btn" (click)="toggle('/setting/primary')">
-      <a><span>
-        <img *ngIf="router.url === '/setting/primary'" src="assets/images/menu-logo/setting_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/setting/primary'" src="assets/images/menu-logo/settingsGreayHead.png" alt="logo" />
-
-      </span></a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/setting_logo.png" alt="logo" /><!--*ngIf="router.url === '/setting/primary'"-->
+          <!-- <img *ngIf="router.url !== '/setting/primary'" src="assets/images/menu-logo/settingsGreayHead.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
 
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/support') }">
     <div class="menu-parent btn" (click)="toggle('/support')">
-      <a><span>
-        <img src="assets/images/menu-logo/setting_logo.png" alt="logo" />
-      </span></a>
+      <a>
+        <span>
+          <img src="assets/images/menu-logo/setting_logo.png" alt="logo" />
+        </span>
+      </a>
     </div>
   </div>
  
   <div class="menu-item-wrapper " ng-class="{ active_nav :  isActive('/setting/batchUpload') || isActive('/product/batch') }">
     <div class="menu-parent btn" (click)="toggle('/setting/batchUpload')">
-      <a><span>
-        <img *ngIf="router.url === '/setting/batchUpload'" src="assets/images/menu-logo/batch_logo.png" alt="logo" />
-        <img *ngIf="router.url !== '/setting/batchUpload'" src="assets/images/menu-logo/batch_upload_grey.png" alt="logo" />
-
-      </span></a>
+      <a>
+        <span>
+          <img  src="assets/images/menu-logo/batch_logo.png" alt="logo" /><!--*ngIf="router.url === '/setting/batchUpload'"-->
+          <!-- <img *ngIf="router.url !== '/setting/batchUpload'" src="assets/images/menu-logo/batch_upload_grey.png" alt="logo" /> -->
+        </span>
+      </a>
     </div>
   </div>
  

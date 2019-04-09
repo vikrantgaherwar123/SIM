@@ -1,4 +1,4 @@
-<div class="row main-wrapper" >
+<div class="row main-wrapper" style="background-color: #e6ecf0 !important;" >
     <div class="row col-md-3" id="main"style="padding-top: 0px !important;max-width: 20%; !important">
       <form class="form-horizontal back shadow settingForm"  #addTaxesForm="ngForm" enctype="multipart/form-data">
         <div class="row mx-0">
@@ -30,11 +30,11 @@
             </h4>
           </div> -->
 
-          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
-          class="btn save_btn btn-raised pull-right font-weight-bold ml-2 width12perbtn"
+          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()" style="margin-right: -111px;"
+          class="btn save_btn btn-raised pull-right font-weight-bold width12perbtn"
             [disabled]="!addTaxesForm.valid"
           >
-            UPDATE
+            Update
           </button>
         </div>
       </div>
@@ -158,11 +158,11 @@
                     <option (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</option>
                   </select> -->
                   <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
+                    <a class="dropdown-item" style="margin-top: -6px;margin-bottom: -8px;" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</a>
-                    <a class="dropdown-item" (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</a>
+                    <a class="dropdown-item" style="margin-bottom: -8px;" (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</a>
                   </div>
                 </div>
               </div>

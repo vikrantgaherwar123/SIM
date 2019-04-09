@@ -1,5 +1,5 @@
 .header {
-  border-bottom: 2px solid #e3e3e3;
+  border-bottom: 2px solid #dee3e6;/*e3e3e3*/
   background-color: #ffffff;
   height: 56px;
   /* padding-top: 10px;
@@ -84,11 +84,11 @@
 
 /* Style the active class, and buttons on mouse-over */
 .active, .navbtn:hover {
-  color: #3399ff; /*#9a999a*/
+  color: #1a73cc; /*#9a999a*/
 }
 .active{
   /* padding: 0px 8px 16px 0px; */
-  border-bottom: 3px solid #0298fe;
+  border-bottom: 3px solid #1a73cc;
 }
 .menu_img{
   margin-left: -15px;
@@ -165,7 +165,7 @@
   line-height: 2px;
 }
 .make_bg_blue{
-  background-color:#0299ff;
+  background-color:#1a73cc;
   width: 66px;
 }
 

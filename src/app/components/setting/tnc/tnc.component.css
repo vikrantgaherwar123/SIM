@@ -10,7 +10,7 @@
 .term-list-show {
   padding-top: 14px;
   margin-bottom: -7px;
-  border-bottom: #ccc solid 1px;
+  border-bottom: #ced4da solid 1px;/*ccc*/
 }
 .pre_term{
   font-family: helvetica_regular!important;
@@ -30,5 +30,5 @@
   height: 18px;
   width: 18px;
   background-color: white;
-  border: 1px solid #0299ff;
+  border: 1px solid #ced4da;/*0299ff*/
 }
