@@ -134,7 +134,6 @@ export class TncComponent implements OnInit {
       this.activeTnc.setDefault = 'DEFAULT'
     }
   }
-
   delete(index) {
     index = this.tncs.length - (index +1);
     this.operation = 'delete'

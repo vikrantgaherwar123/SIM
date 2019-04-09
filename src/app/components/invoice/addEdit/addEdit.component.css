@@ -306,7 +306,7 @@ a.morelink {
   font-size:12px !important;
   height: 30px !important;
 }
-.filtersubmit:hover{
+.inputWithIcon i:hover{
   color: #1a73cc;
 }
 
