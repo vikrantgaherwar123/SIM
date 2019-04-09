@@ -215,6 +215,10 @@
                         <input type="text" name="product-name" class="form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
                         placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
                           tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
+
+                          <img src="assets/images/product-icon/exclamation-mark.png"  class="errspan help-block" *ngIf="ifProductEmpty === true && addItem !==null">
+
+                          
                         <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                           (optionSelected)="fillItemDetails()">
                           <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
@@ -238,7 +242,7 @@
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        [disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" style="margin-top: 23px;"> 
+                        style="margin-top: 23px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
                         Add Item
                       </button>
                     </td>
@@ -282,7 +286,7 @@
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                     </td>
                     <td class="select_cross_icon" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross.png" alt="logo"
+                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross_grey.png" alt="logo"
                         style="height: 24px;margin-top: 2px;">
                     </td>
                   </tr>
@@ -297,30 +301,30 @@
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
                 <div *ngIf="settings.discountFlagLevel === 0 "><!--&&  activeEstimate.discount_on_item===2 -->
-                  <span  class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.discount_on_item===2 , 'removeaddLabelBackroundColor':activeEstimate.discount_on_item === 0}"
+                  <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.discount_on_item===2 , 'addLabelBackroundColor':activeEstimate.discount_on_item === 0}"
                    (click)="discountFlag=1;activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.shipping_charges === undefined"-->
-                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.shipping_charges === undefined , 'removeaddLabelBackroundColor':activeEstimate.shipping_charges === 0}"
+                  <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.shipping_charges === undefined , 'addLabelBackroundColor':activeEstimate.shipping_charges === 0}"
                    (click)="activeEstimate.shipping_charges = 0">
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                 </span>
                 </div>
                 <div *ngIf="settings.taxFlagLevel === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
-                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.tax_on_item === 2 , 'removeaddLabelBackroundColor':activeEstimate.tax_on_item === 1}"
+                  <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.tax_on_item === 2 , 'addLabelBackroundColor':activeEstimate.tax_on_item === 1}"
                    (click)="activeEstimate.tax_on_item=1">Tax+</span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
-                  <span class="inline" [ngClass]="{'addLabelBackroundColor':activeEstimate.adjustment === undefined, 'removeaddLabelBackroundColor':activeEstimate.adjustment === 0}"
+                  <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.adjustment === undefined, 'addLabelBackroundColor':activeEstimate.adjustment === 0}"
                    (click)="activeEstimate.adjustment = 0">
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                 </span>
                 </div>
                 <div *ngIf="activeEstimate.taxList">
                 <div *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
-                  <span class="inline" [ngClass]="{'addLabelBackroundColor':!activeEstimate.taxList[taxIndex], 'removeaddLabelBackroundColor':activeEstimate.taxList[taxIndex] }"
+                  <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!activeEstimate.taxList[taxIndex], 'addLabelBackroundColor':activeEstimate.taxList[taxIndex] }"
                   (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
                     {{tax.taxName}}+
                 </span><!--*ngIf="!activeEstimate.taxList[taxIndex]" -->
@@ -350,7 +354,7 @@
                     <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
                       <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
                         <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
-                      <hr style="width: 403px;margin-top: 6px !important;">
+                      <hr style="width: 403px;margin-top: 6px !important;color: #ced4da;">
                       </div>
                       <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
@@ -892,11 +896,17 @@
       <!-- Previous Estimates Button -->
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
-            <button type="button" 
+
+          <button type="button" style="padding: 14px;" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
+            (click)="router.navigate(['/estimate/view'])">Search For Invoices
+            <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
+          </button>
+
+            <!-- <button type="button" 
               class="col-11 side_btn btn btnd btn-custom-2 no-border-radius"
               (click)="router.navigate(['/estimate/view'])">Search For Estimates
               <i class="fa fa-search" style="padding: 12px 0px;"></i>
-            </button>
+            </button> -->
             <!-- Previous Invoices Button ends -->
           </div>
 

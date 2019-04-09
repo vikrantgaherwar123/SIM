@@ -7,7 +7,7 @@
 }
 #main {
   position: relative;
-  background-color: #eff0f1;
+  background-color: #e6ecf0;
   padding-top: 12px;
   padding-bottom: 10px;
 }
@@ -16,7 +16,7 @@
 }
 .item-list {
 	padding-left: 30px;
-	max-height: 525px;
+	max-height: 588px;/*525*/
 	overflow: hidden;
 }
 .scroll-bar-shadow {
@@ -48,7 +48,7 @@
 	width: 38px;
 	height: 38px;
 	padding: 6px 0px 0px 6px;
-	background: #0299ff;
+	background: #1a73cc;
 	border: #CCCCCC solid 1px;
 	border-radius: 2px;
 }
@@ -70,7 +70,7 @@ a, a:hover, a:focus {
 	color: #272727 !important;
 }
 .mCustomScrollbar {
-	max-height: 380px;
+	max-height: 492px;/*380*/
 	overflow-y: scroll;
 }
 .billing-input {
@@ -174,7 +174,7 @@ a.more {
 	-moz-border-radius: 0px;
 	border-radius: 0px;
 	height: 29px !important;
-	color: #666666;
+	color: #ced4da;
 	letter-spacing: 0.5px;
 }
 .form-error {

@@ -119,13 +119,13 @@ export class ViewEstComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.removeEmptySpaces();
+        // this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
       },err => this.openErrorModal()
       )
     } else {
-      this.removeEmptySpaces();
+      // this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -319,7 +319,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    this.removeEmptySpaces();
+    // this.removeEmptySpaces();
     if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }

@@ -129,6 +129,7 @@ export class AddEditComponent implements OnInit {
   noProductSelected: boolean = false;
   show: false;
   defaultChecked: boolean;
+  amountPaid: number = 0;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -349,6 +350,7 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.payments){
           var temp1 = []
           for(let i=0; i < this.activeInvoice.payments.length; i++) {
+            
             temp1.push({
               date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
               organization_id: this.activeInvoice.payments[i].orgId,
@@ -360,6 +362,9 @@ export class AddEditComponent implements OnInit {
             })
           }
           this.activeInvoice.payments = temp1
+          for(let i = 0; i < this.activeInvoice.payments.length; i++){
+            this.amountPaid += this.activeInvoice.payments[i].paid_amount;
+          }
       }
 
         // Set Dates
@@ -988,7 +993,12 @@ export class AddEditComponent implements OnInit {
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
     // console.log(this.addItem, uid)
-    
+
+    //reduce paid amount when clicked on cross icon of paid label  
+    this.amountPaid = (this.activeInvoice.amount - this.activeInvoice.balance)
+    if(isNaN(this.amountPaid)){
+      this.amountPaid = 0;
+    }
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
@@ -1487,8 +1497,11 @@ export class AddEditComponent implements OnInit {
   }
 
   deleteInstallment(index){
-    this.activeInvoice.payments.splice(index, 1);
-    // this.addPaymentModal.payments.pop(index, 1);
+    this.amountPaid = this.amountPaid - this.addPaymentModal.payments[index].paid_amount;
+    this.activeInvoice.balance = this.activeInvoice.balance + this.addPaymentModal.payments[index].paid_amount;
+    
+    this.activeInvoice.payments.splice(index,1);
+    // this.addPaymentModal.payments.pop();
   }
   // deleteInstallmentModal(index){
   //   this.addPaymentModal.payments.splice(index, 1);
@@ -1500,6 +1513,7 @@ export class AddEditComponent implements OnInit {
     this.dueDate.reset()
     this.activeInvoice = <invoice>{}
     this.activeClient = <client>{}
+    this.amountPaid = undefined;
 
     // Invoice Number
     if (!isNaN(parseInt(this.settings.invNo))) {
@@ -1552,14 +1566,15 @@ export class AddEditComponent implements OnInit {
 
   // Payment Functions
   openAddPaymentModal() {
-    if(!this.activeInvoice.amount || this.activeInvoice.amount == 0 || this.activeInvoice.balance == 0) {
-      return false
-    }
+    // if(!this.activeInvoice.amount || this.activeInvoice.amount == 0 || this.activeInvoice.balance == 0) {
+    //   return false
+    // } //commented due to not to open a modal
+    
     this.addPaymentModal = {
       amount: this.activeInvoice.amount,
       balance: this.activeInvoice.amount,
       date_of_payment: this.activeInvoice.created_date,
-      paid_amount: 0.00,
+      paid_amount: this.activeInvoice.balance,
       payments: (this.activeInvoice.payments ? [...this.activeInvoice.payments] : []),
     }
     this.paymentDate.reset(this.invoiceDate.value)
@@ -1570,10 +1585,12 @@ export class AddEditComponent implements OnInit {
       )
     })
     this.addPaymentModal.balance -= this.addPaymentModal.payments.reduce((a, b) => a + b.paid_amount, 0)
-    $('#addPaymentAddInvoice').modal('show')
+    // this.amountPaid = 0;
+    // $('#addPaymentAddInvoice').modal('show')
   }
 
   addPaymentInModalPaymentList() {
+    this.amountPaid += this.addPaymentModal.paid_amount;
     this.addPaymentModal.payments.push({
       date_of_payment: this.addPaymentModal.date_of_payment,
       organization_id: this.user.user.orgId,
@@ -1586,20 +1603,22 @@ export class AddEditComponent implements OnInit {
 
     this.addPaymentModal.balance -= this.addPaymentModal.paid_amount
     this.addPaymentModal.paid_amount = 0.00
-    
+    this.addPaymentsInInvoice();
     
   }
 
   addPaymentsInInvoice() {
-    this.activeInvoice.payments = [...this.addPaymentModal.payments]
+    this.activeInvoice.payments = this.addPaymentModal.payments
     this.calculateInvoice()
-    this.closeAddPaymentModal()
+    // this.closeAddPaymentModal()    comment due to modal is removed as this was called done button clicked from modal
   }
 
   closeAddPaymentModal() {
     this.addPaymentModal = {}
     $('#addPaymentAddInvoice').modal('hide')
   }
+
+
   // error modal
   openErrorModal() {
     $('#error-message').modal('show')

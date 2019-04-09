@@ -5,7 +5,7 @@
           <div class="row">
             <div class="col-md-9">
               <span>Showing results for:</span> <img src="assets/images/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#0299ff">Client: </span><span>
+              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#1a73cc">Client: </span><span>
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
                 <span *ngIf="invoiceQueryForm.client.value">
                     {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
@@ -19,7 +19,7 @@
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
-               <span  style="color:#0299ff">{{itemSelected}} :</span>
+               <span  style="color:#1a73cc">{{itemSelected}} :</span>
               <span *ngIf="disableDateText === false">
                 <span 
                   style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
@@ -38,7 +38,7 @@
     
             <div class="col-12 col-md-2">
               <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn" style="margin-top: -4px;height: 34px !important;margin-right: -72px;"
+                class="btn save_btn btn-raised pull-right width20btn" style="margin-top: -4px;height: 34px !important;margin-right: -114px;"
               >
                 Change
               </button>

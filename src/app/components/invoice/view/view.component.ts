@@ -128,13 +128,13 @@ export class ViewComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.removeEmptySpaces();
+        // this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         // this.store.dispatch(new clientActions.add(response.records))
       },err => this.openErrorModal()
       )
     } else {
-      this.removeEmptySpaces();
+      // this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -197,7 +197,7 @@ export class ViewComponent implements OnInit {
   removeEmptySpaces(){
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
+      if(this.clientList[i].name === undefined){
         this.clientList.splice(i,1);
       }
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
@@ -205,7 +205,6 @@ export class ViewComponent implements OnInit {
         this.clientList.splice(i,1);
       }
     }
-    
   }
   showItem(item) {
     var curr = new Date;

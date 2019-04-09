@@ -142,6 +142,13 @@ export class TncComponent implements OnInit {
     this.save(true)
   }
 
+  openDeleteTermModal() {
+    $('#delete-tnc').modal('show')
+    $('#delete-tnc').on('shown.bs.modal', (e) => {
+      // $('#delete-product input[type="text"]')[1].focus()
+    })
+  }
+
   close() {
     $('#addEditTnc').modal('hide')
   }

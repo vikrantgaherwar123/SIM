@@ -161,7 +161,7 @@ a:hover, a:active, a:focus, a:visited {
   font-size: 14px !important;
 }
 .total-color {
-  color: #0c82df !important;
+  color: #1a73cc !important;
   font-weight: 400;
   font-size: 13px;
 }
@@ -228,6 +228,7 @@ input:checked + .slider:before {
   margin-bottom: 8px;
 }
 .label_span{
+  cursor: pointer;
   text-align: center;
 }
 .mrg_right_20{
@@ -648,9 +649,9 @@ option {
 }
 
 /* On mouse-over, add a grey background color */
-.check:hover input ~ .checkmark {
+/* .check:hover input ~ .checkmark {
   background-color: #ccc;
-}
+} */
 
 /* When the checkbox is checked, add a blue background */
 .check input:checked ~ .checkmark {
@@ -975,7 +976,7 @@ background-color: none;
   margin-bottom: 6px;
 }
 .back_change{
-  background: #ededed;
+  background: #eff0f1; /*ededed*/
 }
 /* added by vikrant */
 .moreDiscr {
@@ -1006,7 +1007,7 @@ background-color: none;
   margin-top: 6px !important;
 }
 .add_term{
-  color:#2196f3 !important;
+  color:#1a73cc !important;
 }
 .add_term:hover{
   color: #4c4c4c !important;
@@ -1025,7 +1026,7 @@ background-color: none;
 
 .item_box_shadow{
   background-color: white !important;
-  border-left: 3px solid #0299ff;
+  border-left: 3px solid #1a73cc;
   box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
@@ -1051,6 +1052,29 @@ background-color: none;
 }
 
 /* addEdit css */
+.side_btn{
+  width: 100%;
+  letter-spacing: 0.5px;
+  /* background-color: #ededed !important; */
+  color: #1a73cc !important;
+  border: 2px solid #1a73cc !important;
+  border-radius: 6px !important;
+  margin-top: 16px;
+  background-color: #ededed !important;
+}
+.side_btn:hover{
+  border: 2px solid #cecece !important;
+  /* color: #ededed !important; */
+}
+.errspan {
+  float: right;
+  margin-right: 6px;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+  color: red;
+  height: 14px;
+}
 .title{
   text-align: center;
   color: #0299ff;
@@ -1063,16 +1087,18 @@ background-color: none;
   font-family: helvetica_regular !important;
   color: #787e83;
 }
+
+/* product css */
 .selectedSetting{
-  color: #0294ff;
+  color: #1a73cc;
   font-size: 18px;
   background-color: #ebf3fb;
 
 }
 .label_div{
   font-size: 15px;
-  padding: 19px;
-  text-align: center;
+  padding: 14px 37px;
+  text-align: left;
   width: 100%;
   cursor: pointer;
 }
@@ -1081,7 +1107,7 @@ background-color: none;
   background-color: #ebf3fb;
 }
 .settingForm{
-  height:591px  !important;
+  height:657px  !important;
   text-align: center;
 }
 
@@ -1147,7 +1173,7 @@ textarea{
 /* payment installment section */
 .payment_row{
   /* padding: 10px 16px 0px 10px; */
-  border-left: 4px solid #0299ff;
+  border-left: 3px solid #1a73cc;
   border-top: 1px solid #cecece;
   margin-top: 10px;
 }
@@ -1167,5 +1193,8 @@ textarea{
   width: auto !important;
   height: auto !important;
   font-size: 12px !important;
+}
+.input_border_color{
+  border-color: #dfebfb;
 }
 

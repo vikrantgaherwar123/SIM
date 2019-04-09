@@ -119,6 +119,7 @@ export class AddEditEstComponent implements OnInit {
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
   errorMessage: any;
+  defaultChecked: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -797,9 +798,8 @@ export class AddEditEstComponent implements OnInit {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
     
-    if(this.activeItem.product_name ===null ){
+    if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-      this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
@@ -941,8 +941,19 @@ export class AddEditEstComponent implements OnInit {
 
   // Terms Functions
   openAddTermModal() {
+    this.defaultChecked = true;
     this.addTermModal = {}
+    this.addTermModal.setDefault = true;
     $('#add-terms').modal('show')
+  }
+
+  //toggle checked box for terms
+  changeCheckbox() {
+    if (this.defaultChecked) {
+      this.addTermModal.setDefault = true;
+    }else{
+      delete this.addTermModal.setDefault;
+    }
   }
 
   saveTerm(status) {
