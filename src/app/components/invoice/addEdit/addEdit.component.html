@@ -30,9 +30,9 @@
                             [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
                             (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }">
                           <div>
-                              <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                              <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
                               <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()"
-                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
                           </div>
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3"
@@ -307,7 +307,7 @@
                         <td [class.no-border-last]="last">
                           <div class="text_right last_td">
                             <a class="closeicon show" title="Delete Row" (click)="removeItem(index)">
-                              <img src="assets/images/cross.png" class="hg_20 img_hover edit_delete_icon"
+                              <img src="assets/images/cross.png" style="margin-right: 7px;" class="hg_20 img_hover edit_delete_icon"
                                 >
                             </a>
                           </div>
@@ -336,7 +336,7 @@
                                 *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
                                 [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
-                            <div class="custom-description" style="margin-top: -4px;">
+                            <div class="custom-description" style="margin-top: -2px;">
                               <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
                                 name="description_{{index}}"
                                 class="black form-control font_wg_none mCustomScrollbar style-3" elastic
@@ -417,7 +417,7 @@
                         </td>
                         <td class="select_item_cross" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross_grey.png"
-                            alt="logo" style="margin-top: 2px;" class="hg_20 img_hover"><!--assets/images/cross.png-->
+                            alt="logo" style="margin-top: 2px;margin-right: 7px;" class="hg_20 img_hover"><!--assets/images/cross.png-->
                           <!--(click)="activeInvoice.listItems=undefined"-->
                         </td>
                       </tr>

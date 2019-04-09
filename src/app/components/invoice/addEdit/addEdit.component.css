@@ -297,4 +297,7 @@ a.morelink {
   width: 50px !important;
   padding-bottom: 5px !important;
 }
+.mat-button-ripple .mat-ripple:hover{
+  background-color:red !important;
+}
 
