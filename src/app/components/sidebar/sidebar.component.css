@@ -1,4 +1,5 @@
 .sidebar-nav {
+  display: none;
   height: 100vh;
   width: 65px;
   position: fixed;
@@ -6,6 +7,7 @@
   background-color: #1a73cc;
 }
 .sidebar-nav-out{
+  display: none;
   height: 80vh;
   width: 65px;
   position: fixed;

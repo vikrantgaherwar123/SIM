@@ -30,6 +30,7 @@ const routes: Routes = [
   { path: 'product', component: ProductComponent, canActivate: [AuthGuard] },
   { path: 'invoice', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
+  { path: 'invoice/add/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'load', component: LoadalldataComponent, canActivate: [AuthGuard] },
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/add/:estId', component: AddEditComponent, canActivate: [AuthGuard] },

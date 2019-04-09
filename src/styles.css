@@ -503,6 +503,17 @@ option {
 .save_btn:hover{
   background: #1e81e3;
 }
+
+.no_save_btn{
+  border-radius: 5px !important;
+  background: #1a73cc;
+  height: 38px !important;
+  width: 116px !important;
+  color: white !important;
+}
+.no_save_btn:hover{
+  background-color: #edf5fd   !important ;
+}
 .view_desc
 {
   margin-left: 10px;
@@ -602,8 +613,8 @@ option {
   height: 44px;
   position: relative;
   width:100%;
-  background-color: #1a73cc !important;
-  border-color: #1a73cc !important;
+  background-color: #1a73cc !important; /*0299ff*/
+  border-color: #1a73cc!important; /*0299ff*/
   z-index: 99;
 }
 .mat-datepicker-content .mat-calendar-next-button, .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-toggle {
@@ -938,7 +949,7 @@ background-color: none;
 }
 /* side list */
 .side_list{
-  height: 500px;
+  height: 644px;
   margin-top: -9px;
 }
 .last_td{

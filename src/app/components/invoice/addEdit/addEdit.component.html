@@ -232,13 +232,13 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                         </td>
                         <td width="9%"
-                          *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                          *ngIf="settings.taxFlagLevel === 0 "><!--|| showTaxRate!==0 && showTaxRateFlag == true-->
                           <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="tax-rate" disabled
                             
-                            value="Tax (%)" />
+                            value="Tax (%)"/>
                         </td>
                         <td width="9%"
-                          *ngIf=" settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
+                          *ngIf=" settings.discountFlagLevel === 1 "><!--|| showDiscountRate !==0 && showDiscountRateFlag == true-->
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="discount"
                             disabled value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                             />
@@ -374,7 +374,7 @@
                           </div>
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
-                          *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                          *ngIf="settings.taxFlagLevel === 0"><!-- || showTaxRate!==0 && showTaxRateFlag == true-->
                           <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemTaxRate" tabindex="4"
                               class="form-control height_40 text_right input_border_color" min=0 max=100
@@ -387,7 +387,7 @@
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
-                          *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true ">
+                          *ngIf="settings.discountFlagLevel === 1 "><!--|| showDiscountRate !==0 && showDiscountRateFlag == true -->
                           <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemDiscountRate" tabindex="5"
                               class="form-control height_40 text_right input_border_color" min=0 max=100 [(ngModel)]="activeItem.discount"
@@ -436,27 +436,28 @@
                     style="padding-bottom: 8px;">
                     <div *ngIf="settings.discountFlagLevel === 0"> <!-- &&  activeInvoice.discount_on_item===2-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.discount_on_item===2 , 'addLabelBackroundColor':activeInvoice.discount_on_item===0}"
-                        (click)="activeInvoice.discount_on_item=0;activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null">
+                        (click)="activeInvoice.discount_on_item=0;"><!--activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null-->
                         {{settings.discount ? settings.discount : 'Discount'}} &nbsp;+
                     </span>
                     </div>
-                    <div> <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.shipping_charges === undefined , 'addLabelBackroundColor':activeInvoice.shipping_charges === 0}"
-                       (click)="activeInvoice.shipping_charges = 0">
+                    <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noShippingCharges , 'addLabelBackroundColor':noShippingCharges}"
+                       (click)="activeInvoice.shipping_charges = 0;noShippingCharges = true">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
                     </div>
-                    <div *ngIf="showTaxRateFlag === true">
-                      <div *ngIf="settings.taxFlagLevel === 1 "> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
-                        <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':settings.taxFlagLevel === 1 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
+                    <div><!--*ngIf="showTaxRateFlag === true"-->
+                      <div
+                        *ngIf="settings.taxFlagLevel === 1 "> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
+                        <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
                          (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
                       </div>
                     </div>
-                    <div><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.adjustment === null || activeInvoice.adjustment === undefined ,
-                       'addLabelBackroundColor':activeInvoice.adjustment === 0}"
-                       (click)="activeInvoice.adjustment = 0">
+                    <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noAdjustment ,
+                       'addLabelBackroundColor':noAdjustment}"
+                       (click)="activeInvoice.adjustment = 0;noAdjustment = true">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
@@ -493,7 +494,6 @@
                         <div *ngFor="let term of activeInvoice.termsAndConditions" class="row mx-0">
                           <div *ngIf="term.terms" class="col-12 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
                             <span class="all_terms">{{term.terms}}</span>
-                            <hr class="term_hr">
                           </div>
                           <div *ngIf="!term.terms" class="col-12 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                             <span class="all_terms">{{term.terms_condition}}</span>
@@ -507,6 +507,7 @@
                                     alt="">
                             </a>
                           </div>
+                          <hr class="term_hr">
                         </div>
                       </div>
                     </div>
@@ -674,7 +675,7 @@
 
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector padr0"
-                                (click)="activeInvoice.shipping_charges = undefined;calculateInvoice()">
+                                (click)="activeInvoice.shipping_charges = undefined;noShippingCharges = false;calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
                                   class="hg_20 cross_label_img img_hover">
                               </div>
@@ -704,7 +705,7 @@
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
-                                (click)="activeInvoice.adjustment = undefined; calculateInvoice()">
+                                (click)="activeInvoice.adjustment = undefined;noAdjustment = false; calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>

@@ -36,8 +36,8 @@
                 class="save_btn btn-raised pull-right" style="width:auto !important;border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
-                Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-              </button>
+                Add Terms
+              </button><!--Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}-->
             </div>
           </div>
         </div>
@@ -57,6 +57,8 @@
           
             <div class="col-2 text-right">
               <span>
+              <img (click)="openDeleteTermModal(index)" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
+              </span>
 
               <!-- Delete product MODAL -->
               <div id="delete-tnc" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
@@ -74,36 +76,46 @@
                     </div>
                     <div class="modal-body">
                       <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}?</h5>
-                        <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;text-align: left;">Are you sure want to delete this {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}?</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;text-align: left;">You can undo this action</h5>
 
                       </form>
                     </div>
+
                     <div class="modal-footer">
+                        <button type="button" class="no_save_btn close btn btn-raised btn-custom-1 width20btn" 
+                        data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;color: #1a73cc!important;">
+                          No
+                        </button>
+                        <button type="button" id="clientFormLabel" (click)="delete()"  
+                        class="save_btn close btn btn-raised  btn-success width20btn"
+                          data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+                          Yes
+                        </button>
+                      </div>
+
+
+                    <!-- <div class="modal-footer">
                       <button type="button" class="close btn btn-raised btn-custom-1 width20btn" 
                       data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
                         No
                       </button>
-                      <button type="button" id="clientFormLabel" (click)="delete(index)"  
+                      <button type="button" id="clientFormLabel" (click)="delete()"  
                       class="close btn btn-raised  btn-success width20btn"
                         data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
                         Yes
                       </button>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
               <!-- Delete Product MODAL ends -->
-
-
-
-
-
               <!-- <span [swal]="{ title: 'Are you sure want to delete?', type: 'warning',
                   showCancelButton: true, confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'
                 }"
                 (confirm)="delete(index)"
               > -->
+              <span>
                 <img (click)="openDeleteTermModal()" class="img_hover" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>
               <span (click)="edit(index)">

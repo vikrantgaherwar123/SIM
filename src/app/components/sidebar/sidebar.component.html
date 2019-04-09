@@ -1,4 +1,4 @@
-<nav  class="sidebar-nav font-custom-bold" [class.sidebar-nav-out]="router.url==='/login'" id="userLogout">
+<nav  class="sidebar-nav font-custom-bold" [class.sidebar-nav-out]="router.url==='/login'" ><!--id="userLogout"-->
   <div class="menu-item-wrapper" ng-class="{ active_nav : isActive('/invoice/view/0') || isActive('/invoice') || isActive('/invoice/edit/:invoiceId') }">
     <div class="menu-parent btn" (click)="toggle('/invoice');">
       <a>
