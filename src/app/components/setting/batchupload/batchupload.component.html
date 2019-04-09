@@ -34,8 +34,8 @@
               <span class="span_text">This is dummy text</span>
               <div class="row steps_div" *ngIf="showClientDiv == true">
                 <div class="verticle_line"></div>
-                <div class="col-3 col_3_label">
-                  <span class="client_label">Choose File<br> Format</span>
+                <div class="col-3 col_3_label" style="padding: 14px 3px 6px 13px;">
+                  <span class="client_label">Choose File Format</span>
                 </div>
                 <div class="col-9 row" style="padding: 15px 0px 0px 21px;">
                     <a href="../../../assets/excel_files/clients.csv" download  class="change_bg download_btn btn btnd pull-left">
@@ -80,7 +80,7 @@
               <div class="col-2" style="padding: 19px 2px 2px 24px;">
                 <span class="client_label">Or</span>
               </div>
-              <div class="col-4" style="padding: 9px 2px 2px 55px">
+              <div class="col-4" style="padding: 9px 2px 2px 46px">
                 <label class="change_bg btn btn-default btn-lg upload_btn">Upload
                   <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
                 </label> 
@@ -180,9 +180,9 @@
           
         </tbody>
         <div>
-            <button class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" type="button" (click)="addFieldValues()">Add</button>
           </div>
     </table>
+    <button *ngIf="addClientManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()">Add New Row</button>
     
     <!-- products record table -->
     <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">

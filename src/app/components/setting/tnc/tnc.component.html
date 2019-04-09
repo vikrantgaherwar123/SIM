@@ -33,7 +33,7 @@
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
-                class="save_btn btn-raised pull-right" style="border: none !important;padding: 6px 19px 4px 24px;"
+                class="save_btn btn-raised pull-right" style="width:auto !important;border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
                 Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
@@ -64,11 +64,11 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title form-header font-custom-bold header-color" id="productFormLabel">
+                      <h4 class="modal-title form-header font-custom-bold header-color img_hover" id="productFormLabel">
                           <img src="assets/images/delete-color.png" class="del" style="height:28px;">
                            Delete Term
                       </h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
+                      <button type="button" class="close img_hover" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
                         <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
                       </button>
                     </div>
@@ -104,10 +104,10 @@
                 }"
                 (confirm)="delete(index)"
               > -->
-                <img (click)="openDeleteTermModal()" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
+                <img (click)="openDeleteTermModal()" class="img_hover" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>
               <span (click)="edit(index)">
-                <img style="width: 16px; height: 16px;margin-left: 10px;" Title="Edit Term" src="/assets/images/edit_blue.png">
+                <img style="width: 16px; height: 16px;margin-left: 10px;" class="img_hover" Title="Edit Term" src="/assets/images/edit_blue.png">
               </span>
             </div>
           </div>

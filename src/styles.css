@@ -301,15 +301,13 @@ textarea {
 	min-height: 450px;
 }
 
-.style-3::-webkit-scrollbar
-{
+.style-3::-webkit-scrollbar{
 	width: 6px;
-	background-color: #e3e3e3;
+	background-color: #d7d7d7;
 }
 
-.style-3::-webkit-scrollbar-thumb
-{
-	background-color: #bababa;
+.style-3::-webkit-scrollbar-thumb{
+	background-color: #d7d7d7;
 	border-radius: 100px;
 }
 /* table row background color-bootstrap */
@@ -948,7 +946,7 @@ background-color: none;
   padding-right: 12px !important;
 }
 .header_menu_text{
-  margin-left: 2px;
+  margin-left: 4px;
 }
 .edit_delete_icon{
   margin-top: -5px;
@@ -1196,5 +1194,6 @@ textarea{
 .preview_btn:hover{
   color: #1a73cc  !important;
 }
+
 
 

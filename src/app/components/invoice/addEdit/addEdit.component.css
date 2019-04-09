@@ -7,7 +7,7 @@
 .create-invoice {
   background: #fff;
   margin-top: 12px;
-  margin-right: -14px;
+  /* margin-right: -14px; */
   /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24); */
 }
 input, textarea {
@@ -152,12 +152,9 @@ select {
 .border_white{
   border-right: 1px solid white;
 }
-
-
-
 .dropdown-toggle::after{
-  font-size: 24px !important;
-  margin-top: 8px !important;
+  font-size: 13px !important;
+  margin-top: 1px !important;
 }
 .form-control:disabled, .form-control[readonly] {
   background-color: white;
@@ -235,7 +232,6 @@ a.morelink {
   }
   
 }
-
 .addLabelBackroundColor{
   color: white;
   background-color: #1a73cc;
@@ -300,4 +296,19 @@ a.morelink {
 .mat-button-ripple .mat-ripple:hover{
   background-color:red !important;
 }
-
+.light_font{
+  font-family: helvetica_light !important;
+}
+.dropdown-toggle::after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  content: '\f078';
+  font: normal normal normal 17px/1 FontAwesome;
+  -webkit-text-stroke: 0.2px white;
+  margin-left: -0.745em !important;
+  vertical-align: .255em;
+  border-right: 0 solid transparent !important;
+  border-bottom: 0;
+  border-left: 0 solid transparent !important;
+}

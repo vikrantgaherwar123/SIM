@@ -129,7 +129,7 @@ a.more {
 .item-form {
 	padding-left: 20px;
 	height: 100%;
-	padding-right: 30px;
+	/* padding-right: 30px; */
 }
 #main .form-group {
 	margin: 0;

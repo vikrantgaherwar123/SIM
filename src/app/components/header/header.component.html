@@ -1,14 +1,14 @@
 <div class="header row mx-0">
   <div class="col-8"> <!--style="padding: 0;"-->
     <div class="row" id="navbar">
-      <div class="col-1 hvr_img">
+      <div class="col-1">
         <!-- <img src="assets/images/sim_logo.png" class="menu_img" alt="icon"
           > -->
           <!-- <img src="assets/images/menu32.png" alt="icon" style="width: 28px; height: 28px"> -->
           <div class="menu_bar" [ngClass]="{'make_bg_blue': showVar}" (click)="toggleSideNavBar()">
             <div [ngClass]="{'img_hover menu_hover_div':!showVar}">
               <img src="{{ showVar ? 'assets/images/menu-logo/cross_white.png' : 'assets/images/menu-logo/menu_black.png'}}"
-                class="nav_img" alt="logo" />
+                class="nav_img" alt="logo" style="padding: 0px 5px 0px 3px;" />
             </div>
             <!-- <img *ngIf="openSidebar == false" src="assets/images/menu-logo/menu_white.png" class="nav_img" alt="logo" /> -->
           </div>
@@ -74,7 +74,8 @@
         <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
          <a>
-            <img src="assets/images/black-male-user-symbol.png" alt="icon" style="width: auto; height: 20px">
+           <i class="fa fa-user logout-user"></i>
+            <!-- <img src="assets/images/black-male-user-symbol.png" alt="icon" style="width: auto; height: 20px"> -->
           </a>
         </div>
         <ul class="dropdown-menu dropdown-menu-right" style="top: -6px !important;

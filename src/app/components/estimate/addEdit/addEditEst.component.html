@@ -26,8 +26,8 @@
                             <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
                               matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                             >
-                            <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                            <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
                             
                             <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                             <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
@@ -91,7 +91,7 @@
                   <div class="col-6">
                     <form #estNumberForm="ngForm" name="estNumberForm">
                       <div class="form-group" [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required">
-                        <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
+                        <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0 light_font"
                           [(ngModel)]="activeEstimate.estimate_number" required onfocus="this.select()" />
                         <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
                           <span *ngIf="estNumberForm.estimateNumber.error.required"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No. required</span>
@@ -106,7 +106,7 @@
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
                   <div class="col-6">
-                    <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker"
+                    <input type="text" class="form-control light_font" [formControl]="estimateDate" matInput [matDatepicker]="picker"
                       required (click)="picker.open()" style="margin-top: 4px !important;">
                     <mat-datepicker #picker></mat-datepicker>
                     <div class="form-error" *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched">
@@ -428,7 +428,7 @@
                     <form #form_discount="ngForm" name="form_discount">
                       <div class="input-group addon-input">
                           <input type="number" id="percentage_input" name="percentage_input" min="0" max="100" *ngIf="activeEstimate.percentage_flag == 1"
-                          step="any" class="form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
+                          step="any" class="col-3 form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
                           (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)" />
 
                         <input type="number" id="discount_input" name="discount_input" step="any" min="0.00" [max]="activeEstimate.gross_amount"
