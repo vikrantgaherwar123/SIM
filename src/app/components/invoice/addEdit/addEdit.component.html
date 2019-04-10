@@ -1230,7 +1230,7 @@
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
-            border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
+            border-bottom: 1px solid #d2d2d2;" (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span style="color: #8c9299;font-size: 10px;">{{ invoice.created_date | date: 'MMM' }}</span>

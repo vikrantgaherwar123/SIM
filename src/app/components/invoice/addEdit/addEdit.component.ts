@@ -202,7 +202,6 @@ export class AddEditComponent implements OnInit {
   // Initialisation functions
   ngOnInit() {
     this.addTermModal.setDefault = true; //set term initially default
-    
     $('#navbar').show()
     // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
@@ -218,10 +217,8 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-
     
     this.fetchInvoices();
-    
 }
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -1661,14 +1658,8 @@ export class AddEditComponent implements OnInit {
         this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
         this.store.select('invoice').subscribe(invoices => {
           this.invoiceList = invoices
-          
         })
       }
-      this.route.params.subscribe(params => {
-        if (params.invId) {
-            this.setActiveInv(params.invId);
-        } 
-      })
 
     }, err => this.openErrorModal())
   }
@@ -1701,11 +1692,6 @@ export class AddEditComponent implements OnInit {
     //     this.showTodaysDiscountRate = false;
     //   }
     //  }
-
-    if(!this.edit){
-      this.router.navigate([`invoice/add/${invId}`])
-    }
-    
     
     this.setActiveClient()
   }
@@ -1758,6 +1744,10 @@ export class AddEditComponent implements OnInit {
 
   goEdit(invId) {
     this.router.navigate([`invoice/edit/${invId}`])
+  }
+
+  goView(invId){
+    this.router.navigate([`invoice/add/${invId}`])
   }
 
   downloadInvoice(type) {
