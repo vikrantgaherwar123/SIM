@@ -36,8 +36,8 @@
                 class="save_btn btn-raised pull-right" style="border: none !important;padding: 6px 19px 4px 24px;"
                 (click)="add()"
               >
-                Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-              </button>
+                Add Terms
+              </button><!--Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}-->
             </div>
           </div>
         </div>
@@ -57,6 +57,8 @@
           
             <div class="col-2 text-right">
               <span>
+              <img (click)="openDeleteTermModal(index)" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
+              </span>
 
               <!-- Delete product MODAL -->
               <div id="delete-tnc" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
@@ -69,27 +71,41 @@
                            Delete Term
                       </h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
-                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+                        <img src="assets/images/cross.png" alt="logo" style="height: 28px;margin-top: -1px;margin-right: 25px;">
                       </button>
                     </div>
                     <div class="modal-body">
                       <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}?</h5>
-                        <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;text-align: left;">Are you sure want to delete this {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}?</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;text-align: left;">You can undo this action</h5>
 
                       </form>
                     </div>
+
                     <div class="modal-footer">
+                        <button type="button" class="no_save_btn close btn btn-raised btn-custom-1 width20btn" 
+                        data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;color: #1a73cc!important;">
+                          No
+                        </button>
+                        <button type="button" id="clientFormLabel" (click)="delete()"  
+                        class="save_btn close btn btn-raised  btn-success width20btn"
+                          data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+                          Yes
+                        </button>
+                      </div>
+
+
+                    <!-- <div class="modal-footer">
                       <button type="button" class="close btn btn-raised btn-custom-1 width20btn" 
                       data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
                         No
                       </button>
-                      <button type="button" id="clientFormLabel" (click)="delete(index)"  
+                      <button type="button" id="clientFormLabel" (click)="delete()"  
                       class="close btn btn-raised  btn-success width20btn"
                         data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
                         Yes
                       </button>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -104,8 +120,6 @@
                 }"
                 (confirm)="delete(index)"
               > -->
-                <img (click)="openDeleteTermModal()" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
-              </span>
               <span (click)="edit(index)">
                 <img style="width: 16px; height: 16px;margin-left: 10px;" Title="Edit Term" src="/assets/images/edit_blue.png">
               </span>

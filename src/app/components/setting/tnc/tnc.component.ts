@@ -33,6 +33,7 @@ export class TncComponent implements OnInit {
     setting: setting
   }
   settings: setting;
+  deleteIndex: any;
 
   constructor(private tncService: TermConditionService,
     public router: Router,
@@ -135,15 +136,16 @@ export class TncComponent implements OnInit {
     }
   }
 
-  delete(index) {
-    index = this.tncs.length - (index +1);
+  delete() {
+    this.deleteIndex = this.tncs.length - (this.deleteIndex +1);
     this.operation = 'delete'
-    this.activeTnc = this.tncs[index]
+    this.activeTnc = this.tncs[this.deleteIndex]
     this.activeTnc.enabled = 1
     this.save(true)
   }
 
-  openDeleteTermModal() {
+  openDeleteTermModal(index) {
+    this.deleteIndex = index;
     $('#delete-tnc').modal('show')
     $('#delete-tnc').on('shown.bs.modal', (e) => {
       // $('#delete-product input[type="text"]')[1].focus()
