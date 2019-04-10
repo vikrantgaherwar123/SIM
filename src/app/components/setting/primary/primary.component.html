@@ -1,5 +1,5 @@
 <div class="row main-wrapper" style="background-color: #e6ecf0 !important;" >
-    <div class="row col-md-3" id="main"style="padding-top: 0px !important;max-width: 20%; !important">
+    <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
       <form class="form-horizontal back shadow settingForm"  #addTaxesForm="ngForm" enctype="multipart/form-data">
         <div class="row mx-0">
           <div class="row">
@@ -30,8 +30,8 @@
             </h4>
           </div> -->
 
-          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()" style="margin-right: -111px;"
-          class="btn save_btn btn-raised pull-right font-weight-bold width12perbtn"
+          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()" style="margin-right: -40px;"
+          class="btn save_btn btn-raised pull-right width12perbtn"
             [disabled]="!addTaxesForm.valid"
           >
             Update
@@ -324,7 +324,7 @@ data-backdrop="static" data-keyboard="false">
         !!!</p>
     </div>
     <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
+      <button type="button" class="btn save_btn btn-raised width25btn center"
         data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
         OK
       </button>
