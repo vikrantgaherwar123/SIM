@@ -11,7 +11,7 @@
 	color: #272727 !important;
 }
 .client-form input {
-	height: 34px;
+	height: 37px !important;
 	margin-bottom: 0px !important;
 }
 .client-form .input-group-addon {
@@ -19,7 +19,7 @@
 	border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   border-right: 0;
-  padding: 0px 12px;
+  padding: 5px 11px;
 }
 .client-form input[type=text] {
 	border-left: none !important;

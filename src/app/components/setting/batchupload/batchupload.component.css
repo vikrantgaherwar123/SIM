@@ -162,13 +162,7 @@ input.ng-dirty.ng-invalid {
   height: 30px !important;
   /* padding: 6px 10px 5px 10px !important; */
 }
-input[type=text], input[type=password], select {
-  font-family: helvetica_regular !important;
-  font-size: 12.5px !important;
-  font-style: normal;
-  font-weight: 100 !important;
-  border-color: #bbd0e5 !important;
-}
+
 .table td, .table th {
   padding: 0px;
   vertical-align: top;
@@ -180,20 +174,9 @@ input[type=text], input[type=password], select {
 .form-control[readonly] {
   background-color: #fff !important;
 }
-.td_header{
-  color: #515151;
-  
-}
-input[type=text] {
-  padding: 3px !important;
-  font-family: helvetica_regular!important;
-  font-size: 14px !important;
-  font-style: normal;
-  font-weight: 100 !important;
-  border-color: #bbd0e5 !important;
-}
+
 .main-wrapper{
-  background-color: #ededed;
+  background-color: #e6ecf0 !important;
   /* overflow-x: none !important; */
   min-height: 2px;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
@@ -370,4 +353,24 @@ input[type=text] {
   height: 608px;  
   position: relative;
   background-color: #e2e2e2;
+}
+.td_header{
+  font-size: 13px !important;
+  font-weight: bold !important;
+  color: #515151;
+}
+.td_inputs{
+  font-size: 12px !important;
+}
+input[type=text]{
+  padding: 6px !important;
+  font-family: helvetica_regular!important;
+  font-style: normal;
+  border-color: #dae4ef !important;
+}
+input:focus{
+  border:2px solid #3399ff !important;
+}
+.form-control[readonly]{
+  background-color: #f5f5f5 !important;
 }

@@ -127,7 +127,7 @@ a.more {
 	border: 1px solid #ededed;
 }
 .item-form {
-	padding-left: 20px;
+	/* padding-left: 20px; */
 	height: 100%;
 	/* padding-right: 30px; */
 }
@@ -222,12 +222,13 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   margin-bottom: 17px;
 }
 .c-name {
-  font-size: 40px;
+  font-size: 50px;
   font-family: quicksand_bold;
   width: 100%;
   margin-left: 20px;
   text-align: right;
-  margin: 0 auto;
+	margin: 0 auto;
+	text-transform: uppercase;
 }
 .ngx-datepicker-container{
   position: absolute;

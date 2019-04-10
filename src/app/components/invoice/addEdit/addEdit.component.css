@@ -290,7 +290,7 @@ a.morelink {
 .addPaid_btn{
   font-size: 12px !important;
   height: 30px !important;
-  width: 50px !important;
+  width: 62px !important;
   padding-bottom: 5px !important;
 }
 .mat-button-ripple .mat-ripple:hover{
@@ -311,4 +311,8 @@ a.morelink {
   border-right: 0 solid transparent !important;
   border-bottom: 0;
   border-left: 0 solid transparent !important;
+}
+.pad_left_46{
+  padding-left: 46px;
+  margin-top: 6px;
 }

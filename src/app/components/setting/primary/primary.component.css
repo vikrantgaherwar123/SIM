@@ -12,6 +12,11 @@
   color:#fff;
   background-color: #1a73cc; /*2196f3*/
 }
+.edit-setting input[type=radio]:checked + label:hover {
+  outline: 0;
+  color:#fff;
+  background: #1e81e3; /*2196f3*/
+}
 .edit-setting input[type=radio] + label {
   display: inline-block;
   font-family: helvetica_regular!important;

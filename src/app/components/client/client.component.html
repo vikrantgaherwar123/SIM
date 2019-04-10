@@ -8,7 +8,7 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-6" style="padding-top: 15px;">
-                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img" style="border: 0px solid #ccc;">
                     <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
@@ -80,8 +80,8 @@
       <div class="col-12 col-sm-9 item-form ">
         <form class="form-horizontal" #f="ngForm" name="form" id="form">
           <div ><!--class="shadow"-->
-            <div class="form-group back" style="padding: 18px;">
-              <div class="row mx-0">
+            <div class="form-group back" style="padding: 18px;height: 597px;">
+              <div class="row mx-0" style="margin-top: 10% !important;">
                 <!-- Heading -->
                 <div class="col-7 col-md-8 editBtnShow">
                   <h4 class="form-header text-right client-header" *ngIf="createMode" style="margin-left: 61%;">
@@ -96,7 +96,7 @@
                 </div>
 
                 <!-- Top Buttons -->
-                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold">
+                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold" style="margin-top: -86px;">
                   <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right ml-2">
                     <img src="assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
@@ -132,7 +132,7 @@
               <div class="client-form">
                 <div class="row">
                   <!-- Create / Edit -->
-                  <div class="col-12 mt-2" *ngIf="createMode || editMode">
+                  <div class="col-12 mt-2" *ngIf="createMode || editMode" style="margin-bottom: 28px;">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
@@ -221,7 +221,7 @@
                   </div>
 
                   <!-- View -->
-                  <div class="col-12 mt-2" *ngIf="viewMode == true">
+                  <div class="col-12 mt-2" *ngIf="viewMode == true" style="margin-bottom: 28px;">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
@@ -315,8 +315,8 @@
               </div>
 
               <!-- Bottom Buttons -->
-              <div class="row">
-                <div class="col-12 align-self-end">
+              <!-- <div class="row">
+                <div class="col-12 align-self-end" style="margin-bottom: 8% !important;">
                   <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right ml-2">
                     <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
@@ -325,13 +325,13 @@
                    *ngIf="viewMode"  (click)="openDeleteClientModal()">
                     Delete
                   </button>
-                   <!-- <button type="button" *ngIf="viewMode"
+                   <button type="button" *ngIf="viewMode"
                     class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
                     [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
                       confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
                     "
                     (confirm)="deleteClient()" [disabled]="!f.valid"  
-                  > -->
+                  >
                   <div class="rightDivBtns">
                     <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)" class="btn save_btn btn-raised width25btn pull-right ml-2"
                       *ngIf="editMode" [disabled]="!f.valid">
@@ -350,7 +350,7 @@
 
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- // testing -->
               <!-- Delete CLIENT MODAL -->
               <div id="delete-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"

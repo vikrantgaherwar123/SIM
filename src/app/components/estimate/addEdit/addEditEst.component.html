@@ -85,7 +85,7 @@
               <div class="col-12 col-sm-6" id="estDataAdd">
                 <div class="row"> 
                   <!-- Estimate Number and Dates -->
-                  <div class="col-6 offset-md-2 col-md-4" style="margin-top: 1px;">
+                  <div class="col-6 offset-md-2 col-md-4 pad_left_46">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
                   </div>
                   <div class="col-6">
@@ -101,8 +101,8 @@
                   </div>
                 </div>
 
-                <div class="row" style="margin-top: 1px;">
-                  <div class="col-6 offset-md-2 col-md-4">
+                <div class="row">
+                  <div class="col-6 offset-md-2 col-md-4 pad_left_46">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
                   <div class="col-6">
@@ -257,21 +257,21 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
                       <div class="input-group">
                         <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_right height_40" min=0 max=100
-                          [(ngModel)]="activeItem.tax_rate" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
+                          [(ngModel)]="activeItem.tax_rate" placeholder="%" (keyup)="calculateTotal()" onfocus="this.select()" />
+                        <!-- <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div>
+                        </div> -->
                       </div>
                       <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0  && showDiscountRateFlag == true ">
                       <div class="input-group">
-                        <input type="number" tabindex="5" name="itemDiscountRate" class="form-control text_center height_40" min=0
-                          max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
+                        <input type="number" tabindex="5" name="itemDiscountRate" placeholder="%" class="form-control text_right height_40" min=0
+                          max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
+                        <!-- <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div>
+                        </div> -->
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
                     </td>
@@ -350,11 +350,10 @@
                 </div>
 
                 <div class="col-12 px-0" style="font-size: 13px;">
-                  <div class="form-group" style="margin-top: 10px;">
-                    <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
-                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
+                  <div class="form-group">
+                    <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0 term_border">
+                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
-                      <hr style="width: 403px;margin-top: 6px !important;color: #ced4da;">
                       </div>
                       <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
@@ -362,7 +361,7 @@
                       <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)"
                         style="cursor:pointer;">
                         <a class="closeicon show float-right">
-                          <img src="assets/images/cross_grey.png" Title="Delete Term"
+                          <img src="assets/images/cross_grey.png" Title="Delete Term" style="margin-top: 0px;"
                             class="img_hover hg_16 del set-color swap-on-hover__front-image" alt="">
                         </a>
                       </div>

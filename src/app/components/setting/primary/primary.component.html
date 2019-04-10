@@ -158,7 +158,7 @@
                     <option (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</option>
                   </select> -->
                   <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" style="margin-top: -6px;margin-bottom: -8px;" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
+                    <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</a>
@@ -189,7 +189,7 @@
 
                 <div class="col-12 col-md-5 country-code country-radio ">
                   <div class="row" style="margin-top: 4px;">
-                    <div class="col-5 text-center px-0">
+                    <div class="col-5  px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Symbol</div>
                       <input type="radio" id="currencySymbol" name="currenySymbol" [checked]="activeSettings.currencySymbol"
                         (click)="setCurrencySymbol('symbol')"
@@ -197,7 +197,7 @@
                       <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
                     </div>
                     <div class="col-2 mt-3 px-0 text-center">or</div>
-                    <div class="col-5 text-center px-0">
+                    <div class="col-5 px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
                       <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
                         (click)="setCurrencySymbol('text')"
@@ -210,7 +210,7 @@
             </div>
 
             <!-- Additional Taxes -->
-            <div class="row labelSpacing">
+            <div class="row labelSpacing" style="margin-top: 30px;">
               <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">
                 <button class="btn save_btn btn-raised pull-right ml-2 width12perbtn add_tax_btn" data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</button>
               </label>

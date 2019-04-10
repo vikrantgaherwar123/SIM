@@ -23,14 +23,14 @@
   <div class="col-9" id="main">
     <div class="back"><!--style="margin: 0px auto; max-width:1000px;" -->
       <form class="shadow" name="userForm" #form="ngForm">
-        <div align="center" class="custom-field-form" style="padding: 15px;height: 645px;">
+        <div align="center" class="custom-field-form" style="padding: 120px;height: 645px;">
           <div class="col-12" style="margin-bottom: 10px;">
             <h5 class=" form-header font-custom-bold" style="margin-top: 0px;">
               Banking details & PayPal.Me
             </h5>
           </div>
 
-          <div class="col-12" style="margin-bottom: 10px;">
+          <div class="col-12" style="margin-bottom: 38px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
               class="payment-detail-input form-control" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
               style="width: 300px;"
