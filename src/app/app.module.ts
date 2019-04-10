@@ -58,6 +58,8 @@ import { Title }     from '@angular/platform-browser';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 import { TodaysInvoiceComponent } from './components/todays-invoice/todays-invoice.component';
+import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
+import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -69,10 +71,10 @@ export function getAuthServiceConfigs() {
   const G_APP_ID = environment.G_APP_ID
 
   return new AuthServiceConfig([
-    // {
-    //   id: FacebookLoginProvider.PROVIDER_ID,
-    //   provider: new FacebookLoginProvider(FB_APP_ID)
-    // },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(FB_APP_ID)
+    },
     {
       id: GoogleLoginProvider.PROVIDER_ID,
       provider: new GoogleLoginProvider(G_APP_ID)
@@ -104,6 +106,8 @@ export function getAuthServiceConfigs() {
     SupportComponent,
     LoadalldataComponent,
     TodaysInvoiceComponent,
+    ViewTodaysInvoiceComponent,
+    ViewTodaysEstimateComponent,
   ],
   imports: [
     ProgressBarModule,
