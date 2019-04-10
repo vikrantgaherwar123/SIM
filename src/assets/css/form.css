@@ -35,7 +35,7 @@
 }
 .back-add-list {
 	font-size: 15px;
-	padding: 6px 0px 6px 23px;
+	padding: 6px 0px 6px 15px;
 	text-align: left !important;
 	width: 100%;
 	background-color: #f9f9f9;
@@ -63,7 +63,7 @@
 	margin-bottom: 20px;
 }
 a, a:hover, a:focus {
-	color: #2196f3 !important;
+	color: #1e81e3 !important;
 	cursor: pointer;
 }
 .list-header-col {
@@ -174,7 +174,6 @@ a.more {
 	-moz-border-radius: 0px;
 	border-radius: 0px;
 	height: 29px !important;
-	color: #ced4da;
 	letter-spacing: 0.5px;
 }
 .form-error {
@@ -224,7 +223,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 }
 .c-name {
   font-size: 40px;
-  font-family: helvetica_regular;
+  font-family: quicksand_bold;
   width: 100%;
   margin-left: 20px;
   text-align: right;
@@ -252,6 +251,12 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 	/* text-align: right; */
 	letter-spacing: 0.5px !important;
 	border: 1px solid #666;
+}
+input:focus {
+  border:2px solid #3399ff;
+}
+textarea:focus {
+  border:2px solid #3399ff;
 }
 .row-item td {
 	border-bottom: none;

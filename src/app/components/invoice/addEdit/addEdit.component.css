@@ -288,7 +288,7 @@ a.morelink {
   font-size:12px !important;
   height: 30px !important;
 }
-.filtersubmit:hover{
+.inputWithIcon i:hover{
   color: #1a73cc;
 }
 .addPaid_btn{
@@ -296,5 +296,8 @@ a.morelink {
   height: 30px !important;
   width: 50px !important;
   padding-bottom: 5px !important;
+}
+.mat-button-ripple .mat-ripple:hover{
+  background-color:red !important;
 }
 

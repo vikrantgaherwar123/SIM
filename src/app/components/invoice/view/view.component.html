@@ -4,7 +4,7 @@
       <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
           <div class="row">
             <div class="col-md-9">
-              <span>Showing results for:</span> <img src="assets/images/client.png" 
+              <span style="color: grey;">Showing results for:</span> <img src="assets/images/menu-logo/client.png" 
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#1a73cc">Client: </span><span>
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
                 <span *ngIf="invoiceQueryForm.client.value">
@@ -17,7 +17,7 @@
                   </span>
                 <!-- <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
-              <img src="assets/images/date.png" 
+              <img src="assets/images/menu-logo/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
                <span  style="color:#1a73cc">{{itemSelected}} :</span>
               <span *ngIf="disableDateText === false">
@@ -26,7 +26,7 @@
                               invoiceQueryForm.dateRange.start.value.getDate() + '-' +
                               (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-                            }}</span> TO <span>{{invoiceQueryForm.dateRange.end.value ?
+                            }}</span>&nbsp; <span style="font-size: 14px;">to</span>&nbsp; <span>{{invoiceQueryForm.dateRange.end.value ?
                               invoiceQueryForm.dateRange.end.value.getDate() + '-' +
                               (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                               invoiceQueryForm.dateRange.end.value.getFullYear() : 0
@@ -73,7 +73,7 @@
                   Download
                 </button>
                 <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                  class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
+                  class="preview_btn btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
                   title="Preview"
                 >
                   <img src="assets/images/buttons-icon/view16.png">
@@ -501,12 +501,12 @@
     <div class="modal-dialog">
       <div class="modal-content" style="background-color: #f3f2f1;border-radius: 0px;border-radius: 0px;padding: 12px;">
         <form>
-        <div class="modal-header" style="border-bottom: none !important;padding: 10px 15px 25px 26px !important;">
+        <div class="modal-header" style="margin-right: 0px;border-bottom: none !important;padding: 10px 15px 25px 26px !important;">
           <!-- <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
             Search Invoice
           </h4> -->
-          <button type="button" class="close" aria-label="Close" (click)="closeSearchModel()">
-              <img src="assets/images/cross16.png">
+          <button type="button" class="btn btn-success font-custom pull-right close" style="background-color: #f3f2f1 !important; border: none !important;" aria-label="Close" (click)="closeSearchModel()">
+              <img src="assets/images/cross16.png" >
           </button>
         </div>
         <div class="col-12 col-md-12">
@@ -521,13 +521,13 @@
           </div>
         </div>
         <div class="row" style="margin-top: -3px;">
-          <div class="col-md-5 mr_right" style="margin-left: 8px !important;margin-top: 20px;">
+          <div class="col-md-5 mr_right" style="margin-left: 8px !important;margin-top: 25px;">
               <ul class="nav">
                 <li class="button-dropdown">
                   <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
                   {{itemSelected}}  
-                  </a><span><img src="assets/images/filter.png" style="height: 18px;
-                    margin-left: 160px;margin-top: -61px;"> </span>
+                  </a><span><img src="assets/images/filter.png" style="height: 15px;
+                    margin-left: 160px;margin-top: -64px;"> </span>
                   <ul class="dropdown-menu">
                     <li *ngFor="let item of duration">
                       <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
@@ -584,12 +584,12 @@
           </div>
         </div> -->
         <div class="modal-footer">
-          <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" type="reset" style="padding-right: 14px;background-color: #f3f2f1; border: none;" value="reset">
-            <img src="assets/images/delete_in_dark_grey.png" alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
+          <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" class="btn btn-success font-custom pull-right width20btn save_btn" type="reset" style="padding-right: 14px;background-color: #f3f2f1 !important; border: none !important;" value="reset">
+            <img src="assets/images/delete_in_dark_grey.png"  alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
             <span style="color: grey;">Clear all</span>
           </button>
-          <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" style="width: 94px;font-size: 14px !important;border-radius: 0px !important;margin-right: -1px;"
-            class="btn btn-success font-custom pull-right width20btn">
+          <button type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)" style="margin-right: -1px;"
+            class="btn btn-success font-custom pull-right width20btn save_btn">
             Apply
           </button>
         </div>
