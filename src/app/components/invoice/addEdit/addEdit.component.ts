@@ -97,6 +97,8 @@ export class AddEditComponent implements OnInit {
     },
     setting: setting
   }
+  noAdjustment:boolean = false;
+  noShippingCharges : boolean = false;
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
@@ -199,7 +201,8 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    this.addTermModal.setDefault = true;
+    this.addTermModal.setDefault = true; //set term initially default
+    
     $('#navbar').show()
     // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
@@ -215,8 +218,10 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
+
     
     this.fetchInvoices();
+    
 }
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -247,20 +252,20 @@ export class AddEditComponent implements OnInit {
   
   addInit() {
     //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 1){
-      this.showTaxRate = 0;
-    }
-    // condition for disable tax 
-    else if(this.settings.taxFlagLevel === 2){
-      this.showTaxRateFlag = false;
-    }
-    if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRate = 0;
-    }
-    // condition for disable discount 
-    else if(this.settings.discountFlagLevel === 2){
-      this.showDiscountRateFlag = false;
-    }
+    // if(this.settings.taxFlagLevel === 1){
+    //   this.showTaxRate = 0;
+    // }
+    // // condition for disable tax 
+    // else if(this.settings.taxFlagLevel === 2){
+    //   this.showTaxRateFlag = false;
+    // }
+    // if(this.settings.discountFlagLevel === 0){
+    //   this.showDiscountRate = 0;
+    // }
+    // // condition for disable discount 
+    // else if(this.settings.discountFlagLevel === 2){
+    //   this.showDiscountRateFlag = false;
+    // }
     
     this.commonSettingsInit()
     var date = new Date()
@@ -294,6 +299,12 @@ export class AddEditComponent implements OnInit {
         delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+        if(this.shippingAddress){
+          this.noShippingCharges = true; //activate a class if shipping value is present
+        }
+        if(this.activeInvoice.adjustment){
+          this.noAdjustment = true;
+        }
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
           var temp = []
@@ -312,16 +323,16 @@ export class AddEditComponent implements OnInit {
           }
           this.activeInvoice.listItems = temp
           //show discount and tax fields when item settings is selected
-          for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-            this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
-            if (this.showTaxRate !== 0) {
-              this.settings.taxFlagLevel = 0;
-            }
-            this.showDiscountRate = this.activeInvoice.listItems[i].discount;
-            if (this.showDiscountRate !== 0) {
-              this.settings.discountFlagLevel = 1;
-            }
-          }
+          // for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+          //   this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+          //   if (this.showTaxRate !== 0) {
+          //     this.settings.taxFlagLevel = 0;
+          //   }
+          //   this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+          //   if (this.showDiscountRate !== 0) {
+          //     this.settings.discountFlagLevel = 1;
+          //   }
+          // }
         }
         //tax and discount position according to settings changed
         // if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
@@ -338,14 +349,14 @@ export class AddEditComponent implements OnInit {
         //   this.showDiscountRateFlag = true;
         // }
         //hide discount and tax fields when bill settings is selected
-        if (this.activeInvoice.discount !== 0) {
-          this.settings.discountFlagLevel = 0;
-          this.activeInvoice.discount_on_item = 0;
-        }
-        if (this.activeInvoice.tax_rate !== 0) {
-          this.settings.taxFlagLevel = 1;
-          this.showTaxRate=0;
-        }
+        // if (this.activeInvoice.discount !== 0) {
+        //   this.settings.discountFlagLevel = 0;
+        //   this.activeInvoice.discount_on_item = 0;
+        // }
+        // if (this.activeInvoice.tax_rate !== 0) {
+        //   this.settings.taxFlagLevel = 1;
+        //   this.showTaxRate=0;
+        // }
        // Change payment keys compatible
         if(this.activeInvoice.payments){
           var temp1 = []
@@ -439,17 +450,17 @@ export class AddEditComponent implements OnInit {
               }
               this.activeEstimate.listItems = temp
               this.activeInvoice.listItems = this.activeEstimate.listItems;
-              for(let i=0;i<this.activeInvoice.listItems.length;i++){
-                this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
-                if(this.showTaxRate!==0){
-                  this.settings.taxFlagLevel=0;
-                  this.activeInvoice.tax_on_item = 0;
-                }
-                this.showDiscountRate = this.activeInvoice.listItems[i].discount;
-                if(this.showDiscountRate!==0){
-                  this.settings.discountFlagLevel=1;
-                }
-              }
+              // for(let i=0;i<this.activeInvoice.listItems.length;i++){
+              //   this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
+              //   if(this.showTaxRate!==0){
+              //     this.settings.taxFlagLevel=0;
+              //     this.activeInvoice.tax_on_item = 0;
+              //   }
+              //   this.showDiscountRate = this.activeInvoice.listItems[i].discount;
+              //   if(this.showDiscountRate!==0){
+              //     this.settings.discountFlagLevel=1;
+              //   }
+              // }
             }
             // Change TnC keys compatible
             if (this.activeEstimate.termsAndConditions) {
@@ -510,18 +521,18 @@ export class AddEditComponent implements OnInit {
 
             
             // Tax and discounts show or hide
-            if (this.activeEstimate.discount == 0) {
-              this.activeInvoice.percentage_flag = null
-            }
-            if (this.activeEstimate.shipping_charges == 0) {
-              this.activeInvoice.shipping_charges = undefined
-            }
-            if (this.activeEstimate.adjustment == 0) {
-              this.activeInvoice.adjustment = null
-            }
-            if (this.activeEstimate.tax_amount == 0) {
-              this.activeInvoice.tax_rate = null
-            }
+            // if (this.activeEstimate.discount == 0) {
+            //   this.activeInvoice.percentage_flag = null
+            // }
+            // if (this.activeEstimate.shipping_charges == 0) {
+            //   this.activeInvoice.shipping_charges = undefined
+            // }
+            // if (this.activeEstimate.adjustment == 0) {
+            //   this.activeInvoice.adjustment = null
+            // }
+            // if (this.activeEstimate.tax_amount == 0) {
+            //   this.activeInvoice.tax_rate = null
+            // }
     
             
             // Wait for clients to be loaded before setting active client
@@ -1650,8 +1661,14 @@ export class AddEditComponent implements OnInit {
         this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
         this.store.select('invoice').subscribe(invoices => {
           this.invoiceList = invoices
+          
         })
       }
+      this.route.params.subscribe(params => {
+        if (params.invId) {
+            this.setActiveInv(params.invId);
+        } 
+      })
 
     }, err => this.openErrorModal())
   }
@@ -1661,16 +1678,16 @@ export class AddEditComponent implements OnInit {
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     //if discount and tax on bill is selected
-    if(this.activeInv.discount){
-      for(var i=0;i<this.activeInv.listItems.length;i++){
-        this.activeInv.listItems[i].discountRate = 0;
-      }
-    }
-    if(this.activeInv.tax_rate){
-      for(var i=0;i<this.activeInv.listItems.length;i++){
-        this.activeInv.listItems[i].tax_rate = 0;
-      }
-    }
+    // if(this.activeInv.discount){
+    //   for(var i=0;i<this.activeInv.listItems.length;i++){
+    //     this.activeInv.listItems[i].discountRate = 0;
+    //   }
+    // }
+    // if(this.activeInv.tax_rate){
+    //   for(var i=0;i<this.activeInv.listItems.length;i++){
+    //     this.activeInv.listItems[i].tax_rate = 0;
+    //   }
+    // }
     
     //  for(let i=0;i<this.activeInv.listItems.length;i++){
     //   if(this.activeInv.listItems[i].tax_rate){
@@ -1684,6 +1701,11 @@ export class AddEditComponent implements OnInit {
     //     this.showTodaysDiscountRate = false;
     //   }
     //  }
+
+    if(!this.edit){
+      this.router.navigate([`invoice/add/${invId}`])
+    }
+    
     
     this.setActiveClient()
   }
