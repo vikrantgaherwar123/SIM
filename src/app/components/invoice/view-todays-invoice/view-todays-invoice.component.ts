@@ -35,6 +35,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   invoiceId: string;
   clientListLoading: boolean;
   settingsLoading: boolean;
+  showTaXLabel: boolean;
+  showDiscountLabel: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -52,7 +54,10 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        this.removeEmptyNameClients();
       }, err => this.openErrorModal());
+    }else{
+      this.removeEmptyNameClients();
     }
     this.fetchInvoices();
     
@@ -100,6 +105,23 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   setActiveInv(invId: string = '') {
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+
+    for(let i =0;i<this.activeInv.listItems.length;i++){
+      if(this.settings.discountFlagLevel == 0 && this.activeInv.listItems[i].tax_rate !== 0 ){
+        this.activeInv.listItems[i].tax_rate = 0;
+      }
+      if(this.activeInv.listItems[i].tax_rate !== 0){
+        this.showTaXLabel = true;
+      }else{
+        this.showTaXLabel = false;
+      }
+      if(this.activeInv.listItems[i].discountRate !== 0){
+        this.showDiscountLabel = true;
+      }else{
+        this.showDiscountLabel = false;
+      }
+
+    }
     this.setActiveClient()
   }
 
@@ -125,6 +147,23 @@ paidAmount() {
   }
 
   return temp
+}
+
+
+removeEmptyNameClients(){
+  //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }else{
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
+    
+    }
+  this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
 }
 
 getClientName(id) {

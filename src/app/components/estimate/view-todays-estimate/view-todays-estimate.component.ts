@@ -37,6 +37,8 @@ export class ViewTodaysEstimateComponent implements OnInit {
   estListLoader: boolean;
   settingsLoading: boolean;
   estimateId: string;
+  showTaXLabel: boolean;
+  showDiscountLabel: boolean;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -50,6 +52,8 @@ export class ViewTodaysEstimateComponent implements OnInit {
   ngOnInit() {
     if (this.clientList.length < 1) {
       this.fetchClients();
+    }else{
+      this.removeEmptyNameClients();
     }
     this.fetchSettings();
     this.fetchEstimates();
@@ -60,6 +64,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        this.removeEmptyNameClients();
       }, err => this.openErrorModal());
   }
   fetchSettings(){
@@ -108,6 +113,19 @@ export class ViewTodaysEstimateComponent implements OnInit {
   setActiveEst(estId: string = '') {
     this.estimateId = estId;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+      if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
+        this.showTaXLabel = true;
+      }else{
+        this.showTaXLabel = false;
+      }
+      if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
+        this.showDiscountLabel = true;
+      }else{
+        this.showDiscountLabel = false;
+      }
+
+    }
     this.setActiveClient()
   }
  
@@ -122,8 +140,24 @@ export class ViewTodaysEstimateComponent implements OnInit {
     }
   }
 
+  removeEmptyNameClients(){
+    //remove whitespaces from clientlist
+    // for (let i = 0; i < this.clientList.length; i++) {
+    //   if(!this.clientList[i].name){
+    //     this.clientList.splice(i,1);
+    //   }else{
+    //   var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+    //   if (tempClient === "") {
+    //     this.clientList.splice(i,1);
+    //   }
+    // }
+    
+    // }
+    this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+  }
+
   getClientName(id) {
-    if(this.clientList){
+    if(this.clientList.length !==0){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }

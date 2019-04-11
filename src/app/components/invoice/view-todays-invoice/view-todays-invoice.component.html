@@ -1,10 +1,10 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main" style="padding-top: 3px !important;">
-    <div class="row">
+    <div *ngIf="activeInv" class="row">
       
       <!--Toays Invoice Starts-->
       <div class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
+        <form  id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
           style="margin-top: 12px;border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
@@ -146,11 +146,11 @@
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text_right" disabled
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="10%">
+                    <td *ngIf="settings.taxFlagLevel == 0" width="10%">
                       <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)"
                         disabled>
                     </td>
-                    <td width="10%">
+                    <td *ngIf="settings.discountFlagLevel == 1" width="10%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right"
                         value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
@@ -188,13 +188,13 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="item.tax_rate"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
                         {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="item.discountRate" [class.no-border-last]="last" style="vertical-align: initial;">
                       <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
                         {{item.discountRate | number:'2.'}}
