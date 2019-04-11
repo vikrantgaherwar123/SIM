@@ -1,5 +1,5 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main" style="padding-top: 3px !important;">
+  <div class="col-12" id="main">
     <div class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false"
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
@@ -160,7 +160,7 @@
 
                           <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag || 0"
                             class="due_date form-control pr-0 selectDueDate light_font"
-                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: 5px;">
+                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: 0px;">
                             <option class="opt" value="0">No Due Date</option>
                             <option class="opt" value="1">Immediately</option>
                             <option class="opt" value="2">Custom Date</option>
@@ -711,7 +711,7 @@
                     </div>
 
                     <!-- Gross Total -->
-                    <div class="col-12 term-cond-label">
+                    <div class="col-12 term-cond-label" style="margin-bottom: -7px;">
                       <div class="row">
                         <div class="col-6 text-left">
                           <span class="font-custom-bold">
@@ -729,19 +729,34 @@
 
                     <!-- Paid Amount -->
                     <div class="paidBackground">
-                      <div class="row mx-0" style="margin-top: 6px;">
-                        <div class="col-6 text-left">
+                      <div class="row mx-0 paid_border">
+
+                        <div class="col-6 text-left" style="margin-top: 6px;">
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
                             <a class="paidArrow fa fa-angle-down" style="color: #666666 !important;" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
                             </a>
-                            
                           </span>
                         </div>
-                        <div class="col-6 text-right" style="padding-right: 10px !important;">
+                        <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
                             class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
+                        <div *ngFor="let item of activeInvoice.payments; let i = index" class="row mx-0 payment_row">
+                            <div class="row mx-0">
+                              <div class="col-6 text-left label_color">
+                                <span class="font-custom">{{item.date_of_payment | date}}</span>
+                                <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
+                              </div>
+                              <div class="col-6 text-right pad_rg_5">
+                                <span
+                                  class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                                </span>
+                                <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
+                                  class="hg_20 cross_label_img img_hover">
+                              </div>
+                            </div>
+                          </div>
                         <div class="row mx-0 payment_row">
                           <div class="row collapse" id="collapseExample" style="margin: 10px -7px 12px;">
                             <div class="col-4">
@@ -765,21 +780,7 @@
                       </div>
                     </div>
                     <!-- <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)"> -->
-                    <div *ngFor="let item of activeInvoice.payments; let i = index" class="top_bot_mr_10 pay_clr">
-                      <div class="row mx-0">
-                        <div class="col-6 text-left label_color">
-                          <span class="font-custom">{{item.date_of_payment | date}}</span>
-                          <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
-                        </div>
-                        <div class="col-6 text-right pad_rg_5">
-                          <span
-                            class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
-                          </span>
-                          <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
-                            class="hg_20 cross_label_img img_hover">
-                        </div>
-                      </div>
-                    </div>
+                   
                     <!-- Balance -->
                     <div class="col-12 balance-row">
                       <div class="row mx-0">
@@ -823,7 +824,7 @@
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
           
-          <button type="button" style="padding: 14px;margin-top: 28px !important" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
+          <button type="button" style="padding: 14px;" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>

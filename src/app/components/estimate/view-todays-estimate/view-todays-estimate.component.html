@@ -1,10 +1,10 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
-    <div class="row">
+    <div class="row"*ngIf="activeEst" >
 
       <!--Toays Estimate Starts-->
       <div style="padding-right: 13px;" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeEst" id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back" style="border-radius: 2px;">
+        <form  id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back" style="border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">
             <div class="col-md-12">
@@ -104,7 +104,7 @@
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="margin-left: 12px;text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
                     <td width="17%">
                       <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
@@ -128,10 +128,10 @@
                 <tbody class="lineItems">
                   <tr class="row-item" *ngFor="let item of activeEst.alstQuotProduct; let last = last">
                     <td [class.no-border-last]="last">
-                      <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                      <div class="text-left product-color" style="margin-left: 12px;border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
                         {{item.productName}}
                       </div>
-                      <div class="text-left mCustomScrollbar style-3" >
+                      <div class="text-left view_desc" >
                         {{item.description}}
                       </div>
                     </td>
@@ -303,24 +303,13 @@
             (click)="router.navigate(['/estimate/view'])">Search For Invoices
             <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>
-
-            <!-- <button type="button" 
-              class="col-11 side_btn btn btnd btn-custom-2 no-border-radius"
-              (click)="router.navigate(['/estimate/view'])">Search For Estimates
-              <i class="fa fa-search" style="padding: 12px 0px;"></i>
-            </button> -->
-            <!-- Previous Invoices Button ends -->
           </div>
-
           <div class="row" style="margin: 0 auto;">
-              <button type="button" style="margin-top: 5px;margin-bottom: 4px;"
-                class="col-11 btn btnd btn-custom-2 no-border-radius side_btn"
-                (click)="addNewEstimate()">Add New Estimate
-                <i class="fa fa-plus" style="padding: 12px 0px"></i>
-              </button>
-              <div class="col-1"></div>
-            </div>
-
+            <button type="button" style="margin-top: 5px;margin-bottom: 4px;"
+              class="col-12 btn btnd btn-custom-2 no-border-radius side_btn" (click)="router.navigate(['/estimate/add'])">Add New Estimate
+              <i class="fa fa-plus" style="padding: 12px 0px"></i>
+            </button>
+          </div>
         <!-- recently added Estimate -->
         
         <div class="row" style="margin-top: 14px;">
@@ -329,7 +318,7 @@
             {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
+          <div class="col-12 px-0">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
             *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;

@@ -1,10 +1,10 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main" style="padding-top: 3px !important;">
-    <div class="row">
+    <div *ngIf="activeInv" class="row">
       
       <!--Toays Invoice Starts-->
       <div class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form *ngIf="activeInv" id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
+        <form  id="invoiceGenerator" name="invoiceGenerator" class="p-4 back shadow" 
           style="margin-top: 12px;border-radius: 2px;">
           <!-- Buttons -->
           <div class="row">

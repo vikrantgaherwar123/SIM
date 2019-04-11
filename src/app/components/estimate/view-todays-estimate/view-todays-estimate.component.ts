@@ -43,7 +43,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
     private estimateService: EstimateService,
     private settingService: SettingService,
     private store: Store<AppState>,private clientService: ClientService,) {
-
     store.select('client').subscribe(clients => this.clientList = clients)
    }
 
@@ -52,7 +51,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
       this.fetchClients();
     }
     this.fetchSettings();
-    this.fetchEstimates();
   }
 
   fetchClients(){
@@ -71,6 +69,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
         this.settings = this.user.setting
+        this.fetchEstimates();
       }
     }, err => this.openErrorModal());
 

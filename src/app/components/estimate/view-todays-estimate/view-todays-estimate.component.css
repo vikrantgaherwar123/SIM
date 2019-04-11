@@ -1,4 +1,4 @@
 @import '../../../../assets/css/form.css';
-@import '../../../components/estimate/addEdit/addEditEst.component.css';
-@import '../../../components/estimate/view/viewEst.component.css';
+@import '../../../components/invoice/addEdit/addEdit.component.css';
+@import '../../../components/invoice/view/view.component.css';
 

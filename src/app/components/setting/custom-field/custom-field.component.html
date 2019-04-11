@@ -10,7 +10,7 @@
                     <span>Custom Field Name</span>
                   </div>
                   <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                    <span>Banking Datails</span>
+                    <span>Banking Details</span>
                   </div>
                   <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
                     <span>Terms & Conditions</span>
@@ -21,8 +21,8 @@
           </form>
         </div>
   <div class="col-9" id="main">
-    <div class="back"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
-      <form class="form-horizontal" name="userForm" #form="ngForm" style="min-height: 1106px;">
+    <div class="back" style="height: 1293px;"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
+      <form class="form-horizontal" name="userForm" #form="ngForm">
         <div class="custom-field-form">
           <div style="padding-top: 25px;">
             <div align="center">
@@ -36,7 +36,7 @@
                 </span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 18px;">
+              <div class="col-12" style="margin-bottom: 10px;">
                 <div class="form-group">
                   <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
                     class="form-control" placeholder="Invoice" onfocus="this.select()"
@@ -230,7 +230,7 @@
               <div class="col-12" style="margin-bottom: 10px;">
                 <div style="width: 300px;">
                   <button type="button" (click)="cancel();"
-                    class="btn save_btn btn-raised width25btn pull-right ml-2 pull-left change_bg"
+                    class="btn save_btn btn-raised width25btn pull-right pull-left change_bg"
                   >
                     CANCEL
                   </button>

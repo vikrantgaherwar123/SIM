@@ -6,7 +6,7 @@
 }
 .create-invoice {
   background: #fff;
-  margin-top: 12px;
+  /* margin-top: 12px; */
   /* margin-right: -14px; */
   /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24); */
 }
@@ -190,7 +190,7 @@ a.morelink {
 }
 .search_div{
   border-left: 1px solid #cecece;
-  margin-top: -17px;
+  margin-top: -14px;
 }
 .add_invoice{
   margin-top: 5px;
@@ -312,7 +312,7 @@ a.morelink {
   border-bottom: 0;
   border-left: 0 solid transparent !important;
 }
-.pad_left_46{
-  padding-left: 46px;
+.pad_left_38{
+  padding-left: 38px;
   margin-top: 6px;
 }

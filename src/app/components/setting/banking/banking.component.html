@@ -10,7 +10,7 @@
                   <span>Custom Field Name</span>
                 </div>
                 <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                  <span>Banking Datails</span>
+                  <span>Banking Details</span>
                 </div>
                 <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
                   <span>Terms & Conditions</span>
@@ -63,7 +63,7 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input type="checkbox" name="payPalActivatinFlag" id="payPalActivatinFlag"
-              [(ngModel)]="activeSetting.payPalActivatinFlag"
+              [(ngModel)]="activeSetting.payPalActivatinFlag" style="margin-right: 10px;"
             >
             <span class="fontsize12" style="display:inline">Add PAY NOW! button using PayPal.Me</span>
           </div>

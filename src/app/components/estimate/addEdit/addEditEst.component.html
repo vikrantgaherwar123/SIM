@@ -1,10 +1,11 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-      <div id="msgInv" *ngIf="viewTodaysEstimate == false" style="padding-right: 13px;" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" *ngIf="viewTodaysEstimate == false" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
         <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
           (ngSubmit)="save(estimateGeneratorAdd.valid)">
-          <div class="shadow back p-5" style="border-radius: 2px;">
+          <div class="shadow back p-4" style="border-radius: 2px;">
+            <div class="col-12">
             <div class="vtop text-right">
               <span class="c-name" type="text" id="titleAdd" name="title">
                 {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
@@ -13,7 +14,7 @@
 
             <!-- Estimate Details Header -->
             <div class="row">
-              <div class="col-sm-6 px-0" id="clientDataAdd" name="clientData">
+              <div class="col-sm-6" id="clientDataAdd" name="clientData">
                     <div class="row">
 
                       <!-- Billing To -->
@@ -211,7 +212,7 @@
                   <!-- Select Item for estimate input -->
                   <tr *ngIf="disableProductText === true" class="row-item item_box_shadow" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;"> 
                         <input type="text" name="product-name" class="form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
                         placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
                           tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
@@ -225,7 +226,7 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 55px; max-height: 80px; height: 73px;"
                              [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
                             onfocus="this.select()"></textarea>
                           <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
@@ -237,25 +238,25 @@
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="2" name="itemQty" id="qty" step="any" class="form-control text_right  height_40"
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        style="margin-top: 23px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
+                        style="margin-top: 16px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
                         Add Item
                       </button>
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="3" name="itemRate" step="any" class="form-control text_right  height_40" min="0.01"
                           [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
-                      <div class="input-group">
+                      <div class="input-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_right height_40" min=0 max=100
                           [(ngModel)]="activeItem.tax_rate" placeholder="%" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <!-- <div class="input-group-append">
@@ -266,7 +267,7 @@
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0  && showDiscountRateFlag == true ">
-                      <div class="input-group">
+                      <div class="input-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="5" name="itemDiscountRate" placeholder="%" class="form-control text_right height_40" min=0
                           max=100 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <!-- <div class="input-group-append">
@@ -277,7 +278,7 @@
                     </td>
 
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" step="any" class="form-control text_right height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
                           name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;border: 0px solid #ced4da !important"
                           convert-decimal onfocus="this.select()" readonly />
@@ -595,7 +596,9 @@
                 </div>
               </div>
             </div>
+          
           </div>
+        </div>
         </form>
       </div>
 
@@ -920,7 +923,7 @@
 
         <!-- recently added Estimate -->
         
-        <div class="row" style="margin-top: 14px;">
+        <div class="row" style="margin-top: 20px;">
          
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
             {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today

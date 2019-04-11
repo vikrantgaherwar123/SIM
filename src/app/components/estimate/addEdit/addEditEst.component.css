@@ -184,7 +184,7 @@ select {
 } */
 .search_div{
   border-left: 1px solid #babec3;
-  margin-top: -17px;
+  margin-top: -14px;
 }
 .add_invoice{
   margin-top: 5px;
@@ -283,7 +283,7 @@ select {
   font-size: 13px !important;
   margin-top: 1px !important;
 }
-.pad_left_46{
-  padding-left: 46px;
+.pad_left_36{
+  padding-left: 36px;
   margin-top: 1px;
 }

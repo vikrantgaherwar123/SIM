@@ -404,7 +404,7 @@ hr {
   content: '\f078';
   font: normal normal normal 17px/1 FontAwesome;
   right: 25px;
-  top: -3px;
+  top: -10px;
   height: 24px;
   -webkit-text-stroke: 1px white;
   font-size: 16px;
@@ -1029,11 +1029,19 @@ background-color: none;
 .item_box_shadow{
   background-color: white !important;
   border-left: 3px solid #1a73cc;
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
-  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6); */
   padding-bottom: 1px;
+  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
+  border-top: 1px solid #ced4da;
+}
+.paid_border{
+  margin-top: 6px;
+  border: 1px solid #ced4da;
+  border-top: none;
 }
 
 /* Header css */
@@ -1184,11 +1192,10 @@ textarea{
   cursor:pointer;
 }
 
-.paidBackground
-{
+.paidBackground{
   padding-top: 1px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6); */
   margin-bottom: 10px;
 }
 .add_btn{
