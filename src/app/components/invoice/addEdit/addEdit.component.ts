@@ -280,10 +280,6 @@ export class AddEditComponent implements OnInit {
   editInit(invId) {
     //to view updated or viewed invoice in view page
     // localStorage.setItem('invoiceId', invId )
-    console.log(this.settings.taxFlagLevel === 1);
-    console.log(this.settings.discountFlagLevel === 1);
-
-    
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice

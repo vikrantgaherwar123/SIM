@@ -1,13 +1,13 @@
 /* Assets form CSS */
 .main-wrapper {
-	background-color: #eff0f1;
+	background-color: #e6ecf0 !important;
 	overflow-x: hidden;
 	min-height: 100vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
   position: relative;
-  background-color: #e6ecf0;
+  background-color: #e6ecf0 !important;
   padding-top: 12px;
   padding-bottom: 10px;
 }
@@ -58,9 +58,10 @@
 .filter-box input {
 	background: #ffffff url(../images/list-icon/search16.png) no-repeat 10px;
 	padding-left: 35px;
-	height: 36px !important;
+	height: 38px !important;
 	color: black;
 	margin-bottom: 20px;
+	font-size: 13px;
 }
 a, a:hover, a:focus {
 	color: #1e81e3 !important;
@@ -324,7 +325,6 @@ button.add-line-item-button {
 	color: #fff;
 }
 .adr {
-	font-size: 14px;
 	width: 98%;
 }
 .term-cond-label {

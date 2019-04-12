@@ -220,7 +220,7 @@
                     *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
                   >
                     <input class="form-control bd_none" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
-                      [(ngModel)]="taxNames.taxName" required onfocus="this.select()" style="margin-bottom: 10px;"
+                      [(ngModel)]="taxNames.taxName" required onfocus="this.select()" style="margin-bottom: 10px;height:38px !important"
                     />
                   </div>
                 </div>

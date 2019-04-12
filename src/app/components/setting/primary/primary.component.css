@@ -97,10 +97,12 @@
 .edit-setting .country-code input[type=radio]:checked + label{
   background-color: #ffffff;
   height: 38px !important;
+  padding-top: 8px;
 }
 .edit-setting .country-code input[type=radio] + label{
   background-color: #ffffff;
   height: 38px !important;
+  padding-top: 8px;
 }
 
 .labelText{

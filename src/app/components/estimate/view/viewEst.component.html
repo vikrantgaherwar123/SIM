@@ -257,27 +257,27 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.qty}}
+                        {{item.qty | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.rate}}
+                        {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="item.taxRate || hideTaxLabel === false || isTaxPresent ===true" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.taxRate}}
+                        {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="item.discountRate || hideDiscountLabel === false || isDiscountPresent === true"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.discountRate}}
+                        {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.price}}
+                        {{item.price | number:'2.2-2'}}
                       </div>
                     </td>
                   </tr>

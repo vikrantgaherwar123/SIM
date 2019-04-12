@@ -28,21 +28,21 @@
                           <input type="text" id="bill-to-input" style="height: 40px !important;"
                             class="form-control billing-input input_border_color" placeholder="Search & Select Client" matInput
                             [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
-                            (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }">
+                            [ngClass]="{ 'box_red': noClientSelected ===true }">
                           <div>
-                              <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                              <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()"
-                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
+                              <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit"></i>
+                              <i *ngIf="billingTo.value" (click)="closeAddClientModal()"
+                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
                           </div>
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                          <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3"
+                          <mat-autocomplete id="field" #auto1="matAutocomplete" class="mCustomScrollbar style-3 ui-menu"
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
                               <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
                               class="btn btn-primary add_client_btn">
                               <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;Add New Client
                             </button>
-                            <mat-option style="color: #2c3e59"
+                            <mat-option style="color: #2c3e59" class="option_focus"
                               *ngFor="let client of (filteredClients | async | orderBy:'name':false:false)"
                               [value]="client">
                               {{client.name}}
@@ -81,10 +81,10 @@
                       </div>
                     </div>
                   </div>
-
+                  <div class="col-1"></div>
 
                   <!-- Invoice Number and Dates -->
-                  <div class="col-12 col-sm-5 pr-0" id="invDataAdd">
+                  <div class="col-12 col-sm-4 pr-0" id="invDataAdd">
                     <div class="row">
                       <div class="col-4 col-md-4 pr-0 pad_left_46" style="margin-top: 6px;">
                         <span class="font-custom-bold text-left w-100">
@@ -278,22 +278,23 @@
                         </td>
                         <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
                           <div class="text_right">
-                            {{item.rate | number:'2.'}}
+                            {{item.rate | number:'2.2-2'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0">
                           <div class="text_right">
-                            {{item.tax_rate | number:'2.'}}
+                            {{item.tax_rate | number:'2.2-2'}} 
                           </div>
                         </td>
                         <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1">
                           <div class="text_right">
-                            {{item.discount | number:'2.'}}
+                            {{item.discount | number:'2.2-2'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
                           <div class="text_right">
-                            {{item.total | number:'2.'}}
+                            {{item.total | number:'2.2-2'}}
+                            <!-- {{item.total | number:'2.'}} original -->
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
@@ -400,11 +401,11 @@
 
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <div class="form-group" style="padding: 4px 2px;">
-                            <input type="number" step="any" class="form-control height_40 text_right input_border_color" readonly
+                            <input type="number" step="any" class="amount_box form-control height_40 text_right input_border_color" readonly
                               title="{{settings.mTvamount ? settings.mTvAmount : 'Amount'}} calculated automatically."
                               name="itemTotal" [(ngModel)]="activeItem.total"
-                              style="border: 0px solid #ced4da !important;background-color: #f2f1f1 !important;"
-                              disabled.btn-custom-1 />
+                             
+                              />
                             <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
                           >Add Item
                           </button> -->
@@ -729,58 +730,64 @@
 
                     <!-- Paid Amount -->
                     <div class="paidBackground">
-                      <div class="row mx-0 paid_border">
+                      <div class="row mx-0 paid_border" style="padding-bottom: 6px;">
 
                         <div class="col-6 text-left" style="margin-top: 6px;">
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
-                            <a class="paidArrow fa fa-angle-down" style="color: #666666 !important;" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
+                          </span>
+                          <a class="paidArrow fa fa-angle-down pay_arrow"[ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
                             </a>
-                          </span>
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
                             class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
-                        <div *ngFor="let item of activeInvoice.payments; let i = index" class="row mx-0 payment_row">
-                            <div class="row mx-0">
-                              <div class="col-6 text-left label_color">
-                                <span class="font-custom">{{item.date_of_payment | date}}</span>
-                                <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
+                        
+                        <div class="row mx-0" style="margin-bottom: -15px;width: 100%;">
+                          <div class="collapse" id="collapseExample" style="width: 100%;"> 
+                            <div class="pay_mrg">
+                              <div *ngFor="let item of activeInvoice.payments; let i = index">
+                                <div class="row mx-0" style="margin-bottom: 10px;">
+                                  <div class="col-6 text-left label_color">
+                                    <span class="font-custom">{{item.date_of_payment | date}}</span>
+                                    <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
+                                  </div>
+                                  <div class="col-6 text-right pad_rg_5" style="margin-top: 6px;">
+                                    <span
+                                      class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                                    </span>
+                                    <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
+                                      class="hg_20 cross_label_img img_hover">
+                                  </div>
+                                </div>
                               </div>
-                              <div class="col-6 text-right pad_rg_5">
-                                <span
-                                  class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
-                                </span>
-                                <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
-                                  class="hg_20 cross_label_img img_hover">
+                            </div>
+                            <div class="row mx-0 payment_row installment_mrg">
+                              <div class="row installment_mrg">
+                                <div class="col-4">
+                                  <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
+                                  [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
+                                <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
                               </div>
-                            </div>
-                          </div>
-                        <div class="row mx-0 payment_row">
-                          <div class="row collapse" id="collapseExample" style="margin: 10px -7px 12px;">
-                            <div class="col-4">
-                                <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
-                                [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
-                              <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
-                            </div>
-                            <div class="col-5">
-                                <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
-                                class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
-                                [(ngModel)]="addPaymentModal.paid_amount"
-                                placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 190px;font-size: 13px;" />
-                            </div>
-                            <div class="col-3">
-                              <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
-                                Add
-                              </button>
+                              <div class="col-5">
+                                  <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
+                                  class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
+                                  [(ngModel)]="addPaymentModal.paid_amount"
+                                  placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 190px;font-size: 13px;" />
+                              </div>
+                              <div class="col-3">
+                                <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
+                                  Add
+                                </button>
+                              </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <!-- <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)"> -->
-                   
                     <!-- Balance -->
                     <div class="col-12 balance-row">
                       <div class="row mx-0">

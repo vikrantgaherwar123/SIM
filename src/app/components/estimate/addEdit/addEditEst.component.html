@@ -16,7 +16,6 @@
             <div class="row">
               <div class="col-sm-6" id="clientDataAdd" name="clientData">
                     <div class="row">
-
                       <!-- Billing To -->
                       <div class="col-11">
                           <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
@@ -72,7 +71,7 @@
                             </div>
                           </div>
                           <div class="col-6 pr-0">
-                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                            <span style="padding-left: 45px;" type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                             </span>
                             <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
@@ -82,14 +81,14 @@
                       </div>
                     </div>
                   </div>
-
-              <div class="col-12 col-sm-6" id="estDataAdd">
+                  <div class="col-2"></div>
+              <div class="col-12 col-sm-4" id="estDataAdd">
                 <div class="row"> 
                   <!-- Estimate Number and Dates -->
-                  <div class="col-6 offset-md-2 col-md-4 pad_left_46">
+                  <div class="col-5" style="margin-top: 5px;">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
                   </div>
-                  <div class="col-6">
+                  <div class="col-7">
                     <form #estNumberForm="ngForm" name="estNumberForm">
                       <div class="form-group" [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required">
                         <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0 light_font"
@@ -103,10 +102,10 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-6 offset-md-2 col-md-4 pad_left_46">
+                  <div class="col-5" style="margin-top: 5px;">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
-                  <div class="col-6">
+                  <div class="col-7">
                     <input type="text" class="form-control light_font" [formControl]="estimateDate" matInput [matDatepicker]="picker"
                       required (click)="picker.open()" style="margin-top: 4px !important;">
                     <mat-datepicker #picker></mat-datepicker>
@@ -146,8 +145,8 @@
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text_right" name="amount" disabled
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                     </td>
-                    <td width="5%" class="text-center">Edit</td>
-                    <td width="6%" class="text-center">Delete</td>
+                    <td width="5%" class="text-right">Edit</td>
+                    <td width="6%" class="last_td">Delete</td>
                   </tr>
                 </thead>
 
@@ -170,27 +169,27 @@
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.quantity | number:'2.'}}
+                        {{item.quantity | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.rate | number:'2.'}}
+                        {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0"> <!--|| setTaxOnItem === true-->
                       <div class="text_right">
-                        {{item.tax_rate | number:'2.'}}
+                        {{item.tax_rate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 "> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
-                        {{item.discount | number:'2.'}}
+                        {{item.discount | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.total | number:'2.'}}
+                        {{item.total | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
@@ -243,7 +242,7 @@
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        style="margin-top: 16px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
+                        style="margin-top: 10px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
                         Add Item
                       </button>
                     </td>
@@ -279,16 +278,16 @@
 
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                       <div class="form-group" style="padding: 4px 2px;">
-                        <input type="number" step="any" class="form-control text_right height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
-                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;border: 0px solid #ced4da !important"
+                        <input type="number" step="any" class="amount_box form-control text_right height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
+                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
                           convert-decimal onfocus="this.select()" readonly />
                       </div>
                     </td>
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                     </td>
-                    <td class="select_cross_icon" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross_grey.png" alt="logo"
-                        style="height: 24px;margin-top: 2px;">
+                    <td class="select_item_cross" [class.no-border-last]="last">
+                      <img (click)="disableProductText=false" class="img_hover hg_20" Title="Delete" src="assets/images/cross_grey.png" alt="logo"
+                        style="margin-top: 2px;margin-right: 7px;">
                     </td>
                   </tr>
                   <button *ngIf="disableProductText === false" type="button" style="width: 130px !important;" class="change_bg btn save_btn btn-raised add_new_btn"

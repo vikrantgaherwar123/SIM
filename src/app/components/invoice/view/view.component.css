@@ -203,7 +203,13 @@
 svg {
   height: 18px !important;
 }
-
+.inline {
+  margin-right: 10px;
+  float: left;
+  font-size: 11px;
+  padding: 0 0 0 0 !important;
+  margin-bottom: 8px;
+}
 .caln{
   top: -42px !important;
 }

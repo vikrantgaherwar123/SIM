@@ -88,6 +88,7 @@ select {
 
 .inputWithIcon input[type=text]{
   padding-left: 15px;
+  margin-top: 6px;
   /* border-right: white; */
 }
 .inputWithIcon{
@@ -142,8 +143,8 @@ select {
   font-weight: 500;
   color: white !important;
 }
-.filter-box[_ngcontent-c5] {
-  background: #ffffff;
+.filter-box{
+  background: #e6ecf0;
   border-bottom: none !important;
 }
 .search_btn{
@@ -244,7 +245,7 @@ a.morelink {
 .removeaddLabelBackroundColor{
   color: #1a73cc;
   background-color: #d6e8fa !important;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 .removeaddLabelBackroundColor:hover{
   background-color: #d6e8fa !important;
@@ -315,4 +316,31 @@ a.morelink {
 .pad_left_38{
   padding-left: 38px;
   margin-top: 6px;
+}
+.installment_mrg{
+  margin-bottom: 10px;
+  margin-left: -6px;
+  margin-right: -4px;
+  margin-top: -1px;
+  padding: 8px 2px 0px 0px;
+  width: 100% !important;
+}
+.pay_mrg{
+  margin-top: 6px;
+  border-top: 1px solid #c5c5c5;
+}
+.pay_arrow{
+  color: #666666 !important;
+  margin-left: 6px;
+  font-size: 20px;
+}
+.inline {
+  margin-right: 10px;
+  float: left;
+  font-size:11px;
+  padding: 5px 10px 5px 17px !important;
+  margin-bottom: 8px;
+}
+.option_focus:hover{
+  background-color: red !important;
 }

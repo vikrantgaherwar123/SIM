@@ -245,7 +245,7 @@ select {
 .removeaddLabelBackroundColor{
   color: #1a73cc;
   background-color: #d6e8fa !important;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 .removeaddLabelBackroundColor:hover{
   background-color: #d6e8fa !important;
@@ -286,4 +286,17 @@ select {
 .pad_left_36{
   padding-left: 36px;
   margin-top: 1px;
+}
+.select_item_cross{
+  text-align: right !important;
+  padding-right: 12px !important;
+  vertical-align: top !important;
+  position: relative !important;
+}
+.inline {
+  margin-right: 10px;
+  float: left;
+  font-size:11px;
+  padding: 5px 10px 5px 17px !important;
+  margin-bottom: 8px;
 }
