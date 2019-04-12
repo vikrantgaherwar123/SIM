@@ -35,6 +35,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   invoiceId: string;
   clientListLoading: boolean;
   settingsLoading: boolean;
+  hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  hideTaxLabel: boolean;
+  isTaxPresent: boolean;
+  noDiscountOnItem: boolean;
+  noTaxOnItem: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -52,7 +58,10 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        this.removeEmptyNameClients();
       }, err => this.openErrorModal());
+    }else{
+      this.removeEmptyNameClients();
     }
     this.fetchInvoices();
     
@@ -100,6 +109,33 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   setActiveInv(invId: string = '') {
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+
+    //display label and values if tax on item & discount on item selected and values are there
+    if(this.activeInv !== undefined){
+
+      if(this.activeInv.discount_on_item == 1){
+        this.noDiscountOnItem = true;
+      }else{
+        this.noDiscountOnItem = false;
+      }
+  
+      if(this.activeInv.tax_on_item == 0){
+        this.noTaxOnItem = true;
+      }else{
+        this.noTaxOnItem = false;
+      }
+
+    //display label and values if tax on Bill & discount on Bill selected and values are there
+    if(this.activeInv.discount > 0){
+      this.noDiscountOnItem = false;
+    }
+
+    if(this.activeInv.tax_rate > 0){
+      this.noTaxOnItem = false;
+    }
+    }
+    
+
     this.setActiveClient()
   }
 
@@ -125,6 +161,23 @@ paidAmount() {
   }
 
   return temp
+}
+
+
+removeEmptyNameClients(){
+  //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }else{
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
+    
+    }
+  this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
 }
 
 getClientName(id) {

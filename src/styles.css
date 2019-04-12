@@ -1022,7 +1022,8 @@ background-color: none;
 
 .item_box_shadow{
   background-color: white !important;
-  border-left: 3px solid #1a73cc;
+  box-shadow: inset 23px 0 0px -20px #1a73cc;
+  /* border-left: 3px solid #1a73cc; */
   /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
