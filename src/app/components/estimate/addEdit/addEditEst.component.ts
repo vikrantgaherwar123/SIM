@@ -200,9 +200,15 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addInit() {
+
+    this.commonSettingsInit()
+
     //tax and discount position according to settings changed
     if(this.settings.taxFlagLevel === 1){
       this.showTaxRate = 0;
+    }
+    if(this.settings.taxFlagLevel === 0){
+      this.activeEstimate.tax_on_item = 0
     }
     // condition for disable tax 
     else if(this.settings.taxFlagLevel === 2){
@@ -216,9 +222,6 @@ export class AddEditEstComponent implements OnInit {
     else if(this.settings.discountFlagLevel === 2){
       this.showDiscountRateFlag = false;
     }
-
-
-    this.commonSettingsInit()
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
@@ -452,12 +455,12 @@ export class AddEditEstComponent implements OnInit {
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      // this.activeEstimate.tax_on_item = 2
+      this.activeEstimate.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      // this.activeEstimate.discount_on_item = 2
+      this.activeEstimate.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
   }

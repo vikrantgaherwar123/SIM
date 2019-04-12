@@ -142,17 +142,17 @@ export class ViewTodaysEstimateComponent implements OnInit {
 
   removeEmptyNameClients(){
     //remove whitespaces from clientlist
-    // for (let i = 0; i < this.clientList.length; i++) {
-    //   if(!this.clientList[i].name){
-    //     this.clientList.splice(i,1);
-    //   }else{
-    //   var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-    //   if (tempClient === "") {
-    //     this.clientList.splice(i,1);
-    //   }
-    // }
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }else{
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
     
-    // }
+    }
     this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
   }
 

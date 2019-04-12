@@ -134,10 +134,10 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabelAdd" class="bld w-100 text_right" name="rate" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                     </td>
-                    <td width="9%" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                    <td width="9%" *ngIf="activeEstimate.tax_on_item === 0 ">
                       <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="rate" disabled value="Tax (%)" />
                     </td>
-                    <td width="9%" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0 && showDiscountRateFlag == true">
+                    <td width="9%" *ngIf=" activeEstimate.discount_on_item == 1 ">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="rate" disabled
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
@@ -177,12 +177,12 @@
                         {{item.rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0"> <!--|| setTaxOnItem === true-->
+                    <td *ngIf="noTaxOnItem || activeEstimate.tax_on_item === 0 " [class.no-border-last]="last">
                       <div class="text_right">
                         {{item.tax_rate | number:'2.'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 "> <!--|| setDiscountOnItem === true-->
+                    <td *ngIf="noDiscountOnItem || activeEstimate.discount_on_item === 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
                         {{item.discount | number:'2.'}}
                       </div>
@@ -254,7 +254,7 @@
                       </div>
                     </td>
 
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.taxFlagLevel === 0 || showTaxRate!==0 && showTaxRateFlag == true">
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="noTaxOnItem || activeEstimate.tax_on_item == 0">
                       <div class="input-group">
                         <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_right height_40" min=0 max=100
                           [(ngModel)]="activeItem.tax_rate" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
@@ -265,7 +265,7 @@
                       <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                     </td>
 
-                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="settings.discountFlagLevel === 1 || showDiscountRate !==0  && showDiscountRateFlag == true ">
+                    <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="noDiscountOnItem || activeEstimate.discount_on_item == 1">
                       <div class="input-group">
                         <input type="number" tabindex="5" name="itemDiscountRate" class="form-control text_center height_40" min=0
                           max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
@@ -302,7 +302,7 @@
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
                 <div *ngIf="settings.discountFlagLevel === 0 "><!--&&  activeEstimate.discount_on_item===2 -->
                   <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.discount_on_item===2 , 'addLabelBackroundColor':activeEstimate.discount_on_item === 0}"
-                   (click)="discountFlag=1;activeEstimate.discount_on_item=0;showDiscountField = true;activeEstimate.percentage_flag = 0;activeEstimate.percentage_value=undefined;activeEstimate.discount=undefined">
+                   (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </span>
                 </div>
@@ -599,299 +599,6 @@
           </div>
         </form>
       </div>
-
-      <!--Toays Estimate Starts-->
-      <div *ngIf="viewTodaysEstimate == true" style="padding-right: 13px;" class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
-        <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back" style="border-radius: 2px;">
-          <!-- Buttons -->
-          <div class="row">
-            <div class="col-md-12">
-              <button id="editBtn" type="button" (click)="goEdit(activeEst.unique_identifier)" data-loading-text="Loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn save_btn btn-raised width25btn pull-right ml-2 width12perbtn" title="Edit">
-                <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
-                Edit
-              </button>
-              <button id="downloadBtn" type="button" (click)="downloadEstimate('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn" title="Download">
-                <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
-                Download
-              </button>
-              <button id="previewBtn" type="button" (click)="downloadEstimate('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn" title="Preview">
-                <img src="assets/images/buttons-icon/view16.png">
-                Preview
-              </button>
-              <button id="previewBtn" type="button" (click)="makeInvoice()" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn" title="Preview">
-                Make Invoice
-              </button>
-            </div>
-          </div>
-
-          <!-- Title -->
-          <div class="text-right w-100 px-1">
-            <span class="c-name" type="text" id="title" name="title">
-              {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
-            </span>
-          </div>
-
-          <!-- Estimate Details -->
-          <div class="row mb-2">
-            <div class="col-12 col-sm-7" id="clientData" name="clientData">
-              <div class="row">
-                <div class="col-12" style="width: 88%;">
-                  <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
-                    {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}} 
-                  </span>
-                  <div *ngIf="activeClient" class="font-custom-bold" style="padding-top: 4px;font-size: 23px;">
-                    {{activeClient.name}}
-                  </div>
-                </div>
-              </div>
-              <div class="row" id="addressBar" name="addressBar">
-                <div *ngIf="activeClient" class="col-6">
-                  <span type="text" id="BillAddress" class="adr bill-to font-custom-bold">
-                    Address
-                  </span>
-                  <div class="address-render">{{activeClient.addressLine1}}</div>
-                  <div *ngIf="activeClient?.email">
-                    Email: {{activeClient.email}}
-                  </div>
-                  <div *ngIf="activeClient?.email">
-                    Contact No: {{activeClient.number}}
-                  </div>
-                </div>
-                <div class="col-6">
-                  <span type="text" id="shippingAddress" class="adr bill-to font-custom-bold">
-                    {{settings.shipping ? settings.shipping : 'Shipping'}} Address
-                  </span>
-                  <div class="address-render">{{activeEst.shippingAddress}}</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-sm-5" id="estData" name="estData">
-              <div class="row">
-                <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No</span>
-                </div>
-                <div class="col-sm-6">
-                  {{ activeEst.quetationNo }}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="offset-md-2 col-md-4 col-sm-6 ">
-                  <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
-                </div>
-                <div *ngIf="dateDDMMYY" class="col-sm-6">
-                  {{activeEst.createDate | date:"dd/MM/yyyy"}}
-                </div>
-                <div *ngIf="dateMMDDYY" class="col-sm-6">
-                  {{activeEst.createDate | date:"MM/dd/yyyy"}}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Items Table -->
-          <div class="row mb-3">
-            <div class="col-md-12 lineItemDiv">
-              <table width="100%" cellpadding="0" cellspacing="0" class="column table table-striped" style="table-layout: fixed">
-                <!--table head content itemDescription , Qty , Rate ,Amount start -->
-                <thead>
-                  <tr class="hd font-custom-bold">
-                    <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
-                    </td>
-                    <td width="17%">
-                      <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
-                    </td>
-                    <td width="17%">
-                      <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
-                    </td>
-                    <td width="17%">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
-                    </td>
-                    <td width="17%">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
-                    </td>
-                    <td width="18%" class="last_td">
-                      <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
-                        value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
-                    </td>
-                  </tr>
-                </thead>
-
-                <tbody class="lineItems">
-                  <tr class="row-item" *ngFor="let item of activeEst.alstQuotProduct; let last = last">
-                    <td [class.no-border-last]="last">
-                      <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
-                        {{item.productName}}
-                      </div>
-                      <div class="text-left mCustomScrollbar style-3" >
-                        {{item.description}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
-                        {{item.qty}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div class="text-right">
-                        {{item.rate}}
-                      </div>
-                    </td>
-                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div  class="text-right">
-                        {{item.taxRate}}
-                      </div>
-                    </td>
-                    <td  [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div  class="text-right">
-                        {{item.discountRate}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
-                      <div class="text-right">
-                        {{item.price}}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Bottom -->
-          <div class="row">
-            <!-- TnC -->
-            <div class="col-6 term-row">
-              <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
-                <span class="bld">
-                  {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
-                </span>
-              </div>
-              <div class="col-md-12 px-0 margin-top-8">
-                <ul class="list-unstyled">
-                  <li *ngFor="let term of activeEst.alstQuotTermsCondition">
-                    <div class="col-md-12 margin-bottom-5px">
-                      <span style="word-wrap: break-word">{{term.termsConditionText}}</span><br />
-                    </div>
-                  </li>
-                </ul>
-                <div *ngIf="!activeEst.alstQuotTermsCondition || activeEst.alstQuotTermsCondition.length < 1">
-                  <h4>No terms added</h4>
-                </div>
-              </div>
-            </div>
-
-            <!-- Calculations -->
-            <div class="col-6">
-              <!-- Total -->
-              <div class="row mx-0 term-cond-label">
-                <div class="col-6 text-left">
-                  <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' |
-                    translate}}</span>
-                </div>
-                <div class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                </div>
-              </div>
-
-              <!-- Discount -->
-              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
-                <div class="col-5 discount-tax-label">
-                  <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                  <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
-                    slice:0:1}})
-                  </div>
-                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
-                </div>
-
-                <div class="col-7">
-                  <div class="text-right">
-                    <div *ngIf="activeEst.discountFlag == 0">
-                      {{activeEst.discount | number:'2.'}}
-                    </div>
-                    <div *ngIf="activeEst.discountFlag == 1">
-                      {{activeEst.percentageValue | number:'2.'}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tax -->
-              <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
-                <div class="col-4 discount-tax-label">
-                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">({{activeEst.taxrate | number:'1.1-2'}} %)</div>
-                </div>
-                <div class="col-8 ">
-                  <div class="text-right">
-                    {{activeEst.taxAmt | number:'1.1-2'}}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tax List -->
-                <div class="row mx-0" *ngFor="let tax of activeEst.taxList; index as index">
-                  <div class="col-4 discount-tax-label">
-                    <div *ngIf="tax !== null" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                    <div *ngIf="tax" class="inline font-custom">({{activeEst.taxList[index].percentage | number:'1.1-2'}} %)</div>
-                  </div>
-                  <div *ngIf="tax !== null" class="col-8 ">
-                    <div class="text-right">
-                      {{activeEst.taxList[index].calculateValue}}
-                    </div>
-                  </div>
-                </div>
-
-              <!-- Shipping Charges -->
-              <div class="row mx-0" *ngIf="activeEst.shippingCharges > 0">
-                <div class="col-4 discount-tax-label">
-                  <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ?
-                    settings.shipping : 'Shipping'}}</div>
-                </div>
-                <div class="col-8">
-                  <div class="text-right">
-                    {{activeEst.shippingCharges | number:'2.'}}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Adjustment -->
-              <div class="row mx-0" *ngIf="activeEst.adjustment > 0">
-                <div class="col-4 discount-tax-label">
-                  <div class="inline" style="text-align: left; vertical-align: bottom;">
-                    {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="text-right">
-                    {{activeEst.adjustment | number:'2.'}}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Gross Total -->
-              <div class="row mx-0 term-cond-label">
-                <div class="col-6 text-left">
-                  <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
-                </div>
-                <div class="col-6 text-right">
-                  <span class="font-custom-bold price">{{activeEst.amount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <!--Todays Estimate Ends-->
 
       <!-- Previous Estimates Button -->
       <div class="col-12 col-md-3 search_div">
