@@ -103,14 +103,6 @@ export class AddEditComponent implements OnInit {
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
   noClientSelected: boolean = false;
-  showTaxRate: any;
-  showDiscountRate: any;
-  showProduct: any;
-  showDescription: any;
-  showQuantity: any;
-  showDiscountedRate: any;
-  showTaxRateFlag: boolean = true;
-  showDiscountRateFlag: boolean = true;
   invoiceListLoading: boolean;
   estimateListLoading: boolean;
   tncLoading: boolean;
@@ -125,13 +117,13 @@ export class AddEditComponent implements OnInit {
   invListLoader: boolean;
   hideDiscountLabel: boolean = false;
   hideTaxLabel: boolean = false;
-  showTodaysTaxRate: boolean;
-  showTodaysDiscountRate: boolean;
   isDeleted: boolean = false;
   noProductSelected: boolean = false;
   show: false;
   defaultChecked: boolean;
   amountPaid: number = 0;
+  noDiscountOnItem: boolean = false;
+  noTaxOnItem: boolean = false;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -172,7 +164,7 @@ export class AddEditComponent implements OnInit {
         return false;
       });
     });
-/*Scroll to top when arrow up clicked END*/
+    /*Scroll to top when arrow up clicked END*/
     // save button processing script
     $(document).ready(function () {
       $('.save').on('click', function () {
@@ -248,22 +240,6 @@ export class AddEditComponent implements OnInit {
 
   
   addInit() {
-    //tax and discount position according to settings changed
-    // if(this.settings.taxFlagLevel === 1){
-    //   this.showTaxRate = 0;
-    // }
-    // // condition for disable tax 
-    // else if(this.settings.taxFlagLevel === 2){
-    //   this.showTaxRateFlag = false;
-    // }
-    // if(this.settings.discountFlagLevel === 0){
-    //   this.showDiscountRate = 0;
-    // }
-    // // condition for disable discount 
-    // else if(this.settings.discountFlagLevel === 2){
-    //   this.showDiscountRateFlag = false;
-    // }
-    
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -279,7 +255,6 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //to view updated or viewed invoice in view page
-    // localStorage.setItem('invoiceId', invId )
     console.log(this.settings.taxFlagLevel === 1);
     console.log(this.settings.discountFlagLevel === 1);
 
@@ -295,6 +270,25 @@ export class AddEditComponent implements OnInit {
         delete invoice.records[0].client
         delete invoice.records[0].client_id
         this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+        if(this.activeInvoice.discount_on_item == 1){
+          this.noDiscountOnItem = true;
+        }else{
+          this.noDiscountOnItem = false;
+        }
+    
+        if(this.activeInvoice.tax_on_item == 0){
+          this.noTaxOnItem = true;
+        }else{
+          this.noTaxOnItem = false;
+        }
+
+        if(this.activeInvoice.discount > 0){
+          this.noDiscountOnItem = false;
+        }
+    
+        if(this.activeInvoice.tax_rate > 0){
+          this.noTaxOnItem = false;
+        }
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if(this.shippingAddress){
           this.noShippingCharges = true; //activate a class if shipping value is present
@@ -319,41 +313,9 @@ export class AddEditComponent implements OnInit {
             })
           }
           this.activeInvoice.listItems = temp
-          //show discount and tax fields when item settings is selected
-          // for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-          //   this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
-          //   if (this.showTaxRate !== 0) {
-          //     this.settings.taxFlagLevel = 0;
-          //   }
-          //   this.showDiscountRate = this.activeInvoice.listItems[i].discount;
-          //   if (this.showDiscountRate !== 0) {
-          //     this.settings.discountFlagLevel = 1;
-          //   }
-          // }
+          
         }
-        //tax and discount position according to settings changed
-        // if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
-        //   this.showTaxRateFlag = false;
-        // } else {
-        //   // tax on bill
-        //   this.showTaxRateFlag = true;
-        // }
-        // if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
-        //   this.showDiscountRateFlag = false;
-        // } else {
-        //   //discount on bill
-        //   this.activeInvoice.discount_on_item = 2
-        //   this.showDiscountRateFlag = true;
-        // }
-        //hide discount and tax fields when bill settings is selected
-        // if (this.activeInvoice.discount !== 0) {
-        //   this.settings.discountFlagLevel = 0;
-        //   this.activeInvoice.discount_on_item = 0;
-        // }
-        // if (this.activeInvoice.tax_rate !== 0) {
-        //   this.settings.taxFlagLevel = 1;
-        //   this.showTaxRate=0;
-        // }
+        
        // Change payment keys compatible
         if(this.activeInvoice.payments){
           var temp1 = []
@@ -390,11 +352,11 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.adjustment = null
         }
         //to show when editing if value exists
-        if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
-          this.activeInvoice.tax_on_item = 0;
-        }else{
-          this.activeInvoice.tax_on_item = 1;
-        }
+        // if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
+        //   this.activeInvoice.tax_on_item = 0;
+        // }else{
+        //   this.activeInvoice.tax_on_item = 1;
+        // }
 
         this.changeDueDate(this.activeInvoice.due_date_flag.toString())
         // Wait for clients to be loaded before setting active client
@@ -408,7 +370,7 @@ export class AddEditComponent implements OnInit {
         }, 50)
       } else {
         this.incrementInvNo = true;
-        //make edit flag false so that it will work as adding new invoice as addInit fun is doing
+        //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
         this.edit = false;
         this.estimateListLoading = true;
         this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
@@ -447,17 +409,6 @@ export class AddEditComponent implements OnInit {
               }
               this.activeEstimate.listItems = temp
               this.activeInvoice.listItems = this.activeEstimate.listItems;
-              // for(let i=0;i<this.activeInvoice.listItems.length;i++){
-              //   this.showTaxRate = this.activeInvoice.listItems[i].tax_rate;
-              //   if(this.showTaxRate!==0){
-              //     this.settings.taxFlagLevel=0;
-              //     this.activeInvoice.tax_on_item = 0;
-              //   }
-              //   this.showDiscountRate = this.activeInvoice.listItems[i].discount;
-              //   if(this.showDiscountRate!==0){
-              //     this.settings.discountFlagLevel=1;
-              //   }
-              // }
             }
             // Change TnC keys compatible
             if (this.activeEstimate.termsAndConditions) {
@@ -1668,30 +1619,6 @@ export class AddEditComponent implements OnInit {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
-    //if discount and tax on bill is selected
-    // if(this.activeInv.discount){
-    //   for(var i=0;i<this.activeInv.listItems.length;i++){
-    //     this.activeInv.listItems[i].discountRate = 0;
-    //   }
-    // }
-    // if(this.activeInv.tax_rate){
-    //   for(var i=0;i<this.activeInv.listItems.length;i++){
-    //     this.activeInv.listItems[i].tax_rate = 0;
-    //   }
-    // }
-    
-    //  for(let i=0;i<this.activeInv.listItems.length;i++){
-    //   if(this.activeInv.listItems[i].tax_rate){
-    //     this.showTodaysTaxRate = true;
-    //   }else if(this.activeInv.listItems[i].tax_rate == 0 || undefined){
-    //     this.showTodaysTaxRate = false;
-    //   }
-    //   if(this.activeInv.listItems[i].discountRate){
-    //     this.showTodaysDiscountRate = true;
-    //   }else if(this.activeInv.listItems[i].discountRate == 0 || undefined){
-    //     this.showTodaysDiscountRate = false;
-    //   }
-    //  }
     
     this.setActiveClient()
   }

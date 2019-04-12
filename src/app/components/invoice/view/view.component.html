@@ -189,10 +189,10 @@
                           value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                         >
                       </td>
-                      <td width="10%" *ngIf="hideTaxLabel === false || isTaxPresent === true">
+                      <td width="10%" *ngIf="activeInv.discount_on_item == 1">
                         <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
                       </td>
-                      <td width="10%" *ngIf="hideDiscountLabel === false || isDiscountPresent === true">
+                      <td width="10%" *ngIf="activeInv.tax_on_item == 0">
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
@@ -230,12 +230,12 @@
                           {{item.rate | number:'2.'}}
                         </div>
                       </td>
-                      <td *ngIf="item.tax_rate || hideTaxLabel === false ||isTaxPresent ===true" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
+                      <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                         <div class="text_right">
                           {{item.tax_rate | number:'2.'}}
                         </div>
                       </td>
-                      <td *ngIf="item.discountRate || hideDiscountLabel === false || isDiscountPresent === true" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
+                      <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                         <div class="text_right">
                           {{item.discountRate | number:'2.'}} 
                         </div>
@@ -470,7 +470,7 @@
                 <div class="col-10">
                   <div class="row">
                     <div class="col-12">
-                      <h5 class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                      <h5 *ngIf="clientList" class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                     </div>
                     <div class="col-5 font-custom-book fontsize13">
                       {{ invoice.invoice_number }}

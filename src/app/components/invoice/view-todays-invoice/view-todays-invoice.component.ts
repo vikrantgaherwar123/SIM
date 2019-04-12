@@ -35,8 +35,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   invoiceId: string;
   clientListLoading: boolean;
   settingsLoading: boolean;
-  showTaXLabel: boolean;
-  showDiscountLabel: boolean;
+  hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  hideTaxLabel: boolean;
+  isTaxPresent: boolean;
+  noDiscountOnItem: boolean;
+  noTaxOnItem: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -106,22 +110,32 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
 
-    for(let i =0;i<this.activeInv.listItems.length;i++){
-      if(this.settings.discountFlagLevel == 0 && this.activeInv.listItems[i].tax_rate !== 0 ){
-        this.activeInv.listItems[i].tax_rate = 0;
-      }
-      if(this.activeInv.listItems[i].tax_rate !== 0){
-        this.showTaXLabel = true;
+    //display label and values if tax on item & discount on item selected and values are there
+    if(this.activeInv !== undefined){
+
+      if(this.activeInv.discount_on_item == 1){
+        this.noDiscountOnItem = true;
       }else{
-        this.showTaXLabel = false;
+        this.noDiscountOnItem = false;
       }
-      if(this.activeInv.listItems[i].discountRate !== 0){
-        this.showDiscountLabel = true;
+  
+      if(this.activeInv.tax_on_item == 0){
+        this.noTaxOnItem = true;
       }else{
-        this.showDiscountLabel = false;
+        this.noTaxOnItem = false;
       }
 
+    //display label and values if tax on Bill & discount on Bill selected and values are there
+    if(this.activeInv.discount > 0){
+      this.noDiscountOnItem = false;
     }
+
+    if(this.activeInv.tax_rate > 0){
+      this.noTaxOnItem = false;
+    }
+    }
+    
+
     this.setActiveClient()
   }
 
