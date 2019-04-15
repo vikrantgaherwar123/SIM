@@ -98,7 +98,7 @@ export class AddEditComponent implements OnInit {
     setting: setting
   }
   noAdjustment:boolean = false;
-  noShippingCharges : boolean = false;
+  noShippingCharges : boolean;
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
@@ -289,6 +289,8 @@ export class AddEditComponent implements OnInit {
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if(this.shippingAddress){
           this.noShippingCharges = true; //activate a class if shipping value is present
+        }else{
+          this.noShippingCharges = false;
         }
         if(this.activeInvoice.adjustment){
           this.noAdjustment = true;

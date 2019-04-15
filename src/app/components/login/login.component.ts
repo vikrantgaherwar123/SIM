@@ -3,7 +3,7 @@ import { Router } from "@angular/router"
 
 import { response as apiRespo } from '../../interface'
 import { setStorage } from '../../globalFunctions'
-
+import {ToasterService} from 'angular2-toaster';
 import { AuthService } from '../../services/auth.service'
 import { ClientService } from '../../services/client.service'
 import { ProductService } from '../../services/product.service'
@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    public toasterService: ToasterService,
     private router: Router,
     private clientService: ClientService,
     private productService: ProductService,
@@ -228,7 +229,12 @@ export class LoginComponent implements OnInit {
           (result: any) => {
              if(result){
               this.clientsLoading = false;
+              if(result.status == 200){
               this.store.dispatch(new clientActions.add(result.records))
+              }
+              else{
+              this.toasterService.pop('failure', 'Your Subscription has been expired !!!');
+              }
               this.clientsCompleted = true;
               this.navigateToAdd();
              }
@@ -241,12 +247,18 @@ export class LoginComponent implements OnInit {
             this.productService.fetch().subscribe(
             (result: any) => {
               this.productLoading = false;
-              if(result){
-                this.productLoading = false;
-                this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
-                this.productsCompleted = true;
-                this.navigateToAdd(); 
-              }
+                if (result) {
+                  this.productLoading = false;
+                  if (result.status == 200) {
+                    this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
+                  }
+                  else {
+                    this.toasterService.pop('failure', 'Your Subscription has been expired !!!');
+                  }
+
+                  this.productsCompleted = true;
+                  this.navigateToAdd();
+                }
               else{
                 this.productsCompleted = false;
               }
@@ -257,7 +269,12 @@ export class LoginComponent implements OnInit {
             (result: any) => {
               if(result){
                 this.termsLoading = false;
+                if(result.status == 200){
                 this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+                }
+                else{
+                  this.toasterService.pop('failure', 'Your Subscription has been expired !!!');
+                }
                 this.termsCompleted = true;
                 this.navigateToAdd();
               }

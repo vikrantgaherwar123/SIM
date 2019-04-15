@@ -259,10 +259,10 @@ input[type=number] {
 .mat-option:hover {
   background-color:#eaf7ff;
 }
-
-.mat-option:focus:not(.mat-option-disabled), .mat-option:hover:not(.mat-option-disabled) {
-  background: #eaf7ff;
+.mat-option:focus {
+  background-color:red;
 }
+
 
 .mat-calendar-previous-button::after, .mat-calendar-next-button::after {
   width: 10px;
@@ -1022,7 +1022,7 @@ background-color: none;
 
 .item_box_shadow{
   background-color: white !important;
-  box-shadow: inset 23px 0 0px -20px #1a73cc;
+  box-shadow: inset 23px 0 0px -19px #1a73cc;
   /* border-left: 3px solid #1a73cc; */
   /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
@@ -1215,6 +1215,21 @@ textarea{
 .amount_box{
   border: 0px solid #ced4da !important;
   background-color: #f2f1f1 !important;
+}
+.mrg_item_input{
+  margin-left: 4px;
+}
+.invoice_desc{
+  margin-top: 3px;
+  overflow-y: auto !important;
+  width: 224px !important;
+}
+.date_month{
+  color: #8c9299;
+  font-size: 10px;
+}
+.inv_date{
+  font-size: 18px !important;
 }
 
 

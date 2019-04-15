@@ -35,7 +35,7 @@
                                 style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
                           </div>
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
-                          <mat-autocomplete id="field" #auto1="matAutocomplete" class="mCustomScrollbar style-3 ui-menu"
+                          <mat-autocomplete id="field" #auto1="matAutocomplete" class="ui-widget mCustomScrollbar style-3 ui-menu"
                             [displayWith]="displayWith" autoActiveFirstOption
                             (optionSelected)="selectedClientChange($event)" id="style-3">
                               <button *ngIf="openClientModal === false" (click)="openAddClientModal()"
@@ -160,7 +160,7 @@
 
                           <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag || 0"
                             class="due_date form-control pr-0 selectDueDate light_font"
-                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: 0px;">
+                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: -0.5px;">
                             <option class="opt" value="0">No Due Date</option>
                             <option class="opt" value="1">Immediately</option>
                             <option class="opt" value="2">Custom Date</option>
@@ -322,7 +322,7 @@
                           <div class="form-group" style="padding-right: -2px;padding-left: 4px;
                           border-radius: 2px;padding: 4px 2px;">
                         <div class="v1"></div>
-                            <input type="text" name="product-name" class="form-control billing-input input_border_color" tabindex="1"
+                            <input type="text" name="product-name" class="mrg_item_input form-control billing-input input_border_color" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
                               matInput [formControl]="addItem" [matAutocomplete]="auto" required>
@@ -337,16 +337,15 @@
                                 *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
                                 [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
-                            <div class="custom-description" style="margin-top: -2px;">
-                              <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
+                            <div class="custom-description mrg_item_input" style="margin-top: -2px;">
+                              <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6" style="height: 55px !important;"
                                 name="description_{{index}}"
-                                class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
+                                class="black form-control font_wg_none mCustomScrollbar style-3 invoice_desc" elastic
+                                [(ngModel)]="activeItem.description"
                                 placeholder="Description" onfocus="this.select()">
                               </textarea>
-                              <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"
-                                class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" placeholder="Description"
+                              <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}" style="height: 55px !important;"
+                                class="invoice_desc black form-control font_wg_none mCustomScrollbar style-3 mrg_item_input" elastic placeholder="Description"
                                 onfocus="this.select()">
                               </textarea>
                             </div>
@@ -440,7 +439,7 @@
                     </span>
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noShippingCharges , 'addLabelBackroundColor':noShippingCharges}"
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.shipping_charges == undefined, 'addLabelBackroundColor':noShippingCharges}"
                        (click)="activeInvoice.shipping_charges = 0;noShippingCharges = true">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
@@ -856,11 +855,11 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+              *ngFor="let invoice of invoiceList" class="row" style="padding: 5px 1px 0px 0px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
-                <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
-                <span style="color: #8c9299;font-size: 10px;">{{ invoice.created_date | date: 'MMM' }}</span>
+                <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
               <div class="col-10">
                 <div class="row" style="line-height: 7px;">
