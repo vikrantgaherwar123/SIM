@@ -11,7 +11,7 @@ import { retryWhen, flatMap } from 'rxjs/operators';
 import { interval, throwError, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, client, invoice, terms, setting, product, addEditEstimate } from '../../../interface'
+import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
@@ -110,7 +110,7 @@ export class AddEditComponent implements OnInit {
   settingsLoading: boolean;
   InvoiceId: any;
   InvoiceNumber: string;
-  recentInvoiceList: any = [];
+  recentInvoiceList: recentInvoices[];
   disabledDescription: boolean = false;
   viewTodaysInvoice: boolean = false;
   viewNextInvoice: boolean;
@@ -146,6 +146,9 @@ export class AddEditComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+    store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
+    store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
+
 
 
    /*Scroll to top when arrow up clicked BEGIN*/
@@ -202,15 +205,18 @@ export class AddEditComponent implements OnInit {
         this.InvoiceId = params.invId;
         this.edit = true
         this.editTerm = false
+        this.fetchCommonData()
         this.editInit(params.invId)
-        this.fetchCommonData()
+        
       } else {
-        this.fetchCommonData()
+        this.fetchCommonData();
         this.addInit()
       }
     })
+    if(this.recentInvoiceList.length < 1){
+      this.fetchInvoices();
+    }
     
-    this.fetchInvoices();
 }
   //restrict user to write more than 100 value in pecrentage of discount   
   dataChanged(input){
@@ -263,13 +269,16 @@ export class AddEditComponent implements OnInit {
     this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceListLoading = true;
-    this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+    
+    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
+    if(this.activeInvoice){
+    // this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
-      if(invoice.records !== null) {
+      // if(invoice.records !== null) {
         //deleted these objects bcz input was mismatcing for adding while deleting
-        delete invoice.records[0].client
-        delete invoice.records[0].client_id
-        this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+        // delete invoice.records[0].client
+        // delete invoice.records[0].client_id
+        // this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         if(this.activeInvoice.discount_on_item == 1){
           this.noDiscountOnItem = true;
         }else{
@@ -368,7 +377,121 @@ export class AddEditComponent implements OnInit {
             clearInterval(ref)
           }
         }, 50)
-      } else {
+      } else if(this.invoiceListLoading){
+
+        this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+          if(invoice.records !== null) {
+            //deleted these objects bcz input was mismatcing for adding while deleting
+            delete invoice.records[0].client
+            delete invoice.records[0].client_id
+            this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+            if(this.activeInvoice.discount_on_item == 1){
+              this.noDiscountOnItem = true;
+            }else{
+              this.noDiscountOnItem = false;
+            }
+        
+            if(this.activeInvoice.tax_on_item == 0){
+              this.noTaxOnItem = true;
+            }else{
+              this.noTaxOnItem = false;
+            }
+    
+            if(this.activeInvoice.discount > 0){
+              this.noDiscountOnItem = false;
+            }
+        
+            if(this.activeInvoice.tax_rate > 0){
+              this.noTaxOnItem = false;
+            }
+            this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+            if(this.shippingAddress){
+              this.noShippingCharges = true; //activate a class if shipping value is present
+            }else{
+              this.noShippingCharges = false;
+            }
+            if(this.activeInvoice.adjustment){
+              this.noAdjustment = true;
+            }
+            // Change list item keys compatible
+            if (this.activeInvoice.listItems) {
+              var temp = []
+              for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+                temp.push({
+                  description: this.activeInvoice.listItems[i].description,
+                  discount: this.activeInvoice.listItems[i].discountRate,
+                  product_name: this.activeInvoice.listItems[i].productName,
+                  quantity: this.activeInvoice.listItems[i].qty,
+                  rate: this.activeInvoice.listItems[i].rate,
+                  tax_rate: this.activeInvoice.listItems[i].tax_rate,
+                  total: this.activeInvoice.listItems[i].price,
+                  unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+                  unit: this.activeInvoice.listItems[i].unit,
+                })
+              }
+              this.activeInvoice.listItems = temp
+              
+            }
+            
+           // Change payment keys compatible
+            if(this.activeInvoice.payments){
+              var temp1 = []
+              for(let i=0; i < this.activeInvoice.payments.length; i++) {
+                
+                temp1.push({
+                  date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
+                  organization_id: this.activeInvoice.payments[i].orgId,
+                  paid_amount: this.activeInvoice.payments[i].paidAmount,
+                  unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
+                  unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
+                  unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
+                  unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
+                })
+              }
+              this.activeInvoice.payments = temp1
+              for(let i = 0; i < this.activeInvoice.payments.length; i++){
+                this.amountPaid += this.activeInvoice.payments[i].paid_amount;
+              }
+          }
+    
+            // Set Dates
+            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+            this.invoiceDate.reset(new Date(y, (m - 1), d))
+    
+            // Tax and discounts show or hide
+            if(this.activeInvoice.discount == 0) {
+              this.activeInvoice.discount = null
+            }
+            if(this.activeInvoice.shipping_charges == 0) {
+              this.activeInvoice.shipping_charges = undefined
+            }
+            if(this.activeInvoice.adjustment == 0) {
+              this.activeInvoice.adjustment = null
+            }
+            //to show when editing if value exists
+            // if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
+            //   this.activeInvoice.tax_on_item = 0;
+            // }else{
+            //   this.activeInvoice.tax_on_item = 1;
+            // }
+    
+            this.changeDueDate(this.activeInvoice.due_date_flag.toString())
+            // Wait for clients to be loaded before setting active client
+            var ref = setInterval(() => {
+              if (this.allClientList.length > 0) {
+                let uid = this.activeInvoice.unique_key_fk_client
+                this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                this.billingTo.reset(this.activeClient)
+                clearInterval(ref)
+              }
+            }, 50)
+          } 
+          return false
+        },
+        err => this.openErrorModal());
+
+      } 
+       else {
         this.incrementInvNo = true;
         //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
         this.edit = false;
@@ -502,9 +625,6 @@ export class AddEditComponent implements OnInit {
         // this.toasterService.pop('failure', 'Invalid invoice id!');
         // this.router.navigate(['/invoice/view'])
       }
-      return false
-    },
-    err => this.openErrorModal());
   }
 
   commonSettingsInit() {
@@ -642,46 +762,17 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Settings every time
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
-
-      // Invoice Number
-    //   if(!this.edit){
-    //     this.tempInvNo = JSON.parse(localStorage.getItem('invNo'));
-    //     if (this.tempInvNo) {
-    //     //regex code to find no. from string
-    //     // var r = /\d+/;
-    //     // var m = r.exec(this.tempInvNo.toString())[0]
-    //     // var s =parseInt(m);
-    //     // console.log(s);
-
-
-    //     // this regex code separates string and no.
-    //     var text = this.tempInvNo.toString().split(/(\d+)/)
-    //     var t = text[0] //text
-    //     var n = parseInt(text[1]) //number
-    //     if( isNaN(n)){
-    //       n = 0; 
-    //     }
-    //     // var x = t+(n+1);
-    //     this.tempInvNo = n + 1 ;
-
-    //   } else {
-    //     this.tempInvNo = 1
-    //     t = this.settings.setInvoiceFormat;
+    // this.settingsLoading = true;
+    // this.settingService.fetch().subscribe((response: any) => {
+    //   this.settingsLoading = false;
+    //   if (response.settings !== null) {
+    //     setStorage(response.settings)
+    //     this.user = JSON.parse(localStorage.getItem('user'))
+    //     this.settings = this.user.setting
     //   }
-    //   if (this.settings.setInvoiceFormat) {
-    //     this.activeInvoice.invoice_number = t + this.tempInvNo
-    //   } else {
-    //     this.activeInvoice.invoice_number = this.tempInvNo.toString();
-    //   }
-    // }
+    
+    // },err => this.openErrorModal())
+
     if (!isNaN(parseInt(this.settings.invNo))) {
       // console.log(this.InvoiceNumber);
       this.tempInvNo = parseInt(this.settings.invNo) + 1
@@ -693,29 +784,15 @@ export class AddEditComponent implements OnInit {
     } else {
       this.activeInvoice.invoice_number = this.tempInvNo.toString();
     }
-    },err => this.openErrorModal())
     
   }
 
   // Client Functions
   
   setClientFilter() {
-    // Filter for client autocomplete
-    if(this.clientList){
-      this.filteredClients = this.billingTo.valueChanges.pipe(
-        startWith<string | client>(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(name => name ? this._filterCli(name) : this.clientList.slice())
-      )
-  }else{
-    this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
-        
-        this.clientListLoading = false
-        if (response.records) {
-          this.store.dispatch(new clientActions.add(response.records))
-          this.clientList = response.records.filter(recs => recs.enabled == 0)
-          var seen = {};
+    this.store.select('client').subscribe(clients => this.clientList = clients)
+    this.clientList = this.clientList.filter(recs => recs.enabled == 0)
+    var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
             if (seen.hasOwnProperty(item.name)) {
@@ -727,11 +804,15 @@ export class AddEditComponent implements OnInit {
           });
           this.clientList = uniqueClients;
           this.removeEmptyNameClients();
-        }
-        this.setClientFilter()
-        
-      },err => this.openErrorModal())
+    // Filter for client autocomplete
+    if(this.clientList){
+      this.filteredClients = this.billingTo.valueChanges.pipe(
+        startWith<string | client>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterCli(name) : this.clientList.slice())
+      )
   }
+  
 }
 
    private _filterCli(value: string): client[] {
@@ -1134,7 +1215,7 @@ export class AddEditComponent implements OnInit {
   }
 
   isTermInInvoice(term) {
-    if(this.activeInvoice.termsAndConditions) {
+    if(this.activeInvoice) {
       return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -1406,6 +1487,7 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
@@ -1606,9 +1688,9 @@ export class AddEditComponent implements OnInit {
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('invoice').subscribe(invoices => {
-          this.invoiceList = invoices
+        this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('recentInvoices').subscribe(invoices => {
+          this.recentInvoiceList = invoices
         })
       }
 

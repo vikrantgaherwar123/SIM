@@ -72,6 +72,8 @@ export class ViewEstComponent implements OnInit {
   hideDiscountLabel: boolean;
   isDiscountPresent: boolean;
   isTaxPresent: boolean;
+  noTaxOnItem: boolean;
+  noDiscountOnItem: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -319,7 +321,6 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    // this.removeEmptySpaces();
     if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
@@ -361,19 +362,16 @@ export class ViewEstComponent implements OnInit {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
     if(this.activeEst !== undefined){
-      for(let i = 0;i<this.activeEst.alstQuotProduct.length; i++){
-
-        if(this.activeEst.alstQuotProduct[i].discountRate === 0){
-          this.hideTaxLabel = true;
+      for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+        if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
+          this.noTaxOnItem = true;
         }else{
-          this.isDiscountPresent = true;
-          this.hideTaxLabel = false;
+          this.noTaxOnItem = false;
         }
-        if(this.activeEst.alstQuotProduct[i].taxRate === 0){
-          this.hideDiscountLabel = true;
+        if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
+          this.noDiscountOnItem = true;
         }else{
-          this.isTaxPresent = true;
-          this.hideDiscountLabel = false;
+          this.noDiscountOnItem = false;
         }
       }
       for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){

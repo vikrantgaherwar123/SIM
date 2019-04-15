@@ -120,6 +120,8 @@ export class AddEditEstComponent implements OnInit {
   noClientSelected: boolean = false;
   errorMessage: any;
   defaultChecked: boolean;
+  noDiscountOnItem: boolean;
+  noTaxOnItem: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -204,29 +206,33 @@ export class AddEditEstComponent implements OnInit {
     this.commonSettingsInit()
 
     //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 1){
-      this.showTaxRate = 0;
-    }
-    if(this.settings.taxFlagLevel === 0){
-      this.activeEstimate.tax_on_item = 0
-    }
-    // condition for disable tax 
-    else if(this.settings.taxFlagLevel === 2){
-      this.showTaxRateFlag = false;
-    }
-    if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = false;
-      this.showDiscountRate = 0;
-    }
-    // condition for disable discount 
-    else if(this.settings.discountFlagLevel === 2){
-      this.showDiscountRateFlag = false;
-    }
+    // if(this.settings.taxFlagLevel === 1){
+    //   this.showTaxRate = 0;
+    // }
+    // if(this.settings.taxFlagLevel === 0){
+    //   this.activeEstimate.tax_on_item = 0
+    // }
+    // // condition for disable tax 
+    // else if(this.settings.taxFlagLevel === 2){
+    //   this.showTaxRateFlag = false;
+    // }
+    // if(this.settings.discountFlagLevel === 0){
+    //   this.showDiscountRateFlag = false;
+    //   this.showDiscountRate = 0;
+    // }
+    // // condition for disable discount 
+    // else if(this.settings.discountFlagLevel === 2){
+    //   this.showDiscountRateFlag = false;
+    // }
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
     if (!this.activeEstimate.listItems) {
       this.activeEstimate.listItems = []
+    }
+    if(this.activeEstimate.tax_on_item ==2){
+      this.activeEstimate.tax_on_item = 0;
+
     }
   }
 
@@ -240,9 +246,31 @@ export class AddEditEstComponent implements OnInit {
       if (estimate.records !== null) {
         this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-        if(this.activeEstimate.discount !==0){
-          this.discountFlag = 1;
+        // if(this.activeEstimate.discount !==0){
+        //   this.discountFlag = 1;
+        // }
+
+        if(this.activeEstimate.discount_on_item == 1){
+          this.noDiscountOnItem = true;
+          this.activeEstimate.tax_on_item = 0; //this is a condition when user saved est by tax on item it was 2 we set it to 0 
+        }else{
+          this.noDiscountOnItem = false;
         }
+    
+        if(this.activeEstimate.tax_on_item == 0){
+          this.noTaxOnItem = true;
+        }else{
+          this.noTaxOnItem = false;
+        }
+
+        if(this.activeEstimate.discount > 0){
+          this.noDiscountOnItem = false;
+        }
+    
+        if(this.activeEstimate.tax_rate > 0){
+          this.noTaxOnItem = false;
+        }
+        
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
         if (!this.activeEstimate.taxList)

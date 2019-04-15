@@ -39,6 +39,8 @@ export class ViewTodaysEstimateComponent implements OnInit {
   estimateId: string;
   showTaXLabel: boolean;
   showDiscountLabel: boolean;
+  noDiscountOnItem: boolean;
+  noTaxOnItem: boolean;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -53,10 +55,9 @@ export class ViewTodaysEstimateComponent implements OnInit {
     if (this.clientList.length < 1) {
       this.fetchClients();
     }else{
-      this.removeEmptyNameClients();
+      this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+      this.fetchSettings();
     }
-    this.fetchSettings();
-    this.fetchEstimates();
   }
 
   fetchClients(){
@@ -64,7 +65,8 @@ export class ViewTodaysEstimateComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.removeEmptyNameClients();
+        this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+        this.fetchSettings();
       }, err => this.openErrorModal());
   }
   fetchSettings(){
@@ -76,6 +78,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
         this.settings = this.user.setting
+        this.fetchEstimates();
       }
     }, err => this.openErrorModal());
 
@@ -113,18 +116,43 @@ export class ViewTodaysEstimateComponent implements OnInit {
   setActiveEst(estId: string = '') {
     this.estimateId = estId;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
-    for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
-      if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
-        this.showTaXLabel = true;
-      }else{
-        this.showTaXLabel = false;
-      }
-      if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
-        this.showDiscountLabel = true;
-      }else{
-        this.showDiscountLabel = false;
+    //display label and values if tax on item & discount on item selected and values are there
+    if(this.activeEst !== undefined){
+
+      for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+        if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
+          this.noTaxOnItem = true;
+        }else{
+          this.noTaxOnItem = false;
+        }
+        if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
+          this.noDiscountOnItem = true;
+        }else{
+          this.noDiscountOnItem = false;
+        }
       }
 
+      // if(this.activeEst.assignDiscountFlag == 1){
+      //   this.noDiscountOnItem = true;
+      // }else{
+      //   this.noDiscountOnItem = false;
+      // }
+  
+      // if(this.activeEst.assignTaxFlag == 1){
+      //   // this.activeEst.assignTaxFlag = 0;
+      //   this.noTaxOnItem = true;
+      // }else{
+      //   this.noTaxOnItem = false;
+      // }
+
+    //display label and values if tax on Bill & discount on Bill selected and values are there
+    if(this.activeEst.discount > 0){
+      this.noDiscountOnItem = false;
+    }
+
+    if(this.activeEst.taxrate > 0){
+      this.noTaxOnItem = false;
+    }
     }
     this.setActiveClient()
   }
@@ -157,7 +185,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList.length !==0){
+    if(this.clientList){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }

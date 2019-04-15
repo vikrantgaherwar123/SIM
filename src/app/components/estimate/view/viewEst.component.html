@@ -232,10 +232,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="hideTaxLabel === false || isTaxPresent === true">
+                    <td width="17%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="hideDiscountLabel ===false || isDiscountPresent === true">
+                    <td width="17%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%">
@@ -265,12 +265,12 @@
                         {{item.rate}}
                       </div>
                     </td>
-                    <td *ngIf="item.taxRate || hideTaxLabel === false || isTaxPresent ===true" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.taxRate}}
                       </div>
                     </td>
-                    <td *ngIf="item.discountRate || hideDiscountLabel === false || isDiscountPresent === true"  [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountRate}}
                       </div>

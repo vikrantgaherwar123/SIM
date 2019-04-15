@@ -1,6 +1,6 @@
-<div class="row main-wrapper">
+<div *ngIf="activeInvoice" class="row main-wrapper">
   <div class="col-12" id="main" style="padding-top: 3px !important;">
-    <div class="row">
+    <div  class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false"
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator" class="create-invoice"
@@ -276,17 +276,17 @@
                             {{item.quantity | number:'1.'}}
                           </div>
                         </td>
-                        <td [class.no-border-last]="last" *ngIf="showDiscountedRate !==0">
+                        <td [class.no-border-last]="last">
                           <div class="text_right">
                             {{item.rate | number:'2.'}}
                           </div>
                         </td>
-                        <td *ngIf="noTaxOnItem" [class.no-border-last]="last">
+                        <td *ngIf="activeInvoice.tax_on_item === 0 " [class.no-border-last]="last">
                           <div class="text_right">
                             {{item.tax_rate | number:'2.'}}
                           </div>
                         </td>
-                        <td *ngIf="noTaxOnItem" [class.no-border-last]="last">
+                        <td *ngIf="activeInvoice.discount_on_item == 1" [class.no-border-last]="last">
                           <div class="text_right">
                             {{item.discount | number:'2.'}}
                           </div>
@@ -723,7 +723,7 @@
                           </span>
                         </div>
 
-                        <div class="col-6 text-right">
+                        <div *ngIf="activeInvoice" class="col-6 text-right">
                           <span class="font-custom-bold price">
                             {{activeInvoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                           </span>
@@ -842,7 +842,7 @@
           </button>
         </div>
         <!-- recently added invoice -->
-        <div class="row" style="margin-top: 14px;">
+        <div *ngIf="invoiceList" class="row" style="margin-top: 14px;">
           <div
             class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
             style="border-top: 1px solid #cecece;">
@@ -852,7 +852,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
@@ -1212,7 +1212,7 @@
             <div class="font-custom-bold float-left">
               {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}}
             </div>
-            <div class="font-custom-bold float-right price">
+            <div *ngIf="addPaymentModal" class="font-custom-bold float-right price">
               {{ addPaymentModal.amount | currency:settings.currencyInText:'symbol':'1.2-2' }}
             </div>
           </div>
@@ -1223,7 +1223,7 @@
             <div class="col-6 text-left">
               <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
             </div>
-            <div class="col-6 text-right" style="padding-right: 23px !important;">
+            <div  *ngIf="activeInvoice" class="col-6 text-right" style="padding-right: 23px !important;">
               <span
                 class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
             </div>
