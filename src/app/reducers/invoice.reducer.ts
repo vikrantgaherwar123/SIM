@@ -81,6 +81,10 @@ export function invoiceReducer(state = initialState, action: InvoiceActions.Acti
       state.splice(action.payload, 1)
       return state
 
+    case InvoiceActions.REMOVERECENTINVOICE:
+      state.splice(action.payload, 1)
+      return state
+
     case InvoiceActions.RESET:
       return action.payload
 

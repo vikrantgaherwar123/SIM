@@ -27,6 +27,7 @@ import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
+import { recentInvoice } from '../../../actions/invoice.action';
 
 @Component({
   selector: 'app-invoice',
@@ -40,6 +41,7 @@ export class AddEditComponent implements OnInit {
   invoiceId
 
   activeInvoice: invoice = <invoice>{}
+  recentInvoice: recentInvoices = <recentInvoices>{}
   activeInv: invoice
   estimateDate = new FormControl()
   invoiceDate = new FormControl()
@@ -98,7 +100,7 @@ export class AddEditComponent implements OnInit {
     setting: setting
   }
   noAdjustment:boolean = false;
-  noShippingCharges : boolean;
+  noShippingCharges : boolean = false;
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
@@ -261,19 +263,25 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //to view updated or viewed invoice in view page
+    console.log(this.settings.taxFlagLevel === 1);
+    console.log(this.settings.discountFlagLevel === 1);
+
+    
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceListLoading = true;
     
-    //edit invoices if viewed from view component
-    if(this.invoiceList.length > 0){
-      this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
-    }else{
-      this.activeInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId);
-    }
+    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
+    this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId);
     if(this.activeInvoice){
+    // this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
+      // if(invoice.records !== null) {
+        //deleted these objects bcz input was mismatcing for adding while deleting
+        // delete invoice.records[0].client
+        // delete invoice.records[0].client_id
+        // this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         if(this.activeInvoice.discount_on_item == 1){
           this.noDiscountOnItem = true;
         }else{
@@ -296,8 +304,6 @@ export class AddEditComponent implements OnInit {
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if(this.shippingAddress){
           this.noShippingCharges = true; //activate a class if shipping value is present
-        }else{
-          this.noShippingCharges = false;
         }
         if(this.activeInvoice.adjustment){
           this.noAdjustment = true;
@@ -1476,6 +1482,7 @@ export class AddEditComponent implements OnInit {
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
             if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
               self.store.dispatch(new invoiceActions.remove(index))
+              this.store.dispatch(new invoiceActions.removeRecentInvoice(index + 1))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
             } else if(this.activeInvoice.deleted_flag !== 1 ) {
@@ -1492,7 +1499,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()

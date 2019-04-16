@@ -168,7 +168,7 @@
                     <td [class.no-border-last]="last">
                       <div class="">
                         <div class="form-group">
-                          <div *ngIf="item" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                          <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
                             {{item.productName}}
                           </div>
                           <div class="text-left text-truncate view_desc" >
@@ -195,7 +195,7 @@
                     </td>
                     <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discount | number:'2.'}} 
+                        {{item.discountRate | number:'2.'}} 
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">

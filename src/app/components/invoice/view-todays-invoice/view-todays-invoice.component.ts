@@ -31,7 +31,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   recentInvoiceList: recentInvoices[];
   private clientList: client[]
   // private allClientList: client[]
-  activeInv: invoice
+  activeInv: recentInvoices
+
   activeClient: any = {}
   invoiceId: string;
   clientListLoading: boolean;
@@ -42,6 +43,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  fetchrecentInvoice: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -70,6 +72,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     if(this.recentInvoiceList.length < 1){
+      this.fetchrecentInvoice = true;
       this.fetchInvoices();
     }else{
       this.route.params.subscribe(params => {
@@ -82,6 +85,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
 
   fetchInvoices() {
+    
     // Fetch invoices with given query
     var start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -95,11 +99,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.dispatch(new invoiceActions.resetRecentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
         this.store.select('recentInvoices').subscribe(invoices => {
           this.recentInvoiceList = invoices
         })
       }
+      
       this.route.params.subscribe(params => {
         if (params.invId) {
          this.setActiveInv(params.invId);
@@ -112,6 +117,49 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   setActiveInv(invId: string = '') {
     this.invoiceId = invId;
     this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
+
+      if (this.activeInv.listItems) {
+        var temp = []
+        for (let i = 0; i < this.activeInv.listItems.length; i++) {
+          temp.push({
+            description: this.activeInv.listItems[i].description,
+            discountRate: this.activeInv.listItems[i].discountRate,
+            productName: this.activeInv.listItems[i].productName,
+            qty: this.activeInv.listItems[i].qty,
+            rate: this.activeInv.listItems[i].rate,
+            tax_rate: this.activeInv.listItems[i].tax_rate,
+            price: this.activeInv.listItems[i].price,
+            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
+            unit: this.activeInv.listItems[i].unit,
+          })
+        }
+        this.activeInv.listItems = temp
+        
+      }
+    
+  //   else{
+
+  //   // Change list item keys compatible
+  //   if (this.activeInv.listItems) {
+  //     var temp = []
+  //     for (let i = 0; i < this.activeInv.listItems.length; i++) {
+  //       temp.push({
+  //         description: this.activeInv.listItems[i].description,
+  //         discount: this.activeInv.listItems[i].discount,
+  //         productName: this.activeInv.listItems[i].productName,
+  //         qty: this.activeInv.listItems[i].qty,
+  //         rate: this.activeInv.listItems[i].rate,
+  //         tax_rate: this.activeInv.listItems[i].tax_rate,
+  //         total: this.activeInv.listItems[i].total,
+  //         unique_identifier: this.activeInv.listItems[i].unique_identifier,
+  //         unit: this.activeInv.listItems[i].unit,
+  //       })
+  //     }
+  //     this.activeInv.listItems = temp
+      
+  //   }
+
+  // }
 
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
