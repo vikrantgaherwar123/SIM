@@ -135,7 +135,8 @@ export class EstimateService {
       created_date: estimate.createDate,
       device_modified_on: 0,
       discount: estimate.discount,
-      discount_on_item: estimate.discountFlag,
+      
+      discount_on_item: estimate.assignDiscountFlag,
       estimate_number: estimate.quetationNo,
       gross_amount: estimate.grossAmount,
       listItems: estimate.alstQuotProduct,
@@ -146,7 +147,7 @@ export class EstimateService {
       shipping_charges: estimate.shippingCharges,
       taxList: estimate.taxList,
       tax_amount: estimate.taxAmt,
-      tax_on_item: 0,
+      tax_on_item: estimate.assignTaxFlag,
       tax_rate: estimate.taxrate,
       termsAndConditions: estimate.alstQuotTermsCondition,
       unique_identifier: estimate.unique_identifier,

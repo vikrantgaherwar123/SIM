@@ -112,10 +112,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td *ngIf="settings.taxFlagLevel == 1 && showTaXLabel" width="17%">
+                    <td *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0" width="17%">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
-                    <td *ngIf="settings.discountFlagLevel == 0 && showDiscountLabel " width="17%">
+                    <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings " width="17%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="18%" class="last_td">
@@ -145,12 +145,12 @@
                         {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="settings.taxFlagLevel == 1 && item.taxRate" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="settings.discountFlagLevel == 0 && item.discountRate"  [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountRate | number:'2.2-2'}}
                       </div>
@@ -204,7 +204,7 @@
               </div>
 
               <!-- Discount -->
-              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
+              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0) && settings">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
@@ -280,7 +280,7 @@
               </div>
 
               <!-- Gross Total -->
-              <div class="row mx-0 term-cond-label">
+              <div *ngIf="settings" class="row mx-0 term-cond-label">
                 <div class="col-6 text-left">
                   <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                 </div>
@@ -334,7 +334,7 @@
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                    <h5 *ngIf="clientList" class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
                   <div class="col-5 font-custom-book fontsize13">
                     #{{ estimate.quetationNo }}

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store'
 import { InvoiceService } from 'src/app/services/invoice.service';
 import * as invoiceActions from '../../../actions/invoice.action'
 import { AppState } from 'src/app/app.state';
-import { invoice, client, setting } from 'src/app/interface';
+import { invoice, client, setting, recentInvoices } from 'src/app/interface';
 import { ClientService } from 'src/app/services/client.service';
 import { SettingService } from '../../../services/setting.service'
 
@@ -50,6 +50,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
       store.select('client').subscribe(clients => this.clientList = clients)
+      store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
      }
 
   ngOnInit() {
@@ -58,23 +59,24 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.removeEmptyNameClients();
+        // this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+        this.clientList = response.records.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
     }else{
-      this.removeEmptyNameClients();
+      this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
-    this.fetchInvoices();
-    
-    // Fetch Settings every time
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
-    }, err => this.openErrorModal());
+
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
+    if(this.invoiceList.length < 1){
+      this.fetchInvoices();
+    }else{
+      this.route.params.subscribe(params => {
+        if (params.invId) {
+         this.setActiveInv(params.invId);
+        }
+      })
+    }
     
   }
 
@@ -93,8 +95,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       if (response.status === 200) {
         this.invListLoader = false
         this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('invoice').subscribe(invoices => {
-          this.invoiceList = invoices
+        this.store.select('invoice').subscribe(invoice => {
+          this.invoiceList = invoice
         })
       }
       this.route.params.subscribe(params => {
@@ -177,11 +179,12 @@ removeEmptyNameClients(){
     }
     
     }
-  this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+  
 }
 
 getClientName(id) {
-  if(this.clientList){
+  
+  if(this.clientList.length !== 0){
   return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
   }
 }

@@ -1231,6 +1231,9 @@ textarea{
 .inv_date{
   font-size: 18px !important;
 }
-
+.term_col1{
+  padding: 6px 12px !important;
+  color: #1e81e3 !important;
+}
 
 

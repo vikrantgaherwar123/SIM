@@ -105,14 +105,14 @@ export class InvoiceService {
     for (var j = 0; j < data.listItems.length; j++) {
       var temp: any = {
         'uniqueKeyListItem': data.listItems[j].unique_identifier,
-        'productName': data.listItems[j].product_name,
+        'product_name': data.listItems[j].product_name,
         'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
-        'qty': data.listItems[j].quantity,
+        'quantity': data.listItems[j].quantity,
         'unit': data.listItems[j].unit,
         'rate': data.listItems[j].rate,
         'discountRate': data.listItems[j].discount,
         'tax_rate': data.listItems[j].tax_rate,
-        'price': data.listItems[j].total,
+        'total': data.listItems[j].total,
         'taxAmount': data.listItems[j].tax_amount,
         'discountAmount': data.listItems[j].discount_amount,
         'uniqueKeyFKProduct': data.listItems[j].unique_key_fk_product,
@@ -167,4 +167,5 @@ export class InvoiceService {
 
     return tempInvoice
   }
+  
 }
