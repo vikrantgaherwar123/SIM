@@ -144,7 +144,7 @@ export class ProductComponent implements OnInit {
             this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
             this.viewThis(self.productService.changeKeysForStore(response.productList[0]), false)
             this.toasterService.pop('success', 'Product added successfully !!!');
-            this.ngOnInit();
+            // this.ngOnInit();
           } else {
             if (self.activeProduct.enabled) {   // delete
               self.store.dispatch(new productActions.remove(storeIndex))
@@ -152,14 +152,14 @@ export class ProductComponent implements OnInit {
               this.activeProduct = this.productList[0]
               this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
-              this.ngOnInit();
+              // this.ngOnInit();
               // window.location.reload(true);
             } else {    //edit
               self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
               this.viewThis(this.productList[index], false)
               this.toasterService.pop('success','Product Edited Successfully !!!');
-              this.ngOnInit();
+              // this.ngOnInit();
             }
           }
         } else if (response.status != 200) {

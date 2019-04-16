@@ -1,7 +1,7 @@
 <div class="row main-wrapper">
   <!-- Estimate query bar -->
   <div class="col-12 query-container">
-      <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
+      <div class="query-bar query_padding" *ngIf="!changingQuery">
           <div class="row">
             <div class="col-md-9">
               <span>Showing results for:</span> <img src="assets/images/client.png" 
@@ -32,7 +32,7 @@
     
             <div class="col-12 col-md-2">
               <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn" style="margin-top: -4px;height: 34px !important;margin-right: -114px;"
+                class="btn save_btn btn-raised pull-right width20btn change_btn"
               >
                 Change
               </button>
@@ -257,27 +257,27 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.qty}}
+                        {{item.qty | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.rate}}
+                        {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.taxRate}}
+                        {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.discountRate}}
+                        {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.price}}
+                        {{item.price | number:'2.2-2'}}
                       </div>
                     </td>
                   </tr>
@@ -472,7 +472,8 @@
               *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
-                {{ estimate.createDate | date: 'dd MMM' }}
+                <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />
+                <span class="date_month">{{ estimate.createDate  | date: 'MMM' }}</span>
               </div>
 
               <div class="col-10">
@@ -508,19 +509,19 @@
 <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
       <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 

@@ -98,7 +98,7 @@ export class AddEditComponent implements OnInit {
     setting: setting
   }
   noAdjustment:boolean = false;
-  noShippingCharges : boolean = false;
+  noShippingCharges : boolean;
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
@@ -147,7 +147,7 @@ export class AddEditComponent implements OnInit {
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
-    store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
+    // store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
 
 
 
@@ -213,7 +213,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-    if(this.recentInvoiceList.length < 1){
+    if(this.invoiceList.length < 1){
       this.fetchInvoices();
     }
     
@@ -261,10 +261,7 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //to view updated or viewed invoice in view page
-    console.log(this.settings.taxFlagLevel === 1);
-    console.log(this.settings.discountFlagLevel === 1);
-
-    
+    // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
@@ -301,6 +298,8 @@ export class AddEditComponent implements OnInit {
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
         if(this.shippingAddress){
           this.noShippingCharges = true; //activate a class if shipping value is present
+        }else{
+          this.noShippingCharges = false;
         }
         if(this.activeInvoice.adjustment){
           this.noAdjustment = true;
@@ -1487,7 +1486,7 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
@@ -1688,9 +1687,9 @@ export class AddEditComponent implements OnInit {
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('recentInvoices').subscribe(invoices => {
-          this.recentInvoiceList = invoices
+        this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('invoice').subscribe(invoices => {
+          this.invoiceList = invoices
         })
       }
 

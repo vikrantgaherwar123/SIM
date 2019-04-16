@@ -6,8 +6,8 @@
 }
 .create-invoice {
   background: #fff;
-  margin-top: 12px;
-  margin-right: -14px;
+  /* margin-top: 12px; */
+  /* margin-right: -14px; */
   /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24); */
 }
 input, textarea {
@@ -88,6 +88,7 @@ select {
 
 .inputWithIcon input[type=text]{
   padding-left: 15px;
+  margin-top: 6px;
   /* border-right: white; */
 }
 .inputWithIcon{
@@ -142,8 +143,8 @@ select {
   font-weight: 500;
   color: white !important;
 }
-.filter-box[_ngcontent-c5] {
-  background: #ffffff;
+.filter-box{
+  background: #e6ecf0;
   border-bottom: none !important;
 }
 .search_btn{
@@ -152,12 +153,9 @@ select {
 .border_white{
   border-right: 1px solid white;
 }
-
-
-
 .dropdown-toggle::after{
-  font-size: 24px !important;
-  margin-top: 8px !important;
+  font-size: 13px !important;
+  margin-top: 1px !important;
 }
 .form-control:disabled, .form-control[readonly] {
   background-color: white;
@@ -193,7 +191,7 @@ a.morelink {
 }
 .search_div{
   border-left: 1px solid #cecece;
-  margin-top: -17px;
+  margin-top: -14px;
 }
 .add_invoice{
   margin-top: 5px;
@@ -235,7 +233,6 @@ a.morelink {
   }
   
 }
-
 .addLabelBackroundColor{
   color: white;
   background-color: #1a73cc;
@@ -248,7 +245,7 @@ a.morelink {
 .removeaddLabelBackroundColor{
   color: #1a73cc;
   background-color: #d6e8fa !important;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 .removeaddLabelBackroundColor:hover{
   background-color: #d6e8fa !important;
@@ -294,10 +291,57 @@ a.morelink {
 .addPaid_btn{
   font-size: 12px !important;
   height: 30px !important;
-  width: 50px !important;
+  width: 72px !important;
   padding-bottom: 5px !important;
+  margin-right: -18px;
 }
 .mat-button-ripple .mat-ripple:hover{
   background-color:red !important;
 }
-
+.light_font{
+  font-family: helvetica_light !important;
+}
+.dropdown-toggle::after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  content: '\f078';
+  font: normal normal normal 17px/1 FontAwesome;
+  -webkit-text-stroke: 0.2px white;
+  margin-left: -0.745em !important;
+  vertical-align: .255em;
+  border-right: 0 solid transparent !important;
+  border-bottom: 0;
+  border-left: 0 solid transparent !important;
+}
+.pad_left_38{
+  padding-left: 38px;
+  margin-top: 6px;
+}
+.installment_mrg{
+  margin-bottom: 10px;
+  margin-left: -6px;
+  margin-right: -4px;
+  margin-top: -1px;
+  padding: 8px 2px 0px 0px;
+  width: 100% !important;
+}
+.pay_mrg{
+  margin-top: 6px;
+  border-top: 1px solid #c5c5c5;
+}
+.pay_arrow{
+  color: #666666 !important;
+  margin-left: 32px;
+  font-size: 20px;
+}
+.inline {
+  margin-right: 10px;
+  float: left;
+  font-size:11px;
+  padding: 5px 10px 5px 17px !important;
+  margin-bottom: 8px;
+}
+.ui-menu-item a.ui-state-focus {
+  background: #faa;
+  }

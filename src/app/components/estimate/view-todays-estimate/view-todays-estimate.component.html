@@ -104,7 +104,7 @@
                 <thead>
                   <tr class="hd font-custom-bold">
                     <td width="48%">
-                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
+                      <input type="text" id="itemDescLabel" class="bld w-100" disabled style="margin-left: 12px;text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
                     <td width="17%">
                       <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
@@ -128,36 +128,36 @@
                 <tbody class="lineItems">
                   <tr class="row-item" *ngFor="let item of activeEst.alstQuotProduct; let last = last">
                     <td [class.no-border-last]="last">
-                      <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
+                      <div class="text-left product-color" style="margin-left: 12px;border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
                         {{item.productName}}
                       </div>
-                      <div class="text-left mCustomScrollbar style-3" >
+                      <div class="text-left view_desc" >
                         {{item.description}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.qty}}
+                        {{item.qty | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.rate}}
+                        {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.taxRate}}
+                        {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.discountRate}}
+                        {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text-right">
-                        {{item.price}}
+                        {{item.price | number:'2.2-2'}}
                       </div>
                     </td>
                   </tr>
@@ -303,15 +303,7 @@
             (click)="router.navigate(['/estimate/view'])">Search For Invoices
             <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>
-
-            <!-- <button type="button" 
-              class="col-11 side_btn btn btnd btn-custom-2 no-border-radius"
-              (click)="router.navigate(['/estimate/view'])">Search For Estimates
-              <i class="fa fa-search" style="padding: 12px 0px;"></i>
-            </button> -->
-            <!-- Previous Invoices Button ends -->
           </div>
-
           <div class="row" style="margin: 0 auto;">
               <button type="button" style="margin-top: 5px;margin-bottom: 4px;"
                 class="col-11 btn btnd btn-custom-2 no-border-radius side_btn"
@@ -329,7 +321,7 @@
             {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
+          <div class="col-12 px-0">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
             *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
@@ -375,19 +367,19 @@
 <!-- Error MODAL starts -->
 <div id="error-message" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
       <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 

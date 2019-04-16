@@ -1,13 +1,13 @@
 /* Assets form CSS */
 .main-wrapper {
-	background-color: #eff0f1;
+	background-color: #e6ecf0 !important;
 	overflow-x: hidden;
 	min-height: 100vh;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 #main {
   position: relative;
-  background-color: #e6ecf0;
+  background-color: #e6ecf0 !important;
   padding-top: 12px;
   padding-bottom: 10px;
 }
@@ -30,8 +30,8 @@
 	border-left: 1px solid #cecece;
 }
 .filter-box {
-	background: #ededed;
-	/* border-bottom: 1px solid #d2d2d2; */
+	background: #ffffff;
+	height: 116px !important;
 }
 .back-add-list {
 	font-size: 15px;
@@ -52,15 +52,29 @@
 	border: #CCCCCC solid 1px;
 	border-radius: 2px;
 }
+.list-btn:hover{
+	background: #1e81e3;
+}
+.list_drop{
+	width: 38px;
+	height: 38px;
+	padding: 6px 0px 0px 6px;
+	border: #CCCCCC solid 1px;
+	border-radius: 2px;
+}
+.list_drop:hover{
+border: #1a73cc solid 1px;
+}
 .search-box {
 	margin: 8px 0 7px 0;
 }
 .filter-box input {
 	background: #ffffff url(../images/list-icon/search16.png) no-repeat 10px;
 	padding-left: 35px;
-	height: 36px !important;
+	height: 38px !important;
 	color: black;
 	margin-bottom: 20px;
+	font-size: 13px;
 }
 a, a:hover, a:focus {
 	color: #1e81e3 !important;
@@ -127,9 +141,9 @@ a.more {
 	border: 1px solid #ededed;
 }
 .item-form {
-	padding-left: 20px;
+	/* padding-left: 20px; */
 	height: 100%;
-	padding-right: 30px;
+	/* padding-right: 30px; */
 }
 #main .form-group {
 	margin: 0;
@@ -222,12 +236,13 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   margin-bottom: 17px;
 }
 .c-name {
-  font-size: 40px;
+  font-size: 50px;
   font-family: quicksand_bold;
   width: 100%;
   margin-left: 20px;
   text-align: right;
-  margin: 0 auto;
+	margin: 0 auto;
+	text-transform: uppercase;
 }
 .ngx-datepicker-container{
   position: absolute;
@@ -323,7 +338,6 @@ button.add-line-item-button {
 	color: #fff;
 }
 .adr {
-	font-size: 14px;
 	width: 98%;
 }
 .term-cond-label {

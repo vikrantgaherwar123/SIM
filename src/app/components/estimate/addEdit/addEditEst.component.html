@@ -1,10 +1,11 @@
 <div class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
-      <div id="msgInv" *ngIf="viewTodaysEstimate == false" style="padding-right: 13px;" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" *ngIf="viewTodaysEstimate == false" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
         <form #estimateGeneratorAdd="ngForm" id="estimateGeneratorAdd" name="estimateGenerator" class="create-estimate"
           (ngSubmit)="save(estimateGeneratorAdd.valid)">
-          <div class="shadow back p-5" style="border-radius: 2px;">
+          <div class="shadow back p-4" style="border-radius: 2px;">
+            <div class="col-12">
             <div class="vtop text-right">
               <span class="c-name" type="text" id="titleAdd" name="title">
                 {{settings.mTvEstimate ? settings.mTvEstimate : 'EST_LABEL' | translate}}
@@ -13,9 +14,8 @@
 
             <!-- Estimate Details Header -->
             <div class="row">
-              <div class="col-sm-6 px-0" id="clientDataAdd" name="clientData">
+              <div class="col-sm-6" id="clientDataAdd" name="clientData">
                     <div class="row">
-
                       <!-- Billing To -->
                       <div class="col-11">
                           <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
@@ -26,8 +26,8 @@
                             <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
                               matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                             >
-                            <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
+                            <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
+                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
                             
                             <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                             <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
@@ -71,7 +71,7 @@
                             </div>
                           </div>
                           <div class="col-6 pr-0">
-                            <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                            <span style="padding-left: 45px;" type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                               {{settings.shipping ? settings.shipping : 'Shipping'}} Address
                             </span>
                             <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
@@ -81,17 +81,17 @@
                       </div>
                     </div>
                   </div>
-
-              <div class="col-12 col-sm-6" id="estDataAdd">
+                  <div class="col-2"></div>
+              <div class="col-12 col-sm-4" id="estDataAdd">
                 <div class="row"> 
                   <!-- Estimate Number and Dates -->
-                  <div class="col-6 offset-md-2 col-md-4" style="margin-top: 1px;">
+                  <div class="col-5" style="margin-top: 5px;">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No.</span>
                   </div>
-                  <div class="col-6">
+                  <div class="col-7">
                     <form #estNumberForm="ngForm" name="estNumberForm">
                       <div class="form-group" [class.has-error]="(estNumberForm.submitted || estNumberForm.estimateNumber ) && estNumberForm.estimateNumber.error.required">
-                        <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0"
+                        <input type="text" id="estimateNumber" name="estimateNumber" class="form-control pr-0 light_font"
                           [(ngModel)]="activeEstimate.estimate_number" required onfocus="this.select()" />
                         <div class="form-error" *ngIf="estNumberForm.submitted || estNumberForm.estimateNumber">
                           <span *ngIf="estNumberForm.estimateNumber.error.required"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} No. required</span>
@@ -101,12 +101,12 @@
                   </div>
                 </div>
 
-                <div class="row" style="margin-top: 1px;">
-                  <div class="col-6 offset-md-2 col-md-4">
+                <div class="row">
+                  <div class="col-5" style="margin-top: 5px;">
                     <span class="font-custom-bold text-left w-100"> {{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
-                  <div class="col-6">
-                    <input type="text" class="form-control" [formControl]="estimateDate" matInput [matDatepicker]="picker"
+                  <div class="col-7">
+                    <input type="text" class="form-control light_font" [formControl]="estimateDate" matInput [matDatepicker]="picker"
                       required (click)="picker.open()" style="margin-top: 4px !important;">
                     <mat-datepicker #picker></mat-datepicker>
                     <div class="form-error" *ngIf="estimateGeneratorAdd.submitted || estimateGeneratorAdd.touched">
@@ -145,8 +145,8 @@
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text_right" name="amount" disabled
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" />
                     </td>
-                    <td width="5%" class="text-center">Edit</td>
-                    <td width="6%" class="text-center">Delete</td>
+                    <td width="5%" class="text-right">Edit</td>
+                    <td width="6%" class="last_td">Delete</td>
                   </tr>
                 </thead>
 
@@ -169,27 +169,27 @@
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.quantity | number:'2.'}}
+                        {{item.quantity | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.rate | number:'2.'}}
+                        {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noTaxOnItem || activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.tax_rate | number:'2.'}}
+                        {{item.tax_rate | number:'1.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="noDiscountOnItem || activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
-                        {{item.discount | number:'2.'}}
+                        {{item.discount | number:'1.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.total | number:'2.'}}
+                        {{item.total | number:'1.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
@@ -211,8 +211,8 @@
                   <!-- Select Item for estimate input -->
                   <tr *ngIf="disableProductText === true" class="row-item item_box_shadow" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="text" name="product-name" class="form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
+                      <div class="form-group" style="padding: 4px 2px;"> 
+                        <input type="text" name="product-name" class="mrg_item_input form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
                         placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
                           tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
 
@@ -225,10 +225,10 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 60px; max-height: 80px; height: 73px;"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mrg_item_input mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 55px; max-height: 80px; height: 73px;"
                              [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
                             onfocus="this.select()"></textarea>
-                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="black form-control font_wg_none mCustomScrollbar style-3" elastic
+                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="mrg_item_input black form-control font_wg_none mCustomScrollbar style-3" elastic
                                 style="margin-top: 3px;height: 69px !important;overflow-y: auto !important;"
                                 placeholder="Description" onfocus="this.select()"
                           ></textarea>
@@ -237,18 +237,18 @@
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="2" name="itemQty" id="qty" step="any" class="form-control text_right  height_40"
                           min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
-                        style="margin-top: 23px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
+                        style="margin-top: 10px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
                         Add Item
                       </button>
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last">
-                      <div class="form-group">
+                      <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="3" name="itemRate" step="any" class="form-control text_right  height_40" min="0.01"
                           [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
                       </div>
@@ -257,10 +257,10 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="noTaxOnItem || activeEstimate.tax_on_item == 0">
                       <div class="input-group">
                         <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_right height_40" min=0 max=100
-                          [(ngModel)]="activeItem.tax_rate" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
+                          [(ngModel)]="activeItem.tax_rate" placeholder="%" (keyup)="calculateTotal()" onfocus="this.select()" />
+                        <!-- <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div>
+                        </div> -->
                       </div>
                       <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                     </td>
@@ -271,23 +271,23 @@
                           max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div>
+                        </div> -->
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
                     </td>
 
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                      <div class="form-group">
-                        <input type="number" step="any" class="form-control text_right height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
-                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled style="background-color: #eaeaea !important;border: 0px solid #ced4da !important"
+                      <div class="form-group" style="padding: 4px 2px;">
+                        <input type="number" step="any" class="amount_box form-control text_right height_40" title="{{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} is calculated automatically."
+                          name="itemTotal" [(ngModel)]="activeItem.total" style="border: none;" disabled
                           convert-decimal onfocus="this.select()" readonly />
                       </div>
                     </td>
                     <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                     </td>
-                    <td class="select_cross_icon" [class.no-border-last]="last">
-                      <img (click)="disableProductText=false" class="img_hover" Title="Delete" src="assets/images/cross_grey.png" alt="logo"
-                        style="height: 24px;margin-top: 2px;">
+                    <td class="select_item_cross" [class.no-border-last]="last">
+                      <img (click)="disableProductText=false" class="img_hover hg_20" Title="Delete" src="assets/images/cross_grey.png" alt="logo"
+                        style="margin-top: 2px;margin-right: 7px;">
                     </td>
                   </tr>
                   <button *ngIf="disableProductText === false" type="button" style="width: 130px !important;" class="change_bg btn save_btn btn-raised add_new_btn"
@@ -350,11 +350,10 @@
                 </div>
 
                 <div class="col-12 px-0" style="font-size: 13px;">
-                  <div class="form-group" style="margin-top: 10px;">
-                    <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0">
-                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;margin-top: -6px;">
+                  <div class="form-group">
+                    <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0 term_border">
+                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
-                      <hr style="width: 403px;margin-top: 6px !important;color: #ced4da;">
                       </div>
                       <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
@@ -362,7 +361,7 @@
                       <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)"
                         style="cursor:pointer;">
                         <a class="closeicon show float-right">
-                          <img src="assets/images/cross_grey.png" Title="Delete Term"
+                          <img src="assets/images/cross_grey.png" Title="Delete Term" style="margin-top: 0px;"
                             class="img_hover hg_16 del set-color swap-on-hover__front-image" alt="">
                         </a>
                       </div>
@@ -428,7 +427,7 @@
                     <form #form_discount="ngForm" name="form_discount">
                       <div class="input-group addon-input">
                           <input type="number" id="percentage_input" name="percentage_input" min="0" max="100" *ngIf="activeEstimate.percentage_flag == 1"
-                          step="any" class="form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
+                          step="any" class="col-3 form-control" onfocus="this.select()" [(ngModel)]="activeEstimate.percentage_value"
                           (keyup)="calculateEstimate()" (ngModelChange)="dataChanged($event)" />
 
                         <input type="number" id="discount_input" name="discount_input" step="any" min="0.00" [max]="activeEstimate.gross_amount"
@@ -596,7 +595,9 @@
                 </div>
               </div>
             </div>
+          
           </div>
+        </div>
         </form>
       </div>
 
@@ -628,7 +629,7 @@
 
         <!-- recently added Estimate -->
         
-        <div class="row" style="margin-top: 14px;">
+        <div class="row" style="margin-top: 20px;">
          
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
             {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
@@ -640,8 +641,8 @@
             *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="goView(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
-                <span style="font-size: 18px;">{{ estimate.createDate  | date: 'dd' }}</span><br />
-                <span style="color: #8c9299;font-size: 10px;">{{ estimate.createDate  | date: 'MMM' }}</span>
+                <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />
+                <span class="date_month">{{ estimate.createDate  | date: 'MMM' }}</span>
               </div>
     
               <div class="col-10">
@@ -972,19 +973,19 @@
 <!-- Error MODAL starts -->
 <div id="error-message" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
       <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 

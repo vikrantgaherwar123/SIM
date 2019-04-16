@@ -47,7 +47,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
     private estimateService: EstimateService,
     private settingService: SettingService,
     private store: Store<AppState>,private clientService: ClientService,) {
-
     store.select('client').subscribe(clients => this.clientList = clients)
    }
 

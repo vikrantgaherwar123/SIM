@@ -10,7 +10,7 @@
                     <span>Custom Field Name</span>
                   </div>
                   <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                    <span>Banking Datails</span>
+                    <span>Banking Details</span>
                   </div>
                   <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
                     <span>Terms & Conditions</span>
@@ -21,8 +21,8 @@
           </form>
         </div>
   <div class="col-9" id="main">
-    <div class="back"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
-      <form class="form-horizontal" name="userForm" #form="ngForm" style="min-height: 1106px;">
+    <div class="back" style="height: 1293px;"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
+      <form class="form-horizontal" name="userForm" #form="ngForm">
         <div class="custom-field-form">
           <div style="padding-top: 25px;">
             <div align="center">
@@ -36,7 +36,7 @@
                 </span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 18px;">
+              <div class="col-12" style="margin-bottom: 10px;">
                 <div class="form-group">
                   <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
                     class="form-control" placeholder="Invoice" onfocus="this.select()"
@@ -230,12 +230,12 @@
               <div class="col-12" style="margin-bottom: 10px;">
                 <div style="width: 300px;">
                   <button type="button" (click)="cancel();"
-                    class="btn btn-custom-1 btn-raised no-border-radius pull-left width10btn ml-2 font-custom-bold"
+                    class="btn save_btn btn-raised width25btn pull-right pull-left change_bg"
                   >
                     CANCEL
                   </button>
                   <button type="submit" id="customSubmit" (click)="save(form.valid)"
-                    class="btn save_btn btn-raised width25btn pull-right ml-2" style="height: 29px !important;padding-top: 4px !important;"
+                    class="btn save_btn btn-raised width25btn pull-right ml-2"
                   >
                     SAVE
                   </button>
@@ -252,19 +252,19 @@
 <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
       <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 

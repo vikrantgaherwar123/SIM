@@ -1,5 +1,5 @@
 .header {
-  border-bottom: 2px solid #dee3e6;/*e3e3e3*/
+  border-bottom: 2px solid #e4e7e9;/*e3e3e3*/
   background-color: #ffffff;
   height: 56px;
   /* padding-top: 10px;
@@ -29,7 +29,6 @@
 
 .menu_list{
   font-size: 14px;
-  padding: 1px 0px 1px 2px;
   font-weight: bold;
   margin-left: -11px;
 }
@@ -61,7 +60,7 @@
 .navbtn {
   border: none;
   outline: none;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   cursor: pointer;
   font-size: 18px;
   padding: 18px 7px 13px 5px;
@@ -69,14 +68,16 @@
 }
 
 .menu_hover_div{
-  padding: 5px 9px 9px 13px;
-  margin-left: -4px;
-  margin-top: -7px;
+  width: 31px;
+  height: 28px;
+  /* padding: 5px 9px 9px 13px; */
+  /* margin-left: -4px;
+  margin-top: -7px; */
 }
 .menu_hover_div:hover{
-  padding: 5px 9px 9px 13px;
+  /* padding: 5px 9px 9px 13px;
   margin-left: -4px;
-  margin-top: -7px;
+  margin-top: -7px; */
   border:2px solid #1a73cc;
   /* border-radius: 5px; */
 }
@@ -156,7 +157,7 @@
 
 .menu_bar{
   padding: 21px 2px 17px 19px;
-  margin-left: -4px;
+  margin-left: -19px;
 }
 .menu_icon{
   color: white;
@@ -167,6 +168,14 @@
 .make_bg_blue{
   background-color:#1a73cc;
   width: 66px;
+}
+.logout-user{
+  font-size: 24px;
+  color: #1a73cc;
+}
+.logout-user:hover{
+  font-size: 24px;
+  color: #1e81e3;
 }
 
 

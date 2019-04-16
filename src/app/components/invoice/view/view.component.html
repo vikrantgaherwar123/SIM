@@ -1,10 +1,10 @@
 <div class="row main-wrapper" id="hovereffect">
   <!-- Invoice query bar -->
   <div class="col-12 query-container">
-      <div class="query-bar" *ngIf="!changingQuery" style="padding: 10px 2px 0px 24px !important; ">
+      <div class="query-bar query_padding" *ngIf="!changingQuery">
           <div class="row">
             <div class="col-md-9">
-              <span style="color: grey;">Showing results for:</span> <img src="assets/images/menu-logo/client.png" 
+              <span style="color: grey;margin-left: -20px;">Showing results for:</span> <img src="assets/images/menu-logo/client.png" 
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#1a73cc">Client: </span><span>
                 <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
                 <span *ngIf="invoiceQueryForm.client.value">
@@ -38,15 +38,14 @@
     
             <div class="col-12 col-md-2">
               <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn" style="margin-top: -4px;height: 34px !important;margin-right: -114px;"
-              >
+                class="btn save_btn btn-raised pull-right width20btn change_btn">
                 Change
               </button>
             </div>
           </div>
         </div>
     </div>
-    <div class="w-100" style="padding-top: 56px">
+    <div class="w-100" style="padding-top: 44px">
       <div class="row mx-0">
         
   
@@ -54,7 +53,7 @@
         <div id="invMain" name="invMain" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen hide"
           *ngIf="activeInv"
         >
-          <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back">
+          <form id="invoiceGenerator" name="invoiceGenerator" class="shadow p-4 back" style="margin-top: -9px;">
             <!-- Buttons -->
             <div class="row">
               <div class="col-12">
@@ -197,7 +196,7 @@
                           disabled
                         >
                       </td>
-                      <td width="5%" class="last_td_padding">
+                      <td width="10%" class="last_td">
                         <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text_right" style="text-align:right;" disabled
                           value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}"
                         >
@@ -222,27 +221,27 @@
   
                       <td [class.no-border-last]="last" style="vertical-align: initial;">
                         <div class="text_right">
-                          {{item.qty | number:'2.'}}
+                          {{item.qty | number:'1.'}}
                         </div>
                       </td>
                       <td [class.no-border-last]="last" style="vertical-align: initial;">
                         <div class="text_right">
-                          {{item.rate | number:'2.'}}
+                          {{item.rate | number:'2.2-2'}}
                         </div>
                       </td>
                       <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                         <div class="text_right">
-                          {{item.tax_rate | number:'2.'}}
+                          {{item.tax_rate | number:'2.2-2'}}
                         </div>
                       </td>
                       <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                         <div class="text_right">
-                          {{item.discountRate | number:'2.'}} 
+                          {{item.discountRate | number:'2.2-2'}} 
                         </div>
                       </td>
-                      <td [class.no-border-last]="last" class="last_td_padding" style="vertical-align: initial;">
+                      <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                         <div class="text_right">
-                          {{item.price | number:'2.'}}
+                          {{item.price | number:'2.2-2'}}
                         </div>
                       </td>
                     </tr>
@@ -463,8 +462,9 @@
                 *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true | filter:invSearchTerm  | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
-                <div class="col-2 list-date font-custom-bold fontsize13">
-                  {{ invoice.created_date | date: 'dd MMM' }}
+                <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
+                  <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                  <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
                 </div>
       
                 <div class="col-10">
@@ -488,7 +488,7 @@
               </div>
             </div>
             <div *ngIf="!activeInv" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
-              <img src="assets/images/no_data_found.png" style="width: 255px;">
+              <img src="assets/images/no_data_found.png" style="width: 255px;margin-top: 80px;">
             </div>
           </div>
         </div>
@@ -558,31 +558,7 @@
             <mat-datepicker #picker4></mat-datepicker>
           </div>
         </div>
-        <!-- <div class="row mr_right">
-          <div class="edit-setting">
-            <form>
-                <div class="row" style="padding: 10px 0px 0px 32px;">
-                  <div style="font-size: 13px;color: #32475b;margin-bottom: 6px;padding-left: 14px;">Payment</div>
-                  <div class="col-12 taxradio">
-                    <input type="radio" id="taxonItem" name="taxon" checked>
-                    <label for="taxonItem" class="taxonitem fontsize13 border-right-none font-custom-bold">
-                      All Invoices
-                    </label>
         
-                    <input type="radio" id="taxonBill" name="taxon">
-                    <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
-                        {{settings.paid ? settings.paid : 'Paid'}}
-                    </label>
-        
-                    <input type="radio" id="taxdisabled" name="taxon">
-                    <label for="taxdisabled" class="disabled fontsize13 border-left-none font-custom-bold">
-                      Unpaid Invoices
-                    </label>
-                  </div>
-                </div>
-              </form>
-          </div>
-        </div> -->
         <div class="modal-footer">
           <button (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'" class="btn btn-success font-custom pull-right width20btn save_btn" type="reset" style="padding-right: 14px;background-color: #f3f2f1 !important; border: none !important;" value="reset">
             <img src="assets/images/delete_in_dark_grey.png"  alt="logo" style="height: 20px;padding-right: 4px;padding-bottom: 3px;">
@@ -602,19 +578,19 @@
     <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
 data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog" style="max-width: 435px;margin-top: 135px;">
-  <div class="modal-content" style="border: 0px solid rgba(0,0,0,.2);border-radius: 1px;">
-    <div class="modal-header" style="border-bottom: 0px solid #e9ecef;">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
       <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="erroe_para">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer" style="border-top: 0px solid #e9ecef;">
-      <button type="button" class="btn save_btn btn-raised width25btn center font-weight-bold"
-        data-dismiss="modal" aria-label="Close" style="margin-top: -34px;;opacity: unset;">
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
         OK
       </button>
 
