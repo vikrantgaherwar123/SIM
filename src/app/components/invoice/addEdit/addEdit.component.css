@@ -345,3 +345,11 @@ a.morelink {
 .ui-menu-item a.ui-state-focus {
   background: #faa;
   }
+  /* term modal */
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 9px 23px 10px 10px !important;
+    border-top: 1px solid #e9ecef;
+}
