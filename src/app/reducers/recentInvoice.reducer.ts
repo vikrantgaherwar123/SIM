@@ -11,9 +11,20 @@ export function recentInvoice(state = initialState, action: InvoiceActions.Actio
 	switch (action.type) {
         case InvoiceActions.RECENTINVOICE:
         state.push(...action.payload)
+		return state
+
+		case InvoiceActions.EDITRECENTINVOICE:
+		state[action.payload.index] = action.payload.value
+		return state
+
+		case InvoiceActions.RESETRECENTINVOICE:
+        return action.payload
+		
+		case InvoiceActions.REMOVERECENTINVOICE:
+        state.splice(action.payload, 1)
         return state
 
 		default:
-			return state
+		return state
 	}
 }
