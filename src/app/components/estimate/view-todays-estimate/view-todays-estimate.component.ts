@@ -117,6 +117,23 @@ export class ViewTodaysEstimateComponent implements OnInit {
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
 
+      if (this.activeEst.alstQuotProduct) {
+        var temp = []
+        for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+          temp.push({
+            description: this.activeEst.alstQuotProduct[i].description,
+            discountRate: this.activeEst.alstQuotProduct[i].discountRate ? this.activeEst.alstQuotProduct[i].discountRate :this.activeEst.alstQuotProduct[i].discount,
+            productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
+            qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
+            rate: this.activeEst.alstQuotProduct[i].rate,
+            taxRate: this.activeEst.alstQuotProduct[i].taxRate,
+            price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
+            unit: this.activeEst.alstQuotProduct[i].unit,
+          })
+        }
+        this.activeEst.alstQuotProduct = temp
+      }
+
       for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
         if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
           this.noTaxOnItem = true;

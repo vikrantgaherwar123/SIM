@@ -135,30 +135,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         }
         this.activeInv.listItems = temp
       }
-    
-  //   else{
-
-  //   // Change list item keys compatible
-  //   if (this.activeInv.listItems) {
-  //     var temp = []
-  //     for (let i = 0; i < this.activeInv.listItems.length; i++) {
-  //       temp.push({
-  //         description: this.activeInv.listItems[i].description,
-  //         discount: this.activeInv.listItems[i].discount,
-  //         productName: this.activeInv.listItems[i].productName,
-  //         qty: this.activeInv.listItems[i].qty,
-  //         rate: this.activeInv.listItems[i].rate,
-  //         tax_rate: this.activeInv.listItems[i].tax_rate,
-  //         total: this.activeInv.listItems[i].total,
-  //         unique_identifier: this.activeInv.listItems[i].unique_identifier,
-  //         unit: this.activeInv.listItems[i].unit,
-  //       })
-  //     }
-  //     this.activeInv.listItems = temp
-      
-  //   }
-
-  // }
 
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
