@@ -11,7 +11,7 @@ import { retryWhen, flatMap } from 'rxjs/operators';
 import { interval, throwError, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices } from '../../../interface'
+import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices, estimate } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
@@ -68,6 +68,7 @@ export class AddEditComponent implements OnInit {
 
 
   invoiceList: invoice[]
+  estimateList: estimate[]
   private clientList: client[]
   private allClientList: client[]
   activeClient: any = {}
@@ -150,6 +151,7 @@ export class AddEditComponent implements OnInit {
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
     store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
+    store.select('estimate').subscribe(estimates => this.estimateList = estimates)
 
 
 
@@ -269,11 +271,13 @@ export class AddEditComponent implements OnInit {
     
     this.commonSettingsInit()
     this.shippingChange = false;
-    // Fetch selected invoice
     this.invoiceListLoading = true;
-    
-    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
-    this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId);
+    // Fetch selected invoice
+    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
+    this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId); //when came from todays component
+    if(this.recentInvoice){
+      this.activeInvoice = this.recentInvoice;
+    }
     if(this.activeInvoice){
 
       this.invoiceListLoading = false;
@@ -297,8 +301,10 @@ export class AddEditComponent implements OnInit {
           this.noTaxOnItem = false;
         }
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-        if(this.shippingAddress){
+        if(this.activeInvoice.shipping_charges){
           this.noShippingCharges = true; //activate a class if shipping value is present
+        }else{
+          this.noShippingCharges = false;
         }
         if(this.activeInvoice.adjustment){
           this.noAdjustment = true;
@@ -309,7 +315,7 @@ export class AddEditComponent implements OnInit {
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
             temp.push({
               description: this.activeInvoice.listItems[i].description,
-              discount: this.activeInvoice.listItems[i].discountRate,
+              discount: this.activeInvoice.listItems[i].discount,
               product_name: this.activeInvoice.listItems[i].productName,
               quantity: this.activeInvoice.listItems[i].qty,
               rate: this.activeInvoice.listItems[i].rate,
@@ -353,7 +359,7 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.discount = null
         }
         if(this.activeInvoice.shipping_charges == 0) {
-          this.activeInvoice.shipping_charges = undefined
+          this.noShippingCharges = false;
         }
         if(this.activeInvoice.adjustment == 0) {
           this.activeInvoice.adjustment = null
@@ -403,11 +409,11 @@ export class AddEditComponent implements OnInit {
               this.noTaxOnItem = false;
             }
             this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-            if(this.shippingAddress){
-              this.noShippingCharges = true; //activate a class if shipping value is present
-            }else{
-              this.noShippingCharges = false;
-            }
+            // if(this.shippingAddress){
+            //   this.noShippingCharges = true; //activate a class if shipping value is present
+            // }else{
+            //   this.noShippingCharges = false;
+            // }
             if(this.activeInvoice.adjustment){
               this.noAdjustment = true;
             }
@@ -461,17 +467,11 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.discount = null
             }
             if(this.activeInvoice.shipping_charges == 0) {
-              this.activeInvoice.shipping_charges = undefined
+              this.noShippingCharges = false;
             }
             if(this.activeInvoice.adjustment == 0) {
               this.activeInvoice.adjustment = null
             }
-            //to show when editing if value exists
-            // if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
-            //   this.activeInvoice.tax_on_item = 0;
-            // }else{
-            //   this.activeInvoice.tax_on_item = 1;
-            // }
     
             this.changeDueDate(this.activeInvoice.due_date_flag.toString())
             // Wait for clients to be loaded before setting active client
@@ -483,146 +483,141 @@ export class AddEditComponent implements OnInit {
                 clearInterval(ref)
               }
             }, 50)
+          }
+          //MAKE INVOICE
+          else {
+            this.activeInvoice = <invoice>{}
+            this.incrementInvNo = true;
+            //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
+            this.edit = false;
+            this.estimateListLoading = true;
+            this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
+              this.estimateListLoading = false;
+              if (estimate.records !== null) {
+                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+                this.shippingAddressEditMode = true
+                this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+                if (this.activeEstimate.taxList){
+                  this.activeInvoice.taxList = this.activeEstimate.taxList;
+                }
+                //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
+                if(this.activeEstimate.tax_rate!==0){
+                  this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+                  this.activeInvoice.tax_on_item=1;
+                }
+                if(this.activeEstimate.discount!==0){
+                  this.activeInvoice.discount_on_item=0;
+                }
+        
+                // Change list item keys compatible
+                if (this.activeEstimate.listItems) {
+                  var temp = []
+                  for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                    temp.push({
+                      description: this.activeEstimate.listItems[i].description,
+                      discount: this.activeEstimate.listItems[i].discountRate,
+                      product_name: this.activeEstimate.listItems[i].productName,
+                      quantity: this.activeEstimate.listItems[i].qty,
+                      rate: this.activeEstimate.listItems[i].rate,
+                      tax_rate: this.activeEstimate.listItems[i].taxRate,
+                      total: this.activeEstimate.listItems[i].price,
+                      unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                      unit: this.activeEstimate.listItems[i].unit
+                    })
+                  }
+                  this.activeEstimate.listItems = temp
+                  this.activeInvoice.listItems = this.activeEstimate.listItems;
+                }
+                // Change TnC keys compatible
+                if (this.activeEstimate.termsAndConditions) {
+                  temp = []
+                  for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+                    temp.push({
+                      orgId: this.activeEstimate.termsAndConditions[i].orgId,
+                      terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+                      uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+                      _id: this.activeEstimate.termsAndConditions[i]._id
+                    })
+                  }
+                  this.activeEstimate.termsAndConditions = temp
+                  this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+                } else if (this.termList.length < 1) {
+                  this.tncLoading = true;
+                  this.termConditionService.fetch().subscribe((response: response) => {
+                    this.tncLoading = false;
+                    if (response.termsAndConditionList) {
+                      this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+                    }
+                    this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+                    this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+                  },error => this.openErrorModal())
+                } else {
+                  this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
+                  this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
+                }
+    
+                //set reference no of estimate
+                this.activeInvoice.reference =  this.activeEstimate.estimate_number;
+                this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
+                this.activeInvoice.amount = this.activeEstimate.amount;
+                this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
+                this.activeInvoice.discount = this.activeEstimate.discount;
+                
+                
+                this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
+                this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+                this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
+    
+                this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
+                this.activeInvoice.adjustment = this.activeEstimate.adjustment;
+                this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
+                
+                // Set Dates
+                this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
+                var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+                this.invoiceDate.reset(new Date(y, (m - 1), d))
+    
+                
+                // Tax and discounts show or hide
+                if (this.activeEstimate.discount == 0) {
+                  this.activeInvoice.percentage_flag = null
+                }
+                if (this.activeEstimate.shipping_charges == 0) {
+                  this.activeInvoice.shipping_charges = undefined
+                }
+                if (this.activeEstimate.adjustment == 0) {
+                  this.activeInvoice.adjustment = null
+                }
+                if (this.activeEstimate.tax_amount == 0) {
+                  this.activeInvoice.tax_rate = null
+                }
+        
+                
+                // Wait for clients to be loaded before setting active client
+                var ref = setInterval(() => {
+                  if (this.allClientList.length > 0) {
+                    //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
+                    this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
+                    let uid = this.activeInvoice.unique_key_fk_client
+                    this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                    this.billingTo.reset(this.activeClient)
+                    clearInterval(ref)
+                  }
+                }, 50)
+              } else {
+                this.toasterService.pop('failure', 'Invalid estimate id');
+                this.router.navigate(['/estimate/view'])
+              }
+            },error => this.openErrorModal())
+            // this.toasterService.pop('failure', 'Invalid invoice id!');
+            // this.router.navigate(['/invoice/view'])
           } 
           return false
         },
         err => this.openErrorModal());
 
       } 
-       else {
-        this.incrementInvNo = true;
-        //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
-        this.edit = false;
-        this.estimateListLoading = true;
-        this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
-          this.estimateListLoading = false;
-          if (estimate.records !== null) {
-            this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-            this.shippingAddressEditMode = true
-            this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-            if (this.activeEstimate.taxList){
-              this.activeInvoice.taxList = this.activeEstimate.taxList;
-            }
-            //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
-            if(this.activeEstimate.tax_rate!==0){
-              this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-              this.activeInvoice.tax_on_item=1;
-            }
-            if(this.activeEstimate.discount!==0){
-              this.activeInvoice.discount_on_item=0;
-            }
-    
-            // Change list item keys compatible
-            if (this.activeEstimate.listItems) {
-              var temp = []
-              for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
-                temp.push({
-                  description: this.activeEstimate.listItems[i].description,
-                  discount: this.activeEstimate.listItems[i].discountRate,
-                  product_name: this.activeEstimate.listItems[i].productName,
-                  quantity: this.activeEstimate.listItems[i].qty,
-                  rate: this.activeEstimate.listItems[i].rate,
-                  tax_rate: this.activeEstimate.listItems[i].taxRate,
-                  total: this.activeEstimate.listItems[i].price,
-                  unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-                  unit: this.activeEstimate.listItems[i].unit
-                })
-              }
-              this.activeEstimate.listItems = temp
-              this.activeInvoice.listItems = this.activeEstimate.listItems;
-            }
-            // Change TnC keys compatible
-            if (this.activeEstimate.termsAndConditions) {
-              temp = []
-              for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
-                temp.push({
-                  orgId: this.activeEstimate.termsAndConditions[i].orgId,
-                  terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
-                  uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
-                  _id: this.activeEstimate.termsAndConditions[i]._id
-                })
-              }
-              this.activeEstimate.termsAndConditions = temp
-              this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-            } else if (this.termList.length < 1) {
-              this.tncLoading = true;
-              this.termConditionService.fetch().subscribe((response: response) => {
-                this.tncLoading = false;
-                if (response.termsAndConditionList) {
-                  this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-                }
-                this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-                this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-              },error => this.openErrorModal())
-            } else {
-              this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-              this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-            }
-
-            //set reference no of estimate
-            this.activeInvoice.reference =  this.activeEstimate.estimate_number;
-            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
-            this.activeInvoice.amount = this.activeEstimate.amount;
-            this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
-            this.activeInvoice.discount = this.activeEstimate.discount;
-            
-            
-            this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
-            this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-            this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
-
-            this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
-            this.activeInvoice.adjustment = this.activeEstimate.adjustment;
-            this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
-            var currentDate = Date.now();
-            this.formatedDate = currentDate;
-            // // //to show when editing if value exists
-            // if (this.activeInvoice.tax_amount == 0 || this.activeInvoice.tax_rate === 0) {
-            //   this.activeInvoice.tax_on_item = 0;
-            //   this.activeInvoice.tax_rate = null;
-            // } else {
-            //   this.activeInvoice.tax_on_item = 1;
-            // }
-            // Set Dates
-            this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
-            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
-            this.invoiceDate.reset(new Date(y, (m - 1), d))
-
-            
-            // Tax and discounts show or hide
-            if (this.activeEstimate.discount == 0) {
-              this.activeInvoice.percentage_flag = null
-            }
-            if (this.activeEstimate.shipping_charges == 0) {
-              this.activeInvoice.shipping_charges = undefined
-            }
-            if (this.activeEstimate.adjustment == 0) {
-              this.activeInvoice.adjustment = null
-            }
-            if (this.activeEstimate.tax_amount == 0) {
-              this.activeInvoice.tax_rate = null
-            }
-    
-            
-            // Wait for clients to be loaded before setting active client
-            var ref = setInterval(() => {
-              if (this.allClientList.length > 0) {
-                //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
-                this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
-                let uid = this.activeInvoice.unique_key_fk_client
-                this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
-                this.billingTo.reset(this.activeClient)
-                clearInterval(ref)
-              }
-            }, 50)
-          } else {
-            this.toasterService.pop('failure', 'Invalid estimate id');
-            this.router.navigate(['/estimate/view'])
-          }
-        },error => this.openErrorModal())
-        // this.toasterService.pop('failure', 'Invalid invoice id!');
-        // this.router.navigate(['/invoice/view'])
-      }
+       
   }
 
   commonSettingsInit() {
@@ -1477,16 +1472,24 @@ export class AddEditComponent implements OnInit {
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
             if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
               self.store.dispatch(new invoiceActions.remove(index))
-              this.store.dispatch(new invoiceActions.removeRecentInvoice(index + 1))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
             } else if(this.activeInvoice.deleted_flag !== 1 ) {
               self.store.dispatch(new invoiceActions.edit({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
             }
           })
+          this.store.select('recentInvoices').subscribe(invs => {
+            let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
+            //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
+            if (result.invoiceList[0].deleted_flag == 1) {
+              this.store.dispatch(new invoiceActions.removeRecentInvoice(index))
+              this.isDeleted = true;
+            } else if(this.activeInvoice.deleted_flag !== 1 ) {
+              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])}))
+            }
+          })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
@@ -1494,7 +1497,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1502,6 +1505,7 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else if(this.activeInvoice.deleted_flag !== 1) {
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           //set recently added invoice list in store
           // this.fetchInvoices();
           this.toasterService.pop('success', 'Invoice saved successfully');

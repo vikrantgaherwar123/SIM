@@ -13,6 +13,10 @@ export function recentInvoice(state = initialState, action: InvoiceActions.Actio
         state.push(...action.payload)
 		return state
 
+		case InvoiceActions.EDITRECENTINVOICE:
+		state[action.payload.index] = action.payload.value
+		return state
+
 		case InvoiceActions.RESETRECENTINVOICE:
         return action.payload
 		

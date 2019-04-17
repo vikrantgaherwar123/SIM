@@ -177,7 +177,7 @@
                 <div class="col-12 col-md-3">
                   <span style="font-size: 11px;color: #2e2e2e;">Select Country</span>
                   <div class="form-group" *ngIf="countries?.length>0">
-                    <select name="country-symbol" class="form-control country_select bd_none"
+                    <select name="country-symbol" class="form-control country_select"
                       [ngModel]='activeSettings.countryIndex' (change)="setCountry($event.target.value)"
                     >
                       <option [value]="country.id" *ngFor="let country of countries; let index = index">
@@ -212,7 +212,7 @@
             <!-- Additional Taxes -->
             <div class="row labelSpacing" style="margin-top: 30px;">
               <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">
-                <button class="btn save_btn btn-raised pull-right ml-2 width12perbtn add_tax_btn" data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</button>
+                Additional Taxes
               </label>
               <form class="col-9" name="addTaxes">
                 <div class="form-group font-custom-bold fontsize18">
@@ -265,12 +265,12 @@
             <div class="form-group labelSpacing">
               <div class="row">
                 <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText"></label>
-                <div class="col-md-9 row mx-0">
+                <div class="col-md-9 row">
                   <div class="col-12 col-md-4" id="additionalTax{{index}}"
                     *ngFor="let taxNames of activeSettings.alstTaxName; let index = index">
-                    <input class="form-control bd_none" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
+                    <input class="form-control all_tax" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
                       [(ngModel)]="taxNames.taxName" required onfocus="this.select()"
-                      style="margin-bottom: 10px;height:38px !important" />
+                      />
                   </div>
                 </div>
               </div>

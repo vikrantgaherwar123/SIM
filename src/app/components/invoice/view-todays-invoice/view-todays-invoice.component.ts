@@ -43,7 +43,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
-  fetchrecentInvoice: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -72,7 +71,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     if(this.recentInvoiceList.length < 1){
-      this.fetchrecentInvoice = true;
       this.fetchInvoices();
     }else{
       this.route.params.subscribe(params => {
@@ -97,9 +95,11 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
-      if (response.status === 200) {
+      if (response.status === 200) {    
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.resetRecentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        var obj = []
+        obj = response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []              
+        this.store.dispatch(new invoiceActions.resetRecentInvoice(obj))
         this.store.select('recentInvoices').subscribe(invoices => {
           this.recentInvoiceList = invoices
         })
@@ -115,7 +115,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    this.invoiceId = invId;
+    // this.invoiceId = invId;
     this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
 
       if (this.activeInv.listItems) {
@@ -123,18 +123,17 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         for (let i = 0; i < this.activeInv.listItems.length; i++) {
           temp.push({
             description: this.activeInv.listItems[i].description,
-            discountRate: this.activeInv.listItems[i].discountRate,
-            productName: this.activeInv.listItems[i].productName,
-            qty: this.activeInv.listItems[i].qty,
+            discount: this.activeInv.listItems[i].discountRate ? this.activeInv.listItems[i].discountRate :this.activeInv.listItems[i].discount,
+            productName: this.activeInv.listItems[i].productName ? this.activeInv.listItems[i].productName :this.activeInv.listItems[i].product_name,
+            qty: this.activeInv.listItems[i].qty ? this.activeInv.listItems[i].qty : this.activeInv.listItems[i].quantity ,
             rate: this.activeInv.listItems[i].rate,
             tax_rate: this.activeInv.listItems[i].tax_rate,
-            price: this.activeInv.listItems[i].price,
-            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
+            price: this.activeInv.listItems[i].price ? this.activeInv.listItems[i].price : this.activeInv.listItems[i].total,
+            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem ? this.activeInv.listItems[i].uniqueKeyListItem : this.activeInv.listItems[i].unique_identifier,
             unit: this.activeInv.listItems[i].unit,
           })
         }
         this.activeInv.listItems = temp
-        
       }
     
   //   else{

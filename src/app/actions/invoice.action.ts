@@ -7,6 +7,8 @@ export const RESET = 'RESET_INVOICE'
 export const RECENTINVOICE = 'RECENT_INVOICE'
 export const REMOVERECENTINVOICE = 'REMOVE_RECENT_INVOICE'
 export const RESETRECENTINVOICE = 'RESET_RECENT_INVOICE'
+export const EDITRECENTINVOICE = 'EDIT_RECENT_INVOICE'
+
 
 
 
@@ -25,6 +27,7 @@ export class edit implements Action {
     
   }
 }
+
 
 export class remove implements Action {
   readonly type = REMOVE
@@ -50,6 +53,14 @@ export class recentInvoice implements Action {
   }
 }
 
+export class editRecentInvoice implements Action {
+  readonly type = EDITRECENTINVOICE
+
+  constructor(public payload: any) {
+    
+  }
+}
+
 export class resetRecentInvoice implements Action {
   readonly type = RESETRECENTINVOICE
 
@@ -66,4 +77,4 @@ export class removeRecentInvoice implements Action {
   }
 }
 
-export type Action = add | edit | remove | reset | recentInvoice | removeRecentInvoice | resetRecentInvoice
+export type Action = add | edit | remove | reset | recentInvoice | removeRecentInvoice | resetRecentInvoice | editRecentInvoice

@@ -225,12 +225,11 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mrg_item_input mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 55px; max-height: 80px; height: 73px;"
-                             [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="txt_area mrg_item_input mCustomScrollbar style-3 form-control" elastic
+                             [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6" style="height: 55px !important;"
                             onfocus="this.select()"></textarea>
-                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="mrg_item_input black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;overflow-y: auto !important;"
-                                placeholder="Description" onfocus="this.select()"
+                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="txt_area mrg_item_input black form-control font_wg_none mCustomScrollbar style-3" elastic
+                                placeholder="Description" onfocus="this.select()" style="height: 55px !important;"
                           ></textarea>
                         </div>
                       </div>
@@ -271,7 +270,7 @@
                           max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div> -->
+                        </div>
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
                     </td>
@@ -638,7 +637,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
-            *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+            *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="goView(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
                 <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />
@@ -917,7 +916,7 @@
                 <div class="col-1">
                   
                   <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
-                    class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
+                    class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn term_col1"
                     (click)="saveTerm(termForm.valid)">
                     <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
                   </button>

@@ -32,3 +32,13 @@
   background-color: white;
   border: 1px solid #ced4da;/*0299ff*/
 }
+#main {
+  /* width: 508px; */
+  position: relative;
+  background-color: #e6ecf0 !important;
+  padding-bottom: 10px;
+  padding-right: 0px;
+  margin-right: 1px;
+}
+
+

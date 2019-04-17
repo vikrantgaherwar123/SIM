@@ -91,7 +91,7 @@
   cursor: pointer;
   border: 1px solid #D0E4F7;
   transition: box-shadow .2s;
-  border-radius: 5px;
+  border-radius: 3px;
   font-family: quicksand_bold;
 }
 .edit-setting .country-code input[type=radio]:checked + label{
@@ -140,6 +140,11 @@ input[type="radio"] {
   -ms-transform: scale(1.5); /* IE 9 */
   -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
   transform: scale(1.5);
+}
+.all_tax{
+  margin-bottom: 10px;
+  height:38px !important;
+  border-radius: 3px;
 }
 /* [type="radio"]:checked,
 [type="radio"]:not(:checked) {

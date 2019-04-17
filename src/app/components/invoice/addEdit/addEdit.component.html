@@ -336,16 +336,15 @@
                                 *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
                                 [value]="product">{{product.prodName}}</mat-option>
                             </mat-autocomplete>
-                            <div class="custom-description" style="margin-top: -2px;">
+                            <div class="custom-description mrg_item_input" style="margin-top: -2px;">
                               <textarea *ngIf="disabledDescription==false" id="descId" tabindex="6"
-                                name="description_{{index}}"
-                                class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" [(ngModel)]="activeItem.description"
+                                name="description_{{index}}" style="height: 55px !important;"
+                                class="txt_area black form-control font_wg_none mCustomScrollbar style-3 invoice_desc" elastic
+                                [(ngModel)]="activeItem.description"
                                 placeholder="Description" onfocus="this.select()">
                               </textarea>
-                              <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"
-                                class="black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 55px !important;overflow-y: auto !important;" placeholder="Description"
+                              <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}" style="height: 55px !important;"
+                                class="txt_area invoice_desc black form-control font_wg_none mCustomScrollbar style-3 mrg_item_input" elastic placeholder="Description"
                                 onfocus="this.select()">
                               </textarea>
                             </div>
@@ -379,10 +378,10 @@
                             <input type="number" name="itemTaxRate" tabindex="4"
                               class="form-control height_40 text_right input_border_color" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
-                              style="border-right: none !important" />
-                            <div class="input-group-append">
+                              placeholder="%" />
+                            <!-- <div class="input-group-append">
                               <span class="input-group-text p-0" style="width: 22px;border-left: none;">%</span>
-                            </div>
+                            </div> -->
                           </div>
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                         </td>
@@ -392,10 +391,8 @@
                             <input type="number" name="itemDiscountRate" tabindex="5"
                               class="form-control height_40 text_right input_border_color" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
-                              style="border-right: none !important" />
-                            <div class="input-group-append">
-                              <span class="input-group-text p-0" style="width: 22px;border-left: none;">%</span>
-                            </div>
+                              placeholder="%" />
+                            
                           </div>
                           <!-- <div class="text-right">{{activeItem.discount_amount}}</div>            -->
                         </td>
@@ -422,7 +419,7 @@
                         </td>
                       </tr>
                       <button *ngIf="disableProductText === false" type="button"
-                        class="change_bg btn save_btn btn-raised add_new_btn" style="width: 130px !important;"
+                        class="change_bg btn save_btn btn-raised add_new_btn add_new_item" style="width: 130px !important;"
                         (click)="disableProductText=true;ifProductEmpty=false">
                         Add New Item
                       </button>
@@ -535,12 +532,6 @@
                         <span style="text-align: left;vertical-align: bottom;">
                           {{settings.discount ? settings.discount : 'Discount'}}
                         </span>
-                        <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;">
-                          ({{mysymbols}})
-                        </div>
-
-                        <div *ngIf="activeInvoice.percentage_flag == 1" style="margin-right: 0px !important;" class="inline font-custom">(%)</div>
-
                         <div class="px-0" style="float: right; padding-right: 10px;">
                           <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -564,6 +555,14 @@
                             </li>
                           </ul>
                         </div>
+                        <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;margin-left: -5px;">
+                          ({{mysymbols}})
+                        </div>
+
+
+                        
+                        <div *ngIf="activeInvoice.percentage_flag == 1" style="margin-right: 0px !important;margin-left: -5px;" class="inline font-custom">(%)</div>
+
                       </div>
 
                       <div class="col-8 pr-0">
@@ -658,7 +657,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div class="row mr_right mr_0" *ngIf="activeInvoice.shipping_charges !== undefined">
+                    <div class="row mr_right mr_0" *ngIf="noShippingCharges">
                       <div class="col-4 discount-tax-label ">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
@@ -733,54 +732,60 @@
 
                     <!-- Paid Amount -->
                     <div class="paidBackground">
-                      <div class="row mx-0" style="margin-top: 6px;">
-                        <div class="col-6 text-left">
+                      <div class="row mx-0 paid_border" style="padding-bottom: 6px;">
+
+                        <div class="col-6 text-left" style="margin-top: 6px;">
                           <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
-                            <a class="paidArrow fa fa-angle-down" style="color: #666666 !important;" [ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
+                          </span>
+                          <a class="paidArrow fa fa-angle-down pay_arrow"[ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
                             </a>
-                            
-                          </span>
                         </div>
-                        <div class="col-6 text-right" style="padding-right: 10px !important;">
+                        <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
                             class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                         </div>
-                        <div class="row mx-0 payment_row">
-                          <div class="row collapse" id="collapseExample" style="margin: 10px -7px 12px;">
-                            <div class="col-4">
-                                <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
-                                [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
-                              <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
+                        
+                        <div class="row mx-0" style="margin-bottom: -15px;width: 100%;">
+                          <div class="collapse" id="collapseExample" style="width: 100%;"> 
+                            <div class="pay_mrg">
+                              <div *ngFor="let item of activeInvoice.payments; let i = index">
+                                <div class="row mx-0" style="margin-bottom: 10px;">
+                                  <div class="col-6 text-left label_color">
+                                    <span class="font-custom">{{item.date_of_payment | date}}</span>
+                                    <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
+                                  </div>
+                                  <div class="col-6 text-right pad_rg_5" style="margin-top: 6px;">
+                                    <span
+                                      class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                                    </span>
+                                    <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
+                                      class="hg_20 cross_label_img img_hover">
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div class="col-6">
-                                <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
-                                class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
-                                [(ngModel)]="addPaymentModal.paid_amount"
-                                placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 207px;font-size: 13px;" />
-                            </div>
-                            <div class="col-2">
-                              <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
-                                Add
-                              </button>
+                            <div class="row mx-0 payment_row installment_mrg">
+                              <div class="row installment_mrg">
+                                <div class="col-4">
+                                  <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
+                                  [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
+                                <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
+                              </div>
+                              <div class="col-5">
+                                  <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
+                                  class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
+                                  [(ngModel)]="addPaymentModal.paid_amount"
+                                  placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 190px;font-size: 13px;" />
+                              </div>
+                              <div class="col-3">
+                                <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
+                                  Add
+                                </button>
+                              </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- <hr *ngIf="(activeInvoice.amount - activeInvoice.balance)"> -->
-                    <div *ngFor="let item of activeInvoice.payments; let i = index" class="top_bot_mr_10 pay_clr">
-                      <div class="row mx-0">
-                        <div class="col-6 text-left label_color">
-                          <span class="font-custom">{{item.date_of_payment | date}}</span>
-                          <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
-                        </div>
-                        <div class="col-6 text-right pad_rg_5">
-                          <span
-                            class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
-                          </span>
-                          <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
-                            class="hg_20 cross_label_img img_hover">
                         </div>
                       </div>
                     </div>
@@ -1110,7 +1115,7 @@
               <div class="col-1">
                 
                 <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
-                  class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn" style="padding: 6px 24px !important;"
+                  class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn term_col1"
                   (click)="saveTerm(termForm.valid)">
                   <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
                 </button>

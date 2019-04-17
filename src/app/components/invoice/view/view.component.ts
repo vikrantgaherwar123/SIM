@@ -158,10 +158,10 @@ export class ViewComponent implements OnInit {
     })
 
     // show date as per format changed
-    this.settingService.fetch().subscribe((response: any) => {
-      this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
-      this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
-    },err => this.openErrorModal())
+    // this.settingService.fetch().subscribe((response: any) => {
+    //   this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
+    //   this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
+    // },err => this.openErrorModal())
 
     // dropdown settings
     this.dropdownSettings = {
@@ -435,7 +435,6 @@ export class ViewComponent implements OnInit {
 
   getFileName() {
     var d = new Date()
-
     var day = d.getDate() <= 9 ? '0' + d.getDate() : d.getDate()
     var month = d.toString().split(' ')[1]
     var year = d.getFullYear()
