@@ -656,7 +656,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div class="row mr_right mr_0" *ngIf="activeInvoice.shipping_charges !== undefined">
+                    <div class="row mr_right mr_0" *ngIf="noShippingCharges">
                       <div class="col-4 discount-tax-label ">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)

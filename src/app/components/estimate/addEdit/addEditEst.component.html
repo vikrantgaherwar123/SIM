@@ -635,7 +635,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
-            *ngFor="let estimate of estimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+            *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="goView(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
                 <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />

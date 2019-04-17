@@ -5,7 +5,7 @@ import { EstimateService } from '../../../services/estimate.service'
 
 import * as invoiceActions from '../../../actions/invoice.action'
 import { AppState } from 'src/app/app.state';
-import { invoice, client, setting, estimate } from 'src/app/interface';
+import { invoice, client, setting, estimate, recentEstimates } from 'src/app/interface';
 import { ClientService } from 'src/app/services/client.service';
 import { SettingService } from '../../../services/setting.service'
 
@@ -30,6 +30,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
     setting: setting
   }
   estimateList: estimate[]
+  recentEstimateList: recentEstimates[];
   activeEst: estimate
   private clientList: client[]
   activeClient: client = <client>{}
@@ -48,14 +49,26 @@ export class ViewTodaysEstimateComponent implements OnInit {
     private settingService: SettingService,
     private store: Store<AppState>,private clientService: ClientService,) {
     store.select('client').subscribe(clients => this.clientList = clients)
+    store.select('recentEstimates').subscribe(recentInvoices => this.recentEstimateList = recentInvoices)
+
    }
 
   ngOnInit() {
     if (this.clientList.length < 1) {
       this.fetchClients();
     }else{
-      this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
-      this.fetchSettings();
+      this.clientList = this.clientList.filter(recs => recs.enabled == 0)
+    }
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
+    if(this.recentEstimateList.length < 1){
+      this.fetchEstimates();
+    }else{
+      this.route.params.subscribe(params => {
+        if (params.estId) {
+         this.setActiveEst(params.estId);
+        }
+      })
     }
   }
 
@@ -64,23 +77,9 @@ export class ViewTodaysEstimateComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
-        this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
-        this.fetchSettings();
+        this.clientList = this.clientList.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
-  }
-  fetchSettings(){
-    // Fetch Settings every time
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-        this.fetchEstimates();
-      }
-    }, err => this.openErrorModal());
-
+      
   }
 
   fetchEstimates() {
@@ -98,10 +97,10 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.estListLoader = false
-        this.store.dispatch(new estimateActions.reset(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
+        this.store.dispatch(new estimateActions.resetRecentEstimate(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
         // Set Active invoice whenever invoice list changes
-        this.store.select('estimate').subscribe(estimates => {
-          this.estimateList = estimates
+        this.store.select('recentEstimates').subscribe(estimates => {
+          this.recentEstimateList = estimates
         })
       }
       this.route.params.subscribe(params => {
@@ -114,7 +113,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
 
   setActiveEst(estId: string = '') {
     this.estimateId = estId;
-    this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    this.activeEst = this.recentEstimateList.filter(est => est.unique_identifier == estId)[0]
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
 
@@ -130,20 +129,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
           this.noDiscountOnItem = false;
         }
       }
-
-      // if(this.activeEst.assignDiscountFlag == 1){
-      //   this.noDiscountOnItem = true;
-      // }else{
-      //   this.noDiscountOnItem = false;
-      // }
-  
-      // if(this.activeEst.assignTaxFlag == 1){
-      //   // this.activeEst.assignTaxFlag = 0;
-      //   this.noTaxOnItem = true;
-      // }else{
-      //   this.noTaxOnItem = false;
-      // }
-
+      
     //display label and values if tax on Bill & discount on Bill selected and values are there
     if(this.activeEst.discount > 0){
       this.noDiscountOnItem = false;
@@ -184,7 +170,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList){
+    if(this.clientList.length !== 0){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }

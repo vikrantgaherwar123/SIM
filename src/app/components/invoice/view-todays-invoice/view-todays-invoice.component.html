@@ -195,7 +195,7 @@
                     </td>
                     <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discountRate | number:'2.'}} 
+                        {{item.discount | number:'2.'}} 
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -406,9 +406,9 @@
 
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
-            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
+            <div [ngClass]="{'item': true, 'row': true}" 
               *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
-            border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
+            border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
