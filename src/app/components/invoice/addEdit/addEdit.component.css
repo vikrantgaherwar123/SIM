@@ -192,6 +192,7 @@ a.morelink {
 .search_div{
   border-left: 1px solid #cecece;
   margin-top: -14px;
+  background-color: #dee2e5;
 }
 .add_invoice{
   margin-top: 5px;
@@ -329,6 +330,7 @@ a.morelink {
 .pay_mrg{
   margin-top: 6px;
   border-top: 1px solid #c5c5c5;
+  /* height: 100px; */
 }
 .pay_arrow{
   color: #666666 !important;

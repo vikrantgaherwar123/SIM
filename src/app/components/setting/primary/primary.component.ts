@@ -202,7 +202,7 @@ export class PrimaryComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(cookie))
 
         this.toasterService.pop('success','Updated Successfully')
-        this.ngOnInit()
+        // this.ngOnInit()
       } else {
         alert (response.message)
         // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })

@@ -168,8 +168,8 @@
                     <td [class.no-border-last]="last">
                       <div class="">
                         <div class="form-group">
-                          <div *ngIf="item" class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
-                            {{item.product_name}}
+                          <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
+                            {{item.productName}}
                           </div>
                           <div class="text-left text-truncate view_desc" >
                             {{item.description}}
@@ -180,7 +180,7 @@
 
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.quantity | number:'1.'}}
+                        {{item.qty | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
@@ -195,12 +195,12 @@
                     </td>
                     <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discount | number:'2.2-2'}}
+                        {{item.discountRate | number:'2.'}} 
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.total | number:'2.2-2'}}
+                        {{item.price | number:'2.2-2'}}
                       </div>
                     </td>
                   </tr>
@@ -407,7 +407,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of invoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>

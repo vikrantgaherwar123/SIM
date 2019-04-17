@@ -28,6 +28,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
   invListLoader: boolean;
   invoiceList: invoice[]
+  recentInvoiceList: recentInvoices[];
   private clientList: client[]
   // private allClientList: client[]
   activeInv: invoice
@@ -50,7 +51,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
       store.select('client').subscribe(clients => this.clientList = clients)
-      store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
+      store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
      }
 
   ngOnInit() {
@@ -68,7 +69,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
-    if(this.invoiceList.length < 1){
+    if(this.recentInvoiceList.length < 1){
       this.fetchInvoices();
     }else{
       this.route.params.subscribe(params => {
@@ -94,9 +95,9 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('invoice').subscribe(invoice => {
-          this.invoiceList = invoice
+        this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('recentInvoices').subscribe(invoices => {
+          this.recentInvoiceList = invoices
         })
       }
       this.route.params.subscribe(params => {
@@ -110,7 +111,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
   setActiveInv(invId: string = '') {
     this.invoiceId = invId;
-    this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
+    this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
 
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){

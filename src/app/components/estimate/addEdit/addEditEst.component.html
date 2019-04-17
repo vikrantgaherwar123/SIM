@@ -225,12 +225,11 @@
                             [value]="product">{{product.prodName}}</mat-option>
                         </mat-autocomplete>
                         <div class="custom-description">
-                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="mrg_item_input mCustomScrollbar style-3 form-control" elastic style="overflow-y: auto !important;margin-top: 3px; min-height: 55px; max-height: 80px; height: 73px;"
-                             [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6"
+                          <textarea *ngIf="disabledDescription==false" id="descId" name="description_{{index}}" class="txt_area mrg_item_input mCustomScrollbar style-3 form-control" elastic
+                             [(ngModel)]="activeItem.description" placeholder="Description" tabindex="6" style="height: 55px !important;"
                             onfocus="this.select()"></textarea>
-                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="mrg_item_input black form-control font_wg_none mCustomScrollbar style-3" elastic
-                                style="margin-top: 3px;height: 69px !important;overflow-y: auto !important;"
-                                placeholder="Description" onfocus="this.select()"
+                          <textarea *ngIf="disabledDescription==true" id="descId" name="description_{{index}}"  class="txt_area mrg_item_input black form-control font_wg_none mCustomScrollbar style-3" elastic
+                                placeholder="Description" onfocus="this.select()" style="height: 55px !important;"
                           ></textarea>
                         </div>
                       </div>
@@ -271,7 +270,7 @@
                           max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <div class="input-group-append">
                           <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div> -->
+                        </div>
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
                     </td>

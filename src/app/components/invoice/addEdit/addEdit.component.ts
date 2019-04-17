@@ -147,7 +147,7 @@ export class AddEditComponent implements OnInit {
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
-    // store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
+    store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
 
 
 
@@ -213,7 +213,7 @@ export class AddEditComponent implements OnInit {
         this.addInit()
       }
     })
-    if(this.invoiceList.length < 1){
+    if(this.recentInvoiceList.length < 1){
       this.fetchInvoices();
     }
     
@@ -261,21 +261,19 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //to view updated or viewed invoice in view page
-    // localStorage.setItem('invoiceId', invId )
     this.commonSettingsInit()
     this.shippingChange = false;
     // Fetch selected invoice
     this.invoiceListLoading = true;
     
-    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
+    //edit invoices if viewed from view component
+    if(this.invoiceList.length > 0){
+      this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
+    }else{
+      this.activeInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId);
+    }
     if(this.activeInvoice){
-    // this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
       this.invoiceListLoading = false;
-      // if(invoice.records !== null) {
-        //deleted these objects bcz input was mismatcing for adding while deleting
-        // delete invoice.records[0].client
-        // delete invoice.records[0].client_id
-        // this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         if(this.activeInvoice.discount_on_item == 1){
           this.noDiscountOnItem = true;
         }else{
@@ -1486,7 +1484,7 @@ export class AddEditComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
@@ -1494,7 +1492,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-          // self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1687,9 +1685,9 @@ export class AddEditComponent implements OnInit {
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
         this.invListLoader = false
-        this.store.dispatch(new invoiceActions.reset(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
-        this.store.select('invoice').subscribe(invoices => {
-          this.invoiceList = invoices
+        this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
+        this.store.select('recentInvoices').subscribe(invoices => {
+          this.recentInvoiceList = invoices
         })
       }
 
