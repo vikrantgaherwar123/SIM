@@ -1,5 +1,5 @@
 <div *ngIf="activeInvoice" class="row main-wrapper">
-  <div class="col-12" id="main" style="padding-top: 3px !important;">
+  <div class="col-12" id="main">
     <div  class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false"
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
@@ -320,7 +320,6 @@
 
                           <div class="form-group" style="padding-right: -2px;padding-left: 4px;
                           border-radius: 2px;padding: 4px 2px;">
-                        <div class="v1"></div>
                             <input type="text" name="product-name" class="form-control billing-input input_border_color" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"

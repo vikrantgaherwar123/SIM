@@ -61,37 +61,37 @@ export class HeaderComponent implements OnInit {
     this.estSrc = "assets/images/menu-logo/estimetOnHover.png";
   }
   offEstHover(){
-    this.estSrc = "assets/images/estimet_n.png";
+    this.estSrc = "assets/images/menu-logo/estimate_grey.png";
   }
   onInvHover(){
     this.invSrc = "assets/images/menu-logo/invoiceOnHover.png";
   }
   offInvHover(){
-    this.invSrc = "assets/images/invoice_n.png";
+    this.invSrc = "assets/images/menu-logo/invoice_grey.png";
   }
   onProductHover(){
     this.productSrc = "assets/images/menu-logo/productHeader.png";
   }
   offProductHover(){
-    this.productSrc = "assets/images/product_n.png";
+    this.productSrc = "assets/images/menu-logo/product_grey.png";
   }
   onClientHover(){
     this.clientSrc = "assets/images/menu-logo/clientHeader.png";
   }
   offClientHover(){
-    this.clientSrc = "assets/images/client_img.png";
+    this.clientSrc = "assets/images/menu-logo/client_grey.png";
   }
   onSettingHover(){
-    this.settingSrc = "assets/images/menu-logo/settingsHeader.png";
+    this.settingSrc = "assets/images/menu-logo/settingsGreayHead.png";
   }
   offSettingHover(){
-    this.settingSrc = "assets/images/setting_n.png";
+    this.settingSrc = "assets/images/menu-logo/settings-grey.png";
   }
   onBatchHover(){
     this.BatchSrc = "assets/images/menu-logo/batch_uploadHeader.png";
   }
   offBatchHover(){
-    this.BatchSrc = "assets/images/batch_upload.png";
+    this.BatchSrc = "assets/images/menu-logo/batch_upload_greyb.png";
   }
 
   toggleSideNavBar() {

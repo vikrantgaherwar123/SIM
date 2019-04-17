@@ -182,7 +182,7 @@
         <div>
           </div>
     </table>
-    <button *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()">+&nbsp; New Row</button>
+    <button *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> New row</button>
     <!-- products record table -->
     <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
       <thead>
@@ -229,7 +229,7 @@
           </tr>
         </tbody>
     </table>
-    <button *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()">+ &nbsp;Add</button>
+    <button *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> &nbsp;Add</button>
     <!-- dropdown -->
     <div class="row">
       <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">

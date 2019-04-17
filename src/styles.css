@@ -36,6 +36,7 @@ b, body, p, button {
   font-size: 13.5px !important;
   font-style: normal;
   letter-spacing: 0.5px !important;
+  color:#474959 !important;
   /* font-weight: 800 !important; */
 }
 input[type=text], input[type=password],select {
@@ -398,7 +399,7 @@ hr {
   content: '\f078';
   font: normal normal normal 17px/1 FontAwesome;
   right: 25px;
-  top: -10px;
+  top: -6px;
   height: 24px;
   -webkit-text-stroke: 1px white;
   font-size: 16px;
@@ -456,19 +457,19 @@ display: none;
 }
 /* placeholder */
 input::placeholder {
-  color: #b1b0b0 !important;
+  color: #d3d9dd !important;
 }
 ::placeholder {
-  color: #b1b0b0 !important;
+  color: #d3d9dd !important;
   opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
- color: #b1b0b0 !important;
+ color: #d3d9dd !important;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
- color: #b1b0b0 !important;
+ color: #d3d9dd !important;
 }
 /* mat-autocomplete-styling */
 .mat-autocomplete-panel:not([class*=mat-elevation-z]) {
@@ -478,7 +479,7 @@ input::placeholder {
 .small_dropdown
 {
   border: none !important;
-  box-shadow: 0 5px 5px -3px #eaf7ff, 0 8px 10px 1px #eaf7ff, 0 3px 14px 2px #eaf7ff !important;
+  box-shadow: 0 0px 1px -31px #eaf7ff, 0 1px 3px 1px #eaf7ff, 0 3px 14px 2px #eaf7ff !important;
 }
 /* dropdown option */
 option {
@@ -604,6 +605,7 @@ option {
 {
   margin-top: 1px;
   margin-bottom: 1px;
+  color: white !important;
   height: 44px;
   position: relative;
   width:100%;
@@ -956,6 +958,7 @@ background-color: none;
 }
 .header_menu_text{
   margin-left: 4px;
+  color: #697887;
 }
 .edit_delete_icon{
   margin-top: -5px;

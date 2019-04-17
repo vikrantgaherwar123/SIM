@@ -1,6 +1,6 @@
 .header {
   border-bottom: 2px solid #e4e7e9;/*e3e3e3*/
-  background-color: #ffffff;
+  background-color: #fdfdfe;
   height: 56px;
   /* padding-top: 10px;
   padding-bottom: 12px; */
@@ -19,9 +19,10 @@
   padding-bottom: 2%;
 }
 .welcome-user {
-  padding: 5px;
+  padding: 0px 2px;
   text-align: right;
   font-size: 14px;
+  color: #697887;
 }
 .user-logout h6 {
   font-size: 16px;
@@ -40,6 +41,11 @@
   letter-spacing: 0.5px;
   padding: 4px;
   font-family: helvetica_regular;
+  color: #697887;
+
+}
+.span_text:hover{
+  color:#1a73cc;
 }
 .nav_img{
   height: 20px;

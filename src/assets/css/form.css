@@ -8,7 +8,7 @@
 #main {
   position: relative;
   background-color: #e6ecf0 !important;
-  padding-top: 12px;
+  /* padding-top: 12px; */
   padding-bottom: 10px;
 }
 .shadow {
@@ -71,7 +71,7 @@ border: #1a73cc solid 1px;
 .filter-box input {
 	background: #ffffff url(../images/list-icon/search16.png) no-repeat 10px;
 	padding-left: 35px;
-	height: 38px !important;
+	height: 42 !important;
 	color: black;
 	margin-bottom: 20px;
 	font-size: 13px;
@@ -157,6 +157,7 @@ a.more {
 }
 .back {
 	background: #ffffff;
+	margin-top: 14px;
 }
 .editBtnShow h4, .editBtnShow div {
 	display: inline-block;
