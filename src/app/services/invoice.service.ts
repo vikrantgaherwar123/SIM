@@ -169,68 +169,68 @@ export class InvoiceService {
   }
 
 
-  changeKeysForRecentStore(data) {
-    var tempInvoice = data
+  changeKeysForRecentStore(recentdata) {
+    var tempInvoice = recentdata
     var tempItemList = []
     var tempTermList = []
     var tempPaymentList = []
-    for (var j = 0; j < data.listItems.length; j++) {
+    for (var j = 0; j < recentdata.listItems.length; j++) {
       var temp: any = {
-        'uniqueKeyListItem': data.listItems[j].uniqueKeyListItem,
-        'productName': data.listItems[j].productName,
-        'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
-        'qty': data.listItems[j].qty,
-        'unit': data.listItems[j].unit,
-        'rate': data.listItems[j].rate,
-        'discountRate': data.listItems[j].discountRate,
-        'tax_rate': data.listItems[j].tax_rate,
-        'price': data.listItems[j].price,
-        'taxAmount': data.listItems[j].taxAmount,
-        'discountAmount': data.listItems[j].discountAmount,
-        'uniqueKeyFKProduct': data.listItems[j].uniqueKeyFKProduct,
-        'unique_identifier': data.unique_identifier,
-        'listItemId': data.listItems[j].listItemId,
-        'prodId': data.listItems[j].prodId,
-        'org_id': data.listItems[j].org_id,
-        'invoiceProductCode': data.listItems[j].invoiceProductCode,
-        'uniqueKeyFKInvoice': data.listItems[j].uniqueKeyFKInvoice
+        'uniqueKeyListItem': recentdata.listItems[j].uniqueKeyListItem,
+        'productName': recentdata.listItems[j].productName,
+        'description': recentdata.listItems[j].description == null ? '' : recentdata.listItems[j].description,
+        'qty': recentdata.listItems[j].qty,
+        'unit': recentdata.listItems[j].unit,
+        'rate': recentdata.listItems[j].rate,
+        'discountRate': recentdata.listItems[j].discountRate,
+        'tax_rate': recentdata.listItems[j].tax_rate,
+        'price': recentdata.listItems[j].price,
+        'taxAmount': recentdata.listItems[j].taxAmount,
+        'discountAmount': recentdata.listItems[j].discountAmount,
+        'uniqueKeyFKProduct': recentdata.listItems[j].uniqueKeyFKProduct,
+        'unique_identifier': recentdata.unique_identifier,
+        'listItemId': recentdata.listItems[j].listItemId,
+        'prodId': recentdata.listItems[j].prodId,
+        'org_id': recentdata.listItems[j].org_id,
+        'invoiceProductCode': recentdata.listItems[j].invoiceProductCode,
+        'uniqueKeyFKInvoice': recentdata.listItems[j].uniqueKeyFKInvoice
       }
       tempItemList.push(temp)
     }
     tempInvoice.listItems = tempItemList
 
-    if (data.termsAndConditions && data.termsAndConditions.length > 0) {
-      for (var i = 0; i < data.termsAndConditions.length; i++) {
+    if (recentdata.termsAndConditions && recentdata.termsAndConditions.length > 0) {
+      for (var i = 0; i < recentdata.termsAndConditions.length; i++) {
         var temp: any = {
-          "terms": data.termsAndConditions[i].terms,
-          "localId": data.termsAndConditions[i].localId,
-          "invoiceId": data.termsAndConditions[i].invoiceId,
-          "serverInvoiceId": data.termsAndConditions[i].serverInvoiceId,
-          "serverOrgId": data.termsAndConditions[i].serverOrgId,
-          "uniqueInvoiceTerms": data.termsAndConditions[i].uniqueInvoiceTerms,
-          "uniqueKeyFKInvoice": data.termsAndConditions[i].uniqueKeyFKInvoice
+          "terms": recentdata.termsAndConditions[i].terms,
+          "localId": recentdata.termsAndConditions[i].localId,
+          "invoiceId": recentdata.termsAndConditions[i].invoiceId,
+          "serverInvoiceId": recentdata.termsAndConditions[i].serverInvoiceId,
+          "serverOrgId": recentdata.termsAndConditions[i].serverOrgId,
+          "uniqueInvoiceTerms": recentdata.termsAndConditions[i].uniqueInvoiceTerms,
+          "uniqueKeyFKInvoice": recentdata.termsAndConditions[i].uniqueKeyFKInvoice
         }
         tempTermList.push(temp)
       }
       tempInvoice.termsAndConditions = tempTermList
     }
 
-    if (data.payments && data.payments.length > 0) {
-      for (var i = 0; i < data.payments.length; i++) {
+    if (recentdata.payments && recentdata.payments.length > 0) {
+      for (var i = 0; i < recentdata.payments.length; i++) {
         var temp: any = {
-          "dateOfPayment": data.payments[i].dateOfPayment,
-          "paidAmount": data.payments[i].paidAmount,
-          "orgId": data.payments[i].orgId,
-          "uniqueKeyInvoicePayment": data.payments[i].uniqueKeyInvoicePayment,
-          "uniqueKeyFKClient": data.payments[i].uniqueKeyFKClient,
-          "uniqueKeyFKInvoice": data.payments[i].uniqueKeyFKInvoice,
-          "enabled": data.payments[i].enabled,
-          "uniqueKeyVoucherNo": data.payments[i].uniqueKeyVoucherNo,
-          "voucherNo": data.payments[i].voucherNo,
-          "invPayId": data.payments[i].invPayId,
-          "invoiceId": data.payments[i].invoiceId,
-          "clientId": data.payments[i].clientId,
-          "paymentNote": data.payments[i].paymentNote
+          "dateOfPayment": recentdata.payments[i].dateOfPayment,
+          "paidAmount": recentdata.payments[i].paidAmount,
+          "orgId": recentdata.payments[i].orgId,
+          "uniqueKeyInvoicePayment": recentdata.payments[i].uniqueKeyInvoicePayment,
+          "uniqueKeyFKClient": recentdata.payments[i].uniqueKeyFKClient,
+          "uniqueKeyFKInvoice": recentdata.payments[i].unique_key_fk_invoice,
+          "enabled": recentdata.payments[i].deleted_flag,
+          "uniqueKeyVoucherNo": recentdata.payments[i].unique_key_voucher_no,
+          "voucherNo": recentdata.payments[i].voucher_no,
+          "invPayId": recentdata.payments[i]._id,
+          "invoiceId": recentdata.payments[i].local_invoice_id,
+          "clientId": recentdata.payments[i].local_client_id,
+          "paymentNote": recentdata.payments[i].paymentNote
         }
         tempPaymentList.push(temp)
       }

@@ -275,13 +275,8 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId);
     this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId);
     if(this.activeInvoice){
-    // this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+
       this.invoiceListLoading = false;
-      // if(invoice.records !== null) {
-        //deleted these objects bcz input was mismatcing for adding while deleting
-        // delete invoice.records[0].client
-        // delete invoice.records[0].client_id
-        // this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
         if(this.activeInvoice.discount_on_item == 1){
           this.noDiscountOnItem = true;
         }else{
@@ -387,7 +382,7 @@ export class AddEditComponent implements OnInit {
             //deleted these objects bcz input was mismatcing for adding while deleting
             delete invoice.records[0].client
             delete invoice.records[0].client_id
-            this.activeInvoice = {...this.activeInvoice, ...invoice.records[0]}
+            this.activeInvoice = {...invoice.records[0]}
             if(this.activeInvoice.discount_on_item == 1){
               this.noDiscountOnItem = true;
             }else{
