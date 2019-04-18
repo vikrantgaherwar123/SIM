@@ -67,7 +67,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     }else{
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
-
+    //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     if(this.recentInvoiceList.length < 1){
