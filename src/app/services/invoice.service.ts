@@ -181,7 +181,7 @@ export class InvoiceService {
         'qty': data.listItems[j].qty,
         'unit': data.listItems[j].unit,
         'rate': data.listItems[j].rate,
-        'discountRate': data.listItems[j].discountRate,
+        'discount': data.listItems[j].discountRate,
         'tax_rate': data.listItems[j].tax_rate,
         'price': data.listItems[j].price,
         'taxAmount': data.listItems[j].taxAmount,

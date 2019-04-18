@@ -1507,14 +1507,12 @@ export class AddEditComponent implements OnInit {
          else if(this.activeInvoice.deleted_flag !== 1) {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           //set recently added invoice list in store
-          // this.fetchInvoices();
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
           self.addInit()
         }
       }
-      //  $('#invSubmitBtn').removeAttr('disabled')
     }
     , err => this.openErrorModal()
     )

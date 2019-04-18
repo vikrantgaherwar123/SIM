@@ -126,14 +126,15 @@ export class ViewTodaysEstimateComponent implements OnInit {
             productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
             qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
             rate: this.activeEst.alstQuotProduct[i].rate,
-            taxRate: this.activeEst.alstQuotProduct[i].taxRate,
+            taxRate: this.activeEst.alstQuotProduct[i].tax_rate ? this.activeEst.alstQuotProduct[i].tax_rate : this.activeEst.alstQuotProduct[i].taxRate,
             price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
+            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
             unit: this.activeEst.alstQuotProduct[i].unit,
           })
         }
         this.activeEst.alstQuotProduct = temp
       }
-
+      //adjust labels according to value comes
       for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
         if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
           this.noTaxOnItem = true;
@@ -146,6 +147,21 @@ export class ViewTodaysEstimateComponent implements OnInit {
           this.noDiscountOnItem = false;
         }
       }
+
+      // Change TnC keys compatible
+      if (this.activeEst.alstQuotTermsCondition) {
+        temp = []
+        for (let i = 0; i < this.activeEst.alstQuotTermsCondition.length; i++) {
+          temp.push({
+            orgId: this.activeEst.alstQuotTermsCondition[i].orgId,
+            termsConditionText: this.activeEst.alstQuotTermsCondition[i].terms_condition ? this.activeEst.alstQuotTermsCondition[i].terms_condition : this.activeEst.alstQuotTermsCondition[i].termsConditionText,
+            uniqueKeyQuotTerms: this.activeEst.alstQuotTermsCondition[i].uniqueKeyQuotTerms,
+            _id: this.activeEst.alstQuotTermsCondition[i]._id
+          })
+        }
+        this.activeEst.alstQuotTermsCondition = temp
+      }
+
       
     //display label and values if tax on Bill & discount on Bill selected and values are there
     if(this.activeEst.discount > 0){
