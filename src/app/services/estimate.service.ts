@@ -128,37 +128,6 @@ export class EstimateService {
     }
   }
 
-  changeKeysForRecentStore(estimate) {
-    return {
-      adjustment: estimate.adjustment,
-      alstQuotProduct: estimate.alstQuotProduct,
-      alstQuotTermsCondition: estimate.alstQuotTermsCondition,
-      amount: estimate.amount,
-      assignDiscountFlag: estimate.assignDiscountFlag,
-      assignTaxFlag: estimate.assignTaxFlag,
-      createDate: estimate.createDate,
-      discount: estimate.discount,
-      discountFlag: estimate.discountFlag,
-      enabled: estimate.enabled,
-      epochTime: estimate.epochTime,
-      grossAmount: estimate.grossAmount,
-      localClientId: estimate.localClientId,
-      localId: estimate.localId,
-      organizationId: estimate.organizationId,
-      percentageValue: estimate.percentageValue,
-      pushFlag: estimate.pushFlag,
-      quetationNo: estimate.quetationNo,
-      serverUpdateTime: estimate.serverUpdateTime,
-      shippingAddress: estimate.shippingAddress,
-      shippingCharges: estimate.shippingCharges,
-      taxAmt: estimate.taxAmt,
-      taxList: estimate.taxList,
-      taxrate: estimate.taxrate,
-      unique_identifier: estimate.unique_identifier,
-      unique_key_fk_client: estimate.unique_key_fk_client,
-      version: estimate.version
-    }
-  }
 
   changeKeysForApi(estimate) {
     return {
