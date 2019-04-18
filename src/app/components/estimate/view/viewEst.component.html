@@ -8,13 +8,6 @@
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
               <span style="color:#1a73cc">Client: </span>
               <span style="color: black;font-family: quicksand_bold !important;">
-                <!-- {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}} -->
-                <!-- <span *ngIf="estimateQueryForm.client.value?.length > 1"
-                  [title]="getNames()"
-                >
-                  (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                </span>, -->
-                <!-- <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#1a73cc">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
@@ -26,8 +19,6 @@
                 (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                 estimateQueryForm.dateRange.end.value.getFullYear() : 0
               }}</span>
-              <!-- <img src="assets/images/payment2.png" 
-              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
     
             <div class="col-12 col-md-2">
@@ -469,7 +460,7 @@
             </div> -->
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
-              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
+              *ngFor="let estimate of (estimateList |  filter:estSearchTerm | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />

@@ -43,7 +43,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
-  showTaxList: boolean = false;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -146,11 +145,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       }
 
     //display label and values if tax on item & discount on item selected and values are 
-    if(this.activeInv.taxList[0].percentage == 0){  // show tax field only when taxes are added
-      this.showTaxList = true
-    }else{
-      this.showTaxList = false
-    }
+    
     if(this.activeInv !== undefined){
 
       if(this.activeInv.discount_on_item == 1){
