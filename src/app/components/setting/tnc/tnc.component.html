@@ -1,6 +1,6 @@
 <div class="row main-wrapper">
       <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
-          <form class="form-horizontal back shadow settingForm"  #addTaxesForm="ngForm" enctype="multipart/form-data">
+          <form class="form-horizontal back shadow settingForm" style="margin-top: 0px;" #addTaxesForm="ngForm" enctype="multipart/form-data">
             <div class="row mx-0">
               <div class="row">
                   <div class="label_div" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
@@ -33,7 +33,7 @@
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
-                class="save_btn btn-raised pull-right" style="margin-top: 7px;width:auto !important;border: none !important;padding: 6px 19px 4px 24px;"
+                class="save_btn btn-raised pull-right term_save"
                 (click)="add()"
               >
                 Add Terms

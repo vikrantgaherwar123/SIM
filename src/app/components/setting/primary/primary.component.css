@@ -19,6 +19,7 @@
 }
 .edit-setting input[type=radio] + label {
   display: inline-block;
+  text-transform: uppercase;
   font-family: helvetica_regular!important;
   padding: 5px 12px;
   margin-bottom: 5px;
@@ -33,6 +34,12 @@
   border: 1px solid #1a73cc; /*2196f3*/
   transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
 
+}
+.edit-setting input[type=radio] + label:hover{
+  border:1px solid grey;
+}
+.edit-setting input[type=radio]:checked + label:hover {
+  border: 1px solid #1a73cc;
 }
 .edit-setting .taxradio label.taxonitem,.edit-setting .discountradio label.discountonitem{
   border-top-left-radius:3px;

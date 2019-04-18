@@ -8,7 +8,7 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-3" style="padding-top: 15px;">
-                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img" style="border: 0px solid #ccc;">
                     <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-3" style="padding-top: 15px;">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list_drop list-btn cus-img"
                   >
                     <img alt="logo" Title="Search By" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
@@ -77,7 +77,7 @@
                 </div>
   
                 <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
-                  <img src="assets/images/next12.png" style="padding-top: 16px;">
+                  <img src="assets/images/next12.png" style="padding-top: 8px;">
                 </div>
               </div>
             </div>
@@ -111,7 +111,7 @@
                 </div>
 
                 <!-- Top Buttons -->
-                <div class="col-5 col-md-4 px-0 pull-right" style="margin-top: -86px;">
+                <div class="col-5 col-md-4 px-0 pull-right" style="margin-top: -96px;">
                   <button type="button" *ngIf="viewMode" (click)="editThis(product)"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >

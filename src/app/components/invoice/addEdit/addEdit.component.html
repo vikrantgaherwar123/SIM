@@ -1,5 +1,5 @@
 <div *ngIf="activeInvoice" class="row main-wrapper">
-  <div class="col-12" id="main" style="padding-top: 3px !important;">
+  <div class="col-12" id="main">
     <div  class="row">
       <div id="msgInv" *ngIf="viewTodaysInvoice == false"
         class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
@@ -30,9 +30,9 @@
                             [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit"
                             (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }">
                           <div>
-                              <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                              <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()"
-                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
+                               <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit"></i>
+                              <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" 
+                                style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i>
                           </div>
                           <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                           <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3"
@@ -71,7 +71,7 @@
                           </div>
                           <div class="col-6 pr-0">
                             <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                              {{settings.mTvShipTo ? settings.mTvShipTo : 'Shipping Address'}}
+                              Shipping Address
                             </span>
                             <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
                             <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">
@@ -82,11 +82,11 @@
                     </div>
                   </div>
 
-
+                  <div class="col-1"></div>
                   <!-- Invoice Number and Dates -->
-                  <div class="col-12 col-sm-5 pr-0" id="invDataAdd">
+                  <div class="col-12 col-sm-4 pr-0" id="invDataAdd">
                     <div class="row">
-                      <div class="col-4 col-md-4 pr-0" style="margin-top: 6px;">
+                      <div class="col-4 col-md-4 pr-0 pad_left_46" style="margin-top: 6px;">
                         <span class="font-custom-bold text-left w-100">
                           {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No</span>
                       </div>
@@ -94,7 +94,7 @@
                         <form #invNumberForm="ngForm" name="invNumberForm">
                           <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
                             && invNumberForm.invoiceNumber.$error.required">
-                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="form-control pr-0 input_border_color"
+                            <input type="text" id="invoiceNumber" name="invoiceNumber" class="light_font form-control pr-0 input_border_color"
                               style="margin-top: 0px !important;" [(ngModel)]="activeInvoice.invoice_number"
                               [ngClass]="{ 'box_red': invoiceFlag === true}" (keyup)="invoiceNoChanged($event)" required
                               onfocus="this.select()" />
@@ -110,14 +110,14 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-4 col-md-4 pr-0" style="margin-top: 6px;">
+                      <div class="col-4 col-md-4 pr-0 pad_left_46">
                         <span class="font-custom-bold text-left w-100">
                           {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} Date</span>
                       </div>
                       <div class="col-8">
                         <div style="max-width: 100%;">
                           <div class="row mx-0">
-                            <input type="text" class="form-control border-hover input_border_color" placeholder="mm/dd/yyyy" required
+                            <input type="text" class="form-control border-hover input_border_color light_font" placeholder="mm/dd/yyyy" required
                               [formControl]="invoiceDate" matInput [matDatepicker]="picker" (click)="picker.open()"
                               onfocus="this.select()">
                             <!-- <input class="form-control" name="formatedDate" [ngModelOptions]="{standalone: true}" matInput [matDatepicker]="picker" (click)="picker.open()"> -->
@@ -138,29 +138,29 @@
                   <mat-datepicker #picker></mat-datepicker> -->
 
                     <div class="row">
-                      <div class="col-md-4 col-4 pr-0" style="margin-top: 6px;">
+                      <div class="col-md-4 col-4 pr-0 pad_left_46">
                         <span class="font-custom-bold text-left w-100">Reference</span>
                       </div>
                       <div class="col-8">
-                        <input type="text" id="referenceid" name="invoiceNumber" class="form-control pr-0 input_border_color"
+                        <input type="text" id="referenceid" name="invoiceNumber" class="light_font form-control pr-0 input_border_color"
                           [(ngModel)]="activeInvoice.reference" onfocus="this.select()" />
                       </div>
                     </div>
 
                     <div class="row">
-                      <div class="col-4 col-md-4 pr-0" style="margin-top: 6px;">
+                      <div class="col-4 col-md-4 pr-0 pad_left_46">
                         <span class="font-custom-bold text-left w-100">
                           Due On
                           <!-- {{settings.mTvDueDate ? settings.mTvDueDate : 'DUE_DATE_LABEL' | translate}} -->
                         </span>
                       </div>
-                      <div class="col-8 selectDueDate form-group" style="margin-top: -5px;">
+                      <div class="col-8 selectDueDate form-group">
 
                         <div class="selectdiv">
 
                           <select name="selectDueDate" id="selectDueDate" [value]="activeInvoice.due_date_flag || 0"
-                            class="due_date form-control pr-0 selectDueDate"
-                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: 5px;">
+                            class="due_date form-control pr-0 selectDueDate light_font"
+                            (change)="changeDueDate($event.target.value)" style="cursor: pointer;margin-top: -0.5px;">
                             <option class="opt" value="0">No Due Date</option>
                             <option class="opt" value="1">Immediately</option>
                             <option class="opt" value="2">Custom Date</option>
@@ -181,7 +181,7 @@
                       <div class="col-8" *ngIf="activeInvoice.due_date_flag">
                         <div style="margin-top: -3px;" *ngIf="activeInvoice.due_date_flag !== 2">
                           <div>
-                            <input type="text" name="dueDate" class="form-control input_border_color"
+                            <input type="text" name="dueDate" class="form-control input_border_color light_font"
                               [value]="activeInvoice.due_date | date: 'MM/dd/yyyy'" required readonly>
                           </div>
                         </div>
@@ -192,7 +192,7 @@
                       </div>
                       <div class="col-8" *ngIf="activeInvoice.due_date_flag === 2">
                         <div style="margin-top: 3px;">
-                          <input type="text" name="dueDate" class="form-control" [formControl]="dueDate" matInput
+                          <input type="text" name="dueDate" class="form-control light_font" [formControl]="dueDate" matInput
                             [matDatepicker]="picker1" required readonly (click)="picker1.open()">
                           <mat-datepicker #picker1></mat-datepicker>
                         </div>
@@ -320,7 +320,6 @@
 
                           <div class="form-group" style="padding-right: -2px;padding-left: 4px;
                           border-radius: 2px;padding: 4px 2px;">
-                        <div class="v1"></div>
                             <input type="text" name="product-name" class="form-control billing-input input_border_color" tabindex="1"
                               onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
@@ -832,7 +831,7 @@
       <div class="col-12 col-md-3 search_div">
         <div class="row" style="margin: 0 auto;">
           
-          <button type="button" style="padding: 14px;margin-top: 28px !important" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
+          <button type="button" style="padding: 14px;" class="col-12 side_btn btn btnd btn-custom-2 no-border-radius"
             (click)="router.navigate(['/invoice/view'])">Search For Invoices
             <img src="assets/images/search_new.png" alt="logo" style="width: 14px;">
           </button>

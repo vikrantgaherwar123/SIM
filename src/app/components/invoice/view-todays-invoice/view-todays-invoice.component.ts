@@ -123,7 +123,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         for (let i = 0; i < this.activeInv.listItems.length; i++) {
           temp.push({
             description: this.activeInv.listItems[i].description,
-            discount: this.activeInv.listItems[i].discountRate ? this.activeInv.listItems[i].discountRate :this.activeInv.listItems[i].discount,
+            discount: this.activeInv.listItems[i].discount ? this.activeInv.listItems[i].discount : this.activeInv.listItems[i].discountRate,
             productName: this.activeInv.listItems[i].productName ? this.activeInv.listItems[i].productName :this.activeInv.listItems[i].product_name,
             qty: this.activeInv.listItems[i].qty ? this.activeInv.listItems[i].qty : this.activeInv.listItems[i].quantity ,
             rate: this.activeInv.listItems[i].rate,
@@ -134,6 +134,14 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           })
         }
         this.activeInv.listItems = temp
+
+        //make discount value 0 if comes undefined when came back from store
+        for (let i = 0; i < this.activeInv.listItems.length; i++) {
+          if(this.activeInv.listItems[i].discount == undefined){
+            this.activeInv.listItems[i].discount = 0 ;
+          }
+        }
+
       }
 
     //display label and values if tax on item & discount on item selected and values are there

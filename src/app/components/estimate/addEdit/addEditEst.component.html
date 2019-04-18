@@ -1,4 +1,4 @@
-<div class="row main-wrapper">
+<div *ngIf="activeEstimate" class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
       <div id="msgInv" *ngIf="viewTodaysEstimate == false" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
@@ -17,7 +17,7 @@
               <div class="col-sm-6" id="clientDataAdd" name="clientData">
                     <div class="row">
                       <!-- Billing To -->
-                      <div class="col-11">
+                      <div class="col-12">
                           <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
                             {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                           </span>
@@ -26,8 +26,8 @@
                             <input type="text" id="bill-to-input" style="height: 40px !important;" class="form-control billing-input"  placeholder="Search & Select Client"
                               matInput [formControl]="billingTo" [matAutocomplete]="auto1" *ngIf="!edit" (click)="closeAddClientModal()" [ngClass]="{ 'box_red': noClientSelected ===true }"
                             >
-                            <!-- <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit fa fa-angle-down"></i>
-                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> -->
+                             <i [ngClass]="{ 'hide_dropdown': billingTo.value }" class="filtersubmit"></i>
+                            <i *ngIf="!edit && billingTo.value" (click)="closeAddClientModal()" style="-webkit-text-stroke: 2px white;" class="filtersubmit fa fa-close"></i> 
                             
                             <div *ngIf="edit && billingTo.value" class="font-custom-bold">{{billingTo.value.name}}</div>
                             <mat-autocomplete #auto1="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
@@ -72,7 +72,7 @@
                           </div>
                           <div class="col-6 pr-0">
                             <span style="padding-left: 45px;" type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
-                              {{settings.shipping ? settings.shipping : 'Shipping'}} Address
+                             Shipping Address
                             </span>
                             <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
                             <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
@@ -254,7 +254,7 @@
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="noTaxOnItem || activeEstimate.tax_on_item == 0">
-                      <div class="input-group">
+                      <div class="input-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="4" name="itemTaxRate" class="form-control text_right height_40" min=0 max=100
                           [(ngModel)]="activeItem.tax_rate" placeholder="%" (keyup)="calculateTotal()" onfocus="this.select()" />
                         <!-- <div class="input-group-append">
@@ -265,12 +265,10 @@
                     </td>
 
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="noDiscountOnItem || activeEstimate.discount_on_item == 1">
-                      <div class="input-group">
-                        <input type="number" tabindex="5" name="itemDiscountRate" class="form-control text_center height_40" min=0
-                          max=100 [(ngModel)]="activeItem.discount" style="border-right: none !important" (keyup)="calculateTotal()" onfocus="this.select()" />
-                        <div class="input-group-append">
-                          <span class="input-group-text p-0" style="width: 22px;">%</span>
-                        </div>
+                      <div class="input-group" style="padding: 4px 2px;">
+                        <input type="number" tabindex="5" name="itemDiscountRate" placeholder="%" class="text_right form-control height_40" min=0
+                          max=100 [(ngModel)]="activeItem.discount"  (keyup)="calculateTotal()" onfocus="this.select()" />
+                       
                       </div>
                       <!-- <div class="text-right">{{activeItem.discount_amount}}</div> -->
                     </td>
@@ -619,11 +617,10 @@
 
           <div class="row" style="margin: 0 auto;">
               <button *ngIf="viewTodaysEstimate == true || edit" type="button" style="margin-top: 5px;margin-bottom: 4px;"
-                class="col-11 btn btnd btn-custom-2 no-border-radius side_btn"
+                class="col-12 btn btnd btn-custom-2 no-border-radius side_btn"
                 (click)="addNewEstimate()">Add New Estimate
                 <i class="fa fa-plus" style="padding: 12px 0px"></i>
               </button>
-              <div class="col-1"></div>
             </div>
 
         <!-- recently added Estimate -->

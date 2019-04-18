@@ -39,8 +39,8 @@
 
 .nav li a {
   display: block;
-  background-color: #2096f3;
-  color: #2096f3 !important;
+  background-color: #1a73cc;
+  color: #1a73cc !important;
   padding: 10px 36px;
   text-decoration: none;
   font-size: 14px;
@@ -58,7 +58,7 @@
 }
 
 .nav li a:hover, .nav li a.dropdown-toggle.active {
-  background-color: #2096f3 !important;
+  background-color: #1e81e3 !important;
   color: #fff !important;
 }
 
@@ -101,10 +101,10 @@
 .list_a
 {
   background-color: white !important;
-  color: #2096f3 !important;
+  color: #1a73cc !important;
 }
 .list_a:hover{
-  background-color:#2096f3 !important;
+  background-color:#1a73cc !important;
   color: white !important;
 }
 /* radio button of payment option */
@@ -220,7 +220,11 @@ svg {
   font-size: 9px !important;
   padding: 2px 12px 5px 10px !important;
   /* font-weight: normal; */
-  font-family: helvetica_regular !important;
+  font-family: helvetica_light !important;
+}
+.back{
+  background: #ffffff;
+  margin-top: -29px !important;
 }
 @media (min-width: 576px)
 {

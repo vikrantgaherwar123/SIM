@@ -40,5 +40,11 @@
   padding-right: 0px;
   margin-right: 1px;
 }
+.term_save{
+  margin-top: 7px;
+  width:auto !important;
+  border: none !important;
+  padding: 6px 19px 4px 24px;
+}
 
 

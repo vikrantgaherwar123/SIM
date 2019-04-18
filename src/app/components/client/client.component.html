@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="pull-right list-btn cus-img">
+                    aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
                     <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right small_dropdown">
@@ -59,7 +59,7 @@
                   </span>
                 </div>
                 <div class="col-1" [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
-                  <img src="assets/images/next12.png" style="padding-top: 16px;">
+                  <img src="assets/images/next12.png" style="padding-top: 8px;">
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
                 </div>
 
                 <!-- Top Buttons -->
-                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold" style="margin-top: -86px;">
+                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold" style="margin-top: -96px;">
                   <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right ml-2">
                     <img src="assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit

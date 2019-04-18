@@ -122,7 +122,7 @@
   <div class="py-3 w-100" style="padding-top: 74px !important;">
     <div class="row mx-0">
       <!-- View Estimate -->
-      <div  class="col-12 col-sm-9 item-form">
+      <div  class="col-12 col-sm-9 item-form" style="padding-right: 0px !important;">
       <div id="estMain" name="estMain" *ngIf="activeEst"> <!--activeEst-->
         <form id="estimateGenerator" name="estimateGenerator" class="shadow p-4 back">
           <!-- Buttons -->
@@ -134,7 +134,7 @@
                 Edit
               </button>
               <button id="downloadBtn" type="button" (click)="downloadEstimate('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                class="btn btnd btn-custom-1 no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
+                class="btn btnd btn-custom-1 change_bg no-border-radius pull-right ml-2 width12perbtn font-weight-bold" title="Download">
                 <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
                 Download
               </button>
@@ -431,7 +431,7 @@
                 </div>
                 <div class="col-6 px-0" style="padding-top: 15px;">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="pull-right list-btn cus-img">
+                    aria-expanded="false" class="pull-right list-btn list_drop cus-img">
                     <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right">
