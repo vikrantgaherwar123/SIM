@@ -43,6 +43,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  showTaxList: boolean = false;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -67,7 +68,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     }else{
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
-
+    //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     if(this.recentInvoiceList.length < 1){
@@ -135,32 +136,13 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         }
         this.activeInv.listItems = temp
       }
-    
-  //   else{
 
-  //   // Change list item keys compatible
-  //   if (this.activeInv.listItems) {
-  //     var temp = []
-  //     for (let i = 0; i < this.activeInv.listItems.length; i++) {
-  //       temp.push({
-  //         description: this.activeInv.listItems[i].description,
-  //         discount: this.activeInv.listItems[i].discount,
-  //         productName: this.activeInv.listItems[i].productName,
-  //         qty: this.activeInv.listItems[i].qty,
-  //         rate: this.activeInv.listItems[i].rate,
-  //         tax_rate: this.activeInv.listItems[i].tax_rate,
-  //         total: this.activeInv.listItems[i].total,
-  //         unique_identifier: this.activeInv.listItems[i].unique_identifier,
-  //         unit: this.activeInv.listItems[i].unit,
-  //       })
-  //     }
-  //     this.activeInv.listItems = temp
-      
-  //   }
-
-  // }
-
-    //display label and values if tax on item & discount on item selected and values are there
+    //display label and values if tax on item & discount on item selected and values are 
+    if(this.activeInv.taxList[0].percentage == 0){  // show tax field only when taxes are added
+      this.showTaxList = true
+    }else{
+      this.showTaxList = false
+    }
     if(this.activeInv !== undefined){
 
       if(this.activeInv.discount_on_item == 1){

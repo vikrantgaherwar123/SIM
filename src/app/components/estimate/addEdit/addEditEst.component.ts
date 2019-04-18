@@ -176,8 +176,8 @@ export class AddEditEstComponent implements OnInit {
         this.estimateId = params.estId;
         this.edit = true
         this.editTerms = false
-        this.editInit(params.estId)
         this.fetchCommonData()
+        this.editInit(params.estId)
       } else {
         this.fetchCommonData()
         this.addInit()
@@ -850,11 +850,11 @@ export class AddEditEstComponent implements OnInit {
           this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
-          $('#add-client').modal('hide')
           this.clientListLoading = false
+          $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
-          window.location.reload(true);
+          // window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -922,7 +922,7 @@ export class AddEditEstComponent implements OnInit {
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
-    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+    if(this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 

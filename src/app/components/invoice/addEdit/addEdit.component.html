@@ -698,7 +698,8 @@
                             <input type="number" name="tax_input" class="form-control" style="margin-right: -4px;"
                               step="any" required onfocus="this.select()" placeholder="0"
                               [(ngModel)]="activeInvoice.adjustment"
-                              (change)=setTwoNumberDecimal(activeInvoice.adjustment) (keyup)="calculateInvoice()" />
+                               (keyup)="calculateInvoice()" /> 
+                               <!-- (change)=setTwoNumberDecimal(activeInvoice.adjustment) // removed this function-->
 
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
@@ -1067,10 +1068,10 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-raised btn-custom-1 width20btn" (click)="closeItemModel()">
+        <button type="button" class="btn btn-raised save_btn btn-custom-1 width20btn" (click)="closeItemModel()">
           Close
         </button>
-        <button type="button" id="saveClientButton" style="border-radius: 1px;" class="btn btn-success width20btn"
+        <button type="button" id="saveClientButton" style="border-radius: 1px;" class="btn change_bg btn-success width20btn"
           [disabled]="!itemform.valid" (click)="addEditInvoiceItem(itemform.controls.uid.value)">
           Edit Item
         </button>
