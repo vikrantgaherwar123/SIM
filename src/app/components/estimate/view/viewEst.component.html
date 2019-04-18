@@ -223,22 +223,22 @@
                 <!--table head content itemDescription , Qty , Rate ,Amount start -->
                 <thead>
                   <tr class="hd font-custom-bold">
-                    <td width="48%">
+                    <td width="20%">
                       <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
+                    <td width="10%">
                       <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
+                    <td width="10%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
+                    <td width="10%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
+                    <td width="10%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
-                    <td width="18%">
+                    <td width="10%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
@@ -459,7 +459,7 @@
           </div>
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}}
           </div>
           
 

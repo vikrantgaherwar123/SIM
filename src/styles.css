@@ -729,8 +729,9 @@ option {
 .multiselect-item-checkbox input[type=checkbox] + div:before{
   border: 1px solid #1a73cc !important;
   color: #1a73cc !important;
-  width: 17px !important;
-  height: 17px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 3px;
 }
 .multiselect-item-checkbox input[type=checkbox] + div:before
   {
@@ -739,6 +740,9 @@ option {
   .multiselect-item-checkbox input[type=checkbox] + div:after
   {
     border-width: 0 0 2px 2px !important;
+    width: 9px;
+    height: 4px;
+    margin-top: -2px !important;
     left: 5px !important;
   }
   .multiselect-item-checkbox input[type=checkbox]:checked + div:before{

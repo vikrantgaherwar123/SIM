@@ -82,7 +82,7 @@ export class HeaderComponent implements OnInit {
     this.clientSrc = "assets/images/menu-logo/client_grey.png";
   }
   onSettingHover(){
-    this.settingSrc = "assets/images/menu-logo/settingsGreayHead.png";
+    this.settingSrc = "assets/images/menu-logo/settingsHeader.png";
   }
   offSettingHover(){
     this.settingSrc = "assets/images/menu-logo/settings-grey.png";
