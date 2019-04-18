@@ -351,12 +351,12 @@
                 <div class="col-12 px-0" style="font-size: 13px;">
                   <div class="form-group">
                     <div *ngFor="let term of activeEstimate.termsAndConditions" class="row mx-0 term_border">
-                      <div *ngIf="term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                      <div class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
                       </div>
-                      <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                      <!-- <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
-                      </div>
+                      </div> -->
                       <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)"
                         style="cursor:pointer;">
                         <a class="closeicon show float-right">

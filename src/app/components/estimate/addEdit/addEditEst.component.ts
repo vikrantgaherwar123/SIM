@@ -337,16 +337,17 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.termsAndConditions = temp
-        } else if (this.termList.length < 1) {
-          this.termConditionService.fetch().subscribe((response: response) => {
-            if (response.termsAndConditionList) {
-              this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-            }
-            this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-          },err => this.openErrorModal(err))
-        } else {
-          this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
         }
+        // else if (this.termList.length < 1) {
+        //   this.termConditionService.fetch().subscribe((response: response) => {
+        //     if (response.termsAndConditionList) {
+        //       this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        //     }
+        //     this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        //   },err => this.openErrorModal(err))
+        // } else {
+        //   this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
+        // }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
@@ -481,22 +482,23 @@ export class AddEditEstComponent implements OnInit {
           for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
             temp.push({
               orgId: this.activeEstimate.termsAndConditions[i].orgId,
-              terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
-              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+              terms: this.activeEstimate.termsAndConditions[i].termsConditionText ? this.activeEstimate.termsAndConditions[i].termsConditionText : this.activeEstimate.termsAndConditions[i].terms_condition,
+              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms ? this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms : this.activeEstimate.termsAndConditions[i].uniqueKeyTerms,
               _id: this.activeEstimate.termsAndConditions[i]._id
             })
           }
           this.activeEstimate.termsAndConditions = temp
-        } else if (this.termList.length < 1) {
-          this.termConditionService.fetch().subscribe((response: response) => {
-            if (response.termsAndConditionList) {
-              this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-            }
-            this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-          },err => this.openErrorModal(err))
-        } else {
-          this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-        }
+        } 
+        // else if (this.termList.length < 1) {
+        //   this.termConditionService.fetch().subscribe((response: response) => {
+        //     if (response.termsAndConditionList) {
+        //       this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
+        //     }
+        //     this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        //   },err => this.openErrorModal(err))
+        // } else {
+        //   this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
+        // }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
