@@ -127,6 +127,7 @@ export class AddEditEstComponent implements OnInit {
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
   recentEstListLoading: boolean;
+  noRecentEstimate: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -234,27 +235,49 @@ export class AddEditEstComponent implements OnInit {
 
     // Fetch selected invoice
     // this.activeEst = this.estimateList.find(x => x.unique_identifier === estId); //when came from view component
+    if(this.estimateList){
+      this.noRecentEstimate = true;
+      this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
+    }
 
     this.recentEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
-    
     if(this.recentEstimate){
-      this.recentEstListLoading = false;
-
-      this.discountFlag = this.recentEstimate.discountFlag;
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
-
-        if(this.activeEstimate.discount_on_item == 1){
-          this.noDiscountOnItem = true;
-          this.activeEstimate.tax_on_item = 0; //this is a condition when user saved est by tax on item it was 2 we set it to 0 
-        }else{
-          this.noDiscountOnItem = false;
-        }
+      this.noRecentEstimate = false;
+      this.activeEstimate = this.recentEstimate
+    }
     
+    if(this.activeEstimate){
+      this.recentEstListLoading = false;
+      //adjust the store variables in our used variables
+      if(this.noRecentEstimate){
+        this.activeEstimate.listItems = this.activeEstimate.alstQuotProduct;
+        this.activeEstimate.termsAndConditions = this.activeEstimate.alstQuotTermsCondition;
+        this.activeEstimate.percentage_flag =  this.activeEstimate.assignDiscountFlag,
+        this.activeEstimate.tax_on_item = this.activeEstimate.assignTaxFlag,
+        this.activeEstimate.created_date = this.activeEstimate.createDate,
+        this.activeEstimate.discount = this.activeEstimate.discount,
+        this.activeEstimate.discountFlag = this.activeEstimate.discountFlag,
+        this.activeEstimate.enabled = this.activeEstimate.enabled,
+        this.activeEstimate.epoch =  this.activeEstimate.epochTime,
+        this.activeEstimate.gross_amount = this.activeEstimate.grossAmount,
+        this.activeEstimate.localId = this.activeEstimate.localId,
+        this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
+        this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
+        this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
+        this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
+        this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
+        this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
+        this.activeEstimate.tax_amount =  this.activeEstimate.taxAmt,
+        this.activeEstimate.taxList =  this.activeEstimate.taxList,
+        this.activeEstimate.tax_rate =  this.activeEstimate.taxrate
         if(this.activeEstimate.tax_on_item == 0){
-          this.noTaxOnItem = true;
-        }else{
-          this.noTaxOnItem = false;
+          this.activeEstimate.discount_on_item = 1;
         }
+      }else{
+        this.discountFlag = this.recentEstimate.discountFlag;
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
+      }
+
 
         if(this.activeEstimate.discount > 0){
           this.noDiscountOnItem = false;
@@ -286,49 +309,7 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
-          // //show discount and tax fields when item settings is selected
-          // for(let i=0;i<this.activeEstimate.listItems.length;i++){
-          // this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
-          // if(this.showTaxRate!==0){
-          //   this.settings.taxFlagLevel = 0;
-          //   // this.setTaxOnItem = true;
-          // }
-          // this.showDiscountRate = this.activeEstimate.listItems[i].discount;
-          // if(this.showDiscountRate!==0){
-          //   this.settings.discountFlagLevel = 1;
-          //   this.showDiscountRateFlag = false;
-          //   this.activeEstimate.discount_on_item = 1;
-          //   // this.setDiscountOnItem = true;
-          // }
-          // }
         }
-
-        //tax and discount position according to settings changed
-        // if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
-        //   this.showTaxRateFlag = false;
-        // } else {
-        //   this.activeEstimate.tax_on_item = 2
-        //   this.showTaxRateFlag = true;
-        // }
-        // if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
-        //   this.showDiscountRateFlag = false;
-        //   this.showDiscountField = true;
-        // } else {
-        //   this.activeEstimate.discount_on_item = 2
-        //   this.showDiscountRateFlag = true;
-        //   this.showDiscountField = false;
-        // }
-        //hide discount and tax fields when bill settings is selected
-        // if (this.activeEstimate.discount !== 0) {
-        //   this.settings.discountFlagLevel = 0;
-        //   this.activeEstimate.discount_on_item = 0;
-        // }
-        // if (this.activeEstimate.tax_rate !== 0) {
-        //   this.settings.taxFlagLevel = 1;
-        //   this.showTaxRate=0;
-        // }
-
-
 
         // Change TnC keys compatible
         if (this.activeEstimate.termsAndConditions) {
@@ -343,16 +324,6 @@ export class AddEditEstComponent implements OnInit {
           }
           this.activeEstimate.termsAndConditions = temp
         }
-        // else if (this.termList.length < 1) {
-        //   this.termConditionService.fetch().subscribe((response: response) => {
-        //     if (response.termsAndConditionList) {
-        //       this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-        //     }
-        //     this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-        //   },err => this.openErrorModal(err))
-        // } else {
-        //   this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-        // }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
@@ -361,8 +332,6 @@ export class AddEditEstComponent implements OnInit {
         // Tax and discounts show or hide
         if (this.activeEstimate.discount == 0) {
           this.activeEstimate.percentage_flag = null
-        }else{
-          this.activeEstimate.discount_on_item = 0;
         }
         if (this.activeEstimate.shipping_charges == 0) {
           this.activeEstimate.shipping_charges = undefined
@@ -372,8 +341,6 @@ export class AddEditEstComponent implements OnInit {
         }
         if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
           this.activeEstimate.tax_rate = null
-        }else{
-          this.activeEstimate.tax_on_item = 1;
         }
 
         // Wait for clients to be loaded before setting active client
@@ -386,6 +353,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       }
+      
 
     else if(this.recentEstListLoading){
 
@@ -453,33 +421,6 @@ export class AddEditEstComponent implements OnInit {
           }
           }
         }
-
-        //tax and discount position according to settings changed
-        // if (this.settings.taxFlagLevel === 0 && this.showTaxRate !== 0) {
-        //   this.showTaxRateFlag = false;
-        // } else {
-        //   this.activeEstimate.tax_on_item = 2
-        //   this.showTaxRateFlag = true;
-        // }
-        // if (this.settings.discountFlagLevel === 1 && this.showDiscountRate !== 0) {
-        //   this.showDiscountRateFlag = false;
-        //   this.showDiscountField = true;
-        // } else {
-        //   this.activeEstimate.discount_on_item = 2
-        //   this.showDiscountRateFlag = true;
-        //   this.showDiscountField = false;
-        // }
-        //hide discount and tax fields when bill settings is selected
-        // if (this.activeEstimate.discount !== 0) {
-        //   this.settings.discountFlagLevel = 0;
-        //   this.activeEstimate.discount_on_item = 0;
-        // }
-        // if (this.activeEstimate.tax_rate !== 0) {
-        //   this.settings.taxFlagLevel = 1;
-        //   this.showTaxRate=0;
-        // }
-
-
 
         // Change TnC keys compatible
         if (this.activeEstimate.termsAndConditions) {
@@ -1238,7 +1179,7 @@ export class AddEditEstComponent implements OnInit {
               self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
             }
           })
-
+        // Add Estimate to recent store
           this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
