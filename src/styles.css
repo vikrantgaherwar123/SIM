@@ -631,6 +631,7 @@ option {
 {
   width: 20px;
   padding-left: 3px;
+  padding-top: 4px;
 }
 .form-control[readonly] {
   /* background-color: #eaeaea !important; */

@@ -191,7 +191,7 @@ a.morelink {
 }
 .search_div{
   border-left: 1px solid #cecece;
-  margin-top: -14px;
+  /* margin-top: -14px; */
   background-color: #dee2e5;
 }
 .add_invoice{

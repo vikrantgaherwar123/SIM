@@ -1762,8 +1762,6 @@ export class AddEditComponent implements OnInit {
     this.router.navigate([`viewtodaysinvoice/${invId}`])
   }
 
-  
-
   addNewInvoice(){
     this.viewTodaysInvoice = false;
     this.invoiceId = '';
