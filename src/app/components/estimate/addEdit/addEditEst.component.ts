@@ -263,7 +263,7 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.localId = this.activeEstimate.localId,
         this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
         this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
-        this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
+        // this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
         this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
         this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
         this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
@@ -309,6 +309,11 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
+          for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            if(this.activeEstimate.listItems[i].discount !==0){
+              this.activeEstimate.discount_on_item = 1;
+            }
+          }
         }
 
         // Change TnC keys compatible
@@ -435,16 +440,6 @@ export class AddEditEstComponent implements OnInit {
           }
           this.activeEstimate.termsAndConditions = temp
         } 
-        // else if (this.termList.length < 1) {
-        //   this.termConditionService.fetch().subscribe((response: response) => {
-        //     if (response.termsAndConditionList) {
-        //       this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-        //     }
-        //     this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-        //   },err => this.openErrorModal(err))
-        // } else {
-        //   this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-        // }
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
