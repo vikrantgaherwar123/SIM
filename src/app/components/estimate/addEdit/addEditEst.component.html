@@ -137,7 +137,7 @@
                     <td width="9%" *ngIf="activeEstimate.tax_on_item === 0">
                       <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="rate" disabled value="Tax (%)" />
                     </td>
-                    <td width="9%" *ngIf="noDiscountOnItem || activeEstimate.discount_on_item == 1 ">
+                    <td width="9%" *ngIf="activeEstimate.discount_on_item == 1">
                       <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="rate" disabled
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
@@ -177,12 +177,12 @@
                         {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="noTaxOnItem || activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
+                    <td *ngIf="activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
                         {{item.tax_rate | number:'1.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="noDiscountOnItem || activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
+                    <td *ngIf="activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
                         {{item.discount | number:'1.2-2'}}
                       </div>
@@ -352,9 +352,9 @@
                       <div class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;color:black !important">{{term.terms}}</span>
                       </div>
-                      <!-- <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
+                      <div *ngIf="!term.terms" class="col-8 col-md-10 pr-0 mb-1" style="color: #a4a4a4;">
                         <span style="word-wrap: break-word;font-size: 12.5px;">{{term.terms_condition}}</span>
-                      </div> -->
+                      </div>
                       <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromEstimate(term)"
                         style="cursor:pointer;">
                         <a class="closeicon show float-right">

@@ -133,6 +133,13 @@ export class ViewTodaysEstimateComponent implements OnInit {
         }
         this.activeEst.alstQuotProduct = temp
       }
+
+      //make discount value 0 if comes undefined when came back from store
+      for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+        if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+          this.activeEst.alstQuotProduct[i].discountRate = 0 ;
+        }
+      }
       //adjust labels according to value comes
       for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
         if(this.activeEst.alstQuotProduct[i].taxRate !== 0){

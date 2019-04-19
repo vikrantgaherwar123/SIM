@@ -265,10 +265,6 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
     //to view updated or viewed invoice in view page
-    console.log(this.settings.taxFlagLevel === 1);
-    console.log(this.settings.discountFlagLevel === 1);
-
-    
     this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
@@ -504,9 +500,13 @@ export class AddEditComponent implements OnInit {
                 if(this.activeEstimate.tax_rate!==0){
                   this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
                   this.activeInvoice.tax_on_item=1;
+                }else{
+                  this.activeInvoice.tax_on_item=0;
                 }
                 if(this.activeEstimate.discount!==0){
                   this.activeInvoice.discount_on_item=0;
+                }else{
+                  this.activeInvoice.discount_on_item=1;
                 }
         
                 // Change list item keys compatible
@@ -731,6 +731,8 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.clientList = uniqueClients;
+        }else{
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
         this.setClientFilter()
         

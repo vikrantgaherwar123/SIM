@@ -188,10 +188,10 @@
                           value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                         >
                       </td>
-                      <td width="10%" *ngIf="activeInv.discount_on_item == 1">
+                      <td width="10%" *ngIf="activeInv.tax_on_item == 0">
                         <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
                       </td>
-                      <td width="10%" *ngIf="activeInv.tax_on_item == 0">
+                      <td width="10%" *ngIf="activeInv.discount_on_item == 1">
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >

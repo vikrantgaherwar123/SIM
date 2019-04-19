@@ -76,11 +76,13 @@ border: #1a73cc solid 1px;
 	font-size: 13px;
 }
 a, a:hover, a:focus {
-	color: #1e81e3 !important;
+	color: #1a73cc !important;
 	cursor: pointer;
 }
 .list-header-col {
-	color: #272727 !important;
+	color: #858d94 !important;
+	font-size: 12px;
+	font-family: helvetica_light !important;
 }
 .mCustomScrollbar {
 	max-height: 492px;/*380*/
@@ -106,6 +108,7 @@ a, a:hover, a:focus {
 	padding-left: 5px;
 	padding-right: 14px;
 	word-wrap: break-word;
+	background-color: #fdfdfe;
 }
 .item span {
 	height: 18px;
@@ -116,6 +119,7 @@ a, a:hover, a:focus {
 }
 .fontsize13 {
 	font-size: 13px !important;
+	color: #474959;
 }
 .no-data-messsage {
 	text-align: center;
@@ -243,6 +247,8 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
   text-align: right;
 	margin: 0 auto;
 	text-transform: uppercase;
+	color: #1c1c1d;
+	
 }
 .ngx-datepicker-container{
   position: absolute;

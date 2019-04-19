@@ -134,14 +134,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           })
         }
         this.activeInv.listItems = temp
-
-        //make discount value 0 if comes undefined when came back from store
-        for (let i = 0; i < this.activeInv.listItems.length; i++) {
-          if(this.activeInv.listItems[i].discount == undefined){
-            this.activeInv.listItems[i].discount = 0 ;
-          }
-        }
-
       }
 
     //display label and values if tax on item & discount on item selected and values are 
@@ -210,17 +202,14 @@ removeEmptyNameClients(){
         this.clientList.splice(i,1);
       }
     }
-    
     }
-  
 }
 
 getClientName(id) {
-  
-  if(this.clientList.length !== 0){
-  return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    if(this.clientList.length !== 0){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
   }
-}
 
 
 goEdit(invId) {
