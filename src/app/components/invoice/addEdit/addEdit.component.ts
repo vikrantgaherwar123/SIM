@@ -270,11 +270,13 @@ export class AddEditComponent implements OnInit {
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
-    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
+    if(this.invoiceList.length !==0 ){ //invoice from view page
+      this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
+    }else{ //invoice from view today's page
     this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId); //when came from todays component
-    // if(this.recentInvoice){
-    //   this.activeInvoice = this.recentInvoice;
-    // }
+    this.activeInvoice = this.recentInvoice;
+    }
+
     if(this.activeInvoice){
 
       this.invoiceListLoading = false;
@@ -312,6 +314,13 @@ export class AddEditComponent implements OnInit {
         if (this.activeInvoice.listItems) {
           var temp = []
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+            if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
+              this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
+            }
+            if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
+              this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
+            }
+            
             temp.push({
               description: this.activeInvoice.listItems[i].description,
               discount: this.activeInvoice.listItems[i].discountRate,
@@ -329,6 +338,19 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.listItems = temp
           
         }
+
+        // Change tnc keys compatible
+        if(this.activeInvoice.termsAndConditions){
+          var temp1 = []
+          for(let i=0; i < this.activeInvoice.termsAndConditions.length; i++) {
+            temp1.push({
+              orgId: this.user.user.orgId,
+              terms: this.activeInvoice.termsAndConditions[i].terms,
+              uniqueKeyTerms: this.activeInvoice.termsAndConditions[i].uniqueKeyFKInvoice,
+            })
+          }
+          this.activeInvoice.termsAndConditions = temp1
+      }
         
        // Change payment keys compatible
         if(this.activeInvoice.payments){
@@ -413,9 +435,17 @@ export class AddEditComponent implements OnInit {
             if (this.activeInvoice.listItems) {
               var temp = []
               for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+                  if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
+                    this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
+                  }
+                  if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
+                    this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
+                  }
                 temp.push({
                   description: this.activeInvoice.listItems[i].description,
                   discount: this.activeInvoice.listItems[i].discountRate,
+                  discount_amount: this.activeInvoice.listItems[i].discount_amount,
+                  tax_amount: this.activeInvoice.listItems[i].tax_amount,
                   product_name: this.activeInvoice.listItems[i].productName,
                   quantity: this.activeInvoice.listItems[i].qty,
                   rate: this.activeInvoice.listItems[i].rate,
@@ -428,6 +458,8 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.listItems = temp
               
             }
+
+            
             
            // Change payment keys compatible
             if(this.activeInvoice.payments){
@@ -652,10 +684,7 @@ export class AddEditComponent implements OnInit {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      // this.settings.date_format = 'dd-mm-yy'
       this.settings.date_format = this.adapter.setLocale('en-GB');
-      // this.formatedDate = new Date;
-      // this.formatedDate = this.datePipe.transform(this.formatedDate,'dd/MM/yyyy')
     }
 
     if (this.settings.currencyInText != "" && typeof this.settings.currencyInText !== 'undefined') {
@@ -742,14 +771,17 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if(this.termList.length < 1 && !this.edit) {
+    if(this.termList.length < 1) {
       this.tncLoading = true;
       this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = false;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        if(this.activeInvoice){
+          self.activeInvoice.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        }
+        
       },err => this.openErrorModal())
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
@@ -1208,7 +1240,7 @@ export class AddEditComponent implements OnInit {
   }
 
   isTermInInvoice(term) {
-    if(this.activeInvoice.termsAndConditions) {
+    if(this.activeInvoice) {
       return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -1471,11 +1503,12 @@ export class AddEditComponent implements OnInit {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
             if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
-              self.store.dispatch(new invoiceActions.remove(index))
+              self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
             } else if(this.activeInvoice.deleted_flag !== 1 ) {
-              self.store.dispatch(new invoiceActions.edit({index, value: result.invoiceList[0]}))
+              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
+              // self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
             }
           })
           // this.store.select('recentInvoices').subscribe(invs => {
@@ -1490,13 +1523,12 @@ export class AddEditComponent implements OnInit {
           // })
         } else {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
-          // self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit && this.activeInvoice.deleted_flag !== 1) {
           this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate([`invoice/view/${this.InvoiceId}`])
+          this.router.navigate([`invoice/add`])
         }else if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
