@@ -17,11 +17,11 @@
   font-size: 13.5px!important;
 }
 .tncContainer{
-  margin-top: -99px;
+  margin-top: -111px;
   height: auto;
   padding-right: 30px;
   padding-right: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 90px !important;
 }
 .checkmark {
   position: absolute;

@@ -123,11 +123,13 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         for (let i = 0; i < this.activeInv.listItems.length; i++) {
           temp.push({
             description: this.activeInv.listItems[i].description,
+            discountAmount: this.activeInv.listItems[i].discountAmount,
             discount: this.activeInv.listItems[i].discount ? this.activeInv.listItems[i].discount : this.activeInv.listItems[i].discountRate,
             productName: this.activeInv.listItems[i].productName ? this.activeInv.listItems[i].productName :this.activeInv.listItems[i].product_name,
             qty: this.activeInv.listItems[i].qty ? this.activeInv.listItems[i].qty : this.activeInv.listItems[i].quantity ,
             rate: this.activeInv.listItems[i].rate,
             tax_rate: this.activeInv.listItems[i].tax_rate,
+            taxAmount: this.activeInv.listItems[i].taxAmount,
             price: this.activeInv.listItems[i].price ? this.activeInv.listItems[i].price : this.activeInv.listItems[i].total,
             uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem ? this.activeInv.listItems[i].uniqueKeyListItem : this.activeInv.listItems[i].unique_identifier,
             unit: this.activeInv.listItems[i].unit,

@@ -460,7 +460,7 @@
             </div> -->
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
-              *ngFor="let estimate of (estimateList |  filter:estSearchTerm | slice:0:estDispLimit); index as key"
+              *ngFor="let estimate of (estimateList |  orderBy: estSortTerm:true | filter:estSearchTerm | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />

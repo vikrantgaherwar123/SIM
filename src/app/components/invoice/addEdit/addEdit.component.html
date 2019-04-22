@@ -260,22 +260,24 @@
                         </td>
                         <td [class.no-border-last]="last">
                           <div class="text_right">
-                            {{item.rate | number:'2.'}}
+                            {{item.rate | number:'1.2-2'}}
                           </div>
                         </td>
                         <td *ngIf="activeInvoice.tax_on_item === 0 " [class.no-border-last]="last">
                           <div class="text_right">
-                            {{item.tax_rate | number:'2.'}}
+                            {{item.tax_amount | number:'1.2-2'}}<br>
+                            {{item.tax_rate | number:'1.2-2'}} %
                           </div>
                         </td>
                         <td *ngIf="activeInvoice.discount_on_item == 1" [class.no-border-last]="last">
                           <div class="text_right">
-                            {{item.discount | number:'2.'}}
+                            {{item.discount_amount | number:'1.2-2'}}<br>
+                            {{item.discount | number:'1.2-2'}} %
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
                           <div class="text_right">
-                            {{item.total | number:'2.'}}
+                            {{item.total | number:'1.2-2'}}
                           </div>
                         </td>
                         <td [class.no-border-last]="last">
