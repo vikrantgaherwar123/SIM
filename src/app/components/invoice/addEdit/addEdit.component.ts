@@ -307,23 +307,19 @@ export class AddEditComponent implements OnInit {
           this.noAdjustment = true;
         }
 
-        for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-          if(!this.activeInvoice.listItems[i].discountRate){
-            this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
-          }
-        }
+        
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
           var temp = []
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
             temp.push({
               description: this.activeInvoice.listItems[i].description,
-              discount: this.activeInvoice.listItems[i].discountRate,
-              product_name: this.activeInvoice.listItems[i].productName,
-              quantity: this.activeInvoice.listItems[i].qty,
+              discount: this.activeInvoice.listItems[i].discount,
+              product_name: this.activeInvoice.listItems[i].product_name,
+              quantity: this.activeInvoice.listItems[i].quantity,
               rate: this.activeInvoice.listItems[i].rate,
               tax_rate: this.activeInvoice.listItems[i].tax_rate,
-              total: this.activeInvoice.listItems[i].price,
+              total: this.activeInvoice.listItems[i].total,
               unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
               unit: this.activeInvoice.listItems[i].unit,
             })
@@ -1485,11 +1481,12 @@ export class AddEditComponent implements OnInit {
               this.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.isDeleted = true;
             } else if(this.activeInvoice.deleted_flag !== 1 ) {
-              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])}))
+              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
             }
           })
         } else {
           self.store.dispatch(new invoiceActions.add([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.resetRecentInvoice((result.invoiceList[0])))
         }
           
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
@@ -1497,7 +1494,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1505,7 +1502,7 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else if(this.activeInvoice.deleted_flag !== 1) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
