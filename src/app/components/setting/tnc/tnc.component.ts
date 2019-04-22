@@ -22,6 +22,7 @@ export class TncComponent implements OnInit {
 
   tncs: Array<terms> = []
   activeTnc: terms = <terms>{}
+  termList: terms[]
   tncLoading: boolean = false
 
   operation: string = ''
@@ -42,20 +43,22 @@ export class TncComponent implements OnInit {
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService,
+    
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
+    store.select('terms').subscribe(terms => this.termList = terms)
   }
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Terms And Conditions');
     this.tncLoading = true
     this.store.dispatch(new tncActions.reset())
-
+    if(this.termList.length < 1) {
     this.tncService.fetch().subscribe((response: any) => {
       this.tncLoading = false
       this.tncs = response.termsAndConditionList.filter(ter => ter.enabled == 0)
       this.store.dispatch(new tncActions.add(this.tncs))
-    },error => this.openErrorModal())
+    },error => this.openErrorModal())}
   }
 
   save(status) {

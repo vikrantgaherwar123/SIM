@@ -38,7 +38,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
   estListLoader: boolean;
   settingsLoading: boolean;
   estimateId: string;
-  showTaXLabel: boolean;
   showDiscountLabel: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;

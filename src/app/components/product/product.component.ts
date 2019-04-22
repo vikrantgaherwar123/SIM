@@ -59,7 +59,7 @@ export class ProductComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Product');
     this.productListLoading = true
 
-    if(this.productList) {
+    if(this.productList.length < 1) {
       this.productService.fetch().subscribe((response: any) => {
         this.productListLoading = false
         if(response.status === 200) {

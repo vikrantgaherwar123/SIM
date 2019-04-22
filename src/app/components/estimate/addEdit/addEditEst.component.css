@@ -182,9 +182,8 @@ select {
   color: #ededed !important;
 } */
 .search_div{
-  border-left: 1px solid #babec3;
-  /* margin-top: -14px; */
   background-color: #dee2e5;
+  margin-top: -4px;
 }
 .add_invoice{
   margin-top: 5px;

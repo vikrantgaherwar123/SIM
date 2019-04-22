@@ -21,7 +21,7 @@
 .welcome-user {
   padding: 0px 2px;
   text-align: right;
-  font-size: 14px;
+  font-size: 13px;
   color: #697887;
 }
 .user-logout h6 {
@@ -36,9 +36,9 @@
 }
 .span_text{
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   padding: 4px;
   font-family: helvetica_regular;
   color: #697887;
@@ -97,6 +97,9 @@
 .active{
   /* padding: 0px 8px 16px 0px; */
   border-bottom: 3px solid #1a73cc;
+}
+.active_text{
+  color: #1a73cc; /*#9a999a*/
 }
 .menu_img{
   margin-left: -15px;

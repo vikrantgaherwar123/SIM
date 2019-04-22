@@ -126,7 +126,7 @@ input.ng-dirty.ng-invalid {
 }
 .step_text{
   padding: 4px 1px 2px 12px;
-  color: #1f96f2;
+  color: #1a73cc;
   font-size: 12px;
   font-family: helvetica_regular!important;
 }
@@ -204,7 +204,7 @@ input.ng-dirty.ng-invalid {
   height: 16px;
 }
 .verticle_line{
-  border-left: 4px solid #0295ff;
+  border-left: 4px solid #1a73cc;
   border-radius: 36px;
 }
 .upload_btn{
@@ -346,7 +346,7 @@ input.ng-dirty.ng-invalid {
   box-shadow: 0 0px 0px 0 rgba(0,0,0,.16), 0 0px 0px 0 rgba(0,0,0,.12);
 }
 .clear_btn{
-  color: #0299ff !important;
+  color: #1a73cc!important;
   font-family: helvetica_regular!important;
 }
 .transparent_div{

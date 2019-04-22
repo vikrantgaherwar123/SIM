@@ -8,13 +8,6 @@
               style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
               <span style="color:#1a73cc">Client: </span>
               <span style="color: black;font-family: quicksand_bold !important;">
-                <!-- {{(estimateQueryForm.client.value?.length > 0) ? estimateQueryForm.client.value[0].name : 'None'}} -->
-                <!-- <span *ngIf="estimateQueryForm.client.value?.length > 1"
-                  [title]="getNames()"
-                >
-                  (+{{estimateQueryForm.client.value.length - 1}} {{estimateQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                </span>, -->
-                <!-- <span *ngFor="let client of estimateQueryForm.client.value"> {{client.name}}  +</span> -->
               </span>
               <img src="assets/images/date.png" 
               style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#1a73cc">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
@@ -26,8 +19,6 @@
                 (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
                 estimateQueryForm.dateRange.end.value.getFullYear() : 0
               }}</span>
-              <!-- <img src="assets/images/payment2.png" 
-              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
     
             <div class="col-12 col-md-2">
@@ -223,22 +214,22 @@
                 <!--table head content itemDescription , Qty , Rate ,Amount start -->
                 <thead>
                   <tr class="hd font-custom-bold">
-                    <td width="48%">
+                    <td width="20%">
                       <input type="text" id="itemDescLabel" class="bld w-100" disabled style="text-align:left;" value="{{settings.mTvProducts ? settings.mTvProducts : 'PRO_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
+                    <td width="10%">
                       <input type="text" id="itemQtyLabel" name="quantity" class="bld w-100 text-right" disabled value="{{settings.mTvQty ? settings.mTvQty : 'QTY_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
+                    <td width="10%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
+                    <td width="10%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
-                    <td width="17%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
+                    <td width="10%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
-                    <td width="18%">
+                    <td width="10%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
                         value="{{settings.mTvAmount ? settings.mTvAmount : 'AMT_LABEL' | translate}}" disabled>
                     </td>
@@ -459,7 +450,7 @@
           </div>
 
           <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
-            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}} {{settings.Estimate}}
+            <img src="assets/images/list-icon/invoice16.png" style="padding: 0px 8px 3px 0px;">List of {{settings.mTvEstimate ? settings.Estimate : 'Estimate'}}
           </div>
           
 
@@ -469,7 +460,7 @@
             </div> -->
             <!-- [class.selected]="estimate.unique_identifier == routeParams.estId" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == activeEst.unique_identifier)}"
-              *ngFor="let estimate of (estimateList | orderBy: estSortTerm:false | filterBy:{quetationNo: estSearchTerm} | slice:0:estDispLimit); index as key"
+              *ngFor="let estimate of (estimateList |  orderBy: estSortTerm:true | filter:estSearchTerm | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
                 <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />

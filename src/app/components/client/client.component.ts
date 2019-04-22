@@ -53,8 +53,8 @@ export class ClientComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Clients');
-    this.clientListLoading = true
-    if(this.clientList) {
+    this.clientListLoading = true;
+    if(this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {

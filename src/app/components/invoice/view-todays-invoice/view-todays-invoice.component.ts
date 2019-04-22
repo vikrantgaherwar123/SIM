@@ -144,6 +144,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           temp.push({
             description: this.activeInv.listItems[i].description,
             discount: this.activeInv.listItems[i].discountRate,
+            discountAmount: this.activeInv.listItems[i].discountAmount,
+            taxAmount: this.activeInv.listItems[i].taxAmount,
             product_name: this.activeInv.listItems[i].productName,
             quantity: this.activeInv.listItems[i].qty,
             rate: this.activeInv.listItems[i].rate,
@@ -216,15 +218,13 @@ removeEmptyNameClients(){
       }
     
     }
-  
 }
 
 getClientName(id) {
-  
-  if(this.clientList.length !== 0){
-  return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    if(this.clientList.length !== 0){
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
+    }
   }
-}
 
 
 goEdit(invId) {

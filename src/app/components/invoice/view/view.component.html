@@ -188,10 +188,10 @@
                           value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                         >
                       </td>
-                      <td width="10%" *ngIf="activeInv.discount_on_item == 1">
+                      <td width="10%" *ngIf="activeInv.tax_on_item == 0">
                         <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
                       </td>
-                      <td width="10%" *ngIf="activeInv.tax_on_item == 0">
+                      <td width="10%" *ngIf="activeInv.discount_on_item == 1">
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
@@ -226,22 +226,24 @@
                       </td>
                       <td [class.no-border-last]="last" style="vertical-align: initial;">
                         <div class="text_right">
-                          {{item.rate | number:'2.2-2'}}
+                          {{item.rate | number:'1.2-2'}}
                         </div>
                       </td>
                       <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                         <div class="text_right">
-                          {{item.tax_rate | number:'2.2-2'}}
+                          {{item.taxAmount | number:'1.2-2'}}<br>
+                          {{item.tax_rate | number:'1.2-2'}} %
                         </div>
                       </td>
                       <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                         <div class="text_right">
-                          {{item.discountRate | number:'2.2-2'}} 
+                          {{item.discountAmount | number:'1.2-2'}}<br>
+                          {{item.discountRate | number:'1.2-2'}} %
                         </div>
                       </td>
                       <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                         <div class="text_right">
-                          {{item.price | number:'2.2-2'}}
+                          {{item.price | number:'1.2-2'}}
                         </div>
                       </td>
                     </tr>
@@ -320,14 +322,16 @@
                 </div>
   
                 <!-- TaxList -->
-                <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
-                  <div class="col-4 discount-tax-label">
-                      <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                      <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
-                  </div>
-                  <div class="col-8 ">
-                    <div class="text-right">
-                      {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                <div *ngIf="activeInv.taxList !== 0">
+                  <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
+                    <div class="col-4 discount-tax-label">
+                        <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                        <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                    </div>
+                    <div class="col-8 ">
+                      <div class="text-right">
+                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -421,7 +425,7 @@
                       <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                     </a>
                   </div>
-                  <div class="col-6 px-0" style="padding-top: 15px;">
+                  <div class="col-6 px-0">
                     <a data-toggle="dropdown" Title="Search By" aria-haspopup="true" aria-expanded="false" class="pull-right list_drop back">
                       <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                     </a>

@@ -725,6 +725,8 @@ export class AddEditComponent implements OnInit {
             }
           });
           this.clientList = uniqueClients;
+        }else{
+          this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
         
         this.removeEmptyNameClients();

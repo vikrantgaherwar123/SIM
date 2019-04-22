@@ -33,7 +33,7 @@
           </div>
 
           <!-- Title -->
-          <div class="text-right px-1">
+          <div class="text-right px-1 same_mrg_20">
             <span class="c-name" type="text" id="title" name="title" *ngIf="settings.mTvInvoice">
               {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}}
             </span>
@@ -50,8 +50,7 @@
                   <span type="text" id="billToLabel" class="adr bill-to font-custom-bold">
                     {{settings.mTvBillTo ? settings.mTvBillTo : 'Bill To'}}
                   </span>
-                  <div *ngIf="activeClient" class="font-custom-bold"
-                    style="padding-top: 4px;font-size: 23px;padding-bottom: 10px;">
+                  <div *ngIf="activeClient" class="font-custom-bold client_name">
                     {{activeClient.name}}
                   </div>
                 </div>
@@ -185,22 +184,24 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.rate | number:'2.2-2'}}
+                        {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
-                        {{item.tax_rate | number:'2.2-2'}}
+                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        {{item.tax_rate | number:'1.2-2'}} %
                       </div>
                     </td>
                     <td  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discount | number:'2.'}} 
+                        {{item.discountAmount | number:'1.1-2'}}<br>
+                        {{item.discount | number:'1.1-2'}} %
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.total | number:'2.2-2'}}
+                        {{item.total | number:'1.2-2'}}
                       </div>
                     </td>
                   </tr>
@@ -282,17 +283,19 @@
               </div>
 
               <!-- TaxList -->
-              <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
-                <div class="col-4 discount-tax-label">
-                  <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
-                    {{tax.taxName}}</div>
-                  <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
-                </div>
-                <div class="col-8 ">
-                  <div class="text-right">
-                    {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+              <div *ngIf="showTaxList === false">
+                <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
+                    <div class="col-4 discount-tax-label">
+                      <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
+                        {{tax.taxName}}</div>
+                      <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                    </div>
+                    <div class="col-8 ">
+                      <div class="text-right">
+                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                      </div>
+                    </div>
                   </div>
-                </div>
               </div>
 
               <!-- Shipping -->
@@ -406,7 +409,7 @@
 
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
-            <div [ngClass]="{'item': true, 'row': true}" 
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
