@@ -176,14 +176,14 @@ export class InvoiceService {
     for (var j = 0; j < data.listItems.length; j++) {
       var temp: any = {
         'uniqueKeyListItem': data.listItems[j].uniqueKeyListItem,
-        'productName': data.listItems[j].productName,
+        'product_name': data.listItems[j].product_name,
         'description': data.listItems[j].description == null ? '' : data.listItems[j].description,
-        'qty': data.listItems[j].qty,
+        'quantity': data.listItems[j].quantity,
         'unit': data.listItems[j].unit,
         'rate': data.listItems[j].rate,
-        'discount': data.listItems[j].discountRate,
+        'discount': data.listItems[j].discount,
         'tax_rate': data.listItems[j].tax_rate,
-        'price': data.listItems[j].price,
+        'total': data.listItems[j].total,
         'taxAmount': data.listItems[j].taxAmount,
         'discountAmount': data.listItems[j].discountAmount,
         'uniqueKeyFKProduct': data.listItems[j].uniqueKeyFKProduct,

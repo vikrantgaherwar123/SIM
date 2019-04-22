@@ -147,21 +147,16 @@ export class ViewComponent implements OnInit {
       }
 
       // Set Active invoice whenever invoice list changes
-      this.store.select('invoice').subscribe(invoices => {
-        this.invoiceList = invoices
-        if (this.InvoiceId) {
-          this.setActiveInv(this.InvoiceId)
-          this.closeSearchModel();
-        }
-      })
+      // this.store.select('invoice').subscribe(invoices => {
+      //   this.invoiceList = invoices
+      //   if (this.InvoiceId) {
+      //     this.setActiveInv(this.InvoiceId)
+      //     this.closeSearchModel();
+      //   }
+      // })
 
     })
 
-    // show date as per format changed
-    // this.settingService.fetch().subscribe((response: any) => {
-    //   this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
-    //   this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
-    // },err => this.openErrorModal())
 
     // dropdown settings
     this.dropdownSettings = {
@@ -372,6 +367,27 @@ export class ViewComponent implements OnInit {
     }
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
+      for (let i = 0; i < this.activeInv.listItems.length; i++) {
+        if(this.activeInv.listItems[i].discount ||this.activeInv.listItems[i].discount == 0){
+          this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount
+        }
+        if(this.activeInv.listItems[i].product_name){
+          this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name
+        }
+        if(this.activeInv.listItems[i].quantity){
+          this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity
+        }
+        if(this.activeInv.listItems[i].total){
+          this.activeInv.listItems[i].price = this.activeInv.listItems[i].total
+        }
+        if(this.activeInv.listItems[i].taxAmount ||this.activeInv.listItems[i].taxAmount == 0 ){
+          this.activeInv.listItems[i].tax_amount = this.activeInv.listItems[i].taxAmount;
+        }
+        if(this.activeInv.listItems[i].discountAmount || this.activeInv.listItems[i].discountAmount == 0 ){
+          this.activeInv.listItems[i].discount_amount = this.activeInv.listItems[i].discountAmount;
+        }
+      }
+
 
       if(this.activeInv.discount_on_item == 1){
         this.noDiscountOnItem = true;

@@ -43,6 +43,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  getTodaysInvoice: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -61,10 +62,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        this.removeEmptyNameClients();
         // this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
         this.clientList = response.records.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
     }else{
+      this.removeEmptyNameClients();
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
     //fetch settings when user comes to this component
@@ -83,7 +86,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
 
   fetchInvoices() {
-    
+    this.getTodaysInvoice = true;  
     // Fetch invoices with given query
     var start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -95,11 +98,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
-      if (response.status === 200) {    
+      if (response.status === 200) { 
+         
         this.invListLoader = false
         var obj = []
         obj = response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []              
-        this.store.dispatch(new invoiceActions.resetRecentInvoice(obj))
+        this.store.dispatch(new invoiceActions.resetRecentInvoice(obj));
         this.store.select('recentInvoices').subscribe(invoices => {
           this.recentInvoiceList = invoices
         })
@@ -115,32 +119,45 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    // this.invoiceId = invId;
     this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
+
+    //display label and values if tax on item & discount on item selected and values are there
+    if(this.activeInv !== undefined){
+      for (let i = 0; i < this.activeInv.listItems.length; i++) {
+        if(this.activeInv.listItems[i].discount ||this.activeInv.listItems[i].discount == 0){
+          this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount
+        }
+        if(this.activeInv.listItems[i].product_name){
+          this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name
+        }
+        if(this.activeInv.listItems[i].quantity){
+          this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity
+        }
+        if(this.activeInv.listItems[i].total){
+          this.activeInv.listItems[i].price = this.activeInv.listItems[i].total
+        }
+      }
 
       if (this.activeInv.listItems) {
         var temp = []
         for (let i = 0; i < this.activeInv.listItems.length; i++) {
           temp.push({
             description: this.activeInv.listItems[i].description,
+            discount: this.activeInv.listItems[i].discountRate,
             discountAmount: this.activeInv.listItems[i].discountAmount,
-            discount: this.activeInv.listItems[i].discount ? this.activeInv.listItems[i].discount : this.activeInv.listItems[i].discountRate,
-            productName: this.activeInv.listItems[i].productName ? this.activeInv.listItems[i].productName :this.activeInv.listItems[i].product_name,
-            qty: this.activeInv.listItems[i].qty ? this.activeInv.listItems[i].qty : this.activeInv.listItems[i].quantity ,
+            taxAmount: this.activeInv.listItems[i].taxAmount,
+            product_name: this.activeInv.listItems[i].productName,
+            quantity: this.activeInv.listItems[i].qty,
             rate: this.activeInv.listItems[i].rate,
             tax_rate: this.activeInv.listItems[i].tax_rate,
-            taxAmount: this.activeInv.listItems[i].taxAmount,
-            price: this.activeInv.listItems[i].price ? this.activeInv.listItems[i].price : this.activeInv.listItems[i].total,
-            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem ? this.activeInv.listItems[i].uniqueKeyListItem : this.activeInv.listItems[i].unique_identifier,
+            total: this.activeInv.listItems[i].price,
+            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
             unit: this.activeInv.listItems[i].unit,
           })
         }
         this.activeInv.listItems = temp
+        
       }
-
-    //display label and values if tax on item & discount on item selected and values are 
-    
-    if(this.activeInv !== undefined){
 
       if(this.activeInv.discount_on_item == 1){
         this.noDiscountOnItem = true;
@@ -194,14 +211,10 @@ paidAmount() {
 removeEmptyNameClients(){
   //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }else{
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
+      if(this.clientList[i].name == undefined){
         this.clientList.splice(i,1);
       }
-    }
+    
     }
 }
 
