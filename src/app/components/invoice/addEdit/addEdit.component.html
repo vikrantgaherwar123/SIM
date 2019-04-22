@@ -427,12 +427,9 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
                     </div>
-                    <div><!--*ngIf="showTaxRateFlag === true"-->
-                      <div
-                        *ngIf="settings.taxFlagLevel == 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
-                        <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
-                         (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
-                      </div>
+                    <div *ngIf="settings.taxFlagLevel == 1 && activeInvoice.tax_on_item === 2"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
+                      <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
+                        (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noAdjustment ,

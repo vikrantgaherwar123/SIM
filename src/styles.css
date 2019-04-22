@@ -965,6 +965,9 @@ background-color: none;
   margin-left: 4px;
   color: #697887;
 }
+.header_menu_text:hover{
+  color: #1a73cc;
+}
 .edit_delete_icon{
   margin-top: -5px;
 }

@@ -253,7 +253,7 @@
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
                   </div>
                   <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
                 </div>
@@ -283,7 +283,7 @@
               </div>
 
               <!-- TaxList -->
-              <div *ngIf="showTaxList === false">
+              <div>
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                     <div class="col-4 discount-tax-label">
                       <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
@@ -312,7 +312,7 @@
               </div>
 
               <!-- Adjustment -->
-              <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
+              <div *ngIf="activeInv.adjustment != 0 && activeInv.adjustment !== null" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
                     {{settings.adjustment ? settings.adjustment : 'Adjustment'}}

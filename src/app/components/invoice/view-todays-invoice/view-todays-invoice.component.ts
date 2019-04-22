@@ -191,8 +191,6 @@ paidAmount() {
 
   return temp
 }
-
-
 removeEmptyNameClients(){
   //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
