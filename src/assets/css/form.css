@@ -22,13 +22,7 @@
 .scroll-bar-shadow {
 	box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.12), 0px 8px 8px 0px rgba(0,0,0,0.24);
 }
-.list-shadow {
-	/* display: inline-block; */
-	/* box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5); */
-	/* -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5); */
-	border-left: 1px solid #cecece;
-}
+
 .filter-box {
 	background: #ffffff;
 	height: 116px !important;

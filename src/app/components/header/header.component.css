@@ -1,5 +1,5 @@
 .header {
-  border-bottom: 2px solid #e4e7e9;/*e3e3e3*/
+  /* border-bottom: 2px solid #e4e7e9; */
   background-color: #fdfdfe;
   height: 56px;
   /* padding-top: 10px;
@@ -36,7 +36,7 @@
 }
 .span_text{
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
   padding: 4px;
@@ -180,7 +180,7 @@
   width: 66px;
 }
 .logout-user{
-  font-size: 24px;
+  font-size: 20px;
   color: #1a73cc;
 }
 .logout-user:hover{

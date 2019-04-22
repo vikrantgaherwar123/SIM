@@ -399,7 +399,7 @@ hr {
   content: '\f078';
   font: normal normal normal 17px/1 FontAwesome;
   right: 25px;
-  top: -6px;
+  top: -10px;
   height: 24px;
   -webkit-text-stroke: 1px white;
   font-size: 16px;
@@ -1271,4 +1271,10 @@ textarea{
 .same_mrg_20{
   margin-top: 20px !important;
   margin-bottom: 20px !important;
+}
+.mrg_top_14{
+  margin-top: 14px;
+}
+.setting_arrow{
+  margin-left: 100px;
 }

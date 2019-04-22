@@ -3,17 +3,17 @@
       <form class="form-horizontal back shadow settingForm" style="margin-top: 0px;position: fixed;"  #addTaxesForm="ngForm" enctype="multipart/form-data">
         <div class="row mx-0">
           <div class="row">
-              <div class="label_div" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
-                <span>Primary settings</span>
+              <div class="label_div row col-12" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                <span class="col-6">Primary settings</span><img src="assets/images/next12.png" class="setting_arrow col-4">
               </div>
               <div class="label_div" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
-                <span>Custom Field Name</span>
+                <span>Custom Field Name</span><img src="assets/images/next12.png" class="setting_arrow">
               </div>
               <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                <span>Banking Details</span>
+                <span>Banking Details</span><img src="assets/images/next12.png" class="setting_arrow">
               </div>
               <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
-                <span>Terms & Conditions</span>
+                <span>Terms & Conditions</span><img src="assets/images/next12.png" class="setting_arrow">
               </div>
           </div>
         </div>
