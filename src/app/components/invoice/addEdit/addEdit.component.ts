@@ -273,6 +273,7 @@ export class AddEditComponent implements OnInit {
     if(this.invoiceList.length !==0 ){ //invoice from view page
       this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
     }else{ //invoice from view today's page
+    this.invoiceList = [];
     this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId); //when came from todays component
     this.activeInvoice = this.recentInvoice;
     }
@@ -338,19 +339,6 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.listItems = temp
           
         }
-
-        // Change tnc keys compatible
-        if(this.activeInvoice.termsAndConditions){
-          var temp1 = []
-          for(let i=0; i < this.activeInvoice.termsAndConditions.length; i++) {
-            temp1.push({
-              orgId: this.user.user.orgId,
-              terms: this.activeInvoice.termsAndConditions[i].terms,
-              uniqueKeyTerms: this.activeInvoice.termsAndConditions[i].uniqueKeyFKInvoice,
-            })
-          }
-          this.activeInvoice.termsAndConditions = temp1
-      }
         
        // Change payment keys compatible
         if(this.activeInvoice.payments){
@@ -1503,29 +1491,19 @@ export class AddEditComponent implements OnInit {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
             if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
-              self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
+              self.store.dispatch(new invoiceActions.remove(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
-            } else if(this.activeInvoice.deleted_flag !== 1 ) {
-              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
-              // self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
             }
+            // else if(this.activeInvoice.deleted_flag !== 0 ) {
+            //   self.store.dispatch(new invoiceActions.edit({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
+            // }
           })
-          // this.store.select('recentInvoices').subscribe(invs => {
-          //   let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
-          //   //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
-          //   if (result.invoiceList[0].deleted_flag == 1) {
-          //     this.store.dispatch(new invoiceActions.removeRecentInvoice(index))
-          //     this.isDeleted = true;
-          //   } else if(this.activeInvoice.deleted_flag !== 1 ) {
-          //     self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: this.invoiceService.changeKeysForStore(result.invoiceList[0])}))
-          //   }
-          // })
         } else {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
           
-        // Reset Create Invoice page for new invoice creation or redirect to view page if edited
+        // Reset Create Invoice page for new invoice creation
         if(this.edit && this.activeInvoice.deleted_flag !== 1) {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/add`])

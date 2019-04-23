@@ -223,7 +223,8 @@
                 <ul class=" col-sm-12 list-unstyled">
                   <li class="row" *ngFor="let term of activeInv.termsAndConditions">
                     <div class="col-md-12 margin-bottom-5px">
-                      <span style="word-wrap: break-word;color: #a4a4a4;">{{term.terms}}</span>
+                      <span *ngIf="term.terms" style="word-wrap: break-word;color: #a4a4a4;">{{term.terms}}</span>
+                      <span *ngIf="!term.terms" style="word-wrap: break-word;color: #a4a4a4;">{{term.terms_condition}}</span>
                       <br /></div>
                   </li>
                 </ul>
