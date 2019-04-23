@@ -122,14 +122,29 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   setActiveInv(invId: string = '') {
     this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
 
-    //display label and values if tax on item & discount on item selected and values are there
-    if(this.activeInv !== undefined){
+    //display label and values if tax on Bill & discount on Bill selected and values are there
+    if(this.activeInv.discount > 0){
+      this.noDiscountOnItem = true;
+    }
 
+    if(this.activeInv.tax_rate > 0){
+      this.noTaxOnItem = true;
+    }
+
+    //set variables according to data comes from API and store 
+    if(this.activeInv !== undefined){
       for(let i = 0; i < this.activeInv.listItems.length; i++){
         if(this.activeInv.listItems[i].discount || this.activeInv.listItems[i].discount == 0){
-          this.isRecentInvoice = false;
+          
           this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount;
         }
+        if(this.activeInv.listItems[i].discount_amount || this.activeInv.listItems[i].discount_amount ==0){
+          this.activeInv.listItems[i].discountAmount = this.activeInv.listItems[i].discount_amount;
+        }
+        if(this.activeInv.listItems[i].tax_amount || this.activeInv.listItems[i].tax_amount == 0){
+          this.activeInv.listItems[i].taxAmount = this.activeInv.listItems[i].tax_amount;
+        }
+        
         if(this.activeInv.listItems[i].product_name){
           this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name;
         }
@@ -143,10 +158,12 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           this.activeInv.listItems[i].uniqueKeyListItem = this.activeInv.listItems[i].unique_identifier;
         }
       }
+
       
-        if (this.activeInv.listItems && this.isRecentInvoice) {
+        if (this.activeInv.listItems) {
           var temp = []
           for (let i = 0; i < this.activeInv.listItems.length; i++) {
+            
             temp.push({
               description: this.activeInv.listItems[i].description,
               discountRate: this.activeInv.listItems[i].discountRate,
@@ -165,26 +182,19 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         }
       
 
-      if(this.activeInv.discount_on_item == 1){
-        this.noDiscountOnItem = true;
-      }else{
-        this.noDiscountOnItem = false;
-      }
+      // if(this.activeInv.discount_on_item == 1){
+      //   this.noDiscountOnItem = true;
+      // }else{
+      //   this.noDiscountOnItem = false;
+      // }
   
-      if(this.activeInv.tax_on_item == 0){
-        this.noTaxOnItem = true;
-      }else{
-        this.noTaxOnItem = false;
-      }
+      // if(this.activeInv.tax_on_item == 0){
+      //   this.noTaxOnItem = true;
+      // }else{
+      //   this.noTaxOnItem = false;
+      // }
 
-    //display label and values if tax on Bill & discount on Bill selected and values are there
-    if(this.activeInv.discount > 0){
-      this.noDiscountOnItem = false;
-    }
-
-    if(this.activeInv.tax_rate > 0){
-      this.noTaxOnItem = false;
-    }
+    
     }
     
 
