@@ -401,14 +401,10 @@
         </div>
         <!-- recently added invoice -->
         <div class="row" style="margin-top: 14px;">
-          <div
-            class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
-            style="border-top: 1px solid #cecece;">
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
-
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
-
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->

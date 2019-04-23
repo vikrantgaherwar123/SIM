@@ -55,19 +55,31 @@ export class HeaderComponent implements OnInit {
     this.offClientHover();
     this.offSettingHover();
     this.offBatchHover();
+    this.onEstClick();
   }
 
   onEstHover(){
     this.estSrc = "assets/images/menu-logo/estimate_blue.png";
   }
   offEstHover(){
-    this.estSrc = "assets/images/menu-logo/estimate_grey.png";
+      this.estSrc = "assets/images/menu-logo/estimate_grey.png";
+  }
+  onEstClick(){
+    if(this.router.url == "/estimate/add"){
+      this.estSrc = "assets/images/menu-logo/estimate_blue.png";
+    }else{
+      this.estSrc = "assets/images/menu-logo/estimate_grey.png";
+    }
   }
   onInvHover(){
     this.invSrc = "assets/images/menu-logo/invoice_blue.png";
   }
   offInvHover(){
-    this.invSrc = "assets/images/menu-logo/invoice_grey.png";
+    if(this.router.url == "/invoice/add"){
+      this.invSrc = "assets/images/menu-logo/invoice_blue.png";
+    }else{
+      this.invSrc = "assets/images/menu-logo/invoice_grey.png";
+    }
   }
   onProductHover(){
     this.productSrc = "assets/images/menu-logo/product_blue.png";

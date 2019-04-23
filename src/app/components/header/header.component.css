@@ -39,7 +39,7 @@
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
-  padding: 4px;
+  padding: 10px;
   font-family: helvetica_regular;
   color: #697887;
 
@@ -96,7 +96,7 @@
 }
 .active{
   /* padding: 0px 8px 16px 0px; */
-  border-bottom: 3px solid #1a73cc;
+  border-bottom: 4px solid #1a73cc;
 }
 .active_text{
   color: #1a73cc; /*#9a999a*/
@@ -136,8 +136,8 @@
   margin: 1.125rem 0 0;
   font-size: 1rem;
   color: #212529;
-  top: -5px !important;
-  left: 46px !important;
+  top: 1px !important;
+  left: 15px !important;
   text-align: left;
   list-style: none;
   background-color: #fff;
@@ -184,7 +184,7 @@
   color: #1a73cc;
 }
 .logout-user:hover{
-  font-size: 24px;
+  font-size: 20px;
   color: #1e81e3;
 }
 

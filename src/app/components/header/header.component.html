@@ -9,9 +9,9 @@
             </button>
           </h5>
         </div>
-        <div class="d-sm-flex"  >
+        <div class="d-sm-flex">
           <h5 class="menu_list">
-            <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()" [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
+            <button (mouseover)="onEstHover()" (click)="onEstClick()" [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
               <span class="span_text">
                 <img src="{{estSrc}}" class="nav_img" alt="" /><span class="header_menu_text" [class.active_text]="router.url==='/estimate/add' || router.url==='/estimate/view'">Estimates</span></span>
             </button>

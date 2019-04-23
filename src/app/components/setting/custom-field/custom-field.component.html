@@ -2,19 +2,27 @@
     <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
           <form class="form-horizontal back shadow settingForm" style="margin-top: 0px;position: fixed;"  #addTaxesForm="ngForm" enctype="multipart/form-data">
             <div class="row mx-0">
-              <div class="row">
-                  <div class="label_div" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
-                    <span>Primary settings</span>
-                  </div>
-                  <div class="label_div" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
-                    <span>Custom Field Name</span>
-                  </div>
-                  <div class="label_div" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                    <span>Banking Details</span>
-                  </div>
-                  <div class="label_div" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
-                    <span>Terms & Conditions</span>
-                  </div>
+              <div>
+                <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                  <span class="col-8">Primary settings</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+                  <span class="col-8">Custom Field Name</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+                  <span class="col-8">Banking Details</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+                  <span class="col-8">Terms & Conditions</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
               </div>
             </div>
             

@@ -311,13 +311,11 @@ export class AddEditComponent implements OnInit {
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
             temp.push({
               description: this.activeInvoice.listItems[i].description,
-              discount: this.activeInvoice.listItems[i].discountRate,
-              discountAmount: this.activeInvoice.listItems[i].discountAmount,
+              discount: this.activeInvoice.listItems[i].discount,
               product_name: this.activeInvoice.listItems[i].productName,
               quantity: this.activeInvoice.listItems[i].qty,
               rate: this.activeInvoice.listItems[i].rate,
               tax_rate: this.activeInvoice.listItems[i].tax_rate,
-              taxAmount: this.activeInvoice.listItems[i].taxAmount,
               total: this.activeInvoice.listItems[i].price,
               unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
               unit: this.activeInvoice.listItems[i].unit,
@@ -421,7 +419,6 @@ export class AddEditComponent implements OnInit {
               for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
                 temp.push({
                   description: this.activeInvoice.listItems[i].description,
-                  discountAmount: this.activeInvoice.listItems[i].discountAmount,
                   discount: this.activeInvoice.listItems[i].discountRate,
                   product_name: this.activeInvoice.listItems[i].productName,
                   quantity: this.activeInvoice.listItems[i].qty,
@@ -1500,7 +1497,7 @@ export class AddEditComponent implements OnInit {
         // Reset Create Invoice page for new invoice creation or redirect to view page if edited
         if(this.edit && this.activeInvoice.deleted_flag !== 1) {
           this.toasterService.pop('success', 'invoice Updated successfully');
-          // this.router.navigate([`invoice/view/${this.InvoiceId}`])
+          this.router.navigate([`invoice/view/${this.InvoiceId}`])
         }else if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           this.toasterService.pop('success', 'Invoice saved successfully');
