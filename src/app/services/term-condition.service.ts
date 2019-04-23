@@ -50,9 +50,9 @@ export class TermConditionService {
 
   changeKeysForInvoiceApi(terms) {
     return {
-      organization_id: terms.orgId,
+      organization_id: terms.orgId ? terms.orgId : terms.serverOrgId,
       terms_condition: terms.terms,
-      unique_identifier: terms.uniqueKeyTerms,
+      unique_identifier: terms.uniqueKeyTerms ? terms.uniqueKeyTerms : terms.uniqueInvoiceTerms,
       _id: terms._id
     }
   }

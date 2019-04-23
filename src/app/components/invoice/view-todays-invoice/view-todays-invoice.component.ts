@@ -44,6 +44,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
   getTodaysInvoice: boolean;
+  isRecentInvoice: boolean;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -63,7 +64,6 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         this.clientListLoading = false
         this.clientList = response.records;
         this.removeEmptyNameClients();
-        // this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
         this.clientList = response.records.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
     }else{
@@ -76,6 +76,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     if(this.recentInvoiceList.length < 1){
       this.fetchInvoices();
     }else{
+      this.isRecentInvoice = true;
       this.route.params.subscribe(params => {
         if (params.invId) {
          this.setActiveInv(params.invId);
@@ -123,41 +124,46 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
-      for (let i = 0; i < this.activeInv.listItems.length; i++) {
-        if(this.activeInv.listItems[i].discount ||this.activeInv.listItems[i].discount == 0){
-          this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount
+
+      for(let i = 0; i < this.activeInv.listItems.length; i++){
+        if(this.activeInv.listItems[i].discount || this.activeInv.listItems[i].discount == 0){
+          this.isRecentInvoice = false;
+          this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount;
         }
         if(this.activeInv.listItems[i].product_name){
-          this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name
+          this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name;
         }
         if(this.activeInv.listItems[i].quantity){
-          this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity
+          this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity;
         }
         if(this.activeInv.listItems[i].total){
-          this.activeInv.listItems[i].price = this.activeInv.listItems[i].total
+          this.activeInv.listItems[i].price = this.activeInv.listItems[i].total;
+        }
+        if(this.activeInv.listItems[i].unique_identifier){
+          this.activeInv.listItems[i].uniqueKeyListItem = this.activeInv.listItems[i].unique_identifier;
         }
       }
-
-      if (this.activeInv.listItems) {
-        var temp = []
-        for (let i = 0; i < this.activeInv.listItems.length; i++) {
-          temp.push({
-            description: this.activeInv.listItems[i].description,
-            discount: this.activeInv.listItems[i].discountRate,
-            discountAmount: this.activeInv.listItems[i].discountAmount,
-            taxAmount: this.activeInv.listItems[i].taxAmount,
-            product_name: this.activeInv.listItems[i].productName,
-            quantity: this.activeInv.listItems[i].qty,
-            rate: this.activeInv.listItems[i].rate,
-            tax_rate: this.activeInv.listItems[i].tax_rate,
-            total: this.activeInv.listItems[i].price,
-            uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
-            unit: this.activeInv.listItems[i].unit,
-          })
+      
+        if (this.activeInv.listItems && this.isRecentInvoice) {
+          var temp = []
+          for (let i = 0; i < this.activeInv.listItems.length; i++) {
+            temp.push({
+              description: this.activeInv.listItems[i].description,
+              discountRate: this.activeInv.listItems[i].discountRate,
+              discount_amount: this.activeInv.listItems[i].discountAmount,
+              tax_amount: this.activeInv.listItems[i].taxAmount,
+              productName: this.activeInv.listItems[i].productName,
+              qty: this.activeInv.listItems[i].qty,
+              rate: this.activeInv.listItems[i].rate,
+              tax_rate: this.activeInv.listItems[i].tax_rate,
+              price: this.activeInv.listItems[i].price,
+              uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
+              unit: this.activeInv.listItems[i].unit,
+            })
+          }
+          this.activeInv.listItems = temp
         }
-        this.activeInv.listItems = temp
-        
-      }
+      
 
       if(this.activeInv.discount_on_item == 1){
         this.noDiscountOnItem = true;

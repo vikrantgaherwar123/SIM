@@ -168,7 +168,7 @@
                       <div class="">
                         <div class="form-group">
                           <div class="text-left product-color" style="border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;margin-left: 10px;">
-                            {{item.product_name}}
+                            {{item.productName}}
                           </div>
                           <div class="text-left text-truncate view_desc" >
                             {{item.description}}
@@ -179,7 +179,7 @@
 
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.quantity | number:'1.'}}
+                        {{item.qty | number:'1.'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
@@ -189,19 +189,19 @@
                     </td>
                     <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
-                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        {{item.tax_amount | number:'1.2-2'}}<br>
                         {{item.tax_rate | number:'1.2-2'}} %
                       </div>
                     </td>
                     <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discountAmount | number:'1.1-2'}}<br>
-                        {{item.discount | number:'1.1-2'}} %
+                        {{item.discount_amount | number:'1.1-2'}}<br>
+                        {{item.discountRate | number:'1.1-2'}} %
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.total | number:'1.2-2'}}
+                        {{item.price | number:'1.2-2'}}
                       </div>
                     </td>
                   </tr>
@@ -223,7 +223,8 @@
                 <ul class=" col-sm-12 list-unstyled">
                   <li class="row" *ngFor="let term of activeInv.termsAndConditions">
                     <div class="col-md-12 margin-bottom-5px">
-                      <span style="word-wrap: break-word;color: #a4a4a4;">{{term.terms}}</span>
+                      <span *ngIf="term.terms" style="word-wrap: break-word;color: #a4a4a4;">{{term.terms}}</span>
+                      <span *ngIf="!term.terms" style="word-wrap: break-word;color: #a4a4a4;">{{term.terms_condition}}</span>
                       <br /></div>
                   </li>
                 </ul>
