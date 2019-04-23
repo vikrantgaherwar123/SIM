@@ -70,7 +70,6 @@ export class AddEditComponent implements OnInit {
   invoiceList: invoice[]
   estimateList: estimate[]
   private clientList: client[]
-  private allClientList: client[]
   activeClient: any = {}
   clientListLoading: boolean
   billingTo = new FormControl()
@@ -146,7 +145,7 @@ export class AddEditComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
 
-    store.select('client').subscribe(clients => this.allClientList = clients)
+    store.select('client').subscribe(clients => this.clientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
@@ -200,9 +199,11 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    //fetch settings when user comes to this component
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     this.addTermModal.setDefault = true; //set term initially default
     $('#navbar').show()
-    // this.settings();
     this.titleService.setTitle('Simple Invoice | Invoice');
     this.route.params.subscribe(params => {
       if (params && params.invId) {
@@ -273,7 +274,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
     }else{ //invoice from view today's page
     this.invoiceList = [];
-    this.recentInvoice = this.recentInvoiceList.find(x => x.unique_identifier === invId); //when came from todays component
+    this.recentInvoice = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]; //when came from todays component
     this.activeInvoice = this.recentInvoice;
     }
 
@@ -308,6 +309,8 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.adjustment){
           this.noAdjustment = true;
         }
+
+        
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
           var temp = []
@@ -321,7 +324,9 @@ export class AddEditComponent implements OnInit {
             
             temp.push({
               description: this.activeInvoice.listItems[i].description,
-              discount: this.activeInvoice.listItems[i].discount,
+              discount: this.activeInvoice.listItems[i].discountRate,
+              discount_amount: this.activeInvoice.listItems[i].discount_amount,
+              tax_amount: this.activeInvoice.listItems[i].tax_amount,
               product_name: this.activeInvoice.listItems[i].productName,
               quantity: this.activeInvoice.listItems[i].qty,
               rate: this.activeInvoice.listItems[i].rate,
@@ -370,19 +375,14 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.adjustment == 0) {
           this.activeInvoice.adjustment = null
         }
-        //to show when editing if value exists
-        // if(this.activeInvoice.tax_amount ==0 || this.activeInvoice.tax_rate ===0){
-        //   this.activeInvoice.tax_on_item = 0;
-        // }else{
-        //   this.activeInvoice.tax_on_item = 1;
-        // }
+        
 
         this.changeDueDate(this.activeInvoice.due_date_flag.toString())
         // Wait for clients to be loaded before setting active client
         var ref = setInterval(() => {
-          if (this.allClientList.length > 0) {
+          if (this.clientList.length > 0) {
             let uid = this.activeInvoice.unique_key_fk_client
-            this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+            this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
             this.billingTo.reset(this.activeClient)
             clearInterval(ref)
           }
@@ -415,11 +415,7 @@ export class AddEditComponent implements OnInit {
               this.noTaxOnItem = false;
             }
             this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-            // if(this.shippingAddress){
-            //   this.noShippingCharges = true; //activate a class if shipping value is present
-            // }else{
-            //   this.noShippingCharges = false;
-            // }
+            
             if(this.activeInvoice.adjustment){
               this.noAdjustment = true;
             }
@@ -492,9 +488,9 @@ export class AddEditComponent implements OnInit {
             this.changeDueDate(this.activeInvoice.due_date_flag.toString())
             // Wait for clients to be loaded before setting active client
             var ref = setInterval(() => {
-              if (this.allClientList.length > 0) {
+              if (this.clientList.length > 0) {
                 let uid = this.activeInvoice.unique_key_fk_client
-                this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
                 this.billingTo.reset(this.activeClient)
                 clearInterval(ref)
               }
@@ -615,11 +611,11 @@ export class AddEditComponent implements OnInit {
                 
                 // Wait for clients to be loaded before setting active client
                 var ref = setInterval(() => {
-                  if (this.allClientList.length > 0) {
+                  if (this.clientList.length > 0) {
                     //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
                     this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
                     let uid = this.activeInvoice.unique_key_fk_client
-                    this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                    this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
                     this.billingTo.reset(this.activeClient)
                     clearInterval(ref)
                   }
@@ -729,7 +725,7 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Clients if not in store
-    if(this.allClientList.length < 1) {
+    if(this.clientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
@@ -751,11 +747,14 @@ export class AddEditComponent implements OnInit {
         }else{
           this.clientList = response.records.filter(recs => recs.enabled == 0)
         }
+        
+        this.removeEmptyNameClients();
         this.setClientFilter()
         
       },err => this.openErrorModal())
       
     } else {
+      this.clientList = this.clientList.filter(recs => recs.enabled == 0)
       this.setClientFilter()
     }
 
@@ -805,8 +804,6 @@ export class AddEditComponent implements OnInit {
   // Client Functions
   
   setClientFilter() {
-    this.store.select('client').subscribe(clients => this.clientList = clients)
-    this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     var seen = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -839,11 +836,12 @@ export class AddEditComponent implements OnInit {
     for (let i = 0; i < this.clientList.length; i++) {
       if(!this.clientList[i].name){
         this.clientList.splice(i,1);
-      }
+      }else{
       var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
       if (tempClient === "") {
         this.clientList.splice(i);
       }
+    }
     }
   }
 
@@ -1489,17 +1487,17 @@ export class AddEditComponent implements OnInit {
         this.invListLoader = false;
         // Update store
         if(this.edit) {
-          this.store.select('invoice').subscribe(invs => {
+          this.store.select('recentInvoices').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
             if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
-              self.store.dispatch(new invoiceActions.remove(index))
+              self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
             }
-            // else if(this.activeInvoice.deleted_flag !== 0 ) {
-            //   self.store.dispatch(new invoiceActions.edit({index, value: [this.invoiceService.changeKeysForStore(result.invoiceList[0])]}))
-            // }
+            else if(this.activeInvoice.deleted_flag !== 0 ) {
+              self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: result.invoiceList[0]}))
+            }
           })
         } else {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
@@ -1510,7 +1508,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'invoice Updated successfully');
           this.router.navigate([`invoice/add`])
         }else if(this.incrementInvNo === true) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
+          self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
@@ -1518,7 +1516,6 @@ export class AddEditComponent implements OnInit {
           // this.router.navigate(['/invoice/add'])
         }
          else if(this.activeInvoice.deleted_flag !== 1) {
-          self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForRecentStore(result.invoiceList[0])]))
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
@@ -1539,7 +1536,7 @@ export class AddEditComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList){
+    if(this.clientList.length !== 0){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }

@@ -62,3 +62,8 @@
 .img-wrap:hover .close {
   opacity: 1;
 }
+.back{
+  background: #ffffff;
+  margin-top: 14px;
+  height: 660px !important;
+}

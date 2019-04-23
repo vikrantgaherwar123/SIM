@@ -896,7 +896,7 @@ background-color: none;
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
-  height: 42px;
+  /* height: 42px; */
   overflow: hidden;
 }
 
@@ -1128,7 +1128,7 @@ background-color: none;
   background-color: #ebf3fb;
 }
 .settingForm{
-  height:657px  !important;
+  height:678px  !important;
   text-align: center;
 }
 
@@ -1276,4 +1276,9 @@ textarea{
 }
 .setting_arrow{
   margin-left: 45px;
+}
+.setting_sidebar_form{
+  margin-top: 0px !important;
+  position: fixed;
+  width: 348px;
 }
