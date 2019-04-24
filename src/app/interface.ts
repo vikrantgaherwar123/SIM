@@ -370,4 +370,7 @@ export interface addEditEstimate {
   termsAndConditions: Array<any>
   unique_identifier: string
   unique_key_fk_client: string
+  version: number
+  deviceCreatedDate: number
+  serverClientId: number
 }

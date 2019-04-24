@@ -49,10 +49,16 @@ export class TermConditionService {
   }
 
   changeKeysForInvoiceApi(terms) {
+    if(terms.serverOrgId){
+      terms.orgId = terms.serverOrgId;
+    }
+    if(terms.uniqueInvoiceTerms){
+      terms.uniqueKeyTerms = terms.uniqueInvoiceTerms;
+    }
     return {
-      organization_id: terms.orgId ? terms.orgId : terms.serverOrgId,
-      terms_condition: terms.terms,
-      unique_identifier: terms.uniqueKeyTerms ? terms.uniqueKeyTerms : terms.uniqueInvoiceTerms,
+      organization_id: terms.orgId ? terms.orgId : terms.organization_id,
+      terms_condition: terms.terms ? terms.terms : terms.terms_condition,
+      unique_identifier: terms.uniqueKeyTerms ? terms.uniqueKeyTerms : terms.unique_identifier,
       _id: terms._id
     }
   }

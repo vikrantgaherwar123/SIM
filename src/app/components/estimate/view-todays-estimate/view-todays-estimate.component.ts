@@ -5,7 +5,7 @@ import { EstimateService } from '../../../services/estimate.service'
 
 import * as invoiceActions from '../../../actions/invoice.action'
 import { AppState } from 'src/app/app.state';
-import { invoice, client, setting, estimate, recentEstimates } from 'src/app/interface';
+import { invoice, client, setting, estimate, recentEstimates, addEditEstimate } from 'src/app/interface';
 import { ClientService } from 'src/app/services/client.service';
 import { SettingService } from '../../../services/setting.service'
 
@@ -41,6 +41,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   showDiscountLabel: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  isRecentInvoice: boolean;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -61,8 +62,10 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     if(this.recentEstimateList.length < 1){
+      this.isRecentInvoice = true;
       this.fetchEstimates();
     }else{
+      this.isRecentInvoice = false;
       this.route.params.subscribe(params => {
         if (params.estId) {
          this.setActiveEst(params.estId);
@@ -115,58 +118,77 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.activeEst = this.recentEstimateList.filter(est => est.unique_identifier == estId)[0]
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
+      if(this.isRecentInvoice){
+        this.activeEst = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEst)
+      }
+      
 
-      if (this.activeEst.alstQuotProduct) {
-        var temp = []
-        for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
-          temp.push({
-            description: this.activeEst.alstQuotProduct[i].description,
-            discountRate: this.activeEst.alstQuotProduct[i].discountRate ? this.activeEst.alstQuotProduct[i].discountRate :this.activeEst.alstQuotProduct[i].discount,
-            productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
-            qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
-            rate: this.activeEst.alstQuotProduct[i].rate,
-            taxRate: this.activeEst.alstQuotProduct[i].tax_rate ? this.activeEst.alstQuotProduct[i].tax_rate : this.activeEst.alstQuotProduct[i].taxRate,
-            price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
-            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
-            unit: this.activeEst.alstQuotProduct[i].unit,
-          })
+      // if (this.activeEst.alstQuotProduct) {
+      //   var temp = []
+      //   for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+      //     temp.push({
+      //       description: this.activeEst.alstQuotProduct[i].description,
+      //       discountRate: this.activeEst.alstQuotProduct[i].discountRate ? this.activeEst.alstQuotProduct[i].discountRate :this.activeEst.alstQuotProduct[i].discount,
+      //       productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
+      //       qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
+      //       rate: this.activeEst.alstQuotProduct[i].rate,
+      //       taxRate: this.activeEst.alstQuotProduct[i].tax_rate ? this.activeEst.alstQuotProduct[i].tax_rate : this.activeEst.alstQuotProduct[i].taxRate,
+      //       price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
+      //       uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
+      //       unit: this.activeEst.alstQuotProduct[i].unit,
+      //     })
+      //   }
+      //   this.activeEst.alstQuotProduct = temp
+      // }
+
+      for(let i = 0; i < this.activeEst.listItems.length; i++){
+        if(this.activeEst.listItems[i].discount || this.activeEst.listItems[i].discount == 0){
+          
+          this.activeEst.listItems[i].discountRate = this.activeEst.listItems[i].discount;
         }
-        this.activeEst.alstQuotProduct = temp
+        if(this.activeEst.listItems[i].discount_amount || this.activeEst.listItems[i].discount_amount ==0){
+          this.activeEst.listItems[i].discountAmt = this.activeEst.listItems[i].discount_amount;
+        }
+        if(this.activeEst.listItems[i].tax_amount || this.activeEst.listItems[i].tax_amount == 0){
+          this.activeEst.listItems[i].taxAmount = this.activeEst.listItems[i].tax_amount;
+        }
+        
+        if(this.activeEst.listItems[i].product_name){
+          this.activeEst.listItems[i].productName = this.activeEst.listItems[i].product_name;
+        }
+        if(this.activeEst.listItems[i].quantity){
+          this.activeEst.listItems[i].qty = this.activeEst.listItems[i].quantity;
+        }
+        if(this.activeEst.listItems[i].total){
+          this.activeEst.listItems[i].price = this.activeEst.listItems[i].total;
+        }
+        if(this.activeEst.listItems[i].unique_identifier){
+          this.activeEst.listItems[i].uniqueKeyFKQuotation = this.activeEst.listItems[i].unique_identifier;
+        }
       }
 
-      //make discount value 0 if comes undefined when came back from store
-      for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
-        if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-          this.activeEst.alstQuotProduct[i].discountRate = 0 ;
+      
+        if (this.activeEst.listItems) {
+          var temp = []
+          for (let i = 0; i < this.activeEst.listItems.length; i++) {
+            
+            temp.push({
+              description: this.activeEst.listItems[i].description,
+              discountRate: this.activeEst.listItems[i].discountRate,
+              discount_amount: this.activeEst.listItems[i].discountAmt,
+              tax_amount: this.activeEst.listItems[i].taxAmount,
+              productName: this.activeEst.listItems[i].productName,
+              qty: this.activeEst.listItems[i].qty,
+              rate: this.activeEst.listItems[i].rate,
+              taxRate: this.activeEst.listItems[i].taxRate,
+              price: this.activeEst.listItems[i].price,
+              uniqueKeyFKProduct: this.activeEst.listItems[i].uniqueKeyFKQuotation,
+              unit: this.activeEst.listItems[i].unit,
+            })
+          }
+          this.activeEst.listItems = temp
         }
-      }
-      //adjust labels according to value comes
-      for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
-        if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
-          this.noTaxOnItem = true;
-        }else{
-          this.noTaxOnItem = false;
-        }
-        if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
-          this.noDiscountOnItem = true;
-        }else{
-          this.noDiscountOnItem = false;
-        }
-      }
-
-      // Change TnC keys compatible
-      if (this.activeEst.alstQuotTermsCondition) {
-        temp = []
-        for (let i = 0; i < this.activeEst.alstQuotTermsCondition.length; i++) {
-          temp.push({
-            orgId: this.activeEst.alstQuotTermsCondition[i].orgId,
-            termsConditionText: this.activeEst.alstQuotTermsCondition[i].terms_condition ? this.activeEst.alstQuotTermsCondition[i].terms_condition : this.activeEst.alstQuotTermsCondition[i].termsConditionText,
-            uniqueKeyQuotTerms: this.activeEst.alstQuotTermsCondition[i].uniqueKeyQuotTerms,
-            _id: this.activeEst.alstQuotTermsCondition[i]._id
-          })
-        }
-        this.activeEst.alstQuotTermsCondition = temp
-      }
+      
 
       
     //display label and values if tax on Bill & discount on Bill selected and values are there

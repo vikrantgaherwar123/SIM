@@ -233,48 +233,49 @@ export class AddEditEstComponent implements OnInit {
 
     // Fetch selected invoice
     // this.activeEst = this.estimateList.find(x => x.unique_identifier === estId); //when came from view component
-    if(this.estimateList){
+    if(this.estimateList.length !==0){
       this.noRecentEstimate = true;
       this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
-    }
-
-    this.recentEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
-    if(this.recentEstimate){
+    }else{
+      this.activeEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
+      if(this.activeEstimate){
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
+      }
+      
       this.noRecentEstimate = false;
-      this.activeEstimate = this.recentEstimate
     }
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
-      if(this.noRecentEstimate){
-        this.activeEstimate.listItems = this.activeEstimate.alstQuotProduct;
-        this.activeEstimate.termsAndConditions = this.activeEstimate.alstQuotTermsCondition;
-        this.activeEstimate.percentage_flag =  this.activeEstimate.assignDiscountFlag,
-        this.activeEstimate.tax_on_item = this.activeEstimate.assignTaxFlag,
-        this.activeEstimate.created_date = this.activeEstimate.createDate,
-        this.activeEstimate.discount = this.activeEstimate.discount,
-        this.activeEstimate.discountFlag = this.activeEstimate.discountFlag,
-        this.activeEstimate.enabled = this.activeEstimate.enabled,
-        this.activeEstimate.epoch =  this.activeEstimate.epochTime,
-        this.activeEstimate.gross_amount = this.activeEstimate.grossAmount,
-        this.activeEstimate.localId = this.activeEstimate.localId,
-        this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
-        this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
-        // this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
-        this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
-        this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
-        this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
-        this.activeEstimate.tax_amount =  this.activeEstimate.taxAmt,
-        this.activeEstimate.taxList =  this.activeEstimate.taxList,
-        this.activeEstimate.tax_rate =  this.activeEstimate.taxrate
-        if(this.activeEstimate.tax_on_item == 0){
-          this.activeEstimate.discount_on_item = 1;
-        }
-      }else{
-        this.discountFlag = this.recentEstimate.discountFlag;
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
-      }
+      // if(this.noRecentEstimate){
+      //   this.activeEstimate.listItems = this.activeEstimate.alstQuotProduct;
+      //   this.activeEstimate.termsAndConditions = this.activeEstimate.alstQuotTermsCondition;
+      //   this.activeEstimate.percentage_flag =  this.activeEstimate.assignDiscountFlag,
+      //   this.activeEstimate.tax_on_item = this.activeEstimate.assignTaxFlag,
+      //   this.activeEstimate.created_date = this.activeEstimate.createDate,
+      //   this.activeEstimate.discount = this.activeEstimate.discount,
+      //   this.activeEstimate.discountFlag = this.activeEstimate.discountFlag,
+      //   this.activeEstimate.enabled = this.activeEstimate.enabled,
+      //   this.activeEstimate.epoch =  this.activeEstimate.epochTime,
+      //   this.activeEstimate.gross_amount = this.activeEstimate.grossAmount,
+      //   this.activeEstimate.localId = this.activeEstimate.localId,
+      //   this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
+      //   this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
+      //   this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
+      //   this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
+      //   this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
+      //   this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
+      //   this.activeEstimate.tax_amount =  this.activeEstimate.taxAmt,
+      //   this.activeEstimate.taxList =  this.activeEstimate.taxList,
+      //   this.activeEstimate.tax_rate =  this.activeEstimate.taxrate
+      //   if(this.activeEstimate.tax_on_item == 0){
+      //     this.activeEstimate.discount_on_item = 1;
+      //   }
+      // }else{
+      //   this.discountFlag = this.recentEstimate.discountFlag;
+      //   this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
+      // }
 
 
         if(this.activeEstimate.discount > 0){
@@ -631,14 +632,16 @@ export class AddEditEstComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if (this.termList.length < 1 && !this.edit) {
+    if (this.termList.length < 1) {
       this.tncLoading = false;
       this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = true;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        if(this.activeEstimate){
+          this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        }
       },err => this.openErrorModal(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
@@ -1064,7 +1067,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if (this.activeEstimate.termsAndConditions) {
+    if (this.activeEstimate) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -1163,15 +1166,7 @@ export class AddEditEstComponent implements OnInit {
       } else if (response.status === 200) {
         // Add Estimate to store
         if (this.edit) {
-          this.store.select('estimate').subscribe(ests => {
-            let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
-            if (response.quotationList[0].deleted_flag == 1 && this.isDeleted == false) {
-              self.store.dispatch(new estimateActions.remove(index))
-              this.isDeleted = true;
-            } else{
-              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
-            }
-          })
+          
         // Add Estimate to recent store
           this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
@@ -1179,18 +1174,18 @@ export class AddEditEstComponent implements OnInit {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
               this.toasterService.pop('success', 'Estimate Deleted successfully');
               this.isDeleted = true;
-            } else{
+            }else if(this.activeEstimate.deleted_flag !== 1 ){
               this.toasterService.pop('success', 'Estimate Edited successfully');
-              self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
+              self.store.dispatch(new estimateActions.editRecentEstimate({index, value: response.quotationList[0]}))
             }
           })
         } else {
-          self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
         }
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
        if(!this.edit) {
           //add recently added esimate in store
-          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1390,49 +1385,50 @@ export class AddEditEstComponent implements OnInit {
     this.estimateListLoading = true;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     if(this.activeEst){
-    for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
-      if(!this.activeEst.alstQuotProduct[i].productName){
-        this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
-      }
-      if(!this.activeEst.alstQuotProduct[i].qty){
-        this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
-      }
-      if(!this.activeEst.alstQuotProduct[i].taxRate){
-        this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
-      }
-      if(!this.activeEst.alstQuotProduct[i].discountRate){
-        this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
-      }
-      if(!this.activeEst.alstQuotProduct[i].price){
-        this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
-      }
-      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-          this.activeEst.alstQuotProduct[i].taxRate = 0;
-      }
-      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-          this.activeEst.alstQuotProduct[i].discountRate = 0;
-      }
-      // if(this.activeEst.alstQuotProduct[i].taxRate){
-      //   this.showTaxOnItem = true;
-      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
-      // }else{
-      //   this.showTaxOnItem = false;
-      // }
-      // if(this.activeEst.alstQuotProduct[i].discountRate){
-      //   this.showDiscountOnItem = true;
-      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
-      // }else{
-      //   this.showDiscountOnItem = false;
-      // }
-    }
+      this.activeEst = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEst)
+    // for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
+    //   if(!this.activeEst.alstQuotProduct[i].productName){
+    //     this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+    //   }
+    //   if(!this.activeEst.alstQuotProduct[i].qty){
+    //     this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+    //   }
+    //   if(!this.activeEst.alstQuotProduct[i].taxRate){
+    //     this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+    //   }
+    //   if(!this.activeEst.alstQuotProduct[i].discountRate){
+    //     this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+    //   }
+    //   if(!this.activeEst.alstQuotProduct[i].price){
+    //     this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+    //   }
+    //   if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+    //       this.activeEst.alstQuotProduct[i].taxRate = 0;
+    //   }
+    //   if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+    //       this.activeEst.alstQuotProduct[i].discountRate = 0;
+    //   }
+    //   // if(this.activeEst.alstQuotProduct[i].taxRate){
+    //   //   this.showTaxOnItem = true;
+    //   // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+    //   //   this.activeEst.alstQuotProduct[i].taxRate = 0;
+    //   // }else{
+    //   //   this.showTaxOnItem = false;
+    //   // }
+    //   // if(this.activeEst.alstQuotProduct[i].discountRate){
+    //   //   this.showDiscountOnItem = true;
+    //   // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+    //   //   this.activeEst.alstQuotProduct[i].discountRate = 0;
+    //   // }else{
+    //   //   this.showDiscountOnItem = false;
+    //   // }
+    // }
 
-    for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
-      if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
-        this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
-      }
-    }
+    // for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
+    //   if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
+    //     this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
+    //   }
+    // }
   }
     this.setActiveClient()
   }

@@ -365,8 +365,8 @@ button.add-line-item-button {
 {
 	font-size: 11px;
 	word-wrap: break-word;
-	max-height: 80px;
-	white-space: normal;
+	/* max-height: 80px;
+	white-space: normal; */
 	color: #a4a4a4;
 }
 .selected-items-display

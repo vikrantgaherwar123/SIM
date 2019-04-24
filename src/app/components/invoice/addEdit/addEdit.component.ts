@@ -265,16 +265,20 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
+    
     //to view updated or viewed invoice in view page
     this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
-    if(this.invoiceList.length !==0 ){ //invoice from view page
+    if(this.invoiceList.length > 0 ){ //invoice from view page
       this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
-    }else{ //invoice from view today's page
+    }
+    if(this.recentInvoiceList.length > 0){ //invoice from view today's page
     this.invoiceList = [];
     this.activeInvoice = this.recentInvoiceList.find(inv => inv.unique_identifier == invId); //when came from todays component
+    }else{
+      this.activeInvoice = null
     }
 
     if(this.activeInvoice){
@@ -314,11 +318,29 @@ export class AddEditComponent implements OnInit {
         if (this.activeInvoice.listItems) {
           var temp = []
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-            if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
-              this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
+            //set variables according to data comes from API and store 
+            if(this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0){
+          
+              this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
             }
-            if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
-              this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
+            if(this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount ==0){
+              this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
+            }
+            if(this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0){
+              this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
+            }
+            
+            if(this.activeInvoice.listItems[i].product_name){
+              this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
+            }
+            if(this.activeInvoice.listItems[i].quantity){
+              this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
+            }
+            if(this.activeInvoice.listItems[i].total){
+              this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
+            }
+            if(this.activeInvoice.listItems[i].unique_identifier){
+              this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
             }
             
             temp.push({
