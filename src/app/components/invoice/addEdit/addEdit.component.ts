@@ -41,7 +41,6 @@ export class AddEditComponent implements OnInit {
   invoiceId
 
   activeInvoice: invoice = <invoice>{}
-  recentInvoice: recentInvoices = <recentInvoices>{}
   activeInv: invoice
   estimateDate = new FormControl()
   invoiceDate = new FormControl()
@@ -238,6 +237,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
+  //entering proper invoice number 
   invoiceNoChanged(input){
     if(input.target.value.length >= 16){
       this.invoiceFlag = true
@@ -280,8 +280,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
     }else{ //invoice from view today's page
     this.invoiceList = [];
-    this.recentInvoice = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]; //when came from todays component
-    this.activeInvoice = this.recentInvoice;
+    this.activeInvoice = this.recentInvoiceList.find(inv => inv.unique_identifier == invId); //when came from todays component
     }
 
     if(this.activeInvoice){
@@ -535,9 +534,17 @@ export class AddEditComponent implements OnInit {
                 if (this.activeEstimate.listItems) {
                   var temp = []
                   for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                    if (this.activeEstimate.listItems[i].discountAmount || this.activeEstimate.listItems[i].discountAmount == 0) {
+                      this.activeInvoice.listItems[i].discount_amount = this.activeEstimate.listItems[i].discountAmount
+                    }
+                    if (this.activeEstimate.listItems[i].taxAmount || this.activeEstimate.listItems[i].taxAmount == 0 ) {
+                      this.activeEstimate.listItems[i].tax_amount = this.activeEstimate.listItems[i].taxAmount
+                    }
                     temp.push({
                       description: this.activeEstimate.listItems[i].description,
                       discount: this.activeEstimate.listItems[i].discountRate,
+                      discount_amount: this.activeInvoice.listItems[i].discount_amount,
+                      tax_amount: this.activeInvoice.listItems[i].tax_amount,
                       product_name: this.activeEstimate.listItems[i].productName,
                       quantity: this.activeEstimate.listItems[i].qty,
                       rate: this.activeEstimate.listItems[i].rate,
@@ -1501,7 +1508,7 @@ export class AddEditComponent implements OnInit {
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.isDeleted = true;
             }
-            else if(this.activeInvoice.deleted_flag !== 0 ) {
+            else if(this.activeInvoice.deleted_flag !== 1 ) {
               self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: result.invoiceList[0]}))
             }
           })
@@ -1559,11 +1566,8 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.balance = this.activeInvoice.balance + this.addPaymentModal.payments[index].paid_amount;
     
     this.activeInvoice.payments.splice(index,1);
-    // this.addPaymentModal.payments.pop();
   }
-  // deleteInstallmentModal(index){
-  //   this.addPaymentModal.payments.splice(index, 1);
-  // }
+  
 
   resetCreateInvoice() {
     this.billingTo.reset('')

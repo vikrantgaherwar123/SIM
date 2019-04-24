@@ -218,13 +218,11 @@ export class AddEditEstComponent implements OnInit {
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+
     if (!this.activeEstimate.listItems) {
       this.activeEstimate.listItems = []
     }
-    if(this.activeEstimate.tax_on_item ==2){
-      this.activeEstimate.tax_on_item = 0;
-
-    }
+    
   }
 
   editInit(estId) {
@@ -528,7 +526,7 @@ export class AddEditEstComponent implements OnInit {
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeEstimate.tax_on_item = 2
+        this.activeEstimate.tax_on_item = 0
       }
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
