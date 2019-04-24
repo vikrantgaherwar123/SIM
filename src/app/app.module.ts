@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
 import { HttpClientModule, HttpClient ,HTTP_INTERCEPTORS } from '@angular/common/http'
@@ -83,6 +84,18 @@ export function getAuthServiceConfigs() {
   
 }
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -156,7 +169,7 @@ export function getAuthServiceConfigs() {
     // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
     // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    // { provide: MAT_DATE_FORMATS, useValue: DateFormat },
+    // { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs

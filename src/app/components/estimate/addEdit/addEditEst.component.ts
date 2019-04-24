@@ -119,7 +119,6 @@ export class AddEditEstComponent implements OnInit {
   discountFlag: any;
   viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
-  isDeleted: boolean = false;
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
   errorMessage: any;
@@ -233,49 +232,30 @@ export class AddEditEstComponent implements OnInit {
 
     // Fetch selected invoice
     // this.activeEst = this.estimateList.find(x => x.unique_identifier === estId); //when came from view component
-    if(this.estimateList.length !==0){
+    if(this.estimateList){
       this.noRecentEstimate = true;
       this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
-    }else{
-      this.activeEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
-      if(this.activeEstimate){
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
-      }
-      
-      this.noRecentEstimate = false;
     }
+
+    this.recentEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
+    if(this.recentEstimate){
+      this.noRecentEstimate = false;
+      this.activeEstimate = this.recentEstimate
+    }
+    
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
-      // if(this.noRecentEstimate){
-      //   this.activeEstimate.listItems = this.activeEstimate.alstQuotProduct;
-      //   this.activeEstimate.termsAndConditions = this.activeEstimate.alstQuotTermsCondition;
-      //   this.activeEstimate.percentage_flag =  this.activeEstimate.assignDiscountFlag,
-      //   this.activeEstimate.tax_on_item = this.activeEstimate.assignTaxFlag,
-      //   this.activeEstimate.created_date = this.activeEstimate.createDate,
-      //   this.activeEstimate.discount = this.activeEstimate.discount,
-      //   this.activeEstimate.discountFlag = this.activeEstimate.discountFlag,
-      //   this.activeEstimate.enabled = this.activeEstimate.enabled,
-      //   this.activeEstimate.epoch =  this.activeEstimate.epochTime,
-      //   this.activeEstimate.gross_amount = this.activeEstimate.grossAmount,
-      //   this.activeEstimate.localId = this.activeEstimate.localId,
-      //   this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
-      //   this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
-      //   this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
-      //   this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
-      //   this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
-      //   this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
-      //   this.activeEstimate.tax_amount =  this.activeEstimate.taxAmt,
-      //   this.activeEstimate.taxList =  this.activeEstimate.taxList,
-      //   this.activeEstimate.tax_rate =  this.activeEstimate.taxrate
-      //   if(this.activeEstimate.tax_on_item == 0){
-      //     this.activeEstimate.discount_on_item = 1;
-      //   }
-      // }else{
-      //   this.discountFlag = this.recentEstimate.discountFlag;
-      //   this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
-      // }
+      if(this.noRecentEstimate){
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
+        if(this.activeEstimate.tax_on_item == 0){
+          this.activeEstimate.discount_on_item = 1;
+        }
+      }else{
+        this.discountFlag = this.recentEstimate.discountFlag;
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
+      }
 
 
         if(this.activeEstimate.discount > 0){
@@ -295,11 +275,37 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.listItems) {
           var temp = []
           for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            //set variables according to data comes from API and store 
+            if(this.activeEstimate.listItems[i].discount || this.activeEstimate.listItems[i].discount == 0){
+          
+              this.activeEstimate.listItems[i].discountRate = this.activeEstimate.listItems[i].discount;
+            }
+            if(this.activeEstimate.listItems[i].discount_amount || this.activeEstimate.listItems[i].discount_amount ==0){
+              this.activeEstimate.listItems[i].discountAmt = this.activeEstimate.listItems[i].discount_amount;
+            }
+            if(this.activeEstimate.listItems[i].tax_amount || this.activeEstimate.listItems[i].tax_amount == 0){
+              this.activeEstimate.listItems[i].taxAmount = this.activeEstimate.listItems[i].tax_amount;
+            }
+            
+            if(this.activeEstimate.listItems[i].product_name){
+              this.activeEstimate.listItems[i].productName = this.activeEstimate.listItems[i].product_name;
+            }
+            if(this.activeEstimate.listItems[i].quantity){
+              this.activeEstimate.listItems[i].qty = this.activeEstimate.listItems[i].quantity;
+            }
+            if(this.activeEstimate.listItems[i].total){
+              this.activeEstimate.listItems[i].price = this.activeEstimate.listItems[i].total;
+            }
+            if(this.activeEstimate.listItems[i].unique_identifier){
+              this.activeEstimate.listItems[i].uniqueKeyListItem = this.activeEstimate.listItems[i].unique_identifier;
+            }
             temp.push({
               description: this.activeEstimate.listItems[i].description,
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
+              discountAmt: this.activeEstimate.listItems[i].discountAmt,
+              taxAmount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -319,6 +325,15 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.termsAndConditions) {
           temp = []
           for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+            if(this.activeEstimate.termsAndConditions[i].organization_id){
+              this.activeEstimate.termsAndConditions[i].orgId = this.activeEstimate.termsAndConditions[i].organization_id
+            }
+            if(this.activeEstimate.termsAndConditions[i].unique_identifier){
+              this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms = this.activeEstimate.termsAndConditions[i].unique_identifier
+            }
+            if(this.activeEstimate.termsAndConditions[i].terms_condition){
+              this.activeEstimate.termsAndConditions[i].termsConditionText = this.activeEstimate.termsAndConditions[i].terms_condition
+            }
             temp.push({
               orgId: this.activeEstimate.termsAndConditions[i].orgId,
               terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
@@ -357,6 +372,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       }
+      
       
 
     else if(this.recentEstListLoading){
@@ -401,6 +417,8 @@ export class AddEditEstComponent implements OnInit {
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
+              discountAmt: this.activeEstimate.listItems[i].discountAmt,
+              taxAmount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -605,11 +623,13 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = response.records.filter(recs => recs.enabled == 0)
           this.removeEmptyNameClients();
           //findout shipping address of selected client from clientlist
+          if(this.activeEstimate){
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
           }
+        }
           
           var seen = {};
           //You can filter based on Id or Name based on the requirement
@@ -639,9 +659,7 @@ export class AddEditEstComponent implements OnInit {
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        if(this.activeEstimate){
-          this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-        }
+        this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
       },err => this.openErrorModal(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
@@ -1067,7 +1085,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if (this.activeEstimate) {
+    if (this.activeEstimate.termsAndConditions) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -1173,19 +1191,18 @@ export class AddEditEstComponent implements OnInit {
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
               this.toasterService.pop('success', 'Estimate Deleted successfully');
-              this.isDeleted = true;
-            }else if(this.activeEstimate.deleted_flag !== 1 ){
+            } else{
               this.toasterService.pop('success', 'Estimate Edited successfully');
-              self.store.dispatch(new estimateActions.editRecentEstimate({index, value: response.quotationList[0]}))
+              self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
             }
           })
         } else {
-          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
         }
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
        if(!this.edit) {
           //add recently added esimate in store
-          
+          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1385,50 +1402,49 @@ export class AddEditEstComponent implements OnInit {
     this.estimateListLoading = true;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     if(this.activeEst){
-      this.activeEst = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEst)
-    // for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
-    //   if(!this.activeEst.alstQuotProduct[i].productName){
-    //     this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
-    //   }
-    //   if(!this.activeEst.alstQuotProduct[i].qty){
-    //     this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
-    //   }
-    //   if(!this.activeEst.alstQuotProduct[i].taxRate){
-    //     this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
-    //   }
-    //   if(!this.activeEst.alstQuotProduct[i].discountRate){
-    //     this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
-    //   }
-    //   if(!this.activeEst.alstQuotProduct[i].price){
-    //     this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
-    //   }
-    //   if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-    //       this.activeEst.alstQuotProduct[i].taxRate = 0;
-    //   }
-    //   if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-    //       this.activeEst.alstQuotProduct[i].discountRate = 0;
-    //   }
-    //   // if(this.activeEst.alstQuotProduct[i].taxRate){
-    //   //   this.showTaxOnItem = true;
-    //   // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-    //   //   this.activeEst.alstQuotProduct[i].taxRate = 0;
-    //   // }else{
-    //   //   this.showTaxOnItem = false;
-    //   // }
-    //   // if(this.activeEst.alstQuotProduct[i].discountRate){
-    //   //   this.showDiscountOnItem = true;
-    //   // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-    //   //   this.activeEst.alstQuotProduct[i].discountRate = 0;
-    //   // }else{
-    //   //   this.showDiscountOnItem = false;
-    //   // }
-    // }
+    for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
+      if(!this.activeEst.alstQuotProduct[i].productName){
+        this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+      }
+      if(!this.activeEst.alstQuotProduct[i].qty){
+        this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+      }
+      if(!this.activeEst.alstQuotProduct[i].taxRate){
+        this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+      }
+      if(!this.activeEst.alstQuotProduct[i].discountRate){
+        this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+      }
+      if(!this.activeEst.alstQuotProduct[i].price){
+        this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+      }
+      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+          this.activeEst.alstQuotProduct[i].taxRate = 0;
+      }
+      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+          this.activeEst.alstQuotProduct[i].discountRate = 0;
+      }
+      // if(this.activeEst.alstQuotProduct[i].taxRate){
+      //   this.showTaxOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
+      // }else{
+      //   this.showTaxOnItem = false;
+      // }
+      // if(this.activeEst.alstQuotProduct[i].discountRate){
+      //   this.showDiscountOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
+      // }else{
+      //   this.showDiscountOnItem = false;
+      // }
+    }
 
-    // for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
-    //   if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
-    //     this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
-    //   }
-    // }
+    for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
+      if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
+        this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
+      }
+    }
   }
     this.setActiveClient()
   }

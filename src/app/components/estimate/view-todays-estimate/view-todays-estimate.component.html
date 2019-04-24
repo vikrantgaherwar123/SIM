@@ -126,7 +126,7 @@
                 </thead>
 
                 <tbody class="lineItems">
-                  <tr class="row-item" *ngFor="let item of activeEst.listItems; let last = last">
+                  <tr class="row-item" *ngFor="let item of activeEst.alstQuotProduct; let last = last">
                     <td [class.no-border-last]="last">
                       <div class="text-left product-color" style="margin-left: 12px;border-bottom-width: 1px;border-left-width: 0px;border-right-width: 0px;border-top-width: 0px;">
                         {{item.productName}}
@@ -147,11 +147,13 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
+                        {{item.taxAmount | number:'1.2-2'}}<br>
                         {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
+                        {{item.discountAmt | number:'1.2-2'}}<br>
                         {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
@@ -177,13 +179,13 @@
               </div>
               <div class="col-md-12 px-0 margin-top-8">
                 <ul class="list-unstyled">
-                  <li *ngFor="let term of activeEst.termsAndConditions">
+                  <li *ngFor="let term of activeEst.alstQuotTermsCondition">
                     <div class="col-md-12 margin-bottom-5px">
                       <span style="word-wrap: break-word">{{term.termsConditionText}}</span><br />
                     </div>
                   </li>
                 </ul>
-                <div *ngIf="!activeEst.termsAndConditions || activeEst.termsAndConditions.length < 1">
+                <div *ngIf="!activeEst.alstQuotTermsCondition || activeEst.alstQuotTermsCondition.length < 1">
                   <h4>No terms added</h4>
                 </div>
               </div>
