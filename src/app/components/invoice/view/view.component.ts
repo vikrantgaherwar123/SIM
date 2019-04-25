@@ -146,8 +146,8 @@ export class ViewComponent implements OnInit {
         this.openSearchClientModal()
       }
 
-      // Set Active invoice whenever invoice list changes
-      // this.store.select('invoice').subscribe(invoices => {
+      // // Set Active invoice whenever invoice list changes
+      // this.store.select('recentInvoices').subscribe(invoices => {
       //   this.invoiceList = invoices
       //   if (this.InvoiceId) {
       //     this.setActiveInv(this.InvoiceId)

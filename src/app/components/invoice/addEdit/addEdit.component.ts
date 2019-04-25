@@ -1589,9 +1589,10 @@ export class AddEditComponent implements OnInit {
         }
           
         // Reset Create Invoice page for new invoice creation
-        if(this.edit && this.activeInvoice.deleted_flag !== 1) {
+        if(this.edit) {
           this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate([`invoice/add`])
+          this.router.navigate([`viewtodaysinvoice/${this.InvoiceId}`])
+
         }else if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
@@ -1605,7 +1606,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
-          self.addInit()
+          this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }
       }
     }
