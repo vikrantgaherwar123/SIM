@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { retryWhen, flatMap } from 'rxjs/operators';
 import { interval, throwError, of } from 'rxjs';
-import { Router, ActivatedRoute, NavigationStart  } from '@angular/router'
+import { Router, ActivatedRoute, NavigationStart, NavigationEnd  } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
@@ -43,7 +43,7 @@ export class AddEditEstComponent implements OnInit {
   estimateList: estimate[]
   recentEstimateList: recentEstimates[];
   recentEstimate: recentEstimates = <recentEstimates>{}
-
+  previousUrl: string;
 
   activeEst: estimate
   activeEstimate: addEditEstimate
@@ -141,6 +141,11 @@ export class AddEditEstComponent implements OnInit {
     private store: Store<AppState>,
     private titleService: Title
   ) {
+    router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {        
+        this.previousUrl = event.url;
+      };
+    });
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -231,7 +236,6 @@ export class AddEditEstComponent implements OnInit {
     this.recentEstListLoading = true;
 
     // Fetch selected invoice
-    // this.activeEst = this.estimateList.find(x => x.unique_identifier === estId); //when came from view component
     if(this.estimateList){
       this.noRecentEstimate = true;
       this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
@@ -280,11 +284,11 @@ export class AddEditEstComponent implements OnInit {
           
               this.activeEstimate.listItems[i].discountRate = this.activeEstimate.listItems[i].discount;
             }
-            if(this.activeEstimate.listItems[i].discount_amount || this.activeEstimate.listItems[i].discount_amount ==0){
-              this.activeEstimate.listItems[i].discountAmt = this.activeEstimate.listItems[i].discount_amount;
+            if(this.activeEstimate.listItems[i].discountAmt || this.activeEstimate.listItems[i].discountAmt ==0){
+              this.activeEstimate.listItems[i].discount_amount = this.activeEstimate.listItems[i].discountAmt;
             }
-            if(this.activeEstimate.listItems[i].tax_amount || this.activeEstimate.listItems[i].tax_amount == 0){
-              this.activeEstimate.listItems[i].taxAmount = this.activeEstimate.listItems[i].tax_amount;
+            if(this.activeEstimate.listItems[i].taxAmount || this.activeEstimate.listItems[i].taxAmount == 0){
+              this.activeEstimate.listItems[i].tax_amount = this.activeEstimate.listItems[i].taxAmount;
             }
             
             if(this.activeEstimate.listItems[i].product_name){
@@ -304,8 +308,8 @@ export class AddEditEstComponent implements OnInit {
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
-              discountAmt: this.activeEstimate.listItems[i].discountAmt,
-              taxAmount: this.activeEstimate.listItems[i].taxAmount,
+              discount_amount: this.activeEstimate.listItems[i].discount_amount,
+              tax_amount: this.activeEstimate.listItems[i].tax_amount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -417,8 +421,8 @@ export class AddEditEstComponent implements OnInit {
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
-              discountAmt: this.activeEstimate.listItems[i].discountAmt,
-              taxAmount: this.activeEstimate.listItems[i].taxAmount,
+              discount_amount: this.activeEstimate.listItems[i].discountAmt,
+              tax_amount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -659,7 +663,10 @@ export class AddEditEstComponent implements OnInit {
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        if(this.activeEstimate){
+          this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        }
+        
       },err => this.openErrorModal(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
@@ -891,6 +898,12 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
       if (uid == null) {
+        if(this.activeItem.tax_rate == 0){
+          this.activeItem.tax_amount = 0;
+        }
+        if(this.activeItem.discount == 0){
+          this.activeItem.discount_amount = 0;
+        }
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
       } else {
@@ -1085,7 +1098,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if (this.activeEstimate.termsAndConditions) {
+    if (this.activeEstimate) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store'
 import {ToasterService} from 'angular2-toaster';
 import { Title }     from '@angular/platform-browser';
 import { DateAdapter, MatAutocomplete } from '@angular/material';
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { retryWhen, flatMap } from 'rxjs/operators';
@@ -40,6 +40,7 @@ export class AddEditComponent implements OnInit {
   @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
   invoiceId
 
+  previousUrl: string;
   activeInvoice: invoice = <invoice>{}
   activeInv: invoice
   estimateDate = new FormControl()
@@ -125,6 +126,7 @@ export class AddEditComponent implements OnInit {
   amountPaid: number = 0;
   noDiscountOnItem: boolean = false;
   noTaxOnItem: boolean = false;
+  currentUrl: string;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -140,6 +142,13 @@ export class AddEditComponent implements OnInit {
     private datePipe: DatePipe,
     private titleService: Title
   ) {
+    router.events.subscribe(event => {
+      this.currentUrl = this.router.url;
+      if (event instanceof NavigationEnd) {        
+        this.previousUrl = this.currentUrl;
+        this.currentUrl = event.url;
+      };
+    });
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -271,14 +280,14 @@ export class AddEditComponent implements OnInit {
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
-    if(this.invoiceList.length > 0 ){ //invoice from view page
-      this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
-    }
-    if(this.recentInvoiceList.length > 0){ //invoice from view today's page
+     //invoice from view page
+    
+    this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
+    
+    
+    if(this.recentInvoiceList.length > 0 && !this.activeInvoice){ //invoice from view today's page
     this.invoiceList = [];
     this.activeInvoice = this.recentInvoiceList.find(inv => inv.unique_identifier == invId); //when came from todays component
-    }else{
-      this.activeInvoice = null
     }
 
     if(this.activeInvoice){
@@ -349,8 +358,8 @@ export class AddEditComponent implements OnInit {
             temp.push({
               description: this.activeInvoice.listItems[i].description,
               discount: this.activeInvoice.listItems[i].discountRate,
-              discount_amount: this.activeInvoice.listItems[i].discount_amount,
-              tax_amount: this.activeInvoice.listItems[i].tax_amount,
+              discount_amount: this.activeInvoice.listItems[i].discountAmount,
+              tax_amount: this.activeInvoice.listItems[i].taxAmount,
               product_name: this.activeInvoice.listItems[i].productName,
               quantity: this.activeInvoice.listItems[i].qty,
               rate: this.activeInvoice.listItems[i].rate,

@@ -179,13 +179,13 @@
                     </td>
                     <td *ngIf="activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        {{item.tax_amount | number:'1.2-2'}}<br>
                         {{item.tax_rate | number:'1.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
-                        {{item.discountAmt | number:'1.2-2'}}<br>
+                        {{item.discount_amount | number:'1.2-2'}}<br>
                         {{item.discount | number:'1.2-2'}}
                       </div>
                     </td>
