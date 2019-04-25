@@ -408,7 +408,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true | filter:invSearchTerm) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
+            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-1" class="arrow_img_div">
                   <img src="assets/images/left-arrow.png" class="arrow_img" >

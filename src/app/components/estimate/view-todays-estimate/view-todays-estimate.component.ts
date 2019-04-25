@@ -119,15 +119,43 @@ export class ViewTodaysEstimateComponent implements OnInit {
       if (this.activeEst.alstQuotProduct) {
         var temp = []
         for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+          if(this.activeEst.alstQuotProduct[i].discount || this.activeEst.alstQuotProduct[i].discount == 0){
+          
+            this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+          }
+          if(this.activeEst.alstQuotProduct[i].discount_amount || this.activeEst.alstQuotProduct[i].discount_amount == 0){
+            this.activeEst.alstQuotProduct[i].discountAmt = this.activeEst.alstQuotProduct[i].discount_amount;
+          }
+          if(this.activeEst.alstQuotProduct[i].tax_amount || this.activeEst.alstQuotProduct[i].tax_amount == 0){
+            this.activeEst.alstQuotProduct[i].taxAmount = this.activeEst.alstQuotProduct[i].tax_amount;
+          }
+          if(this.activeEst.alstQuotProduct[i].taxAmount && this.activeEst.alstQuotProduct[i].taxAmount == 0){
+            this.activeEst.alstQuotProduct[i].tax_rate = 0;
+          }
+          
+          if(this.activeEst.alstQuotProduct[i].product_name){
+            this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+          }
+          if(this.activeEst.alstQuotProduct[i].quantity){
+            this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+          }
+          if(this.activeEst.alstQuotProduct[i].total){
+            this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+          }
+          if(this.activeEst.alstQuotProduct[i].unique_identifier){
+            this.activeEst.alstQuotProduct[i].uniqueKeyFKQuotation = this.activeEst.alstQuotProduct[i].unique_identifier;
+          }
           temp.push({
             description: this.activeEst.alstQuotProduct[i].description,
-            discountRate: this.activeEst.alstQuotProduct[i].discountRate ? this.activeEst.alstQuotProduct[i].discountRate :this.activeEst.alstQuotProduct[i].discount,
-            productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
-            qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
+            discountRate: this.activeEst.alstQuotProduct[i].discountRate,
+            discountAmt: this.activeEst.alstQuotProduct[i].discountAmt,
+            taxAmount: this.activeEst.alstQuotProduct[i].taxAmount,
+            productName: this.activeEst.alstQuotProduct[i].productName,
+            qty: this.activeEst.alstQuotProduct[i].qty,
             rate: this.activeEst.alstQuotProduct[i].rate,
-            taxRate: this.activeEst.alstQuotProduct[i].tax_rate ? this.activeEst.alstQuotProduct[i].tax_rate : this.activeEst.alstQuotProduct[i].taxRate,
-            price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
-            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
+            taxRate: this.activeEst.alstQuotProduct[i].taxRate,
+            price: this.activeEst.alstQuotProduct[i].price,
+            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKQuotation,
             unit: this.activeEst.alstQuotProduct[i].unit,
           })
         }

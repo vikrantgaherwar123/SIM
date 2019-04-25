@@ -834,7 +834,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true | filter:invSearchTerm) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
+              *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span class="sub_date">{{ invoice.created_date | date: 'MMM' }}</span>

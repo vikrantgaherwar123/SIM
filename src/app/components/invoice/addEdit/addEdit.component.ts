@@ -43,7 +43,6 @@ export class AddEditComponent implements OnInit {
 
   invSortTerm: string = 'createdDate'
 
-  previousUrl: string;
   activeInvoice: invoice = <invoice>{}
   activeInv: invoice
   estimateDate = new FormControl()
@@ -72,7 +71,7 @@ export class AddEditComponent implements OnInit {
 
   invoiceList: invoice[]
   estimateList: estimate[]
-  private clientList: client[]
+  public clientList: client[]
   activeClient: any = {}
   clientListLoading: boolean
   billingTo = new FormControl()
@@ -145,13 +144,6 @@ export class AddEditComponent implements OnInit {
     private datePipe: DatePipe,
     private titleService: Title
   ) {
-    router.events.subscribe(event => {
-      this.currentUrl = this.router.url;
-      if (event instanceof NavigationEnd) {        
-        this.previousUrl = this.currentUrl;
-        this.currentUrl = event.url;
-      };
-    });
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -544,7 +536,9 @@ export class AddEditComponent implements OnInit {
             var ref = setInterval(() => {
               if (this.clientList.length > 0) {
                 let uid = this.activeInvoice.unique_key_fk_client
-                this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                if(this.clientList){
+                  this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                }
                 this.billingTo.reset(this.activeClient)
                 clearInterval(ref)
               }
