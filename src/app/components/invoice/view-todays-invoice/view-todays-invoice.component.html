@@ -146,20 +146,13 @@
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
-<<<<<<< HEAD
-                    <td width="10%" *ngIf="noTaxOnItem">
-                      <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
-                    </td>
-                    <td width="10%" *ngIf="noDiscountOnItem">
-=======
+                    <td *ngIf="!noDiscountOnItem" width="10%" >
+                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
+                          disabled
+                        >
+                      </td>
                     <td *ngIf="!noTaxOnItem" width="10%" >
                       <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
-                    </td>
-                    <td *ngIf="!noDiscountOnItem" width="10%" >
->>>>>>> 8ce8a8b24524b35d6d83679af4bc082372cec578
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
-                        disabled
-                      >
                     </td>
                     <td width="10%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text_right"
@@ -194,24 +187,16 @@
                         {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
-<<<<<<< HEAD
-                    <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
-=======
-                    <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
->>>>>>> 8ce8a8b24524b35d6d83679af4bc082372cec578
+                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.tax_amount | number:'1.2-2'}}<br>
-                        {{item.tax_rate | number:'1.2-2'}} %
+                        {{item.discount_amount | number:'1.2-2'}}<br>
+                        <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
                       </div>
                     </td>
-<<<<<<< HEAD
-                    <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
-=======
-                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
->>>>>>> 8ce8a8b24524b35d6d83679af4bc082372cec578
+                    <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
-                        {{item.discount_amount | number:'1.1-2'}}<br>
-                        {{item.discountRate | number:'1.1-2'}} %
+                        {{item.tax_amount | number:'1.2-2'}}<br>
+                        <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -328,11 +313,7 @@
               </div>
 
               <!-- Adjustment -->
-<<<<<<< HEAD
-              <div *ngIf="activeInv.adjustment != 0 && activeInv.adjustment !== null" class="row mx-0">
-=======
               <div *ngIf="activeInv.adjustment" class="row mx-0">
->>>>>>> 8ce8a8b24524b35d6d83679af4bc082372cec578
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
                     {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
@@ -425,8 +406,9 @@
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
-            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
+            <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
+              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
