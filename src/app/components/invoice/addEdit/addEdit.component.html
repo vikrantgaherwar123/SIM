@@ -417,7 +417,7 @@
                 <div class="row">
                   <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold"
                     style="padding-bottom: 8px;">
-                    <div *ngIf="settings.discountFlagLevel == 0 &&  activeInvoice.discount_on_item===2"> <!-- &&  activeInvoice.discount_on_item===2-->
+                    <div *ngIf="settings.discountFlagLevel == 0"> <!-- &&  activeInvoice.discount_on_item===2-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.discount_on_item===2 , 'addLabelBackroundColor':activeInvoice.discount_on_item === 0}"
                         (click)="activeInvoice.discount_on_item = 0 ;activeInvoice.percentage_flag = 0"><!--activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null-->
                         {{settings.discount ? settings.discount : 'Discount'}} &nbsp;+
@@ -521,20 +521,19 @@
                               title="{{settings.discount ? settings.discount : 'Discount'}}"></span>
                           </div>
                           <ul class="dropdown-menu dropdown-menu-right">
-                            <li [class.active]="activeInvoice.percentage_flag == 0">
-                              <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;
-                                 calculateInvoice()">
-                                Flat ({{mysymbols}})
-                              </a>
-                              <!--activeInvoice.discount=0.00;activeInvoice.percentage_flag = 0;-->
-                            </li>
-                            <li [class.active]="activeInvoice.percentage_flag == 1">
-                              <a (click)="activeInvoice.discount=0.00;
-                                activeInvoice.percentage_flag=1;
-                                calculateInvoice()">
-                                Percent (%)
-                              </a>
-                            </li>
+                              <li [class.active]="activeInvoice.percentage_flag == 1">
+                                <a (click)="activeInvoice.discount=0.00;
+                                   activeInvoice.percentage_flag=1;calculateInvoice()">
+                                  Percent (%)
+                                </a>
+                              </li>
+                              <li [class.active]="activeInvoice.percentage_flag == 0">
+                                <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
+                                  Flat ({{mysymbols}})
+                                </a>
+                                <!--activeInvoice.discount=0.00;activeInvoice.percentage_flag = 0;-->
+                              </li>
+                            
                           </ul>
                         </div>
                         <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;margin-left: -18px;">
@@ -759,6 +758,9 @@
                                   <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
                                   [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
                                 <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
+                                <!-- <input matInput [matDatepicker]="dp" [formControl]="paymentDate" (click)="dp.open()">
+                                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                <mat-datepicker #dp></mat-datepicker> -->
                               </div>
                               <div class="col-5">
                                   <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"

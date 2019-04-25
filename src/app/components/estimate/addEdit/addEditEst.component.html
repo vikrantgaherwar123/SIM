@@ -179,11 +179,13 @@
                     </td>
                     <td *ngIf="activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
+                        {{item.taxAmount | number:'1.2-2'}}<br>
                         {{item.tax_rate | number:'1.2-2'}}
                       </div>
                     </td>
                     <td *ngIf="activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
+                        {{item.discountAmt | number:'1.2-2'}}<br>
                         {{item.discount | number:'1.2-2'}}
                       </div>
                     </td>
@@ -297,7 +299,7 @@
             <!-- Tax discount list -->
             <div class="row">
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
-                <div *ngIf="settings.discountFlagLevel === 0 &&  activeEstimate.discount_on_item===2"><!--&&  activeEstimate.discount_on_item===2 -->
+                <div *ngIf="settings.discountFlagLevel === 0 ||  activeEstimate.discount_on_item===2"><!--&&  activeEstimate.discount_on_item===2 -->
                   <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.discount_on_item===2 , 'addLabelBackroundColor':activeEstimate.discount_on_item === 0}"
                    (click)="activeEstimate.discount_on_item=0;activeEstimate.percentage_flag = 0">
                     {{settings.discount ? settings.discount : 'Discount'}}+

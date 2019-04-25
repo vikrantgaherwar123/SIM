@@ -356,8 +356,7 @@ export class ViewEstComponent implements OnInit {
   setActiveEst(estId: string = '') {
     // this.closeEstSearchModel();
     if (!estId || estId === "null") {
-      this.activeEst = this.estimateList[0];
-      //console.log(this.activeEst)
+      this.activeEst = this.estimateList[this.estimateList.length - 1];
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }

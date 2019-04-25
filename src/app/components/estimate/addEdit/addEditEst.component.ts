@@ -119,7 +119,6 @@ export class AddEditEstComponent implements OnInit {
   discountFlag: any;
   viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
-  isDeleted: boolean = false;
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
   errorMessage: any;
@@ -244,30 +243,12 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate = this.recentEstimate
     }
     
+    
     if(this.activeEstimate){
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
       if(this.noRecentEstimate){
-        this.activeEstimate.listItems = this.activeEstimate.alstQuotProduct;
-        this.activeEstimate.termsAndConditions = this.activeEstimate.alstQuotTermsCondition;
-        this.activeEstimate.percentage_flag =  this.activeEstimate.assignDiscountFlag,
-        this.activeEstimate.tax_on_item = this.activeEstimate.assignTaxFlag,
-        this.activeEstimate.created_date = this.activeEstimate.createDate,
-        this.activeEstimate.discount = this.activeEstimate.discount,
-        this.activeEstimate.discountFlag = this.activeEstimate.discountFlag,
-        this.activeEstimate.enabled = this.activeEstimate.enabled,
-        this.activeEstimate.epoch =  this.activeEstimate.epochTime,
-        this.activeEstimate.gross_amount = this.activeEstimate.grossAmount,
-        this.activeEstimate.localId = this.activeEstimate.localId,
-        this.activeEstimate.organization_id =  this.activeEstimate.organizationId,
-        this.activeEstimate.percentage_value =  this.activeEstimate.percentageValue,
-        // this.activeEstimate.estimate_number = this.activeEstimate.quetationNo,
-        this.activeEstimate.serverUpdateTime = this.activeEstimate.serverUpdateTime,
-        this.activeEstimate.shipping_address =  this.activeEstimate.shippingAddress,
-        this.activeEstimate.shipping_charges =  this.activeEstimate.shippingCharges,
-        this.activeEstimate.tax_amount =  this.activeEstimate.taxAmt,
-        this.activeEstimate.taxList =  this.activeEstimate.taxList,
-        this.activeEstimate.tax_rate =  this.activeEstimate.taxrate
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
         if(this.activeEstimate.tax_on_item == 0){
           this.activeEstimate.discount_on_item = 1;
         }
@@ -294,11 +275,37 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.listItems) {
           var temp = []
           for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            //set variables according to data comes from API and store 
+            if(this.activeEstimate.listItems[i].discount || this.activeEstimate.listItems[i].discount == 0){
+          
+              this.activeEstimate.listItems[i].discountRate = this.activeEstimate.listItems[i].discount;
+            }
+            if(this.activeEstimate.listItems[i].discount_amount || this.activeEstimate.listItems[i].discount_amount ==0){
+              this.activeEstimate.listItems[i].discountAmt = this.activeEstimate.listItems[i].discount_amount;
+            }
+            if(this.activeEstimate.listItems[i].tax_amount || this.activeEstimate.listItems[i].tax_amount == 0){
+              this.activeEstimate.listItems[i].taxAmount = this.activeEstimate.listItems[i].tax_amount;
+            }
+            
+            if(this.activeEstimate.listItems[i].product_name){
+              this.activeEstimate.listItems[i].productName = this.activeEstimate.listItems[i].product_name;
+            }
+            if(this.activeEstimate.listItems[i].quantity){
+              this.activeEstimate.listItems[i].qty = this.activeEstimate.listItems[i].quantity;
+            }
+            if(this.activeEstimate.listItems[i].total){
+              this.activeEstimate.listItems[i].price = this.activeEstimate.listItems[i].total;
+            }
+            if(this.activeEstimate.listItems[i].unique_identifier){
+              this.activeEstimate.listItems[i].uniqueKeyListItem = this.activeEstimate.listItems[i].unique_identifier;
+            }
             temp.push({
               description: this.activeEstimate.listItems[i].description,
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
+              discountAmt: this.activeEstimate.listItems[i].discountAmt,
+              taxAmount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -318,6 +325,15 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.termsAndConditions) {
           temp = []
           for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+            if(this.activeEstimate.termsAndConditions[i].organization_id){
+              this.activeEstimate.termsAndConditions[i].orgId = this.activeEstimate.termsAndConditions[i].organization_id
+            }
+            if(this.activeEstimate.termsAndConditions[i].unique_identifier){
+              this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms = this.activeEstimate.termsAndConditions[i].unique_identifier
+            }
+            if(this.activeEstimate.termsAndConditions[i].terms_condition){
+              this.activeEstimate.termsAndConditions[i].termsConditionText = this.activeEstimate.termsAndConditions[i].terms_condition
+            }
             temp.push({
               orgId: this.activeEstimate.termsAndConditions[i].orgId,
               terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
@@ -356,6 +372,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       }
+      
       
 
     else if(this.recentEstListLoading){
@@ -400,6 +417,8 @@ export class AddEditEstComponent implements OnInit {
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
+              discountAmt: this.activeEstimate.listItems[i].discountAmt,
+              taxAmount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -604,11 +623,13 @@ export class AddEditEstComponent implements OnInit {
           this.clientList = response.records.filter(recs => recs.enabled == 0)
           this.removeEmptyNameClients();
           //findout shipping address of selected client from clientlist
+          if(this.activeEstimate){
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
           }
+        }
           
           var seen = {};
           //You can filter based on Id or Name based on the requirement
@@ -631,7 +652,7 @@ export class AddEditEstComponent implements OnInit {
     }
 
     // Fetch Terms if not in store
-    if (this.termList.length < 1 && !this.edit) {
+    if (this.termList.length < 1) {
       this.tncLoading = false;
       this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = true;
@@ -1163,22 +1184,13 @@ export class AddEditEstComponent implements OnInit {
       } else if (response.status === 200) {
         // Add Estimate to store
         if (this.edit) {
-          this.store.select('estimate').subscribe(ests => {
-            let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
-            if (response.quotationList[0].deleted_flag == 1 && this.isDeleted == false) {
-              self.store.dispatch(new estimateActions.remove(index))
-              this.isDeleted = true;
-            } else{
-              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
-            }
-          })
+          
         // Add Estimate to recent store
           this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
               this.toasterService.pop('success', 'Estimate Deleted successfully');
-              this.isDeleted = true;
             } else{
               this.toasterService.pop('success', 'Estimate Edited successfully');
               self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))

@@ -281,29 +281,36 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
+    
     //to view updated or viewed invoice in view page
     this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
-    if(this.invoiceList.length !==0 ){ //invoice from view page
+    if(this.invoiceList.length > 0 ){ //invoice from view page
       this.activeInvoice = this.invoiceList.find(x => x.unique_identifier === invId); //when came from view component
-    }else{ //invoice from view today's page
+    }
+    if(this.recentInvoiceList.length > 0){ //invoice from view today's page
     this.invoiceList = [];
     this.activeInvoice = this.recentInvoiceList.find(inv => inv.unique_identifier == invId); //when came from todays component
+    }else{
+      this.activeInvoice = null
     }
 
     if(this.activeInvoice){
 
       this.invoiceListLoading = false;
+        
         if(this.activeInvoice.discount_on_item == 1){
           this.noDiscountOnItem = true;
+          this.settings.discountFlagLevel = 1;
         }else{
           this.noDiscountOnItem = false;
         }
     
         if(this.activeInvoice.tax_on_item == 0){
           this.noTaxOnItem = true;
+          this.settings.taxFlagLevel = 0;
         }else{
           this.noTaxOnItem = false;
         }
@@ -330,11 +337,29 @@ export class AddEditComponent implements OnInit {
         if (this.activeInvoice.listItems) {
           var temp = []
           for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-            if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
-              this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
+            //set variables according to data comes from API and store 
+            if(this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0){
+          
+              this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
             }
-            if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
-              this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
+            if(this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount ==0){
+              this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
+            }
+            if(this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0){
+              this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
+            }
+            
+            if(this.activeInvoice.listItems[i].product_name){
+              this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
+            }
+            if(this.activeInvoice.listItems[i].quantity){
+              this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
+            }
+            if(this.activeInvoice.listItems[i].total){
+              this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
+            }
+            if(this.activeInvoice.listItems[i].unique_identifier){
+              this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
             }
             
             temp.push({
@@ -412,12 +437,15 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice = {...invoice.records[0]}
             if(this.activeInvoice.discount_on_item == 1){
               this.noDiscountOnItem = true;
+              this.settings.discountFlagLevel = 1; //saved discount on item so disable discount on bill
             }else{
               this.noDiscountOnItem = false;
             }
+            
         
             if(this.activeInvoice.tax_on_item == 0){
               this.noTaxOnItem = true;
+              this.settings.taxFlagLevel = 0;
             }else{
               this.noTaxOnItem = false;
             }
@@ -544,11 +572,29 @@ export class AddEditComponent implements OnInit {
                 if (this.activeEstimate.listItems) {
                   var temp = []
                   for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
-                    if (this.activeEstimate.listItems[i].discountAmount || this.activeEstimate.listItems[i].discountAmount == 0) {
-                      this.activeInvoice.listItems[i].discount_amount = this.activeEstimate.listItems[i].discountAmount
+                    //set variables according to data comes from API and store 
+                    if (this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0) {
+
+                      this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
                     }
-                    if (this.activeEstimate.listItems[i].taxAmount || this.activeEstimate.listItems[i].taxAmount == 0 ) {
-                      this.activeEstimate.listItems[i].tax_amount = this.activeEstimate.listItems[i].taxAmount
+                    if (this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount == 0) {
+                      this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
+                    }
+                    if (this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0) {
+                      this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
+                    }
+
+                    if (this.activeInvoice.listItems[i].product_name) {
+                      this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
+                    }
+                    if (this.activeInvoice.listItems[i].quantity) {
+                      this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
+                    }
+                    if (this.activeInvoice.listItems[i].total) {
+                      this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
+                    }
+                    if (this.activeInvoice.listItems[i].unique_identifier) {
+                      this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
                     }
                     temp.push({
                       description: this.activeEstimate.listItems[i].description,
@@ -716,6 +762,19 @@ export class AddEditComponent implements OnInit {
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
         this.activeInvoice.tax_on_item = 0
+      }
+
+      //keep open tax field when tax on bill
+      if (settings.taxFlagLevel == 1) {
+        this.activeInvoice.tax_on_item = 1
+        this.activeInvoice.tax_rate = 0;
+      }
+
+      //keep open discount field when discount on bill && make default % choice as selected for discount
+      if(this.settings.discountFlagLevel == 0){
+        this.activeInvoice.discount_on_item = 0;
+        this.activeInvoice.percentage_flag=1;
+        this.activeInvoice.percentage_value=0;
       }
       if (settings.discountFlagLevel == 1) {
         this.activeInvoice.discount_on_item = 1
@@ -1087,6 +1146,12 @@ export class AddEditComponent implements OnInit {
     if(this.activeItem.quantity !==null && this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
       this.activeItem.rate !==null ){
       if(uid == null) {
+        if(this.activeItem.tax_rate == 0){
+          this.activeItem.tax_amount = 0;
+        }
+        if(this.activeItem.discount == 0){
+          this.activeItem.discount_amount = 0;
+        }
         // Add Item to invoice
         this.activeInvoice.listItems.push(this.activeItem)
 
