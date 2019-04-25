@@ -250,7 +250,7 @@
                                 <pre class="selected-items selected_description"
                                  >{{item.description}}</pre>
                               </div>
-                              <span *ngIf="item.description.length !== 0" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span>
+                              <span *ngIf="item.description.length !== 0" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
                               <!-- <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span> -->
                             </div>
                           </div>
@@ -539,13 +539,8 @@
                         <div *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;margin-left: -18px;">
                           ({{mysymbols}})
                         </div>
-
-
-                        
                         <div *ngIf="activeInvoice.percentage_flag == 1" style="margin-right: 0px !important;margin-left: -18px;" class="inline font-custom">(%)</div>
-
                       </div>
-
                       <div class="col-8 pr-0">
                         <form #form_discount="ngForm" name="form_discount">
                           <div class="input-group addon-input">
@@ -736,7 +731,7 @@
                               <div *ngFor="let item of activeInvoice.payments; let i = index">
                                 <div class="row mx-0" style="margin-bottom: 10px;">
                                   <div class="col-4 text-left label_color">
-                                    <span class="font-custom">{{item.date_of_payment | date}}</span>
+                                    <span class="font-custom">{{item.date_of_payment | date : 'mm/dd/yy'}}</span>
                                     <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
                                   </div>
                                   <div class="col-4 pad_rg_5" style="margin-top: 6px;">
@@ -1282,10 +1277,10 @@
       </div>
       <div class="modal-body">
         <h3 class="title">Connection Lost !</h3>
-        <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
           !!!</p>
       </div>
-      <div class="modal-footer mod_footer">
+      <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
         <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
           data-dismiss="modal" aria-label="Close">
           OK

@@ -408,10 +408,9 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;
-            border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
+              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
-                <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                <span class="inv_date" [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
               <div class="col-10">
@@ -420,7 +419,7 @@
                     <h5 *ngIf="clientList" class="fontsize13" style="font-family: helvetica_regular !important;
                     font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5 today_txt">
+                  <div class="col-5 fontsize13 today_txt">
                     {{ invoice.invoice_number }}
                   </div>
                   <div class="col-6 text-right fontsize12 today_txt">

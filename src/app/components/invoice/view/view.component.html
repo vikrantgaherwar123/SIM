@@ -289,7 +289,7 @@
                 </div>
   
                 <!-- Discount -->
-                <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
+                <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 6px;">
                   <div class="col-5 discount-tax-label">
                     <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                     <div *ngIf="!isRate" class="inline font-custom">
@@ -467,20 +467,20 @@
                 *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true | filter:invSearchTerm  | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
-                <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
-                  <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
-                  <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
+                <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;margin-top: 3px;">
+                  <span class="inv_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                  <span class="date_month sub_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'MMM' }}</span>
                 </div>
       
                 <div class="col-10">
-                  <div class="row">
+                  <div class="row" style="margin-top: 6px;">
                     <div class="col-12">
-                      <h5 *ngIf="clientList" class="font-custom-bold fontsize13">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                      <h5 *ngIf="clientList" class="font-custom-bold fontsize13" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                     </div>
-                    <div class="col-5 font-custom-book fontsize13">
+                    <div class="col-5 font-custom-book fontsize13 today_txt" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
                       {{ invoice.invoice_number }}
                     </div>
-                    <div class="col-6 text-right font-custom-bold fontsize12">
+                    <div class="col-6 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 20px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
                       {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                     </div>
                   </div>

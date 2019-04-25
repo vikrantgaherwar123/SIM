@@ -923,6 +923,7 @@ background-color: none;
 }
 .mod_header{
   border-bottom: 0px solid #e9ecef !important;
+  padding: 17px !important;
 }
 .mod_footer{
   border-top: 0px solid #e9ecef !important;
@@ -998,15 +999,16 @@ background-color: none;
 }
 /* added by vikrant */
 .morebtn{
-  background-color: white;
   border-radius: 5px;
-  font-size: 9px;
-  width: 30px;
+  font-size: 10px;
+  font-weight: bold;
   padding-left: 4px;
+  font-style: italic;
   float: right;
   margin-bottom: 10px;
   margin-top: -12px;
   cursor: pointer;
+  color: #1a73cc;
 }
 .all_terms{
   word-wrap: break-word;
@@ -1105,9 +1107,9 @@ background-color: none;
   font-family: helvetica_regular;
 }
 .today_txt{
-  font-size: 13px;
+  font-size: 13px !important;
   font-family: helvetica_regular !important;
-  color: #787e83;
+  color: #787e83 !important;
 }
 
 /* product css */
@@ -1287,4 +1289,26 @@ textarea{
 }
 .item_percent_icon{
   font-size: 10px;
+}
+.error_logo {
+  height: 44px !important;
+  margin: 2px auto !important;
+  margin-top: 10px !important;
+  text-align: center !important;
+  color: #697887 !important;
+  font-family: helvetica_light !important;
+}
+.error_text{
+  padding: 0px 45px !important;
+  margin-bottom: 12px !important;
+}
+.modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 9px 23px 20px 10px !important;
+  border-top: 1px solid #e9ecef;
+}
+.color_white{
+  color:white !important;
 }
