@@ -55,6 +55,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.settings = this.user.setting
       store.select('client').subscribe(clients => this.clientList = clients)
       store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
+      store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
      }
 
   ngOnInit() {
@@ -138,11 +139,14 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           
           this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount;
         }
-        if(this.activeInv.listItems[i].discount_amount || this.activeInv.listItems[i].discount_amount ==0){
+        if(this.activeInv.listItems[i].discount_amount || this.activeInv.listItems[i].discount_amount == 0){
           this.activeInv.listItems[i].discountAmount = this.activeInv.listItems[i].discount_amount;
         }
         if(this.activeInv.listItems[i].tax_amount || this.activeInv.listItems[i].tax_amount == 0){
           this.activeInv.listItems[i].taxAmount = this.activeInv.listItems[i].tax_amount;
+        }
+        if(this.activeInv.listItems[i].taxAmount && this.activeInv.listItems[i].taxAmount == 0){
+          this.activeInv.listItems[i].tax_rate = 0;
         }
         
         if(this.activeInv.listItems[i].product_name){
@@ -182,17 +186,17 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         }
       
 
-      // if(this.activeInv.discount_on_item == 1){
-      //   this.noDiscountOnItem = true;
-      // }else{
-      //   this.noDiscountOnItem = false;
-      // }
+      if(this.activeInv.discount_on_item == 2){
+        this.noDiscountOnItem = true;
+      }else{
+        this.noDiscountOnItem = false;
+      }
   
-      // if(this.activeInv.tax_on_item == 0){
-      //   this.noTaxOnItem = true;
-      // }else{
-      //   this.noTaxOnItem = false;
-      // }
+      if(this.activeInv.tax_on_item == 2){
+        this.noTaxOnItem = true;
+      }else{
+        this.noTaxOnItem = false;
+      }
 
     
     }

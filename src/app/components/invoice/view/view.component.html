@@ -237,7 +237,7 @@
                       </td>
                       <td *ngIf="noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                         <div class="text_right">
-                          {{item.tax_amount | number:'1.2-2'}}<br>
+                          {{item.taxAmount | number:'1.2-2'}}<br>
                           {{item.tax_rate | number:'1.2-2'}} %
                         </div>
                       </td>

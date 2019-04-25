@@ -268,13 +268,19 @@
                         <td *ngIf="activeInvoice.discount_on_item == 1" [class.no-border-last]="last">
                             <div class="text_right">
                               {{item.discount_amount | number:'1.2-2'}}<br>
-                              <span class="item_percent_text">{{item.discount | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                              <div class="amount_text_div">
+                                <span class="item_percent_text">{{item.discount | number:'1.2-2'}}</span> 
+                                <span class="item_percent_icon">%</span>
+                              </div>
                             </div>
                         </td>
                         <td *ngIf="activeInvoice.tax_on_item === 0 " [class.no-border-last]="last">
                           <div class="text_right">
                             {{item.tax_amount | number:'1.2-2'}}<br>
-                            <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                            <div class="amount_text_div">
+                              <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                              <span class="item_percent_icon">%</span>
+                            </div>
                           </div>
                         </td>
                         <td [class.no-border-last]="last" style="position: unset !important;">
@@ -375,9 +381,6 @@
                               class="form-control height_40 text_right input_border_color" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                               placeholder="%" />
-                            <!-- <div class="input-group-append">
-                              <span class="input-group-text p-0" style="width: 22px;border-left: none;">%</span>
-                            </div> -->
                           </div>
                           <!-- <div class="text-right">{{activeItem.tax_amount}}</div> -->
                         </td>
@@ -390,9 +393,7 @@
                               name="itemTotal" [(ngModel)]="activeItem.total"
                               style="border: 0px solid #ced4da !important;background-color: #f2f1f1 !important;"
                               disabled.btn-custom-1 />
-                            <!-- <button type="button"  class="btn save_btn btn-raised add_new_btn add_item_mr_discount" (click)="addEditInvoiceItem();"
-                          >Add Item
-                          </button> -->
+                            
                           </div>
                         </td>
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
@@ -429,7 +430,7 @@
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel == 1 && activeInvoice.tax_on_item === 2"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
+                    <div *ngIf="settings.taxFlagLevel == 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
                       <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
                         (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
                     </div>
@@ -646,7 +647,7 @@
                           <div class="input-group pr-0">
                             <input type="number" name="shipping_input" class="form-control" min="0.00" step="any"
                               [max]="activeInvoice.gross_amount" required onclick="this.select()"
-                              style="margin-right: -4px;" [(ngModel)]="activeInvoice.shipping_charges"
+                              style="margin-right: -4px;text-align: right;" [(ngModel)]="activeInvoice.shipping_charges"
                               (keyup)="calculateInvoice()" placeholder="0" />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -673,7 +674,7 @@
                       <div class="col-8 pr-0">
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
-                            <input type="number" name="tax_input" class="form-control" style="margin-right: -4px;"
+                            <input type="number" name="tax_input" class="form-control" style="margin-right: -4px;text-align: right;"
                               step="any" required onfocus="this.select()" placeholder="0"
                               [(ngModel)]="activeInvoice.adjustment"
                                (keyup)="calculateInvoice()" /> 
@@ -733,13 +734,13 @@
                                     <span class="font-custom">{{item.date_of_payment | date}}</span>
                                     <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
                                   </div>
-                                  <div class="col-4 pad_rg_5" style="margin-top: 6px;">
-                                    <span
+                                  <div class="col-6 pad_rg_5 paid_amt">
+                                    <span style="padding-right: 16px;"
                                       class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                                     </span>
                                     
                                   </div>
-                                  <div class="col-4 pad_rg_5 text-right">
+                                  <div class="col-2 pad_rg_5 text-right">
                                       <img src="assets/images/grey_cross.png" (click)="deleteInstallment(i)" Title="Delete" alt=""
                                       class="hg_20 cross_label_img img_hover" style="margin-top: 4px !important;">
                                   </div>
@@ -752,17 +753,14 @@
                                   <input type="text" id="addPaymentDate12" style="width: 140px;" name="paymentDate" class="form-control" placeholder="mm/dd/yyyy"
                                   [formControl]="paymentDate" matInput [matDatepicker]="picker2" (click)="picker2.open()" required readonly>
                                 <mat-datepicker #picker2 style="z-index: 8000"></mat-datepicker>
-                                <!-- <input matInput [matDatepicker]="dp" [formControl]="paymentDate" (click)="dp.open()">
-                                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                                <mat-datepicker #dp></mat-datepicker> -->
                               </div>
-                              <div class="col-5">
+                              <div class="col-6">
                                   <input type="number" id="paymentAmount2" name="paymentAmount" onclick="this.select()"
-                                  class="form-control default-height" min="0.00" [max]="addPaymentModal.balance"
+                                  class="form-control default-height paid_date" min="0.00" [max]="addPaymentModal.balance"
                                   [(ngModel)]="addPaymentModal.paid_amount"
-                                  placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" style="width: 190px;font-size: 13px;" />
+                                  placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" />
                               </div>
-                              <div class="col-3">
+                              <div class="col-2">
                                 <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
                                   Add
                                 </button>
@@ -788,11 +786,6 @@
 
                     <!-- Payment and Save buttons -->
                     <div class="col-12 px-0 mt-2">
-                      <!-- <button type="button" title="ADD PAYMENT" [disabled]="activeInvoice.balance == 0"
-                        class="btn_width_auto change_bg btn btnd btn-custom-1 btn-raised pull-left"
-                        (click)="openAddPaymentModal()" style="width: auto !important;">
-                        Add Payment
-                      </button> -->
                       <button type="submit" id="invSubmitBtn" 
                         class="save btn save_btn btn-raised width25btn pull-right"
                         data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>">

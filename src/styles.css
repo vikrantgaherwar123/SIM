@@ -1334,3 +1334,17 @@ textarea{
   width: 255px;
   margin-top: 80px;
 }
+.amount_text_div{
+  margin-top: -3px;
+  font-style: italic;
+  color: #787e83;
+}
+.paid_date{
+  width: 190px;
+  font-size: 13px;
+  text-align: right;
+}
+.paid_amt{
+  margin-top: 6px;
+  text-align: right;
+}

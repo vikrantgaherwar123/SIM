@@ -765,8 +765,12 @@ export class AddEditComponent implements OnInit {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
     if (settings) {
-      this.activeInvoice.tax_on_item = 2
-      this.activeInvoice.discount_on_item = 2
+      if(settings.discountFlagLevel == 2 && settings.taxFlagLevel == 2 ){
+        this.taxtext = "Tax (Disabled)"
+        this.activeInvoice.tax_on_item = 2
+        this.activeInvoice.discount_on_item = 2
+      }
+      
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
