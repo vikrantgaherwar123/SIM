@@ -2,22 +2,22 @@
   margin-top: 8%;
 }
 .info-container {
-  padding: 4%;
-  margin: 45px 0px;
-  background-color: #d8d8d8;
+  padding: 1%;
+  margin: 32px 0px;
+  background-color: #f2f2f2;
 }
 .info-container img {
-  width: 263px;
+  width: 377px;
   height: auto;
-  margin-top: 22px;
+  margin-top: 10px;
 }
 .info-container p {
-  padding: 0 10%;
+  padding: 0 1%;
   margin-top: 2%;
-  font-size: 14px;
+  font-size: 12px !important;
 }
 .login-form-container {
-  padding: 10%;
+  padding: 13%;
   background-color: #176cc1;
 }
 .lock-image{
@@ -25,11 +25,11 @@
   height: auto;
   position: absolute;
   top: 2%;
-  left: 40%
+  left: 37%
 }
 .login-form {
   background-color: #ffffff;
-  padding: 12px 20px
+  padding: 12px 13px
 }
 .social-login-container a {
   width: 66%;
@@ -60,8 +60,9 @@
 #login-btn
 {
   width:100%;
+  font-family: helvetica_light !important;
   background-color: #176cc1;
-  color: #fff;
+  color: #fff !important;
   font-weight: 600;
   border: none;
   padding: 10px;
@@ -98,4 +99,103 @@
 }
 #login-container {
   height: 485px;
+}
+
+.center{
+  height: 52px;
+  margin-top: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: -34px; */
+  opacity: unset;
+  margin-bottom: 6px;
+}
+.loginOpacity{
+  opacity: .1;
+}
+.loggingInBtn{
+  font-size: 18px !important;
+  color: #2096f3;
+  border: none;
+  padding: 11px 45px 11px 45px;
+  border-radius: 11px;
+  position: relative;
+  top: -281px;
+  border: 1px solid #f3f3f3;
+  padding: -18px;
+  text-align: center;
+  background-color: #ffffff;
+}
+.loading_text{
+  font-size: 14px;
+  font-family: helvetica_regular !important;
+  color:#2096f3;
+}
+.txt_orange{
+  color: #fe664e;
+}
+.loading_tick_img{
+  height: 14px;
+  float: right;
+  margin-top: 4px;
+  /* margin-right: 3px; */
+}
+.sm_tik_img_blue{
+  background-color: #d8eafc;
+  padding: 1px 5px 0px 3px;
+  height: 25px;
+}
+.sm_tik_img_orange{
+  background-color: #feebe8;
+  padding: 1px 5px 0px 3px;
+  height: 25px;
+}
+.sidebar-nav{
+  height: 100vh;
+  width: 65px;
+  position: fixed;
+  top: 56px;
+  background-color: #ffffff !important;
+}
+.main_heading{
+  color: #0780d2; 
+  font-size: 30px; 
+  margin-top: 30px;
+}
+/* testing */
+@keyframes blink {
+  0% {
+    opacity: .2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .2;
+  }
+}
+
+.loading span {
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  font-size: 20px;
+}
+
+.loading span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.loading span:nth-child(3) {
+  animation-delay: .4s;
+}
+.log_success{
+  text-align: center;
+  font-size: 18px !important;
+  font-family: helvetica_regular !important;
+  color: #000000;
+  border: none;
+  background-color: #ffffff
 }

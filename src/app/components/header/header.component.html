@@ -1,23 +1,87 @@
 <div class="header row mx-0">
-  <div class="col-5">
-    <div class="row">
-      <div class="col-3 col-md-1 sidebar-switch-icon" (click)="toggleSideNavBar()">
-        <img src="assets/images/menu32.png" alt="icon" style="width: 28px; height: 28px">
-      </div>
-      <div class="logo col-10 d-none d-md-block">
-        <img src="assets/images/logo_header.png" alt="icon" style="width: auto; height: 50px">
+  <div class="col-8"> <!--style="padding: 0;"-->
+    <div class="row" id="navbar">
+      <div  class="row">
+        <div class="d-sm-flex">
+          <h5 class="menu_list" style="padding-left: 23px !important;">
+            <button (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
+              <span class="span_text">
+                <img src="{{invSrc}}" class="nav_img" alt="logo" />
+              <span style="margin-left: 3px;" [class.active_text]="router.url==='/invoice/add' || router.url==='/invoice/view' ">Invoices</span></span>
+            </button>
+          </h5>
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list">
+            <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()" [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
+              <span class="span_text">
+                <img src="{{estSrc}}" class="nav_img" alt="" /><span class="header_menu_text" [class.active_text]="router.url==='/estimate/add' || router.url==='/estimate/view'">Estimates</span></span>
+            </button>
+            <ng-template #notShow>
+              <p>
+                Show this only if "show" is not true
+              </p>
+            </ng-template>
+          </h5>
+        </div>
+        <div class="d-sm-flex">
+            <h5 class="menu_list">
+              <button (mouseover)="onClientHover()" (mouseleave)="offClientHover()" [class.active]="router.url==='/client'" [routerLink]="['/client']"class="navbtn">
+                <span class="span_text"><img src="{{clientSrc}}" class="nav_img" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/client'">Clients</span></span>
+              </button>
+            </h5>
+          </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list">
+            <button  (mouseover)="onProductHover()" (mouseleave)="offProductHover()" [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
+              <span class="span_text"><img src="{{productSrc}}" class="nav_img" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/product'">Products</span></span>
+            </button>
+          </h5>
+        </div>
+        <div class="d-sm-flex">
+          <h5 class="menu_list">
+            <button (mouseover)="onSettingHover()" (mouseleave)="offSettingHover()" [class.active]="router.url==='/setting/primary'" [routerLink]="['/setting/primary']" class="navbtn">
+              <span class="span_text"><img class="nav_img" src="{{settingSrc}}" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/setting/primary'">Settings</span></span>
+            </button>
+          </h5>
+        </div>
+        <div class="d-sm-flex">
+            <h5 class="menu_list">
+              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn">
+                <span class="span_text"><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/setting/batchUpload'">Batch Upload</span></span>
+              </button>
+            </h5>
+          </div>
       </div>
     </div>
-  </div>
-  <div class="col-7">
+   
+</div>
+  <div class="col-4">
     <div id="userLogout" class="row py-3">
       <div class="col-10 col-sm-11 welcome-user d-none d-sm-block">
-        Welcome, <span style="font-family: quicksand_bold;">{{email}}</span>
+      <span>  Hi, </span> <span style="color: #474959;">{{email}}</span>
       </div>
       <div class="col-2 col-sm-1 offset-10 offset-sm-0 pl-0 text-right float-right">
-        <a (click)="logout()" Title="Logout">
-          <img src="assets/images/logout.png" alt="icon" style="width: auto; height: 15px">
-        </a>
+        
+        <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+         <a>
+           <i class="fa fa-angle-down logout-user"></i>
+            <!-- <img src="assets/images/black-male-user-symbol.png" alt="icon" style="width: auto; height: 20px"> -->
+          </a>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-right" style="top: -6px !important;
+        left: 46px!important">
+          <li (click)="toggle('/setting/userProfile')" class="mat-option ng-star-inserted">
+            <a >Profile</a>
+          </li>
+          <li (click)="toggle('/setting/password')" class="mat-option ng-star-inserted">
+            <a >Change Password</a>
+          </li>
+          <li (click)="logout()" class="mat-option ng-star-inserted">
+            <a >Logout</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

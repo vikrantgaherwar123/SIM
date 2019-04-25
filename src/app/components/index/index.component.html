@@ -1,5 +1,5 @@
 <!-- Header -->
-<ngx-loading-bar [includeSpinner]="false"></ngx-loading-bar>
+<ngx-loading-bar *ngIf="router.url !=='/login'" [includeSpinner]="false"></ngx-loading-bar>
 <div class="header-container">
   <app-header [instance]="self" ></app-header>
 </div>

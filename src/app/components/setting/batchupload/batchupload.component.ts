@@ -12,9 +12,10 @@ import * as productActions from '../../../actions/product.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import * as XLSX from 'xlsx';
-import { empty } from 'rxjs';
+import { empty, interval, throwError, of } from 'rxjs';
 import { IfStmt } from '@angular/compiler';
 import { Title }     from '@angular/platform-browser';
+import { flatMap, retryWhen, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-batchupload',
@@ -24,8 +25,8 @@ import { Title }     from '@angular/platform-browser';
 export class BatchuploadComponent implements OnInit {
   arrayBuffer: any;
   file: File;
-  clientRecords: any;
-  productRecords: any;
+  clientRecords: Array<any> = [];
+  productRecords: Array<any> = [];
   errors: {};
   worksheet1: XLSX.WorkSheet;
   private activeClient = <client>{}
@@ -39,6 +40,19 @@ export class BatchuploadComponent implements OnInit {
   clientListLoading: boolean;
   productListLoading: boolean;
   repeatativeProductName: string;
+  errorOccured: boolean;
+  unitErrorOccured: boolean;
+  rateErrorOccured: boolean;
+  taxErrorOccured: boolean;
+  showClientDiv: boolean = false;
+  showProductDiv: boolean = false;
+  make_blur_disable : boolean = false;
+  private fieldArray: Array<any> = [];
+  private newAttribute: any = {};
+  addProductManually: boolean = false;
+  addClientManually: boolean = false;
+  cleientSaved: boolean;
+
   incomingfile(event) {
     if (event.target.files[0]) {
       this.file = event.target.files[0];
@@ -48,6 +62,7 @@ export class BatchuploadComponent implements OnInit {
         this.showProductsTable = false
       }
     }
+    this.Upload();
   }
 
   // client starts
@@ -72,13 +87,15 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-
-      
-      
   }
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Batch Upload');
+    //get client option selected initially
+    this.showClient();
+
+    //faded background table
+    this.backgroundTable();
     this.clientListLoading = true
     if (this.clientList) {
       this.clientService.fetch().subscribe((response: response) => {
@@ -88,7 +105,7 @@ export class BatchuploadComponent implements OnInit {
           this.clientList = response.records.filter(cli => cli.enabled == 0)
 
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
     }
@@ -103,19 +120,65 @@ export class BatchuploadComponent implements OnInit {
           this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
           this.productList = response.records.filter(prod => prod.enabled == 0)
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.productListLoading = false
     }
   }
 
+  backgroundTable(){
+    for(let i=0;i< 20;i++){
+      this.fieldArray.push([]);
+    }  
+  }
+  
+
+  addFieldValues() {
+    if(this.showClientDiv){
+      this.clientRecords.push([])
+    }else if(this.showProductDiv){
+      this.productRecords.push([])
+    }
+  }
+
+  openManuallyAddField(){
+    if(this.showClientDiv){
+      this.addClientManually = true;
+      this.make_blur_disable = true;
+      for(let i=0;i< 20;i++){
+        this.clientRecords.push([]);
+      }  
+    //get client btn selected if client file selected
+    $("#clientbtn").click()
+    }
+    else if(this.showProductDiv){
+      this.addProductManually = true;
+      this.make_blur_disable = true;
+      for(let i=0;i< 20;i++){
+        this.productRecords.push([]);
+      }  
+      //get client btn selected if product file selected
+      $("#productbtn").click()
+    }
+
+  }
+
+  showClient(){
+    this.showClientDiv = true
+    this.showProductDiv = false
+  }
+
+  showProduct(){
+    this.showProductDiv = true
+    this.showClientDiv = false
+  }
+
   Upload() {
-    // if(this.worksheet1.A1.v === ' '){
-    //   console.log('remove spaces');
-    // }
-    // else{
-      
-    // }
+    //make save and clear btn disable
+    this.make_blur_disable = true;
+    
+    this.showClientsOrProducts = true;
+    this.showClientsTable = true;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -144,13 +207,15 @@ export class BatchuploadComponent implements OnInit {
       
 
       if (clientName === "organizationname*") {
+        //get client btn selected if client file selected
+        $("#clientbtn").click()
         this.showClientsTable = true;
         this.showProductsTable = false;
         //get address of header
-        if(this.worksheet1.A1 === undefined){
+        if (this.worksheet1.A1 === undefined) {
           this.worksheet1.A1 = "name";
         }
-        else{
+        else {
           this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "name"
         }
 
@@ -213,6 +278,8 @@ export class BatchuploadComponent implements OnInit {
         //header ends for clients
       }
       if (productName === "productname*") {
+        //get client btn selected if product file selected
+        $("#productbtn").click()
 
         this.showClientsTable = false;
         this.showProductsTable = true;
@@ -221,14 +288,14 @@ export class BatchuploadComponent implements OnInit {
           this.worksheet1.A1 = "prodName";
         }
         else{
-          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "unit"
+          this.worksheet1.A1.v = this.worksheet1.A1.h = this.worksheet1.A1.w = "prodName"
         }
 
         if(this.worksheet1.B1 === undefined){
           this.worksheet1.B1 = "unit";
         }
         else{
-          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "prodName"
+          this.worksheet1.B1.v = this.worksheet1.B1.h = this.worksheet1.B1.w = "unit"
         }
 
         if(this.worksheet1.C1 === undefined){
@@ -263,6 +330,19 @@ export class BatchuploadComponent implements OnInit {
     fileReader.readAsArrayBuffer(this.file); // readAsArrayBuffer represents the FILES DATA
   }
 
+  clearData(){
+    this.make_blur_disable = false;
+    this.showClientsTable = false;
+    this.showProductsTable = false;
+    this.clientRecords = [];
+    this.productRecords = [];
+    this.showClient();
+    //get client btn selected after clear clicked
+    $( "#clientbtn" ).click()
+    //manually add options
+    this.addClientManually = false;
+    this.addProductManually = false;
+  }
 
 
   save(status, edit) {
@@ -274,8 +354,9 @@ export class BatchuploadComponent implements OnInit {
         var proStatus = true
 
         // If adding or editing client, make sure client with same name doesnt already exist
-        if (!this.activeClient.enabled) {
+        if (!this.activeClient.enabled && this.activeClient.name ) {
           var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
+          status = true
 
           // If empty spaces
           if (!tempClientName) {
@@ -306,9 +387,10 @@ export class BatchuploadComponent implements OnInit {
             }
           }
           this.repeatativeClientName = ''
+        }else{
+          status = false;
         }
-
-
+        
         if (status && proStatus) {
           //add required input params for api call
           this.clientRecords[i].enabled = 0;
@@ -317,10 +399,14 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.clientRecords[i].deviceCreatedDate = d.getTime()
           this.clientRecords[i].modifiedDate = d.getTime()
+
           //add all addresses in a single object and send it to api to show those all addr in client view mode
-          this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
-          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ +(?= )/g, '');
-          if (this.clientRecords[i].name !== ' ') {
+          if(this.clientRecords[i].addressLine1){ //if any adrr is there 
+            this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
+          }
+          
+          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
+          if (this.clientRecords[i].name !== '') {
             this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
@@ -332,31 +418,17 @@ export class BatchuploadComponent implements OnInit {
                 })
 
                 if (index == -1) {  // add
-                  // this if condn and for loop is used to not add existing org name but right nw its not working
-                  var OrgName = response.clientList[0].name.toLowerCase();
-                  if (this.clientList) {
-                    for (let i = 0; i < this.clientList.length; i++) {
-                      this.list = this.clientList[i].name.toLowerCase();
-                      if (this.list[i] == OrgName) {
-                        this.toasterService.pop('failure', 'Client Already Exists !!!');
-                        this.duplicateOrgName = false;
-                      }
-                    }
-                    if (this.duplicateOrgName == true) {
-                      this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-                      this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
-                      this.toasterService.pop('success', 'Clients Saved Successfully !!!');
-                    }
-                  }
+                  // var OrgName = response.clientList[0].name.toLowerCase();
+                  this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
+                  this.clientList.push(this.clientService.changeKeysForStore(response.clientList[0]))
+                  this.cleientSaved = true;
+                  // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
                 this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
               }
               else {
-                // self.errors = [response.error]
-                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-                //console.log(response.error)
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
             })
@@ -368,6 +440,16 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Client name already exists.');
           }
+          // else if(!status){
+          //   this.toasterService.pop('failure', 'Client name should not be empty');
+          // }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.clientRecords.length-1)){
+          this.toasterService.pop('success', 'Clients added successfully !!!');
+          if(!status){
+            this.toasterService.pop('failure', 'Client name should not be empty');
+          }
         }
       }
     }
@@ -378,8 +460,9 @@ export class BatchuploadComponent implements OnInit {
         this.activeProduct = this.productRecords[i];
         var proStatus = true
         // If adding or editing product, make sure product with same name doesnt exist
-        if (this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+        if (this.activeProduct.prodName && this.activeProduct.prodName) {    
           var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
+          status = true;
           var tempCompare = ''
           for (var p = 0; p < this.productList.length; p++) {
             if(this.productList[p].prodName){
@@ -404,21 +487,32 @@ export class BatchuploadComponent implements OnInit {
           }
           this.repeatativeProductName = ''
         }
-
-
-
-
-
+        else{
+          status = false
+        }
 
         if (status && proStatus) {
+          //flag set to highlite user if he enters wrong input
+          if(isNaN(this.productRecords[i].unit) && this.productRecords[i].unit !== undefined){
+            this.unitErrorOccured = true;
+            this.toasterService.pop('failure', 'Unit must be numeric !');
+          }
+          if(isNaN(this.productRecords[i].rate) && this.productRecords[i].rate !== undefined){
+            this.rateErrorOccured = true;
+            this.toasterService.pop('failure', 'Rate must be numeric !');
+          }
+          if(isNaN(this.productRecords[i].taxRate) && this.productRecords[i].taxRate !==undefined){
+            this.taxErrorOccured = true;
+            this.toasterService.pop('failure', 'Tax Rate must be numeric !');
+          }
           //add required input params for api call
           this.productRecords[i].serverOrgId = parseInt(this.user.user.orgId);
           this.productRecords[i].uniqueKeyProduct = generateUUID(this.user.user.orgId);
           var d = new Date()
           this.productRecords[i].modifiedDate = d.getTime()
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ +(?= )/g, '');
-          if (this.productRecords[i].prodName !== ' ') {
+          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
+          if (this.productRecords[i].prodName !== '') {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
@@ -431,19 +525,17 @@ export class BatchuploadComponent implements OnInit {
                 if (index == -1) {  // add
                   this.store.dispatch(new productActions.add([this.productService.changeKeysForStore(response.productList[0])]))
                   this.productList.push(this.productService.changeKeysForStore(response.productList[0]))
-                  this.toasterService.pop('success', 'Product added successfully !!!');
+                  // this.toasterService.pop('success', 'CLients added successfully !!!');
                 }
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
                 this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
               }
               else {
-                // self.errors = [response.error]
-                // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true });
-                //console.log(response.error)
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
-            })
+            }
+            );
           } else {
             this.toasterService.pop('failure', 'Product name required!');
           }
@@ -451,21 +543,60 @@ export class BatchuploadComponent implements OnInit {
           if (!proStatus) {
             this.toasterService.pop('failure', 'Product name already exists.');
           }
+          // else if(!status){
+          //   this.toasterService.pop('failure', 'Product Name Required');
+          // }
+        }
+        //show only one toaster instead of multiple
+        if(i == (this.productRecords.length-1)){
+          this.toasterService.pop('success', 'Products added successfully !!!');
+          if(!status){
+            this.toasterService.pop('failure', 'Product Name Required');
+          }
         }
       }
     }
   }
+
+  showProductSuccessAdd(){
+    this.toasterService.pop('success', 'Products added successfully !!!');
+  }
+
+  // errorHandler(error){
+  //   if(error){
+  //   //  this.toasterService.pop('failure', 'Unit, Rate and Tax Rate must be numeric !');
+  //   }
+  //   console.log(error);
+    
+  // }
+
+  
   remove(index) {
     this.clientRecords.splice(index, 1);
   }
 
-  removespaceRow(index) {
-    if(this.clientRecords.i === ' ')
-    this.clientRecords.splice(index, 1);
+  removeEmptyProducts(){
+    //remove whitespaces from productlist
+    for (let i = 0; i < this.productList.length; i++) {
+      if (!this.productList[i].prodName) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i,1);
+      }
+    }
   }
 
   productRemove(index) {
     this.productRecords.splice(index, 1);
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
 }

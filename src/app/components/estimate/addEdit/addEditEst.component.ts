@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core'
-import { Router, ActivatedRoute, NavigationStart  } from '@angular/router'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
+import { Router, ActivatedRoute, NavigationStart, NavigationEnd  } from '@angular/router'
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
+import { ToasterService } from 'angular2-toaster'
+import { DatePipe } from '@angular/common';
+import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
+import { Store } from '@ngrx/store'
+
 import { CONSTANTS } from '../../../constants'
-import { response, addEditEstimate, estimate , client, terms, setting, product } from '../../../interface'
+import { response, addEditEstimate, estimate , client, terms, setting, product, recentEstimates } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { EstimateService } from '../../../services/estimate.service'
@@ -13,15 +21,12 @@ import { ProductService } from '../../../services/product.service'
 import { TermConditionService } from '../../../services/term-condition.service'
 import { SettingService } from '../../../services/setting.service'
 
-import { Store } from '@ngrx/store'
 import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as productActions from '../../../actions/product.action'
 import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
-import { ToasterService } from 'angular2-toaster'
-import { DatePipe } from '@angular/common';
-import { Title }     from '@angular/platform-browser';
+
 
 
 @Component({
@@ -36,6 +41,11 @@ export class AddEditEstComponent implements OnInit {
 
 
   estimateList: estimate[]
+  recentEstimateList: recentEstimates[];
+  recentEstimate: recentEstimates = <recentEstimates>{}
+  previousUrl: string;
+
+  activeEst: estimate
   activeEstimate: addEditEstimate
   estimateDate = new FormControl()
   private tempEstNo: number
@@ -53,6 +63,7 @@ export class AddEditEstComponent implements OnInit {
   editTerms: boolean = true
   disableProductText: boolean = true
   ifProductEmpty:boolean = false
+  hideme = [] //show more or less flag
 
   last
   index
@@ -62,6 +73,7 @@ export class AddEditEstComponent implements OnInit {
   private allClientList: client[]
   activeClient: client = <client>{}
   clientListLoading: boolean
+  estimateListLoading: boolean
   billingTo = new FormControl()
   filteredClients: Observable<string[] | client[]>
   addClientModal: any = {}
@@ -93,24 +105,31 @@ export class AddEditEstComponent implements OnInit {
     },
     setting: setting
   }
-  keepGoing: boolean;
-  estimateDelete: boolean;
   showTaxRate: number;
   showTaxRateFlag: boolean;
   showDiscountRateFlag: boolean;
   showDiscountRate: number;
-  setTaxOnItem: boolean;
-  setDiscountOnItem: boolean;
+  showTaxOnItem: boolean = false;
+  showDiscountOnItem: boolean = false;
   showDiscountField: boolean;
   tncLoading: boolean;
   settingsLoading: boolean;
   estimateId: any;
-  recentEstimateList: any = [];
   disabledDescription: boolean = false;
   discountFlag: any;
-
+  viewTodaysEstimate: boolean = false;
+  estListLoader: boolean;
+  noProductSelected: boolean = false;
+  noClientSelected: boolean = false;
+  errorMessage: any;
+  defaultChecked: boolean;
+  noDiscountOnItem: boolean;
+  noTaxOnItem: boolean;
+  recentEstListLoading: boolean;
+  noRecentEstimate: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
+    private adapter: DateAdapter<any>,
     public toasterService: ToasterService,
     private route: ActivatedRoute,
     private estimateService: EstimateService,
@@ -122,6 +141,11 @@ export class AddEditEstComponent implements OnInit {
     private store: Store<AppState>,
     private titleService: Title
   ) {
+    router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {        
+        this.previousUrl = event.url;
+      };
+    });
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -129,6 +153,9 @@ export class AddEditEstComponent implements OnInit {
     store.select('client').subscribe(clients => this.allClientList = clients)
     store.select('product').subscribe(products => this.productList = products)
     store.select('terms').subscribe(terms => this.termList = terms)
+    store.select('estimate').subscribe(estimates => this.estimateList = estimates)
+    store.select('recentEstimates').subscribe(recentInvoices => this.recentEstimateList = recentInvoices)
+
     
     // save button processing script
     $(document).ready(function () {
@@ -155,27 +182,20 @@ export class AddEditEstComponent implements OnInit {
         this.estimateId = params.estId;
         this.edit = true
         this.editTerms = false
-        this.editInit(params.estId)
         this.fetchCommonData()
+        this.editInit(params.estId)
       } else {
         this.fetchCommonData()
         this.addInit()
       }
     })
-    for (let i = 0; i < this.productList.length; i++) {
-      if (this.productList[i].prodName == "") {
-        var product = this.productList[i];
-        var index = this.productList.indexOf(product)
-        if (index > -1) {
-          this.productList.splice(index, 1);
-        }
-      }
+   
+    if(this.recentEstimateList.length < 1){
+      this.fetchEstimates();
     }
-    //getting arraylist of recenlty added estimates 
-    this.store.select('recentEstimates').subscribe(estimates => {
-      this.estimateList = estimates
-    })
+    
   }
+
 
   dataChanged(input) {
     if (input > 100) {
@@ -197,57 +217,196 @@ export class AddEditEstComponent implements OnInit {
   }
 
   addInit() {
-    //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 1){
-      this.showTaxRateFlag = false;
-      this.showTaxRate = 0;
-    }else{
-      this.showTaxRateFlag = true;
-    }
-    if(this.settings.discountFlagLevel === 0){
-      this.showDiscountRateFlag = false;
-      this.showDiscountRate = 0;
-    }
-
 
     this.commonSettingsInit()
     var date = new Date()
     this.estimateDate.reset(date)
     this.activeEstimate.created_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+
     if (!this.activeEstimate.listItems) {
       this.activeEstimate.listItems = []
     }
+    
   }
 
   editInit(estId) {
-
-    //tax and discount position according to settings changed
-    if(this.settings.taxFlagLevel === 0 && this.showTaxRate !==0){
-      this.showTaxRateFlag = false;
-    }else{
-      this.showTaxRateFlag = true;
-    }
-    if(this.settings.discountFlagLevel === 1 && this.showDiscountRate !==0){
-      this.showDiscountRateFlag = false;
-      this.showDiscountField = true;
-    }else{
-      this.showDiscountRateFlag = true;
-      this.showDiscountField = false;
-    }
-
-    
     //to view updated or viewed estimate in view page
-    // localStorage.setItem('estimateId', estId )
     // Fetch selected estimate
     this.commonSettingsInit()
+    this.recentEstListLoading = true;
+
+    // Fetch selected invoice
+    if(this.estimateList){
+      this.noRecentEstimate = true;
+      this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
+    }
+
+    this.recentEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
+    if(this.recentEstimate){
+      this.noRecentEstimate = false;
+      this.activeEstimate = this.recentEstimate
+    }
+    
+    
+    if(this.activeEstimate){
+      this.recentEstListLoading = false;
+      //adjust the store variables in our used variables
+      if(this.noRecentEstimate){
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
+        if(this.activeEstimate.tax_on_item == 0){
+          this.activeEstimate.discount_on_item = 1;
+        }
+      }else{
+        this.discountFlag = this.recentEstimate.discountFlag;
+        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
+      }
+
+
+        if(this.activeEstimate.discount > 0){
+          this.noDiscountOnItem = false;
+        }
+    
+        if(this.activeEstimate.tax_rate > 0){
+          this.noTaxOnItem = false;
+        }
+        
+        this.shippingAddressEditMode = true
+        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
+        if (!this.activeEstimate.taxList)
+          this.activeEstimate.taxList = [];
+
+        // Change list item keys compatible
+        if (this.activeEstimate.listItems) {
+          var temp = []
+          for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            //set variables according to data comes from API and store 
+            if(this.activeEstimate.listItems[i].discount || this.activeEstimate.listItems[i].discount == 0){
+          
+              this.activeEstimate.listItems[i].discountRate = this.activeEstimate.listItems[i].discount;
+            }
+            if(this.activeEstimate.listItems[i].discountAmt || this.activeEstimate.listItems[i].discountAmt ==0){
+              this.activeEstimate.listItems[i].discount_amount = this.activeEstimate.listItems[i].discountAmt;
+            }
+            if(this.activeEstimate.listItems[i].taxAmount || this.activeEstimate.listItems[i].taxAmount == 0){
+              this.activeEstimate.listItems[i].tax_amount = this.activeEstimate.listItems[i].taxAmount;
+            }
+            
+            if(this.activeEstimate.listItems[i].product_name){
+              this.activeEstimate.listItems[i].productName = this.activeEstimate.listItems[i].product_name;
+            }
+            if(this.activeEstimate.listItems[i].quantity){
+              this.activeEstimate.listItems[i].qty = this.activeEstimate.listItems[i].quantity;
+            }
+            if(this.activeEstimate.listItems[i].total){
+              this.activeEstimate.listItems[i].price = this.activeEstimate.listItems[i].total;
+            }
+            if(this.activeEstimate.listItems[i].unique_identifier){
+              this.activeEstimate.listItems[i].uniqueKeyListItem = this.activeEstimate.listItems[i].unique_identifier;
+            }
+            temp.push({
+              description: this.activeEstimate.listItems[i].description,
+              product_name: this.activeEstimate.listItems[i].productName,
+              quantity: this.activeEstimate.listItems[i].qty,
+              discount: this.activeEstimate.listItems[i].discountRate,
+              discount_amount: this.activeEstimate.listItems[i].discount_amount,
+              tax_amount: this.activeEstimate.listItems[i].tax_amount,
+              rate: this.activeEstimate.listItems[i].rate,
+              tax_rate: this.activeEstimate.listItems[i].taxRate,
+              total: this.activeEstimate.listItems[i].price,
+              unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+              unit: this.activeEstimate.listItems[i].unit
+            })
+          }
+          this.activeEstimate.listItems = temp
+          for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            if(this.activeEstimate.listItems[i].discount !==0){
+              this.activeEstimate.discount_on_item = 1;
+            }
+          }
+        }
+
+        // Change TnC keys compatible
+        if (this.activeEstimate.termsAndConditions) {
+          temp = []
+          for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+            if(this.activeEstimate.termsAndConditions[i].organization_id){
+              this.activeEstimate.termsAndConditions[i].orgId = this.activeEstimate.termsAndConditions[i].organization_id
+            }
+            if(this.activeEstimate.termsAndConditions[i].unique_identifier){
+              this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms = this.activeEstimate.termsAndConditions[i].unique_identifier
+            }
+            if(this.activeEstimate.termsAndConditions[i].terms_condition){
+              this.activeEstimate.termsAndConditions[i].termsConditionText = this.activeEstimate.termsAndConditions[i].terms_condition
+            }
+            temp.push({
+              orgId: this.activeEstimate.termsAndConditions[i].orgId,
+              terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+              _id: this.activeEstimate.termsAndConditions[i]._id
+            })
+          }
+          this.activeEstimate.termsAndConditions = temp
+        }
+
+        // Set Dates
+        var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
+        this.estimateDate.reset(new Date(y, (m - 1), d))
+
+        // Tax and discounts show or hide
+        if (this.activeEstimate.discount == 0) {
+          this.activeEstimate.percentage_flag = null
+        }
+        if (this.activeEstimate.shipping_charges == 0) {
+          this.activeEstimate.shipping_charges = undefined
+        }
+        if (this.activeEstimate.adjustment == 0) {
+          this.activeEstimate.adjustment = undefined
+        }
+        if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
+          this.activeEstimate.tax_rate = null
+        }
+
+        // Wait for clients to be loaded before setting active client
+        var ref = setInterval(() => {
+          if (this.allClientList.length > 0) {
+            let uid = this.activeEstimate.unique_key_fk_client
+            this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+            this.billingTo.reset(this.activeClient)
+            clearInterval(ref)
+          }
+        }, 50)
+      }
+      
+      
+
+    else if(this.recentEstListLoading){
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-        if(this.activeEstimate.discount !==0){
-          this.discountFlag = 1;
+
+        if(this.activeEstimate.discount_on_item == 1){
+          this.noDiscountOnItem = true;
+          this.activeEstimate.tax_on_item = 0; //this is a condition when user saved est by tax on item it was 2 we set it to 0 
+        }else{
+          this.noDiscountOnItem = false;
         }
+    
+        if(this.activeEstimate.tax_on_item == 0){
+          this.noTaxOnItem = true;
+        }else{
+          this.noTaxOnItem = false;
+        }
+
+        if(this.activeEstimate.discount > 0){
+          this.noDiscountOnItem = false;
+        }
+    
+        if(this.activeEstimate.tax_rate > 0){
+          this.noTaxOnItem = false;
+        }
+        
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
         if (!this.activeEstimate.taxList)
@@ -262,6 +421,8 @@ export class AddEditEstComponent implements OnInit {
               product_name: this.activeEstimate.listItems[i].productName,
               quantity: this.activeEstimate.listItems[i].qty,
               discount: this.activeEstimate.listItems[i].discountRate,
+              discount_amount: this.activeEstimate.listItems[i].discountAmt,
+              tax_amount: this.activeEstimate.listItems[i].taxAmount,
               rate: this.activeEstimate.listItems[i].rate,
               tax_rate: this.activeEstimate.listItems[i].taxRate,
               total: this.activeEstimate.listItems[i].price,
@@ -270,20 +431,22 @@ export class AddEditEstComponent implements OnInit {
             })
           }
           this.activeEstimate.listItems = temp
+          //show discount and tax fields when item settings is selected
           for(let i=0;i<this.activeEstimate.listItems.length;i++){
           this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
           if(this.showTaxRate!==0){
-            this.setTaxOnItem = true;
+            this.settings.taxFlagLevel = 0;
+            // this.setTaxOnItem = true;
           }
           this.showDiscountRate = this.activeEstimate.listItems[i].discount;
           if(this.showDiscountRate!==0){
+            this.settings.discountFlagLevel = 1;
             this.showDiscountRateFlag = false;
-            this.setDiscountOnItem = true;
+            this.activeEstimate.discount_on_item = 1;
+            // this.setDiscountOnItem = true;
           }
           }
         }
-
-
 
         // Change TnC keys compatible
         if (this.activeEstimate.termsAndConditions) {
@@ -291,22 +454,13 @@ export class AddEditEstComponent implements OnInit {
           for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
             temp.push({
               orgId: this.activeEstimate.termsAndConditions[i].orgId,
-              terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
-              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+              terms: this.activeEstimate.termsAndConditions[i].termsConditionText ? this.activeEstimate.termsAndConditions[i].termsConditionText : this.activeEstimate.termsAndConditions[i].terms_condition,
+              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms ? this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms : this.activeEstimate.termsAndConditions[i].uniqueKeyTerms,
               _id: this.activeEstimate.termsAndConditions[i]._id
             })
           }
           this.activeEstimate.termsAndConditions = temp
-        } else if (this.termList.length < 1) {
-          this.termConditionService.fetch().subscribe((response: response) => {
-            if (response.termsAndConditionList) {
-              this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-            }
-            this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-          })
-        } else {
-          this.activeEstimate.termsAndConditions = this.editTerms ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-        }
+        } 
 
         // Set Dates
         var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
@@ -343,7 +497,10 @@ export class AddEditEstComponent implements OnInit {
         this.toasterService.pop('failure', 'Invalid estimate id');
         this.router.navigate(['/estimate/view'])
       }
-    })
+    },err => this.openErrorModal(err))
+  } 
+
+    
   }
 
   commonSettingsInit() {
@@ -365,13 +522,16 @@ export class AddEditEstComponent implements OnInit {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
 
+     // Date format selection with locale
     if (settings.dateDDMMYY === false) {
-      this.settings.date_format = 'mm-dd-yy'
+      // this.settings.date_format = 'mm-dd-yy'
+      this.settings.date_format = this.adapter.setLocale('en-US');
     } else if (settings.dateDDMMYY === true) {
       if (!this.settings) {
         this.settings = { date_format: '' }
       }
-      this.settings.date_format = 'dd-mm-yy'
+      // this.settings.date_format = 'dd-mm-yy'
+      this.settings.date_format = this.adapter.setLocale('en-GB');
     }
 
     if (this.settings.date_format === 'dd-mm-yy') {
@@ -389,7 +549,7 @@ export class AddEditEstComponent implements OnInit {
 
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
-        this.activeEstimate.tax_on_item = 2
+        this.activeEstimate.tax_on_item = 0
       }
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
@@ -428,12 +588,12 @@ export class AddEditEstComponent implements OnInit {
       //console.log("2")
       this.tax_on = 'taxDisabled'
       this.taxtext = "Tax (Disabled)"
-      // this.activeEstimate.tax_on_item = 2
+      this.activeEstimate.tax_on_item = 2
       $('a.taxbtn').addClass('disabledBtn')
 
       this.discount_on = 'disabled'
       this.discounttext = "Discount (Disabled)"
-      // this.activeEstimate.discount_on_item = 2
+      this.activeEstimate.discount_on_item = 2
       $('a.discountbtn').addClass('disabledBtn')
     }
   }
@@ -447,10 +607,11 @@ export class AddEditEstComponent implements OnInit {
             (prod.enabled == 0 && prod.prodName !== undefined)
           )))
           this.setProductFilter()
-        } else {
-          this.setProductFilter()
         }
-      })
+        //  else {
+        //   this.setProductFilter()
+        // }
+      },err => this.openErrorModal(err))
     } else {
       this.setProductFilter()
     }
@@ -464,23 +625,15 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          //remove whitespaces from clientlist
-           for (let i = 0; i < this.clientList.length; i++) {
-            if(!this.clientList[i].name){
-              this.clientList.splice(i, 1);
-            }
-            var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "")
-            if (tempClient === "") {
-              this.clientList.splice(i, 1);
-            }
-          }
+          this.removeEmptyNameClients();
           //findout shipping address of selected client from clientlist
+          if(this.activeEstimate){
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
-          console.log(client);
           if(client){
             this.shippingAddress = client.shippingAddress;
             this.activeEstimate.shipping_address = this.shippingAddress;
           }
+        }
           
           var seen = {};
           //You can filter based on Id or Name based on the requirement
@@ -496,36 +649,41 @@ export class AddEditEstComponent implements OnInit {
         }
         this.setClientFilter()
         
-      })
+      },err => this.openErrorModal(err))
     } else {
       
       this.setClientFilter()
     }
 
     // Fetch Terms if not in store
-    if (this.termList.length < 1 && !this.edit) {
+    if (this.termList.length < 1) {
       this.tncLoading = false;
       this.termConditionService.fetch().subscribe((response: response) => {
         this.tncLoading = true;
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-      })
+        if(this.activeEstimate){
+          this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
+        }
+        
+      },err => this.openErrorModal(err))
     } else {
       this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT');
     }
 
 
     //Fetch Settings every time
-    this.settingsLoading = false;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = true;
-      if (response.settings !== null) {
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
+    // this.settingsLoading = false;
+    // this.settingService.fetch().subscribe((response: any) => {
+    //   this.settingsLoading = true;
+    //   if (response.settings !== null) {
+    //     setStorage(response.settings)
+    //     this.user = JSON.parse(localStorage.getItem('user'))
+    //     this.settings = this.user.setting
+    //   }
+    // },err => this.openErrorModal(err)
+    // )
 
       // Estimate Number
       if (!isNaN(parseInt(this.settings.quotNo))) {
@@ -539,93 +697,56 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.estimate_number = this.tempEstNo.toString();
       }
 
-    //   if(!this.edit){
-    //     this.tempEstNo = JSON.parse(localStorage.getItem('estNo'));
-    //     if (this.tempEstNo) {
-    //     //regex code to find no. from string
-    //     // var r = /\d+/;
-    //     // var m = r.exec(this.tempInvNo.toString())[0]
-    //     // var s =parseInt(m);
-    //     // console.log(s);
-
-
-    //     // this regex code separates string and no.
-    //     var text = this.tempEstNo.toString().split(/(\d+)/)
-    //     var t = text[0] //text
-    //     var n = parseInt(text[1]) //number
-    //     if( isNaN(n)){
-    //       n = 0; 
-    //     }
-    //     // var x = t+(n+1);
-    //     this.tempEstNo = n + 1 ;
-
-    //   } else {
-    //     this.tempEstNo = 1
-    //     t = this.settings.setInvoiceFormat;
-    //   }
-    //   if (this.settings.setInvoiceFormat) {
-    //     this.activeEstimate.estimate_number = t + this.tempEstNo
-    //   } else {
-    //     this.activeEstimate.estimate_number = this.tempEstNo.toString();
-    //   }
-    // }
-    })
+    
+    
   }
 
   // Client Functions
   setClientFilter() {
+    this.store.select('client').subscribe(clients => this.clientList = clients)
+    this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     // Filter for client autocomplete
-    if(this.clientList){
-    var seen = {};
-    //You can filter based on Id or Name based on the requirement
-    var uniqueClients = this.clientList.filter(function (item) {
-      if (seen.hasOwnProperty(item.name)) {
-        return false;
-      } else {
-        seen[item.name] = true;
-        return true;
-      }
-    });
-    this.clientList = uniqueClients;
+    if (this.clientList) {
+      var seen = {};
+      //You can filter based on Id or Name based on the requirement
+      var uniqueClients = this.clientList.filter(function (item) {
+        if (seen.hasOwnProperty(item.name)) {
+          return false;
+        } else {
+          seen[item.name] = true;
+          return true;
+        }
+      });
+      this.clientList = uniqueClients;
+      this.removeEmptyNameClients();
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
-  }else{
-    this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
-        this.clientListLoading = false;
-        if (response.records) {
-          this.store.dispatch(new clientActions.add(response.records))
-          this.clientList = response.records.filter(recs => recs.enabled == 0)
-          var seen = {};
-          //You can filter based on Id or Name based on the requirement
-          var uniqueClients = this.clientList.filter(function (item) {
-            if (seen.hasOwnProperty(item.name)) {
-              return false;
-            } else {
-              seen[item.name] = true;
-              return true;
-            }
-          });
-          this.clientList = uniqueClients;
-          this.filteredClients = this.billingTo.valueChanges.pipe(
-            startWith<string | client>(''),
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filterCli(name) : this.clientList.slice())
-          )
-        }
-        // this.setClientFilter()
-      })
   }
+  
 }
 
   private _filterCli(value: string): client[] {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
+  removeEmptyNameClients(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i);
+      }
+    }
+  }
+
   selectedClientChange(client) {
+    this.noClientSelected = false;
     this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
     var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
 
@@ -698,16 +819,17 @@ export class AddEditEstComponent implements OnInit {
           this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
-          $('#add-client').modal('hide')
           this.clientListLoading = false
+          $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
-          window.location.reload(true);
+          // window.location.reload(true);
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
         }
-      })
+      },err => this.openErrorModal(err)
+      )
     }else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
@@ -721,14 +843,26 @@ export class AddEditEstComponent implements OnInit {
     var obj = {};
     //You can filter based on Id or Name based on the requirement
     var uniqueProducts = this.productList.filter(function (item) {
+      if(item.prodName){
       if (obj.hasOwnProperty(item.prodName)) {
         return false;
       } else {
         obj[item.prodName] = true;
         return true;
       }
+    }
     });
     this.productList = uniqueProducts;
+    //remove whitespaces from productList
+    for (let i = 0; i < this.productList.length; i++) {
+      if (this.productList[i].prodName == undefined) {
+        this.productList.splice(i,1);
+      }
+      var tempProduct = this.productList[i].prodName.toLowerCase().replace(/\s/g, "")
+      if (tempProduct === "") {
+        this.productList.splice(i,1);
+      }
+    }
 
     
     this.filteredProducts = this.addItem.valueChanges.pipe(
@@ -739,9 +873,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   private _filterProd(value: string): product[] {
-    if(this.productList && value){
     return this.productList.filter(prod => prod.prodName.toLowerCase().includes(value.toLowerCase()))
-    }
   }
 
   editEstimateItem(index) {
@@ -753,20 +885,25 @@ export class AddEditEstComponent implements OnInit {
   addEditEstimateItem(uid = null) {
     // If product is in product list directly add to Estimate else save product and then add to Estimate
     // console.log(this.addItem, uid)
-
-    if(this.activeItem.product_name ===null ){
+    
+    if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-      this.toasterService.pop('failure', 'Product Name can not be empty');
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
-    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+    if(this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
       this.toasterService.pop('failure', 'rate can not be 0 or empty');
     }
 
     if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
       if (uid == null) {
+        if(this.activeItem.tax_rate == 0){
+          this.activeItem.tax_amount = 0;
+        }
+        if(this.activeItem.discount == 0){
+          this.activeItem.discount_amount = 0;
+        }
         // Add Item to Estimate
         this.activeEstimate.listItems.push(this.activeItem)
       } else {
@@ -845,7 +982,8 @@ export class AddEditEstComponent implements OnInit {
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
-    })
+    },err => this.openErrorModal(err)
+    )
   }
 
   closeEditItemModal() {
@@ -885,15 +1023,31 @@ export class AddEditEstComponent implements OnInit {
         this.activeItem.tax_rate = 0
       } else {
         this.activeItem.tax_amount = (this.activeItem.rate * this.activeItem.tax_rate / 100) * this.activeItem.quantity
-        this.activeItem.total += this.activeItem.tax_amount
+        if(this.activeItem.discount_amount){
+          this.activeItem.tax_amount = ((this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount) * this.activeItem.tax_rate/100;
+          this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount +  this.activeItem.tax_amount;
+        }else{
+          this.activeItem.total += this.activeItem.tax_amount
+        }
       }
     }
   }
 
   // Terms Functions
   openAddTermModal() {
+    this.defaultChecked = true;
     this.addTermModal = {}
+    this.addTermModal.setDefault = true;
     $('#add-terms').modal('show')
+  }
+
+  //toggle checked box for terms
+  changeCheckbox() {
+    if (this.defaultChecked) {
+      this.addTermModal.setDefault = true;
+    }else{
+      delete this.addTermModal.setDefault;
+    }
   }
 
   saveTerm(status) {
@@ -929,7 +1083,8 @@ export class AddEditEstComponent implements OnInit {
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
           this.toasterService.pop('failure', 'Error occured');
         }
-      })
+      },err => this.openErrorModal(err)
+      )
     }
   }
 
@@ -943,7 +1098,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if (this.activeEstimate.termsAndConditions) {
+    if (this.activeEstimate) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -952,6 +1107,7 @@ export class AddEditEstComponent implements OnInit {
 
   // Estimate Functions
   fillItemDetails(prod = null) {
+    this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
     this.activeItem = {
@@ -969,13 +1125,15 @@ export class AddEditEstComponent implements OnInit {
 
   save(status) {
     if (!this.activeEstimate.unique_key_fk_client) {
+      this.noClientSelected = true;
       this.toasterService.pop('failure', 'Client not selected');
       $('#bill-to-input').select()
       return false
     }
 
     if (this.activeEstimate.listItems.length == 0 || !status) {
-      alert('You haven\'t added item')
+      this.noProductSelected = true;  // show red box
+      this.toasterService.pop('failure','You haven\'t added item')
       return false
     }
 
@@ -996,11 +1154,7 @@ export class AddEditEstComponent implements OnInit {
     this.activeEstimate.termsAndConditions.forEach(tnc => {
       temp.push({ ...this.termConditionService.changeKeysForInvoiceApi(tnc)}) //, unique_key_fk_quotation: this.activeEstimate.unique_identifier 
     })
-  //   for(let i = 0;i<temp.length; i++){
-  //   if(temp[i].terms_condition === undefined){
-  //     temp.splice(i,1);
-  //   }
-  // }
+  
     this.activeEstimate.termsAndConditions = temp
 
 
@@ -1043,34 +1197,25 @@ export class AddEditEstComponent implements OnInit {
       } else if (response.status === 200) {
         // Add Estimate to store
         if (this.edit) {
-          this.store.select('estimate').subscribe(ests => {
+          
+        // Add Estimate to recent store
+          this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
             if (response.quotationList[0].deleted_flag == 1) {
-              self.store.dispatch(new estimateActions.remove(index))
-            } else {
-              self.store.dispatch(new estimateActions.edit({index, value: this.estimateService.changeKeysForStore(response.estimateList[0])}))
+              self.store.dispatch(new estimateActions.removeRecentEstimate(index))
+              this.toasterService.pop('success', 'Estimate Deleted successfully');
+            } else{
+              this.toasterService.pop('success', 'Estimate Edited successfully');
+              self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
             }
           })
         } else {
           self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
         }
-
-        // Update settings
-        // if (!this.edit) {
-        //   this.updateSettings()
-        // }
-
-
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
-        if (this.edit) {
-           this.toasterService.pop('success', 'Estimate updated successfully');
-          // this.router.navigate(['/estimate/view'])
-          this.router.navigate([`estimate/view/${this.estimateId}`])
-        } else{
+       if(!this.edit) {
           //add recently added esimate in store
           self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
-          
-         
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()
@@ -1078,7 +1223,8 @@ export class AddEditEstComponent implements OnInit {
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
-    })
+    },err => this.openErrorModal(err)
+    )
   }
   // validate user if he removes invoice number and try to save invoice 
   else {                    
@@ -1096,11 +1242,9 @@ export class AddEditEstComponent implements OnInit {
 
   deleteEstimate() {
     this.activeEstimate.deleted_flag = 1
-    // localStorage.setItem('deleteEstimateId', "1" )
-    // this.estimateDelete = false;
     this.save(true)
-    this.toasterService.pop('success', 'estimate Deleted successfully');
-    // this.closeDeleteEstimateModal();
+    
+    this.router.navigate(['/estimate/add']);
   }
 
 
@@ -1124,6 +1268,9 @@ export class AddEditEstComponent implements OnInit {
       }
 
       this.activeEstimate.discount = gross_amount * discountFactor
+      //remove digits after two decimal
+      var value = this.activeEstimate.discount.toString().substring(0, this.activeEstimate.discount.toString().indexOf(".") + 3);
+      this.activeEstimate.discount = parseFloat(value);
       deductions += this.activeEstimate.discount
     } else {
       if (isNaN(this.activeEstimate.discount)) {
@@ -1151,7 +1298,7 @@ export class AddEditEstComponent implements OnInit {
           }
           this.activeEstimate.taxList[i].calculateValue = (this.activeEstimate.gross_amount - deductions) / 100 * this.activeEstimate.taxList[i].percentage
           //remove digits after two decimal
-          var b = this.activeEstimate.taxList[i].calculateValue.toString().substring(0, this.activeEstimate.taxList[i].toString().indexOf(".") + 6);
+          var b = this.activeEstimate.taxList[i].calculateValue.toString().substring(0, this.activeEstimate.taxList[i].toString().indexOf(".") + 5);
           this.activeEstimate.taxList[i].calculateValue = parseFloat(b);
           temp_tax_amount += this.activeEstimate.taxList[i].calculateValue
         }
@@ -1159,6 +1306,9 @@ export class AddEditEstComponent implements OnInit {
       additions += temp_tax_amount
     }
     this.activeEstimate.tax_amount = additions
+    //remove digits after two decimal
+    var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
+    this.activeEstimate.tax_amount = parseFloat(value);
 
     // Shipping
     if (isNaN(this.activeEstimate.shipping_charges)) {
@@ -1220,6 +1370,139 @@ export class AddEditEstComponent implements OnInit {
     }
     // settings1.androidSettings.estNo = this.tempEstNo
 
-    this.settingService.add(settings1).subscribe((response: any) => { })
+    this.settingService.add(settings1).subscribe((response: any) => { },err => this.openErrorModal(err)
+    )
+  }
+
+  // error modal
+  openErrorModal(err) {
+    this.errorMessage = err
+    $('#error-message').modal('show')
+    $('#error-message').on('shown.bs.modal', (e) => {
+    })
+  }
+
+
+  //todays estimates functionality
+
+  fetchEstimates() {
+    // Fetch estimates with given query
+
+    var start = new Date();
+    start.setHours(0, 0, 0, 0);
+    var  query = {
+        startDate: start.getTime(),
+        endDate: new Date().getTime(),
+        serviceIdentifier: true
+      }
+
+    this.estListLoader = true
+    this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
+      if (response.status === 200) {
+        this.estListLoader = false
+        this.store.dispatch(new estimateActions.recentEstimate(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever estimate list changes
+        this.store.select('recentEstimates').subscribe(estimates => {
+          this.recentEstimateList = estimates
+        })
+      }
+    }, err => this.openErrorModal(err));
+  }
+
+  setActiveEst(estId: string = '') {
+    this.viewTodaysEstimate = true;
+    this.estimateId = estId;
+    this.estimateListLoading = true;
+    this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    if(this.activeEst){
+    for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
+      if(!this.activeEst.alstQuotProduct[i].productName){
+        this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+      }
+      if(!this.activeEst.alstQuotProduct[i].qty){
+        this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+      }
+      if(!this.activeEst.alstQuotProduct[i].taxRate){
+        this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+      }
+      if(!this.activeEst.alstQuotProduct[i].discountRate){
+        this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+      }
+      if(!this.activeEst.alstQuotProduct[i].price){
+        this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+      }
+      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+          this.activeEst.alstQuotProduct[i].taxRate = 0;
+      }
+      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+          this.activeEst.alstQuotProduct[i].discountRate = 0;
+      }
+      // if(this.activeEst.alstQuotProduct[i].taxRate){
+      //   this.showTaxOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
+      // }else{
+      //   this.showTaxOnItem = false;
+      // }
+      // if(this.activeEst.alstQuotProduct[i].discountRate){
+      //   this.showDiscountOnItem = true;
+      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
+      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
+      // }else{
+      //   this.showDiscountOnItem = false;
+      // }
+    }
+
+    for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
+      if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
+        this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
+      }
+    }
+  }
+    this.setActiveClient()
+  }
+ 
+  setActiveClient() {
+    if (this.clientList.length < 1) {
+      this.clientListLoading = true
+      this.clientService.fetch().subscribe((response: response) => {
+        this.clientListLoading = false
+        this.clientList = response.records;
+        this.removeEmptyNameClients();
+      },err => this.openErrorModal(err)
+      )
+    }
+
+    if (this.activeEst) {
+    
+      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
+      if (client) {
+        this.activeClient = client
+      } else {
+        this.activeClient = null
+      }
+    }
+  }
+
+  goEdit(estId) {
+    this.viewTodaysEstimate = true;
+    this.router.navigate([`estimate/edit/${estId}`])
+  }
+
+  goView(invId){
+    this.router.navigate([`viewtodaysestimate/${invId}`])
+  }
+
+  makeInvoice() {
+    this.router.navigate([`invoice/edit/${this.activeEst.unique_identifier}`])
+  }
+
+  
+  addNewEstimate(){
+    this.viewTodaysEstimate = false;
+    this.estimateId = '';
+    this.activeClient = <client>{}
+    this.shippingAddress = null;
+    this.router.navigate(['/estimate/add'])
   }
 }

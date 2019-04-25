@@ -1,7 +1,41 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main">
-    <div style="margin: 20px auto 0px auto; max-width:1000px;">
-      <form class="form-horizontal back shadow" name="userForm" #form="ngForm" style="min-height: 1106px;">
+    <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
+          <form class="form-horizontal back shadow settingForm setting_sidebar_form"  #addTaxesForm="ngForm" enctype="multipart/form-data">
+            <div class="row mx-0">
+              <div>
+                <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                  <span class="col-8">Primary settings</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+                  <span class="col-8">Custom Field Name</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+                  <span class="col-8">Banking Details</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+                  <span class="col-8">Terms & Conditions</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+                <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
+                  <span class="col-8">Profile</span>
+                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-2"></span>
+                </div>
+              </div>
+            </div>
+            
+          </form>
+        </div>
+  <div class="col-9" id="main">
+    <div class="back" style="height: 1293px;margin-right: -33px;"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
+      <form class="form-horizontal" name="userForm" #form="ngForm">
         <div class="custom-field-form">
           <div style="padding-top: 25px;">
             <div align="center">
@@ -10,12 +44,12 @@
               </div>
 
               <div class="col-12" style="margin-bottom: 10px;">
-                <span style="font-size: 11px;" class="font-weight-bold">
+                <span style="font-size: 11px;">
                   Customize field name as they appear on your PDF
                 </span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 18px;">
+              <div class="col-12" style="margin-bottom: 10px;">
                 <div class="form-group">
                   <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
                     class="form-control" placeholder="Invoice" onfocus="this.select()"
@@ -209,12 +243,12 @@
               <div class="col-12" style="margin-bottom: 10px;">
                 <div style="width: 300px;">
                   <button type="button" (click)="cancel();"
-                    class="btn btn-custom-1 btn-raised no-border-radius pull-left width10btn ml-2 font-custom-bold"
+                    class="btn save_btn btn-raised width25btn pull-right pull-left change_bg"
                   >
                     CANCEL
                   </button>
                   <button type="submit" id="customSubmit" (click)="save(form.valid)"
-                    class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2" style="height: 29px !important;padding-top: 4px !important;"
+                    class="btn save_btn btn-raised width25btn pull-right ml-2"
                   >
                     SAVE
                   </button>
@@ -227,3 +261,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

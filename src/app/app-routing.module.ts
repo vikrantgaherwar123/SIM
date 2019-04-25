@@ -19,10 +19,14 @@ import { UserProfileComponent } from './components/setting/user-profile/user-pro
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
 import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
+import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
+import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
+
+
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/load', pathMatch: 'full' },
+  { path: '', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
@@ -31,6 +35,9 @@ const routes: Routes = [
   { path: 'invoice', redirectTo: '/invoice/add', pathMatch: 'full' },
   { path: 'invoice/add', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'load', component: LoadalldataComponent, canActivate: [AuthGuard] },
+  { path: 'viewtodaysinvoice/:invId', component: ViewTodaysInvoiceComponent, canActivate: [AuthGuard] },
+  { path: 'viewtodaysestimate/:estId', component: ViewTodaysEstimateComponent, canActivate: [AuthGuard] },
+
   { path: 'invoice/edit/:invId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/add/:estId', component: AddEditComponent, canActivate: [AuthGuard] },
   { path: 'invoice/view', component: ViewComponent, canActivate: [AuthGuard] },

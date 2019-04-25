@@ -5,6 +5,7 @@ import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
 import { ToasterService } from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -26,9 +27,11 @@ export class UserProfileComponent implements OnInit {
   logoStyle: SafeStyle
   signStyle: SafeStyle
   settings: setting;
+  emptyCompanyName: boolean = true;
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
+    public router: Router,
     private orgService: OrganisationService,
     private sanitizer: DomSanitizer,
     private titleService: Title
@@ -83,17 +86,14 @@ export class UserProfileComponent implements OnInit {
       } else {
         $('#signImgCont').css('background-image', `url(${this.signImgUrl}?random=${tempRandom})`)
       }
-    })
+    },error => this.openErrorModal())
   }
-
+ 
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
 
   save(valid) {
-    if(this.org.org_name == ''){
-     // this.toasterService.pop('failure','Company Name required')
-   }
    this.org.org_name = this.org.org_name.replace(/\s/g, "");
    if (valid && this.org.org_name !== "") {
      $('#profileSubmitBtn').attr('disabled', 'disabled')
@@ -102,12 +102,21 @@ export class UserProfileComponent implements OnInit {
        this.toasterService.pop('success','Saved Successfully')
        //alert(response.message)
        $('#profileSubmitBtn').removeAttr('disabled')
-     }, (err) => {
-       console.log('errrr', err)
-     })
+     }, 
+    //  (err) => {
+    //    console.log('errrr', err)
+    //  }
+    error => this.openErrorModal())
    }
    else{
      this.toasterService.pop('failure','Company Name required')
    }
  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
 }

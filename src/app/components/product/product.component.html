@@ -8,8 +8,8 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-3" style="padding-top: 15px;">
-                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
-                    <img src="/assets/images/list-icon/add-plus-button24.png" class="plus_list">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img" style="border: 0px solid #ccc;">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 text-center px-0" style="padding-top: 15px;" >
@@ -19,9 +19,9 @@
                 </div>
                 <div class="col-3" style="padding-top: 15px;">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" class="pull-right list-btn cus-img"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list_drop list-btn cus-img"
                   >
-                    <img alt="logo" Title="Search By" src="/assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+                    <img alt="logo" Title="Search By" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='prodName'">
@@ -54,7 +54,7 @@
             >
               <div class="row item product-list">
                 <div class="col-2 pl-1">
-                  <img src="../assets/images/list-icon/pro.png"
+                  <img src="assets/images/list-icon/pro.png"
                     style="vertical-align: middle;width: 36px; height: 36px;"
                   >
                 </div>
@@ -77,7 +77,7 @@
                 </div>
   
                 <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
-                  <img src="/assets/images/next12.png">
+                  <img src="assets/images/next12.png" style="padding-top: 8px;">
                 </div>
               </div>
             </div>
@@ -95,10 +95,10 @@
 
       <!-- Body -->
       <div class="col-12 col-sm-9 item-form">
-        <form class="form-horizontal" #f="ngForm" name="form">
+        <form class="form-horizontal mrg_top_14" #f="ngForm" name="form">
           <div class="shadow">
-            <div class="form-group back" style="padding: 18px;">
-              <div class="row mx-0">
+            <div class="form-group back" style="padding: 18px;height: 597px;">
+              <div class="row mx-0" style="margin-top: 10% !important;">
                 <!-- Heading -->
                 <div class="col-7 col-md-8">
                   <h4 class="form-header product-header" style="margin-left: 59%" *ngIf="createMode">
@@ -111,44 +111,44 @@
                 </div>
 
                 <!-- Top Buttons -->
-                <div class="col-5 col-md-4 px-0 pull-right">
+                <div class="col-5 col-md-4 px-0 pull-right" style="margin-top: -96px;">
                   <button type="button" *ngIf="viewMode" (click)="editThis(product)"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
                   *ngIf="viewMode"  (click)="openDeleteProductModal()">
-                   DELETE
+                   Delete
                  </button>
                   <div class="rightDivBtns">
                     <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="createMode" 
                     >
-                      SAVE
+                      Save
                     </button>
                     <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       *ngIf="editMode" [disabled]="!f.valid"
                     >
                      
-                      UPDATE
+                      Update
                     </button>
                     <button type="button" id="cancleProBtn" (click)="cancelThis()"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
                       *ngIf="editMode"
                     >
-                      CANCEL
+                      Cancel
                     </button>
                     <button type="button" id="clearProBtn" (click)="clearThis()"
                       class="btn btn-custom-1 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
                       *ngIf="createMode"
                     >
-                      CLEAR
+                      Clear
                     </button>
                   </div>
                 </div>
@@ -162,7 +162,7 @@
                       <div class="form-group" [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img style="padding:0px 8px 0px 12px" src="/assets/images/product-icon/ic_normal_prod_name.png">
+                            <img src="assets/images/product-icon/ic_normal_prod_name.png">
                           </span>
                           <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
                             class="form-control" maxlength="45" onfocus="this.select()" required
@@ -179,7 +179,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_product_code_grey.png">
+                            <img src="assets/images/product-icon/ic_product_code_grey.png">
                           </span>
                           <input type="text" name="productCode" id="productCode"
                             class="form-control" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Code"
@@ -193,7 +193,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_unit.png">
+                            <img src="assets/images/product-icon/ic_normal_unit.png">
                           </span>
                           <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
                             [(ngModel)]="activeProduct.unit" onfocus="this.select()"
@@ -215,10 +215,10 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_rate.png">
+                            <img src="assets/images/product-icon/ic_normal_rate.png">
                           </span>
                           <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*"
-                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()"
+                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}"
                           />
                         </div>
                       </div>
@@ -228,7 +228,7 @@
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon">
-                            <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
+                            <img src="assets/images/product-icon/ic_normal_tax_rate.png">
                           </span>
                           <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
                             [(ngModel)]="activeProduct.taxRate" onfocus="this.select()"
@@ -257,7 +257,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_prod_name.png">
+                          <img src="assets/images/product-icon/ic_normal_prod_name.png">
                           {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -268,7 +268,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class=" col-6 client-view-label ">
-                          <img src="/assets/images/product-icon/ic_product_code_grey.png">
+                          <img src="assets/images/product-icon/ic_product_code_grey.png">
                           {{settings.productCode ? settings.productCode : 'Products Code'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -279,7 +279,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_unit.png">
+                          <img src="assets/images/product-icon/ic_normal_unit.png">
                           Unit:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -290,7 +290,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_description.png">
+                          <img src="assets/images/product-icon/ic_normal_description.png">
                           Description:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold" style="text-align: justify;">{{activeProduct.discription}}</div>
@@ -299,7 +299,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_rate.png">
+                          <img src="assets/images/product-icon/ic_normal_rate.png">
                           {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -310,8 +310,8 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/product-icon/ic_normal_tax_rate.png">
-                          Tax {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
+                          <img src="assets/images/product-icon/ic_normal_tax_rate.png">
+                          Tax Rate:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
                           {{activeProduct.taxRate}}
@@ -323,46 +323,46 @@
               </div>
 
               <!-- Bottom Buttons -->
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-12 pull-right">
                   <button type="button" (click)="editThis(product)" *ngIf="viewMode"
                   class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                   >
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png"
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png"
                       style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
                     >
                     Edit
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
                    *ngIf="viewMode"  (click)="openDeleteProductModal()">
-                    DELETE
+                    Delete
                   </button>
                   <div class="rightDivBtns">
                     <button id="updateProBtn1" type="button" (click)="save(f.valid, 0)" *ngIf="createMode"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
-                      SAVE
+                      Save
                     </button>
                     <button id="saveProBtn1" type="button" (click)="save(f.valid, 1)" *ngIf="editMode"
                       class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                       [disabled]="!f.valid"
                     >
-                      UPDATE
+                      Update
                     </button>
                     <button type="button" (click)="cancelThis()" *ngIf="editMode"
                       class="btn btn-custom-2 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
                     >
-                      CANCEL
+                      Cancel
                     </button>
                     <button type="button" (click)="clearThis()" *ngIf="createMode"
-                      class="btn btn-custom-1 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
+                      class="change_bg btn btn-custom-1 btn-raised no-border-radius pull-right mr-2 width10btn font-custom-bold"
                     >
-                      CLEAR
+                      Clear
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- Delete product MODAL -->
               <div id="delete-product" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
                 data-backdrop="static" data-keyboard="false">
@@ -371,7 +371,7 @@
                     <div class="modal-header">
                       <h4 class="modal-title form-header font-custom-bold header-color" id="productFormLabel">
                           <img src="assets/images/delete-color.png" class="del" style="height:28px;">
-                           Delete Client
+                           Delete Product
                       </h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
                         <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
@@ -406,3 +406,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

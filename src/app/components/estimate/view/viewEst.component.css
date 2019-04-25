@@ -3,17 +3,14 @@
 .query-container {
   position: fixed;
   padding: 2px 15px;
-  top: 75px;
+  height: 28px;
   z-index: 1000;
-  background: #F9F9F9;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.5);
+  background: #f4f8fb;
+  font-size: 11px;
 }
-
 .query-bar {
   border-radius: 4px;
-  padding-top: 8px;
+  padding-top: 3px;
 }
 
 .client-select {
@@ -42,12 +39,11 @@
 
 .nav li a {
   display: block;
-  background-color: #2096f3;
-  color: #2096f3 !important;
+  background-color: #1a73cc;
+  color: #1a73cc !important;
   padding: 10px 36px;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 800;
   border-radius: 2px;
   width: 188px !important;
   padding: 9px 0px 11px 16px;
@@ -62,7 +58,7 @@
 }
 
 .nav li a:hover, .nav li a.dropdown-toggle.active {
-  background-color: #2096f3 !important;
+  background-color: #1e81e3 !important;
   color: #fff !important;
 }
 
@@ -88,7 +84,6 @@
 .nav li .dropdown-menu button {
   width: 170px;
   padding: 2px 0px 6px 4px;
-  font-weight: bold !important;
   border: 1px solid #bcbaba;
   border-radius: 4px;
   margin-top: 10px;
@@ -106,10 +101,10 @@
 .list_a
 {
   background-color: white !important;
-  color: #2096f3 !important;
+  color: #1a73cc !important;
 }
 .list_a:hover{
-  background-color:#2096f3 !important;
+  background-color:#1a73cc !important;
   color: white !important;
 }
 /* radio button of payment option */
@@ -152,7 +147,7 @@
 .date-format input[type=radio] + label {
   display:inline-block !important;
   padding: 0 0 0 0px !important;
-  background:url("/assets/images/unchecked24.png") no-repeat !important;
+  background:url("../../../../assets/images/unchecked24.png") no-repeat !important;
   height: 20px !important;
   width: 20px !important;
   background-size: 100% !important;
@@ -160,7 +155,7 @@
   margin: 0px 2px 0px 0px !important;
 }
 .date-format input[type=radio]:checked + label {
-  background:url("/assets/images/checked24.png") no-repeat !important;
+  background:url("../../../../assets/images/checked24.png") no-repeat !important;
   height: 20px !important;
   width: 20px !important;
   display:inline-block !important;
@@ -210,6 +205,26 @@ svg {
 .disabledDiv {
   pointer-events: none;
   opacity: 0.4; 
+}
+.conn_lost_img{
+  width: 325px;
+  margin-top: 108px;
+  margin-right: 77px;
+}
+.change_btn{
+  width: 58px !important;
+  margin-top: -2px;
+  height: 20px !important;
+  border-radius: 4px !important;
+  margin-right: -114px;
+  font-size: 9px !important;
+  padding: 2px 12px 5px 10px !important;
+  /* font-weight: normal; */
+  font-family: helvetica_light !important;
+}
+.back{
+  background: #ffffff;
+  margin-top: -29px !important;
 }
 @media (min-width: 576px)
 {

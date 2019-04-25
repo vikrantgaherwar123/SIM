@@ -8,14 +8,14 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-6" style="padding-top: 15px;">
-                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img" style="border: 0px solid #ccc;">
                     <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
                   </a>
                 </div>
                 <div class="col-6 dropdown" style="padding-top: 15px;" ng-init="order.sortClient = 'id'; setSortClients('id');">
                   <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="pull-right list-btn cus-img">
-                    <img alt="logo" src="/assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+                    aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
+                    <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                     <li [class.active]="sortTerm=='name'">
@@ -48,7 +48,7 @@
               [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
               <div class="row item product-list" *ngIf="client.enabled == 0">
                 <div class="col-2">
-                  <img src="../assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
+                  <img src="assets/images/list-icon/org1.png" style="vertical-align: middle;width: 36px; height: 36px;">
                 </div>
                 <div class="col-8 px-0" (click)="viewThis(client)">
                   <h5 class="col-10 pr-0 font-custom-bold fontsize13">
@@ -59,7 +59,7 @@
                   </span>
                 </div>
                 <div class="col-1" [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
-                  <img src="/assets/images/next12.png">
+                  <img src="assets/images/next12.png" style="padding-top: 8px;">
                 </div>
               </div>
             </div>
@@ -78,10 +78,10 @@
 
       <!-- Body -->
       <div class="col-12 col-sm-9 item-form ">
-        <form class="form-horizontal" #f="ngForm" name="form" id="form">
-          <div class="shadow">
-            <div class="form-group back" style="padding: 18px;">
-              <div class="row mx-0">
+        <form class="form-horizontal mrg_top_14" #f="ngForm" name="form" id="form">
+          <div ><!--class="shadow"-->
+            <div class="form-group back" style="padding: 18px;height: 597px;">
+              <div class="row mx-0" style="margin-top: 10% !important;">
                 <!-- Heading -->
                 <div class="col-7 col-md-8 editBtnShow">
                   <h4 class="form-header text-right client-header" *ngIf="createMode" style="margin-left: 61%;">
@@ -96,23 +96,23 @@
                 </div>
 
                 <!-- Top Buttons -->
-                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold">
-                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+                <div class="col-5 col-md-4 pull-right px-0 font-custom-bold" style="margin-top: -96px;">
+                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right ml-2">
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png" style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"  *ngIf="viewMode"  (click)="openDeleteClientModal()">
-                    DELETE
+                    Delete
                   </button>
                   <div class="rightDivBtns">
-                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)" *ngIf="editMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                    <button type="button" id="updateClientBtn1" (click)="save(f.valid, 1)" *ngIf="editMode" class="btn save_btn btn-raised width25btn pull-right ml-2"
                       [disabled]="!f.valid">
 
-                      UPDATE
+                      Update
                     </button>
-                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right ml-2"
                       *ngIf="createMode">
-                      SAVE
+                      Save
                     </button>
                     <!-- <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
                     *ngIf="createMode" [disabled]="!f.valid">
@@ -120,10 +120,10 @@
                     </button> -->
 
                     <button type="button" (click)="cancelThis()" *ngIf="editMode" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
-                      CANCEL
+                      Cancel
                     </button>
-                    <button type="button" (click)="clearThis()" *ngIf="createMode" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
-                      CLEAR
+                    <button type="button" (click)="clearThis()" *ngIf="createMode" class="change_bg btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
+                      Clear
                     </button>
                   </div>
                 </div>
@@ -132,12 +132,12 @@
               <div class="client-form">
                 <div class="row">
                   <!-- Create / Edit -->
-                  <div class="col-12 mt-2" *ngIf="createMode || editMode">
+                  <div class="col-12 mt-2" *ngIf="createMode || editMode" style="margin-bottom: 28px;">
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" [class.has-error]="(f.submitted || errors.name ) && f.value.name == ''">
                         <div class="input-group client-input">
                           <span class="input-group-addon">
-                            <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                            <img src="assets/images/client-icon/ic_normal_org_name.png">
                           </span>
                           <div class="form-error" *ngIf="f.submitted || errors.name">
                             <span *ngIf="f.value.name == '' && name.errors.required">Organization name required</span>
@@ -153,7 +153,7 @@
                       <div class="form-group">
                         <div class="input-group client-input">
                           <span class="input-group-addon">
-                            <img src="/assets/images/client-icon/ic_normal_contact_person.png">
+                            <img src="assets/images/client-icon/ic_normal_contact_person.png">
                           </span>
                           <input type="text" name="contactPersonName" id="contactPersonName" class="form-control"
                             [(ngModel)]="activeClient.contactPersonName" placeholder="Contact person" onfocus="this.select()" />
@@ -164,7 +164,7 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group" id="emailLabel" name="emailLabel">
                         <div class="input-group client-input">
-                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_email_id.png"></span>
+                          <span class="input-group-addon"><img src="assets/images/client-icon/ic_normal_email_id.png"></span>
                           <input type="text" id="email" name="email" class="form-control" [(ngModel)]="activeClient.email"
                             placeholder="Email address" onfocus="this.select()" />
                         </div>
@@ -174,7 +174,7 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
-                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_contact_no.png"></span>
+                          <span class="input-group-addon"><img src="assets/images/client-icon/ic_normal_contact_no.png"></span>
                           <input type="text" id="cont_number" name="cont_number" class="form-control" [(ngModel)]="activeClient.number"
                             placeholder="Contact number" onfocus="this.select()" />
                           <!--<div class="form-error" *ngIf="form.$submitted || form.cont_number.$touched || errors.number">-->
@@ -204,7 +204,7 @@
                     <div style="margin: 0px auto 10px auto;max-width: 300px;">
                       <div class="form-group">
                         <div class="input-group client-input">
-                          <span class="input-group-addon"><img src="/assets/images/client-icon/ic_normal_business_id.png"></span>
+                          <span class="input-group-addon"><img src="assets/images/client-icon/ic_normal_business_id.png"></span>
                           <input type="text" id="business_id" name="business_id" class="form-control" [(ngModel)]="activeClient.businessId"
                             placeholder="Business Id" onfocus="this.select()" />
                         </div>
@@ -221,11 +221,11 @@
                   </div>
 
                   <!-- View -->
-                  <div class="col-12 mt-2" *ngIf="viewMode == true">
+                  <div class="col-12 mt-2" *ngIf="viewMode == true" style="margin-bottom: 28px;">
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                          <img src="assets/images/client-icon/ic_normal_org_name.png">
                           Organization name:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -236,7 +236,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_contact_person.png">
+                          <img src="assets/images/client-icon/ic_normal_contact_person.png">
                           Contact person:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -247,7 +247,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_email_id.png">
+                          <img src="assets/images/client-icon/ic_normal_email_id.png">
                           Email:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -258,7 +258,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_contact_no.png">
+                          <img src="assets/images/client-icon/ic_normal_contact_no.png">
                           Number:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -269,7 +269,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_address_line.png">
+                          <img src="assets/images/client-icon/ic_normal_address_line.png">
                           Address line:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -280,7 +280,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_address_line.png"><!--{{settings.shipping}} address:-->
+                          <img src="assets/images/client-icon/ic_normal_address_line.png"><!--{{settings.shipping}} address:-->
                           Shipping Address:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -291,7 +291,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                          <img src="assets/images/client-icon/ic_normal_org_name.png">
                           Business Id:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -302,7 +302,7 @@
                     <div class="col-12" style="margin-bottom: 10px;">
                       <div class="row">
                         <div class="col-6 client-view-label">
-                          <img src="/assets/images/client-icon/ic_normal_business_detail.png">
+                          <img src="assets/images/client-icon/ic_normal_business_detail.png">
                           Business detail:
                         </div>
                         <div class="col-6 client-view-body font-custom-bold">
@@ -315,42 +315,42 @@
               </div>
 
               <!-- Bottom Buttons -->
-              <div class="row">
-                <div class="col-12 align-self-end">
-                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
-                    <img src="/assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
+              <!-- <div class="row">
+                <div class="col-12 align-self-end" style="margin-bottom: 8% !important;">
+                  <button type="button" (click)="editThis()" *ngIf="viewMode" class="btn save_btn btn-raised width25btn pull-right ml-2">
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png" style="padding: 0px 2px 3px 0px;width: 14px;height: 14px;">
                     Edit
                   </button>
                   <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
                    *ngIf="viewMode"  (click)="openDeleteClientModal()">
-                    DELETE
+                    Delete
                   </button>
-                   <!-- <button type="button" *ngIf="viewMode"
+                   <button type="button" *ngIf="viewMode"
                     class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold"
                     [swal]="{ title: 'Are you sure want to delete Client ?', type: 'warning', showCancelButton: true,
                       confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
                     "
                     (confirm)="deleteClient()" [disabled]="!f.valid"  
-                  > -->
+                  >
                   <div class="rightDivBtns">
-                    <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                    <button id="updateClientBtn" type="button" (click)="save(f.valid, 1)" class="btn save_btn btn-raised width25btn pull-right ml-2"
                       *ngIf="editMode" [disabled]="!f.valid">
-                      UPDATE
+                      Update
                     </button>
-                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                    <button type="button" id="saveClientBtn1" (click)="f.submitted = true; save(f.valid, 0)" class="btn save_btn btn-raised width25btn pull-right ml-2"
                       *ngIf="createMode">
-                      SAVE
+                      Save
                     </button>
                     <button type="button" (click)="cancelThis()" *ngIf="editMode" class="btn btn-custom-2 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
-                      CANCEL
+                      Cancel
                     </button>
-                    <button type="button" (click)="clearThis()" *ngIf="createMode" class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
-                      CLEAR
+                    <button type="button" (click)="clearThis()" *ngIf="createMode" class="change_bg btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold">
+                      Clear
                     </button>
 
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- // testing -->
               <!-- Delete CLIENT MODAL -->
               <div id="delete-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
@@ -395,3 +395,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

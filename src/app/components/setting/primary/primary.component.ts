@@ -6,6 +6,8 @@ import { setting } from '../../../interface'
 import { SettingService } from '../../../services/setting.service'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { DateAdapter } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-primary',
@@ -30,11 +32,14 @@ export class PrimaryComponent implements OnInit {
     setting: any
   }
   settings: any;
+  activePatternNumber: string = "Pattern";
 
   constructor(private CONST: CONSTANTS,
+    public router: Router,
     public toasterService : ToasterService,
     private settingService: SettingService,
-    private titleService: Title
+    private titleService: Title,
+    private adapter: DateAdapter<any>
   ) {
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -60,7 +65,7 @@ export class PrimaryComponent implements OnInit {
 
         this.activeCountry = this.countries.filter(country => country.id == this.activeSettings.countryIndex)[0]
       }
-    })
+    },error => this.openErrorModal())
   }
 
   dynamicSort(property) {
@@ -180,7 +185,9 @@ export class PrimaryComponent implements OnInit {
 
         if (!this.activeSettings.dateDDMMYY) {
           // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
+          this.adapter.setLocale('en-GB');
         } else if (this.activeSettings.dateDDMMYY) {
+          this.adapter.setLocale('en-US');
           // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy"
         }
 
@@ -195,12 +202,12 @@ export class PrimaryComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(cookie))
 
         this.toasterService.pop('success','Updated Successfully')
-        this.ngOnInit()
+        // this.ngOnInit()
       } else {
         alert (response.message)
         // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
       }
-    })
+    },error => this.openErrorModal())
   }
 
   // Setter Functions
@@ -223,27 +230,39 @@ export class PrimaryComponent implements OnInit {
       case "###,###,###.00":
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
+        this.activePatternNumber = "1,000,000.00"
         break
       case "##,##,##,###.00":
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
+        this.activePatternNumber = "1,00,00,000.00"
         break
       case "###.###.###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = "."
+        this.activePatternNumber = "1.000.000,00"
         break
       case "##.##.##.###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = "."
+        this.activePatternNumber = "1.00.00.000,00"
         break
       case "### ### ###,00":
         this.activeSettings.decimalSeperator = ","
         this.activeSettings.commaSeperator = " "
+        this.activePatternNumber = "1 000 000,00"
         break
       default:
         this.activeSettings.decimalSeperator = "."
         this.activeSettings.commaSeperator = ","
     }
+  }
+
+   // error modal
+   openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   setCountry(countryId) {

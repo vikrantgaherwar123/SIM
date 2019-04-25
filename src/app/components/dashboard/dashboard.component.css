@@ -1,7 +1,13 @@
 @import '../../../assets/css/form.css';
 .dashboard-container {
-  margin-top: 75px;
+  /* margin-top: 75px; */
   background-color: #ededed;
+}
+#main{
+  position: relative;
+  background-color: #ededed;
+  padding-top: 100px !important;
+  padding-bottom: 10px;
 }
 .dashboard-top a :hover {
   background-color: #a0ceef !important;

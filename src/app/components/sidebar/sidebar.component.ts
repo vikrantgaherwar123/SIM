@@ -10,7 +10,7 @@ import { setting } from '../../interface'
 
 export class SidebarComponent implements OnInit {
   
-  constructor(private router: Router) { 
+  constructor(public router: Router) { 
    
   }
 

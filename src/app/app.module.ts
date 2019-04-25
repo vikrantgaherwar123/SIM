@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
-import { HttpClientModule, HttpClient } from '@angular/common/http'
+import { HttpClientModule, HttpClient ,HTTP_INTERCEPTORS } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client'
 import * as $ from 'jquery'
@@ -11,11 +12,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2'
 import { FilterPipeModule } from 'ngx-filter-pipe'
 import { OrderModule } from 'ngx-order-pipe'
-
 import { SocialLoginModule, AuthServiceConfig,
   GoogleLoginProvider, FacebookLoginProvider
 } from "angular-6-social-login"
-
 import { StoreModule } from '@ngrx/store'
 import { clientReducer } from './reducers/client.reducer'
 import { productReducer } from './reducers/product.reducer'
@@ -24,13 +23,10 @@ import { estimateReducer } from './reducers/estimate.reducer'
 import { invoiceReducer } from './reducers/invoice.reducer'
 import { recentInvoice } from './reducers/recentInvoice.reducer'
 import { recentEstimate } from './reducers/recentEstimate.reducer'
-
-
+import { HttpErrorInterceptor } from './error-handler';
 import { globalReducer } from './reducers/globals.reducer'
-
 import { CONSTANTS } from './constants'
 import { MaterialModule } from './material'
-
 import { AppComponent } from './components/index/index.component'
 import { HeaderComponent } from './components/header/header.component'
 import { AppRoutingModule } from './/app-routing.module'
@@ -61,12 +57,13 @@ import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
-
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
+import { TodaysInvoiceComponent } from './components/todays-invoice/todays-invoice.component';
+import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
+import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
 // Social login config
@@ -84,7 +81,20 @@ export function getAuthServiceConfigs() {
       provider: new GoogleLoginProvider(G_APP_ID)
     }
   ])
+  
 }
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -108,6 +118,9 @@ export function getAuthServiceConfigs() {
     BatchuploadComponent,
     SupportComponent,
     LoadalldataComponent,
+    TodaysInvoiceComponent,
+    ViewTodaysInvoiceComponent,
+    ViewTodaysEstimateComponent,
   ],
   imports: [
     ProgressBarModule,
@@ -146,10 +159,17 @@ export function getAuthServiceConfigs() {
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    {
+    provide: HTTP_INTERCEPTORS,
+     useClass: HttpErrorInterceptor,
+     multi: true
+    },
     EmailService,
     CONSTANTS,
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
+    // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    // { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs
@@ -158,4 +178,6 @@ export function getAuthServiceConfigs() {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+ }

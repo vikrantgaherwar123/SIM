@@ -1,18 +1,22 @@
 import { Component, OnInit } from '@angular/core'
+import { retryWhen, flatMap } from 'rxjs/operators';
+import { interval, throwError, of } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router'
+import { Observable } from 'rxjs'
+import { FormControl } from '@angular/forms'
+
+import { Store } from '@ngrx/store'
+
 import { EstimateService } from '../../../services/estimate.service'
 import { ClientService } from '../../../services/client.service'
 import { SettingService } from '../../../services/setting.service'
 
 import { response, estimate, client } from '../../../interface'
-import { Observable } from 'rxjs'
-import { FormControl } from '@angular/forms'
 
-import { Store } from '@ngrx/store'
 import * as estimateActions from '../../../actions/estimate.action'
 import * as clientActions from '../../../actions/client.action'
 import * as globalActions from '../../../actions/globals.action'
 import { AppState } from '../../../app.state'
-import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-view',
@@ -64,6 +68,12 @@ export class ViewEstComponent implements OnInit {
   customEnableDate: boolean;
   estimateId: any;
   showBackground: boolean = false;
+  hideTaxLabel: boolean;
+  hideDiscountLabel: boolean;
+  isDiscountPresent: boolean;
+  isTaxPresent: boolean;
+  noTaxOnItem: boolean;
+  noDiscountOnItem: boolean;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -111,10 +121,13 @@ export class ViewEstComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records;
+        // this.removeEmptySpaces();
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
-      })
+      },err => this.openErrorModal()
+      )
     } else {
+      // this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -124,19 +137,20 @@ export class ViewEstComponent implements OnInit {
         this.showBackground = true;
         this.openSearchClientModal()
       }
-      
     })
+
+    // Set Active invoice whenever invoice list changes
+    // this.store.select('estimate').subscribe(estimates => {
+    //   this.estimateList = estimates
+    //   this.setActiveEst(this.estimateId);
+    // })
   
     // show date as per format changed
     this.settingService.fetch().subscribe((response: any) => {
       this.dateDDMMYY = response.settings.appSettings.androidSettings.dateDDMMYY;
       this.dateMMDDYY = response.settings.appSettings.androidSettings.dateMMDDYY;
-    })
-
-    // make invoice list empty if clients not selected in dropdown
-    // if (this.estimateQueryForm.client.value === null) {
-    //   this.estimateList = []
-    // }
+    },err => this.openErrorModal()
+    )
 
     // dropdown settings
     this.dropdownSettings = {
@@ -154,28 +168,6 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
-   // Set Active estimate or fetch estimates and dispatch in a store whenever estimate list changes
-   this.store.select('estimate').subscribe(estimates => {
-    this.estimateList = estimates
-    if(this.estimateList.length < 1){
-      this.estListLoader = true
-      this.estimateService.fetch().subscribe((response: any) => {
-        this.estListLoader = false
-        var records = (response.records ? response.records.filter(rec => rec.enabled == 0) : [])
-        this.store.dispatch(new estimateActions.add(records))
-        this.estimateList = records
-          if(this.estimateId){
-            this.setActiveEst(this.estimateId)
-          }
-          else{
-            this.setActiveEst()
-          }
-      })
-    }
-    else{
-        this.setActiveEst()
-    }
-  })
   }
 
   onItemSelect(item: any) {
@@ -193,10 +185,23 @@ export class ViewEstComponent implements OnInit {
       this.itemSelected = 'Custom'
     }
   }
+
+  removeEmptySpaces(){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < this.clientList.length; i++) {
+      if(!this.clientList[i].name){
+        this.clientList.splice(i,1);
+      }
+      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (tempClient === "") {
+        this.clientList.splice(i,1);
+      }
+    }
+  }
   showItem(item) {
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
-    var lastday = firstday + 6;
+    // var lastday = firstday + 6;
     var lastWeekFirstDay = firstday - 7;
     var lastWeekLastsDay = firstday - 1;
     var lastdayoflastmonth = new Date();
@@ -212,7 +217,7 @@ export class ViewEstComponent implements OnInit {
     }
     if(this.itemSelected === 'This Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(firstday)))
-      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(lastday)))
+      this.estimateQueryForm.dateRange.end.reset(new Date(curr.setDate(curr.getDate() - curr.getDay()+6))) //lastday
     }
     if(this.itemSelected === 'Last Week'){
       this.estimateQueryForm.dateRange.start.reset(new Date(curr.setDate(lastWeekFirstDay)))
@@ -228,6 +233,13 @@ export class ViewEstComponent implements OnInit {
     }
   }
 
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
+
   loadMore() {
     this.estDispLimit += 10
   }
@@ -241,6 +253,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   showSelectedEstimate(client) {
+    this.estimateList = [];          //to clear background data when clicked on search button
     this.estimateQueryForm.client = client
     this.SearchEstimate()
     $('#search-client').modal('hide')
@@ -255,12 +268,26 @@ export class ViewEstComponent implements OnInit {
   }
 
 
+  //this fun is formating selected date in string for api input
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+
   // Search Estimate Functions
   SearchEstimate() {
     var query = {
       clientIdList: [],
-      startTime: 0,
-      endTime: 0
+      startTime: "",
+      endTime: ""
     }
     // this.estimateQueryForm.client = this.searchService.getUserData()
     if (this.estimateQueryForm.client.value && this.estimateQueryForm.client.value.length > 0) {
@@ -274,12 +301,16 @@ export class ViewEstComponent implements OnInit {
       // this.estimateQueryForm.client.reset([{ name: 'All' }])
     }
     if (this.estimateQueryForm.dateRange.start.value) {
-      query.startTime = this.estimateQueryForm.dateRange.start.value.getTime()
+
+      query.startTime = this.formatDate(this.estimateQueryForm.dateRange.start.value);
     }
+
     if (this.estimateQueryForm.dateRange.end.value) {
-      query.endTime = this.estimateQueryForm.dateRange.end.value.getTime()
+
+      query.endTime = this.formatDate(this.estimateQueryForm.dateRange.end.value);
+
     } else {
-      query.endTime = new Date().getTime()
+      query.endTime = this.formatDate(new Date());
     }
     this.store.dispatch(new globalActions.add({ estimateQueryForm: this.estimateQueryForm }))
     this.fetchEstimates(query)
@@ -295,35 +326,58 @@ export class ViewEstComponent implements OnInit {
     }
   }
 
+  
   fetchEstimates(query = null) {
     // Fetch estimates with given query
     if (query == null) {
       query = {
         clientIdList: null,
-        startTime: 0,
-        endTime: new Date().getTime()
+        startTime: "",
+        endTime: this.formatDate(new Date())
       }
     }
 
     this.estListLoader = true
     this.estimateService.fetchByQuery(query).subscribe((response: any) => {
-      this.estListLoader = false
       if (response.status === 200) {
-        // this.store.dispatch(new estimateActions.add(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
-        this.estimateList = response.records ? response.records.filter(rec => rec.enabled == 0) : [];
-        this.setActiveEst(this.estimateList[0].unique_identifier);
+        this.estListLoader = false
+        this.store.dispatch(new estimateActions.reset(response.records ? response.records.filter(rec => rec.enabled == 0) : []))
+        // Set Active invoice whenever invoice list changes
+        this.store.select('estimate').subscribe(estimates => {
+          this.estimateList = estimates
+          this.setActiveEst();
+        })
       }
-      this.estListLoader = false
-    })
+      
+    },err => this.openErrorModal()
+    )
   }
 
   setActiveEst(estId: string = '') {
     // this.closeEstSearchModel();
     if (!estId || estId === "null") {
-      this.activeEst = this.estimateList[0];
-      //console.log(this.activeEst)
+      this.activeEst = this.estimateList[this.estimateList.length - 1];
     } else {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
+    }
+    if(this.activeEst !== undefined){
+      for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+        if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
+          this.noTaxOnItem = true;
+        }else{
+          this.noTaxOnItem = false;
+        }
+        if(this.activeEst.alstQuotProduct[i].discountRate !== 0){
+          this.noDiscountOnItem = true;
+        }else{
+          this.noDiscountOnItem = false;
+        }
+      }
+      for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
+        if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){
+          this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
+        }
+      }
     }
     this.setActiveClient()
   }
@@ -365,7 +419,8 @@ export class ViewEstComponent implements OnInit {
         window.open(a.toString())
         $('#previewBtn').removeAttr('disabled')
       }
-    })
+    },err => this.openErrorModal()
+    )
   }
 
   getFileName() {

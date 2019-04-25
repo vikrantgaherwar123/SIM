@@ -1,17 +1,13 @@
 @import '../../../assets/css/form.css';
 
-@font-face {
-  font-family: quicksand_bold;
-  src: url('../../../assets/fonts/Quicksand-Bold.otf')
-}
 
 .product-header {
   font-size: 18px !important;
-  font-family: quicksand_bold !important;
+  font-family: helvetica_regular !important;
   color: #272727 !important;
 }
 .product-form input{
-  height: 34px;
+  height: 37px !important;
   margin-bottom: 0px !important;
 }
 .product-form .input-group-addon{
@@ -25,7 +21,21 @@
   border-left: none !important;
 }
 .product-form img {
-  padding: 0px 8px 0px 12px;
+  padding:6px 14px 0px 7px;
   width: 40px;
   height: auto;
+}
+.box_red{
+  border-color:red;
+}
+.mCustomScrollbar{
+  max-height: 452px !important;
+  overflow-y: scroll;
+  height: auto;
+}
+.filter-box input{
+	background: #ffffff url(/assets/images/list-icon/search16.png) no-repeat 10px;
+}
+.filter-box{
+	background: #ffffff;
 }

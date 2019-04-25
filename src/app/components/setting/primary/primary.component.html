@@ -1,30 +1,66 @@
-<div class="row main-wrapper">
-  <div class="col-12 col-md-10" id="main">
-    <form class="form-horizontal back shadow" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
+<div class="row main-wrapper" style="background-color: #e6ecf0 !important;" >
+    <div class="row col-md-3" id="main" style="padding-top: 0px !important;">
+      <form class="form-horizontal back shadow settingForm setting_sidebar_form" #addTaxesForm="ngForm" enctype="multipart/form-data">
+        <div class="row mx-0">
+          <div>
+            <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+              <span class="col-8">Primary settings</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+              <span class="col-8">Custom Field Name</span>
+              <span class="col-2">
+                <img src="assets/images/next12.png" class="setting_arrow">
+              </span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+              <span class="col-8">Banking Details</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+              <span class="col-8">Terms & Conditions</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
+              <span class="col-8">Profile</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  <div class="col-12 col-md-9" id="main">
+    <form class="form-horizontal" #addTaxesForm="ngForm" enctype="multipart/form-data" *ngIf="activeSettings">
       <div class="row mx-0">
         <div class="col-12 mt-2">
-          <div class="col-9 pull-left fontsize18">
+          <!-- <div class="col-9 pull-left fontsize18">
             <h4 class="form-header inline font-custom-bold mt-1">
               <i class="fa fa-gear"></i> Primary settings
             </h4>
-          </div>
+          </div> -->
 
-          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()"
-          class="btn save_btn btn-raised pull-right font-weight-bold ml-2 width12perbtn"
+          <button type="submit" id="updateButton" name="update-button" (click)="saveSettings()" style="margin-right: -40px;"
+          class="btn save_btn btn-raised pull-right width12perbtn"
             [disabled]="!addTaxesForm.valid"
           >
-            UPDATE
+            Update
           </button>
         </div>
       </div>
 
       <div class="row mx-0 pb-5">
-        <div class="col-12 back mt-1 edit-setting">
+        <div class="col-12 mt-1 edit-setting">
           <div class="width85">
             <!-- Tax -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Tax</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText ">Tax</label>
                 <div class="col-12 col-md-9 taxradio">
                   <input type="radio" id="taxonItem" name="taxon"
                     (click)="activeSettings.taxFlagLevel=0" [checked]="activeSettings.taxFlagLevel==0"
@@ -36,7 +72,7 @@
                   <input type="radio" id="taxonBill" name="taxon"
                     (click)="activeSettings.taxFlagLevel=1" [checked]="activeSettings.taxFlagLevel==1"
                   >
-                  <label for="taxonBill" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
+                  <label for="taxonBill" style="border-left: none;" class="taxonbill fontsize13 border-left-right-none font-custom-bold">
                     TAX ON BILL
                   </label>
 
@@ -51,26 +87,26 @@
             </div>
 
             <!-- Discount -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">{{settings.discount ? settings.discount : 'Discount'}} </label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">{{settings.discount ? settings.discount : 'Discount'}} </label>
                 <div class="col-12 col-md-9 discountradio">
                   <input type="radio" id="discountonitem" name="discounton"
                     (click)="activeSettings.discountFlagLevel=1" [checked]="activeSettings.discountFlagLevel==1"
                   >
-                  <label for="discountonitem"
-                    class="discountonitem fontsize13 border-right-none font-custom-bold" style="text-transform:uppercase"
+                  <label for="discountonitem" 
+                    class="discountonitem fontsize13 border-right-none font-custom-bold"
                   >
-                  {{settings.discount ? settings.discount : 'Discount'}} ON ITEM
+                  {{settings.discount ? settings.discount : 'DISCOUNT'}} ON ITEM
                   </label>
 
                   <input type="radio" id="discountonBill" name="discounton"
                     (click)="activeSettings.discountFlagLevel=0" [checked]="activeSettings.discountFlagLevel==0"
                   >
                   <label for="discountonBill"
-                    class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="text-transform:uppercase"
+                    class="discountonbill fontsize13 border-left-right-none font-custom-bold" style="border-left: none;text-transform:uppercase"
                   >
-                  {{settings.discount ? settings.discount : 'Discount'}} ON BILL
+                  {{settings.discount ? settings.discount : 'DISCOUNT'}} ON BILL
                   </label>
 
                   <input type="radio" id="discountdisabled" name="discounton"
@@ -86,12 +122,12 @@
             </div>
 
             <!-- Date Format -->
-            <div class="form-group pt-2 date-format">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Date Format</label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Date Format</label>
                 <div class="col-12 col-md-9">
-                  <div class="row">
-                    <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
+                  <div>
+                    <!-- <div class="col-6 font-custom-bold fontsize13" style="width: 25%;">
                       <input type="radio" id="ddMMyyyy" name="dateFormat"
                         [checked]="activeSettings.dateDDMMYY" (click)="setDateFormat('dd-mm-yy')"
                       />
@@ -102,6 +138,19 @@
                         [checked]="activeSettings.dateMMDDYY" (click)="setDateFormat('mm-dd-yy')"
                       />
                       <label for="MMddyyyy"></label>MM-DD-YYYY
+                    </div> -->
+                    <div class="row col-md-9 discountradio">
+                        <input type="radio" id="ddMMyyyy" name="dateFormat" (click)="setDateFormat('dd-mm-yy')"
+                          [checked]="activeSettings.dateDDMMYY">
+                        <label for="ddMMyyyy" class="discountonitem fontsize13 border-right-none font-custom-bold">
+                          DD-MM-YYYY
+                        </label>
+                        <input type="radio" id="MMddyyyy" name="dateFormat" (click)="setDateFormat('mm-dd-yy')"
+                          [checked]="activeSettings.dateMMDDYY">
+                        <label for="MMddyyyy" class="discountonbill fontsize13 border-left-right-none font-custom-bold"
+                          style="border-left: none;text-transform:uppercase">
+                          MM-DD-YYYY
+                        </label>
                     </div>
                   </div>
                 </div>
@@ -109,34 +158,41 @@
             </div>
 
             <!-- Currency Pattern -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18">Currency Pattern </label>
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Currency Pattern </label>
                 <div class="col-12 col-md-3 dropdown">
                   <div id="dropdownMenuButton" class="dropbtn" data-toggle="dropdown">
-                    Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    {{activePatternNumber}} <i class="fa fa-caret-down pattern_icon" aria-hidden="true"></i>
                   </div>
+                  <!-- <select class="dropbtn"> Pattern <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    <option (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</option>
+                    <option (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</option>
+                    <option (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</option>
+                    <option (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</option>
+                    <option (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</option>
+                  </select> -->
                   <div id="myDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" (click)="setCurrencyPattern('###,###,###.00')">1,000,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##,##,##,###.00')">1,00,00,000.00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('###.###.###,00')">1.000.000,00</a>
                     <a class="dropdown-item" (click)="setCurrencyPattern('##.##.##.###,00')">1.00.00.000,00</a>
-                    <a class="dropdown-item" (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</a>
+                    <a class="dropdown-item" style="margin-bottom: -8px;" (click)="setCurrencyPattern('### ### ###,00')">1 000 000,00</a>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Currency Symbol -->
-            <div class="form-group pt-2">
+            <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2 labelText">
                   Currency Symbol
                 </label>
                 <div class="col-12 col-md-3">
                   <span style="font-size: 11px;color: #2e2e2e;">Select Country</span>
                   <div class="form-group" *ngIf="countries?.length>0">
-                    <select name="country-symbol" class="form-control" style="width:171px; height:31px; border-radius:4px;"
+                    <select name="country-symbol" class="form-control country_select"
                       [ngModel]='activeSettings.countryIndex' (change)="setCountry($event.target.value)"
                     >
                       <option [value]="country.id" *ngFor="let country of countries; let index = index">
@@ -147,16 +203,16 @@
                 </div>
 
                 <div class="col-12 col-md-5 country-code country-radio ">
-                  <div class="row">
-                    <div class="col-5 text-center px-0">
+                  <div class="row" style="margin-top: 4px;">
+                    <div class="col-5  px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Symbol</div>
                       <input type="radio" id="currencySymbol" name="currenySymbol" [checked]="activeSettings.currencySymbol"
                         (click)="setCurrencySymbol('symbol')"
                       >
                       <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
                     </div>
-                    <div class="col-1 mt-3 px-0 text-center">or</div>
-                    <div class="col-5 text-center px-0">
+                    <div class="col-2 mt-3 px-0 text-center">or</div>
+                    <div class="col-5 px-0">
                       <div style="font-size: 10px;color: #2e2e2e;">Select Currency Code</div>
                       <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
                         (click)="setCurrencySymbol('text')"
@@ -169,18 +225,67 @@
             </div>
 
             <!-- Additional Taxes -->
-            <div class="row pt-2">
-              <label class="col-12 col-md-3 font-custom-bold fontsize18 text-left">
-                <a data-toggle="modal" data-target="#addTaxName" title="Add Taxes Name">Additional Taxes</a>
+            <div class="row labelSpacing" style="margin-top: 30px;">
+              <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">
+                Additional Taxes
               </label>
-              <div class="col-9 px-0">
-                <div class="row mx-0">
+              <form class="col-9" name="addTaxes">
+                <div class="form-group font-custom-bold fontsize18">
+                  <div class="row">
+                    <div class="col-3 radio radio-primary">
+                      <input type="radio" name="optionsRadios" id="disable" checked
+                        [checked]="!activeSettings.alstTaxName || activeSettings.alstTaxName.length == 0"
+                        (click)="setAdditionalTaxes(0)">
+                      <!-- <label for="disable"></label> -->
+                      <span style="vertical-align: top; margin-left: 11px;">Disable</span>
+                    </div>
+              
+                    <div class="col-3 radio radio-primary">
+                      <input type="radio" name="optionsRadios" id="oneTax" [checked]="activeSettings.alstTaxName?.length == 1"
+                        (click)="setAdditionalTaxes(1)">
+                      <!-- <label for="oneTax"></label> -->
+                      <span style="vertical-align:  top;  margin-left: 11px;">One</span>
+                    </div>
+                    <div class="col-3 radio radio-primary">
+                      <input type="radio" name="optionsRadios" id="twoTax" [checked]="activeSettings.alstTaxName?.length == 2"
+                        (click)="setAdditionalTaxes(2)">
+                      <!-- <label for="twoTax"></label> -->
+                      <span style="vertical-align: top; margin-left: 8px;">Two</span>
+                    </div>
+                    <div class="col-3 radio radio-primary">
+                        <input type="radio" name="optionsRadios" id="threeTax" [checked]="activeSettings.alstTaxName?.length == 3"
+                          (click)="setAdditionalTaxes(3)">
+                        <!-- <label for="threeTax"></label> -->
+                        <span style="vertical-align:  top;  margin-left: 8px;"> Three</span>
+                    </div>
+                  </div>
+              
+                  <div class="row">
+                    <div class="col-3 radio radio-primary">
+                      <input type="radio" name="optionsRadios" id="fourTax" [checked]="activeSettings.alstTaxName?.length == 4"
+                        (click)="setAdditionalTaxes(4)">
+                      <!-- <label for="fourTax"></label> -->
+                      <span style="vertical-align:  top;  margin-left: 13px;">Four</span>
+                    </div>
+                    <div class="col-6 radio radio-primary">
+                      <input type="radio" name="optionsRadios" id="fiveTax" [checked]="activeSettings.alstTaxName?.length == 5"
+                        (click)="setAdditionalTaxes(5)">
+                      <!-- <label for="fiveTax"></label> -->
+                      <span style="vertical-align: top; margin-left: 13px;" class="">Five</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-group labelSpacing">
+              <div class="row">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText"></label>
+                <div class="col-md-9 row">
                   <div class="col-12 col-md-4" id="additionalTax{{index}}"
-                    *ngFor="let taxNames of activeSettings.alstTaxName; let index = index"
-                  >
-                    <input class="form-control" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}}: *"
+                    *ngFor="let taxNames of activeSettings.alstTaxName; let index = index">
+                    <input class="form-control all_tax" type="text" name="taxName{{index}}" placeholder="Tax Name {{index+1}} *"
                       [(ngModel)]="taxNames.taxName" required onfocus="this.select()"
-                    />
+                      />
                   </div>
                 </div>
               </div>
@@ -193,7 +298,7 @@
 </div>
 
 <!-- Additional Tax Modal -->
-<div class="modal fade discountModal" id="addTaxName" role="dialog" aria-labelledby="discountLabel"
+<!-- <div class="modal fade discountModal" id="addTaxName" role="dialog" aria-labelledby="discountLabel"
   aria-hidden="true" data-backdrop="static" data-keyboard="false"
 >
   <div class="modal-dialog" *ngIf="activeSettings">
@@ -267,4 +372,29 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
 </div>
+</div>
+<!-- Error MODAL ends -->

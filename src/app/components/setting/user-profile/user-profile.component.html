@@ -1,7 +1,43 @@
 
-<div class="row main-wrapper">
-  <div class="col-12" id="main">
-    <div style="margin: 0px auto; max-width:1000px;">
+<div class="row main-wrapper" style="background-color: #e6ecf0 !important;">
+  <div class="row col-md-3" id="main" style="padding-top: 0px !important;">
+      <form class="form-horizontal back shadow settingForm setting_sidebar_form" #addTaxesForm="ngForm" enctype="multipart/form-data">
+        <div class="row mx-0">
+          <div>
+            <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+              <span class="col-8">Primary settings</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+              <span class="col-8">Custom Field Name</span>
+              <span class="col-2">
+                <img src="assets/images/next12.png" class="setting_arrow">
+              </span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+              <span class="col-8">Banking Details</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+              <span class="col-8">Terms & Conditions</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+            <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
+              <span class="col-8">Profile</span>
+              <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+              <span class="col-2"></span>
+            </div>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  <div class="col-12 col-md-9" id="main">
+    <div style="margin-right: -32px;">
       <form class="shadow form-horizontal back" name="userForm" #userForm="ngForm">
         <div class="user-profile">
           <div align="center">
@@ -45,6 +81,17 @@
 
             <div class="col-12" style="margin-bottom: 10px;">
               <div class="form-group">
+                <div class="input-group client-input">
+                  <span class="input-group-addon">
+                    <img src="/assets/images/client-icon/ic_normal_org_name.png">
+                  </span>
+                 
+                  <input type="text" name="org_name" id="org_name" class="form-control" placeholder="Company Name *"
+                    onfocus="this.select()" [(ngModel)]="org.org_name" required />
+                </div>
+               
+              </div>
+              <!-- <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
                     <img src="/assets/images/client-icon/ic_normal_org_name.png">
@@ -53,7 +100,7 @@
                     [(ngModel)]="org.org_name" placeholder="Company Name" onfocus="this.select()"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="col-12" style="margin-bottom: 10px;">
@@ -62,7 +109,7 @@
                   <span class="input-group-addon">
                     <img src="/assets/images/client-icon/ic_normal_contact_person.png">
                   </span>
-                  <input type="text" name="person_name" id="person_name" class="form-control"
+                  <input type="text" name="person_name" id="person_name" class="form-control" required
                     [(ngModel)]="org.contact_person_name" placeholder="Person Name" onfocus="this.select()"
                   />
                 </div>
@@ -132,12 +179,12 @@
             <div class="col-12" style="margin-bottom: 10px; min-height: 50px;">
               <div class="form-group">
                 <button type="button" (click)="cancel()"
-                  class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
+                  class="change_bg save_btn btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
                 >
                   CANCEL
                 </button>
-                <button type="button" id="profileSubmitBtn" (click)="save(userForm.valid)"
-                  class="btn btn-success btn-raised width10btn no-border-radius font-custom-bold pull-right"
+                <button type="button" id="profileSubmitBtn" (click)="save(userForm.valid);"
+                  class="save_btn btn btn-raised pull-right"
                 >
                   SAVE
                 </button>
@@ -149,3 +196,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

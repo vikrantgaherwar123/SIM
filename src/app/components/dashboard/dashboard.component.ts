@@ -47,119 +47,8 @@ export class DashboardComponent implements OnInit {
           if (response.status === 200) {
             var cookie = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : localStorage.getItem('user')
             if (response.settings === null) {
-              // $rootScope.authenticated.setting = {};
-              // $rootScope.authenticated.setting.date_format = true;
-              // $rootScope.settings.date_format = 'dd-mm-yy';
-              // $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy";
-              // $rootScope.currencySymbolTemp = $locale.NUMBER_FORMATS.CURRENCY_SYM;
-              // $rootScope.settings.alstTaxName = [];
-              // cookie.setting = response.data.settings.appSettings.webSettings;
             } else {
               cookie.setting = response.settings.appSettings.androidSettings;
-    
-              // if (cookie.setting.numberFormat === "###,###,###.00") {
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator;
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern1';
-              // } else if (cookie.setting.numberFormat === "##,##,##,###.00") {
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator;
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern2';
-              // } else if (cookie.setting.numberFormat === "###.###.###,00") {
-              //   console.log("number Format 3")
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator;
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern1';
-    
-              // } else if (cookie.setting.numberFormat === "##.##.##.###,00") {
-              //   console.log("number Format 4")
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator;
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator;
-              //   //$locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2;
-              //   //$locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern2';
-    
-              // } else if (cookie.setting.numberFormat === "### ### ###,00") {
-              //   console.log("number Format 5")
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = cookie.setting.decimalSeperator;
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = cookie.setting.commaSeperator;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern1';
-    
-              // } else {
-              //   console.log("number Format 6")
-              //   $locale.NUMBER_FORMATS.DECIMAL_SEP = ".";
-              //   $locale.NUMBER_FORMATS.GROUP_SEP = ",";
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3;
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-              //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-              //   $rootScope.settings.currency_pattern = 'pattern1';
-              // }
-    
-              // if (cookie.setting.dateDDMMYY === false) {
-              //   $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy";
-              //   $rootScope.settings.date_format = 'mm-dd-yy';
-              // } else if (cookie.setting.dateDDMMYY === true) {
-              //   $locale.DATETIME_FORMATS.mediumDate = "dd-MM-yyyy";
-              //   $rootScope.settings.date_format = 'dd-mm-yy';
-              // }
-    
               if (cookie.setting.currencyInText != "" && typeof cookie.setting.currencyInText !== 'undefined') {
                 // $locale.NUMBER_FORMATS.CURRENCY_SYM = $rootScope.currencySymbol(cookie.setting.currencyInText);
               } else {
@@ -169,9 +58,16 @@ export class DashboardComponent implements OnInit {
             }
             localStorage.setItem('user', JSON.stringify(cookie))
           }
-        })
+        },error => this.openErrorModal())
       }
     }
+    })
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
 

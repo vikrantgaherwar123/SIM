@@ -1,29 +1,62 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main" style="padding-top:0">
+      <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
+          <form class="form-horizontal back shadow settingForm setting_sidebar_form" #addTaxesForm="ngForm" enctype="multipart/form-data">
+            <div class="row mx-0">
+              <div>
+                  <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                    <span class="col-8">Primary settings</span>
+                    <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                    <span class="col-2"></span>
+                  </div>
+                  <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+                    <span class="col-8">Custom Field Name</span>
+                    <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                    <span class="col-2"></span>
+                  </div>
+                  <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+                    <span class="col-8">Banking Details</span>
+                    <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                    <span class="col-2"></span>
+                  </div>
+                  <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+                    <span class="col-8">Terms & Conditions</span>
+                    <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                    <span class="col-2"></span>
+                  </div>
+                  <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
+                    <span class="col-8">Profile</span>
+                    <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                    <span class="col-2"></span>
+                  </div>
+              </div>
+            </div>
+            
+          </form>
+        </div>
+  <div class="col-9" id="main" style="padding-top:0">
     <div class="blue"></div>
-    <div style="margin: 0px auto; max-width:1000px;">
-      <div class="col-12 item-list back padtop20 form-horizontal"
-        style="margin-top: -82px; height: auto;padding-right: 30px;padding-right: 30px;padding-bottom: 30px;"
+    <div class="back" style="margin-right: -17px;"><!--style="margin: 0px auto; max-width:1000px;"-->
+      <div class="col-12 item-list padtop20 form-horizontal tncContainer"
       >
         <!-- HEADER -->
         <div class="col-12 px-0" style="padding-bottom: 20px;padding-top: 10px;">
           <div class="row">
             <div class="col-7 font-custom-bold">
-              <h3 class="px-0 margin-top0"> {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}</h3>
+              <h3 class="px-0 margin-top0" style="margin-top: 6px;"> {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}</h3>
             </div>
             <div class="col-12 col-md-5">
               <button type="button" id="add-term-s" name="add-term-s" title="Add new terms & conds."
-                class="save_btn btn-raised pull-right font-weight-bold" style="border: none !important;padding: 6px 19px 4px 24px;"
+                class="save_btn btn-raised pull-right term_save"
                 (click)="add()"
               >
-                Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
-              </button>
+                Add Terms
+              </button><!--Add {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}-->
             </div>
           </div>
         </div>
 
         <!-- Terms And Conditions List -->
-        <div class="col-12 mb-1 mCustomScrollbar style-3">
+        <div class="col-12 mb-1 mCustomScrollbar style-3" style="margin-bottom: 7.25rem!important;">
           <div class="row term-list-show" *ngFor="let term of tncs | orderBy:'term':'asc' ; let index = index ;" id="term{{index}}">
           <label class="check">
             <div class="col-1">
@@ -32,19 +65,54 @@
             </div>
           </label>
             <div class="col-9" style="left: -2%;">
-              <div style="word-wrap: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
+              <div style="white-space: pre-wrap;word-break: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
             </div>
           
-            <div class="col-2 text-right">
-              <span [swal]="{ title: 'Are you sure want to delete?', type: 'warning',
-                  showCancelButton: true, confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'
-                }"
-                (confirm)="delete(index)"
-              >
-                <img style="width: 16px; height: 16px;" Title="Delete Term" src="/assets/images/grey_cross.png">
+            <div class="col-2 text-right" style="margin-left: 30px;">
+              <span>
+              <img (click)="openDeleteTermModal(index)" class="img_hover" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>
+
+              <!-- Delete product MODAL -->
+              <div id="delete-tnc" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
+                data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title form-header font-custom-bold header-color img_hover" id="productFormLabel">
+                          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+                           Delete Term
+                      </h4>
+                      <button type="button" class="close img_hover" data-dismiss="modal" aria-label="Close">
+                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+                        <h5 style="font-size: 16px;text-align: left;">Are you sure want to delete this {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}?</h5>
+                        <h5 style="font-size: 16px;text-align: left;">You can undo this action</h5>
+
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="no_save_btn close btn btn-raised btn-custom-1 width20btn" 
+                        data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;color: #1a73cc!important;">
+                          No
+                        </button>
+                        <button type="button" id="clientFormLabel" (click)="delete()"  
+                        class="save_btn close btn btn-raised  btn-success width20btn"
+                          data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+                          Yes
+                        </button>
+                      </div>
+
+                  </div>
+                </div>
+              </div>
+             
               <span (click)="edit(index)">
-                <img style="width: 16px; height: 16px;margin-left: 10px;" Title="Edit Term" src="/assets/images/edit_blue.png">
+                <img style="width: 16px; height: 16px;margin-left: 10px;" class="img_hover" Title="Edit Term" src="/assets/images/edit_blue.png">
               </span>
             </div>
           </div>
@@ -91,7 +159,7 @@
               <label for="set_default">Default?</label>
             </div>
             <button type="submit" id="addtermButton" title="save"
-            class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+            class="btn save_btn btn-raised width25btn pull-right ml-2"
               (click)="save(addtermpopup.valid);" [disabled]="!addtermpopup.valid"
             >
               {{activeTnc.uniqueKeyTerms ? 'Update' : 'Save'}}
@@ -102,3 +170,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

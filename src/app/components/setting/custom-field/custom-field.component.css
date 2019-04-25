@@ -3,3 +3,9 @@
 .custom-field-form .form-group {
   max-width: 300px !important
 }
+.form-control{
+  box-shadow: none !important;
+  border-radius: 0px;
+  height: 37px !important;
+  letter-spacing: 0.5px;
+}

@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { EmailService } from './email.service';
+import { EmailService } from '../email.service';
 
 describe('EmailService', () => {
   beforeEach(() => {

@@ -157,6 +157,7 @@ export interface invoice {
   deleted_flag: number
   device_modified_on: number
   discount: number
+  discount_amount : number
   discount_on_item: number
   due_date: string
   due_date_flag: number
@@ -199,6 +200,7 @@ export interface recentInvoices {
   deleted_flag: number
   device_modified_on: number
   discount: number
+  discount_amount : number
   discount_on_item: number
   due_date: string
   due_date_flag: number
@@ -253,11 +255,28 @@ export interface estimate {
   shippingAddress: string
   shippingCharges: number
   taxAmt: number
-  taxList: Array<any>
   taxrate: number
+  version: number
+  created_date: string
+  deleted_flag: number
+  device_modified_on: number
+  discount_on_item: number
+  estimate_number: string
+  gross_amount: number
+  listItems: Array<any>
+  organization_id: number
+  percentage_flag: number
+  percentage_value: number
+  shipping_address: string
+  shipping_charges: number
+  taxList: Array<any>
+  tax_amount: number
+  tax_on_item: number
+  tax_rate: number
+  epoch: number,
+  termsAndConditions: Array<any>
   unique_identifier: string
   unique_key_fk_client: string
-  version: number
 }
 
 export interface recentEstimates {
@@ -285,14 +304,52 @@ export interface recentEstimates {
   shippingAddress: string
   shippingCharges: number
   taxAmt: number
-  taxList: Array<any>
   taxrate: number
+  version: number
+  created_date: string
+  deleted_flag: number
+  device_modified_on: number
+  discount_on_item: number
+  estimate_number: string
+  gross_amount: number
+  listItems: Array<any>
+  organization_id: number
+  percentage_flag: number
+  percentage_value: number
+  shipping_address: string
+  shipping_charges: number
+  taxList: Array<any>
+  tax_amount: number
+  tax_on_item: number
+  tax_rate: number
+  epoch: number,
+  termsAndConditions: Array<any>
   unique_identifier: string
   unique_key_fk_client: string
-  version: number
 }
 
 export interface addEditEstimate {
+  alstQuotProduct: Array<any>
+  alstQuotTermsCondition: Array<any>
+  assignDiscountFlag: number,
+  assignTaxFlag: number,
+  createDate: string,
+  discountFlag: number,
+  enabled: number,
+  epochTime: number,
+  epoch: number,
+  grossAmount: number,
+  localClientId: number,
+  localId: number,
+  organizationId: number,
+  percentageValue: number,
+  pushFlag: number,
+  quetationNo: string,
+  serverUpdateTime: number,
+  shippingAddress: string,
+  shippingCharges: number,
+  taxAmt: number,
+  taxrate: number,
   adjustment: number
   amount: number
   created_date: string
@@ -315,4 +372,7 @@ export interface addEditEstimate {
   termsAndConditions: Array<any>
   unique_identifier: string
   unique_key_fk_client: string
+  version: number
+  deviceCreatedDate: number
+  serverClientId: number
 }

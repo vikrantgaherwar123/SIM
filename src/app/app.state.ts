@@ -1,4 +1,4 @@
-import { client, product, estimate, invoice, terms } from './interface'
+import { client, product, estimate, invoice, terms, recentInvoices ,recentEstimates } from './interface'
 
 export interface AppState {
   readonly client: client[]
@@ -6,4 +6,7 @@ export interface AppState {
   readonly estimate: estimate[]
   readonly invoice: invoice[]
   readonly terms: terms[]
+  readonly recentInvoices: recentInvoices[]
+  readonly recentEstimates: recentEstimates[]
+
 }

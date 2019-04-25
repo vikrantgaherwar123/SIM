@@ -40,6 +40,7 @@ export class ProductComponent implements OnInit {
 
   productDisplayLimit = 12
   settings: any;
+  emptyRate: boolean;
   
 
   constructor(private productService: ProductService,
@@ -58,14 +59,14 @@ export class ProductComponent implements OnInit {
     this.titleService.setTitle('Simple Invoice | Product');
     this.productListLoading = true
 
-    if(this.productList) {
+    if(this.productList.length < 1) {
       this.productService.fetch().subscribe((response: any) => {
         this.productListLoading = false
         if(response.status === 200) {
           this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
           this.productList = response.records.filter(prod => prod.enabled == 0)
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.productListLoading = false
     }
@@ -73,11 +74,15 @@ export class ProductComponent implements OnInit {
 
   save(status, edit) {
     var proStatus = true
+    //prod & rate field validation
     if(this.activeProduct.prodName == undefined){
       this.emptyProduct = true
     }
+    if(this.activeProduct.rate == undefined){
+      this.emptyRate = true;
+    }
     // If adding or editing product, make sure product with same name doesnt exist
-    if(this.activeProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+    if(this.activeProduct.prodName) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {
@@ -139,6 +144,7 @@ export class ProductComponent implements OnInit {
             this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
             this.viewThis(self.productService.changeKeysForStore(response.productList[0]), false)
             this.toasterService.pop('success', 'Product added successfully !!!');
+            // this.ngOnInit();
           } else {
             if (self.activeProduct.enabled) {   // delete
               self.store.dispatch(new productActions.remove(storeIndex))
@@ -146,12 +152,14 @@ export class ProductComponent implements OnInit {
               this.activeProduct = this.productList[0]
               this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
+              // this.ngOnInit();
               // window.location.reload(true);
             } else {    //edit
               self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
               this.viewThis(this.productList[index], false)
               this.toasterService.pop('success','Product Edited Successfully !!!');
+              // this.ngOnInit();
             }
           }
         } else if (response.status != 200) {
@@ -161,7 +169,7 @@ export class ProductComponent implements OnInit {
         // $('#saveProBtn1').button('reset')
         // $('#updateProBtn').button('reset')
         // $('#updateProBtn1').button('reset')
-      })
+      },error => this.openErrorModal())
     } else {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');
@@ -201,6 +209,7 @@ export class ProductComponent implements OnInit {
   emptyField(input){
     if(input.target.value !== ''){
       this.emptyProduct = false
+      this.emptyRate = false;
     }
   }
 
@@ -238,6 +247,13 @@ export class ProductComponent implements OnInit {
 
   batchUpload() {
     this.router.navigate(['/product/batch/'])
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   loadMore() {

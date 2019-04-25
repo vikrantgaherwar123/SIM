@@ -1,31 +1,57 @@
 <div class="row main-wrapper">
-  <div class="col-12" id="main">
-    <div style="margin: 0px auto; max-width:1000px;" class="back">
-      <form class="shadow" name="userForm" #form="ngForm">
-        <div align="center" class="custom-field-form" style="padding: 15px">
+    <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
+        <form class="form-horizontal back shadow settingForm setting_sidebar_form" #addTaxesForm="ngForm" enctype="multipart/form-data">
+          <div class="row mx-0">
+            <div>
+              <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
+                <span class="col-8">Primary settings</span>
+                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-2"></span>
+              </div>
+              <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
+                <span class="col-8">Custom Field Name</span>
+                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-2"></span>
+              </div>
+              <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
+                <span class="col-8">Banking Details</span>
+                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-2"></span>
+              </div>
+              <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
+                <span class="col-8">Terms & Conditions</span>
+                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-2"></span>
+              </div>
+              <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
+                <span class="col-8">Profile</span>
+                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-2"></span>
+              </div>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+  <div class="col-9" id="main">
+    <div class="back" style="margin-right: -33px;"><!--style="margin: 0px auto; max-width:1000px;" -->
+      <form name="userForm" #form="ngForm">
+        <div align="center" class="custom-field-form" style="padding: 120px;height: 645px;">
           <div class="col-12" style="margin-bottom: 10px;">
             <h5 class=" form-header font-custom-bold" style="margin-top: 0px;">
               Banking details & PayPal.Me
             </h5>
           </div>
 
-          <div class="col-12" style="margin-bottom: 10px;">
+          <div class="col-12" style="margin-bottom: 15px;">
             <input [(ngModel)]="org.paybaleToDetails" name="paybaleToDetails"
-              class="payment-detail-input" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
-              style="width: 300px;
-                padding: 0px;
-                margin: 13px 0 0 0;
-                display: inline;
-                border-top: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: 1px #CCCCCC solid;
-              "
+              class="payment-detail-input form-control" placeholder="{{settings.payableTo ? settings.payableTo : 'Payable To'}}" onfocus="this.select()"
+              style="width: 300px;"
             >
           </div>
 
           <div class="col-12" style="margin-bottom: 5px;">
-            <span class="font-custom-bold fontsize12" style="margin-left: -200px">{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}</span>
+            <span class="font-custom-bold fontsize12" style="margin-left: -192px">{{settings.bankingDetails ? settings.bankingDetails : 'Banking Details'}}</span>
           </div>
 
           <div class="col-12" style="margin-bottom: 10px;">
@@ -50,7 +76,7 @@
 
           <div class="col-12" style="margin-bottom: 10px;">
             <input type="checkbox" name="payPalActivatinFlag" id="payPalActivatinFlag"
-              [(ngModel)]="activeSetting.payPalActivatinFlag"
+              [(ngModel)]="activeSetting.payPalActivatinFlag" style="margin-right: 10px;"
             >
             <span class="fontsize12" style="display:inline">Add PAY NOW! button using PayPal.Me</span>
           </div>
@@ -58,14 +84,8 @@
           <div class="col-12" *ngIf="activeSetting.payPalActivatinFlag" style="margin-bottom: 10px;">
             <div style="display: inline;">PayPal.Me/ </div>
             <input [(ngModel)]="activeSetting.payPalUserAccountURL" name="payPalUserAccountURL" onclick="this.select()"
-              placeholder="yourname" style="width:226px;
-                padding: 0px;
-                margin: 0;display: inline;border-top: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: 1px #CCCCCC solid;
-              "
-            >
+              placeholder="yourname" style="width:226px;padding: 0px;margin: 0;display: inline;border-top: none;
+                border-left: none;border-right: none;border-bottom: 1px #CCCCCC solid;">
           </div>
 
           <div style="margin: 0 auto; max-width: 300px">
@@ -81,3 +101,28 @@
     </div>
   </div>
 </div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

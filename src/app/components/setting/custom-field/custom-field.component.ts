@@ -9,6 +9,7 @@ import { AppState } from '../../../app.state'
 import { setStorage } from 'src/app/globalFunctions'
 import {ToasterService} from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-custom-field',
@@ -27,6 +28,7 @@ export class CustomFieldComponent implements OnInit {
   activeSetting: setting = <setting>{}
 
   constructor(private settingService: SettingService,
+    public router: Router,
     public toasterService : ToasterService,
     private titleService: Title,
      private store: Store<AppState>) {
@@ -51,11 +53,18 @@ export class CustomFieldComponent implements OnInit {
         this.appSettings = response.settings.appSettings
         this.activeSetting = this.appSettings.androidSettings ? {...this.appSettings.androidSettings} : <setting>{}
       }
-    })
+    },error => this.openErrorModal())
   }
 
   cancel() {
     window.history.back()
+  }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   save(valid) {
@@ -75,7 +84,7 @@ export class CustomFieldComponent implements OnInit {
           alert (response.message)
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
         }
-      })
+      },error => this.openErrorModal())
     }
   }
 }

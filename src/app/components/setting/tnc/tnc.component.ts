@@ -11,6 +11,7 @@ import * as tncActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tnc',
@@ -21,6 +22,7 @@ export class TncComponent implements OnInit {
 
   tncs: Array<terms> = []
   activeTnc: terms = <terms>{}
+  termList: terms[]
   tncLoading: boolean = false
 
   operation: string = ''
@@ -32,27 +34,31 @@ export class TncComponent implements OnInit {
     setting: setting
   }
   settings: setting;
+  deleteIndex: any;
 
   constructor(private tncService: TermConditionService,
+    public router: Router,
     public toasterService : ToasterService,
     private titleService: Title,
     private store: Store<AppState>
   ) {
     this.toasterService = toasterService,
+    
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
+    store.select('terms').subscribe(terms => this.termList = terms)
   }
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Terms And Conditions');
     this.tncLoading = true
     this.store.dispatch(new tncActions.reset())
-
+    if(this.termList.length < 1) {
     this.tncService.fetch().subscribe((response: any) => {
       this.tncLoading = false
       this.tncs = response.termsAndConditionList.filter(ter => ter.enabled == 0)
       this.store.dispatch(new tncActions.add(this.tncs))
-    })
+    },error => this.openErrorModal())}
   }
 
   save(status) {
@@ -101,8 +107,15 @@ export class TncComponent implements OnInit {
           //notifications.showError({message: result.message, hideDelay: 1500,hide: true})
           alert(response.message)
         }
-      })
+      },error => this.openErrorModal())
     }
+  }
+
+   // error modal
+   openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
   }
 
   add() {
@@ -126,12 +139,20 @@ export class TncComponent implements OnInit {
     }
   }
 
-  delete(index) {
-    index = this.tncs.length - (index +1);
+  delete() {
+    this.deleteIndex = this.tncs.length - (this.deleteIndex +1);
     this.operation = 'delete'
-    this.activeTnc = this.tncs[index]
+    this.activeTnc = this.tncs[this.deleteIndex]
     this.activeTnc.enabled = 1
     this.save(true)
+  }
+
+  openDeleteTermModal(index) {
+    this.deleteIndex = index;
+    $('#delete-tnc').modal('show')
+    $('#delete-tnc').on('shown.bs.modal', (e) => {
+      // $('#delete-product input[type="text"]')[1].focus()
+    })
   }
 
   close() {

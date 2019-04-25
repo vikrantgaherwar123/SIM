@@ -1,18 +1,54 @@
 @import '../../../../assets/css/form.css';
 
 .blue {
-  background:#1678cd;
+  /* background:#1678cd; */
   height:120px;
   margin: -9px -20px 0px -20px;
-  box-shadow: 0 -1px 3px 0 #666
+  /* box-shadow: 0 -1px 3px 0 #666 */
 }
 
 .term-list-show {
   padding-top: 14px;
   margin-bottom: -7px;
-  border-bottom: #ccc solid 1px;
+  border-bottom: #ced4da solid 1px;/*ccc*/
 }
 .pre_term{
-  font-family: quicksand_regular!important;
+  font-family: helvetica_regular!important;
   font-size: 13.5px!important;
 }
+.tncContainer{
+  margin-top: -111px;
+  height: auto;
+  padding-right: 30px;
+  padding-right: 30px;
+  padding-bottom: 90px !important;
+}
+.checkmark {
+  position: absolute;
+  top: 1px;
+  left: 10px !important;
+  height: 18px;
+  width: 18px;
+  background-color: white;
+  border: 1px solid #ced4da;/*0299ff*/
+}
+#main {
+  /* width: 508px; */
+  position: relative;
+  background-color: #e6ecf0 !important;
+  padding-bottom: 10px;
+  padding-right: 0px;
+  /* margin-right: 1px; */
+}
+.term_save{
+  margin-top: 7px;
+  width:auto !important;
+  border: none !important;
+  padding: 6px 19px 4px 24px;
+}
+.back{
+  background: #ffffff;
+  margin-top: 14px;
+  height: 660px !important;
+}
+

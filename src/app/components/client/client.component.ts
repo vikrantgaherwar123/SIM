@@ -53,8 +53,8 @@ export class ClientComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Clients');
-    this.clientListLoading = true
-    if(this.clientList) {
+    this.clientListLoading = true;
+    if(this.clientList.length < 1) {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
@@ -62,7 +62,7 @@ export class ClientComponent implements OnInit {
           this.clientList = response.records.filter(cli => cli.enabled == 0)
           
         }
-      })
+      },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
      }   
@@ -135,7 +135,7 @@ export class ClientComponent implements OnInit {
           let index, storeIndex
           index = self.clientList.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           self.store.select('client').subscribe(clients => {
-            storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
+          storeIndex = clients.findIndex(client => client.uniqueKeyClient == response.clientList[0].unique_identifier)
           })
 
           if (index == -1) {  // add
@@ -146,14 +146,11 @@ export class ClientComponent implements OnInit {
            
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)
-            
             this.toasterService.pop('success', 'Client Deleted Successfully !!!');
           }
             if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
-              //console.log(this.clientList[index]);
-              
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
             }
           self.errors = {}
@@ -172,13 +169,21 @@ export class ClientComponent implements OnInit {
           //console.log(response.error)
           this.toasterService.pop('failure', 'Some error occurred, please try again!');
         }
-      })
+      },error => this.openErrorModal())
     } else {
       if (!proStatus) {
         this.toasterService.pop('failure', 'Client name already exists.');
       }
     }
   }
+
+  // error modal
+  openErrorModal() {
+    $('#errormessage').modal('show')
+    $('#errormessage').on('shown.bs.modal', (e) => {
+    })
+  }
+
   emptyField(input){
     if(input.target.value !== ''){
       this.emptyClient = false
