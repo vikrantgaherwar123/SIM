@@ -231,7 +231,7 @@
                       </td>
                       <td *ngIf="noDiscountOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                         <div class="text_right">
-                          {{item.discount_amount | number:'1.2-2'}}<br>
+                          {{item.discountAmount | number:'1.2-2'}}<br>
                           {{item.discountRate | number:'1.2-2'}} %
                         </div>
                       </td>
@@ -459,20 +459,20 @@
             </div>
   
             <div *ngIf = "activeInv" class="col-12 px-0 mCustomScrollbar style-3" style="max-height: 500px;">
-              <!-- <div *ngIf="invListLoader">
-                <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
-              </div> -->
                 <!-- [class.active]=" invoice.created_date " -->
               <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
                 *ngFor="let invoice of (invoiceList | orderBy: invSortTerm:true | filter:invSearchTerm  | filterBy:{invoice_number: invSearchTerm} | slice:0:invDispLimit); index as key"
                 (click)="setActiveInv(invoice.unique_identifier)"
               >
-                <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;margin-top: 3px;">
+                <div class="col-1" class="arrow_img_div">
+                  <img src="assets/images/left-arrow.png" class="arrow_img" >
+                </div>
+                <div class="col-2 list-date font-custom-bold fontsize13 list_date" style="margin-left: 16px;">
                   <span class="inv_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'dd' }}</span><br/>
                   <span class="date_month sub_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'MMM' }}</span>
                 </div>
       
-                <div class="col-10">
+                <div class="col-9">
                   <div class="row" style="margin-top: 6px;">
                     <div class="col-12">
                       <h5 *ngIf="clientList" class="font-custom-bold fontsize13" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
@@ -480,7 +480,7 @@
                     <div class="col-5 font-custom-book fontsize13 today_txt" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
                       {{ invoice.invoice_number }}
                     </div>
-                    <div class="col-6 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 20px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
+                    <div class="col-5 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 37px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
                       {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                     </div>
                   </div>
@@ -493,7 +493,7 @@
               </div>
             </div>
             <div *ngIf="!activeInv" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
-              <img src="assets/images/no_data_found.png" style="width: 255px;margin-top: 80px;">
+              <img src="assets/images/no_data_found.png" class="no_data_img">
             </div>
           </div>
         </div>

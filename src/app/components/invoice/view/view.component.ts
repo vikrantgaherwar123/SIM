@@ -380,12 +380,12 @@ export class ViewComponent implements OnInit {
         if(this.activeInv.listItems[i].total){
           this.activeInv.listItems[i].price = this.activeInv.listItems[i].total
         }
-        if(this.activeInv.listItems[i].taxAmount ||this.activeInv.listItems[i].taxAmount == 0 ){
-          this.activeInv.listItems[i].tax_amount = this.activeInv.listItems[i].taxAmount;
-        }
-        if(this.activeInv.listItems[i].discountAmount || this.activeInv.listItems[i].discountAmount == 0 ){
-          this.activeInv.listItems[i].discount_amount = this.activeInv.listItems[i].discountAmount;
-        }
+        // if(this.activeInv.listItems[i].taxAmount ||this.activeInv.listItems[i].taxAmount == 0 ){
+        //   this.activeInv.listItems[i].tax_amount = this.activeInv.listItems[i].taxAmount;
+        // }
+        // if(this.activeInv.listItems[i].discountAmount || this.activeInv.listItems[i].discountAmount == 0 ){
+        //   this.activeInv.listItems[i].discount_amount = this.activeInv.listItems[i].discountAmount;
+        // }
       }
 
 

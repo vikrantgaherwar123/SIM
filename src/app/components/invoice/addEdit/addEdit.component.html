@@ -20,7 +20,7 @@
                     <div class="col-sm-6" id="clientDataAdd" name="clientData">
                           <div class="row">
                             <!-- Billing To -->
-                            <div class="col-12">
+                            <div class="col-12" style="margin-top: 6px;">
                                 <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
                                   {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                                 </span>
@@ -65,20 +65,20 @@
                               <div class="row mx-0">
                                 <div class="col-6 pl-0">
                                   <span type="text" value="" id="BillAddressAdd" class="adr bill-to font-custom-bold">Address</span><br />
-                                  <div class="address-render" *ngIf="activeClient">{{activeClient.addressLine1}}<br /></div>
+                                  <div class="address-render" *ngIf="activeClient"><span class="color_grey">{{activeClient.addressLine1}}</span><br /></div>
                                   <div *ngIf="activeClient && activeClient.email">
-                                    Email: {{activeClient.email}}
+                                    Email: <span class="color_grey">{{activeClient.email}}</span>
                                   </div>
                                   <div *ngIf="activeClient && activeClient.number">
-                                    Contact No: {{activeClient.number}}
+                                    Contact No: <span class="color_grey">{{activeClient.number}}</span>
                                   </div>
                                 </div>
-                                <div class="col-6 pr-0">
-                                  <span style="padding-left: 45px;" type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
+                                <div class="col-6 pr-0" style="padding-left: 45px;">
+                                  <span type="text" value="" id="shippingAddressAdd" class="adr bill-to font-custom-bold">
                                    Shipping Address
                                   </span>
-                                  <div class="address-render" *ngIf="shippingChange === false">{{shippingAddress}}<br /></div>
-                                  <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true">{{activeClient.shippingAddress}}<br /></div>
+                                  <div class="address-render" *ngIf="shippingChange === false"><span class="color_grey">{{shippingAddress}}</span><br /></div>
+                                  <div class="address-render" *ngIf="activeClient && shippingAdressChanged === true"><span class="color_grey">{{activeClient.shippingAddress}}</span><br /></div>
                                 </div>
                               </div>
                             </div>
@@ -396,7 +396,6 @@
                           </div>
                         </td>
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
-                          
                         </td>
                         <td class="select_item_cross" [class.no-border-last]="last">
                           <img (click)="disableProductText=false;" Title="Delete" src="assets/images/cross_grey.png" data-tooltip="I’m the tooltip text."
@@ -554,7 +553,7 @@
                               onfocus="this.select()" />
 
                             <input type="number" id="discount_input" name="discount_input"
-                              class="form-control height_40 dis_tax_label col-9" placeholder="00.00"
+                              class="form-control height_40 dis_tax_label col-9" placeholder="0.00"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
                               readonly />
                             <div class="input-group-addon pr-0 remove-button">
@@ -587,7 +586,7 @@
                                 [(ngModel)]="activeInvoice.tax_rate" (ngModelChange)="taxListChanged($event)" (keyup)="calculateInvoice()" onfocus="this.select()"
                               />
                               <input type="number" id="tax_inputs" name="tax_inputs" class="col-9 form-control height_40 dis_tax_label" 
-                              placeholder="00.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly
+                              placeholder="0.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly
                             />
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
@@ -731,7 +730,7 @@
                               <div *ngFor="let item of activeInvoice.payments; let i = index">
                                 <div class="row mx-0" style="margin-bottom: 10px;">
                                   <div class="col-4 text-left label_color">
-                                    <span class="font-custom">{{item.date_of_payment | date : 'mm/dd/yy'}}</span>
+                                    <span class="font-custom">{{item.date_of_payment | date}}</span>
                                     <span *ngIf="!item.date_of_payment" class="font-custom">{{formatedDate | date}}</span>
                                   </div>
                                   <div class="col-4 pad_rg_5" style="margin-top: 6px;">
