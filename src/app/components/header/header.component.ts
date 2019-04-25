@@ -61,7 +61,7 @@ export class HeaderComponent implements OnInit {
     this.estSrc = "assets/images/menu-logo/estimate_blue.png";
   }
   offEstHover(){
-    this.estSrc = "assets/images/menu-logo/estimate_grey.png";
+      this.estSrc = "assets/images/menu-logo/estimate_grey.png";
   }
   onInvHover(){
     this.invSrc = "assets/images/menu-logo/invoice_blue.png";

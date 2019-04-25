@@ -29,6 +29,7 @@ import * as termActions from '../../../actions/terms.action'
 import { AppState } from '../../../app.state'
 import { recentInvoice } from '../../../actions/invoice.action';
 
+
 @Component({
   selector: 'app-invoice',
   templateUrl: './addEdit.component.html',
@@ -39,6 +40,8 @@ import { recentInvoice } from '../../../actions/invoice.action';
 export class AddEditComponent implements OnInit {
   @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
   invoiceId
+
+  invSortTerm: string = 'createdDate'
 
   previousUrl: string;
   activeInvoice: invoice = <invoice>{}
@@ -194,6 +197,12 @@ export class AddEditComponent implements OnInit {
       });
     })
     // save button processing script ends
+    // show more-less button condition depending on height
+    jQuery('.expandClicker').each(function(){
+      if (jQuery(this).parent().height() < 30) {
+        jQuery(this).fadeOut();
+      }
+    });
   }
   
   displayWith(disp): string | undefined {
@@ -236,8 +245,17 @@ export class AddEditComponent implements OnInit {
     if(input > 100){
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
+      this.activeInvoice.discount = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
+    }
+  }
+
+  taxListChanged(input){
+    if(input > 100){
+      alert("Percentage amount must be under 100");
+      this.activeInvoice.tax_rate = 0;
+      this.activeInvoice.tax_amount = 0;
     }
   }
   //entering proper invoice number 
@@ -1409,10 +1427,10 @@ export class AddEditComponent implements OnInit {
 
       this.activeInvoice.discount = gross_amount * discountFactor
       //remove digits after two decimal
-      var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
-      this.activeInvoice.discount = parseFloat(value);
-      deductions += this.activeInvoice.discount
-    } else {
+    //   var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
+    //   this.activeInvoice.discount = parseFloat(value);
+    //   deductions += this.activeInvoice.discount
+    // } else {
       if(!isNaN(this.activeInvoice.discount)) {
         deductions += this.activeInvoice.discount
         this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
@@ -1795,7 +1813,6 @@ export class AddEditComponent implements OnInit {
     this.viewTodaysInvoice = true;
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
-    
     this.setActiveClient()
   }
 

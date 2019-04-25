@@ -5,6 +5,7 @@ import { SettingService } from '../../../services/setting.service'
 import { OrganisationService } from '../../../services/organisation.service'
 import { ToasterService } from 'angular2-toaster'
 import { Title }     from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -30,6 +31,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(private settingService: SettingService,
     public toasterService : ToasterService,
+    public router: Router,
     private orgService: OrganisationService,
     private sanitizer: DomSanitizer,
     private titleService: Title

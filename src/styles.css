@@ -399,7 +399,7 @@ hr {
   content: '\f078';
   font: normal normal normal 17px/1 FontAwesome;
   right: 25px;
-  top: -6px;
+  top: -10px;
   height: 24px;
   -webkit-text-stroke: 1px white;
   font-size: 16px;
@@ -896,7 +896,7 @@ background-color: none;
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
-  height: 30px;
+  height: 14px;
   overflow: hidden;
 }
 
@@ -923,12 +923,13 @@ background-color: none;
 }
 .mod_header{
   border-bottom: 0px solid #e9ecef !important;
+  padding: 17px !important;
 }
 .mod_footer{
   border-top: 0px solid #e9ecef !important;
 }
 .mod_close_btn{
-  margin-top: -34px !important;
+  margin-top: -22px !important;
   opacity: unset !important;
 }
 .title{
@@ -965,6 +966,9 @@ background-color: none;
   margin-left: 4px;
   color: #697887;
 }
+.header_menu_text:hover{
+  color: #1a73cc;
+}
 .edit_delete_icon{
   margin-top: -5px;
 }
@@ -995,15 +999,16 @@ background-color: none;
 }
 /* added by vikrant */
 .morebtn{
-  background-color: white;
   border-radius: 5px;
-  font-size: 9px;
-  width: 30px;
+  font-size: 10px;
+  font-weight: bold;
   padding-left: 4px;
+  font-style: italic;
   float: right;
-  margin-bottom: 10px;
-  margin-top: -12px;
+  margin-bottom: -2px;
+  margin-top: -3px;
   cursor: pointer;
+  color: #1a73cc;
 }
 .all_terms{
   word-wrap: break-word;
@@ -1034,7 +1039,7 @@ background-color: none;
 
 .item_box_shadow{
   background-color: white !important;
-  box-shadow: inset 23px 0 0px -19px #1a73cc;
+  box-shadow: inset 22px 0 0px -19px #1a73cc;
   /* border-left: 3px solid #1a73cc; */
   /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
   -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
@@ -1102,9 +1107,9 @@ background-color: none;
   font-family: helvetica_regular;
 }
 .today_txt{
-  font-size: 13px;
+  font-size: 13px !important;
   font-family: helvetica_regular !important;
-  color: #787e83;
+  color: #787e83 !important;
 }
 
 /* product css */
@@ -1118,7 +1123,6 @@ background-color: none;
   font-size: 15px;
   padding: 14px 37px;
   text-align: left;
-  width: 100%;
   cursor: pointer;
 }
 
@@ -1126,7 +1130,7 @@ background-color: none;
   background-color: #ebf3fb;
 }
 .settingForm{
-  height:657px  !important;
+  height:678px  !important;
   text-align: center;
 }
 
@@ -1229,9 +1233,7 @@ textarea{
   border: 0px solid #ced4da !important;
   background-color: #f2f1f1 !important;
 }
-.mrg_item_input{
-  margin-left: 4px;
-}
+
 .date_month{
   color: #8c9299;
   font-size: 10px;
@@ -1268,4 +1270,79 @@ textarea{
 .same_mrg_20{
   margin-top: 20px !important;
   margin-bottom: 20px !important;
+}
+.mrg_top_14{
+  margin-top: 14px;
+}
+.setting_arrow{
+  margin-left: 45px;
+}
+.setting_sidebar_form{
+  margin-top: 0px !important;
+  position: fixed;
+  width: 348px;
+}
+.item_percent_text{
+  font-size: 11px;
+}
+.item_percent_icon{
+  font-size: 10px;
+}
+.error_logo {
+  height: 44px !important;
+  margin: 2px auto !important;
+  margin-top: 10px !important;
+  text-align: center !important;
+  color: #697887 !important;
+  font-family: helvetica_light !important;
+}
+.error_text{
+  padding: 0px 45px !important;
+  margin-bottom: 12px !important;
+}
+.modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 9px 23px 20px 10px !important;
+  border-top: 1px solid #e9ecef;
+}
+.color_white{
+  color:white !important;
+}
+.color_grey{
+  color: #787e83;
+  font-size: 12.5px;
+}
+.arrow_img_div{
+  margin-top: 15px;
+  padding-left: 4px;
+  padding-right: 0px;
+  margin-right: -15px;
+}
+.arrow_img{
+  height:10px;
+  width:10px
+}
+.list_date{
+  line-height: 16px;
+  margin-top: 3px;
+}
+.no_data_img{
+  width: 255px;
+  margin-top: 80px;
+}
+.amount_text_div{
+  margin-top: -3px;
+  font-style: italic;
+  color: #787e83;
+}
+.paid_date{
+  width: 190px;
+  font-size: 13px;
+  text-align: right;
+}
+.paid_amt{
+  margin-top: 6px;
+  text-align: right;
 }

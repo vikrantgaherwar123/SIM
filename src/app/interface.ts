@@ -157,6 +157,7 @@ export interface invoice {
   deleted_flag: number
   device_modified_on: number
   discount: number
+  discount_amount : number
   discount_on_item: number
   due_date: string
   due_date_flag: number
@@ -199,6 +200,7 @@ export interface recentInvoices {
   deleted_flag: number
   device_modified_on: number
   discount: number
+  discount_amount : number
   discount_on_item: number
   due_date: string
   due_date_flag: number

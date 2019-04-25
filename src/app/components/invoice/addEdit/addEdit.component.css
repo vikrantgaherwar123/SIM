@@ -193,7 +193,7 @@ a.morelink {
   margin-top: -4px;
 }
 .add_invoice{
-  margin-top: 5px;
+  margin-top: 10px;
   margin-bottom: 9px;
 }
 .search_btn_div{
@@ -238,7 +238,7 @@ a.morelink {
   border-radius: 2px;
 }
 .addLabelBackroundColor:hover{
-  background: #1a73cc;
+  background: #1e81e3;
   border-radius: 2px;
 }
 .removeaddLabelBackroundColor{
@@ -247,8 +247,9 @@ a.morelink {
   border-radius: 4px;
 }
 .removeaddLabelBackroundColor:hover{
-  background-color: #d6e8fa !important;
+  background-color: #edf5fd !important;
   border-radius: 2px;
+
 }
 
 .comment {

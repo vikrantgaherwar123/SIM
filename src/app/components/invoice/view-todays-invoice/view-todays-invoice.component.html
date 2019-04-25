@@ -146,13 +146,13 @@
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
+                    <td *ngIf="!noDiscountOnItem" width="10%" >
+                        <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
+                          disabled
+                        >
+                      </td>
                     <td *ngIf="!noTaxOnItem" width="10%" >
                       <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
-                    </td>
-                    <td *ngIf="!noDiscountOnItem" width="10%" >
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
-                        disabled
-                      >
                     </td>
                     <td width="10%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text_right"
@@ -187,16 +187,16 @@
                         {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
+                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
+                      <div class="text_right">
+                        {{item.discount_amount | number:'1.2-2'}}<br>
+                        <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                      </div>
+                    </td>
                     <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
                         {{item.tax_amount | number:'1.2-2'}}<br>
-                        {{item.tax_rate | number:'1.2-2'}} %
-                      </div>
-                    </td>
-                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
-                      <div class="text_right">
-                        {{item.discount_amount | number:'1.1-2'}}<br>
-                        {{item.discountRate | number:'1.1-2'}} %
+                        <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -254,7 +254,7 @@
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
+                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
                   </div>
                   <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
                 </div>
@@ -284,7 +284,7 @@
               </div>
 
               <!-- TaxList -->
-              <div *ngIf="showTaxList === false">
+              <div>
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                     <div class="col-4 discount-tax-label">
                       <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
@@ -402,36 +402,36 @@
         </div>
         <!-- recently added invoice -->
         <div class="row" style="margin-top: 14px;">
-          <div
-            class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
-            style="border-top: 1px solid #cecece;">
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
           </div>
-
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
-
-            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
-            border-bottom: 1px solid #d2d2d2;" (click)="setActiveInv(invoice.unique_identifier)"><!--, 'selected': (invoice.unique_identifier == invoiceId)-->
-              <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
-                <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
-                <span class="date_month">{{ invoice.created_date | date: 'MMM' }}</span>
-              </div>
-              <div class="col-10">
-                <div class="row" style="line-height: 7px;">
-                  <div class="col-12" style="padding: 3px 4px 0px 14px;">
-                    <h5 *ngIf="clientList" class="fontsize13" style="font-family: helvetica_regular !important;
-                    font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
-                  </div>
-                  <div class="col-5 today_txt">
-                    {{ invoice.invoice_number }}
-                  </div>
-                  <div class="col-6 text-right fontsize12 today_txt">
-                    {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+            <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
+            <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
+            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true | filter:invSearchTerm) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
+              >
+                <div class="col-1" class="arrow_img_div">
+                  <img src="assets/images/left-arrow.png" class="arrow_img" >
+                </div>
+                <div class="col-2 list-date font-custom-bold fontsize13 list_date" style="margin-left: 16px;">
+                  <span class="inv_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'dd' }}</span><br/>
+                  <span class="date_month sub_date" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ invoice.created_date | date: 'MMM' }}</span>
+                </div>
+      
+                <div class="col-9">
+                  <div class="row" style="margin-top: 6px;">
+                    <div class="col-12">
+                      <h5 *ngIf="clientList" class="font-custom-bold fontsize13" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                    </div>
+                    <div class="col-5 font-custom-book fontsize13 today_txt" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
+                      {{ invoice.invoice_number }}
+                    </div>
+                    <div class="col-5 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 40px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
+                      {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
         <!-- ends -->

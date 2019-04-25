@@ -36,7 +36,7 @@ a[data-toggle="collapse"] {
 #content {
   transition: all 0.3s;
   position: absolute;
-  left: 62px;
+  /* left: 62px; */
   top: 0;
   right: 0;
 }

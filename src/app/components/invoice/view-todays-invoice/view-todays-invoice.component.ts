@@ -33,6 +33,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   // private allClientList: client[]
   activeInv: recentInvoices
 
+  invSortTerm: string = 'createdDate'
+
   activeClient: any = {}
   invoiceId: string;
   clientListLoading: boolean;
