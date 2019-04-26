@@ -919,6 +919,7 @@ export class AddEditComponent implements OnInit {
 }
 
    private _filterCli(value: string): client[] {
+    if (!value) return this.clientList;
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
   }
 
