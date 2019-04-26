@@ -255,7 +255,7 @@
               </div>
 
               <!-- Discount -->
-              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
+              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 5px;">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
@@ -414,7 +414,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-            *ngFor="let invoice of recentInvoiceList" class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
+            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-1" class="arrow_img_div">
                   <img src="assets/images/left-arrow.png" class="arrow_img" >

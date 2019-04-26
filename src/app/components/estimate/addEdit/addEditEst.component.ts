@@ -43,7 +43,6 @@ export class AddEditEstComponent implements OnInit {
   estimateList: estimate[]
   recentEstimateList: recentEstimates[];
   recentEstimate: recentEstimates = <recentEstimates>{}
-  previousUrl: string;
 
   activeEst: estimate
   activeEstimate: addEditEstimate
@@ -141,11 +140,6 @@ export class AddEditEstComponent implements OnInit {
     private store: Store<AppState>,
     private titleService: Title
   ) {
-    router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {        
-        this.previousUrl = event.url;
-      };
-    });
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -236,31 +230,24 @@ export class AddEditEstComponent implements OnInit {
     this.recentEstListLoading = true;
 
     // Fetch selected invoice
-    if(this.estimateList){
-      this.noRecentEstimate = true;
-      this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
+    this.activeEstimate = this.estimateList.find(x => x.unique_identifier === estId);
+    if(this.activeEstimate){
+      this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
     }
+    
 
-    this.recentEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
-    if(this.recentEstimate){
-      this.noRecentEstimate = false;
-      this.activeEstimate = this.recentEstimate
+    if(this.recentEstimateList.length > 0 && !this.activeEstimate){
+      this.activeEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
+      this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
     }
+    
     
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
-      if(this.noRecentEstimate){
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
-        if(this.activeEstimate.tax_on_item == 0){
-          this.activeEstimate.discount_on_item = 1;
-        }
-      }else{
-        this.discountFlag = this.recentEstimate.discountFlag;
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.recentEstimate)
-      }
-
+      
+        this.discountFlag = this.activeEstimate.discountFlag;
 
         if(this.activeEstimate.discount > 0){
           this.noDiscountOnItem = false;

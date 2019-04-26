@@ -833,7 +833,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
 
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
-              *ngFor="let invoice of recentInvoiceList" class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
+              *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
                 <span style="font-size: 18px;">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span class="sub_date">{{ invoice.created_date | date: 'MMM' }}</span>
@@ -1015,9 +1015,10 @@
                   required />
               </div>
             </div>
-            <div class="row col-12" *ngIf="settings.taxFlagLevel === 0">
-              <span class="edit_span">Tax:</span>
-              <input type="number" name="tax-rate" class="form-control add-client-input-custom popup_input_height" min="0" max="100"
+
+            <div class="col-12" *ngIf="activeInvoice.tax_on_item === 0">
+              Tax:
+              <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
                 [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"
                 onfocus="this.select()" />
             </div>
@@ -1095,7 +1096,7 @@
 
         <div class="row terms_border">
           <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;">
-            <div class="terms_item termlist row product-list" id="term1{{index}}"
+            <div class="term_item termlist row product-list" id="term1{{index}}"
               *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index"
               [class.selected]="selectedTerm == index">
               <div class="col-12 px-0">

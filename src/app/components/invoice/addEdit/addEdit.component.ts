@@ -41,7 +41,8 @@ export class AddEditComponent implements OnInit {
   @ViewChild(MatAutocomplete) matAutocomplete: MatAutocomplete;
   invoiceId
 
-  previousUrl: string;
+  invSortTerm: string = 'createdDate'
+
   activeInvoice: invoice = <invoice>{}
   activeInv: invoice
   estimateDate = new FormControl()
@@ -70,7 +71,7 @@ export class AddEditComponent implements OnInit {
 
   invoiceList: invoice[]
   estimateList: estimate[]
-  private clientList: client[]
+  public clientList: client[]
   activeClient: any = {}
   clientListLoading: boolean
   billingTo = new FormControl()
@@ -120,7 +121,6 @@ export class AddEditComponent implements OnInit {
   invListLoader: boolean;
   hideDiscountLabel: boolean = false;
   hideTaxLabel: boolean = false;
-  isDeleted: boolean = false;
   noProductSelected: boolean = false;
   show: false;
   defaultChecked: boolean;
@@ -143,13 +143,6 @@ export class AddEditComponent implements OnInit {
     private datePipe: DatePipe,
     private titleService: Title
   ) {
-    router.events.subscribe(event => {
-      this.currentUrl = this.router.url;
-      if (event instanceof NavigationEnd) {        
-        this.previousUrl = this.currentUrl;
-        this.currentUrl = event.url;
-      };
-    });
     this.toasterService = toasterService; 
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -542,7 +535,9 @@ export class AddEditComponent implements OnInit {
             var ref = setInterval(() => {
               if (this.clientList.length > 0) {
                 let uid = this.activeInvoice.unique_key_fk_client
-                this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                if(this.clientList){
+                  this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                }
                 this.billingTo.reset(this.activeClient)
                 clearInterval(ref)
               }
@@ -923,6 +918,7 @@ export class AddEditComponent implements OnInit {
 }
 
    private _filterCli(value: string): client[] {
+    if (!value) return this.clientList;
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
   }
 
@@ -1591,13 +1587,15 @@ export class AddEditComponent implements OnInit {
           this.store.select('recentInvoices').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
-            if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
+            if (result.invoiceList[0].deleted_flag == 1) {
               self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
-              this.isDeleted = true;
+              this.router.navigate(['/invoice/add'])
             }
             else if(this.activeInvoice.deleted_flag !== 1 ) {
               self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: result.invoiceList[0]}))
+              this.toasterService.pop('success', 'invoice Updated successfully');
+              this.router.navigate([`viewtodaysinvoice/${this.InvoiceId}`])
             }
           })
         } else {
@@ -1605,10 +1603,7 @@ export class AddEditComponent implements OnInit {
         }
           
         // Reset Create Invoice page for new invoice creation
-        if(this.edit && this.activeInvoice.deleted_flag !== 1) {
-          this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate([`invoice/add`])
-        }else if(this.incrementInvNo === true) {
+        if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
@@ -1616,12 +1611,12 @@ export class AddEditComponent implements OnInit {
           self.addInit()
           // this.router.navigate(['/invoice/add'])
         }
-         else if(this.activeInvoice.deleted_flag !== 1) {
+         else if(!this.edit) {
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
-          self.addInit()
+          this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }
       }
     }
