@@ -121,7 +121,6 @@ export class AddEditComponent implements OnInit {
   invListLoader: boolean;
   hideDiscountLabel: boolean = false;
   hideTaxLabel: boolean = false;
-  isDeleted: boolean = false;
   noProductSelected: boolean = false;
   show: false;
   defaultChecked: boolean;
@@ -1422,13 +1421,13 @@ export class AddEditComponent implements OnInit {
 
       this.activeInvoice.discount = gross_amount * discountFactor
       //remove digits after two decimal
-    //   var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
-    //   this.activeInvoice.discount = parseFloat(value);
-    //   deductions += this.activeInvoice.discount
-    // } else {
+      var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
+      this.activeInvoice.discount = parseFloat(value);
+      deductions += this.activeInvoice.discount
+
       if(!isNaN(this.activeInvoice.discount)) {
         deductions += this.activeInvoice.discount
-        this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
+        // this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
     }
 
@@ -1588,25 +1587,23 @@ export class AddEditComponent implements OnInit {
           this.store.select('recentInvoices').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
-            if (result.invoiceList[0].deleted_flag == 1  && this.isDeleted === false) {
+            if (result.invoiceList[0].deleted_flag == 1) {
               self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
-              this.isDeleted = true;
+              this.router.navigate(['/invoice/add'])
             }
             else if(this.activeInvoice.deleted_flag !== 1 ) {
               self.store.dispatch(new invoiceActions.editRecentInvoice({index, value: result.invoiceList[0]}))
+              this.toasterService.pop('success', 'invoice Updated successfully');
+              this.router.navigate([`viewtodaysinvoice/${this.InvoiceId}`])
             }
           })
         } else {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
           
-        // Reset Create Invoice page for new invoice creation
-        if(this.edit) {
-          this.toasterService.pop('success', 'invoice Updated successfully');
-          this.router.navigate([`viewtodaysinvoice/${this.InvoiceId}`])
-
-        }else if(this.incrementInvNo === true) {
+        // save make invoice
+        if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
@@ -1614,7 +1611,7 @@ export class AddEditComponent implements OnInit {
           self.addInit()
           // this.router.navigate(['/invoice/add'])
         }
-         else if(this.activeInvoice.deleted_flag !== 1) {
+         else if(!this.edit) {
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();

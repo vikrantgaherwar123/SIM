@@ -96,34 +96,34 @@ export class BatchuploadComponent implements OnInit {
 
     //faded background table
     this.backgroundTable();
-    this.clientListLoading = true
-    if (this.clientList) {
-      this.clientService.fetch().subscribe((response: response) => {
-        this.clientListLoading = false
-        if (response.status === 200) {
-          this.store.dispatch(new clientActions.add(response.records))
-          this.clientList = response.records.filter(cli => cli.enabled == 0)
+    // this.clientListLoading = true
+    // if (this.clientList) {
+    //   this.clientService.fetch().subscribe((response: response) => {
+    //     this.clientListLoading = false
+    //     if (response.status === 200) {
+    //       this.store.dispatch(new clientActions.add(response.records))
+    //       this.clientList = response.records.filter(cli => cli.enabled == 0)
 
-        }
-      },error => this.openErrorModal())
-    } else {
-      this.clientListLoading = false
-    }
+    //     }
+    //   },error => this.openErrorModal())
+    // } else {
+    //   this.clientListLoading = false
+    // }
 
     //fetching products
-    this.productListLoading = true
+    // this.productListLoading = true
 
-    if (this.productList) {
-      this.productService.fetch().subscribe((response: any) => {
-        this.productListLoading = false
-        if (response.status === 200) {
-          this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
-          this.productList = response.records.filter(prod => prod.enabled == 0)
-        }
-      },error => this.openErrorModal())
-    } else {
-      this.productListLoading = false
-    }
+    // if (this.productList) {
+    //   this.productService.fetch().subscribe((response: any) => {
+    //     this.productListLoading = false
+    //     if (response.status === 200) {
+    //       this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
+    //       this.productList = response.records.filter(prod => prod.enabled == 0)
+    //     }
+    //   },error => this.openErrorModal())
+    // } else {
+    //   this.productListLoading = false
+    // }
   }
 
   backgroundTable(){

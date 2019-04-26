@@ -32,7 +32,8 @@ export class PrimaryComponent implements OnInit {
     setting: any
   }
   settings: any;
-  activePatternNumber: string = "Pattern";
+  activePatternNumber: string;
+  pattern: string
 
   constructor(private CONST: CONSTANTS,
     public router: Router,
@@ -64,6 +65,21 @@ export class PrimaryComponent implements OnInit {
         }
 
         this.activeCountry = this.countries.filter(country => country.id == this.activeSettings.countryIndex)[0]
+        if(this.activeSettings.numberFormat == "###,###,###.00"){
+          this.activePatternNumber = "1,000,000.00"
+        }
+        if(this.activeSettings.numberFormat == "##,##,##,###.00"){
+          this.activePatternNumber = "1,00,00,000.00"
+        }
+        if(this.activeSettings.numberFormat == "###.###.###,00"){
+          this.activePatternNumber = "1.000.000,00"
+        }
+        if(this.activeSettings.numberFormat == "##.##.##.###,00"){
+          this.activePatternNumber = "1.00.00.000,00"
+        }
+        if(this.activeSettings.numberFormat == "### ### ###,00"){
+          this.activePatternNumber = "1 000 000,00"
+        }
       }
     },error => this.openErrorModal())
   }
