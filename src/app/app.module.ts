@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
-import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
 import { HttpClientModule, HttpClient ,HTTP_INTERCEPTORS } from '@angular/common/http'
@@ -51,14 +50,12 @@ import {ProgressBarModule} from "angular-progress-bar"
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BatchuploadComponent } from './components/setting/batchupload/batchupload.component';
 import { SupportComponent } from './components/support/support.component';
-import { LoadalldataComponent } from './components/loadalldata/loadalldata.component';
 import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
-import { TodaysInvoiceComponent } from './components/todays-invoice/todays-invoice.component';
 import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
 import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
 // AoT requires an exported function for factories
@@ -117,8 +114,6 @@ export const MY_FORMATS = {
     UserProfileComponent,
     BatchuploadComponent,
     SupportComponent,
-    LoadalldataComponent,
-    TodaysInvoiceComponent,
     ViewTodaysInvoiceComponent,
     ViewTodaysEstimateComponent,
   ],

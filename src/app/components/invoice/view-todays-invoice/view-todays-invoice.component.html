@@ -190,13 +190,19 @@
                     <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
                         {{item.discount_amount | number:'1.2-2'}}<br>
-                        <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                        <div class="amount_text_div">
+                          <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
                         {{item.tax_amount | number:'1.2-2'}}<br>
-                        <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                        <div class="amount_text_div">
+                          <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">

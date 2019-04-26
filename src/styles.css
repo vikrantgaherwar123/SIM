@@ -1039,12 +1039,7 @@ background-color: none;
 
 .item_box_shadow{
   background-color: white !important;
-  box-shadow: inset 23px 0 0px -19px #1a73cc;
-  /* border-left: 3px solid #1a73cc; */
-  /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -webkit-box-shadow: 0 0 10px rgba(152, 152, 152, 0.6);
-  -o-box-shadow: 0 0 10px rgba(0,0,0,0.6); */
+  box-shadow: inset 22px 0 0px -19px #1a73cc;
   padding-bottom: 1px;
   border-bottom: 1px solid #ced4da;
   border-right: 1px solid #ced4da;
@@ -1205,11 +1200,9 @@ textarea{
 }
 
 .paidBackground{
-  padding-top: 1px;
   margin-top: -7px !important;
-  /* box-shadow: 0 0 10px rgba(0,0,0,0.6);
-  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6); */
   margin-bottom: 10px;
+  padding: 0px 0px 0px 6px;
 }
 .add_btn{
   width: auto !important;
@@ -1232,9 +1225,6 @@ textarea{
 .amount_box{
   border: 0px solid #ced4da !important;
   background-color: #f2f1f1 !important;
-}
-.mrg_item_input{
-  margin-left: 4px;
 }
 .date_month{
   color: #8c9299;
@@ -1347,4 +1337,27 @@ textarea{
 .paid_amt{
   margin-top: 6px;
   text-align: right;
+}
+.edit_item_row{
+  padding: 3px 28px 9px 46px !important;
+  margin-left: -4px !important;
+  line-height: 38px !important;
+}
+.popup_input_height{
+  height: 32px !important;
+}
+.mr_4{
+  margin-left: -4px !important;
+}
+.edit_span{
+  margin-bottom: -6px;
+}
+.tax_dis_span{
+  line-height: 25px;
+  margin-top: 10px;
+}
+.paid_div{
+  padding-bottom: 6px;
+  margin-left: -5px !important;
+  margin-right: 0px !important;
 }
