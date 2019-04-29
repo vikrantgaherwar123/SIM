@@ -235,13 +235,10 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
     }
     
-
     if(this.recentEstimateList.length > 0 && !this.activeEstimate){
       this.activeEstimate = this.recentEstimateList.find(x => x.unique_identifier === estId);
       this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
     }
-    
-    
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
