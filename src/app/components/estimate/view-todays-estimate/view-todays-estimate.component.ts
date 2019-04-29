@@ -198,11 +198,11 @@ export class ViewTodaysEstimateComponent implements OnInit {
 
       
     //display label and values if tax on Bill & discount on Bill selected and values are there
-    if(this.activeEst.discount > 0){
+    if(this.activeEst.discount == 0){
       this.noDiscountOnItem = false;
     }
 
-    if(this.activeEst.taxrate > 0){
+    if(this.activeEst.taxrate == 0){
       this.noTaxOnItem = false;
     }
     }
