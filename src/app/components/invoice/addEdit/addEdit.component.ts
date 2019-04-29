@@ -236,7 +236,7 @@ export class AddEditComponent implements OnInit {
     if(input > 100){
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
-      this.activeInvoice.discount = 0;
+      // this.activeInvoice.discount = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
@@ -1421,13 +1421,13 @@ export class AddEditComponent implements OnInit {
 
       this.activeInvoice.discount = gross_amount * discountFactor
       //remove digits after two decimal
-    //   var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
-    //   this.activeInvoice.discount = parseFloat(value);
-    //   deductions += this.activeInvoice.discount
-    // } else {
+      var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
+      this.activeInvoice.discount = parseFloat(value);
+      deductions += this.activeInvoice.discount
+    } else {
       if(!isNaN(this.activeInvoice.discount)) {
         deductions += this.activeInvoice.discount
-        this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
+        // this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
     }
 

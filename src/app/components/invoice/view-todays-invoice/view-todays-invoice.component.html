@@ -243,7 +243,7 @@
             <!-- Calculations -->
             <div class="col-6">
               <!-- Total -->
-              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;margin-bottom:6px">
                 <div class="col-6 text-left">
                   <span
                     class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
@@ -255,7 +255,7 @@
               </div>
 
               <!-- Discount -->
-              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 5px;">
+              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
@@ -280,7 +280,7 @@
               <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
+                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.2-2'}} %)</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
@@ -299,7 +299,7 @@
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                        {{activeInv.taxList[index].calculateValue | number:'1.2-2'}}
                       </div>
                     </div>
                   </div>
@@ -313,7 +313,7 @@
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.shipping_charges | number:'1.1-2'}}
+                    {{activeInv.shipping_charges | number:'1.2-2'}}
                   </div>
                 </div>
               </div>
@@ -327,7 +327,7 @@
                 </div>
                 <div class="col-8">
                   <div class="text-right">
-                    {{activeInv.adjustment | number:'1.1-2'}}
+                    {{activeInv.adjustment | number:'1.2-2'}}
                   </div>
                 </div>
               </div>

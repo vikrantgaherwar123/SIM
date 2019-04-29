@@ -153,6 +153,10 @@ input[type="radio"] {
   height:38px !important;
   border-radius: 3px;
 }
+.selected{
+  background-color: #1a73cc;
+  color:white;
+}
 /* [type="radio"]:checked,
 [type="radio"]:not(:checked) {
     position: absolute;

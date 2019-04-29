@@ -297,7 +297,7 @@ export class LoginComponent implements OnInit {
             }, err => this.openErrorModal())
       $('#userLogout').show()
 
-      $('#userLogout span').html(this.authenticated.registered_email)
+      $('#userLogout span').html(this.authenticated.registered_email) 
     }
   }
 

@@ -354,3 +354,7 @@ a.morelink {
     padding: 9px 23px 10px 10px !important;
     border-top: 1px solid #e9ecef;
 }
+.terms_border {
+  padding: 5px 17px 0px 36px;
+  line-height: 28px;
+}
