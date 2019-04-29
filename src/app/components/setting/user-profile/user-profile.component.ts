@@ -94,8 +94,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   save(valid) {
-   this.org.org_name = this.org.org_name.replace(/ /g, '');
-   if (valid && this.org.org_name !== '') {
+  const isWhitespace = (this.org.org_name || '').trim().length === 0;
+    
+   if (valid && !isWhitespace) {
      $('#profileSubmitBtn').attr('disabled', 'disabled')
 
      this.orgService.add(this.org).subscribe((response: any) => {
@@ -103,6 +104,7 @@ export class UserProfileComponent implements OnInit {
        //alert(response.message)
        $('#profileSubmitBtn').removeAttr('disabled')
      }, 
+   
     error => this.openErrorModal())
    }
    else{

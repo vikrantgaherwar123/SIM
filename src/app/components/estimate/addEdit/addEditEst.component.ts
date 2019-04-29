@@ -1188,18 +1188,20 @@ export class AddEditEstComponent implements OnInit {
             if (response.quotationList[0].deleted_flag == 1) {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
               this.toasterService.pop('success', 'Estimate Deleted successfully');
-            } else{
+              this.router.navigate(['/estimate/add']);
+            }else if(response.quotationList[0].deleted_flag !== 1){
               this.toasterService.pop('success', 'Estimate Edited successfully');
               self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
+              this.router.navigate([`viewtodaysestimate/${this.estimateId}`]);
             }
           })
         } else {
-          self.store.dispatch(new estimateActions.add([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
+          this.router.navigate([`viewtodaysestimate/${response.quotationList[0].unique_identifier}`]);
         }
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
        if(!this.edit) {
           //add recently added esimate in store
-          self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
           this.toasterService.pop('success', 'Estimate saved successfully');
           this.updateSettings();
           self.resetFormControls()

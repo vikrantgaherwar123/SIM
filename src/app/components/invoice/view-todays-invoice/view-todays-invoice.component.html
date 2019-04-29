@@ -146,12 +146,12 @@
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
-                    <td *ngIf="!noDiscountOnItem" width="10%" >
+                    <td *ngIf="activeInv.discount_on_item == 1" width="10%" >
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
                       </td>
-                    <td *ngIf="!noTaxOnItem" width="10%" >
+                    <td *ngIf="activeInv.tax_on_item == 0 " width="10%" >
                       <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
                     </td>
                     <td width="10%" class="last_td">
@@ -187,7 +187,7 @@
                         {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
+                    <td *ngIf="activeInv.discount_on_item == 1"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
                         {{item.discount_amount | number:'1.2-2'}}<br>
                         <div class="amount_text_div">
@@ -196,7 +196,7 @@
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
+                    <td *ngIf="activeInv.tax_on_item == 0" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
                         {{item.tax_amount | number:'1.2-2'}}<br>
                         <div class="amount_text_div">
@@ -255,19 +255,19 @@
               </div>
 
               <!-- Discount -->
-              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
+              <div *ngIf="(activeInv.percentage_value > 0 || activeInv.discount > 0)" class="row mx-0">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                  <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
+                  <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
+                    ({{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
                   </div>
-                  <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
+                  <div *ngIf="activeInv.percentage_flag == 1" class="inline font-custom">({{activeInv.percentage_value}} %)</div>
                 </div>
                 <div class="col-7">
                   <div class="text-right">
                     <div *ngIf="!activeInv.discountFlag == 0">
-                      {{activeInv.percentageValue | number:'2.'}}
+                      {{activeInv.percentage_value | number:'2.'}}
                     </div>
                     <div class="price" *ngIf="!activeInv.discountFlag == 1">
                       {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}

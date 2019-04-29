@@ -1424,7 +1424,6 @@ export class AddEditComponent implements OnInit {
       var value = this.activeInvoice.discount.toString().substring(0, this.activeInvoice.discount.toString().indexOf(".") + 3);
       this.activeInvoice.discount = parseFloat(value);
       deductions += this.activeInvoice.discount
-    } else {
       if(!isNaN(this.activeInvoice.discount)) {
         deductions += this.activeInvoice.discount
         // this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
@@ -1602,7 +1601,7 @@ export class AddEditComponent implements OnInit {
           self.store.dispatch(new invoiceActions.recentInvoice([this.invoiceService.changeKeysForStore(result.invoiceList[0])]))
         }
           
-        // Reset Create Invoice page for new invoice creation
+        // save make invoice
         if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');

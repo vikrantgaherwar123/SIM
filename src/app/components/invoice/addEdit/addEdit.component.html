@@ -1,8 +1,8 @@
 <div *ngIf="activeInvoice" class="row main-wrapper">
   <div class="col-12" id="main">
     <div  class="row">
-      <div id="msgInv" *ngIf="viewTodaysInvoice == false"
-        class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen">
+      <div id="msgInv" 
+        class="col-12 col-md-9 item-form all-invoices inv-generator inv-gen"> <!--*ngIf="viewTodaysInvoice == false"-->
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator" class="create-invoice"
           (ngSubmit)="save(invoiceGeneratorAdd.valid)">
           <div class="back p-4 shadow" style="border-radius: 2px;">
@@ -419,7 +419,7 @@
                     style="padding-bottom: 8px;">
                     <div *ngIf="settings.discountFlagLevel == 0"> <!-- &&  activeInvoice.discount_on_item===2-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.discount_on_item===2 , 'addLabelBackroundColor':activeInvoice.discount_on_item === 0}"
-                        (click)="activeInvoice.discount_on_item = 0 ;activeInvoice.percentage_flag = 0"><!--activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null-->
+                        (click)="activeInvoice.discount_on_item = 0 "><!--;activeInvoice.percentage_flag = 0 activeInvoice.percentage_flag = 0;activeInvoice.percentage_value=null;activeInvoice.discount=null-->
                         {{settings.discount ? settings.discount : 'Discount'}} &nbsp;+
                     </span>
                     </div>
@@ -432,7 +432,7 @@
                     </div>
                     <div *ngIf="settings.taxFlagLevel == 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
                       <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
-                        (click)="activeInvoice.tax_on_item=1;activeInvoice.tax_rate = null">Tax &nbsp;+</span>
+                        (click)="activeInvoice.tax_on_item=1">Tax &nbsp;+</span><!--;activeInvoice.tax_rate = null-->
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noAdjustment ,
@@ -814,13 +814,13 @@
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
-        <div class="row" style="margin: 0 auto;">
+        <!-- <div class="row" style="margin: 0 auto;">
           <button *ngIf="viewTodaysInvoice == true || edit" type="button"
             class="col-12 btn btnd btn-custom-2 no-border-radius side_btn add_invoice"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
-        </div>
+        </div> -->
         <!-- recently added invoice -->
         <div *ngIf="invoiceList" class="row" style="margin-top: 22px;">
           <div
