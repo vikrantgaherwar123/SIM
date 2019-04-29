@@ -223,11 +223,11 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="10%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
-                    </td>
                     <td width="10%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
+                    </td>
+                    <td width="10%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
                     <td width="10%">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -256,16 +256,16 @@
                         {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div  class="text-right">
-                        {{item.taxAmount | number:'1.2-2'}}<br>
-                        {{item.taxRate | number:'2.2-2'}}
-                      </div>
-                    </td>
                     <td *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1"  [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountAmt | number:'1.2-2'}}<br>
                         {{item.discountRate | number:'2.2-2'}}
+                      </div>
+                    </td>
+                    <td *ngIf="noTaxOnItem || activeEst.assignTaxFlag === 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div  class="text-right">
+                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">

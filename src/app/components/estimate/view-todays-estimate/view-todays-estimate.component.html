@@ -113,10 +113,10 @@
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
                     <td width="17%">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
+                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="17%">
-                      <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
                     <td width="18%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -147,14 +147,14 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.taxAmount | number:'1.2-2'}}<br>
-                        {{item.taxRate | number:'2.2-2'}}
+                        {{item.discountAmt | number:'1.2-2'}}<br>
+                        {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
-                        {{item.discountAmt | number:'1.2-2'}}<br>
-                        {{item.discountRate | number:'2.2-2'}}
+                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        {{item.taxRate | number:'2.2-2'}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -328,19 +328,19 @@
             *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
-                <span style="font-size: 18px;">{{ estimate.createDate  | date: 'dd' }}</span><br />
-                <span style="color: #8c9299;font-size: 10px;">{{ estimate.createDate  | date: 'MMM' }}</span>
+                <span style="font-size: 18px;" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ estimate.createDate  | date: 'dd' }}</span><br />
+                <span style="color: #8c9299;font-size: 10px;" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ estimate.createDate  | date: 'MMM' }}</span>
               </div>
     
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 *ngIf="clientList" class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                    <h5 *ngIf="clientList" class="font-custom-bold fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5 font-custom-book fontsize13">
+                  <div class="col-5 font-custom-book fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
                     #{{ estimate.quetationNo }}
                   </div>
-                  <div class="col-6 text-right font-custom-bold fontsize12">
+                  <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
                     {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
                   </div>
                 </div>
@@ -348,16 +348,7 @@
             </div>
           </div>
         </div>
-      <!-- ends -->
-
-        <!-- Delete Estimates Button -->
-        <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
-          [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
-          "
-        >
-          Delete Estimates
-        </button> -->
+     
       </div>
     </div>
   </div>
