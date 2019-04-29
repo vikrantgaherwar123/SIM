@@ -571,40 +571,30 @@ export class AddEditComponent implements OnInit {
                 }else{
                   this.activeInvoice.discount_on_item=1;
                 }
+
+                //set invoice number for making invoice
+
+                if (!isNaN(parseInt(this.settings.invNo))) {
+                  // console.log(this.InvoiceNumber);
+                  this.tempInvNo = parseInt(this.settings.invNo) + 1
+                } else {
+                  this.tempInvNo = 1
+                }
+                if (this.settings.setInvoiceFormat) {
+                  this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+                } else {
+                  this.activeInvoice.invoice_number = this.tempInvNo.toString();
+                }
         
                 // Change list item keys compatible
                 if (this.activeEstimate.listItems) {
                   var temp = []
                   for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
-                    //set variables according to data comes from API and store 
-                    if (this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0) {
-
-                      this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
-                    }
-                    if (this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount == 0) {
-                      this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
-                    }
-                    if (this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0) {
-                      this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
-                    }
-
-                    if (this.activeInvoice.listItems[i].product_name) {
-                      this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
-                    }
-                    if (this.activeInvoice.listItems[i].quantity) {
-                      this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
-                    }
-                    if (this.activeInvoice.listItems[i].total) {
-                      this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
-                    }
-                    if (this.activeInvoice.listItems[i].unique_identifier) {
-                      this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
-                    }
                     temp.push({
                       description: this.activeEstimate.listItems[i].description,
                       discount: this.activeEstimate.listItems[i].discountRate,
-                      discount_amount: this.activeInvoice.listItems[i].discount_amount,
-                      tax_amount: this.activeInvoice.listItems[i].tax_amount,
+                      discount_amount: this.activeEstimate.listItems[i].discountAmt,
+                      tax_amount: this.activeEstimate.listItems[i].taxAmount,
                       product_name: this.activeEstimate.listItems[i].productName,
                       quantity: this.activeEstimate.listItems[i].qty,
                       rate: this.activeEstimate.listItems[i].rate,
@@ -614,8 +604,7 @@ export class AddEditComponent implements OnInit {
                       unit: this.activeEstimate.listItems[i].unit
                     })
                   }
-                  this.activeEstimate.listItems = temp
-                  this.activeInvoice.listItems = this.activeEstimate.listItems;
+                  this.activeInvoice.listItems = temp
                 }
                 // Change TnC keys compatible
                 if (this.activeEstimate.termsAndConditions) {
@@ -628,23 +617,8 @@ export class AddEditComponent implements OnInit {
                       _id: this.activeEstimate.termsAndConditions[i]._id
                     })
                   }
-                  this.activeEstimate.termsAndConditions = temp
-                  this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-                } else if (this.termList.length < 1) {
-                  this.tncLoading = true;
-                  this.termConditionService.fetch().subscribe((response: response) => {
-                    this.tncLoading = false;
-                    if (response.termsAndConditionList) {
-                      this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
-                    }
-                    this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
-                    this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-                  },error => this.openErrorModal())
-                } else {
-                  this.activeEstimate.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : [];
-                  this.activeInvoice.termsAndConditions = this.activeEstimate.termsAndConditions;
-                }
-    
+                  this.activeInvoice.termsAndConditions = temp
+                } 
                 //set reference no of estimate
                 this.activeInvoice.reference =  this.activeEstimate.estimate_number;
                 this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
@@ -1325,7 +1299,7 @@ export class AddEditComponent implements OnInit {
   }
 
   isTermInInvoice(term) {
-    if(this.activeInvoice) {
+    if(this.activeInvoice && this.activeInvoice.termsAndConditions ) {
       return this.activeInvoice.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false

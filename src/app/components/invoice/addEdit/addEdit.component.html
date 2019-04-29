@@ -375,7 +375,7 @@
                           <!-- <div class="text-right">{{activeItem.discount_amount}}</div>            -->
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
-                        *ngIf="noTaxOnItem || activeInvoice.tax_on_item === 0 && activeInvoice"><!-- || showTaxRate!==0 && showTaxRateFlag == true-->
+                        *ngIf="noTaxOnItem || activeInvoice && activeInvoice.tax_on_item === 0"><!-- || showTaxRate!==0 && showTaxRateFlag == true-->
                           <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemTaxRate" tabindex="4"
                               class="form-control height_40 text_right input_border_color" min=0 max=100
@@ -571,7 +571,7 @@
                       </div>
                     </div>
                     <!-- tax -->
-                    <div class="row mr_right mr_4" *ngIf="activeInvoice.tax_on_item === 1">
+                    <div class="row mr_right mr_0" *ngIf="activeInvoice && activeInvoice.tax_on_item === 1">
                         <div class="col-4 discount-tax-label pr-0">
                           <span style="text-align: left;vertical-align: bottom;">
                               Tax (%)
@@ -1011,7 +1011,8 @@
                 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="{{settings.discount}}"
                 onfocus="this.select()" />
             </div>
-            <div class="col-12 row" *ngIf="activeInvoice && activeInvoice.tax_on_item === 0">
+
+            <div class="col-12" *ngIf="activeInvoice && activeInvoice.tax_on_item === 0">
               Tax:
               <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
                 [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"
