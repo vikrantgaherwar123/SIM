@@ -296,13 +296,14 @@
   
                 <!-- Discount -->
                 <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 6px;">
-                  <div class="col-5 discount-tax-label">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                    <div *ngIf="!isRate" class="inline font-custom">
-                      ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'| slice:0:1}})
-                    </div>
-                    <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
-                  </div>
+                    <div class="col-5 discount-tax-label">
+                        <span style="text-align: left;vertical-align: bottom;"
+                          class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
+                        <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
+                          ({{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
+                        </div>
+                        <div *ngIf="activeInv.percentage_flag == 1" class="inline font-custom">({{activeInv.percentage_value}} %)</div>
+                      </div>
                   <div class="col-7">
                     <div class="text-right">
                       <div *ngIf="!activeInv.discountFlag == 0">

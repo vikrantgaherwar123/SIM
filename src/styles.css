@@ -1354,3 +1354,12 @@ textarea{
   margin-left: -5px !important;
   margin-right: 0px !important;
 }
+.drop_arrow{
+  margin-right: 16px;
+  margin-top: -16px;
+  width: 20px;
+  margin-left: 96px;
+  text-align: right;
+  cursor: pointer;
+  height: 20px;
+}

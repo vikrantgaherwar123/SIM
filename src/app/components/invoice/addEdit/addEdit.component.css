@@ -358,12 +358,4 @@ a.morelink {
   padding: 5px 17px 0px 36px;
   line-height: 28px;
 }
-.drop_arrow{
-  margin-right: 16px;
-  margin-top: -16px;
-  width: 20px;
-  margin-left: 96px;
-  text-align: right;
-  cursor: pointer;
-  height: 20px;
-}
+
