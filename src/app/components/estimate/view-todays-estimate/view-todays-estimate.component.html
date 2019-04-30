@@ -112,10 +112,10 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td *ngIf="activeEst.assignDiscountFlag == 0" width="17%">
+                    <td *ngIf="activeEst.assignDiscountFlag == 1" width="17%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
-                    <td *ngIf="activeEst.assignTaxFlag == 1" width="17%">
+                    <td *ngIf="activeEst.assignTaxFlag == 0" width="17%">
                       <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
                     <td width="18%" class="last_td">
@@ -145,13 +145,13 @@
                         {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignDiscountFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountAmt | number:'1.2-2'}}<br>
                         {{item.discountRate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="activeEst.assignTaxFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.taxAmount | number:'1.2-2'}}<br>
                         {{item.taxRate | number:'2.2-2'}}
