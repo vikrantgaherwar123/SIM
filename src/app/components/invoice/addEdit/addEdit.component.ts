@@ -11,7 +11,7 @@ import { retryWhen, flatMap } from 'rxjs/operators';
 import { interval, throwError, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices, estimate } from '../../../interface'
+import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices, estimate, recentEstimates } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
@@ -115,6 +115,7 @@ export class AddEditComponent implements OnInit {
   InvoiceId: any;
   InvoiceNumber: string;
   recentInvoiceList: recentInvoices[];
+  recentEstimateList: recentEstimates[];
   disabledDescription: boolean = false;
   viewTodaysInvoice: boolean = false;
   viewNextInvoice: boolean;
@@ -152,7 +153,10 @@ export class AddEditComponent implements OnInit {
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
     store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
-    store.select('estimate').subscribe(estimates => this.estimateList = estimates)
+    store.select('estimate').subscribe(estimates => this.estimateList = estimates);
+    store.select('recentEstimates').subscribe(estimates => this.recentEstimateList = estimates);
+
+    
 
 
 
@@ -557,11 +561,15 @@ export class AddEditComponent implements OnInit {
             this.incrementInvNo = true;
             //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
             this.edit = false;
-            this.estimateListLoading = true;
-            this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
-              this.estimateListLoading = false;
-              if (estimate.records !== null) {
-                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+            this.activeEstimate = this.estimateList.find(x => x.unique_identifier === invId); //when came from view component
+
+            if(this.recentEstimateList.length > 0 && !this.activeEstimate){ //invoice from view today's page
+            this.estimateList = [];
+            this.activeEstimate = this.recentEstimateList.find(inv => inv.unique_identifier == invId); //when came from todays component
+            }
+            
+              if (this.activeEstimate) {
+                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
                 this.shippingAddressEditMode = true
                 this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
                 if (this.activeEstimate.taxList){
@@ -691,12 +699,9 @@ export class AddEditComponent implements OnInit {
                   }
                 }, 50)
               } else {
-                this.toasterService.pop('failure', 'Invalid estimate id');
+                // this.toasterService.pop('failure', 'Invalid estimate id');
                 this.router.navigate(['/estimate/view'])
               }
-            },error => this.openErrorModal())
-            // this.toasterService.pop('failure', 'Invalid invoice id!');
-            // this.router.navigate(['/invoice/view'])
           } 
           return false
         },
