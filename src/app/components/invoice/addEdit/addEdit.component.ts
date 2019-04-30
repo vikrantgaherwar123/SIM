@@ -435,8 +435,9 @@ export class AddEditComponent implements OnInit {
             clearInterval(ref)
           }
         }, 50)
-      } else if(this.invoiceListLoading){
+      } else if(this.invoiceListLoading && this.estimateList.length < 1 && this.recentEstimateList.length < 1){
 
+       
         this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
           if(invoice.records !== null) {
             //deleted these objects bcz input was mismatcing for adding while deleting
@@ -554,159 +555,164 @@ export class AddEditComponent implements OnInit {
                 clearInterval(ref)
               }
             }, 50)
+          }else {
+            // this.toasterService.pop('failure', 'Invalid estimate id');
+            this.router.navigate(['/estimate/view'])
           }
-          //MAKE INVOICE
-          else {
-            this.activeInvoice = <invoice>{}
-            this.incrementInvNo = true;
-            //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
-            this.edit = false;
-            this.activeEstimate = this.estimateList.find(x => x.unique_identifier === invId); //when came from view component
-
-            if(this.recentEstimateList.length > 0 && !this.activeEstimate){ //invoice from view today's page
-            this.estimateList = [];
-            this.activeEstimate = this.recentEstimateList.find(inv => inv.unique_identifier == invId); //when came from todays component
-            }
-            
-              if (this.activeEstimate) {
-                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
-                this.shippingAddressEditMode = true
-                this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-                if (this.activeEstimate.taxList){
-                  this.activeInvoice.taxList = this.activeEstimate.taxList;
-                }
-                //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
-                if(this.activeEstimate.tax_rate!==0){
-                  this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-                }
-
-                //settings flagLevels as per estimate was saved
-                this.activeInvoice.discount_on_item = this.activeEstimate.discount_on_item
-                this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
-
-                //disabled
-                if(this.activeInvoice.discount_on_item == 2){
-                  this.settings.discountFlagLevel = 2;
-                }
-                if(this.activeInvoice.tax_on_item == 2){
-                  this.settings.taxFlagLevel = 2;
-                }
-
-                //tax on item
-                if(this.activeInvoice.discount_on_item == 1){
-                  this.settings.discountFlagLevel = 1;
-                }
-                if(this.activeInvoice.tax_on_item == 0){
-                  this.settings.taxFlagLevel = 0;
-                }
-
-                
-
-                //set invoice number for making invoice
-
-                if (!isNaN(parseInt(this.settings.invNo))) {
-                  // console.log(this.InvoiceNumber);
-                  this.tempInvNo = parseInt(this.settings.invNo) + 1
-                } else {
-                  this.tempInvNo = 1
-                }
-                if (this.settings.setInvoiceFormat) {
-                  this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
-                } else {
-                  this.activeInvoice.invoice_number = this.tempInvNo.toString();
-                }
-        
-                // Change list item keys compatible
-                if (this.activeEstimate.listItems) {
-                  var temp = []
-                  for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
-                    
-                    temp.push({
-                      description: this.activeEstimate.listItems[i].description,
-                      discount: this.activeEstimate.listItems[i].discountRate,
-                      discount_amount: this.activeEstimate.listItems[i].discountAmt,
-                      tax_amount: this.activeEstimate.listItems[i].taxAmount,
-                      product_name: this.activeEstimate.listItems[i].productName,
-                      quantity: this.activeEstimate.listItems[i].qty,
-                      rate: this.activeEstimate.listItems[i].rate,
-                      tax_rate: this.activeEstimate.listItems[i].taxRate,
-                      total: this.activeEstimate.listItems[i].price,
-                      unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-                      unit: this.activeEstimate.listItems[i].unit
-                    })
-                  }
-                  this.activeInvoice.listItems = temp
-                }
-                // Change TnC keys compatible
-                if (this.activeEstimate.termsAndConditions) {
-                  temp = []
-                  for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
-                    temp.push({
-                      orgId: this.activeEstimate.termsAndConditions[i].orgId,
-                      terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
-                      uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
-                      _id: this.activeEstimate.termsAndConditions[i]._id
-                    })
-                  }
-                  this.activeInvoice.termsAndConditions = temp
-                } 
-                //set reference no of estimate
-                this.activeInvoice.reference =  this.activeEstimate.estimate_number;
-                this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
-                this.activeInvoice.amount = this.activeEstimate.amount;
-                this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
-                this.activeInvoice.discount = this.activeEstimate.discount;
-                
-                
-                this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
-                this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-                this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
-    
-                this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
-                this.activeInvoice.adjustment = this.activeEstimate.adjustment;
-                this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
-                
-                // Set Dates
-                this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
-                var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
-                this.invoiceDate.reset(new Date(y, (m - 1), d))
-    
-                
-                // Tax and discounts show or hide
-                if (this.activeEstimate.discount == 0) {
-                  this.activeInvoice.percentage_flag = null
-                }
-                if (this.activeEstimate.shipping_charges == 0) {
-                  this.activeInvoice.shipping_charges = undefined
-                }
-                if (this.activeEstimate.adjustment == 0) {
-                  this.activeInvoice.adjustment = null
-                }
-                if (this.activeEstimate.tax_amount == 0) {
-                  this.activeInvoice.tax_rate = null
-                }
-        
-                
-                // Wait for clients to be loaded before setting active client
-                var ref = setInterval(() => {
-                  if (this.clientList.length > 0) {
-                    //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
-                    this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
-                    let uid = this.activeInvoice.unique_key_fk_client
-                    this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
-                    this.billingTo.reset(this.activeClient)
-                    clearInterval(ref)
-                  }
-                }, 50)
-              } else {
-                // this.toasterService.pop('failure', 'Invalid estimate id');
-                this.router.navigate(['/estimate/view'])
-              }
-          } 
+          
+          
           return false
         },
         err => this.openErrorModal());
 
+      } 
+      //MAKE INVOICE
+      else {
+        this.activeInvoice = <invoice>{}
+        this.incrementInvNo = true;
+        //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
+        this.edit = false;
+        this.activeEstimate = this.estimateList.find(x => x.unique_identifier === invId); //when came from view component
+
+        if(this.recentEstimateList.length > 0 && !this.activeEstimate){ //invoice from view today's page
+        this.estimateList = [];
+        this.activeEstimate = this.recentEstimateList.find(inv => inv.unique_identifier == invId); //when came from todays component
+        }
+        
+          if (this.activeEstimate) {
+            this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
+            this.shippingAddressEditMode = true
+            this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+            if (this.activeEstimate.taxList){
+              this.activeInvoice.taxList = this.activeEstimate.taxList;
+            }
+            //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
+            if(this.activeEstimate.tax_rate!==0){
+              this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+            }
+
+            //settings flagLevels as per estimate was saved
+            this.activeInvoice.discount_on_item = this.activeEstimate.discount_on_item
+            this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
+
+            //disabled
+            if(this.activeInvoice.discount_on_item == 2){
+              this.settings.discountFlagLevel = 2;
+            }
+            if(this.activeInvoice.tax_on_item == 2){
+              this.settings.taxFlagLevel = 2;
+            }
+
+            //tax on item
+            if(this.activeInvoice.discount_on_item == 1){
+              this.settings.discountFlagLevel = 1;
+            }
+            if(this.activeInvoice.tax_on_item == 0){
+              this.settings.taxFlagLevel = 0;
+            }
+
+            
+
+            //set invoice number for making invoice
+
+            if (!isNaN(parseInt(this.settings.invNo))) {
+              // console.log(this.InvoiceNumber);
+              this.tempInvNo = parseInt(this.settings.invNo) + 1
+            } else {
+              this.tempInvNo = 1
+            }
+            if (this.settings.setInvoiceFormat) {
+              this.activeInvoice.invoice_number = this.settings.setInvoiceFormat + this.tempInvNo
+            } else {
+              this.activeInvoice.invoice_number = this.tempInvNo.toString();
+            }
+    
+            // Change list item keys compatible
+            if (this.activeEstimate.listItems) {
+              var temp = []
+              for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                
+                temp.push({
+                  description: this.activeEstimate.listItems[i].description,
+                  discount: this.activeEstimate.listItems[i].discountRate,
+                  discount_amount: this.activeEstimate.listItems[i].discountAmt,
+                  tax_amount: this.activeEstimate.listItems[i].taxAmount,
+                  product_name: this.activeEstimate.listItems[i].productName,
+                  quantity: this.activeEstimate.listItems[i].qty,
+                  rate: this.activeEstimate.listItems[i].rate,
+                  tax_rate: this.activeEstimate.listItems[i].taxRate,
+                  total: this.activeEstimate.listItems[i].price,
+                  unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                  unit: this.activeEstimate.listItems[i].unit
+                })
+              }
+              this.activeInvoice.listItems = temp
+            }
+            // Change TnC keys compatible
+            if (this.activeEstimate.termsAndConditions) {
+              temp = []
+              for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+                temp.push({
+                  orgId: this.activeEstimate.termsAndConditions[i].orgId,
+                  terms: this.activeEstimate.termsAndConditions[i].termsConditionText,
+                  uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms,
+                  _id: this.activeEstimate.termsAndConditions[i]._id
+                })
+              }
+              this.activeInvoice.termsAndConditions = temp
+            } 
+            //set reference no of estimate
+            this.activeInvoice.reference =  this.activeEstimate.estimate_number;
+            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.amount = this.activeEstimate.amount;
+            this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
+            this.activeInvoice.discount = this.activeEstimate.discount;
+            
+            
+            this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
+            this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
+            this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
+
+            this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
+            this.activeInvoice.adjustment = this.activeEstimate.adjustment;
+            this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
+            
+            // Set Dates
+            this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
+            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+            this.invoiceDate.reset(new Date(y, (m - 1), d))
+
+            
+            // Tax and discounts show or hide
+            if (this.activeEstimate.discount == 0) {
+              this.activeInvoice.percentage_flag = null
+            }
+            if (this.activeEstimate.shipping_charges == 0) {
+              this.activeInvoice.shipping_charges = undefined
+            }
+            if (this.activeEstimate.adjustment == 0) {
+              this.activeInvoice.adjustment = null
+            }
+            if (this.activeEstimate.tax_amount == 0) {
+              this.activeInvoice.tax_rate = null
+            }
+    
+            
+            // Wait for clients to be loaded before setting active client
+            var ref = setInterval(() => {
+              if (this.clientList.length > 0) {
+                //here we set unique_key_fk_client of invoice from estimate unique_key_fk_client to view and edit what we added newly created invoice from estimate
+                this.activeInvoice.unique_key_fk_client = this.activeEstimate.unique_key_fk_client;
+                let uid = this.activeInvoice.unique_key_fk_client
+                this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                this.billingTo.reset(this.activeClient)
+                clearInterval(ref)
+              }
+            }, 50)
+          } else {
+            // this.toasterService.pop('failure', 'Invalid estimate id');
+            this.router.navigate(['/estimate/view'])
+          }
       } 
        
   }
@@ -1606,8 +1612,7 @@ export class AddEditComponent implements OnInit {
           this.toasterService.pop('success', 'Invoice saved successfully');
           this.updateSettings();
           self.resetCreateInvoice()
-          self.addInit()
-          // this.router.navigate(['/invoice/add'])
+          this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }
          else if(!this.edit) {
           //set recently added invoice list in store
