@@ -11,7 +11,7 @@ import { retryWhen, flatMap } from 'rxjs/operators';
 import { interval, throwError, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators'
 import { CONSTANTS } from '../../../constants'
-import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices, estimate } from '../../../interface'
+import { response, client, invoice, terms, setting, product, addEditEstimate, recentInvoices, estimate, recentEstimates } from '../../../interface'
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
@@ -101,8 +101,8 @@ export class AddEditComponent implements OnInit {
     },
     setting: setting
   }
-  noAdjustment:boolean = false;
-  noShippingCharges : boolean = false;
+  noAdjustment:boolean = true;
+  noShippingCharges : boolean = true;
   shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
@@ -115,6 +115,7 @@ export class AddEditComponent implements OnInit {
   InvoiceId: any;
   InvoiceNumber: string;
   recentInvoiceList: recentInvoices[];
+  recentEstimateList: recentEstimates[];
   disabledDescription: boolean = false;
   viewTodaysInvoice: boolean = false;
   viewNextInvoice: boolean;
@@ -152,7 +153,10 @@ export class AddEditComponent implements OnInit {
     store.select('terms').subscribe(terms => this.termList = terms)
     store.select('invoice').subscribe(invoices => this.invoiceList = invoices)
     store.select('recentInvoices').subscribe(recentInvoices => this.recentInvoiceList = recentInvoices)
-    store.select('estimate').subscribe(estimates => this.estimateList = estimates)
+    store.select('estimate').subscribe(estimates => this.estimateList = estimates);
+    store.select('recentEstimates').subscribe(estimates => this.recentEstimateList = estimates);
+
+    
 
 
 
@@ -301,39 +305,40 @@ export class AddEditComponent implements OnInit {
 
     if(this.activeInvoice){
 
+
       this.invoiceListLoading = false;
+
+      if(this.activeInvoice.discount > 0){
+        this.settings.discountFlagLevel = 0
+        this.noDiscountOnItem = false;
+      }
+  
+      if(this.activeInvoice.tax_rate > 0){
+        this.noTaxOnItem = false;
+      }
         
-        if(this.activeInvoice.discount_on_item == 1){
-          this.noDiscountOnItem = true;
-          this.settings.discountFlagLevel = 1;
-        }else{
-          this.noDiscountOnItem = false;
-        }
-    
-        if(this.activeInvoice.tax_on_item == 0){
-          this.noTaxOnItem = true;
-          this.settings.taxFlagLevel = 0;
-        }else{
-          this.noTaxOnItem = false;
-        }
+      if(this.activeInvoice.discount_on_item == 1){
+        this.noDiscountOnItem = true;
+        this.settings.discountFlagLevel = 1; //saved discount on item so disable discount on bill
+      }else if(this.activeInvoice.discount_on_item == 2){
+        this.settings.discountFlagLevel = 2; //if discount is disabled
+      }else{
+        this.noDiscountOnItem = false;
+      }
+      
+  
+      if(this.activeInvoice.tax_on_item == 0){
+        this.noTaxOnItem = true;
+        this.settings.taxFlagLevel = 0;
+      }else if(this.activeInvoice.tax_on_item == 2){
+        this.settings.taxFlagLevel = 2;//if tax is disabled
+      }else{
+        this.noTaxOnItem = false;
+      }
 
-        if(this.activeInvoice.discount > 0){
-          this.noDiscountOnItem = false;
-        }
-    
-        if(this.activeInvoice.tax_rate > 0){
-          this.noTaxOnItem = false;
-        }
+      
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-        if(this.activeInvoice.shipping_charges){
-          this.noShippingCharges = true; //activate a class if shipping value is present
-        }else{
-          this.noShippingCharges = false;
-        }
-        if(this.activeInvoice.adjustment){
-          this.noAdjustment = true;
-        }
-
+        
         
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
@@ -411,11 +416,12 @@ export class AddEditComponent implements OnInit {
         if(this.activeInvoice.discount == 0) {
           this.activeInvoice.discount = null
         }
-        if(this.activeInvoice.shipping_charges == 0) {
+        if(this.activeInvoice.shipping_charges) {
           this.noShippingCharges = false;
         }
-        if(this.activeInvoice.adjustment == 0) {
-          this.activeInvoice.adjustment = null
+
+        if(this.activeInvoice.adjustment) {
+          this.noAdjustment = false
         }
         
 
@@ -437,9 +443,21 @@ export class AddEditComponent implements OnInit {
             delete invoice.records[0].client
             delete invoice.records[0].client_id
             this.activeInvoice = {...invoice.records[0]}
+
+            if(this.activeInvoice.discount > 0){
+              this.settings.discountFlagLevel = 0
+              this.noDiscountOnItem = false;
+            }
+        
+            if(this.activeInvoice.tax_rate > 0){
+              this.noTaxOnItem = false;
+            }
+            
             if(this.activeInvoice.discount_on_item == 1){
               this.noDiscountOnItem = true;
               this.settings.discountFlagLevel = 1; //saved discount on item so disable discount on bill
+            }else if(this.activeInvoice.discount_on_item == 2){
+              this.settings.discountFlagLevel = 2; //if discount is disabled
             }else{
               this.noDiscountOnItem = false;
             }
@@ -448,22 +466,16 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.tax_on_item == 0){
               this.noTaxOnItem = true;
               this.settings.taxFlagLevel = 0;
+            }else if(this.activeInvoice.tax_on_item == 2){
+              this.settings.taxFlagLevel = 2;//if tax is disabled
             }else{
               this.noTaxOnItem = false;
             }
     
-            if(this.activeInvoice.discount > 0){
-              this.noDiscountOnItem = false;
-            }
-        
-            if(this.activeInvoice.tax_rate > 0){
-              this.noTaxOnItem = false;
-            }
+            
             this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
             
-            if(this.activeInvoice.adjustment){
-              this.noAdjustment = true;
-            }
+            
             // Change list item keys compatible
             if (this.activeInvoice.listItems) {
               var temp = []
@@ -523,11 +535,11 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.discount == 0) {
               this.activeInvoice.discount = null
             }
-            if(this.activeInvoice.shipping_charges == 0) {
+            if(this.activeInvoice.shipping_charges) {
               this.noShippingCharges = false;
             }
-            if(this.activeInvoice.adjustment == 0) {
-              this.activeInvoice.adjustment = null
+            if(this.activeInvoice.adjustment) {
+              this.noAdjustment = false;
             }
     
             this.changeDueDate(this.activeInvoice.due_date_flag.toString())
@@ -549,11 +561,15 @@ export class AddEditComponent implements OnInit {
             this.incrementInvNo = true;
             //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
             this.edit = false;
-            this.estimateListLoading = true;
-            this.estimateService.fetchById([invId]).subscribe((estimate: any) => {
-              this.estimateListLoading = false;
-              if (estimate.records !== null) {
-                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+            this.activeEstimate = this.estimateList.find(x => x.unique_identifier === invId); //when came from view component
+
+            if(this.recentEstimateList.length > 0 && !this.activeEstimate){ //invoice from view today's page
+            this.estimateList = [];
+            this.activeEstimate = this.recentEstimateList.find(inv => inv.unique_identifier == invId); //when came from todays component
+            }
+            
+              if (this.activeEstimate) {
+                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
                 this.shippingAddressEditMode = true
                 this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
                 if (this.activeEstimate.taxList){
@@ -562,15 +578,29 @@ export class AddEditComponent implements OnInit {
                 //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
                 if(this.activeEstimate.tax_rate!==0){
                   this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-                  this.activeInvoice.tax_on_item=1;
-                }else{
-                  this.activeInvoice.tax_on_item=0;
                 }
-                if(this.activeEstimate.discount!==0){
-                  this.activeInvoice.discount_on_item=0;
-                }else{
-                  this.activeInvoice.discount_on_item=1;
+
+                //settings flagLevels as per estimate was saved
+                this.activeInvoice.discount_on_item = this.activeEstimate.discount_on_item
+                this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
+
+                //disabled
+                if(this.activeInvoice.discount_on_item == 2){
+                  this.settings.discountFlagLevel = 2;
                 }
+                if(this.activeInvoice.tax_on_item == 2){
+                  this.settings.taxFlagLevel = 2;
+                }
+
+                //tax on item
+                if(this.activeInvoice.discount_on_item == 1){
+                  this.settings.discountFlagLevel = 1;
+                }
+                if(this.activeInvoice.tax_on_item == 0){
+                  this.settings.taxFlagLevel = 0;
+                }
+
+                
 
                 //set invoice number for making invoice
 
@@ -590,6 +620,7 @@ export class AddEditComponent implements OnInit {
                 if (this.activeEstimate.listItems) {
                   var temp = []
                   for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                    
                     temp.push({
                       description: this.activeEstimate.listItems[i].description,
                       discount: this.activeEstimate.listItems[i].discountRate,
@@ -668,12 +699,9 @@ export class AddEditComponent implements OnInit {
                   }
                 }, 50)
               } else {
-                this.toasterService.pop('failure', 'Invalid estimate id');
+                // this.toasterService.pop('failure', 'Invalid estimate id');
                 this.router.navigate(['/estimate/view'])
               }
-            },error => this.openErrorModal())
-            // this.toasterService.pop('failure', 'Invalid invoice id!');
-            // this.router.navigate(['/invoice/view'])
           } 
           return false
         },
@@ -734,11 +762,8 @@ export class AddEditComponent implements OnInit {
       this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
     if (settings) {
-      if(settings.discountFlagLevel == 2 && settings.taxFlagLevel == 2 ){
-        this.taxtext = "Tax (Disabled)"
         this.activeInvoice.tax_on_item = 2
         this.activeInvoice.discount_on_item = 2
-      }
       
 
       if (settings.taxFlagLevel == 0) {

@@ -115,7 +115,6 @@ export class AddEditEstComponent implements OnInit {
   settingsLoading: boolean;
   estimateId: any;
   disabledDescription: boolean = false;
-  discountFlag: any;
   viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
   noProductSelected: boolean = false;
@@ -243,8 +242,6 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeEstimate){
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
-      
-        this.discountFlag = this.activeEstimate.discountFlag;
 
         if(this.activeEstimate.discount > 0){
           this.noDiscountOnItem = false;
@@ -367,7 +364,6 @@ export class AddEditEstComponent implements OnInit {
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
-        this.discountFlag = estimate.records[0].discountFlag;
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
 
         if(this.activeEstimate.discount_on_item == 1){

@@ -231,25 +231,6 @@ export interface recentInvoices {
 }
 
 export interface estimate {
-  //for make invoice
-
-  balance: number
-  client_id: number
-  deletedItems: Array<{}>
-  deletedPayments: Array<{}>
-  deletedTerms: Array<{}>
-  discount_amount : number
-  due_date: string
-  due_date_flag: number
-  id: number
-  invoiceNote: string
-  invoice_number: string
-  payments: Array<any>
-  push_flag: number
-  reference: string
-  _id: number
-  
-  //for make invoice ends
   adjustment: number
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
@@ -299,71 +280,52 @@ export interface estimate {
 }
 
 export interface recentEstimates {
-   //for make invoice
-
-   balance: number
-   client_id: number
-   deletedItems: Array<{}>
-   deletedPayments: Array<{}>
-   deletedTerms: Array<{}>
-   discount_amount : number
-   due_date: string
-   due_date_flag: number
-   id: number
-   invoiceNote: string
-   invoice_number: string
-   payments: Array<any>
-   push_flag: number
-   reference: string
-   _id: number
-   
-   //for make invoice ends
-   adjustment: number
-   alstQuotProduct: Array<any>
-   alstQuotTermsCondition: Array<any>
-   amount: number
-   assignDiscountFlag: number
-   assignTaxFlag: number
-   createDate: string
-   deviceCreatedDate: number
-   discount: number
-   discountFlag: number
-   enabled: number
-   epochTime: number
-   grossAmount: number
-   localClientId: number
-   localId: number
-   organizationId: number
-   percentageValue: number
-   pushFlag: number
-   quetationNo: string
-   serverClientId: number
-   serverUpdateTime: number
-   shippingAddress: string
-   shippingCharges: number
-   taxAmt: number
-   taxrate: number
-   version: number
-   created_date: string
-   deleted_flag: number
-   device_modified_on: number
-   discount_on_item: number
-   estimate_number: string
-   gross_amount: number
-   listItems: Array<any>
-   organization_id: number
-   percentage_flag: number
-   percentage_value: number
-   shipping_address: string
-   shipping_charges: number
-   taxList: Array<any>
-   tax_amount: number
-   tax_on_item: number
-   tax_rate: number
-   epoch: number,
-   termsAndConditions: Array<any>
-   unique_identifier: string
-   unique_key_fk_client: string
+  adjustment: number
+  alstQuotProduct: Array<any>
+  alstQuotTermsCondition: Array<any>
+  amount: number
+  assignDiscountFlag: number
+  assignTaxFlag: number
+  createDate: string
+  deviceCreatedDate: number
+  discount: number
+  discountFlag: number
+  enabled: number
+  epochTime: number
+  grossAmount: number
+  localClientId: number
+  localId: number
+  organizationId: number
+  percentageValue: number
+  pushFlag: number
+  quetationNo: string
+  serverClientId: number
+  serverUpdateTime: number
+  shippingAddress: string
+  shippingCharges: number
+  taxAmt: number
+  taxrate: number
+  version: number
+  created_date: string
+  deleted_flag: number
+  device_modified_on: number
+  discount_on_item: number
+  estimate_number: string
+  gross_amount: number
+  listItems: Array<any>
+  organization_id: number
+  percentage_flag: number
+  percentage_value: number
+  shipping_address: string
+  shipping_charges: number
+  taxList: Array<any>
+  tax_amount: number
+  tax_on_item: number
+  tax_rate: number
+  epoch: number,
+  termsAndConditions: Array<any>
+  unique_identifier: string
+  unique_key_fk_client: string
 }
 
 export interface addEditEstimate {
@@ -375,6 +337,7 @@ export interface addEditEstimate {
   discountFlag: number,
   enabled: number,
   epochTime: number,
+  epoch: number,
   grossAmount: number,
   localClientId: number,
   localId: number,
@@ -382,42 +345,24 @@ export interface addEditEstimate {
   percentageValue: number,
   pushFlag: number,
   quetationNo: string,
+  serverUpdateTime: number,
   shippingAddress: string,
   shippingCharges: number,
   taxAmt: number,
   taxrate: number,
-  estimate_number: string
-  deviceCreatedDate: number
-  serverClientId: number
-  //make invoice variables
   adjustment: number
   amount: number
-  balance: number
-  client_id: number
   created_date: string
-  deletedItems: Array<{}>
-  deletedPayments: Array<{}>
-  deletedTerms: Array<{}>
   deleted_flag: number
   device_modified_on: number
   discount: number
-  discount_amount : number
   discount_on_item: number
-  due_date: string
-  due_date_flag: number
-  epoch: number
+  estimate_number: string
   gross_amount: number
-  id: number
-  invoiceNote: string
-  invoice_number: string
   listItems: Array<any>
   organization_id: number
-  payments: Array<any>
   percentage_flag: number
   percentage_value: number
-  push_flag: number
-  reference: string
-  serverUpdateTime: number
   shipping_address: string
   shipping_charges: number
   taxList: Array<any>
@@ -428,5 +373,6 @@ export interface addEditEstimate {
   unique_identifier: string
   unique_key_fk_client: string
   version: number
-  _id: number
+  deviceCreatedDate: number
+  serverClientId: number
 }

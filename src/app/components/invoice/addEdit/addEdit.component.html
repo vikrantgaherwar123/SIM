@@ -214,13 +214,13 @@
                             value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}" />
                         </td>
                         <td width="9%"
-                          *ngIf=" activeInvoice.discount_on_item == 1"><!--|| showDiscountRate !==0 && showDiscountRateFlag == true-->
+                          *ngIf=" activeInvoice.discount_on_item === 1 "><!--|| showDiscountRate !==0 && showDiscountRateFlag == true-->
                           <input type="text" id="itemDiscountLabel" class="bld w-100 text_right" name="discount"
                             disabled value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                             />
                         </td>
                         <td width="9%"
-                          *ngIf="activeInvoice && activeInvoice.tax_on_item === 0"><!--|| showTaxRate!==0 && showTaxRateFlag == true-->
+                          *ngIf="activeInvoice.tax_on_item === 0 "><!--|| showTaxRate!==0 && showTaxRateFlag == true-->
                           <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="tax-rate" disabled
                             
                             value="Tax (%)"/>
@@ -265,8 +265,7 @@
                             {{item.rate | number:'1.2-2'}}
                           </div>
                         </td>
-                        <!-- removed this flag for make invoice && noDiscountOnItem == true -->
-                        <td *ngIf="activeInvoice.discount_on_item == 1 " [class.no-border-last]="last"> 
+                        <td *ngIf="activeInvoice.discount_on_item === 1" [class.no-border-last]="last">
                             <div class="text_right">
                               {{item.discount_amount | number:'1.2-2'}}<br>
                               <div class="amount_text_div">
@@ -275,8 +274,7 @@
                               </div>
                             </div>
                         </td>
-                        <!-- removed this flag for make invoice && noTaxOnItem -->
-                        <td *ngIf="activeInvoice && activeInvoice.tax_on_item === 0" [class.no-border-last]="last">
+                        <td *ngIf="activeInvoice.tax_on_item === 0 " [class.no-border-last]="last">
                           <div class="text_right">
                             {{item.tax_amount | number:'1.2-2'}}<br>
                             <div class="amount_text_div">
@@ -426,20 +424,20 @@
                     </span>
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noShippingCharges , 'addLabelBackroundColor':noShippingCharges}"
-                       (click)="activeInvoice.shipping_charges = 0;noShippingCharges = true">
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noShippingCharges , 'addLabelBackroundColor':!noShippingCharges}"
+                       (click)="activeInvoice.shipping_charges = 0;noShippingCharges = false">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
                     </div>
-                    <div *ngIf="settings.taxFlagLevel == 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
+                    <div *ngIf="settings.taxFlagLevel == 1 || activeInvoice.tax_on_item === 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
                       <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeInvoice.tax_on_item === 2 , 'addLabelBackroundColor':activeInvoice.tax_on_item === 1}"
                         (click)="activeInvoice.tax_on_item=1">Tax &nbsp;+</span><!--;activeInvoice.tax_rate = null-->
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
-                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!noAdjustment ,
-                       'addLabelBackroundColor':noAdjustment}"
-                       (click)="activeInvoice.adjustment = 0;noAdjustment = true">
+                      <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment ,
+                       'addLabelBackroundColor':!noAdjustment}"
+                       (click)="activeInvoice.adjustment = 0;noAdjustment = false">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
@@ -511,7 +509,7 @@
                     </div>
 
                     <!-- Discounts -->
-                    <div class="row mr_right mr_4" *ngIf="activeInvoice.discount_on_item === 0">
+                    <div class="row mr_right mr_4" *ngIf="activeInvoice.discount_on_item === 0 && settings.discountFlagLevel == 0">
                       <div class="col-4 discount-tax-label pr-0">
                         <span style="text-align: left;vertical-align: bottom;">
                           {{settings.discount ? settings.discount : 'Discount'}}
@@ -636,7 +634,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div class="row mr_right mr_4" *ngIf="noShippingCharges">
+                    <div class="row mr_right mr_4" *ngIf="activeInvoice.shipping_charges || !noShippingCharges">
                       <div class="col-4 discount-tax-label ">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
@@ -653,7 +651,7 @@
 
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector padr0"
-                                (click)="activeInvoice.shipping_charges = undefined;noShippingCharges = false;calculateInvoice()">
+                                (click)="activeInvoice.shipping_charges = undefined;noShippingCharges = true;calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt=""
                                   class="hg_20 cross_label_img img_hover">
                               </div>
@@ -665,7 +663,7 @@
 
                     <!-- Adjustment -->
                     <div class="row mr_right mr_4"
-                      *ngIf="activeInvoice.adjustment !== null && activeInvoice.adjustment !== undefined">
+                      *ngIf="activeInvoice.adjustment || !noAdjustment">
                       <div class="col-4 discount-tax-label pr-0 ">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} (-)
@@ -684,7 +682,7 @@
                             <!-- <div class="input-group-addon set-color">%</div>-->
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector"
-                                (click)="activeInvoice.adjustment = undefined;noAdjustment = false; calculateInvoice()">
+                                (click)="activeInvoice.adjustment = undefined;noAdjustment = true; calculateInvoice()">
                                 <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img img_hover">
                               </div>
                             </div>
@@ -816,13 +814,13 @@
           <!-- Previous Invoices Button ends -->
           <div class="col-1"></div>
         </div>
-        <!-- <div class="row" style="margin: 0 auto;">
-          <button *ngIf="viewTodaysInvoice == true || edit" type="button"
+        <div class="row" style="margin: 0 auto;">
+          <button *ngIf="edit" type="button"
             class="col-12 btn btnd btn-custom-2 no-border-radius side_btn add_invoice"
             (click)="addNewInvoice()">Add New Invoice
             <i class="fa fa-plus" style="padding: 12px 0px"></i>
           </button>
-        </div> -->
+        </div>
         <!-- recently added invoice -->
         <div *ngIf="invoiceList" class="row" style="margin-top: 22px;">
           <div
