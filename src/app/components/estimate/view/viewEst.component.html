@@ -223,7 +223,7 @@
                     <td width="10%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="10%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings ">
+                    <td width="10%" *ngIf="noDiscountOnItem || activeEst.assignDiscountFlag == 1 && settings">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                     </td>
                     <td width="10%" *ngIf="noTaxOnItem ||activeEst.assignTaxFlag === 0">

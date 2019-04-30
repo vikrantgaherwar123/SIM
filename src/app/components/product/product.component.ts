@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core'
 import { ProductService } from '../../services/product.service'
 import { generateUUID } from '../../globalFunctions'
 import { Router } from '@angular/router'
@@ -10,14 +10,16 @@ import { AppState } from '../../app.state'
 import {ToasterService} from 'angular2-toaster';
 import { SettingService } from '../../services/setting.service'
 import { Title }     from '@angular/platform-browser';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
-export class ProductComponent implements OnInit {
-
+export class ProductComponent implements OnInit { 
+@Input()
+multi: boolean
   private user: {
     user: {
       orgId: string
@@ -254,6 +256,14 @@ export class ProductComponent implements OnInit {
     $('#errormessage').modal('show')
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
+  }
+  addClientModal() {
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+    })
+  }
+  closeItemModel() {
+    $('#add-client').modal('hide')
   }
 
   loadMore() {

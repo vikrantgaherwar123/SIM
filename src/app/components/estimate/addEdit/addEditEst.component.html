@@ -303,7 +303,7 @@
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                 </span>
                 </div>
-                <div *ngIf="settings.taxFlagLevel === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
+                <div *ngIf="settings.taxFlagLevel === 1 || activeEstimate.tax_on_item === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':activeEstimate.tax_on_item === 2 , 'addLabelBackroundColor':activeEstimate.tax_on_item === 1}"
                    (click)="activeEstimate.tax_on_item=1">Tax+</span>
                 </div>

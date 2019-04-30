@@ -67,15 +67,15 @@
           <label class="check">
               <div class="checkbox default_checkbox col-1">
                 <input type="checkbox" name="default{{index}}" id="default{{index}}" (click)="setDeafulTerm(index)" [checked]="term.setDefault =='DEFAULT'"
-                  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                  class="ng-pristine ng-valid ng-touched modal-checkbox" style="zoom: 1.5;">
                 <span class="checkmark"></span>
               </div>
             </label>
-            <div class="col-9" style="left: -2%;">
+            <div class="col-7" style="left: -2%;">
               <div style="white-space: pre-wrap;word-break: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
             </div>
           
-            <div class="col-2 text-right" style="margin-left: 30px;">
+            <div class="col-3 text-right" style="margin-left: 100px;">
               <span>
               <img (click)="openDeleteTermModal(index)" class="img_hover" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>
