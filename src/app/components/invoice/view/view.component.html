@@ -306,7 +306,7 @@
                   <div class="col-7">
                     <div class="text-right">
                       <div *ngIf="!activeInv.discountFlag == 0">
-                        {{activeInv.percentageValue | number:'2.'}}
+                        {{activeInv.percentageValue | number:'1.1-2'}}
                       </div>
                       <div  class="price" *ngIf="!activeInv.discountFlag == 1">
                         {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
@@ -323,7 +323,7 @@
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeInv.tax_amount | number:'1.1-2'}}
+                      {{activeInv.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                     </div>
                   </div>
                 </div>
@@ -337,7 +337,7 @@
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                        {{activeInv.taxList[index].calculateValue | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                       </div>
                     </div>
                   </div>
@@ -350,7 +350,7 @@
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeInv.shipping_charges | number:'1.1-2'}}
+                      {{activeInv.shipping_charges | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                     </div>
                   </div>
                 </div>
@@ -364,6 +364,7 @@
                   </div>
                   <div class="col-8">
                     <div class="text-right">
+                      {{activeInv.shipping_charges | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                       {{activeInv.adjustment | number:'1.1-2'}}
                     </div>
                   </div>

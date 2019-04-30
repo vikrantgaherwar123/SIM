@@ -58,12 +58,19 @@
         <!-- Terms And Conditions List -->
         <div class="col-12 mb-1 mCustomScrollbar style-3" style="margin-bottom: 7.25rem!important;">
           <div class="row term-list-show" *ngFor="let term of tncs | orderBy:'term':'asc' ; let index = index ;" id="term{{index}}">
-          <label class="check">
+          <!-- <label class="check">
             <div class="col-1">
               <input type="checkbox" name="default{{index}}" id="default{{index}}" (click)="setDeafulTerm(index)" [checked]="term.setDefault =='DEFAULT'">
               <span class="checkmark"></span>
             </div>
-          </label>
+          </label> -->
+          <label class="check">
+              <div class="checkbox default_checkbox col-1">
+                <input type="checkbox" name="default{{index}}" id="default{{index}}" (click)="setDeafulTerm(index)" [checked]="term.setDefault =='DEFAULT'"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                <span class="checkmark"></span>
+              </div>
+            </label>
             <div class="col-9" style="left: -2%;">
               <div style="white-space: pre-wrap;word-break: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
             </div>
