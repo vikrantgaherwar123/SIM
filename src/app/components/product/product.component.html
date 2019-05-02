@@ -23,7 +23,9 @@
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         <div class="col-12 row">
-                          <div class="col-4">{{ product.prodName }}</div>
+                          <div class="col-4">
+                            <img src="assets/images/product_box_blue.png" class="img_box">
+                            {{ product.prodName }}</div>
                           <div class="col-2 text_center">{{ product.rate}}</div>
                           <div class="col-2 text_center">{{ product.taxRate }}</div>
                           <div class="col-2 text_center">{{ product.unit }}</div>
@@ -112,7 +114,7 @@
                 onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}" />
             </div>
 
-            <div class="col-12">
+            <div class="row col-12">
               Tax Rate:
               <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
                 [(ngModel)]="activeProduct.taxRate" onfocus="this.select()" />
@@ -122,11 +124,11 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn save_btn" (click)="closeItemModel()">
+        <button type="button" class="btn change_bg change_btn_width" (click)="closeItemModel()">
           Close
         </button>
         <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
-          class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2">
+          class="btn save_btn btn-raised width25btn pull-right ml-2">
           Save
         </button>
       </div>
