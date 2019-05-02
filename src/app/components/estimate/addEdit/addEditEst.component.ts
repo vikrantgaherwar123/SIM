@@ -1248,7 +1248,7 @@ export class AddEditEstComponent implements OnInit {
           })
         } else {
           self.store.dispatch(new estimateActions.recentEstimate([this.estimateService.changeKeysForStore(response.quotationList[0])]))
-          this.router.navigate([`viewtodaysestimate/${response.quotationList[0].unique_identifier}`]);
+          
         }
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
        if(!this.edit) {
@@ -1257,6 +1257,7 @@ export class AddEditEstComponent implements OnInit {
           this.updateSettings();
           self.resetFormControls()
           self.addInit()
+          this.router.navigate([`viewtodaysestimate/${response.quotationList[0].unique_identifier}`]);
         }
       }
       $('#estSubmitBtn').removeAttr('disabled')
