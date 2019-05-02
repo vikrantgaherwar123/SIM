@@ -115,16 +115,17 @@ export class AddEditEstComponent implements OnInit {
   settingsLoading: boolean;
   estimateId: any;
   disabledDescription: boolean = false;
-  viewTodaysEstimate: boolean = false;
   estListLoader: boolean;
   noProductSelected: boolean = false;
   noClientSelected: boolean = false;
   errorMessage: any;
   defaultChecked: boolean;
-  noDiscountOnItem: boolean;
-  noTaxOnItem: boolean;
+  noDiscountOnItem: boolean = true;
+  noTaxOnItem: boolean = true;
   recentEstListLoading: boolean;
   noRecentEstimate: boolean;
+  noShippingCharges: boolean = true;
+  noAdjustment: boolean = true;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -243,13 +244,34 @@ export class AddEditEstComponent implements OnInit {
       this.recentEstListLoading = false;
       //adjust the store variables in our used variables
 
-        if(this.activeEstimate.discount > 0){
+        //if item and Disabled condition  
+        if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
+          this.noDiscountOnItem = true;
+        }
+
+        if(this.activeEstimate.tax_on_item == 0 || this.activeEstimate.tax_on_item == 2){
+          this.noTaxOnItem = true;
+        }
+
+        //if Bill setting
+        if(this.activeEstimate.discount_on_item == 0){
           this.noDiscountOnItem = false;
         }
-    
-        if(this.activeEstimate.tax_rate > 0){
+
+        if(this.activeEstimate.tax_on_item == 1){
           this.noTaxOnItem = false;
         }
+
+        //shipping & adjustment
+        if(this.activeEstimate.shipping_charges){
+          this.noShippingCharges = false
+        }
+        if(this.activeEstimate.adjustment){
+          this.noAdjustment = false
+        }
+
+        //set balnce 
+        this.balance = this.activeEstimate.amount;
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -366,26 +388,42 @@ export class AddEditEstComponent implements OnInit {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
 
-        if(this.activeEstimate.discount_on_item == 1){
+        //if item and Disabled condition  
+        if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
           this.noDiscountOnItem = true;
-          this.activeEstimate.tax_on_item = 0; //this is a condition when user saved est by tax on item it was 2 we set it to 0 
-        }else{
+        }
+
+        if(this.activeEstimate.tax_on_item == 0 || this.activeEstimate.tax_on_item == 2){
+          this.noTaxOnItem = true;
+        }
+        
+        //item settings
+        //this.activeEstimate.tax_on_item = 0
+        //this.activeEstimate.discount_on_item = 1
+
+        //Bill settings
+        //this.activeEstimate.tax_on_item = 1
+        //this.activeEstimate.discount_on_item = 0
+
+        //if Bill setting
+        if(this.activeEstimate.discount_on_item == 0){
           this.noDiscountOnItem = false;
         }
-    
-        if(this.activeEstimate.tax_on_item == 0){
-          this.noTaxOnItem = true;
-        }else{
+
+        if(this.activeEstimate.tax_on_item == 1){
           this.noTaxOnItem = false;
         }
 
-        if(this.activeEstimate.discount > 0){
-          this.noDiscountOnItem = false;
+        //shipping & adjustment
+        if(this.activeEstimate.shipping_charges){
+          this.noShippingCharges = false
         }
-    
-        if(this.activeEstimate.tax_rate > 0){
-          this.noTaxOnItem = false;
+        if(this.activeEstimate.adjustment){
+          this.noAdjustment = false
         }
+        //set balance
+        this.balance = this.activeEstimate.amount;
+        
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -530,7 +568,24 @@ export class AddEditEstComponent implements OnInit {
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
         this.activeEstimate.tax_on_item = 0
+        this.noTaxOnItem = true;
       }
+
+      //keep open tax field when tax on bill
+      if (settings.taxFlagLevel == 1) {
+        this.activeEstimate.tax_on_item = 1
+        this.activeEstimate.tax_rate = 0;
+        this.noTaxOnItem = false;
+      }
+
+      //keep open discount field when discount on bill && make default % choice as selected for discount
+      if(this.settings.discountFlagLevel == 0){
+        this.activeEstimate.discount_on_item = 0;
+        this.activeEstimate.percentage_flag=1;
+        this.activeEstimate.percentage_value=0;
+        this.noDiscountOnItem = false;
+      }
+
       if (settings.discountFlagLevel == 1) {
         this.activeEstimate.discount_on_item = 1
       }
@@ -627,7 +682,7 @@ export class AddEditEstComponent implements OnInit {
         if (response.termsAndConditionList) {
           this.store.dispatch(new termActions.add(response.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
         }
-        if(this.activeEstimate){
+        if(this.activeEstimate && !this.edit){
           this.activeEstimate.termsAndConditions = this.termList.filter(trm => trm.setDefault == 'DEFAULT')
         }
         
@@ -1376,7 +1431,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   setActiveEst(estId: string = '') {
-    this.viewTodaysEstimate = true;
     this.estimateId = estId;
     this.estimateListLoading = true;
     this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
@@ -1451,7 +1505,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   goEdit(estId) {
-    this.viewTodaysEstimate = true;
     this.router.navigate([`estimate/edit/${estId}`])
   }
 
@@ -1465,7 +1518,6 @@ export class AddEditEstComponent implements OnInit {
 
   
   addNewEstimate(){
-    this.viewTodaysEstimate = false;
     this.estimateId = '';
     this.activeClient = <client>{}
     this.shippingAddress = null;
