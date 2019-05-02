@@ -298,11 +298,8 @@
                 <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 6px;">
                     <div class="col-5 discount-tax-label">
                         <span style="text-align: left;vertical-align: bottom;"
-                          class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                        <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
-                          ({{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
-                        </div>
-                        <div *ngIf="activeInv.percentage_flag == 1" class="inline font-custom">({{activeInv.percentage_value}} %)</div>
+                          class="inline">(-){{settings.discount ? settings.discount : 'Discount'}}</span>
+                        
                       </div>
                   <div class="col-7">
                     <div class="text-right">
@@ -310,6 +307,8 @@
                         {{activeInv.percentageValue | number:'1.1-2'}}
                       </div>
                       <div  class="price" *ngIf="!activeInv.discountFlag == 1">
+                        
+                        <div *ngIf="activeInv.percentage_flag == 1" class="inline font-custom">({{activeInv.percentage_value}} %)</div>
                         {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                       </div>
                     </div>
@@ -319,11 +318,11 @@
                 <!-- Tax -->
                 <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                    <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
+                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+)Tax</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
+                        ({{activeInv.tax_rate | number:'1.1-2'}} %)
                       {{activeInv.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
                     </div>
                   </div>
@@ -333,7 +332,7 @@
                 <div *ngIf="activeInv.taxList !== 0">
                   <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                     <div class="col-4 discount-tax-label">
-                        <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
+                        <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+){{tax.taxName}}</div>
                         <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
                     </div>
                     <div class="col-8 ">
@@ -347,7 +346,7 @@
                 <!-- Shipping -->
                 <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">(-){{settings.shipping ? settings.shipping : 'Shipping'}}</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
@@ -360,7 +359,7 @@
                 <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
                     <div class="inline" style="text-align: left; vertical-align: bottom;">
-                        {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
+                        (-){{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                     </div>
                   </div>
                   <div class="col-8">

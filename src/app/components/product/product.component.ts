@@ -27,7 +27,7 @@ multi: boolean
     setting: any
   }
   productList: product[]
-  private activeProduct = <product>{}
+  public activeProduct = <product>{}
   productListLoading: boolean = false
   sortTerm: string
   searchTerm: string
@@ -257,13 +257,21 @@ multi: boolean
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
-  addClientModal() {
-    $('#add-client').modal('show')
-    $('#add-client').on('shown.bs.modal', (e) => {
+  addProductModal() {
+    $('#add-product').modal('show')
+    $('#add-product').on('shown.bs.modal', (e) => {
     })
   }
   closeItemModel() {
-    $('#add-client').modal('hide')
+    $('#add-product').modal('hide')
+  }
+  editProductModal() {
+    $('#edit-product').modal('show')
+    $('#edit-product').on('shown.bs.modal', (e) => {
+    })
+  }
+  closeEditProductModel() {
+    $('#edit-product').modal('hide')
   }
 
   loadMore() {

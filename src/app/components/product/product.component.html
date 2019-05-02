@@ -2,8 +2,8 @@
   <div class="col-12" id="main" style="background-color: #ffffff !important;">
     <div class="row pro_row">
       <h3 class="pro_heading">Products</h3>
-      <button type="button" id="saveClientButton" class="btn save_btn"
-      (click)="addClientModal()">
+      <button type="button" class="btn save_btn"
+      (click)="addProductModal()">
       + Add Product
     </button>
     </div>
@@ -31,7 +31,7 @@
                           <div class="col-2 text_center">{{ product.unit }}</div>
                           <div class="col-2 row">
                             <div class="col-1" style="padding-left: 102px;">
-                                <img src="assets/images/edit_blue.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                                <img src="assets/images/edit_blue.png" Title="Delete" alt="" (click)="editProductModal()" class="hg_20 cross_label_img">
                             </div>
                             <div class="col-1">
                                 <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
@@ -67,8 +67,8 @@
 
 
 <!-- accordian development -->
-<!-- Add Client Modal -->
-<div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+<!-- Add product Modal -->
+<div id="add-product" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-md term_popup_modal">
     <div class="modal-content">
@@ -127,7 +127,7 @@
         <button type="button" class="btn change_bg change_btn_width" (click)="closeItemModel()">
           Close
         </button>
-        <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
+        <button type="button" id="updateProBtn" 
           class="btn save_btn btn-raised width25btn pull-right ml-2">
           Save
         </button>
@@ -135,7 +135,77 @@
     </div>
   </div>
 </div>
-<!-- Add Client Modal Ends -->
+<!-- Add product Modal Ends -->
+
+<!-- Edit Client Modal -->
+<div id="edit-product" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-md term_popup_modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+               Edit Product
+            </div>
+          </div>
+      <div class="modal-body term_modal_body">
+        <form class="form-horizontal add-client-form" name="itemform" #itemform="ngForm">
+          <div class="row edit_item_row">
+            <div class="row col-12">
+             <span class="edit_span">Product Name:</span>
+             <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
+             class="form-control" maxlength="45" onfocus="this.select()" required
+             [(ngModel)]="activeProduct.prodName"
+           />
+            </div>
+
+            <div class="row">
+              <div class="col-6 tax_dis_span">
+                <span class="edit_span">Product Code:</span>
+                <input type="text" name="productCode" id="productCode" class="form-control"
+                  placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Code"
+                  [(ngModel)]="activeProduct.productCode" onfocus="this.select()" />
+              </div>
+              <div class="col-6 tax_dis_span">
+                <span class="edit_span">{{settings.mTvRate ? settings.mTvRate : 'Rate'}} (*):</span>
+                <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
+                  [(ngModel)]="activeProduct.unit" onfocus="this.select()" />
+              </div>
+            </div>
+            <div class="row col-12">
+                <span class="edit_span">Description:</span>
+                <textarea elastic name="discription" id="discription" class="form-control mCustomScrollbar style-3"
+                  placeholder="Description" style="height: 72px !important;" [(ngModel)]="activeProduct.discription"
+                  onfocus="this.select()"></textarea>
+            </div>
+            <div class="row col-12">
+              <span class="edit_span">Rate:</span>
+              <input type="number" name="rate" class="form-control" step="any" min=0.01
+                placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*" [(ngModel)]="activeProduct.rate" required
+                onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}" />
+            </div>
+
+            <div class="row col-12">
+              Tax Rate:
+              <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
+                [(ngModel)]="activeProduct.taxRate" onfocus="this.select()" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn change_bg change_btn_width" (click)="closeEditProductModel()">
+          Close
+        </button>
+        <button type="button" id="updateProBtn"
+          class="btn save_btn btn-raised width25btn pull-right ml-2">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Edit Client Modal Ends -->
 
 <!-- Error MODAL starts -->
 <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"

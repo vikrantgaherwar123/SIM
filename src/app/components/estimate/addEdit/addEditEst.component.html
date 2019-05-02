@@ -420,17 +420,14 @@
                         <input type="number" id="discount_input" name="discount_input" step="any" min="0.00" [max]="activeEstimate.gross_amount"
                           class="col-3  form-control" *ngIf="activeEstimate.percentage_flag == 0" required onfocus="this.select()"
                           [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()" />
+
                           <input type="number" id="discount_input" name="discount_input" class="form-control text_center height_40 dis_tax_label"
                            [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
                           readonly style="background-color: white;" />
+                          
                         <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector">
-                            <!--(click)="activeEstimate.discount_on_item=2;calculateEstimate();
-                                              activeEstimate.percentage_value=0;activeEstimate.discount=0;
-                                              activeEstimate.amount=activeEstimate.gross_amount;
-                                              balance=activeEstimate.gross_amount
-                                              "-->
-                            <!-- <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img"> -->
+                            
                           </div>
                         </div>
                       </div>
