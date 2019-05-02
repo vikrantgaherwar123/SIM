@@ -128,6 +128,7 @@ export class AddEditComponent implements OnInit {
   amountPaid: number = 0;
   noDiscountOnItem: boolean = true;
   noTaxOnItem: boolean = true;
+  multipleTax: boolean = false;
   currentUrl: string;
   
   constructor(private CONST: CONSTANTS,public router: Router,
@@ -241,6 +242,8 @@ export class AddEditComponent implements OnInit {
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.discount = 0;
+      this.activeInvoice.tax_rate = 0;
+      this.activeInvoice.tax_amount = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }

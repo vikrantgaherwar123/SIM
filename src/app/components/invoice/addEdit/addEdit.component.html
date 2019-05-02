@@ -428,7 +428,7 @@
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noShippingCharges , 'addLabelBackroundColor':!noShippingCharges}"
-                       (click)="noShippingCharges = !noShippingCharges;activeInvoice.shipping_charges = undefined;noShippingCharges = true;calculateInvoice()">
+                       (click)="noShippingCharges = !noShippingCharges">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
@@ -440,12 +440,12 @@
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment ,
                        'addLabelBackroundColor':!noAdjustment}"
-                       (click)="noAdjustment = !noAdjustment;activeInvoice.adjustment = undefined;noAdjustment = true; calculateInvoice()">
+                       (click)="noAdjustment = !noAdjustment">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
                     <div *ngIf="activeInvoice.taxList">
-                      <div  *ngFor="let tax of activeInvoice.taxList; let taxIndex = index">
+                      <div  *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                         <span class="inline label_span"[ngClass]="{'removeaddLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
                         'addLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
                           (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">

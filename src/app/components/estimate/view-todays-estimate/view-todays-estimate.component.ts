@@ -115,6 +115,11 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.activeEst = this.recentEstimateList.filter(est => est.unique_identifier == estId)[0]
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
+      
+      //discount on bill 
+      if(this.activeEst.discount > 0){
+        this.activeEst.assignDiscountFlag = 0;
+      }
 
       if (this.activeEst.alstQuotProduct) {
         var temp = []
@@ -143,7 +148,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
             this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
           }
           if(this.activeEst.alstQuotProduct[i].unique_identifier){
-            this.activeEst.alstQuotProduct[i].uniqueKeyFKQuotation = this.activeEst.alstQuotProduct[i].unique_identifier;
+            this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct = this.activeEst.alstQuotProduct[i].unique_identifier;
           }
           temp.push({
             description: this.activeEst.alstQuotProduct[i].description,
@@ -155,7 +160,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
             rate: this.activeEst.alstQuotProduct[i].rate,
             taxRate: this.activeEst.alstQuotProduct[i].taxRate,
             price: this.activeEst.alstQuotProduct[i].price,
-            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKQuotation,
+            uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
             unit: this.activeEst.alstQuotProduct[i].unit,
           })
         }
