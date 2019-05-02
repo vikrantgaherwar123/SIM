@@ -206,7 +206,7 @@
               </div>
 
               <!-- Discount -->
-              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0) && settings">
+              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
