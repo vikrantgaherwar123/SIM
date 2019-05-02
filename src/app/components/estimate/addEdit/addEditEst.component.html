@@ -293,7 +293,9 @@
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
                 <div *ngIf="activeEstimate.discount_on_item == 0"><!--&&  activeEstimate.discount_on_item===2 -->
                   <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noDiscountOnItem , 'addLabelBackroundColor':!noDiscountOnItem}"
-                   (click)="noDiscountOnItem  = !noDiscountOnItem">
+                   (click)="noDiscountOnItem  = !noDiscountOnItem;activeEstimate.percentage_value=0;activeEstimate.discount=0;
+                   activeEstimate.amount=activeEstimate.gross_amount;calculateEstimate();
+                   balance=activeEstimate.amount">
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </span>
                 </div>
@@ -305,7 +307,7 @@
                 </div>
                 <div *ngIf="activeEstimate.tax_on_item === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noTaxOnItem , 'addLabelBackroundColor':!noTaxOnItem}"
-                   (click)="noTaxOnItem = !noTaxOnItem">Tax+</span>
+                   (click)="noTaxOnItem = !noTaxOnItem;activeEstimate.tax_rate=0;calculateEstimate()">Tax+</span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment, 'addLabelBackroundColor':!noAdjustment}"
@@ -395,18 +397,12 @@
                       </div>
                       <ul class="dropdown-menu dropdown-menu-right">
                         <li [class.active]="activeEstimate.percentage_flag == 0">
-                          <a (click)="activeEstimate.percentage_flag = 0;
-                                                    activeEstimate.discount=0.00;
-                                                    calculateEstimate()
-                                                  ">
+                          <a (click)="activeEstimate.percentage_flag = 0;activeEstimate.discount=0.00;calculateEstimate()">
                             Flat ({{mysymbols}})
                           </a>
                         </li>
                         <li [class.active]="activeEstimate.percentage_flag == 1">
-                          <a (click)="activeEstimate.discount=0.00;
-                                                    activeEstimate.percentage_flag=1;
-                                                    calculateEstimate()
-                                                  ">
+                          <a (click)="activeEstimate.discount=0.00;activeEstimate.percentage_flag=1;calculateEstimate()">
                             Percent (%)
                           </a>
                         </li>
@@ -428,12 +424,13 @@
                            [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()"
                           readonly style="background-color: white;" />
                         <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector" (click)="activeEstimate.discount_on_item=2;calculateEstimate();
+                          <div class="addon selector">
+                            <!--(click)="activeEstimate.discount_on_item=2;calculateEstimate();
                                               activeEstimate.percentage_value=0;activeEstimate.discount=0;
                                               activeEstimate.amount=activeEstimate.gross_amount;
                                               balance=activeEstimate.gross_amount
-                                              ">
-                            <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                                              "-->
+                            <!-- <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img"> -->
                           </div>
                         </div>
                       </div>
@@ -461,9 +458,9 @@
                 
                 
                         <div class="input-group-addon pr-0 remove-button">
-                          <div class="addon selector"
-                            (click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()">
-                            <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img">
+                          <div class="addon selector">
+                            <!--(click)="activeEstimate.tax_rate=0;activeEstimate.tax_on_item=2;calculateEstimate()"-->
+                            <!-- <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img"> -->
                           </div>
                         </div>
                       </div>

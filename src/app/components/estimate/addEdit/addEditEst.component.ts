@@ -269,6 +269,9 @@ export class AddEditEstComponent implements OnInit {
         if(this.activeEstimate.adjustment){
           this.noAdjustment = false
         }
+
+        //set balnce 
+        this.balance = this.activeEstimate.amount;
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -418,6 +421,8 @@ export class AddEditEstComponent implements OnInit {
         if(this.activeEstimate.adjustment){
           this.noAdjustment = false
         }
+        //set balance
+        this.balance = this.activeEstimate.amount;
         
         
         this.shippingAddressEditMode = true
