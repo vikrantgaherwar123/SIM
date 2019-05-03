@@ -6,8 +6,38 @@
         <form #invoiceGeneratorAdd="ngForm" id="invoiceGeneratorAdd" name="invoiceGenerator" class="create-invoice"
           (ngSubmit)="save(invoiceGeneratorAdd.valid)">
           <div class="back p-4 shadow" style="border-radius: 2px;">
-            <div class="col-12">
-              <div class="vtop text-right">
+            <div class="col-12 row">
+              <div class="col-6">
+                  <ul class="top-level-menu">
+                      <li>
+                          
+                          <a>Change Setting</a>
+                          <ul class="second-level-menu">
+                              <li>
+                                  <a>Discount({{discountLabel}})</a>
+                                  <ul class="third-level-menu">
+                                      <li><a (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</a></li>
+                                      <li><a (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</a></li>
+                                      <li><a (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</a></li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <a>Tax({{taxLabel}})</a>
+                                  <ul class="third-level-menu">
+                                      <li><a (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</a></li>
+                                      <li><a (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</a></li>
+                                      <li><a (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</a></li>
+                                  </ul>
+                              </li>
+                              <li>
+                                  <input type="checkbox">Prices are inclusive of Tax
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+                  <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax
+              </div>
+              <div class="col-6 vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
                   {{settings.mTvInvoice ? settings.mTvInvoice : 'INV_LABEL' | translate}}
                 </span>
