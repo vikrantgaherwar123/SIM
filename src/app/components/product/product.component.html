@@ -13,7 +13,7 @@
               + Add Product
             </button>
           </div>
-          <div class="col-2">
+          <div class="col-2" style="display: flex;">
             <span>
               <a style="cursor: pointer;background: #e6ecf0;margin-right: 38px;" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" class="pull-right list_drop list-btn cus-img"
@@ -58,11 +58,12 @@
                         <span>
                             {{ product.prodName }}
                         </span>
-                      <div class="desc_div">
-                          <span
-                          class="small_description">{{ product.discription }}
-                          <span *ngIf="product.description" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span></span>
+                      <div class="desc_div moreDiscr" [class.show]="hideme[index]">
+                          <span class="small_description selected-items selected_description">{{ product.discription }}</span>
                       </div>
+                      <span *ngIf="product.discription">
+                        <span *ngIf="product.discription.length > 100" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
+                      </span>
                       </div>
                       <div class="col-1 text-right color_grey">{{ product.rate | number:'1.2-2'}}</div>
                       <div class="col-1 text-right color_grey">{{ product.taxRate | number:'1.2-2'}} %</div>

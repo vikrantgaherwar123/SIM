@@ -13,7 +13,7 @@
               + Add Client
             </button>
           </div>
-          <div class="col-2">
+          <div class="col-2" style="display: flex;">
             <span>
                 <a style="cursor: pointer;background: #e6ecf0" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
@@ -51,7 +51,7 @@
                 
                 <div  style="margin-bottom: -12px;"
                 id="client{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:sortTerm:(sortTerm=='name'? true : false):true | filter:searchTerms |  slice:0); index as index"
-                  [class.selected]="activeClient.uniqueKeyClient == client.uniqueKeyClient">
+                 >
                   <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
                     <div class="col-3" style="padding-top: 6px;">
                       <img src="assets/images/product_box_blue.png" class="img_box product_title">
@@ -69,25 +69,25 @@
                         class="hg_20 cross_label_img">
                       <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteClientModal(client)"
                         class="hg_20 cross_label_img">
-                      <span class="morebtn">{{ hideme[index] ? 'Less': 'More...' }}</span>
+                      <span class="morebtn"><img src="{{ hideme[index] ? upArrow: downArrow }}" class="hg_20 cross_label_img"></span>
                     </div>
                   </div>
                     <div class="moreDiscr col-12 row" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
                       <div class="row col-12 selected-items selected_description">
                         <div class="col-3">
-                          <span class="small_title">Address line:</span>
+                          <span class="small_title">Address line:</span> &nbsp;
                           <span class="small_description">{{client.addressLine1}}</span>
                         </div>
                         <div class="col-3">
-                            <span class="small_title">Shipping Address:</span>
+                            <span class="small_title">Shipping Address:</span> &nbsp;
                             <span class="small_description">{{client.shippingAddress}}</span>
                         </div>
                         <div class="col-3">
-                            <span class="small_title"> Business Id:</span>
+                            <span class="small_title"> Business Id:</span> &nbsp;
                             <span class="small_description">{{client.businessId}}</span>
                         </div>
                         <div class="col-3">
-                            <span class="small_title">Business detail:</span>
+                            <span class="small_title">Business detail:</span> &nbsp;
                             <span class="small_description">{{client.businessDetail}}</span>
                         </div>
 

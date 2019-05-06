@@ -60,7 +60,7 @@ hideToggle: boolean = false
 
     // show more-less button condition depending on height
     jQuery('.expandClicker').each(function(){
-      if (jQuery(this).parent().height() < 30) {
+      if (jQuery(this).parent().height() < 0) {
         jQuery(this).fadeOut();
       }
     });

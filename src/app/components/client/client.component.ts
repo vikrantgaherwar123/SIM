@@ -41,6 +41,8 @@ export class ClientComponent implements OnInit {
   emptyClient: boolean;
   deleteclient : boolean = true
   searchTerms;
+  downArrow = "assets/images/down1.png";
+  upArrow = "assets/images/up1.png";
   
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
