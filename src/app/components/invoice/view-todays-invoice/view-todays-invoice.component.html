@@ -344,6 +344,51 @@
                     class="font-custom-bold price">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                 </div>
               </div>
+              
+               <!-- inclusive tax -->
+              <div *ngIf="activeInv.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
+                  <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                      <div class="col-6 text-left">
+                          <span class="font-custom-bold">
+                              Taxable :
+                          </span>
+                        </div>
+                        <div class="col-6 text-right">
+                          <span
+                            class="font-custom-bold price">{{(activeInv.amount - taxPayable) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                        </div>
+                  </div>
+                  <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                      <div class="col-6 text-left">
+                          <span class="font-custom-bold">
+                              (+) Tax ({{item.tax_rate}})
+                          </span>
+                        </div>
+                        <div  class="col-6 text-right">
+                          <span
+                            class="font-custom-bold price">{{item.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                        </div>
+                  </div>
+                </div>
+             
+              <!-- <div  class="col-6 text-left label_color">
+                <div class="row col-12">
+                    <span class="font-custom col-6">Taxable </span>
+                    <span class="font-custom col-6">: {{}}</span>
+                </div>
+
+                <div>
+                  <div  class="top_bot_mr_10 pay_clr">
+                    <div class="row mx-0">
+              
+                      <div class="col-6 text-right pad_rg_5" style="margin-left: -10px;">
+                        <span class="font-custom price">
+                          </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
 
               <!-- Paid -->
               <div class="row mx-0" style="padding-top: 10px;padding-bottom: 10px;">

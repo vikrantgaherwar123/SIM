@@ -146,6 +146,7 @@ export interface terms {
 }
 
 export interface invoice {
+  taxableFlag:number
   adjustment: number
   amount: number
   balance: number
@@ -189,6 +190,7 @@ export interface invoice {
 
 
 export interface recentInvoices {
+  taxableFlag:number
   adjustment: number
   amount: number
   balance: number

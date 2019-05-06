@@ -1509,12 +1509,13 @@ export class AddEditComponent implements OnInit {
         
         //inclusive tax
         if (this.includeTax) {
+
           
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           } else if (this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0) { //when tax on item selected from settings
+            this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate - (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].discount / 100) * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate) / (100 + this.activeInvoice.listItems[i].tax_rate)
             if (this.activeInvoice.listItems[i].discount_amount) {
-              this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate - (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].discount / 100) * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate) / (100 + this.activeInvoice.listItems[i].tax_rate)
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount
             }
           }
@@ -1704,6 +1705,10 @@ export class AddEditComponent implements OnInit {
       if(this.settings.discountFlagLevel === 2){
         this.activeInvoice.listItems[i].discount = 0;
       }
+    }
+
+    if(this.includeTax){
+      this.activeInvoice.taxableFlag = 1;
     }
     
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
