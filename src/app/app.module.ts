@@ -1,5 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import { MatMenuModule} from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core'
 import {TranslateHttpLoader} from '@ngx-translate/http-loader'
 import { HttpClientModule, HttpClient ,HTTP_INTERCEPTORS } from '@angular/common/http'
@@ -119,6 +122,8 @@ export const MY_FORMATS = {
     ViewTodaysEstimateComponent,
   ],
   imports: [
+    MatCheckboxModule,
+    MatMenuModule,
     ProgressBarModule,
     BrowserModule,
     Ng2SearchPipeModule,

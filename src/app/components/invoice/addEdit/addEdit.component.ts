@@ -94,6 +94,9 @@ export class AddEditComponent implements OnInit {
   addPaymentModal: any = {}
   paymentDate = new FormControl()
 
+  appSettings: any
+  activeSettings: setting
+
   settings: any
   private user: {
     user: {
@@ -117,8 +120,6 @@ export class AddEditComponent implements OnInit {
   recentInvoiceList: recentInvoices[];
   recentEstimateList: recentEstimates[];
   disabledDescription: boolean = false;
-  viewTodaysInvoice: boolean = false;
-  viewNextInvoice: boolean;
   invListLoader: boolean;
   hideDiscountLabel: boolean = false;
   hideTaxLabel: boolean = false;
@@ -128,7 +129,11 @@ export class AddEditComponent implements OnInit {
   amountPaid: number = 0;
   noDiscountOnItem: boolean = true;
   noTaxOnItem: boolean = true;
+  multipleTax: boolean = false;
   currentUrl: string;
+  taxLabel: string;
+  discountLabel: string;
+  includeTax: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -237,6 +242,8 @@ export class AddEditComponent implements OnInit {
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
       this.activeInvoice.discount = 0;
+      this.activeInvoice.tax_rate = 0;
+      this.activeInvoice.tax_amount = 0;
       this.activeInvoice.amount = this.activeInvoice.gross_amount;
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
@@ -780,6 +787,8 @@ export class AddEditComponent implements OnInit {
       if (settings.taxFlagLevel == 0) {
         this.taxtext = "Tax (on Item)"
         this.activeInvoice.tax_on_item = 0
+        this.noTaxOnItem = true;
+        this.taxLabel = "On Item"
       }
 
       //keep open tax field when tax on bill
@@ -787,6 +796,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.tax_on_item = 1
         this.activeInvoice.tax_rate = 0;
         this.noTaxOnItem = false;
+        this.taxLabel = "On Bill"
       }
 
       //keep open discount field when discount on bill && make default % choice as selected for discount
@@ -795,10 +805,21 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.percentage_flag=1;
         this.activeInvoice.percentage_value=0;
         this.noDiscountOnItem = false;
+        this.discountLabel = "On Bill"
       }
       if (settings.discountFlagLevel == 1) {
         this.activeInvoice.discount_on_item = 1
+        this.noDiscountOnItem = true;
+        this.discountLabel = "On Item"
       }
+      //set label if for disabled condition
+      if(settings.discountFlagLevel == 2){
+        this.discountLabel = "Disabled"
+      }
+      if(settings.taxFlagLevel == 2){
+        this.taxLabel = "Disabled"
+      }
+
     } else {
       this.taxtext = "Tax (Disabled)"
       this.activeInvoice.tax_on_item = 2
@@ -878,16 +899,18 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Settings every time
-    // this.settingsLoading = true;
-    // this.settingService.fetch().subscribe((response: any) => {
-    //   this.settingsLoading = false;
-    //   if (response.settings !== null) {
-    //     setStorage(response.settings)
-    //     this.user = JSON.parse(localStorage.getItem('user'))
-    //     this.settings = this.user.setting
-    //   }
+    this.settingsLoading = true;
+    this.settingService.fetch().subscribe((response: any) => {
+      this.settingsLoading = false;
+      if (response.settings !== null) {
+        this.appSettings =  response.settings.appSettings
+        this.activeSettings = response.settings.appSettings.androidSettings
+        setStorage(response.settings)
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.settings = this.user.setting
+      }
     
-    // },err => this.openErrorModal())
+    },err => this.openErrorModal())
 
     if (!isNaN(parseInt(this.settings.invNo))) {
       // console.log(this.InvoiceNumber);
@@ -1254,7 +1277,20 @@ export class AddEditComponent implements OnInit {
       }
 
       // Tax
-      if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
+
+      //inclusive tax
+      if(this.includeTax){
+        if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0) {
+          this.activeItem.tax_rate = 0
+        } else if(this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0){ //when tax on item selected from settings
+          if(this.activeItem.discount_amount){
+            this.activeItem.tax_amount = ((this.activeItem.rate - (this.activeItem.rate * this.activeItem.discount/100) * this.activeItem.quantity) * this.activeItem.tax_rate) / (100 + this.activeItem.tax_rate)
+            this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount
+          }
+        }
+      }
+      //exclusive tax
+      else if(isNaN(this.activeItem.tax_rate) || this.activeItem.tax_rate == 0 && !this.includeTax) {
         this.activeItem.tax_rate = 0
       } else if(this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0){ //when tax on item selected from settings
         this.activeItem.tax_amount = (this.activeItem.rate*this.activeItem.tax_rate/100)*this.activeItem.quantity
@@ -1411,6 +1447,19 @@ export class AddEditComponent implements OnInit {
     return new Date(date+(days*24*60*60*1000))
   }
 
+  inclTax(event){
+    if(event.target.checked === true){
+      this.includeTax = true
+      this.calculateInvoice();
+    }
+    //exclusive tax
+    else{
+      this.includeTax = false;
+      this.calculateInvoice();
+      
+    }
+  }
+
   calculateInvoice() {
     var gross_amount = 0
     var deductions = 0
@@ -1418,6 +1467,26 @@ export class AddEditComponent implements OnInit {
 
     if (this.activeInvoice.listItems) {
       for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+        //inclusive tax
+        if (this.includeTax) {
+          if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
+            this.activeInvoice.listItems[i].tax_rate = 0
+          } else if (this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0) { //when tax on item selected from settings
+            if (this.activeInvoice.listItems[i].discount_amount) {
+              this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate - (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].discount / 100) * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate) / (100 + this.activeInvoice.listItems[i].tax_rate)
+              this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount
+            }
+          }
+        }else{
+          if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
+            this.activeInvoice.listItems[i].tax_rate = 0
+          } else if (this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0) { //when tax on item selected from settings
+            if (this.activeInvoice.listItems[i].discount_amount) {
+              this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount) * this.activeInvoice.listItems[i].tax_rate/100;
+              this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount +  this.activeInvoice.listItems[i].tax_amount;
+            }
+          }
+        }
         gross_amount += parseFloat(this.activeInvoice.listItems[i].total)
       }
     }
@@ -1428,7 +1497,6 @@ export class AddEditComponent implements OnInit {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
         discountFactor = 0
-        console.log();
       }
 
       this.activeInvoice.discount = gross_amount * discountFactor
@@ -1810,7 +1878,6 @@ export class AddEditComponent implements OnInit {
   }
 
   setActiveInv(invId: string = '') {
-    this.viewTodaysInvoice = true;
     this.invoiceId = invId;
     this.activeInv = this.invoiceList.filter(inv => inv.unique_identifier == invId)[0]
     this.setActiveClient()
@@ -1871,10 +1938,34 @@ export class AddEditComponent implements OnInit {
   }
 
   addNewInvoice(){
-    this.viewTodaysInvoice = false;
     this.invoiceId = '';
     this.activeClient = {};
     this.shippingAddress = null;
     this.router.navigate(['/invoice/add'])
+  }
+
+
+  saveSettings() {
+    var setting = this.appSettings
+    setting.androidSettings = this.activeSettings
+
+    this.settingService.add(setting).subscribe((response: any) => {
+      if (response.status == 200) {
+        // var cookie = JSON.parse(localStorage.getItem('user'))
+        // Update local storage
+        // cookie.setting = this.activeSettings
+        // localStorage.setItem('user', JSON.stringify(cookie))
+
+        this.toasterService.pop('success','Updated Successfully')
+        setStorage(response.settings)
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.settings = this.user.setting
+        this.commonSettingsInit();
+        
+      } else {
+        alert (response.message)
+        // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
+      }
+    },error => this.openErrorModal())
   }
 }

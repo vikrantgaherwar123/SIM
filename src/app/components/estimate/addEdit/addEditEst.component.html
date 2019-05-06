@@ -293,9 +293,9 @@
               <div class="col-12 offset-md-6 col-md-6 discount-tax-pad font-custom-bold" style="padding-bottom: 8px;">
                 <div *ngIf="activeEstimate.discount_on_item == 0"><!--&&  activeEstimate.discount_on_item===2 -->
                   <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noDiscountOnItem , 'addLabelBackroundColor':!noDiscountOnItem}"
-                   (click)="noDiscountOnItem  = !noDiscountOnItem;activeEstimate.percentage_value=0;activeEstimate.discount=0;
-                   activeEstimate.amount=activeEstimate.gross_amount;calculateEstimate();
-                   balance=activeEstimate.amount">
+                   (click)="noDiscountOnItem  = !noDiscountOnItem;activeEstimate.percentage_value=0;activeEstimate.discount=0;activeEstimate.amount=activeEstimate.gross_amount;calculateEstimate();
+                   balance=activeEstimate.amount"
+                   >
                     {{settings.discount ? settings.discount : 'Discount'}}+
                   </span>
                 </div>

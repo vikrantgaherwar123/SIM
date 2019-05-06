@@ -242,23 +242,27 @@ export class AddEditEstComponent implements OnInit {
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
-      //adjust the store variables in our used variables
+
+      if(this.activeEstimate.discount > 0){
+        this.activeEstimate.discount_on_item = 0;
+      }
+
 
         //if item and Disabled condition  
-        if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
+        if(this.activeEstimate.discount_on_item === 1 || this.activeEstimate.discount_on_item === 2){
           this.noDiscountOnItem = true;
         }
 
-        if(this.activeEstimate.tax_on_item == 0 || this.activeEstimate.tax_on_item == 2){
+        if(this.activeEstimate.tax_on_item === 0 || this.activeEstimate.tax_on_item === 2){
           this.noTaxOnItem = true;
         }
 
         //if Bill setting
-        if(this.activeEstimate.discount_on_item == 0){
+        if(this.activeEstimate.discount_on_item === 0){
           this.noDiscountOnItem = false;
         }
 
-        if(this.activeEstimate.tax_on_item == 1){
+        if(this.activeEstimate.tax_on_item === 1){
           this.noTaxOnItem = false;
         }
 
@@ -272,6 +276,9 @@ export class AddEditEstComponent implements OnInit {
 
         //set balnce 
         this.balance = this.activeEstimate.amount;
+
+        
+
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -388,6 +395,11 @@ export class AddEditEstComponent implements OnInit {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
 
+        if(this.activeEstimate.discount > 0){
+          this.activeEstimate.discount_on_item = 0;
+        }
+
+
         //if item and Disabled condition  
         if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
           this.noDiscountOnItem = true;
@@ -423,7 +435,7 @@ export class AddEditEstComponent implements OnInit {
         }
         //set balance
         this.balance = this.activeEstimate.amount;
-        
+
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -434,6 +446,9 @@ export class AddEditEstComponent implements OnInit {
         if (this.activeEstimate.listItems) {
           var temp = []
           for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+            if(this.activeEstimate.listItems[i].uniqueKeyFKQuotation){
+              this.activeEstimate.listItems[i].uniqueKeyFKProduct = this.activeEstimate.listItems[i].uniqueKeyFKQuotation;
+            }
             temp.push({
               description: this.activeEstimate.listItems[i].description,
               product_name: this.activeEstimate.listItems[i].productName,

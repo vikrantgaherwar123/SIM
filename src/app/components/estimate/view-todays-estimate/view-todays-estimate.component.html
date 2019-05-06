@@ -210,19 +210,18 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
-                    slice:0:1}})
+                    ({{activeEst.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
                   </div>
-                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
+                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">({{activeEst.percentageValue}} %)</div>
                 </div>
 
                 <div class="col-7">
                   <div class="text-right">
                     <div *ngIf="activeEst.discountFlag == 0">
-                      {{activeEst.discount | number:'2.'}}
+                      {{activeEst.discount | number:'1.2-2'}}
                     </div>
                     <div *ngIf="activeEst.discountFlag == 1">
-                      {{activeEst.percentageValue | number:'2.'}}
+                      {{ activeEst.discount| number:'1.2-2'}}
                     </div>
                   </div>
                 </div>
