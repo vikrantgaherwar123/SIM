@@ -798,7 +798,7 @@ export class AddEditComponent implements OnInit {
       //keep open tax field when tax on bill
       if (settings.taxFlagLevel == 1) {
         this.activeInvoice.tax_on_item = 1
-        this.activeInvoice.tax_rate = 0;
+        // this.activeInvoice.tax_rate = 0;
         this.noTaxOnItem = false;
         this.taxLabel = "On Bill"
       }
@@ -807,7 +807,7 @@ export class AddEditComponent implements OnInit {
       if(this.settings.discountFlagLevel == 0){
         this.activeInvoice.discount_on_item = 0;
         this.activeInvoice.percentage_flag=1;
-        this.activeInvoice.percentage_value=0;
+        // this.activeInvoice.percentage_value=0;
         this.noDiscountOnItem = false;
         this.discountLabel = "On Bill"
       }
@@ -1468,11 +1468,48 @@ export class AddEditComponent implements OnInit {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
-
+    
     if (this.activeInvoice.listItems) {
       for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+        //when user changes from discount on Item to discount on Bill
+        if(this.activeSettings.discountFlagLevel === 0 && this.noDiscountOnItem){         //on bill
+          this.activeInvoice.listItems[i].discount = 0;
+          this.activeInvoice.listItems[i].discount_amount = 0;
+          this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity)* this.activeInvoice.listItems[i].tax_rate/100;
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount +  this.activeInvoice.listItems[i].tax_amount;
+        }
+        //when user changes from tax on Item to tax on Bill
+        if(this.activeSettings.taxFlagLevel === 1 && this.noTaxOnItem){         //on bill
+          this.activeInvoice.listItems[i].tax_rate = 0;
+          this.activeInvoice.listItems[i].tax_amount = 0;
+          if (this.activeInvoice.listItems[i].discount_amount) {
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
+          }else{
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
+          }
+        }
+
+        //when user changes to disabled
+        if(this.activeSettings.discountFlagLevel === 2){         
+          this.activeInvoice.listItems[i].discount = 0;
+          this.activeInvoice.listItems[i].discount_amount = 0;
+          this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity)* this.activeInvoice.listItems[i].tax_rate/100;
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount +  this.activeInvoice.listItems[i].tax_amount;
+        }
+        //when user changes to disabled
+        if(this.activeSettings.taxFlagLevel === 2){         
+          this.activeInvoice.listItems[i].tax_rate = 0;
+          this.activeInvoice.listItems[i].tax_amount = 0;
+          if (this.activeInvoice.listItems[i].discount_amount) {
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
+          }else{
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
+          }
+        }
+        
         //inclusive tax
         if (this.includeTax) {
+          
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           } else if (this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0) { //when tax on item selected from settings
@@ -1497,6 +1534,11 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.gross_amount = gross_amount
 
     // Discount
+    if(this.activeSettings.discountFlagLevel === 1){
+      this.activeInvoice.percentage_value = 0;
+      this.activeInvoice.discount = 0;
+    }
+
     if (this.activeInvoice.percentage_flag == 1) {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
@@ -1511,20 +1553,28 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
     }
+    
 
     // Tax
-    if (this.activeInvoice.tax_rate != null) {
+    
+    if (this.activeInvoice.tax_rate != null && !this.includeTax) {
       if(isNaN(this.activeInvoice.tax_rate)) {
         this.activeInvoice.tax_rate = 0
       }
       additions += (this.activeInvoice.gross_amount - deductions) * (
         this.activeInvoice.tax_rate / 100
       )
+      
       this.activeInvoice.tax_amount = additions
+    }else if(this.includeTax){
+      this.activeInvoice.tax_amount = ((this.activeInvoice.gross_amount - (this.activeInvoice.gross_amount * this.activeInvoice.discount / 100)) * this.activeInvoice.tax_rate) / (100 + this.activeInvoice.tax_rate)
       //remove digits after two decimal
-      // var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
-      // this.activeInvoice.tax_amount = parseFloat(value);
+      var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
+      this.activeInvoice.tax_amount = parseFloat(value);
     }
+
+    
+      
 
     // Multiple Taxes
     if (this.activeInvoice.taxList && this.activeInvoice.taxList.length > 0) {
@@ -1953,13 +2003,12 @@ export class AddEditComponent implements OnInit {
     var setting = this.appSettings
     setting.androidSettings = this.activeSettings
 
+    
+
     this.settingService.add(setting).subscribe((response: any) => {
       if (response.status == 200) {
-        // var cookie = JSON.parse(localStorage.getItem('user'))
-        // Update local storage
-        // cookie.setting = this.activeSettings
-        // localStorage.setItem('user', JSON.stringify(cookie))
-
+        this.calculateInvoice()
+        
         this.toasterService.pop('success','Updated Successfully')
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
