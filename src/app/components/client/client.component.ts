@@ -32,6 +32,7 @@ export class ClientComponent implements OnInit {
   sortTerm: string
   searchTerm: string
   repeatativeClientName: string = ''
+  hideme = []
 
   createMode: boolean = true
   editMode: boolean = false
@@ -50,6 +51,13 @@ export class ClientComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting;
+    
+     // show more-less button condition depending on height
+     jQuery('.expandClicker').each(function(){
+      if (jQuery(this).parent().height() < 30) {
+        jQuery(this).fadeOut();
+      }
+    });
   }
 
   ngOnInit() {

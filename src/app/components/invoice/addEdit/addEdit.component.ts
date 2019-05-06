@@ -195,7 +195,7 @@ export class AddEditComponent implements OnInit {
     // save button processing script ends
     // show more-less button condition depending on height
     jQuery('.expandClicker').each(function(){
-      if (jQuery(this).parent().height() < 30) {
+      if (jQuery(this).parent().height() < 50) {
         jQuery(this).fadeOut();
       }
     });

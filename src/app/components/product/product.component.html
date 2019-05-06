@@ -50,53 +50,8 @@
                   <div class="col-2 text-right heading">Product Code</div>
                   <div class="col-1 text-right heading">Actions</div>
                 </div>
-                <!-- <mat-accordion id="prod{{index}}"
-                  *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0:productDisplayLimit); index as index">
-                  <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
-                        <div class="col-12 row">
-                          <div class="col-5">
-                            <img src="assets/images/product_box_blue.png" class="img_box product_title">
-                            {{ product.prodName }}
-                           <div>
-                              <span
-                              class="small_description">{{ product.discription }}</span>
-                           </div>
-                          </div>
-                          <div class="col-1 text-right color_grey">{{ product.rate | number:'1.2-2'}}</div>
-                          <div class="col-1 text-right color_grey">{{ product.taxRate | number:'1.2-2'}} %</div>
-                          <div class="col-1 text-right color_grey">{{ product.unit }}</div>
-                          <div class="col-2 text-right color_grey">{{ product.productCode }}</div>
-                          <div style="margin-left: 55px;">
-                              <img src="assets/images/edit_blue.png" Title="Delete" alt="" (click)="editThis(product)"
-                                class="hg_20 cross_label_img">
-                              <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteProductModal(product)" class="hg_20 cross_label_img">
-                          </div>
-                        </div>
-                      </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <div style="padding: 4px 22px;">
-                      <div style="margin-bottom: 6px;"><span class="small_title">Description</span>: <span
-                          class="small_description">{{ product.discription }}</span>
-                      </div>
-                      <div class="row">
-                        <div class="col-2">
-                          <span class="small_title">Product Code</span>: <span
-                            class="small_description">{{ product.productCode }}</span>
-                        </div>
-                        <div class="col-2">
-                          <span class="small_title">Unit</span>: <span class="small_description">{{ product.unit }}</span>
-                        </div>
-                        <div class="col-2">
-                          <span class="small_title">Tax Rate</span>: <span class="small_description">{{ product.taxRate }} %</span>
-                        </div>
-                      </div>
-                    </div>
-                  </mat-expansion-panel>
-                </mat-accordion> -->
                 <div id="prod{{index}}" style="border-top: 2px solid #f0f4f5 !important;"
-                *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0:productDisplayLimit); index as index">
+                *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0); index as index">
                   <div class="col-12 row main_row">
                       <div class="col-6" style="padding-top: 6px;">
                         <img src="assets/images/product_box_blue.png" class="img_box product_title">
@@ -114,7 +69,7 @@
                       <div class="col-1 text-right color_grey">{{ product.unit }}</div>
                       <div class="col-2 text-right color_grey">{{ product.productCode }}</div>
                       <div class="col-1" style="text-align: right;;margin-top: 12px;">
-                          <img src="assets/images/edit_blue.png" Title="Delete" alt="" (click)="editThis(product)"
+                          <img src="assets/images/edit_blue.png" Title="Edit" alt="" (click)="editThis(product)"
                             class="hg_20 cross_label_img img_hover">
                           <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteProductModal(product)" class="hg_20 cross_label_img img_hover">
                       </div>
