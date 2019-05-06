@@ -156,10 +156,6 @@ export class AddEditComponent implements OnInit {
     store.select('estimate').subscribe(estimates => this.estimateList = estimates);
     store.select('recentEstimates').subscribe(estimates => this.recentEstimateList = estimates);
 
-    
-
-
-
    /*Scroll to top when arrow up clicked BEGIN*/
     $(window).scroll(function () {
       var height = $(window).scrollTop();

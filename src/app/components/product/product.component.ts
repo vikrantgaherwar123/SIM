@@ -20,12 +20,14 @@ import {MatExpansionModule} from '@angular/material/expansion';
 export class ProductComponent implements OnInit { 
 @Input()
 multi: boolean
+hideToggle: boolean = false
   private user: {
     user: {
       orgId: string
     },
     setting: any
   }
+  hideme = []
   productList: product[]
   public activeProduct = <product>{}
   productListLoading: boolean = false
@@ -37,8 +39,8 @@ multi: boolean
 
   createMode: boolean = true
   editMode: boolean = false
-  viewMode: boolean = false
-  deleteproduct:boolean = false
+ 
+  deleteproduct:boolean = true
 
   productDisplayLimit = 12
   settings: any;
@@ -55,6 +57,13 @@ multi: boolean
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
     this.codeOrSym = this.user.setting.currencyText ? 'code' : 'symbol'
+
+    // show more-less button condition depending on height
+    jQuery('.expandClicker').each(function(){
+      if (jQuery(this).parent().height() < 30) {
+        jQuery(this).fadeOut();
+      }
+    });
   }
 
   ngOnInit() {
@@ -84,7 +93,7 @@ multi: boolean
       this.emptyRate = true;
     }
     // If adding or editing product, make sure product with same name doesnt exist
-    if(this.activeProduct.prodName) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+    if(this.activeProduct.prodName && this.deleteproduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {
@@ -99,6 +108,7 @@ multi: boolean
           //edit=1: case of editing
           //edit=null: case of deleting
           //edit=0: case of adding duplicate
+          this.emptyProduct = true;
           if(edit == 1) {
             if(this.activeProduct.uniqueKeyProduct !== this.productList[p].uniqueKeyProduct && tempProName !== this.repeatativeProductName) {
               proStatus = false
@@ -144,57 +154,43 @@ multi: boolean
           if (index == -1) {  // add
             self.store.dispatch(new productActions.add([self.productService.changeKeysForStore(response.productList[0])]))
             this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
-            this.viewThis(self.productService.changeKeysForStore(response.productList[0]), false)
             this.toasterService.pop('success', 'Product added successfully !!!');
-            // this.ngOnInit();
+            this.closeItemModel()
           } else {
             if (self.activeProduct.enabled) {   // delete
               self.store.dispatch(new productActions.remove(storeIndex))
               this.productList.splice(index, 1)
               this.activeProduct = this.productList[0]
-              this.addNew()
               this.toasterService.pop('success','Product deleted successfully !');
-              // this.ngOnInit();
-              // window.location.reload(true);
+              this.closeItemModel()
+             
             } else {    //edit
               self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
               this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
-              this.viewThis(this.productList[index], false)
               this.toasterService.pop('success','Product Edited Successfully !!!');
+              this.closeItemModel()
               // this.ngOnInit();
             }
           }
         } else if (response.status != 200) {
-          // notifications.showError({ message: result.error, hideDelay: 1500, hide: true })
         }
-        // $('#saveProBtn').button('reset')
-        // $('#saveProBtn1').button('reset')
-        // $('#updateProBtn').button('reset')
-        // $('#updateProBtn1').button('reset')
+       
       },error => this.openErrorModal())
     } else {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');
       }
-      // else if(){}
-      // $('#saveProBtn').button('reset')
-      // $('#saveProBtn1').button('reset')
-      // $('#updateProBtn').button('reset')
-      // $('#updateProBtn1').button('reset')
-      // notifications.showError({ message: 'Unable to Save, Product already exist.', hideDelay: 5000, hide: true })
+      
     }
   }
 
   addNew() {
     this.activeProduct = <product>{}
-    this.createMode = true
-    this.editMode = false
-    this.viewMode = false
     $('#prod_name').select()
   }
 
-  openDeleteProductModal() {
-    this.deleteproduct = true
+  openDeleteProductModal(product) {
+    this.activeProduct = product
     $('#delete-product').modal('show')
     $('#delete-product').on('shown.bs.modal', (e) => {
       // $('#delete-product input[type="text"]')[1].focus()
@@ -203,9 +199,10 @@ multi: boolean
 
 
   deleteProduct() {
+    this.deleteproduct = false
     this.activeProduct.enabled = 1
     this.save(true, null)
-    this.deleteproduct = false
+    
   }
 
   emptyField(input){
@@ -215,32 +212,21 @@ multi: boolean
     }
   }
 
-  editThis() {
+  editThis(product) {
+    this.activeProduct = product;
+    this.deleteproduct = false;
     if(this.productList.filter((prod => prod.prodName === this.activeProduct.prodName)).length > 1) {
       this.repeatativeProductName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
     }
+    this.editProductModal();
 
-    this.createMode = false
-    this.editMode = true
-    this.viewMode = false
   }
 
-  viewThis(product, cancelFlag) {
-    if (!cancelFlag) {
-      this.activeProduct = {...product}
-    }
-
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
-  }
+  
 
   cancelThis() {
     this.activeProduct = {...this.productList.filter(prod => prod.uniqueKeyProduct == this.activeProduct.uniqueKeyProduct)[0]}
 
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
   }
 
   clearThis() {
@@ -258,6 +244,9 @@ multi: boolean
     })
   }
   addProductModal() {
+    this.editMode = false;
+    this.createMode = true;
+    this.activeProduct = <product>{}
     $('#add-product').modal('show')
     $('#add-product').on('shown.bs.modal', (e) => {
     })
@@ -266,8 +255,10 @@ multi: boolean
     $('#add-product').modal('hide')
   }
   editProductModal() {
-    $('#edit-product').modal('show')
-    $('#edit-product').on('shown.bs.modal', (e) => {
+    this.editMode = true;
+    this.createMode = false;
+    $('#add-product').modal('show')
+    $('#add-product').on('shown.bs.modal', (e) => {
     })
   }
   closeEditProductModel() {

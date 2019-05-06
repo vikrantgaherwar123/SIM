@@ -48,3 +48,6 @@
 .filter-box{
 	background: #ffffff;
 }
+.modal-content{
+	margin-top: 0px !important;
+}

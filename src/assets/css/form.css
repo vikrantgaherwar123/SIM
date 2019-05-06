@@ -53,7 +53,7 @@
 	height: 38px;
 	padding: 6px 0px 0px 6px;
 	border: #CCCCCC solid 1px;
-	border-radius: 2px;
+	border-radius: 6px !important;
 }
 .list_drop:hover{
 border: #1a73cc solid 1px;

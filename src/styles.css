@@ -508,9 +508,8 @@ option {
   font-size: 11px;
   color: #a4a4a4;
 }
-.color_grey
-{
-  color: #a4a4a4;
+.color_grey{
+  color: #9a9797;
 }
 .btn2 {
   display: inline-block;
@@ -1362,4 +1361,77 @@ textarea{
   text-align: right;
   cursor: pointer;
   height: 20px;
+}
+/* accordian styling css */
+.mat-expansion-panel-header:hover {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid #cde0f4;
+  align-items: center;
+  background-color: #ffffff !important;
+  border-radius: 4px;
+  padding: 0 24px;
+}
+.small_title{
+  color:#454444;
+  font-size: 12px;
+  font-weight: bold;
+}
+.product_title{
+  color: #3e3d3d;
+}
+.small_description{
+  color:#a4a4a4;
+  font-size:12px;
+}
+
+.heading{
+  color: #1a73cc;
+  font-size: 14px;
+}
+
+.mat-expansion-panel-content.mat-expanded {
+  overflow: visible;
+  background-color: #f6f6f6 !important;
+  
+}
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+  box-shadow: none !important;
+  border-top: 2px solid #f0f4f5;
+}
+.mat-accordion>.mat-expansion-panel-spacing:last-child, .mat-accordion>:last-child:not(.mat-expansion-panel) .mat-expansion-panel-spacing {
+  margin-bottom: 0;
+}
+.pro_heading{
+  font-weight: bold;
+  color: #474959 !important;
+  font-size: 25px;
+}
+.pro_row{
+  padding: 24px 46px;
+  background: #e6ecf0;
+}
+
+.img_box{
+  width: 25px;
+  height: 25px;
+}
+.change_btn_width{
+  width: 121px !important;
+}
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 0px solid #e9ecef !important;
+}
+.header_title{
+  margin-bottom: 12px;
+  margin-top: -22px;
+}
+.mat-expansion-panel-header {
+  font-family: helvetica_regular !important;
+}
+.font_16{
+  font-size: 16px;
 }

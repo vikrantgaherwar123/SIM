@@ -25,7 +25,7 @@ export class ClientComponent implements OnInit {
   }
   clientList: client[]
 
-  private activeClient = <client>{}
+  public activeClient = <client>{}
   private errors: object = {}
   clientListLoading: boolean = false
   clientDisplayLimit = 12
@@ -38,6 +38,7 @@ export class ClientComponent implements OnInit {
   viewMode: boolean = false
   settings: any;
   emptyClient: boolean;
+  deleteclient : boolean = true
   searchTerms;
   
   constructor(public clientService: ClientService,
@@ -77,7 +78,7 @@ export class ClientComponent implements OnInit {
     }
 
     // If adding or editing client, make sure client with same name doesnt already exist
-    if (!this.activeClient.enabled) {
+    if (this.activeClient.name && this.deleteclient) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
       // If empty spaces
@@ -142,16 +143,19 @@ export class ClientComponent implements OnInit {
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
+            this.closeItemModel()
           } else if(self.activeClient.enabled !== 0){// delete
            
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)
             this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+            this.closeItemModel()
           }
             if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
+              this.closeItemModel()
             }
           self.errors = {}
           // self.activeClient = <client>{}
@@ -189,12 +193,6 @@ export class ClientComponent implements OnInit {
       this.emptyClient = false
     }
   }
-  openDeleteClientModal() {
-    $('#delete-client').modal('show')
-    $('#delete-client').on('shown.bs.modal', (e) => {
-      // $('#delete-client input[type="text"]')[1].focus() //1
-    })
-  }
 
   addNew() {
     this.activeClient = <client>{}
@@ -206,9 +204,6 @@ export class ClientComponent implements OnInit {
     $('#emailLabel').addClass('is-empty')
 
     $('#name').select()
-    this.createMode = true
-    this.editMode = false
-    this.viewMode = false
   }
 
   batchUpload() {
@@ -216,20 +211,38 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
+    this.deleteclient = false
     this.activeClient.enabled = 1
     this.save(true, null)
-    this.addNew();
   }
+  addClientModal() {
+    this.editMode = false;
+    this.createMode = true;
+    this.activeClient = <client>{}
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+    })
+  }
+  openDeleteClientModal(client) {
+    this.activeClient = client
+    $('#delete-client').modal('show')
+    $('#delete-client').on('shown.bs.modal', (e) => {
+      // $('#delete-product input[type="text"]')[1].focus()
+    })
+  }
+  closeItemModel() {
+    $('#add-client').modal('hide')
+  }
+
  
-  editThis() {
+  editThis(client) {
+    this.activeClient = client
+    this.deleteclient = false
     // If there are clients with same name in db, Allow them to make changes
     if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {
       this.repeatativeClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
     }
-
-    this.createMode = false
-    this.editMode = true
-    this.viewMode = false
+    this.editClientModal();
   }
 
   viewThis(client, cancelFlag=false) {
@@ -240,19 +253,19 @@ export class ClientComponent implements OnInit {
     if (!cancelFlag) {
       this.activeClient = {...client}
     }
-
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
+  }
+  editClientModal() {
+    this.editMode = true;
+    this.createMode = false;
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+    })
   }
   
 
   cancelThis() {
     this.activeClient = {...this.clientList.filter(cli => cli.uniqueKeyClient == this.activeClient.uniqueKeyClient)[0]}
 
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
   }
 
   clearThis() {
