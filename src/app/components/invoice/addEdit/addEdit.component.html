@@ -8,7 +8,7 @@
           <div class="back p-4 shadow" style="border-radius: 2px;">
             <div class="col-12 row">
               <div class="col-6">
-                  <ul class="top-level-menu">
+                  <!-- <ul class="top-level-menu">
                       <li>
                           
                           <a>Change Setting</a>
@@ -35,7 +35,28 @@
                           </ul>
                       </li>
                   </ul>
-                  <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax
+                  <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax -->
+                  <span style="cursor: pointer" mat-button [matMenuTriggerFor]="setting">Change Setting</span>
+
+                      <mat-menu #setting="matMenu">
+                        <button mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
+                        <button mat-menu-item [matMenuTriggerFor]="tax">Tax ({{taxLabel}})</button>
+                        <button mat-menu-item>
+                          <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax
+                        </button>
+                      </mat-menu>
+
+                      <mat-menu #discount="matMenu">
+                        <button mat-menu-item (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                        <button mat-menu-item (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
+                        <button mat-menu-item (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                      </mat-menu>
+
+                      <mat-menu #tax="matMenu">
+                        <button mat-menu-item (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                        <button mat-menu-item (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                        <button mat-menu-item (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                      </mat-menu>
               </div>
               <div class="col-6 vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
