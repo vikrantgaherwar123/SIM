@@ -327,7 +327,7 @@ export class AddEditComponent implements OnInit {
       this.invoiceListLoading = false;
 
       //set settingFlags according to edit i.e invoice saved previously
-      if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+      if(this.activeInvoice.discount_on_item == 0){
         this.activeInvoice.percentage_flag = 1;
         if(this.appSettings){
           this.appSettings.androidSettings.discountFlagLevel = 0;
@@ -342,7 +342,7 @@ export class AddEditComponent implements OnInit {
         this.discountLabel = "On Item"
       }
 
-      if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_rate ){
+      if(this.activeInvoice.tax_on_item == 0){
         if(this.appSettings){
         this.appSettings.androidSettings.taxFlagLevel = 0;
         }
@@ -655,19 +655,30 @@ export class AddEditComponent implements OnInit {
             this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
 
             //set settingFlags according to edit i.e invoice saved previously
-            if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+            if (this.activeInvoice.discount_on_item == 0) {
               this.activeInvoice.percentage_flag = 1;
-              this.appSettings.androidSettings.discountFlagLevel = 0;
+              if (this.appSettings) {
+                this.appSettings.androidSettings.discountFlagLevel = 0;
+              }
               this.noDiscountOnItem = false;
               this.discountLabel = "On Bill"
+            } else if (this.activeInvoice.discount_on_item == 1) {
+              if (this.appSettings) {
+                this.appSettings.androidSettings.discountFlagLevel = 1;
+              }
+              this.noDiscountOnItem = true;
+              this.discountLabel = "On Item"
             }
-      
-            if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_rate ){
-              this.appSettings.androidSettings.taxFlagLevel = 0;
+
+            if (this.activeInvoice.tax_on_item == 0) {
+              if (this.appSettings) {
+                this.appSettings.androidSettings.taxFlagLevel = 0;
+              }
               this.taxtext = "Tax (on Item)"
               this.noTaxOnItem = true;
               this.taxLabel = "On Item"
             }
+
 
 
               //if item and Disabled condition  
@@ -1519,11 +1530,13 @@ export class AddEditComponent implements OnInit {
   inclTax(event){
     if(event.target.checked === true){
       this.includeTax = true
+      this.activeInvoice.taxableFlag = 1;
       this.calculateInvoice();
     }
     //exclusive tax
     else{
       this.includeTax = false;
+      this.activeInvoice.taxableFlag = 0;
       this.calculateInvoice();
       
     }
@@ -1533,12 +1546,13 @@ export class AddEditComponent implements OnInit {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
+    //when inclusive tax was saved 
+    if(this.activeInvoice.taxableFlag === 1){
+      this.includeTax = true;
+    }
     
     if (this.activeInvoice.listItems) {
-      //when inclusive tax was saved 
-      if(this.activeInvoice.taxableFlag === 1){
-        this.includeTax = true;
-      }
+      
       for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
         
         //inclusive tax

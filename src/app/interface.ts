@@ -233,6 +233,7 @@ export interface recentInvoices {
 }
 
 export interface estimate {
+  taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
@@ -282,6 +283,7 @@ export interface estimate {
 }
 
 export interface recentEstimates {
+  taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
@@ -331,6 +333,7 @@ export interface recentEstimates {
 }
 
 export interface addEditEstimate {
+  taxableFlag:number,
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
   assignDiscountFlag: number,
