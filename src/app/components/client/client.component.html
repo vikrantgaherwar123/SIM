@@ -2,7 +2,7 @@
 <div class="row main-wrapper">
   
     <div class="col-12" id="main" style="background-color: #ffffff !important;">
-      <div class="row pro_row" style="padding: 36px 78px;"> 
+      <div class="row pro_row" style="padding: 25px 78px;"> 
         <div class="col-6 row">
           <div class="col-3" style="text-align: center;">
               <h3 class="pro_heading">Client</h3>
@@ -73,7 +73,7 @@
                     </div>
                   </div>
                     <div class="moreDiscr col-12 row" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
-                      <div class="row col-12 selected-items selected_description">
+                      <div class="row col-12 selected-items selected_description" style="padding: 10px 42px;">
                         <div class="col-3">
                           <span class="small_title">Address line:</span> &nbsp;
                           <span class="small_description">{{client.addressLine1}}</span>
@@ -102,9 +102,6 @@
       </div>
     </div>
   </div>
- 
-  
-  
   <!-- accordian development -->
  <!-- Add / Edit Client Modal -->
 <div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
@@ -158,9 +155,6 @@ data-backdrop="static" data-keyboard="false">
                         [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="Shipping Address"
                         onfocus="this.select()"></textarea>
            </div>
-
-
-          
           <div class="row col-12">
               <span class="edit_span">Business Id:</span>
               <input type="text" id="business_id" name="business_id" class="form-control" [(ngModel)]="activeClient.businessId"
@@ -172,8 +166,6 @@ data-backdrop="static" data-keyboard="false">
                         style="height: 47px !important;" [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
                         onfocus="this.select()"></textarea>
           </div>
-
-         
         </div>
       </form>
     </div>

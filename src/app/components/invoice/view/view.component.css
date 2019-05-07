@@ -2,11 +2,11 @@
 
 .query-container {
   position: fixed;
-  padding: 2px 15px;
-  height: 28px;
+  padding: 20px 12px;
+  height: 60px;
   /* top: 75px; */
   z-index: 1000;
-  background: #f4f8fb;
+  background: #1a73cc;
   font-size: 11px;
 }
 .query_padding{

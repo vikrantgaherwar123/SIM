@@ -4,36 +4,33 @@
       <div class="query-bar query_padding" *ngIf="!changingQuery">
           <div class="row">
             <div class="col-md-9">
-              <span style="color: grey;margin-left: -20px;">Showing results for:</span> <img src="assets/images/menu-logo/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#1a73cc">Client: </span><span>
-                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
+              <span style="color: #fff;margin-left: -20px;">Showing results for:</span> 
+              <img src="assets/images/menu-logo/client.png"
+                style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> 
+                <span style="color:#1a73cc">Client:
+              </span><span>
                 <span *ngIf="invoiceQueryForm.client.value">
-                    {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
-                    <span *ngIf="invoiceQueryForm.client.value?.length > 1"
-                      [title]="getNames()"
-                    >
-                      (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                    </span>,
-                  </span>
-                <!-- <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span> -->
+                  {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
+                  <span *ngIf="invoiceQueryForm.client.value?.length > 1" [title]="getNames()">
+                    (+{{invoiceQueryForm.client.value.length - 1}}
+                    {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
+                  </span>,
+                </span>
               </span>
-              <img src="assets/images/menu-logo/date.png" 
-              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
-               <span  style="color:#1a73cc">{{itemSelected}} :</span>
+              <img src="assets/images/menu-logo/date.png"
+                style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
+              <span style="color:#1a73cc">{{itemSelected}} :</span>
               <span *ngIf="disableDateText === false">
-                <span 
-                  style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
-                              invoiceQueryForm.dateRange.start.value.getDate() + '-' +
-                              (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-                              invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-                            }}</span>&nbsp; <span style="font-size: 14px;">to</span>&nbsp; <span>{{invoiceQueryForm.dateRange.end.value ?
-                              invoiceQueryForm.dateRange.end.value.getDate() + '-' +
-                              (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-                              invoiceQueryForm.dateRange.end.value.getFullYear() : 0
-                            }}</span>
+                <span style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
+                                          invoiceQueryForm.dateRange.start.value.getDate() + '-' +
+                                          (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
+                                          invoiceQueryForm.dateRange.start.value.getFullYear() : 0
+                                        }}</span>&nbsp; <span style="font-size: 14px;">to</span>&nbsp; <span>{{invoiceQueryForm.dateRange.end.value ?
+                                          invoiceQueryForm.dateRange.end.value.getDate() + '-' +
+                                          (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
+                                          invoiceQueryForm.dateRange.end.value.getFullYear() : 0
+                                        }}</span>
               </span>
-              <!-- <img src="assets/images/payment2.png" 
-              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
             </div>
     
             <div class="col-12 col-md-2">
@@ -45,7 +42,7 @@
           </div>
         </div>
     </div>
-    <div class="w-100" style="padding-top: 44px">
+    <div class="w-100" style="padding-top: 72px">
       <div class="row mx-0">
         
   

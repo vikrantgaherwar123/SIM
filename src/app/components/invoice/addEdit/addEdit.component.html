@@ -8,34 +8,7 @@
           <div class="back p-4 shadow" style="border-radius: 2px;">
             <div class="col-12 row">
               <div class="col-6">
-                  <!-- <ul class="top-level-menu">
-                      <li>
-                          
-                          <a>Change Setting</a>
-                          <ul class="second-level-menu">
-                              <li>
-                                  <a>Discount({{discountLabel}})</a>
-                                  <ul class="third-level-menu">
-                                      <li><a (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</a></li>
-                                      <li><a (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</a></li>
-                                      <li><a (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</a></li>
-                                  </ul>
-                              </li>
-                              <li>
-                                  <a>Tax({{taxLabel}})</a>
-                                  <ul class="third-level-menu">
-                                      <li><a (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</a></li>
-                                      <li><a (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</a></li>
-                                      <li><a (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</a></li>
-                                  </ul>
-                              </li>
-                              <li>
-                                  <input type="checkbox">Prices are inclusive of Tax
-                              </li>
-                          </ul>
-                      </li>
-                  </ul>
-                  <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax -->
+                  
                   <span style="cursor: pointer" mat-button [matMenuTriggerFor]="setting">Change Setting</span>
 
                       <mat-menu #setting="matMenu">
@@ -603,11 +576,17 @@
 
                             <input type="number" id="discount_input" name="discount_input" class="col-3 form-control"
                               *ngIf="activeInvoice.percentage_flag == 0"
-                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()" style="margin-right: 20px;"
+                              [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
                               onfocus="this.select()" />
+                              <div class="col-1 input_symbol">
+                                <div *ngIf="activeInvoice.percentage_flag == 0" style="margin-left: -4px;">
+                                  {{mysymbols}}
+                                </div>
+                                <div *ngIf="activeInvoice.percentage_flag == 1" style="margin-left: -4px;">%</div>
+                              </div>
 
                             <input type="number" id="discount_inputs" name="discount_inputs"
-                              class="form-control height_40 dis_tax_label col-9" placeholder="0.00"
+                              class="form-control height_40 dis_tax_label col-8" placeholder="0.00"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"  onfocus="this.select()"
                               readonly />
                             <div class="input-group-addon pr-0 remove-button">

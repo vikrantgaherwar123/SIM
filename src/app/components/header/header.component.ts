@@ -56,6 +56,7 @@ export class HeaderComponent implements OnInit {
     this.offSettingHover();
     this.offBatchHover();
   }
+ 
 
   onEstHover(){
     this.estSrc = "assets/images/menu-logo/estimate_blue.png";

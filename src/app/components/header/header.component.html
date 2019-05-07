@@ -4,7 +4,7 @@
       <div  class="row">
         <div class="d-sm-flex">
           <h5 class="menu_list" style="padding-left: 23px !important;">
-            <button (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
+            <button  (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
               <span class="span_text">
                 <img src="{{invSrc}}" class="nav_img" alt="logo" />
               <span style="margin-left: 3px;" [class.active_text]="router.url==='/invoice/add' || router.url==='/invoice/view' ">Invoices</span></span>
