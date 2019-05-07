@@ -47,7 +47,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   noTaxOnItem: boolean;
   getTodaysInvoice: boolean;
   isRecentInvoice: boolean;
-  taxPayable: number = 0;
+  taxable: number;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -172,7 +172,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           for (let i = 0; i < this.activeInv.listItems.length; i++) {
 
             if(this.activeInv.taxableFlag == 1 ){
-              this.taxPayable += this.activeInv.listItems[i].taxAmount;
+              var taxPayable = 0;
+              taxPayable += this.activeInv.listItems[i].taxAmount;
             }
             
             temp.push({
@@ -191,6 +192,13 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           }
           this.activeInv.listItems = temp
         }
+
+        if(this.activeInv.taxableFlag == 1 ){
+          var taxPayable = 0;
+          taxPayable = this.activeInv.tax_amount;
+          this.taxable = this.activeInv.amount - taxPayable;
+        }
+        
       
 
       if(this.activeInv.discount_on_item == 2){

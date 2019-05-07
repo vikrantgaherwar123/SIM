@@ -438,4 +438,6 @@ a.morelink {
 }
 .top-level-menu a:hover { color: #000000; }
 
-
+.disableTaxDiscount{
+pointer-events: none;
+}
