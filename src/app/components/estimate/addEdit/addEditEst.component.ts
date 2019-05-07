@@ -623,36 +623,7 @@ export class AddEditEstComponent implements OnInit {
       if(settings.taxFlagLevel == 2){
         this.taxLabel = "Disabled"
       }
-
-      // if (settings.tax_on_item == 1) {
-      //   this.tax_on = 'taxOnBill'
-      //   this.taxtext = "Tax (on Bill)"
-      //   this.activeEstimate.tax_on_item = 1
-      // } else if (settings.tax_on_item == 0) {
-      //   this.tax_on = 'taxOnItem'
-      //   this.taxtext = "Tax (on Item)"
-      //   this.activeEstimate.tax_on_item = 2
-      // } else {
-      //   this.tax_on = 'taxDisabled'
-      //   this.taxtext = "Tax (Disabled)"
-      //   this.activeEstimate.tax_on_item = 2
-      //   $('a.taxbtn').addClass('disabledBtn')
-      // }
-
-      // if (settings.discount_on_item == 0) {
-      //   this.discount_on = 'onBill'
-      //   this.discounttext = "Discount (on Bill)"
-      //   this.activeEstimate.discount_on_item = 0
-      // } else if (settings.discount_on_item == 1) {
-      //   this.activeEstimate.discount_on_item = 2
-      //   this.discount_on = 'onItem'
-      //   this.discounttext = "Discount (on Item)"
-      // } else {
-      //   this.discount_on = 'disabled'
-      //   this.discounttext = "Discount (Disabled)"
-      //   this.activeEstimate.discount_on_item = 2
-      //   $('a.discountbtn').addClass('disabledBtn')
-      // }
+      
     } else {
       //console.log("2")
       this.tax_on = 'taxDisabled'
@@ -1460,7 +1431,7 @@ export class AddEditEstComponent implements OnInit {
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }
 
-    
+
     // multiple taxes
     if (this.activeEstimate.taxList && this.activeEstimate.taxList.length > 0) {
       var temp_tax_amount = 0
