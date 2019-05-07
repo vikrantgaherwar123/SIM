@@ -139,9 +139,14 @@
 	word-wrap: break-word;
 	white-space: pre-line;
 	color: #a4a4a4;
-	padding-top: 9px;
+	padding-top: 12px;
 	margin-bottom: 27px;
 }
 .selected-items:hover{
 	background-color: #f6f6f6;
+}
+.no_btn{
+  margin-right: 46%;
+  height: 38px !important;
+  width: 124px !important;
 }

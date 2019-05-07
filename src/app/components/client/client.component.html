@@ -2,12 +2,12 @@
 <div class="row main-wrapper">
   
     <div class="col-12" id="main" style="background-color: #ffffff !important;">
-      <div class="row pro_row">
+      <div class="row pro_row" style="padding: 36px 78px;"> 
         <div class="col-6 row">
-          <div class="col-3" style="text-align: right;">
+          <div class="col-3" style="text-align: center;">
               <h3 class="pro_heading">Client</h3>
           </div>
-          <div class="col-3" style="margin-left: -22px;">
+          <div class="col-3" style="margin-left: -40px;">
             <button type="button" class="btn save_btn"
               (click)="addClientModal()">
               + Add Client
@@ -40,9 +40,9 @@
       <div class="row">
         <!-- Product List -->
         <div class="col-12 pr-0">
-            <div style="padding: 36px;" class="item-form">
+            <div style="padding: 39px 79px;" class="item-form">
                 <div class="col-12 row header_title">
-                  <div class="col-3 font_16"><span>Client Name</span></div>
+                  <div class="col-3 font_16"><span style="margin-left: 5px;">Client Name</span></div>
                   <div class="col-3 text-right heading">Contact Person Name</div>
                   <div class="col-2 text-right heading">Email</div>
                   <div class="col-2 text-right heading">Number</div>
@@ -55,7 +55,7 @@
                   <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
                     <div class="col-3" style="padding-top: 6px;">
                       <img src="assets/images/product_box_blue.png" class="img_box product_title">
-                      <span>
+                      <span style="color: #1f1f1f;">
                         {{client.name }}
                       </span>
                     </div>
@@ -65,11 +65,11 @@
                   
                   
                     <div class="col-2" style="text-align: right;">
-                      <img src="assets/images/edit_blue.png" Title="Delete" alt="" (click)="editThis(client)"
-                        class="hg_20 cross_label_img">
+                      <img src="assets/images/edit_blue.png" Title="Edit" alt="" (click)="editThis(client)"
+                        class="hg_20 cross_label_img img_hover">
                       <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteClientModal(client)"
-                        class="hg_20 cross_label_img">
-                      <span class="morebtn"><img src="{{ hideme[index] ? upArrow: downArrow }}" class="hg_20 cross_label_img"></span>
+                        class="hg_20 cross_label_img img_hover">
+                      <span class="morebtn"><img src="{{ hideme[index] ? upArrow: downArrow }}" class="hg_20 cross_label_img img_hover"></span>
                     </div>
                   </div>
                     <div class="moreDiscr col-12 row" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
@@ -215,8 +215,8 @@ data-backdrop="static" data-keyboard="false">
      </form>
    </div>
    <div class="modal-footer">
-      <button type="button" class="close btn save_btn change_bg btn-raised btn-custom-1 width20btn" 
-      data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
+      <button type="button" class="no_btn close btn save_btn change_bg btn-raised btn-custom-1 width20btn" 
+      data-dismiss="modal" aria-label="Close">
         No
       </button>
      <button type="button" id="clientFormLabel" (click)="deleteClient()"  

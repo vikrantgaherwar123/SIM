@@ -2,12 +2,12 @@
 <div class="row main-wrapper">
   
     <div class="col-12" id="main" style="background-color: #ffffff !important;">
-      <div class="row pro_row">
+      <div class="row pro_row" style="padding: 36px 88px;">
         <div class="col-6 row">
-          <div class="col-3" style="text-align: right;">
+          <div class="col-3" style="text-align: right;margin-left: 10px;">
               <h3 class="pro_heading">Products</h3>
           </div>
-          <div class="col-3" style="margin-left: -22px;">
+          <div class="col-3" style="margin-left: -18px;">
             <button type="button" class="btn save_btn"
               (click)="addProductModal()">
               + Add Product
@@ -41,7 +41,7 @@
       <div class="row">
         <!-- Product List -->
         <div class="col-12 pr-0">
-            <div style="padding: 36px;" class="item-form">
+            <div style="padding: 36px 88px;" class="item-form">
                 <div class="col-12 row header_title">
                   <div class="col-6 font_16"><span>Product</span></div>
                   <div class="col-1 text-right heading">Rate</div>
@@ -55,7 +55,7 @@
                   <div class="col-12 row main_row">
                       <div class="col-6" style="padding-top: 6px;">
                         <img src="assets/images/product_box_blue.png" class="img_box product_title">
-                        <span>
+                        <span style="color: #1f1f1f;">
                             {{ product.prodName }}
                         </span>
                       <div class="desc_div moreDiscr" [class.show]="hideme[index]">
@@ -184,8 +184,8 @@
          </form>
        </div>
        <div class="modal-footer">
-         <button type="button" class="close btn change_bg btn-raised btn-custom-1 width20btn" 
-         data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
+         <button type="button" class="no_btn close btn change_bg btn-raised btn-custom-1 width20btn" 
+         data-dismiss="modal" aria-label="Close">
            No
          </button>
          <button type="button" id="clientFormLabel" (click)="deleteProduct()"  
