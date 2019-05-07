@@ -155,7 +155,7 @@ select {
 }
 .dropdown-toggle::after{
   font-size: 13px !important;
-  margin-top: 1px !important;
+  margin-top: -6px !important;
 }
 .form-control:disabled, .form-control[readonly] {
   background-color: white;
@@ -437,3 +437,5 @@ a.morelink {
     line-height: 30px;
 }
 .top-level-menu a:hover { color: #000000; }
+
+

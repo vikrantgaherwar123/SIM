@@ -623,19 +623,6 @@ export class AddEditEstComponent implements OnInit {
       if(settings.taxFlagLevel == 2){
         this.taxLabel = "Disabled"
       }
-      //keep open tax field when tax on bill
-      if (settings.taxFlagLevel == 1) {
-        this.activeEstimate.tax_on_item = 1
-        this.activeEstimate.tax_rate = 0;
-      }
-
-      //keep open discount field when discount on bill && make default % choice as selected for discount
-      if(this.settings.discountFlagLevel == 0){
-        this.activeEstimate.discount_on_item = 0;
-        this.activeEstimate.percentage_flag=1;
-        this.activeEstimate.percentage_value=0;
-      }
-
       
     } else {
       //console.log("2")
@@ -1444,7 +1431,7 @@ export class AddEditEstComponent implements OnInit {
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }
 
-    
+
     // multiple taxes
     if (this.activeEstimate.taxList && this.activeEstimate.taxList.length > 0) {
       var temp_tax_amount = 0

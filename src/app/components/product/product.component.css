@@ -39,14 +39,7 @@
 .filter-box{
 	background: #ffffff;
 }
-.save_btn {
-  border-radius: 5px !important;
-  background: #1a73cc;
-  height: 38px !important;
-  width: 124px !important;
-  color: white !important;
-  margin-left: -19px;
-}
+
 .color_grey{
   color:#716f6f;
 }
@@ -101,6 +94,9 @@
   color: white !important;
   margin-left: 0px !important;
 }
+.save_btn:hover{
+  background: #1e81e3;
+}
 .morebtn {
   border-radius: 5px;
   font-size: 10px;
@@ -125,3 +121,4 @@
   height: 38px !important;
   width: 124px !important;
 }
+

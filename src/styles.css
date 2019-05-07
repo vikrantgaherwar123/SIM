@@ -1440,5 +1440,13 @@ textarea{
 }
 .input_symbol{
   border: 1px solid #ced4da;
-  padding: 3px 2px 3px 0px;
+  background-color: #ced4da;
+  padding: 4px 2px 3px 0px;
+}
+.mrg_btm{
+  margin-bottom: 3px;
+}
+.icon_color{
+  color: #666666;
+  margin-left: -5px;
 }

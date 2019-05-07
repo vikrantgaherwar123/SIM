@@ -105,6 +105,9 @@
   color: white !important;
   margin-left: 0px !important;
 }
+.save_btn:hover{
+  background: #1e81e3;
+}
 .morebtn {
   border-radius: 5px;
   font-size: 10px;
@@ -127,10 +130,10 @@
 	margin-top: 10px !important;
 }
 .moreDiscr {
-	font-size: 16px;
+  font-size: 16px;
+  /* height: 14px; */
 	line-height: 16px;
 	overflow: hidden;
-	/* padding: 13px 54px !important; */
 	background-color: #f1f6f9;
 	border-radius: 4px;
 }
@@ -142,11 +145,19 @@
 	padding-top: 12px;
 	margin-bottom: 27px;
 }
-.selected-items:hover{
+/* .selected-items:hover{
 	background-color: #e6ecf0;
-}
+} */
 .no_btn{
   margin-right: 46%;
   height: 38px !important;
   width: 124px !important;
+}
+.img_box {
+  width: 18px;
+  height: 18px;
+}
+.client_name{
+  color: #1f1f1f;
+  margin-left: 10px;
 }

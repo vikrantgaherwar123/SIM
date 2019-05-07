@@ -309,3 +309,12 @@ select {
   height: 20px;
   margin-bottom: -20px;
 }
+.drop_arrow{
+  margin-right: 4px;
+  width: 20px;
+  margin-left: 102px !important;
+  text-align: right;
+  cursor: pointer;
+  height: 20px;
+  margin-bottom: -20px;
+}

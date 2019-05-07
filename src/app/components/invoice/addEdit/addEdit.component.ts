@@ -292,7 +292,7 @@ export class AddEditComponent implements OnInit {
   editInit(invId) {
     
     //to view updated or viewed invoice in view page
-    this.commonSettingsInit()
+    // this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
@@ -307,9 +307,34 @@ export class AddEditComponent implements OnInit {
     }
 
     if(this.activeInvoice){
-
-
       this.invoiceListLoading = false;
+
+      //set settingFlags according to edit i.e invoice saved previously
+      if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+        this.activeInvoice.percentage_flag = 1;
+        this.settings.discountFlagLevel = 0;
+        this.noDiscountOnItem = false;
+        this.discountLabel = "On Bill"
+      }else if(this.activeInvoice.discount_on_item == 1){
+        this.settings.discountFlagLevel = 1;
+        this.noDiscountOnItem = true;
+        this.discountLabel = "On Item"
+      }
+
+      if(this.activeInvoice.tax_on_item == 1){
+        this.settings.taxFlagLevel = 1;
+        this.noTaxOnItem = true;
+        this.taxLabel = "On Bill"
+
+      }else if(this.activeInvoice.tax_on_item == 0){
+        this.settings.taxFlagLevel = 0;
+        this.taxtext = "Tax (on Item)"
+        this.noTaxOnItem = true;
+        this.taxLabel = "On Item"
+      }
+
+
+      
 
         //if item and Disabled condition  
         if(this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2){
@@ -441,6 +466,25 @@ export class AddEditComponent implements OnInit {
             delete invoice.records[0].client
             delete invoice.records[0].client_id
             this.activeInvoice = {...invoice.records[0]}
+
+            //set settingFlags according to edit i.e invoice saved previously
+            if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+              this.activeInvoice.percentage_flag = 1;
+              this.appSettings.androidSettings.discountFlagLevel = 0;
+              this.noDiscountOnItem = false;
+              this.discountLabel = "On Bill"
+            }else if(this.activeInvoice.discount_on_item == 1){
+              this.settings.discountFlagLevel = 1;
+              this.noDiscountOnItem = true;
+              this.discountLabel = "On Item"
+            }
+      
+            if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_rate ){
+              this.appSettings.androidSettings.taxFlagLevel = 0;
+              this.taxtext = "Tax (on Item)"
+              this.noTaxOnItem = true;
+              this.taxLabel = "On Item"
+            }
 
               //if item and Disabled condition  
               if(this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2){
@@ -587,6 +631,21 @@ export class AddEditComponent implements OnInit {
             //settings flagLevels as per estimate was saved
             this.activeInvoice.discount_on_item = this.activeEstimate.discount_on_item
             this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
+
+            //set settingFlags according to edit i.e invoice saved previously
+            if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+              this.activeInvoice.percentage_flag = 1;
+              this.appSettings.androidSettings.discountFlagLevel = 0;
+              this.noDiscountOnItem = false;
+              this.discountLabel = "On Bill"
+            }
+      
+            if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_rate ){
+              this.appSettings.androidSettings.taxFlagLevel = 0;
+              this.taxtext = "Tax (on Item)"
+              this.noTaxOnItem = true;
+              this.taxLabel = "On Item"
+            }
 
 
               //if item and Disabled condition  
@@ -2012,6 +2071,14 @@ export class AddEditComponent implements OnInit {
   saveSettings() {
     var setting = this.appSettings
     setting.androidSettings = this.activeSettings
+
+    // if(this.activeInvoice.discount_on_item == 0 || this.activeInvoice.discount ){
+    //   this.appSettings.androidSettings.discountFlagLevel = 0;
+    // }
+
+    // if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_rate ){
+    //   setting.androidSettings.taxFlagLevel = 0;
+    // }
 
     
 
