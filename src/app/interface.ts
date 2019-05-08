@@ -233,6 +233,7 @@ export interface recentInvoices {
 }
 
 export interface estimate {
+  discount_amount:number,
   taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>
@@ -283,6 +284,7 @@ export interface estimate {
 }
 
 export interface recentEstimates {
+  discount_amount: number,
   taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>

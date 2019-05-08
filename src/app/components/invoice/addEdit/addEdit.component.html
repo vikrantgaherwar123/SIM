@@ -452,7 +452,7 @@
                     </div>
                     <div > <!--*ngIf="activeInvoice.shipping_charges === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noShippingCharges , 'addLabelBackroundColor':!noShippingCharges}"
-                       (click)="noShippingCharges = !noShippingCharges">
+                       (click)="noShippingCharges = !noShippingCharges;calculateInvoice();">
                         <!-- {{settings.shipping ? settings.shipping : 'Shipping'}}+ -->
                         {{settings.shipping ? settings.shipping : 'Shipping'}} &nbsp;+
                       </span>
@@ -464,7 +464,7 @@
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment ,
                        'addLabelBackroundColor':!noAdjustment}"
-                       (click)="noAdjustment = !noAdjustment">
+                       (click)="noAdjustment = !noAdjustment;calculateInvoice();">
                         {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}} &nbsp;+
                       </span>
                     </div>
@@ -999,7 +999,7 @@
 </div>
 
 <!-- EDIT ITEM MODAL -->
-<div id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+<div *ngIf="activeInvoice" id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-md term_popup_modal">
     <div class="modal-content">
@@ -1038,7 +1038,7 @@
                   required />
               </div>
             </div>
-            <div class="row col-12" *ngIf="settings.discountFlagLevel === 1">
+            <div class="row col-12" *ngIf="activeInvoice.discount_on_item === 1">
               <span class="edit_span">{{settings.discount ? settings.discount : 'Discount'}}:</span>
               <input type="number" name="discount" class="form-control add-client-input-custom popup_input_height"
                 [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="{{settings.discount}}"

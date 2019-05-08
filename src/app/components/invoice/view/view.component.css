@@ -285,3 +285,6 @@ svg {
 .multiselect-dropdown .dropdown-btn .selected-item:hover {
   box-shadow: 1px 1px #ffffff !important;
 }
+.color_white{
+  color:white;
+}
