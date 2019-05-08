@@ -230,6 +230,18 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
+    this.settingsLoading = true;
+    this.settingService.fetch().subscribe((response: any) => {
+      this.settingsLoading = false;
+      if (response.settings !== null) {
+        this.appSettings =  response.settings.appSettings
+        this.activeSettings = response.settings.appSettings.androidSettings
+        setStorage(response.settings)
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.settings = this.user.setting
+      }
+    
+    },err => this.openErrorModal(err))
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
     // this.commonSettingsInit()
@@ -252,12 +264,14 @@ export class AddEditEstComponent implements OnInit {
       //set settingFlags according to edit i.e invoice saved previously
       if(this.activeEstimate.discount_on_item == 0){
         this.activeEstimate.percentage_flag = 1;
+        this.settings.discountFlagLevel = 0;
         if(this.appSettings){
-          this.appSettings.androidSettings.discountFlagLevel = 0;
+        this.appSettings.androidSettings.discountFlagLevel = 0;
         }
         this.noDiscountOnItem = false;
         this.discountLabel = "On Bill"
       }else if(this.activeEstimate.discount_on_item == 1){
+        this.settings.discountFlagLevel = 1;
         if(this.appSettings){
         this.appSettings.androidSettings.discountFlagLevel = 1;
         }
@@ -266,16 +280,20 @@ export class AddEditEstComponent implements OnInit {
       }
 
       if(this.activeEstimate.tax_on_item == 0){
+        this.settings.taxFlagLevel = 0;
         if(this.appSettings){
         this.appSettings.androidSettings.taxFlagLevel = 0;
         }
         this.taxtext = "Tax (on Item)"
         this.noTaxOnItem = true;
         this.taxLabel = "On Item"
-      }
-
-      if(this.activeEstimate.discount > 0){
-        this.activeEstimate.discount_on_item = 0;
+      }else if(this.activeEstimate.tax_on_item == 1){
+        this.settings.taxFlagLevel = 1;
+        if(this.appSettings){
+        this.appSettings.androidSettings.taxFlagLevel = 1;
+        }
+        this.noTaxOnItem = false;
+        this.taxLabel = "On Bill"
       }
 
 
@@ -429,22 +447,34 @@ export class AddEditEstComponent implements OnInit {
         //set settingFlags according to edit i.e invoice saved previously
         if(this.activeEstimate.discount_on_item == 0){
           this.activeEstimate.percentage_flag = 1;
+          this.settings.discountFlagLevel = 0;
+          if(this.appSettings){
           this.appSettings.androidSettings.discountFlagLevel = 0;
+          }
           this.noDiscountOnItem = false;
           this.discountLabel = "On Bill"
         }else if(this.activeEstimate.discount_on_item == 1){
           this.settings.discountFlagLevel = 1;
+          if(this.appSettings){
+          this.appSettings.androidSettings.discountFlagLevel = 1;
+          }
           this.noDiscountOnItem = true;
           this.discountLabel = "On Item"
         }
   
-        if(this.activeEstimate.tax_on_item == 0 ){
+        if(this.activeEstimate.tax_on_item == 0){
+          this.settings.taxFlagLevel = 0;
+          if(this.appSettings){
           this.appSettings.androidSettings.taxFlagLevel = 0;
+          }
           this.taxtext = "Tax (on Item)"
           this.noTaxOnItem = true;
           this.taxLabel = "On Item"
         }else if(this.activeEstimate.tax_on_item == 1){
+          this.settings.taxFlagLevel = 1;
+          if(this.appSettings){
           this.appSettings.androidSettings.taxFlagLevel = 1;
+          }
           this.noTaxOnItem = false;
           this.taxLabel = "On Bill"
         }
@@ -762,19 +792,21 @@ export class AddEditEstComponent implements OnInit {
     }
 
 
-    // Fetch Settings every time
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        this.appSettings =  response.settings.appSettings
-        this.activeSettings = response.settings.appSettings.androidSettings
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
-    
-    },err => this.openErrorModal(err))
+    // Fetch Settings 
+    if (!this.edit) {
+      this.settingsLoading = true;
+      this.settingService.fetch().subscribe((response: any) => {
+        this.settingsLoading = false;
+        if (response.settings !== null) {
+          this.appSettings = response.settings.appSettings
+          this.activeSettings = response.settings.appSettings.androidSettings
+          setStorage(response.settings)
+          this.user = JSON.parse(localStorage.getItem('user'))
+          this.settings = this.user.setting
+        }
+      }, err => this.openErrorModal(err))
+    }
+
 
       // Estimate Number
       if (!isNaN(parseInt(this.settings.quotNo))) {
@@ -1292,7 +1324,12 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.shipping_address = this.activeClient.shippingAddress
     }
 
+    if(this.includeTax){
+      this.activeEstimate.taxableFlag = 1;
+    }
+
     var self = this
+    
     if(this.activeEstimate.estimate_number !=="" && this.activeEstimate.created_date){
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
@@ -1357,11 +1394,13 @@ export class AddEditEstComponent implements OnInit {
   inclTax(event){
     if(event.target.checked === true){
       this.includeTax = true
+      this.activeEstimate.taxableFlag = 1;
       this.calculateEstimate();
     }
     //exclusive tax
     else{
       this.includeTax = false;
+      this.activeEstimate.taxableFlag = 0;
       this.calculateEstimate();
       
     }
@@ -1386,22 +1425,22 @@ export class AddEditEstComponent implements OnInit {
           
           if (isNaN(this.activeEstimate.listItems[i].tax_rate) || this.activeEstimate.listItems[i].tax_rate == 0) {
             this.activeEstimate.listItems[i].tax_rate = 0
-          } else if (this.settings.taxFlagLevel === 0 || this.activeEstimate.tax_on_item === 0) { //when tax on item selected from settings
+          }  //when tax on item selected from settings
             this.activeEstimate.listItems[i].tax_amount = ((this.activeEstimate.listItems[i].rate - (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].discount / 100) * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate) / (100 + this.activeEstimate.listItems[i].tax_rate)
             if (this.activeEstimate.listItems[i].discount_amount) {
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount
             }else{
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)
             }
-          }
+
         }else{
           if (isNaN(this.activeEstimate.listItems[i].tax_rate) || this.activeEstimate.listItems[i].tax_rate == 0) {
             this.activeEstimate.listItems[i].tax_rate = 0
-          } else if (this.settings.taxFlagLevel === 0 || this.activeEstimate.tax_on_item === 0) { //when tax on item selected from settings
+          } else { //when tax on item selected from settings
             if (this.activeEstimate.listItems[i].discount_amount) {
               this.activeEstimate.listItems[i].tax_amount = ((this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount) * this.activeEstimate.listItems[i].tax_rate/100;
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
-            }else{
+            }else if(!this.activeEstimate.listItems[i].discount_amount){
               this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate/100;
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) +  this.activeEstimate.listItems[i].tax_amount;
             }
@@ -1414,7 +1453,7 @@ export class AddEditEstComponent implements OnInit {
 
     // Discount
 
-    if(this.activeSettings.discountFlagLevel === 1){
+    if(this.activeSettings.discountFlagLevel === 1 && !this.includeTax){
       this.activeEstimate.percentage_value = 0;
       this.activeEstimate.discount = 0;
     }
@@ -1439,7 +1478,7 @@ export class AddEditEstComponent implements OnInit {
 
     // Tax
 
-    if(this.activeSettings.taxFlagLevel === 0 && !this.edit){
+    if(this.activeSettings.taxFlagLevel === 0 && !this.includeTax){
       this.activeEstimate.tax_rate = 0;
       this.activeEstimate.tax_amount = 0;
     }
@@ -1449,7 +1488,7 @@ export class AddEditEstComponent implements OnInit {
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }else if(this.includeTax){
-      this.activeEstimate.tax_amount = ((this.activeEstimate.gross_amount - (this.activeEstimate.gross_amount * this.activeEstimate.discount / 100)) * this.activeEstimate.tax_rate) / (100 + this.activeEstimate.tax_rate)
+      this.activeEstimate.tax_amount = ((this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate) / (100 + this.activeEstimate.tax_rate)
       //remove digits after two decimal
       var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
       this.activeEstimate.tax_amount = parseFloat(value);
@@ -1474,10 +1513,9 @@ export class AddEditEstComponent implements OnInit {
       }
       additions += temp_tax_amount
     }
-    this.activeEstimate.tax_amount = additions
-    //remove digits after two decimal
-    var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
-    this.activeEstimate.tax_amount = parseFloat(value);
+    if(!this.includeTax){
+      this.activeEstimate.tax_amount = additions
+    }
 
     // Shipping
     if (isNaN(this.activeEstimate.shipping_charges)) {
@@ -1678,38 +1716,44 @@ export class AddEditEstComponent implements OnInit {
 
     for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
       //when user changes from discount on Item to discount on Bill
-      if(this.activeSettings.discountFlagLevel === 0){         //on bill
+      if (this.activeSettings.discountFlagLevel === 0) {         //on bill
         this.activeEstimate.listItems[i].discount = 0;
         this.activeEstimate.listItems[i].discount_amount = 0;
-        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
-        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
+        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
+        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount + this.activeEstimate.listItems[i].tax_amount;
+      }else if(this.activeSettings.discountFlagLevel === 1){
+        this.activeEstimate.percentage_value = 0;
+        this.activeEstimate.discount = 0;
       }
-  
+
       //when user changes from tax on Item to tax on Bill
-      if(this.activeSettings.taxFlagLevel === 1){         //on bill
+      if (this.activeSettings.taxFlagLevel === 1) {         //on bill
         this.activeEstimate.listItems[i].tax_rate = 0;
         this.activeEstimate.listItems[i].tax_amount = 0;
         if (this.activeEstimate.listItems[i].discount_amount) {
           this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-        }else{
+        } else {
           this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
         }
+      }else if(this.activeSettings.taxFlagLevel === 0){
+        this.activeEstimate.tax_rate = 0;
+        this.activeEstimate.tax_amount = 0;
       }
-  
+
       //when user changes to disabled
-      if(this.activeSettings.discountFlagLevel === 2){         
+      if (this.activeSettings.discountFlagLevel === 2) {
         this.activeEstimate.listItems[i].discount = 0;
         this.activeEstimate.listItems[i].discount_amount = 0;
-        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
-        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
+        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
+        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount + this.activeEstimate.listItems[i].tax_amount;
       }
       //when user changes to disabled
-      if(this.activeSettings.taxFlagLevel === 2){         
+      if (this.activeSettings.taxFlagLevel === 2) {
         this.activeEstimate.listItems[i].tax_rate = 0;
         this.activeEstimate.listItems[i].tax_amount = 0;
         if (this.activeEstimate.listItems[i].discount_amount) {
           this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-        }else{
+        } else {
           this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
         }
       }
