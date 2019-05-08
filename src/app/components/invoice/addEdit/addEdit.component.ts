@@ -1604,7 +1604,7 @@ export class AddEditComponent implements OnInit {
             if (this.activeInvoice.listItems[i].discount_amount) {
               this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount) * this.activeInvoice.listItems[i].tax_rate/100;
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount +  this.activeInvoice.listItems[i].tax_amount;
-            }else{
+            }else if(!this.activeInvoice.listItems[i].discount_amount){
               this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate/100;
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) +  this.activeInvoice.listItems[i].tax_amount;
             }
@@ -1659,9 +1659,6 @@ export class AddEditComponent implements OnInit {
       var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
       this.activeInvoice.tax_amount = parseFloat(value);
     }
-
-    
-      
 
     // Multiple Taxes
     if (this.activeInvoice.taxList && this.activeInvoice.taxList.length > 0) {
@@ -2094,44 +2091,44 @@ export class AddEditComponent implements OnInit {
     var setting = this.appSettings
     setting.androidSettings = this.activeSettings
 
-    // for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
-    //   //when user changes from discount on Item to discount on Bill
-    //   if (this.activeSettings.discountFlagLevel === 0) {         //on bill
-    //     this.activeInvoice.listItems[i].discount = 0;
-    //     this.activeInvoice.listItems[i].discount_amount = 0;
-    //     this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
-    //     this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
-    //   }
+    for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+      //when user changes from discount on Item to discount on Bill
+      if (this.activeSettings.discountFlagLevel === 0) {         //on bill
+        this.activeInvoice.listItems[i].discount = 0;
+        this.activeInvoice.listItems[i].discount_amount = 0;
+        this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
+        this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
+      }
 
-    //   //when user changes from tax on Item to tax on Bill
-    //   if (this.activeSettings.taxFlagLevel === 1) {         //on bill
-    //     this.activeInvoice.listItems[i].tax_rate = 0;
-    //     this.activeInvoice.listItems[i].tax_amount = 0;
-    //     if (this.activeInvoice.listItems[i].discount_amount) {
-    //       this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
-    //     } else {
-    //       this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
-    //     }
-    //   }
+      //when user changes from tax on Item to tax on Bill
+      if (this.activeSettings.taxFlagLevel === 1) {         //on bill
+        this.activeInvoice.listItems[i].tax_rate = 0;
+        this.activeInvoice.listItems[i].tax_amount = 0;
+        if (this.activeInvoice.listItems[i].discount_amount) {
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
+        } else {
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
+        }
+      }
 
-    //   //when user changes to disabled
-    //   if (this.activeSettings.discountFlagLevel === 2) {
-    //     this.activeInvoice.listItems[i].discount = 0;
-    //     this.activeInvoice.listItems[i].discount_amount = 0;
-    //     this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
-    //     this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
-    //   }
-    //   //when user changes to disabled
-    //   if (this.activeSettings.taxFlagLevel === 2) {
-    //     this.activeInvoice.listItems[i].tax_rate = 0;
-    //     this.activeInvoice.listItems[i].tax_amount = 0;
-    //     if (this.activeInvoice.listItems[i].discount_amount) {
-    //       this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
-    //     } else {
-    //       this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
-    //     }
-    //   }
-    // }
+      //when user changes to disabled
+      if (this.activeSettings.discountFlagLevel === 2) {
+        this.activeInvoice.listItems[i].discount = 0;
+        this.activeInvoice.listItems[i].discount_amount = 0;
+        this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
+        this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
+      }
+      //when user changes to disabled
+      if (this.activeSettings.taxFlagLevel === 2) {
+        this.activeInvoice.listItems[i].tax_rate = 0;
+        this.activeInvoice.listItems[i].tax_amount = 0;
+        if (this.activeInvoice.listItems[i].discount_amount) {
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
+        } else {
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
+        }
+      }
+    }
 
     // if (this.activeSettings.taxFlagLevel === 1) {
     //   this.activeInvoice.tax_rate = 0;

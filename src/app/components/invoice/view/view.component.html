@@ -6,7 +6,7 @@
             <div class="col-2"><span class="color_white">Showing results for: </span>
               <span class="color_white" style="float: right;">Clients: </span></div>
             <div class="col-2">
-              <div class="form-group pl-0" style="margin-top: -13px !important;">
+              <div class="form-group pl-0" style="margin-top: -7px !important;">
                   <ng-multiselect-dropdown
                   [placeholder]="'All Clients'"
                   [data]="dropdownList"
@@ -16,7 +16,7 @@
                 </ng-multiselect-dropdown>
                 </div>
             </div>
-            <div class="col-md-2 row" style="margin-left: -4px;">
+            <div class="col-md-2 row" >
               <div class="col-md-4"><span class="color_white">Clients: </span></div>
               <ul class="nav col-4">
                 <li class="button-dropdown">
@@ -31,37 +31,33 @@
                 </li>
               </ul>
             </div>
-            <div class="col-md-2 row" style="margin-left: 44px;">
-                <div class="col-md-4"><span class="color_white">Clients: </span></div>
-                <ul class="nav col-4">
-                  <li class="button-dropdown">
-                    <a href="javascript:void(0)" class="dropdown-toggle">
-                    {{itemSelected}}  
-                    </a><span><img src="assets/images/filter.png" class="month_icon"> </span>
-                    <ul class="dropdown-menu">
-                      <li *ngFor="let item of duration">
-                        <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+            <div class="col-md-2 row" style="margin-left: 28px;">
+                <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+                <label class="color_white col-6" style="text-align: right;">From Date: </label>
+                <input class="col-6 date_inputs" id="anOtherButton" placeholder="Start" required readonly 
+                      matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
+                      (click)="picker3.open()"  (dateChange)="onDate($event)"
+                    >
+                    <mat-datepicker-toggle  matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3 ></mat-datepicker>
               </div>
-
-              <div class="col-md-3 row" style="margin-left: 44px;">
+              <div class="col-md-2 row">
+                  <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+                  <label class="color_white col-6" style="text-align: right;">To Date: </label>
+                  <input class="col-6 date_inputs" id="anOtherButton" placeholder="End" required readonly matInput [matDatepicker]="picker4"
+                    [formControl]="invoiceQueryForm.dateRange.end" (click)="picker4.open()" (dateChange)="onDate($event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-bottom: -68px !important;">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                </div>
+              
+              <div class="col-md-2 row search_btns">
                   <div class="col-12 row">
-                    <button id="downloadBtn" type="button" (click)="downloadInvoice('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                      class="col-5 btn-custom-1 change_bg no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                      title="Download"
-                    >
-                      <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
-                      Download
+                    <button id="downloadBtn" type="button" (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'"
+                      class="clear_btn col-5">Clear
                     </button>
-                    <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                      class="col-5 preview_btn btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                      title="Preview"
-                    >
-                      <img src="assets/images/buttons-icon/view16.png">
-                      Preview
+                    <button id="previewBtn" type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)"
+                      class="clear_btn col-5 change_btn_searchbar" style="margin-left: 14px;">Change
                     </button>
                   </div>
               </div>
@@ -98,30 +94,6 @@
                         </ul>
                       </li>
                     </ul>
-                  </div>
-            </div>
-            <div class="row">
-                <span class="col-4" style="color: #fff;">From Date:</span>
-                <div class="col-8 form-group pl-0" style="margin-top: -16px !important;">
-                    <input id="anOtherButton" placeholder="Start" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
-                    border: 1px solid #c4c1c1;color: black;"
-                      matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
-                      (click)="picker3.open()"  (dateChange)="onDate($event)"
-                    >
-                    <mat-datepicker-toggle  matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
-                    <mat-datepicker #picker3 ></mat-datepicker>
-                  </div>
-            </div>
-            <div class="row">
-                <span class="col-4" style="color: #fff;">To Date:</span>
-                <div class="col-8 form-group pl-0" style="margin-top: -16px !important;">
-                    <input id="anOtherButton" placeholder="End" required readonly style="max-width: 100%;padding: 9px 12px !important;background-color: white;
-                    border: 1px solid #c4c1c1;color: black;"
-                      matInput [matDatepicker]="picker4" [formControl]="invoiceQueryForm.dateRange.end"
-                      (click)="picker4.open()" (dateChange)="onDate($event)"
-                    > 
-                    <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: 112px !important;margin-bottom: -68px !important;"></mat-datepicker-toggle>
-                    <mat-datepicker #picker4></mat-datepicker>
                   </div>
             </div>
             <div class="row">
@@ -520,43 +492,6 @@
                   </div>
                   <div class="col-6 text-right">
                     <span class="font-custom-bold price">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                  </div>
-                </div>
-
-                <!-- inclusive tax -->
-              <div *ngIf="activeInv.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
-                  <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              Taxable :
-                          </span>
-                        </div>
-                        <div class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{(taxable) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                        </div>
-                  </div>
-                  <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div *ngIf="item.tax_rate" class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              (+) Tax ({{item.tax_rate}}%)
-                          </span>
-                      </div>
-                      <div *ngIf="item.taxAmount"  class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{item.taxAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                      </div>
-                  </div>
-                  <div *ngIf="activeInv.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              (+) Tax ({{activeInv.tax_rate}}%)
-                          </span>
-                        </div>
-                        <div  class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{activeInv.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
-                        </div>
                   </div>
                 </div>
   

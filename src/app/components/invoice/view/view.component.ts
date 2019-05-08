@@ -144,7 +144,7 @@ export class ViewComponent implements OnInit {
       if (params.invId) {
         this.InvoiceId = params.invId;
       } else {
-        this.openSearchClientModal()
+        // this.openSearchClientModal()
       }
 
       // // Set Active invoice whenever invoice list changes
@@ -166,7 +166,7 @@ export class ViewComponent implements OnInit {
       textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 10,
+      itemsShowLimit: 1,
       allowSearchFilter: true,
     };
     // keep first item selected in madal

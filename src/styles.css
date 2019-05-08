@@ -705,14 +705,17 @@ option {
 .multiselect-dropdown .dropdown-btn{
   background-color: white;
   border-radius: 0px !important;
-  border: 1px solid #d2cccc !important;
-  padding: 12px 12px !important;
+  border: 1px solid #ffffff !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  height: 28px;
 }
 .multiselect-dropdown .dropdown-btn .selected-item{
-  border: 1px solid #1a73cc !important;
-  background: #1a73cc !important;
-  padding: 3px 8px !important;
-  margin-top: 5px;
+  border: 1px solid #ffffff !important;
+  color: #525463 !important;
+  padding: 2px 0px !important;
+  margin-top: -4px !important;
+  background: #ffffff !important;
 }
 .multiselect-item-checkbox input[type=checkbox]:checked + div:before {
   background: #1a73cc !important;
@@ -721,8 +724,8 @@ option {
 .multiselect-item-checkbox input[type=checkbox] + div:before{
   border: 1px solid #1a73cc !important;
   color: #1a73cc !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 18px !important;
+  height: 18px !important;
   border-radius: 3px;
 }
 .multiselect-item-checkbox input[type=checkbox] + div:before
@@ -744,8 +747,18 @@ option {
     padding: .4375em 0;
     border: 1px solid !important;
   }
-  .multiselect-dropdown[_ngcontent-c9] .dropdown-btn[_ngcontent-c9] .selected-item[_ngcontent-c9]:hover {
+  .multiselect-dropdown.dropdown-btn.selected-item:hover {
     box-shadow: none !important;
+}
+.multiselect-item-checkbox input[type=checkbox] + div {
+  position: relative;
+  padding-left: 3em !important;
+  vertical-align: middle;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 0;
 }
 .fa-chevron-down:before {
   content: "\f078";
@@ -753,7 +766,7 @@ option {
 }
 .dropdown-list{
   border-top: none !important;
-  margin-top: -1px !important;
+  margin-top: 1px !important;
   box-shadow: none !important;
 }
 
@@ -1291,9 +1304,7 @@ textarea{
   padding: 9px 23px 20px 10px !important;
   border-top: 1px solid #e9ecef;
 }
-.color_white{
-  color:white !important;
-}
+
 .color_grey{
   color: #787e83;
   font-size: 12.5px;
@@ -1452,10 +1463,54 @@ textarea{
 }
 .color_white{
   color:white;
-  font-size: 11px;
+  font-size: 12px;
+  font-family: helvetica_light;
+  letter-spacing: 1px;
 }
 .month_icon{
   height: 15px;
-  margin-left: 111px;
-  margin-top: -64px;
+  margin-left: 134px;
+  margin-top: -45px;
+}
+.date_inputs{
+  max-width: 100%;
+  padding: 9px 12px !important;
+  background-color: white;
+  border: 1px solid #ffffff;
+  color: #636572;
+  border-radius: 3px;
+  height: 28px;
+  margin-top: -4px;
+}
+input.mat-input-element {
+  margin-top: -6px;
+}
+.clear_btn{
+  color: white !important;
+  width: 104px;
+  font-family: helvetica_light !important;
+  height: 28px;
+  border: 1px solid white !important;
+  /* padding: 7px; */
+  /* font-family: helvetica_light; */
+  padding: 2px 10px !important;
+  border-radius: 7px;
+  background-color: #1a73cc;
+}
+.search_btns{
+  margin-left: 59px !important;
+  margin-top: -6px;
+}
+.change_btn_searchbar{
+  margin-left: 14px;
+  background-color: white;
+  color: black !important;
+}
+.dropdown-list.filter-textbox {
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  padding: 2px !important;
+}
+.multiselect-dropdown .dropdown-btn .selected-item:hover {
+  box-shadow: 1px 1px #ffffff !important;
 }
