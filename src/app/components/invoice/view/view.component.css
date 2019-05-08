@@ -3,7 +3,7 @@
 .query-container {
   position: fixed;
   padding: 20px 12px;
-  height: 54px;
+  height: 57px;
   /* top: 75px; */
   z-index: 1000;
   background: #1a73cc;
@@ -286,5 +286,5 @@ svg {
   box-shadow: 1px 1px #ffffff !important;
 }
 .color_white{
-  color:white;
+  color:white !important;
 }

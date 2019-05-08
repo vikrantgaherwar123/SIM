@@ -57,105 +57,12 @@
                       class="clear_btn col-5">Clear
                     </button>
                     <button id="previewBtn" type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)"
-                      class="clear_btn col-5 change_btn_searchbar" style="margin-left: 14px;">Change
+                      class="clear_btn col-5 change_btn_searchbar" style="margin-left: 14px;">Search
                     </button>
                   </div>
               </div>
         </div>
-          <!-- <div class="row">
-            <div>
-                <span style="color: #fff;">Showing results for:</span> 
-            </div>
-            <div class="col-3 row">
-                <span class="col-3" style="color: #fff;">Clients:</span>
-                <div class="col-8 form-group pl-0" style="margin-top: -13px !important;">
-                    <ng-multiselect-dropdown
-                    [placeholder]="'All Clients'"
-                    [data]="dropdownList"
-                    [settings]="dropdownSettings"
-                    [formControl]="invoiceQueryForm.client"
-                  >
-                  </ng-multiselect-dropdown>
-                  </div>
-            </div>
-            <div class="row">
-                <span class="col-4" style="color: #fff;">Duration:</span>
-                <div class="col-8 form-group pl-0" style="margin-top: -16px !important;">
-                    <ul class="nav">
-                      <li class="button-dropdown">
-                        <a href="javascript:void(0)" class="dropdown-toggle" style="color: white !important;">
-                        {{itemSelected}}  
-                        </a><span><img src="assets/images/filter.png" style="height: 15px;
-                          margin-left: 160px;margin-top: -64px;"> </span>
-                        <ul class="dropdown-menu">
-                          <li *ngFor="let item of duration">
-                            <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                
-                <button id="downloadBtn" type="button" (click)="downloadInvoice('download')" data-loading-text="loading <i class='fa fa-spinner fa-spin '></i>"
-                  class="btn-custom-1 change_bg no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                  title="Download"
-                >
-                  <img src="assets/images/buttons-icon/download16.png" style="width: 13px;height: 13px;">
-                  Download
-                </button>
-                <button id="previewBtn" type="button" (click)="downloadInvoice('preview')" data-loading-text="Previewing <i class='fa fa-spinner fa-spin '></i>"
-                  class="preview_btn btn btnd btn-custom-2 no-border-radius pull-right ml-2 width12perbtn font-weight-bold"
-                  title="Preview"
-                >
-                  <img src="assets/images/buttons-icon/view16.png">
-                  Preview
-                </button>
-              </div>
-            </div> -->
-            <!--  -->
-            <!--  -->
-            <!--  -->
-            
-            <!-- <div class="col-md-9">
-              <span style="color: #fff;margin-left: -20px;">Showing results for:</span> 
-              <img src="assets/images/menu-logo/client.png"
-                style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> 
-                <span style="color:#1a73cc">Client:
-              </span><span>
-                <span *ngIf="invoiceQueryForm.client.value">
-                  {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
-                  <span *ngIf="invoiceQueryForm.client.value?.length > 1" [title]="getNames()">
-                    (+{{invoiceQueryForm.client.value.length - 1}}
-                    {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                  </span>,
-                </span>
-              </span>
-              <img src="assets/images/menu-logo/date.png"
-                style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
-              <span style="color:#1a73cc">{{itemSelected}} :</span>
-              <span *ngIf="disableDateText === false">
-                <span style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
-                                          invoiceQueryForm.dateRange.start.value.getDate() + '-' +
-                                          (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-                                          invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-                                        }}</span>&nbsp; <span style="font-size: 14px;">to</span>&nbsp; <span>{{invoiceQueryForm.dateRange.end.value ?
-                                          invoiceQueryForm.dateRange.end.value.getDate() + '-' +
-                                          (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-                                          invoiceQueryForm.dateRange.end.value.getFullYear() : 0
-                                        }}</span>
-              </span>
-            </div>
-    
-            <div class="col-12 col-md-2">
-              <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn change_btn">
-                Change
-              </button>
-            </div> 
-          </div>-->
+          
         </div>
     </div>
     <div class="w-100" style="padding-top: 72px">

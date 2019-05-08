@@ -1514,3 +1514,25 @@ input.mat-input-element {
 .multiselect-dropdown .dropdown-btn .selected-item:hover {
   box-shadow: 1px 1px #ffffff !important;
 }
+/* sidebar setting css */
+.setting_menu{
+  cursor: pointer;
+  border: 1px solid #aaa !important;
+  padding: 10px;
+  border-radius: 6px;
+}
+.setting_label{
+  color: #474959;
+}
+.nav .button-dropdown {
+  position: relative;
+}
+.cdk-overlay-connected-position-bounding-box {
+  position: absolute;
+  z-index: 1000;
+  top: 205px !important;
+  display: flex;
+  flex-direction: column;
+  min-width: 1px;
+  min-height: 1px;
+}
