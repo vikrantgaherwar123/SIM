@@ -19,15 +19,15 @@
 }
 @font-face {
   font-family: helvetica_bold;
-  src: url('./assets/fonts/poppins/Poppins-Bold.otf')
+  src: url('./assets/fonts/HelveticaNeue-Bold.otf')
 }
 @font-face {
   font-family: helvetica_regular;
-  src: url('./assets/fonts/poppins/Poppins-Regular.otf')
+  src: url('./assets/fonts/HelveticaNeue.otf')
 }
 @font-face {
   font-family: helvetica_light;
-  src: url('./assets/fonts/poppins/Poppins-Light.otf')
+  src: url('./assets/fonts/HelveticaNeue-Light.otf')
 }
 
 
@@ -35,7 +35,7 @@ b, body, p, button {
   font-family: helvetica_regular !important;
   font-size: 13.5px !important;
   font-style: normal;
-  /* letter-spacing: 0.5px !important; */
+  letter-spacing: 0.5px !important;
   color:#474959 !important;
   /* font-weight: 800 !important; */
 }
@@ -44,7 +44,7 @@ input[type=text], input[type=password],select {
   font-size: 13.5px !important;
   font-style: normal;
   font-weight: 100 !important;
-  /* letter-spacing: 0.5px; */
+  letter-spacing: 0.5px;
 }
 .border-hover{
   border-color: none;
@@ -56,7 +56,7 @@ input[type=text], input[type=password],select {
 .font-custom-bold {
   font-family: helvetica_regular !important;
   font-weight: normal !important;
-  /* letter-spacing: 0.5px; */
+  letter-spacing: 0.5px;
 }
 .font-custom-book {
   font-family: helvetica_regular !important;
@@ -888,7 +888,7 @@ background-color: none;
 .moreDiscr {
   font-size: 16px;
   line-height: 16px;
-  height: 14px;
+  height: 16px;
   overflow: hidden;
 }
 
@@ -1449,4 +1449,13 @@ textarea{
 .icon_color{
   color: #666666;
   margin-left: -5px;
+}
+.color_white{
+  color:white;
+  font-size: 11px;
+}
+.month_icon{
+  height: 15px;
+  margin-left: 111px;
+  margin-top: -64px;
 }
