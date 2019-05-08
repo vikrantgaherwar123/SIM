@@ -232,7 +232,7 @@ export class AddEditEstComponent implements OnInit {
   editInit(estId) {
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
-    this.commonSettingsInit()
+    // this.commonSettingsInit()
     this.recentEstListLoading = true;
 
     // Fetch selected invoice
@@ -248,6 +248,31 @@ export class AddEditEstComponent implements OnInit {
     
     if(this.activeEstimate){
       this.recentEstListLoading = false;
+
+      //set settingFlags according to edit i.e invoice saved previously
+      if(this.activeEstimate.discount_on_item == 0){
+        this.activeEstimate.percentage_flag = 1;
+        if(this.appSettings){
+          this.appSettings.androidSettings.discountFlagLevel = 0;
+        }
+        this.noDiscountOnItem = false;
+        this.discountLabel = "On Bill"
+      }else if(this.activeEstimate.discount_on_item == 1){
+        if(this.appSettings){
+        this.appSettings.androidSettings.discountFlagLevel = 1;
+        }
+        this.noDiscountOnItem = true;
+        this.discountLabel = "On Item"
+      }
+
+      if(this.activeEstimate.tax_on_item == 0){
+        if(this.appSettings){
+        this.appSettings.androidSettings.taxFlagLevel = 0;
+        }
+        this.taxtext = "Tax (on Item)"
+        this.noTaxOnItem = true;
+        this.taxLabel = "On Item"
+      }
 
       if(this.activeEstimate.discount > 0){
         this.activeEstimate.discount_on_item = 0;
@@ -400,6 +425,30 @@ export class AddEditEstComponent implements OnInit {
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+
+        //set settingFlags according to edit i.e invoice saved previously
+        if(this.activeEstimate.discount_on_item == 0){
+          this.activeEstimate.percentage_flag = 1;
+          this.appSettings.androidSettings.discountFlagLevel = 0;
+          this.noDiscountOnItem = false;
+          this.discountLabel = "On Bill"
+        }else if(this.activeEstimate.discount_on_item == 1){
+          this.settings.discountFlagLevel = 1;
+          this.noDiscountOnItem = true;
+          this.discountLabel = "On Item"
+        }
+  
+        if(this.activeEstimate.tax_on_item == 0 ){
+          this.appSettings.androidSettings.taxFlagLevel = 0;
+          this.taxtext = "Tax (on Item)"
+          this.noTaxOnItem = true;
+          this.taxLabel = "On Item"
+        }else if(this.activeEstimate.tax_on_item == 1){
+          this.appSettings.androidSettings.taxFlagLevel = 1;
+          this.noTaxOnItem = false;
+          this.taxLabel = "On Bill"
+        }
+
 
         if(this.activeEstimate.discount > 0){
           this.activeEstimate.discount_on_item = 0;
@@ -1323,44 +1372,14 @@ export class AddEditEstComponent implements OnInit {
     var gross_amount = 0
     var deductions = 0
     var additions = 0
+    //when inclusive tax was saved 
+    if(this.activeEstimate.taxableFlag === 1){
+      this.includeTax = true;
+    }
 
     if (this.activeEstimate.listItems) {
       for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
-        //when user changes from discount on Item to discount on Bill
-        if(this.activeSettings.discountFlagLevel === 0 && this.noDiscountOnItem){         //on bill
-          this.activeEstimate.listItems[i].discount = 0;
-          this.activeEstimate.listItems[i].discount_amount = 0;
-          this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
-          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
-        }
-        //when user changes from tax on Item to tax on Bill
-        if(this.activeSettings.taxFlagLevel === 1 && this.noTaxOnItem){         //on bill
-          this.activeEstimate.listItems[i].tax_rate = 0;
-          this.activeEstimate.listItems[i].tax_amount = 0;
-          if (this.activeEstimate.listItems[i].discount_amount) {
-            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-          }else{
-            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
-          }
-        }
-
-        //when user changes to disabled
-        if(this.activeSettings.discountFlagLevel === 2){         
-          this.activeEstimate.listItems[i].discount = 0;
-          this.activeEstimate.listItems[i].discount_amount = 0;
-          this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
-          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
-        }
-        //when user changes to disabled
-        if(this.activeSettings.taxFlagLevel === 2){         
-          this.activeEstimate.listItems[i].tax_rate = 0;
-          this.activeEstimate.listItems[i].tax_amount = 0;
-          if (this.activeEstimate.listItems[i].discount_amount) {
-            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-          }else{
-            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
-          }
-        }
+        
 
         //inclusive tax
         if (this.includeTax) {
@@ -1420,15 +1439,20 @@ export class AddEditEstComponent implements OnInit {
 
     // Tax
 
-    if(this.activeSettings.taxFlagLevel === 0){
+    if(this.activeSettings.taxFlagLevel === 0 && !this.edit){
       this.activeEstimate.tax_rate = 0;
       this.activeEstimate.tax_amount = 0;
     }
-    if (this.activeEstimate.tax_rate != null) {
+    if (this.activeEstimate.tax_rate != null && !this.includeTax) {
       if (isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
+    }else if(this.includeTax){
+      this.activeEstimate.tax_amount = ((this.activeEstimate.gross_amount - (this.activeEstimate.gross_amount * this.activeEstimate.discount / 100)) * this.activeEstimate.tax_rate) / (100 + this.activeEstimate.tax_rate)
+      //remove digits after two decimal
+      var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
+      this.activeEstimate.tax_amount = parseFloat(value);
     }
 
 
@@ -1651,6 +1675,45 @@ export class AddEditEstComponent implements OnInit {
   saveSettings() {
     var setting = this.appSettings
     setting.androidSettings = this.activeSettings
+
+    for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
+      //when user changes from discount on Item to discount on Bill
+      if(this.activeSettings.discountFlagLevel === 0){         //on bill
+        this.activeEstimate.listItems[i].discount = 0;
+        this.activeEstimate.listItems[i].discount_amount = 0;
+        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
+        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
+      }
+  
+      //when user changes from tax on Item to tax on Bill
+      if(this.activeSettings.taxFlagLevel === 1){         //on bill
+        this.activeEstimate.listItems[i].tax_rate = 0;
+        this.activeEstimate.listItems[i].tax_amount = 0;
+        if (this.activeEstimate.listItems[i].discount_amount) {
+          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
+        }else{
+          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
+        }
+      }
+  
+      //when user changes to disabled
+      if(this.activeSettings.discountFlagLevel === 2){         
+        this.activeEstimate.listItems[i].discount = 0;
+        this.activeEstimate.listItems[i].discount_amount = 0;
+        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity)* this.activeEstimate.listItems[i].tax_rate/100;
+        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount +  this.activeEstimate.listItems[i].tax_amount;
+      }
+      //when user changes to disabled
+      if(this.activeSettings.taxFlagLevel === 2){         
+        this.activeEstimate.listItems[i].tax_rate = 0;
+        this.activeEstimate.listItems[i].tax_amount = 0;
+        if (this.activeEstimate.listItems[i].discount_amount) {
+          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
+        }else{
+          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
+        }
+      }
+    }
 
     this.settingService.add(setting).subscribe((response: any) => {
       if (response.status == 200) {

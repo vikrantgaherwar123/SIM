@@ -69,6 +69,7 @@ export class ViewComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean = false;
   noTaxOnItem: boolean = false;
+  taxable: number;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -367,7 +368,17 @@ export class ViewComponent implements OnInit {
     }
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
+      var taxPayable = 0;
+      var totalDiscount = 0;
       for (let i = 0; i < this.activeInv.listItems.length; i++) {
+
+        if(this.activeInv.taxableFlag == 1 ){
+          taxPayable += this.activeInv.listItems[i].taxAmount;
+          if(this.activeInv.listItems[i].discountAmount){
+            totalDiscount += this.activeInv.listItems[i].discountAmount;
+          }
+        }
+        
         if(this.activeInv.listItems[i].discount ||this.activeInv.listItems[i].discount == 0){
           this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount
         }
@@ -386,8 +397,22 @@ export class ViewComponent implements OnInit {
         // if(this.activeInv.listItems[i].discountAmount || this.activeInv.listItems[i].discountAmount == 0 ){
         //   this.activeInv.listItems[i].discount_amount = this.activeInv.listItems[i].discountAmount;
         // }
+
+        //taxable amount
+        if(totalDiscount){
+          this.taxable = (this.activeInv.amount - totalDiscount) - taxPayable;
+        }else{
+          this.taxable = this.activeInv.amount - taxPayable;
+        }
       }
 
+      if(this.activeInv.taxableFlag == 1 && this.activeInv.tax_rate){
+        taxPayable = this.activeInv.tax_amount;
+        if(this.activeInv.discount_amount){
+          this.taxable = (this.activeInv.amount - this.activeInv.discount_amount) - taxPayable;
+        }
+        this.taxable = this.activeInv.amount - taxPayable;
+      }
 
       if(this.activeInv.discount_on_item == 1){
         this.noDiscountOnItem = true;

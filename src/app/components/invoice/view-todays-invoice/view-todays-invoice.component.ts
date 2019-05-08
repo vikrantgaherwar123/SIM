@@ -169,11 +169,15 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       
         if (this.activeInv.listItems) {
           var temp = []
+          var taxPayable = 0;
+          var totalDiscount = 0;
           for (let i = 0; i < this.activeInv.listItems.length; i++) {
 
             if(this.activeInv.taxableFlag == 1 ){
-              var taxPayable = 0;
               taxPayable += this.activeInv.listItems[i].taxAmount;
+              if(this.activeInv.listItems[i].discountAmount){
+                totalDiscount += this.activeInv.listItems[i].discountAmount;
+              }
             }
             
             temp.push({
@@ -191,11 +195,20 @@ export class ViewTodaysInvoiceComponent implements OnInit {
             })
           }
           this.activeInv.listItems = temp
+          //taxable amount
+          if(totalDiscount){
+            this.taxable = (this.activeInv.amount - totalDiscount) - taxPayable;
+          }else{
+            this.taxable = this.activeInv.amount - taxPayable;
+          }
+          
         }
 
-        if(this.activeInv.taxableFlag == 1 ){
-          var taxPayable = 0;
+        if(this.activeInv.taxableFlag == 1 && this.activeInv.tax_rate){
           taxPayable = this.activeInv.tax_amount;
+          if(this.activeInv.discount_amount){
+            this.taxable = (this.activeInv.amount - this.activeInv.discount_amount) - taxPayable;
+          }
           this.taxable = this.activeInv.amount - taxPayable;
         }
         
