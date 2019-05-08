@@ -74,6 +74,7 @@ export class ViewEstComponent implements OnInit {
   isTaxPresent: boolean;
   noTaxOnItem: boolean;
   noDiscountOnItem: boolean;
+  taxable: number;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -361,7 +362,17 @@ export class ViewEstComponent implements OnInit {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
     if(this.activeEst !== undefined){
+      var taxPayable = 0;
+      var totalDiscount = 0;
       for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+        
+        if(this.activeEst.taxableFlag == 1 ){
+          taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
+          if(this.activeEst.alstQuotProduct[i].discountAmount){
+            totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
+          }
+        }
+
         if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
           this.noTaxOnItem = true;
         }else{
@@ -373,11 +384,27 @@ export class ViewEstComponent implements OnInit {
           this.noDiscountOnItem = false;
         }
       }
+
+      //taxable amount
+      if(totalDiscount){
+        this.taxable = (this.activeEst.amount - totalDiscount) - taxPayable;
+      }else{
+        this.taxable = this.activeEst.amount - taxPayable;
+      }
+
       for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
         if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){
           this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
         }
       }
+    }
+
+    if(this.activeEst.taxableFlag == 1 && this.activeEst.tax_rate){
+      taxPayable = this.activeEst.tax_amount;
+      if(this.activeEst.discount_amount){
+        this.taxable = (this.activeEst.amount - this.activeEst.discount_amount) - taxPayable;
+      }
+      this.taxable = this.activeEst.amount - taxPayable;
     }
     this.setActiveClient()
   }

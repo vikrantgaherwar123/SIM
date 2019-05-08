@@ -138,6 +138,7 @@ export class EstimateService {
       created_date: estimate.createDate,
       device_modified_on: 0,
       discount: estimate.discount,
+      taxableFlag:estimate.taxableFlag,
       
       discount_on_item: estimate.assignDiscountFlag,
       estimate_number: estimate.quetationNo,
