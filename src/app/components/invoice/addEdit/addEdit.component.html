@@ -472,7 +472,7 @@
                       <div  *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                         <span class="inline label_span"[ngClass]="{'removeaddLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
                         'addLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
-                          (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                          (click)="activeInvoice.taxList[taxIndex] ? activeInvoice.taxList[taxIndex] = null : activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue};calculateInvoice()">
                           {{tax.taxName}} &nbsp;+
                       </span> <!--*ngIf="!activeInvoice.taxList[taxIndex]"-->
                       </div>
@@ -649,9 +649,8 @@
     
                                 <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pr-0 remove-button">
-                                  <div class="addon selector"
-                                    (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
-                                    <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img">
+                                  <div class="addon selector">
+                                    <!-- <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img"> -->
                                   </div>
                                 </div>
                               </div>
