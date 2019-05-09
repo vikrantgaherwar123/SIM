@@ -1518,21 +1518,25 @@ input.mat-input-element {
 .setting_menu{
   cursor: pointer;
   border: 1px solid #aaa !important;
-  padding: 10px;
+  padding: 7px 20px 6px 7px;
   border-radius: 6px;
 }
+.setting_menu_discount{
+  cursor: pointer;
+  border: 1px solid #aaa !important;
+  padding: 7px 24px 6px 7px;
+  border-radius: 6px;
+}
+.setting_menu_tax{
+  cursor: pointer;
+  border: 1px solid #aaa !important;
+  padding: 7px 60px 6px 7px;
+  border-radius: 6px;
+}
+
 .setting_label{
   color: #474959;
 }
 .nav .button-dropdown {
   position: relative;
-}
-.cdk-overlay-connected-position-bounding-box {
-  position: absolute;
-  z-index: 1000;
-  top: 205px !important;
-  display: flex;
-  flex-direction: column;
-  min-width: 1px;
-  min-height: 1px;
 }

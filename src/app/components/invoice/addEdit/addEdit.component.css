@@ -157,6 +157,7 @@ select {
 .dropdown-toggle::after{
   font-size: 13px !important;
   margin-top: -6px !important;
+  margin-left: 5px !important;
 }
 .form-control:disabled, .form-control[readonly] {
   background-color: white;
@@ -441,4 +442,59 @@ a.morelink {
 
 .disableTaxDiscount{
 pointer-events: none;
+}
+/* sidebar settings */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  margin-left: 2px;
+  display: none;
+  float: left;
+  min-width: 104px;
+  padding: 0.5rem 23px !important;
+  margin: 7px 16px 0px !important;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+.dropdown-toggle::after {
+  display: none;
+  width: 0;
+  height: 0;
+  content: '\f078';
+  font: normal normal normal 17px/1 FontAwesome;
+  -webkit-text-stroke: 0.2px white;
+  margin-left: 0.255em !important;
+  vertical-align: .255em;
+  border-right: 0 solid transparent !important;
+  border-bottom: 0;
+  border-left: 0 solid transparent !important;
+}
+.setting_arrow{
+  float: right;
+  color: #666666 !important;
+  font-size: 20px;
+  margin-right: 15px;
+  
+}
+.setting_arrow_discount{
+  float: right;
+  color: #666666 !important;
+  font-size: 20px;
+  margin-right: 15px;
+  margin-top: -20px;
+}
+.setting_arrow_tax{
+  float: right;
+  color: #666666 !important;
+  font-size: 20px;
+  margin-right: 15px;
+  margin-top: -20px;
 }

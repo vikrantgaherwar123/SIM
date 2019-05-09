@@ -288,3 +288,12 @@ svg {
 .color_white{
   color:white !important;
 }
+.cdk-overlay-connected-position-bounding-box {
+  position: absolute;
+  z-index: 1000;
+  top: 205px !important;
+  display: flex;
+  flex-direction: column;
+  min-width: 1px;
+  min-height: 1px;
+}

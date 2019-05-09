@@ -8,28 +8,6 @@
           <div class="back p-4 shadow" style="border-radius: 2px;">
             <div class="col-12 row">
               <div class="col-6">
-                  
-                  <span style="cursor: pointer" mat-button [matMenuTriggerFor]="setting">Change Setting</span>
-
-                      <mat-menu #setting="matMenu">
-                        <button mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
-                        <button mat-menu-item [matMenuTriggerFor]="tax">Tax ({{taxLabel}})</button>
-                        <button mat-menu-item>
-                          <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)">Prices are inclusive of Tax
-                        </button>
-                      </mat-menu>
-
-                      <mat-menu #discount="matMenu">
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}" (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}" (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-                      </mat-menu>
-
-                      <mat-menu #tax="matMenu">
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}" (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}" (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}" (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
-                      </mat-menu>
               </div>
               <div class="col-6 vtop text-right">
                 <span class="c-name" type="text" id="titleAdd" name="title">
@@ -855,89 +833,78 @@
           </button>
         </div>
         <!-- settings -->
-        <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="margin-top: 22px;">
-          Tax
+        <div class="row">
+            <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
+             style="margin-top: 22px;margin-left: 2px;" data-toggle="collapse" 
+              href="#settingCollapseExample" role="button" aria-expanded="false" aria-controls="settingCollapseExample">
+                Invoice Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
+            </div>
         </div>
+        <div class="collapse" id="settingCollapseExample">
         <div class="row" style="margin-top: 22px;">
-          <div class="col-4">Tax</div>
-          <div class="col-8">
+          <div class="col-5">Discount</div> 
+          <div class="col-7">
 
-              <li class="button-dropdown">
-                  <a href="javascript:void(0)" class="dropdown-toggle setting_menu">
-                      Discount ({{discountLabel}})
-                  </a><span><img src="assets/images/filter.png" class="month_icon"> </span>
-                  <ul class="dropdown-menu">
+              <li class="button-dropdown" style="list-style: none;">
+                  <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount">
+                      Discount ({{discountLabel}}) <span><i class="paidArrow fa fa-angle-down setting_arrow_discount"></i></span>
+                  </a>
+                  <ul class="dropdown-menu" style="padding: 0.5rem 0px !important;">
                     <li>
                         <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
                           (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                    
                       </li>
                       <li>
                         <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
                           (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                    
                       </li>
                       <li>
                           <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
                     
                       </li>
                   </ul>
-                </li>
-
-                <!-- <li class="button-dropdown">
-                    <div href="javascript:void(0)" class="dropdown-toggle setting_menu">
-                    {{itemSelected}} 
-                    </div>
-                    <ul class="dropdown-menu">
-                      
-                      <li>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
-                          (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                    
-                      </li>
-                      <li>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
-                          (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                    
-                      </li>
-                      <li>
-                          <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-                    
-                      </li>
-                    </ul>
-                  </li> -->
-
-
-
-
-
-
-
-
-              <!-- <button class="setting_menu" mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
-
-              <mat-menu #setting="matMenu">
-                <button mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
-                <button mat-menu-item [matMenuTriggerFor]="tax">Tax ({{taxLabel}})</button>
-                <button mat-menu-item>
-                  <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)">Prices are inclusive of Tax
-                </button>
-              </mat-menu>
-
-              <mat-menu #discount="matMenu">
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}" (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}" (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-              </mat-menu>
-
-              <mat-menu #tax="matMenu">
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}" (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}" (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
-                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}" (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
-              </mat-menu> -->
+              </li>
           </div>
 
         </div>
+        <div class="row" style="margin-top: 22px;">
+          <div class="col-5">Tax</div>
+          <div class="col-7">
+              <li class="button-dropdown" style="list-style: none;">
+                <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax">
+                  Tax ({{taxLabel}}) <span><i class="paidArrow fa fa-angle-down setting_arrow_tax"></i></span>
+                </a>
+                <ul class="dropdown-menu" style="margin: 7px 16px 0px !important;">
+                  <li>
+                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
+                      (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                  </li>
+                  <li>
+                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
+                      (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                  </li>
+                  <li>
+                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
+                      (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                  </li>
+                </ul>
+              </li>
+          </div>
+
+        </div>
+        <div class="row" style="margin-top: 22px;">
+          <div class="col-5">Inclusive Tax</div>
+          <div class="col-7">
+              <label class="check">
+                  <div class="checkbox default_checkbox">
+                      <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
+                      <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                  </div>
+                </label>
+          </div>
+
+        </div>
+      </div>
         <!-- recently added invoice -->
         
         <div *ngIf="invoiceList" class="row" style="margin-top: 22px;">
