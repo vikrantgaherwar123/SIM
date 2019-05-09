@@ -1025,6 +1025,10 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
       if (uid == null) {
+        //if no tax item and still tax is there then make it 0
+        if(this.activeEstimate.tax_on_item !== 0){
+          this.activeItem.tax_rate = 0; 
+        }
         if(this.activeItem.tax_rate == 0){
           this.activeItem.tax_amount = 0;
         }
@@ -1250,6 +1254,10 @@ export class AddEditEstComponent implements OnInit {
     this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
+    //if no tax on item and still tax is there then make it 0
+    if(this.activeEstimate.tax_on_item !== 0){
+      product.taxRate = 0; 
+    }
     this.activeItem = {
       description: product.discription == null ? '' : product.discription,
       product_name: product.prodName,

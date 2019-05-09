@@ -1273,9 +1273,6 @@ export class AddEditComponent implements OnInit {
         }
         this.toasterService.pop('success', 'Product has been added!');
         this.store.select('product').subscribe(products => this.productList = products)
-        // window will refresh when product added successfully to see that product in a list
-        // window.location.reload(true);
-        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -1292,7 +1289,10 @@ export class AddEditComponent implements OnInit {
     this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
-    // console.log(product)
+    //if no tax on item and still tax is there then make it 0
+    if(this.activeInvoice.tax_on_item !== 0){
+      product.taxRate = 0; 
+    }
     this.activeItem = {
       unique_identifier: product.uniqueKeyProduct,
       description: product.discription == null ? '' : product.discription,
@@ -1308,7 +1308,6 @@ export class AddEditComponent implements OnInit {
 
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
-    // console.log(this.addItem, uid)
 
     //reduce paid amount when clicked on cross icon of paid label  
     this.amountPaid = (this.activeInvoice.amount - this.activeInvoice.balance)
@@ -1327,6 +1326,10 @@ export class AddEditComponent implements OnInit {
     if(this.activeItem.quantity !==null && this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
       this.activeItem.rate !==null ){
       if(uid == null) {
+        //if no tax item and still tax is there then make it 0
+        if(this.activeInvoice.tax_on_item !== 0){
+          this.activeItem.tax_rate = 0; 
+        }
         if(this.activeItem.tax_rate == 0){
           this.activeItem.tax_amount = 0;
         }
@@ -1701,14 +1704,15 @@ export class AddEditComponent implements OnInit {
           if (isNaN(this.activeInvoice.taxList[i].percentage)) {
             this.activeInvoice.taxList[i].percentage = 0
           }
-          this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions) / 100 * this.activeInvoice.taxList[i].percentage
-          //remove digits after two decimal
-          var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
-          this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
+          this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions)  * this.activeInvoice.taxList[i].percentage / 100
+          // var rounded = Math.round( this.activeInvoice.taxList[i].calculateValue * 10 ) / 10;
           temp_tax_amount += this.activeInvoice.taxList[i].calculateValue
         } 
       }
       additions += temp_tax_amount
+      //remove digits after two decimal
+      // var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
+      // this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
     }
     // this.activeInvoice.tax_amount = additions
 
