@@ -681,7 +681,7 @@ export class AddEditEstComponent implements OnInit {
       }
 
       //keep open discount field when discount on bill && make default % choice as selected for discount
-      if(this.settings.discountFlagLevel == 0){
+      if(this.settings.discountFlagLevel == 0 && this.settings.discountFlagLevel !== 2){
         this.activeEstimate.discount_on_item = 0;
         this.activeEstimate.percentage_flag=1;
         // this.activeEstimate.percentage_value=0;
@@ -697,10 +697,14 @@ export class AddEditEstComponent implements OnInit {
 
       //set label if for disabled condition
       if(settings.discountFlagLevel == 2){
+        this.activeEstimate.discount_on_item = 2
         this.discountLabel = "Disabled"
+        this.noDiscountOnItem = true;
       }
       if(settings.taxFlagLevel == 2){
+        this.activeEstimate.tax_on_item = 2
         this.taxLabel = "Disabled"
+        this.noTaxOnItem = true;
       }
       
     } else {
@@ -1021,6 +1025,10 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
       if (uid == null) {
+        //if no tax item and still tax is there then make it 0
+        if(this.activeEstimate.tax_on_item !== 0){
+          this.activeItem.tax_rate = 0; 
+        }
         if(this.activeItem.tax_rate == 0){
           this.activeItem.tax_amount = 0;
         }
@@ -1246,6 +1254,10 @@ export class AddEditEstComponent implements OnInit {
     this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
+    //if no tax on item and still tax is there then make it 0
+    if(this.activeEstimate.tax_on_item !== 0){
+      product.taxRate = 0; 
+    }
     this.activeItem = {
       description: product.discription == null ? '' : product.discription,
       product_name: product.prodName,
@@ -1744,30 +1756,38 @@ export class AddEditEstComponent implements OnInit {
       if (this.activeSettings.discountFlagLevel === 2) {
         this.activeEstimate.listItems[i].discount = 0;
         this.activeEstimate.listItems[i].discount_amount = 0;
-        this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
-        this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount + this.activeEstimate.listItems[i].tax_amount;
       }
       //when user changes to disabled
       if (this.activeSettings.taxFlagLevel === 2) {
         this.activeEstimate.listItems[i].tax_rate = 0;
         this.activeEstimate.listItems[i].tax_amount = 0;
-        if (this.activeEstimate.listItems[i].discount_amount) {
-          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-        } else {
-          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
-        }
+        
       }
     }
 
+    //when user changes to disabled
+    if (this.activeSettings.discountFlagLevel === 2) {
+      setting.androidSettings.discountFlagLevel = 2;
+      this.activeEstimate.discount = 0;
+    }
+    
+    if (this.activeSettings.taxFlagLevel === 2) {
+      setting.androidSettings.taxFlagLevel = 2;
+      this.activeEstimate.tax_rate = 0;
+      this.activeEstimate.tax_amount = 0;
+    }
+    
+
     this.settingService.add(setting).subscribe((response: any) => {
       if (response.status == 200) {
-        this.calculateEstimate()
+        
         
         this.toasterService.pop('success','Updated Successfully')
         setStorage(response.settings)
         this.user = JSON.parse(localStorage.getItem('user'))
         this.settings = this.user.setting
         this.commonSettingsInit();
+        this.calculateEstimate()
         
       } else {
         alert (response.message)

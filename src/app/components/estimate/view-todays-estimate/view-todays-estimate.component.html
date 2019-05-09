@@ -304,26 +304,26 @@
                           class="font-custom-bold price">{{(taxable) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                       </div>
                 </div>
-                <div *ngFor="let item of activeEst.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                    <div *ngIf="item.tax_rate" class="col-6 text-left">
+                <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                    <div *ngIf="item.taxRate" class="col-6 text-left">
                         <span class="font-custom-bold">
-                            (+) Tax ({{item.tax_rate}}%)
+                            (+) Tax ({{item.taxRate}}%)
                         </span>
                     </div>
-                    <div *ngIf="item.tax_amount"  class="col-6 text-right">
+                    <div *ngIf="item.taxAmount"  class="col-6 text-right">
                         <span
-                          class="font-custom-bold price">{{item.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          class="font-custom-bold price">{{item.taxAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                     </div>
                 </div>
-                <div *ngIf="activeEst.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                <div *ngIf="activeEst.taxrate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
                     <div class="col-6 text-left">
                         <span class="font-custom-bold">
-                            (+) Tax ({{activeEst.tax_rate}}%)
+                            (+) Tax ({{activeEst.taxrate}}%)
                         </span>
                       </div>
                       <div  class="col-6 text-right">
                         <span
-                          class="font-custom-bold price">{{activeEst.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          class="font-custom-bold price">{{activeEst.taxAmt | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
                       </div>
                 </div>
               </div>

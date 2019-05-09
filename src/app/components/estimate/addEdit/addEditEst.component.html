@@ -14,7 +14,7 @@
                     <button mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
                     <button mat-menu-item [matMenuTriggerFor]="tax">Tax ({{taxLabel}})</button>
                     <button mat-menu-item>
-                      <input type="checkbox" (change)="inclTax($event)">Prices are inclusive of Tax
+                      <input type="checkbox" [checked]="activeEstimate.taxableFlag" (change)="inclTax($event)">Prices are inclusive of Tax
                     </button>
                   </mat-menu>
                 

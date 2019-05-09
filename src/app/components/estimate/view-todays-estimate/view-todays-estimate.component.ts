@@ -41,6 +41,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   showDiscountLabel: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  taxable: number;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -122,8 +123,17 @@ export class ViewTodaysEstimateComponent implements OnInit {
       }
 
       if (this.activeEst.alstQuotProduct) {
+        var taxPayable = 0;
+        var totalDiscount = 0;
         var temp = []
         for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+          if(this.activeEst.taxableFlag == 1 ){
+            taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
+            if(this.activeEst.alstQuotProduct[i].discountAmount){
+              totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
+            }
+          }
+          
           if(this.activeEst.alstQuotProduct[i].discount || this.activeEst.alstQuotProduct[i].discount == 0){
           
             this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
@@ -165,6 +175,20 @@ export class ViewTodaysEstimateComponent implements OnInit {
           })
         }
         this.activeEst.alstQuotProduct = temp
+        //taxable amount
+        if(totalDiscount){
+          this.taxable = (this.activeEst.amount - totalDiscount) - taxPayable;
+        }else{
+          this.taxable = this.activeEst.amount - taxPayable;
+        }
+      }
+
+      if(this.activeEst.taxableFlag == 1 && this.activeEst.tax_rate){
+        taxPayable = this.activeEst.tax_amount;
+        if(this.activeEst.discount_amount){
+          this.taxable = (this.activeEst.amount - this.activeEst.discount_amount) - taxPayable;
+        }
+        this.taxable = this.activeEst.amount - taxPayable;
       }
 
       //make discount value 0 if comes undefined when came back from store

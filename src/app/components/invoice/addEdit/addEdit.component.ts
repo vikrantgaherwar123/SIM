@@ -692,6 +692,8 @@ export class AddEditComponent implements OnInit {
             if (this.activeEstimate.taxList){
               this.activeInvoice.taxList = this.activeEstimate.taxList;
             }
+            //set inclusive flag
+            this.activeInvoice.taxableFlag = this.activeEstimate.taxableFlag;
             //validate discount and tax field while makeInvoice if values are there when tax/discount on bills are selected
             if(this.activeEstimate.tax_rate!==0){
               this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
@@ -949,7 +951,7 @@ export class AddEditComponent implements OnInit {
       }
 
       //keep open discount field when discount on bill && make default % choice as selected for discount
-      if(this.settings.discountFlagLevel == 0){
+      if(this.settings.discountFlagLevel == 0 && this.settings.discountFlagLevel !== 2){
         this.activeInvoice.discount_on_item = 0;
         this.activeInvoice.percentage_flag=1;
         // this.activeInvoice.percentage_value=0;
@@ -963,10 +965,14 @@ export class AddEditComponent implements OnInit {
       }
       //set label if for disabled condition
       if(settings.discountFlagLevel == 2){
+        this.activeInvoice.discount_on_item = 2
         this.discountLabel = "Disabled"
+        this.noDiscountOnItem = true;
       }
       if(settings.taxFlagLevel == 2){
+        this.activeInvoice.tax_on_item = 2
         this.taxLabel = "Disabled"
+        this.noTaxOnItem = true;
       }
 
     } else {
@@ -1289,9 +1295,6 @@ export class AddEditComponent implements OnInit {
         }
         this.toasterService.pop('success', 'Product has been added!');
         this.store.select('product').subscribe(products => this.productList = products)
-        // window will refresh when product added successfully to see that product in a list
-        // window.location.reload(true);
-        // this.setProductFilter();
       } else {
         // notifications.showError({ message: 'Some error occurred, please try again!', hideDelay: 1500, hide: true })
       }
@@ -1308,7 +1311,10 @@ export class AddEditComponent implements OnInit {
     this.noProductSelected = false;   //dont show red box
     this.ifProductEmpty = false;
     var product = (prod == null) ? this.addItem.value : prod
-    // console.log(product)
+    //if no tax on item and still tax is there then make it 0
+    if(this.activeInvoice.tax_on_item !== 0){
+      product.taxRate = 0; 
+    }
     this.activeItem = {
       unique_identifier: product.uniqueKeyProduct,
       description: product.discription == null ? '' : product.discription,
@@ -1324,7 +1330,6 @@ export class AddEditComponent implements OnInit {
 
   addEditInvoiceItem(uid = null) {
     // If product is in product list directly add to invoice else save product and then add to invoice
-    // console.log(this.addItem, uid)
 
     //reduce paid amount when clicked on cross icon of paid label  
     this.amountPaid = (this.activeInvoice.amount - this.activeInvoice.balance)
@@ -1343,6 +1348,10 @@ export class AddEditComponent implements OnInit {
     if(this.activeItem.quantity !==null && this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
       this.activeItem.rate !==null ){
       if(uid == null) {
+        //if no tax item and still tax is there then make it 0
+        if(this.activeInvoice.tax_on_item !== 0){
+          this.activeItem.tax_rate = 0; 
+        }
         if(this.activeItem.tax_rate == 0){
           this.activeItem.tax_amount = 0;
         }
@@ -1714,14 +1723,15 @@ export class AddEditComponent implements OnInit {
           if (isNaN(this.activeInvoice.taxList[i].percentage)) {
             this.activeInvoice.taxList[i].percentage = 0
           }
-          this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions) / 100 * this.activeInvoice.taxList[i].percentage
-          //remove digits after two decimal
-          var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
-          this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
+          this.activeInvoice.taxList[i].calculateValue = (this.activeInvoice.gross_amount - deductions)  * this.activeInvoice.taxList[i].percentage / 100
+          // var rounded = Math.round( this.activeInvoice.taxList[i].calculateValue * 10 ) / 10;
           temp_tax_amount += this.activeInvoice.taxList[i].calculateValue
         } 
       }
       additions += temp_tax_amount
+      //remove digits after two decimal
+      // var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
+      // this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
     }
     // this.activeInvoice.tax_amount = additions
 
@@ -2172,20 +2182,26 @@ export class AddEditComponent implements OnInit {
       if (this.activeSettings.discountFlagLevel === 2) {
         this.activeInvoice.listItems[i].discount = 0;
         this.activeInvoice.listItems[i].discount_amount = 0;
-        this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
-        this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
       }
       //when user changes to disabled
       if (this.activeSettings.taxFlagLevel === 2) {
         this.activeInvoice.listItems[i].tax_rate = 0;
         this.activeInvoice.listItems[i].tax_amount = 0;
-        if (this.activeInvoice.listItems[i].discount_amount) {
-          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
-        } else {
-          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
-        }
       }
     }
+      //when user changes to disabled
+      if (this.activeSettings.discountFlagLevel === 2) {
+        setting.androidSettings.discountFlagLevel = 2;
+        this.activeInvoice.discount = 0;
+        this.activeInvoice.discount_amount = 0;
+      }
+      
+      if (this.activeSettings.taxFlagLevel === 2) {
+        setting.androidSettings.taxFlagLevel = 2;
+        this.activeInvoice.tax_rate = 0;
+        this.activeInvoice.tax_amount = 0;
+      }
+    
 
     this.settingService.add(setting).subscribe((response: any) => {
       if (response.status == 200) {
