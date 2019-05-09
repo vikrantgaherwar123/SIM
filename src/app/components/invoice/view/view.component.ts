@@ -121,6 +121,8 @@ export class ViewComponent implements OnInit {
 
   }
 
+  
+
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Invoice');
     // Fetch clients if not in store
@@ -156,6 +158,48 @@ export class ViewComponent implements OnInit {
       //   }
       // })
 
+      var n = 1000000000;
+      if(this.settings.numberFormat == '###.###.###,00' || this.settings.numberFormat == '##.##.##.###,00' ){
+        var value = n.toLocaleString(
+          'de-DE', // leave undefined to use the browser's locale,
+          // or use a string like 'en-US' to override it.
+          { minimumFractionDigits: 2 }
+        );
+        console.log(value);
+        if(this.settings.numberFormat == '##.##.##.###,00'){
+          var value = n.toLocaleString(
+            'IT', // leave undefined to use the browser's locale,
+            // or use a string like 'en-US' to override it.
+            { minimumFractionDigits: 2 }
+          );
+          console.log(value);
+          
+        }
+      }else if(this.settings.numberFormat == '### ### ###,00'){
+        var value = n.toLocaleString(
+          'Fr', // leave undefined to use the browser's locale,
+          // or use a string like 'en-US' to override it.
+          { minimumFractionDigits: 2 }
+        );
+        console.log(value);
+      }else if(this.settings.numberFormat == '###,###,###.00' || this.settings.numberFormat == '##,##,##,###.00'){
+        var value = n.toLocaleString(
+          'en-US', // leave undefined to use the browser's locale,
+          // or use a string like 'en-US' to override it.
+          { minimumFractionDigits: 2 }
+        );
+        console.log(value);
+        if(this.settings.numberFormat == '##,##,##,###.00'){
+          var value = n.toLocaleString(
+            'en-IN', // leave undefined to use the browser's locale,
+            // or use a string like 'en-US' to override it.
+            { minimumFractionDigits: 2 }
+          );
+          console.log(value);
+          
+        }
+      }
+      
     })
 
 
