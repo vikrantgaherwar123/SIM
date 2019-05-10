@@ -168,7 +168,7 @@ export class ViewComponent implements OnInit {
         console.log(value);
         if(this.settings.numberFormat == '##.##.##.###,00'){
           var value = n.toLocaleString(
-            'IT', // leave undefined to use the browser's locale,
+            'de-AT', // leave undefined to use the browser's locale,
             // or use a string like 'en-US' to override it.
             { minimumFractionDigits: 2 }
           );
