@@ -14,7 +14,7 @@
                       <mat-menu #setting="matMenu">
                         <button mat-menu-item [matMenuTriggerFor]="discount">Discount ({{discountLabel}})</button>
                         <button mat-menu-item [matMenuTriggerFor]="tax">Tax ({{taxLabel}})</button>
-                        <button mat-menu-item>
+                        <button [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"  mat-menu-item>
                           <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)">Prices are inclusive of Tax
                         </button>
                       </mat-menu>
@@ -530,7 +530,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{activeInvoice.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'2.2-2'}}</span>
+                            class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
                         </div>
                       </div>
                     </div>

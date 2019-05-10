@@ -71,7 +71,7 @@
                       <div class="ellipsis">{{product.discription}}</div>
                     </span>
                     <span class="col-4 pr-0 font-custom-bold text-truncate">
-                      {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
+                      {{ product.rate | CurrencyPipe }}
                     </span>
                   </div>
                 </div>

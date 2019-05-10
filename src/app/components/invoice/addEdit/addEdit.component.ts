@@ -219,8 +219,6 @@ export class AddEditComponent implements OnInit {
     //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
-    
-
 
     this.addTermModal.setDefault = true; //set term initially default
     $('#navbar').show()
@@ -1647,10 +1645,13 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.gross_amount = gross_amount
 
     // Discount
-    if(this.activeSettings.discountFlagLevel === 1  && !this.includeTax){
-      this.activeInvoice.percentage_value = 0;
-      this.activeInvoice.discount = 0;
+    if(this.activeSettings){
+      if(this.activeSettings.discountFlagLevel === 1  && !this.includeTax){
+        this.activeInvoice.percentage_value = 0;
+        this.activeInvoice.discount = 0;
+      }
     }
+    
 
     if (this.activeInvoice.percentage_flag == 1) {
       var discountFactor = this.activeInvoice.percentage_value / 100
@@ -1669,10 +1670,12 @@ export class AddEditComponent implements OnInit {
     
 
     // Tax
+    if(this.activeSettings){
+      if(this.activeSettings.taxFlagLevel === 0  && !this.includeTax){
+        this.activeInvoice.tax_rate = 0;
+        this.activeInvoice.tax_amount = 0;
+      }
 
-    if(this.activeSettings.taxFlagLevel === 0  && !this.includeTax){
-      this.activeInvoice.tax_rate = 0;
-      this.activeInvoice.tax_amount = 0;
     }
     
     if (this.activeInvoice.tax_rate != null && !this.includeTax) {
@@ -1685,6 +1688,9 @@ export class AddEditComponent implements OnInit {
       
       this.activeInvoice.tax_amount = additions
     }else if(this.includeTax){
+      if(this.activeInvoice.discount == undefined){
+        this.activeInvoice.discount = 0;
+      }
       // this.activeInvoice.tax_amount = ((this.activeInvoice.gross_amount - (this.activeInvoice.gross_amount * this.activeInvoice.discount / 100)) * this.activeInvoice.tax_rate) / (100 + this.activeInvoice.tax_rate)
       this.activeInvoice.tax_amount = ((this.activeInvoice.gross_amount - this.activeInvoice.discount) * this.activeInvoice.tax_rate) / (100 + this.activeInvoice.tax_rate)
       //remove digits after two decimal
@@ -1720,9 +1726,9 @@ export class AddEditComponent implements OnInit {
     if (isNaN(this.activeInvoice.shipping_charges)) {
       this.activeInvoice.shipping_charges = undefined
     } else {
-      additions += this.activeInvoice.shipping_charges = 0;
+      additions += this.activeInvoice.shipping_charges;
     }
-    if(this.noShippingCharges){
+    if(this.noAdjustment){
       this.activeInvoice.adjustment = 0;
     }
 
@@ -1732,8 +1738,8 @@ export class AddEditComponent implements OnInit {
     } else {
       deductions += this.activeInvoice.adjustment
     }
-    if(this.noAdjustment){
-      this.activeInvoice.shipping_charges
+    if(this.noShippingCharges){
+      this.activeInvoice.shipping_charges = 0;
     }
 
     this.activeInvoice.amount = parseFloat((this.activeInvoice.gross_amount - deductions + additions).toFixed(2))

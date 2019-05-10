@@ -395,7 +395,7 @@
                       <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                     </div>
                     <div class="col-6 text-right">
-                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
                     </div>
                   </div>
                 </div>
@@ -579,7 +579,7 @@
                   </div>
 
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold price">{{activeEstimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    <span class="font-custom-bold price">{{activeEstimate.amount | CurrencyPipe}}</span>
                   </div>
                 </div>
 
@@ -589,8 +589,7 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld price">{{balance | currency:settings.currencyInText:(settings.currencyText ? 'code' :
-                      'symbol'):'1.2-2'}}</span>
+                    <span class="bld price">{{balance | CurrencyPipe}}</span>
                   </div>
                 </div>
 
@@ -658,7 +657,7 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                    {{ estimate.amount | CurrencyPipe }}
                   </div>
                 </div>
               </div>
