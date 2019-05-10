@@ -106,12 +106,18 @@
   background-color:#1a73cc;
   color:white;
   height: 38px !important;
+  width: 94px;
   padding-top: 8px;
 }
 .edit-setting .country-code input[type=radio] + label{
-  background-color: #ffffff;
+  background-color: #e6ecf0;
   height: 38px !important;
+  margin-left: 20px !important;
+  width: 94px;
+  border-radius: 5px!important;
+  border: 1px solid;
   padding-top: 8px;
+  margin-top: 5px !important;
 }
 
 .labelText{
@@ -126,6 +132,7 @@
   height:31px !important; 
   border-radius:4px;
   height: 38px !important;
+  margin-top: 6px;
 }
 .pattern_icon{
   float: right;
@@ -158,6 +165,10 @@ input[type="radio"] {
 .selected{
   background-color: #1a73cc;
   color:white;
+}
+.or_div{
+  margin-left: -20px; 
+  margin-top: 28px !important;
 }
 
 /* [type="radio"]:checked,

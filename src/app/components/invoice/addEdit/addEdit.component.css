@@ -452,17 +452,17 @@ pointer-events: none;
   margin-left: 2px;
   display: none;
   float: left;
-  min-width: 104px;
-  padding: 0.5rem 20px !important;
-  margin: 7px 16px 0px !important;
+  width: 164px !important;
+  padding: 0.5rem 24px !important;
+  margin: 0px 16px 0px !important;
   font-size: 1rem;
   color: #212529;
+  border-radius: 0px !important;
   text-align: left;
   list-style: none;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0,0,0,.15);
-  border-radius: .25rem;
 }
 .dropdown-toggle::after {
   display: none;
@@ -501,4 +501,20 @@ pointer-events: none;
 .mat-menu-item {
   padding: 11px 19px !important;
   border: none;
+}
+.fa-angle-down:before {
+  content: "\f107";
+  float: right;
+  margin-left: 10px;
+  color: #666666 !important;
+  margin-bottom: -5px;
+}
+.setting_li_bg{
+  color:#474959;
+}
+.setting_li_bg li:hover{
+  background: rgba(0,0,0,.04);
+}
+.mat-menu-item:hover:not([disabled]) {
+  background: rgba(255, 255, 255, 0.04);
 }

@@ -325,7 +325,7 @@
                 </div>
                 <div ><!--*ngIf="activeEstimate.shipping_charges === undefined"-->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noShippingCharges , 'addLabelBackroundColor':!noShippingCharges}"
-                   (click)="noShippingCharges = !noShippingCharges">
+                   (click)="noShippingCharges = !noShippingCharges;calculateEstimate()">
                     {{settings.shipping ? settings.shipping : 'Shipping'}}+
                 </span>
                 </div>
@@ -335,14 +335,14 @@
                 </div>
                 <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment, 'addLabelBackroundColor':!noAdjustment}"
-                   (click)="noAdjustment = !noAdjustment">
+                   (click)="noAdjustment = !noAdjustment;calculateEstimate()">
                     {{settings.adjustment ? settings.adjustment : 'ADJ_LABEL' | translate}}+
                 </span>
                 </div>
                 <div *ngIf="activeEstimate.taxList">
                 <div *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':!activeEstimate.taxList[taxIndex], 'addLabelBackroundColor':activeEstimate.taxList[taxIndex] }"
-                  (click)="activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                  (click)="activeEstimate.taxList[taxIndex] ? activeEstimate.taxList[taxIndex] = null : activeEstimate.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue};calculateEstimate()">
                     {{tax.taxName}}+
                 </span><!--*ngIf="!activeEstimate.taxList[taxIndex]" -->
                 </div>
@@ -515,8 +515,8 @@
 
                           <!-- <div class="input-group-addon set-color">%</div>-->
                           <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector" (click)="activeEstimate.taxList[taxIndex] = null;">
-                                  <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img">
+                              <div class="addon selector">
+                                  <!-- <img src="assets/images/grey_cross.png" class="hg_20 cross_label_img"> -->
                                 </div>
                           </div>
                         </div>
@@ -539,8 +539,8 @@
                             onfocus="this.select()" [(ngModel)]="activeEstimate.shipping_charges" (keyup)="calculateEstimate()" />
                   
                           <div class="input-group-addon pr-0 remove-button">
-                            <div class="addon selector" (click)="activeEstimate.shipping_charges = undefined;calculateEstimate()">
-                              <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                            <div class="addon selector">
+                              <!-- <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img"> -->
                             </div>
                           </div>
                         </div>
@@ -564,8 +564,8 @@
               
                       <!-- <div class="input-group-addon set-color">%</div>-->
                       <div class="input-group-addon pr-0 remove-button">
-                        <div class="addon selector" (click)="activeEstimate.adjustment = undefined; calculateEstimate()">
-                          <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img">
+                        <div class="addon selector">
+                          <!-- <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="hg_20 cross_label_img"> -->
                         </div>
                       </div>
                     </div>

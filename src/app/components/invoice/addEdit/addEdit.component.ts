@@ -1669,9 +1669,11 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.gross_amount = gross_amount
 
     // Discount
-    if(this.activeSettings.discountFlagLevel === 1  && !this.includeTax){
-      this.activeInvoice.percentage_value = 0;
-      this.activeInvoice.discount = 0;
+    if (this.activeSettings) {
+      if (this.activeSettings.discountFlagLevel === 1 && !this.includeTax) {
+        this.activeInvoice.percentage_value = 0;
+        this.activeInvoice.discount = 0;
+      }
     }
 
     if (this.activeInvoice.percentage_flag == 1) {
@@ -1691,10 +1693,11 @@ export class AddEditComponent implements OnInit {
     
 
     // Tax
-
-    if(this.activeSettings.taxFlagLevel === 0  && !this.includeTax){
-      this.activeInvoice.tax_rate = 0;
-      this.activeInvoice.tax_amount = 0;
+    if(this.activeSettings){
+      if(this.activeSettings.taxFlagLevel === 0  && !this.includeTax){
+        this.activeInvoice.tax_rate = 0;
+        this.activeInvoice.tax_amount = 0;
+      }
     }
     
     if (this.activeInvoice.tax_rate != null && !this.includeTax) {

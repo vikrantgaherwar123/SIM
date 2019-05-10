@@ -450,7 +450,7 @@
                       <div  *ngFor="let tax of settings.alstTaxName; let taxIndex = index">
                         <span class="inline label_span"[ngClass]="{'removeaddLabelBackroundColor':!activeInvoice.taxList[taxIndex] ,
                         'addLabelBackroundColor':activeInvoice.taxList[taxIndex] }"
-                          (click)="activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue}">
+                          (click)="activeInvoice.taxList[taxIndex] ? activeInvoice.taxList[taxIndex] = null : activeInvoice.taxList[taxIndex] = {taxName: tax.taxName, calculateValue: tax.calculateValue};calculateInvoice()">
                           {{tax.taxName}} &nbsp;+
                       </span> <!--*ngIf="!activeInvoice.taxList[taxIndex]"-->
                       </div>
@@ -634,9 +634,8 @@
     
                                 <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pr-0 remove-button">
-                                  <div class="addon selector"
-                                    (click)="activeInvoice.taxList[taxIndex] = null;calculateInvoice()">
-                                    <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img">
+                                  <div class="addon selector">
+                                    <!-- <img src="assets/images/grey_cross.png" Title="Delete" class="img_hover hg_20 cross_label_img"> -->
                                   </div>
                                 </div>
                               </div>
@@ -841,15 +840,15 @@
             </div>
         </div>
         <div class="collapse" id="settingCollapseExample">
-        <div class="row" style="margin-top: 22px;">
+        <div class="row mrg_top_14">
           <div class="col-5">Discount</div> 
           <div class="col-7">
 
               <li class="button-dropdown" style="list-style: none;">
-                  <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount">
-                      Discount ({{discountLabel}}) <span><i class="paidArrow fa fa-angle-down setting_arrow_discount"></i></span>
+                  <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
+                     <span class="setting_span"> Discount ({{discountLabel}})</span>
                   </a>
-                  <ul class="dropdown-menu" style="padding: 0.5rem 0px !important;">
+                  <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                     <li>
                         <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
                           (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
@@ -867,14 +866,14 @@
           </div>
 
         </div>
-        <div class="row" style="margin-top: 22px;">
+        <div class="row mrg_top_14">
           <div class="col-5">Tax</div>
           <div class="col-7">
               <li class="button-dropdown" style="list-style: none;">
-                <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax">
-                  Tax ({{taxLabel}}) <span><i class="paidArrow fa fa-angle-down setting_arrow_tax"></i></span>
+                <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
+                  <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
                 </a>
-                <ul class="dropdown-menu" style="margin: 7px 16px 0px !important;">
+                <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
                   <li>
                     <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
                       (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
@@ -892,13 +891,13 @@
           </div>
 
         </div>
-        <div class="row" style="margin-top: 22px;">
+        <div class="row mrg_top_14">
           <div class="col-5">Inclusive Tax</div>
           <div class="col-7">
               <label class="check">
                   <div class="checkbox default_checkbox">
                       <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
-                      <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                      <span class="setting_checkmark checkmark default_checkbox_span" style="top: 1px !important;"></span>
                   </div>
                 </label>
           </div>
@@ -907,7 +906,7 @@
       </div>
         <!-- recently added invoice -->
         
-        <div *ngIf="invoiceList" class="row" style="margin-top: 22px;">
+        <div *ngIf="invoiceList" class="row mrg_top_14">
           <div
             class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
            >

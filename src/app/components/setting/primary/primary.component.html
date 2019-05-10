@@ -6,29 +6,29 @@
             <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
               <span class="col-8">Primary settings</span>
               <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-              <span class="col-2"></span>
+              <!-- <span class="col-2"></span> -->
             </div>
             <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
               <span class="col-8">Custom Field Name</span>
               <span class="col-2">
                 <img src="assets/images/next12.png" class="setting_arrow">
               </span>
-              <span class="col-2"></span>
+              <!-- <span class="col-2"></span> -->
             </div>
             <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
               <span class="col-8">Banking Details</span>
               <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-              <span class="col-2"></span>
+              <!-- <span class="col-2"></span> -->
             </div>
             <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
               <span class="col-8">Terms & Conditions</span>
               <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-              <span class="col-2"></span>
+              <!-- <span class="col-2"></span> -->
             </div>
             <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
               <span class="col-8">Profile</span>
               <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-              <span class="col-2"></span>
+              <!-- <span class="col-2"></span> -->
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@
             <!-- Currency Symbol -->
             <div class="form-group labelSpacing">
               <div class="row">
-                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2 labelText">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 mt-2 labelText" style="margin-top: 28px !important;">
                   Currency Symbol
                 </label>
                 <div class="col-12 col-md-3">
@@ -211,8 +211,8 @@
                       >
                       <label for="currencySymbol" class="taxonitem">{{activeCountry.currencyCode}}</label>
                     </div>
-                    <div class="col-2 mt-3 px-0 text-center">or</div>
-                    <div class="col-5 px-0">
+                    <div class="col-2 mt-3 px-0 text-center or_div">or</div>
+                    <div class="col-5 px-0"  style="margin-left: -6px;">
                       <div style="font-size: 12px;color: #2e2e2e;">Select Currency Code</div>
                       <input type="radio" id="currencyName" name="currenySymbol" [checked]="activeSettings.currencyText"
                         (click)="setCurrencySymbol('text')"
