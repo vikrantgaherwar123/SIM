@@ -319,7 +319,7 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
-
+    this.commonSettingsInit()
     this.settingsLoading = true;
     this.settingService.fetch().subscribe((response: any) => {
       this.settingsLoading = false;
@@ -1741,10 +1741,11 @@ export class AddEditComponent implements OnInit {
     // Shipping
     if (isNaN(this.activeInvoice.shipping_charges)) {
       this.activeInvoice.shipping_charges = undefined
-    } else {
-      additions += this.activeInvoice.shipping_charges = 0;
+    } 
+    else {
+      additions += this.activeInvoice.shipping_charges
     }
-    if(this.noShippingCharges){
+    if(this.noAdjustment){
       this.activeInvoice.adjustment = 0;
     }
 
@@ -1754,8 +1755,8 @@ export class AddEditComponent implements OnInit {
     } else {
       deductions += this.activeInvoice.adjustment
     }
-    if(this.noAdjustment){
-      this.activeInvoice.shipping_charges
+    if(this.noShippingCharges){
+      this.activeInvoice.shipping_charges = 0
     }
 
     this.activeInvoice.amount = parseFloat((this.activeInvoice.gross_amount - deductions + additions).toFixed(2))

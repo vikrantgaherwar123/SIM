@@ -498,10 +498,6 @@ pointer-events: none;
   margin-right: 15px;
   margin-top: -20px;
 }
-.mat-menu-item {
-  padding: 11px 19px !important;
-  border: none;
-}
 .fa-angle-down:before {
   content: "\f107";
   float: right;
@@ -517,4 +513,13 @@ pointer-events: none;
 }
 .mat-menu-item:hover:not([disabled]) {
   background: rgba(255, 255, 255, 0.04);
+}
+.dropdown-menu.show {
+  display: block !important;
+}
+.discount_drop{
+  font-size: 20px;
+  margin-right: 12px;
+  vertical-align: middle;
+  margin-bottom: 9px;
 }

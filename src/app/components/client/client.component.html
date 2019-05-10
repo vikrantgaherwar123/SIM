@@ -207,15 +207,15 @@ data-backdrop="static" data-keyboard="false">
      </form>
    </div>
    <div class="modal-footer">
-      <button type="button" class="no_btn close btn save_btn change_bg btn-raised btn-custom-1 width20btn" 
-      data-dismiss="modal" aria-label="Close">
+      <button type="button" class="no_btn btn change_bg change_btn_width" (click)="closeItemModel()" data-dismiss="modal"
+        aria-label="Close">
         No
       </button>
-     <button type="button" id="clientFormLabel" (click)="deleteClient()"  
-     class="close btn btn-raised  btn-success width20btn save_btn"
-       data-dismiss="modal" aria-label="Close">
-       Yes
-     </button>
+      <button type="button" id="clientFormLabel" (click)="deleteClient()"  
+      class="btn save_btn btn-raised width25btn"
+        data-dismiss="modal" aria-label="Close">
+        Yes
+      </button>
    </div>
  </div>
 </div>

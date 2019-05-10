@@ -201,7 +201,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
             var allDiscount = (baseAmount - totalDiscount)
             this.taxable = allDiscount - taxPayable;
           }else{
-            this.taxable = this.activeInv.amount - taxPayable;
+            this.taxable = this.activeInv.gross_amount - taxPayable;
           }
           
         }
