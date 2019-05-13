@@ -274,7 +274,7 @@
                                 <pre class="selected-items selected_description"
                                  >{{item.description}}</pre>
                               </div>
-                              <span *ngIf="item.description.length !== 0" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
+                              <span *ngIf="item.description.length > 50" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
                               <!-- <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span> -->
                             </div>
                           </div>

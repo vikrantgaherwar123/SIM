@@ -50,12 +50,12 @@ export class HeaderComponent implements OnInit {
   }
 
   handleRouteChange(){
-    if (this.router.url == '/invoice/add' || this.router.url==='/invoice/view' ){
+    if (this.router.url === '/invoice/add' || this.router.url==='/invoice/view' ){
       this.invSrc = "assets/images/menu-logo/invoice_blue.png";
     }else{
       this.invSrc = "assets/images/menu-logo/invoice_grey.png";
     }
-    if (this.router.url==='/estimate/add' || this.router.url==='/estimate/view' ){
+    if (this.router.url ==='/estimate/add' || this.router.url==='/estimate/view' ){
       this.estSrc = "assets/images/menu-logo/estimate_blue.png";
     }else{
       this.estSrc = "assets/images/menu-logo/estimate_grey.png";
@@ -75,43 +75,72 @@ export class HeaderComponent implements OnInit {
     }else{
       this.settingSrc = "assets/images/menu-logo/settings-grey.png";
     }
+    if (this.router.url==='/setting/batchUpload'){
+      this.BatchSrc = "assets/images/menu-logo/batch_upload_blue.png";
+    }else{
+      this.BatchSrc = "assets/images/menu-logo/batch_upload_greyb.png";
+    }
   }
 
   onEstHover(){
+    if(this.router.url !=='/estimate/add' && this.router.url !=='/estimate/view'){
     this.estSrc = "assets/images/menu-logo/estimate_blue.png";
+    }
   }
   offEstHover(){
+    if(this.router.url !=='/estimate/add' && this.router.url !=='/estimate/view'){
       this.estSrc = "assets/images/menu-logo/estimate_grey.png";
+    }
   }
   onInvHover(){
-    this.invSrc = "assets/images/menu-logo/invoice_blue.png";
+    if(this.router.url !== '/invoice/add' && this.router.url !=='/invoice/view' ){
+      this.invSrc = "assets/images/menu-logo/invoice_blue.png";
+    }
   }
   offInvHover(){
+    if(this.router.url !== '/invoice/add' && this.router.url !=='/invoice/view' ){
     this.invSrc = "assets/images/menu-logo/invoice_grey.png";
+    }
   }
   onProductHover(){
+    if(this.router.url !=='/product'){
     this.productSrc = "assets/images/menu-logo/product_blue.png";
+    }
   }
   offProductHover(){
+    if(this.router.url !=='/product'){
     this.productSrc = "assets/images/menu-logo/product_grey.png";
+    }
   }
   onClientHover(){
+    if(this.router.url !=='/client'){
     this.clientSrc = "assets/images/menu-logo/client_blue.png";
+    }
   }
   offClientHover(){
+    if(this.router.url !=='/client'){
     this.clientSrc = "assets/images/menu-logo/client_grey.png";
+    }
   }
   onSettingHover(){
+    if(this.router.url !=='/setting/primary'){
     this.settingSrc = "assets/images/menu-logo/settings_blue.png";
+    }
   }
   offSettingHover(){
+    if(this.router.url !=='/setting/primary'){
     this.settingSrc = "assets/images/menu-logo/settings-grey.png";
+    }
   }
   onBatchHover(){
+    if(this.router.url !=='/setting/batchUpload'){
     this.BatchSrc = "assets/images/menu-logo/batch_upload_blue.png";
+    }
   }
   offBatchHover(){
+    if(this.router.url !=='/setting/batchUpload'){
     this.BatchSrc = "assets/images/menu-logo/batch_upload_greyb.png";
+    }
   }
   
 
