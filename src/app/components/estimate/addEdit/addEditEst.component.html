@@ -419,9 +419,11 @@
                           required onfocus="this.select()" [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()" />
                         <div class="col-2 input_symbol">
                           <div *ngIf="activeEstimate.percentage_flag == 0" class="icon_color">
-                            {{mysymbols}}
+                            <span>{{mysymbols}}</span>
                           </div>
-                          <div *ngIf="activeEstimate.percentage_flag == 1" class="icon_color">%</div>
+                          <div *ngIf="activeEstimate.percentage_flag == 1" class="icon_color">
+                            <span>%</span>
+                          </div>
                         </div>
 
                         <input type="number" id="discount_input" name="discount_input"
