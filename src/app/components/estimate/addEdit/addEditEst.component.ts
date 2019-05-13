@@ -1500,6 +1500,10 @@ export class AddEditEstComponent implements OnInit {
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }else if(this.includeTax){
+      
+      if(this.activeEstimate.discount == undefined){
+        this.activeEstimate.discount = 0;
+      }
       this.activeEstimate.tax_amount = ((this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate) / (100 + this.activeEstimate.tax_rate)
       //remove digits after two decimal
       var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
