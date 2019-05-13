@@ -387,10 +387,12 @@ export class ViewEstComponent implements OnInit {
 
       //taxable amount
       if(totalDiscount){
-        this.taxable = (this.activeEst.amount - totalDiscount) - taxPayable;
-      }else{
-        this.taxable = this.activeEst.amount - taxPayable;
-      }
+        var baseAmount = this.activeEst.grossAmount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeEst.grossAmount - taxPayable;
+          }
 
       for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
         if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){

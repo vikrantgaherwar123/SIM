@@ -230,18 +230,6 @@ export class AddEditEstComponent implements OnInit {
   }
 
   editInit(estId) {
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        this.appSettings =  response.settings.appSettings
-        this.activeSettings = response.settings.appSettings.androidSettings
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
-    
-    },err => this.openErrorModal(err))
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
     // this.commonSettingsInit()
@@ -797,7 +785,6 @@ export class AddEditEstComponent implements OnInit {
 
 
     // Fetch Settings 
-    if (!this.edit) {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -809,7 +796,6 @@ export class AddEditEstComponent implements OnInit {
           this.settings = this.user.setting
         }
       }, err => this.openErrorModal(err))
-    }
 
 
       // Estimate Number
@@ -1500,7 +1486,7 @@ export class AddEditEstComponent implements OnInit {
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }else if(this.includeTax){
-      
+
       if(this.activeEstimate.discount == undefined){
         this.activeEstimate.discount = 0;
       }

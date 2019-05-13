@@ -177,10 +177,12 @@ export class ViewTodaysEstimateComponent implements OnInit {
         this.activeEst.alstQuotProduct = temp
         //taxable amount
         if(totalDiscount){
-          this.taxable = (this.activeEst.amount - totalDiscount) - taxPayable;
-        }else{
-          this.taxable = this.activeEst.amount - taxPayable;
-        }
+         var baseAmount = this.activeEst.grossAmount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeEst.grossAmount - taxPayable;
+          }
       }
 
       if(this.activeEst.taxableFlag == 1 && this.activeEst.tax_rate){
