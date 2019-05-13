@@ -65,7 +65,7 @@
                         <span *ngIf="product.discription.length > 100" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
                       </span>
                       </div>
-                      <div class="col-1 text-right color_grey">{{ product.rate | number:'1.2-2'}}</div>
+                      <div class="col-1 text-right color_grey">{{ product.rate | CurrencyPipe }}</div>
                       <div class="col-1 text-right color_grey">{{ product.taxRate | number:'1.2-2'}} %</div>
                       <div class="col-1 text-right color_grey">{{ product.unit }}</div>
                       <div class="col-2 text-right color_grey">{{ product.productCode }}</div>

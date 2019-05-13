@@ -1450,9 +1450,13 @@ textarea{
   background-color: #1a73cc !important;
 }
 .input_symbol{
-  border: 1px solid #ced4da;
-  background-color: #ced4da;
+  border: 1px solid #f2f1f1;
+  background-color: #f2f1f1;
   padding: 4px 2px 3px 0px;
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
+  border-left: 1px solid #ced4da;
 }
 .mrg_btm{
   margin-bottom: 3px;
@@ -1517,19 +1521,19 @@ input.mat-input-element {
 /* sidebar setting css */
 .setting_menu{
   cursor: pointer;
-  border: 1px solid #aaa !important;
+  border: 1px solid #ced4da !important;
   padding: 7px 20px 6px 7px;
   border-radius: 6px;
 }
 .setting_menu_discount{
   cursor: pointer;
-  border: 1px solid #aaa !important;
+  border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
 }
 .setting_menu_tax{
   cursor: pointer;
-  border: 1px solid #aaa !important;
+  border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
 }
@@ -1542,7 +1546,8 @@ input.mat-input-element {
 }
 .setting_span{
   font-family: helvetica_regular !important;
-  color: #495057;
+  color: #787e83;
+  font-size: 13px !important;
 }
 .setting_checkmark{
   position: absolute;

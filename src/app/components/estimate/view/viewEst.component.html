@@ -312,7 +312,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold">{{activeEst.grossAmount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    CurrencyPipe}}</span>
                 </div>
               </div>
 
@@ -321,8 +321,7 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
-                    slice:0:1}})
+                    ({{0 | CurrencyPipe}})
                   </div>
                   <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
                 </div>
@@ -399,7 +398,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold price">{{activeEst.amount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    CurrencyPipe}}</span>
                 </div>
               </div>
 
@@ -413,7 +412,7 @@
                       </div>
                       <div class="col-6 text-right">
                         <span
-                          class="font-custom-bold price">{{(taxable) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          class="font-custom-bold price">{{(taxable) | CurrencyPipe}}</span>
                       </div>
                 </div>
                 <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12" style="padding: 6.5px 0px;">
@@ -424,7 +423,7 @@
                     </div>
                     <div *ngIf="item.taxAmount"  class="col-6 text-right">
                         <span
-                          class="font-custom-bold price">{{item.taxAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          class="font-custom-bold price">{{item.taxAmount | CurrencyPipe}}</span>
                     </div>
                 </div>
                 <div *ngIf="activeEst.taxrate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
@@ -435,7 +434,7 @@
                       </div>
                       <div  class="col-6 text-right">
                         <span
-                          class="font-custom-bold price">{{activeEst.taxAmt | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          class="font-custom-bold price">{{activeEst.taxAmt | CurrencyPipe}}</span>
                       </div>
                 </div>
               </div>
@@ -515,8 +514,7 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' :
-                    'symbol'):'1.2-2' }}
+                    {{ estimate.amount | CurrencyPipe}}
                   </div>
                 </div>
               </div>

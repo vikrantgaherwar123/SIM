@@ -197,7 +197,13 @@ export class ViewTodaysInvoiceComponent implements OnInit {
           this.activeInv.listItems = temp
           //taxable amount
           if(totalDiscount){
-            var baseAmount = this.activeInv.gross_amount + totalDiscount
+          //   this.taxable = (this.activeInv.amount - totalDiscount) - taxPayable;
+          // }else if(taxPayable == 0){
+          //   this.taxable = 0;
+          // }else{
+          //   this.taxable = this.activeInv.amount - taxPayable;
+          // }
+          var baseAmount = this.activeInv.gross_amount + totalDiscount
             var allDiscount = (baseAmount - totalDiscount)
             this.taxable = allDiscount - taxPayable;
           }else{

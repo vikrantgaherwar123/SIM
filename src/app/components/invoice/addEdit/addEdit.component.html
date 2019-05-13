@@ -508,7 +508,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{activeInvoice.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'2.2-2'}}</span>
+                            class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
                         </div>
                       </div>
                     </div>
@@ -554,7 +554,7 @@
                               (ngModelChange)="dataChanged($event)" onfocus="this.select()" style="color: #aaaaaa;" />
 
                             <input type="number" id="discount_input" name="discount_input" class="col-3 form-control"
-                              *ngIf="activeInvoice.percentage_flag == 0"
+                              *ngIf="activeInvoice.percentage_flag == 0" style="margin-left: -2px;"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
                               onfocus="this.select()" />
                               <div class="col-2 input_symbol">
@@ -713,7 +713,7 @@
 
                         <div *ngIf="activeInvoice" class="col-6 text-right">
                           <span class="font-custom-bold price">
-                            {{activeInvoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                            {{activeInvoice.amount | CurrencyPipe}}
                           </span>
                         </div>
                       </div>
@@ -731,7 +731,7 @@
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
-                            class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            class="font-custom price">{{amountPaid | CurrencyPipe}}</span>
                         </div>
                         
                         <div class="row mx-0" style="margin-bottom: -15px;width: 100%;">
@@ -745,7 +745,7 @@
                                   </div>
                                   <div class="col-6 pad_rg_5 paid_amt">
                                     <span style="padding-right: 16px;"
-                                      class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                                      class="font-custom price">{{item.paid_amount | CurrencyPipe}}
                                     </span>
                                     
                                   </div>
@@ -788,7 +788,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span class="bld price"
-                            style="margin-right: -25px !important;">{{activeInvoice.balance | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            style="margin-right: -25px !important;">{{activeInvoice.balance | CurrencyPipe}}</span>
                         </div>
                       </div>
                     </div>
@@ -841,68 +841,71 @@
             </div>
         </div>
         <div class="collapse show" id="settingCollapseExample">
-        <div class="row mrg_top_14">
-          <div class="col-5">Discount</div> 
-          <div class="col-7">
-            <li class="button-dropdown" style="list-style: none;">
-                <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
-                    <span class="setting_span"> Discount ({{discountLabel}})</span>
-                </a>
-                <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
-                  <li>
-                    <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
-                      (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                  </li>
-                  <li>
-                    <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
-                      (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                  </li>
-                  <li>
-                      <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-                  </li>
-                </ul>
-            </li>
-          </div>
-
-        </div>
-        <div class="row mrg_top_14">
-          <div class="col-5">Tax</div>
-          <div class="col-7">
-              <li class="button-dropdown" style="list-style: none;">
-                <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
-                  <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
-                </a>
-                <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
-                  <li>
-                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
-                      (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
-                  </li>
-                  <li>
-                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
-                      (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
-                  </li>
-                  <li>
-                    <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
-                      (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
-                  </li>
-                </ul>
-              </li>
-          </div>
-
-        </div>
-        <div class="row mrg_top_14">
-          <div class="col-5">Inclusive Tax</div>
-          <div class="col-7">
-              <label class="check">
-                  <div class="checkbox default_checkbox">
-                      <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
-                      <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+          <div>
+              <div class="row mrg_top_14">
+                  <div class="col-5">Discount</div> 
+                  <div class="col-7">
+                    <li class="button-dropdown" style="list-style: none;">
+                        <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
+                            <span class="setting_span"> Discount ({{discountLabel}})</span>
+                        </a>
+                        <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
+                          <li>
+                            <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
+                              (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                          </li>
+                          <li>
+                            <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
+                              (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
+                          </li>
+                          <li>
+                              <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                          </li>
+                        </ul>
+                    </li>
                   </div>
-                </label>
+        
+                </div>
+                <div class="row mrg_top_14">
+                  <div class="col-5">Tax</div>
+                  <div class="col-7">
+                      <li class="button-dropdown" style="list-style: none;">
+                        <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
+                          <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </a>
+                        <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
+                          <li>
+                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
+                              (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                          </li>
+                          <li>
+                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
+                              (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                          </li>
+                          <li>
+                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
+                              (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                          </li>
+                        </ul>
+                      </li>
+                  </div>
+        
+                </div>
+                <div class="row mrg_top_14">
+                  <div class="col-5">Inclusive Tax</div>
+                  <div class="col-7">
+                      <label class="check">
+                          <div class="checkbox default_checkbox">
+                              <input type="checkbox" [checked]="activeInvoice.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
+                              <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                          </div>
+                        </label>
+                  </div>
+        
+                </div>
           </div>
-
+        
         </div>
-      </div>
       <!-- settings -->
         <!-- recently added invoice -->
         
@@ -924,7 +927,7 @@
               </div>
               <div class="col-10">
                 <div class="row" style="line-height: 7px;">
-                  <div class="col-12" style="padding: 3px 4px 0px 14px;">
+                  <div class="col-12" style="padding: 7px 4px 0px 14px;">
                     <h5 *ngIf="clientList" class="fontsize13" style="font-family: helvetica_regular !important;
                     font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
@@ -932,7 +935,7 @@
                     {{ invoice.invoice_number }}
                   </div>
                   <div class="col-6 text-right fontsize12 today_txt">
-                    {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                    {{ invoice.amount | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -1277,7 +1280,7 @@
             </div>
             <div  *ngIf="activeInvoice" class="col-6 text-right" style="padding-right: 23px !important;">
               <span
-                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | CurrencyPipe}}</span>
             </div>
           </div>
         </div>
