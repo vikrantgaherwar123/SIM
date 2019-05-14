@@ -551,13 +551,13 @@
                             <input type="number" id="percentage_input" name="percentage_input"
                               class="col-3 form-control" *ngIf="activeInvoice.percentage_flag == 1"
                               [(ngModel)]="activeInvoice.percentage_value" (keyup)="calculateInvoice()"
-                              (ngModelChange)="dataChanged($event)" onfocus="this.select()" style="color: #aaaaaa;" />
+                              (ngModelChange)="dataChanged($event)" onfocus="this.select()" />
 
                             <input type="number" id="discount_input" name="discount_input" class="col-3 form-control"
-                              *ngIf="activeInvoice.percentage_flag == 0" style="margin-left: -2px;"
+                              *ngIf="activeInvoice.percentage_flag == 0"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
                               onfocus="this.select()" />
-                              <div class="col-2 input_symbol">
+                              <div class="input_symbol">
                                 <div *ngIf="activeInvoice.percentage_flag == 0" class="icon_color">
                                   {{mysymbols}}
                                 </div>
@@ -592,10 +592,10 @@
                           <form #form_discount="ngForm" name="form_discount">
                             <div class="input-group addon-input">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control col-3"
-                                step="any"min="0.00" max="100" required style="color: #aaaaaa;"
+                                step="any"min="0.00" max="100" required
                                 [(ngModel)]="activeInvoice.tax_rate" (ngModelChange)="taxListChanged($event)" (keyup)="calculateInvoice()" onfocus="this.select()"
                               />
-                              <div class="col-2 input_symbol">
+                              <div class="input_symbol">
                                 <div class="icon_color">%</div>
                               </div>
                               <input type="number" id="tax_inputs" name="tax_inputs" class="col-7 form-control height_40 dis_tax_label" 
@@ -603,8 +603,6 @@
                             />
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
-                                  <!--activeInvoice.tax_amount-->
-                                  <!-- <img src="assets/images/grey_cross.png" Title="Delete" alt="" class="img_hover hg_20 cross_label_img"> -->
                                 </div>
                               </div>
                             </div>
@@ -626,12 +624,12 @@
                               <div class="input-group pr-0 col-12">
                                 <input type="number" id="tax_input_list{{taxIndex}}" name="tax_input" step="any" min="0.00"
                                   max="100" class="form-control col-3"
-                                  style="color: #aaaaaa;margin-left: -15px;margin-right: 20px;" [(ngModel)]="tax.percentage"
+                                  style="margin-left: -15px;margin-right: 20px;" [(ngModel)]="tax.percentage"
                                   (keyup)="calculateInvoice()" onfocus="this.select()" />
                                 <input type="number" id="tax_input_list{{taxIndex}}" name="tax_Listinput"
                                   class="col-9 form-control height_40 dis_tax_label"
                                   [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()"
-                                  style="margin-right: -5px;" readonly />
+                                  readonly />
     
                                 <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pr-0 remove-button">
@@ -658,7 +656,7 @@
                           <div class="input-group pr-0">
                             <input type="number" name="shipping_input" class="form-control" min="0.00" step="any"
                               [max]="activeInvoice.gross_amount" required onclick="this.select()"
-                              style="margin-right: -4px;text-align: right;" [(ngModel)]="activeInvoice.shipping_charges"
+                              style="text-align: right;" [(ngModel)]="activeInvoice.shipping_charges"
                               (keyup)="calculateInvoice()" placeholder="0" />
 
                             <div class="input-group-addon pr-0 remove-button">
@@ -685,7 +683,7 @@
                       <div class="col-8 pr-0">
                         <form #form_tax_input="ngForm" name="form_tax_input">
                           <div class="input-group pr-0">
-                            <input type="number" name="tax_input" class="form-control" style="margin-right: -4px;text-align: right;"
+                            <input type="number" name="tax_input" class="form-control" style="text-align: right;"
                               step="any" required onfocus="this.select()" placeholder="0"
                               [(ngModel)]="activeInvoice.adjustment"
                                (keyup)="calculateInvoice()" /> 
@@ -840,8 +838,8 @@
                 Invoice Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
             </div>
         </div>
-        <div class="collapse show row" id="settingCollapseExample" style="background-color: #fdfdfe;">
-          <div style="padding: 0px 22px;">
+        <div class="collapse show row setting_bg" id="settingCollapseExample" style="background-color: #fdfdfe;">
+          <div class="setting_pad">
               <div class="row mrg_top_14">
                   <div class="col-5">Discount</div> 
                   <div class="col-7">
@@ -915,7 +913,7 @@
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
            </div>
          
-          <div id="todaysInvoice" class="collapse show px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
+          <div id="todaysInvoice" class="collapse col-12 show px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
@@ -1068,13 +1066,13 @@
           <input type="hidden" name="uid" onfocus="this.select()" [ngModel]="activeItem.unique_identifier">
           <div class="row edit_item_row">
             <div class="row col-12">
-             <span class="edit_span"> Name:</span>
+             <span class="edit_span"> Name</span>
               <input type="text" name="name" class="form-control add-client-input-custom popup_input_height"
                 [ngModel]="activeItem.product_name" placeholder="Name" onfocus="this.select()" required disabled />
             </div>
 
             <div class="row col-12">
-              <span class="edit_span">Description:</span>
+              <span class="edit_span">Description</span>
               <textarea [(ngModel)]="activeItem.description" name="description"
                 class="form-control mCustomScrollbar style-3" placeholder="Description" onfocus="this.select()"
                 select-on-click style="height: 69px !important;overflow-y: auto !important"></textarea>
@@ -1087,7 +1085,7 @@
                   (keyup)="calculateTotal()" onfocus="this.select()" style="width: 222px;" required placeholder="Quantity" my-enter-in select-on-click />
               </div>
               <div class="col-6 tax_dis_span">
-                <span class="edit_span">{{settings.mTvRate ? settings.mTvRate : 'Rate'}} (*):</span>
+                <span class="edit_span">{{settings.mTvRate ? settings.mTvRate : 'Rate'}} (*)</span>
                 <input type="number" name="rate" class="form-control add-client-input-custom popup_input_height" [(ngModel)]="activeItem.rate"
                   (keyup)="calculateTotal()" style="width: 222px;" placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}" onfocus="this.select()"
                   required />
@@ -1095,38 +1093,37 @@
             </div>
             <div class="row col-12">
               <div class="col-6 tax_dis_span" *ngIf="activeInvoice.discount_on_item === 1">
-                <span class="edit_span" style="margin-left: -14px;">{{settings.discount ? settings.discount : 'Discount'}}:</span>
+                <span class="edit_span" style="margin-left: -14px;">{{settings.discount ? settings.discount : 'Discount'}}</span>
                 <div class="row">
                     <input type="number" name="discount"
                     class="form-control add-client-input-custom popup_input_height" [(ngModel)]="activeItem.discount"
                     (keyup)="calculateTotal()" placeholder="{{settings.discount}}" onfocus="this.select()" style="max-width: 186px;" />
-                    <div class="col-2 popup_input_symbol" >
+                    <div class="popup_input_symbol" >
                         <div class="popup_icon_color">%</div>
                     </div>
                 </div>
               </div>
               <div class="col-6 tax_dis_span" *ngIf="activeInvoice && activeInvoice.tax_on_item === 0">
-                <span class="edit_span">Tax::</span>
+                <span class="edit_span">Tax</span>
                 <div class="row" style="margin-left: -2px;">
                   <input type="number" name="tax-rate" style="max-width: 186px;" class="form-control add-client-input-custom" min="0"
                     max="100" [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"
                     onfocus="this.select()" />
-                  <div class="col-2 popup_input_symbol" >
+                  <div class="popup_input_symbol" >
                       <div class="popup_icon_color">%</div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="row">
-              <span class="edit_span">{{settings.total ? settings.total : 'Amount'}}:</span>
+            <div class="col-12 tax_dis_span" *ngIf="activeInvoice.discount_on_item === 1">
+              <span class="edit_span" style="margin-left: -14px;">{{settings.total ? settings.total : 'Amount'}}</span>
               <div class="row">
-                  <input type="number" [ngModel]="activeItem.total" name="total" style="width: 438px;" placeholder="quantity" disabled
-                  class="form-control add-client-input-custom popup_input_height col-10" onfocus="this.select()" />
-                  <div class="col-2 popup_input_symbol" style="width: 37px;" >
-                      <div class="popup_icon_color" style="margin-top: -5px;"> {{mysymbols}}</div>
+                  <input type="number" 
+                  class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
+                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" />
+                  <div class="popup_input_symbol" >
+                      <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>
-                  
               </div>
             </div>
           </div>

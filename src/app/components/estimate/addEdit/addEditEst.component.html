@@ -180,13 +180,19 @@
                     <td *ngIf="activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
                         {{item.discount_amount | number:'1.2-2'}}<br>
-                        {{item.discount | number:'1.2-2'}}
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.discount | number:'1.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                          </div>
                       </div>
                     </td>
                     <td *ngIf="activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
                         {{item.tax_amount | number:'1.2-2'}}<br>
-                        {{item.tax_rate | number:'1.2-2'}}
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                          </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
@@ -612,69 +618,72 @@
                   href="#settingCollapseExample" role="button" aria-expanded="false" aria-controls="settingCollapseExample">
                     Invoice Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
                 </div>
+                
             </div>
-            <div class="collapse show" id="settingCollapseExample">
-            <div class="row mrg_top_14">
-              <div class="col-5">Discount</div> 
-              <div class="col-7">
-                <li class="button-dropdown" style="list-style: none;">
-                    <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
-                        <span class="setting_span"> Discount ({{discountLabel}})</span>
-                    </a>
-                    <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
-                      <li>
-                        <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 1}"
-                          (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
-                      </li>
-                      <li>
-                        <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 0}"
-                          (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                      </li>
-                      <li>
-                          <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-                      </li>
-                    </ul>
-                </li>
-              </div>
-
-            </div>
-            <div class="row mrg_top_14">
-              <div class="col-5">Tax</div>
-              <div class="col-7">
-                  <li class="button-dropdown" style="list-style: none;">
-                    <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
-                      <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    </a>
-                    <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
-                      <li>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 0}"
-                          (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
-                      </li>
-                      <li>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 1}"
-                          (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
-                      </li>
-                      <li>
-                        <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 2}"
-                          (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
-                      </li>
-                    </ul>
-                  </li>
-              </div>
-
-            </div>
-            <div class="row mrg_top_14">
-              <div class="col-5">Inclusive Tax</div>
-              <div class="col-7">
-                  <label class="check">
-                      <div class="checkbox default_checkbox">
-                          <input type="checkbox" [checked]="activeEstimate.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
-                          <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+            <div class="collapse show row setting_bg" id="settingCollapseExample">
+              <div class="setting_pad">
+                  <div class="row mrg_top_14">
+                      <div class="col-5">Discount</div> 
+                      <div class="col-7">
+                        <li class="button-dropdown" style="list-style: none;">
+                            <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
+                                <span class="setting_span"> Discount ({{discountLabel}})</span>
+                            </a>
+                            <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
+                              <li>
+                                <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 1}"
+                                  (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                              </li>
+                              <li>
+                                <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 0}"
+                                  (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
+                              </li>
+                              <li>
+                                  <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                              </li>
+                            </ul>
+                        </li>
                       </div>
-                    </label>
+        
+                    </div>
+                    <div class="row mrg_top_14">
+                      <div class="col-5">Tax</div>
+                      <div class="col-7">
+                          <li class="button-dropdown" style="list-style: none;">
+                            <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
+                              <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            </a>
+                            <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
+                              <li>
+                                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 0}"
+                                  (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                              </li>
+                              <li>
+                                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 1}"
+                                  (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                              </li>
+                              <li>
+                                <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 2}"
+                                  (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                              </li>
+                            </ul>
+                          </li>
+                      </div>
+        
+                    </div>
+                    <div class="row mrg_top_14">
+                      <div class="col-5">Inclusive Tax</div>
+                      <div class="col-7">
+                          <label class="check">
+                              <div class="checkbox default_checkbox">
+                                  <input type="checkbox" [checked]="activeEstimate.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
+                                  <span class="checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                              </div>
+                            </label>
+                      </div>
+        
+                    </div>
               </div>
-
-            </div>
           </div>
           <!-- settings -->
 
@@ -682,11 +691,14 @@
         
         <div class="row" style="margin-top: 20px;">
          
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
-            {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center 
+          list-header-col font-custom-bold" data-toggle="collapse" 
+          href="#todaysEstimates" role="button" aria-expanded="false" aria-controls="todaysEstimates">
+            {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
           </div>
+          
 
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
+          <div id="todaysEstimates" class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto;">
            
             <div [ngClass]="{'item': true, 'row': true, 'selected': (estimate.unique_identifier == estimateId)}"
             *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
