@@ -1467,7 +1467,7 @@ textarea{
   /* margin-left: -5px; */
 }
 .color_white{
-  color:white;
+  color:white !important;
   font-size: 12px;
   font-family: helvetica_light;
   letter-spacing: 1px;
