@@ -148,13 +148,19 @@
                     <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountAmt | number:'1.2-2'}}<br>
-                        {{item.discountRate | number:'2.2-2'}}
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.discountRate | number:'2.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.taxAmount | number:'1.2-2'}}<br>
-                        {{item.taxRate | number:'2.2-2'}}
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.taxRate | number:'2.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">

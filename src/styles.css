@@ -1301,7 +1301,6 @@ textarea{
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 9px 23px 20px 10px !important;
   border-top: 1px solid #e9ecef;
 }
 
@@ -1348,6 +1347,7 @@ textarea{
 }
 .popup_input_height{
   height: 32px !important;
+  border-radius: 0px;
 }
 .mr_4{
   margin-left: -4px !important;
@@ -1456,6 +1456,7 @@ textarea{
   border-top: 1px solid #ced4da;
   border-bottom: 1px solid #ced4da;
   border-right: 1px solid #ced4da;
+  width: 37px;
 }
 .mrg_btm{
   margin-bottom: 3px;
@@ -1598,14 +1599,44 @@ input.mat-input-element {
 .popup_input_symbol{
   border: 1px solid #f2f1f1;
   background-color: #f2f1f1;
-  padding: 2px 1px 0px 1px;
+  padding: 2px 0px 0px 6px;
   border-top: 1px solid #ced4da;
   border-bottom: 1px solid #ced4da;
   border-right: 1px solid #ced4da;
   height: 29px;
+  width: 37px;
 }
 .popup_icon_color {
   color: #666666;
   text-align: center;
   margin-left: -5px;
+}
+.setting_bg{
+  background-color: #fdfdfe;
+}
+.setting_pad{
+  padding: 0px 22px;
+}
+.item_input_symbol {
+  border: 1px solid #f2f1f1;
+  background-color: #f2f1f1;
+  padding: 4px 2px 3px 0px;
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
+  width: 25px;
+}
+.side_setting_checkmark{
+  width:18px !important;
+  height:18px !important;
+}
+.check .side_setting_checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

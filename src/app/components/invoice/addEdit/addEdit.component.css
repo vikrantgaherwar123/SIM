@@ -337,6 +337,7 @@ a.morelink {
   color: #666666 !important;
   margin-left: 32px;
   font-size: 20px;
+  margin-left: 63px;
 }
 .inline {
   margin-right: 10px;
@@ -353,7 +354,7 @@ a.morelink {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 9px 23px 10px 10px !important;
+    /* padding: 9px 23px 10px 10px !important; */
     border-top: 1px solid #e9ecef;
 }
 .terms_border {
@@ -522,4 +523,10 @@ pointer-events: none;
   margin-right: 12px;
   vertical-align: middle;
   margin-bottom: 9px;
+}
+.modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 1px solid #e9ecef;
 }

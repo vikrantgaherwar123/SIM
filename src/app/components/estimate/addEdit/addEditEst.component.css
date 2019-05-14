@@ -404,3 +404,9 @@ select {
   color: #666666;
   text-align: center;
 }
+.fontsize13{
+  font-size: 13px !important;
+  color: #474959;
+  margin-bottom: -3px !important;
+  margin-top: 5px !important;
+}
