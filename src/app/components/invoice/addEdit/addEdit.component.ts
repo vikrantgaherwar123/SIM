@@ -106,7 +106,6 @@ export class AddEditComponent implements OnInit {
   }
   noAdjustment:boolean = true;
   noShippingCharges : boolean = true;
-  shippingAddressEditMode: boolean = false;
   activeEstimate: addEditEstimate;
   incrementInvNo: boolean;
   noClientSelected: boolean = false;
@@ -219,6 +218,7 @@ export class AddEditComponent implements OnInit {
       })
     });
     // tax / discount dropdown
+    
     // show more-less button condition depending on height
     jQuery('.expandClicker').each(function(){
       if (jQuery(this).parent().height() < 50) {
@@ -317,20 +317,6 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
-    this.commonSettingsInit()
-    this.settingsLoading = true;
-    this.settingService.fetch().subscribe((response: any) => {
-      this.settingsLoading = false;
-      if (response.settings !== null) {
-        this.appSettings =  response.settings.appSettings
-        this.activeSettings = response.settings.appSettings.androidSettings
-        setStorage(response.settings)
-        this.user = JSON.parse(localStorage.getItem('user'))
-        this.settings = this.user.setting
-      }
-    
-    },err => this.openErrorModal())
-    
     //to view updated or viewed invoice in view page
     // this.commonSettingsInit()
     this.shippingChange = false;
@@ -353,33 +339,25 @@ export class AddEditComponent implements OnInit {
       if(this.activeInvoice.discount_on_item == 0){
         this.activeInvoice.percentage_flag = 1;
         this.settings.discountFlagLevel = 0;
-        if(this.appSettings){
-        this.appSettings.androidSettings.discountFlagLevel = 0;
-        }
+        
         this.noDiscountOnItem = false;
         this.discountLabel = "On Bill"
       }else if(this.activeInvoice.discount_on_item == 1){
         this.settings.discountFlagLevel = 1;
-        if(this.appSettings){
-        this.appSettings.androidSettings.discountFlagLevel = 1;
-        }
+        
         this.noDiscountOnItem = true;
         this.discountLabel = "On Item"
       }
 
       if(this.activeInvoice.tax_on_item == 0){
         this.settings.taxFlagLevel = 0;
-        if(this.appSettings){
-        this.appSettings.androidSettings.taxFlagLevel = 0;
-        }
+        
         this.taxtext = "Tax (on Item)"
         this.noTaxOnItem = true;
         this.taxLabel = "On Item"
       }else if(this.activeInvoice.tax_on_item == 1){
         this.settings.taxFlagLevel = 1;
-        if(this.appSettings){
-        this.appSettings.androidSettings.taxFlagLevel = 1;
-        }
+        
         this.noTaxOnItem = false;
         this.taxLabel = "On Bill"
       }
@@ -685,7 +663,6 @@ export class AddEditComponent implements OnInit {
         
           if (this.activeEstimate) {
             this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
-            this.shippingAddressEditMode = true
             this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
             if (this.activeEstimate.taxList){
               this.activeInvoice.taxList = this.activeEstimate.taxList;
@@ -705,33 +682,25 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.discount_on_item == 0){
               this.activeInvoice.percentage_flag = 1;
               this.settings.discountFlagLevel = 0;
-              if(this.appSettings){
-              this.appSettings.androidSettings.discountFlagLevel = 0;
-              }
+              
               this.noDiscountOnItem = false;
               this.discountLabel = "On Bill"
             }else if(this.activeInvoice.discount_on_item == 1){
               this.settings.discountFlagLevel = 1;
-              if(this.appSettings){
-              this.appSettings.androidSettings.discountFlagLevel = 1;
-              }
+              
               this.noDiscountOnItem = true;
               this.discountLabel = "On Item"
             }
       
             if(this.activeInvoice.tax_on_item == 0){
               this.settings.taxFlagLevel = 0;
-              if(this.appSettings){
-              this.appSettings.androidSettings.taxFlagLevel = 0;
-              }
+              
               this.taxtext = "Tax (on Item)"
               this.noTaxOnItem = true;
               this.taxLabel = "On Item"
             }else if(this.activeInvoice.tax_on_item == 1){
               this.settings.taxFlagLevel = 1;
-              if(this.appSettings){
-              this.appSettings.androidSettings.taxFlagLevel = 1;
-              }
+              
               this.noTaxOnItem = false;
               this.taxLabel = "On Bill"
             }
@@ -931,6 +900,7 @@ export class AddEditComponent implements OnInit {
     if (settings) {
         this.activeInvoice.tax_on_item = 2
         this.activeInvoice.discount_on_item = 2
+        //set inclusive tax as per setting selected from web and device
         this.activeInvoice.taxableFlag = settings.taxableFlag;
       
 
@@ -1053,7 +1023,6 @@ export class AddEditComponent implements OnInit {
     }
 
     // Fetch Settings
-    if (!this.edit) {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -1065,7 +1034,6 @@ export class AddEditComponent implements OnInit {
           this.settings = this.user.setting
         }
       }, err => this.openErrorModal())
-    }
     
 
     
@@ -1088,25 +1056,25 @@ export class AddEditComponent implements OnInit {
   
   setClientFilter() {
     var seen = {};
-          //You can filter based on Id or Name based on the requirement
-          var uniqueClients = this.clientList.filter(function (item) {
-            if (seen.hasOwnProperty(item.name)) {
-              return false;
-            } else {
-              seen[item.name] = true;
-              return true;
-            }
-          });
-          this.clientList = uniqueClients;
-          this.removeEmptyNameClients();
+    //You can filter based on Id or Name based on the requirement
+    var uniqueClients = this.clientList.filter(function (item) {
+      if (seen.hasOwnProperty(item.name)) {
+        return false;
+      } else {
+        seen[item.name] = true;
+        return true;
+      }
+    });
+    this.clientList = uniqueClients;
+    this.removeEmptyNameClients();
     // Filter for client autocomplete
-    if(this.clientList){
+    if (this.clientList) {
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
-  }
+    }
   
 }
 

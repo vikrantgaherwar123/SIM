@@ -643,7 +643,7 @@ option {
   height: 22px !important;
   width: 22px !important;
   border-radius: 2px;
-  background-color: #e6ecf0;
+  background-color: #ffffff;
   border: 1px solid #1e81e3;
 }
 
@@ -1456,7 +1456,6 @@ textarea{
   border-top: 1px solid #ced4da;
   border-bottom: 1px solid #ced4da;
   border-right: 1px solid #ced4da;
-  border-left: 1px solid #ced4da;
 }
 .mrg_btm{
   margin-bottom: 3px;
@@ -1499,10 +1498,10 @@ input.mat-input-element {
   cursor: pointer;
   padding: 2px 10px !important;
   border-radius: 7px;
-  background-color: #1a73cc;
+  background-color: #328ff8;
 }
 .search_btns{
-  margin-left: 59px !important;
+  margin-left: 40px !important;
   margin-top: -6px;
 }
 .change_btn_searchbar{
@@ -1577,9 +1576,36 @@ input.mat-input-element {
   margin-top: 55px;
   margin-left: 38px;
 }
-.mat-menu-item{
+/* .mat-menu-item{
   padding: 8px 12px;
   border: none;
   width: 100%;
   text-align: left;
+  font-size: 13px !important;
+} */
+.setting_drop{
+  padding: 8px 12px;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 13px !important;
+  background-color:#fff;
+  cursor: pointer;
+}
+.setting_drop:hover:not([disabled]) {
+  background: rgba(255, 255, 255, 0.04);
+}
+.popup_input_symbol{
+  border: 1px solid #f2f1f1;
+  background-color: #f2f1f1;
+  padding: 2px 1px 0px 1px;
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
+  height: 29px;
+}
+.popup_icon_color {
+  color: #666666;
+  text-align: center;
+  margin-left: -5px;
 }

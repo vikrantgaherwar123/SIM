@@ -74,7 +74,7 @@ a, a:hover, a:focus {
 	cursor: pointer;
 }
 .list-header-col {
-	color: #858d94 !important;
+	color: #212121!important;
 	font-size: 12px;
 	font-family: helvetica_regular !important;
 }
@@ -128,7 +128,7 @@ a, a:hover, a:focus {
 .fontsize13 {
 	font-size: 13px !important;
 	color: #474959;
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 }
 .no-data-messsage {
 	text-align: center;

@@ -283,7 +283,7 @@
                 <div class="col-8 ">
                   <div class="text-right">
                   ({{activeInv.tax_rate | number:'1.2-2'}} %)
-                    {{activeInv.tax_amount | CurrencyPipe}}
+                    {{activeInv.tax_amount | number:'1.2-2' | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -340,7 +340,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom-bold price">{{activeInv.amount | CurrencyPipe}}</span>
+                    class="font-custom-bold price">{{activeInv.amount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
               
@@ -354,7 +354,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{(taxable) | CurrencyPipe}}</span>
+                            class="font-custom-bold price">{{(taxable) | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                   </div>
                   <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
@@ -365,7 +365,7 @@
                       </div>
                       <div *ngIf="item.tax_amount"  class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{item.tax_amount | CurrencyPipe}}</span>
+                            class="font-custom-bold price">{{item.tax_amount | number:'1.2-2' | CurrencyPipe}}</span>
                       </div>
                   </div>
                   <div *ngIf="activeInv.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
@@ -376,7 +376,7 @@
                         </div>
                         <div  class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{activeInv.tax_amount | CurrencyPipe}}</span>
+                            class="font-custom-bold price">{{activeInv.tax_amount | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                   </div>
                 </div>
@@ -388,7 +388,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom price">{{paidAmount()|CurrencyPipe}}</span>
+                    class="font-custom price">{{paidAmount() | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
               <!-- Payment -->

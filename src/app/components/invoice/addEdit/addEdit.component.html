@@ -508,7 +508,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
+                            class="font-custom-bold price">{{activeInvoice.gross_amount | number:'1.2-2' | CurrencyPipe }}</span>
                         </div>
                       </div>
                     </div>
@@ -840,8 +840,8 @@
                 Invoice Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
             </div>
         </div>
-        <div class="collapse show" id="settingCollapseExample">
-          <div>
+        <div class="collapse show row" id="settingCollapseExample" style="background-color: #fdfdfe;">
+          <div style="padding: 0px 22px;">
               <div class="row mrg_top_14">
                   <div class="col-5">Discount</div> 
                   <div class="col-7">
@@ -850,16 +850,16 @@
                             <span class="setting_span"> Discount ({{discountLabel}})</span>
                         </a>
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
-                          <li>
-                            <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
+                          <li data-toggle="collapse">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
                               (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
                           </li>
-                          <li>
-                            <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
+                          <li data-toggle="collapse">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
                               (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
                           </li>
-                          <li>
-                              <button mat-button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                          <li data-toggle="collapse">
+                              <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
                           </li>
                         </ul>
                     </li>
@@ -874,16 +874,16 @@
                           <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </a>
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
-                          <li>
-                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
+                          <li data-toggle="collapse">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
                               (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
                           </li>
-                          <li>
-                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
+                          <li data-toggle="collapse">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
                               (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
                           </li>
-                          <li>
-                            <button mat-menu-item [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
+                          <li data-toggle="collapse">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
                               (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
                           </li>
                         </ul>
@@ -908,17 +908,14 @@
         </div>
       <!-- settings -->
         <!-- recently added invoice -->
-        
-        
         <div *ngIf="invoiceList" class="row mrg_top_14">
-          <div
-            class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
-           >
-            {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today
-          </div>
-
-          <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
-
+            <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
+            style="margin-top: 4px;margin-left: 2px;" data-toggle="collapse" 
+             href="#todaysInvoice" role="button" aria-expanded="false" aria-controls="todaysInvoice">
+            {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
+           </div>
+         
+          <div id="todaysInvoice" class="collapse show px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
@@ -929,7 +926,7 @@
                 <div class="row" style="line-height: 7px;">
                   <div class="col-12" style="padding: 7px 4px 0px 14px;">
                     <h5 *ngIf="clientList" class="fontsize13" style="font-family: helvetica_regular !important;
-                    font-size: 14px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
+                    font-size: 13px !important;">{{ getClientName(invoice.unique_key_fk_client) }}</h5>
                   </div>
                   <div class="col-5 today_txt">
                     {{ invoice.invoice_number }}
@@ -944,8 +941,6 @@
           <div *ngIf="recentInvoiceList.length == 0" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
               <img src="assets/images/no_todays_invoice.png" class="no_todays_img">
           </div>
-
-          
         </div>
         <!-- ends -->
       </div>
@@ -1098,28 +1093,49 @@
                   required />
               </div>
             </div>
-            <div class="row col-12" *ngIf="activeInvoice.discount_on_item === 1">
-              <span class="edit_span">{{settings.discount ? settings.discount : 'Discount'}}:</span>
-              <input type="number" name="discount" class="form-control add-client-input-custom popup_input_height"
-                [(ngModel)]="activeItem.discount" (keyup)="calculateTotal()" placeholder="{{settings.discount}}"
-                onfocus="this.select()" />
-            </div>
-
-            <div class="col-12 row" *ngIf="activeInvoice && activeInvoice.tax_on_item === 0">
-              Tax:
-              <input type="number" name="tax-rate" class="form-control add-client-input-custom" min="0" max="100"
-                [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"
-                onfocus="this.select()" />
-            </div>
-
             <div class="row col-12">
+              <div class="col-6 tax_dis_span" *ngIf="activeInvoice.discount_on_item === 1">
+                <span class="edit_span" style="margin-left: -14px;">{{settings.discount ? settings.discount : 'Discount'}}:</span>
+                <div class="row">
+                    <input type="number" name="discount"
+                    class="form-control add-client-input-custom popup_input_height" [(ngModel)]="activeItem.discount"
+                    (keyup)="calculateTotal()" placeholder="{{settings.discount}}" onfocus="this.select()" style="max-width: 186px;" />
+                    <div class="col-2 popup_input_symbol" >
+                        <div class="popup_icon_color">%</div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-6 tax_dis_span" *ngIf="activeInvoice && activeInvoice.tax_on_item === 0">
+                <span class="edit_span">Tax::</span>
+                <div class="row" style="margin-left: -2px;">
+                  <input type="number" name="tax-rate" style="max-width: 186px;" class="form-control add-client-input-custom" min="0"
+                    max="100" [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"
+                    onfocus="this.select()" />
+                  <div class="col-2 popup_input_symbol" >
+                      <div class="popup_icon_color">%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
               <span class="edit_span">{{settings.total ? settings.total : 'Amount'}}:</span>
-              <input type="number" [ngModel]="activeItem.total" name="total" placeholder="quantity" disabled
-                class="form-control add-client-input-custom popup_input_height" onfocus="this.select()" />
+              <div class="row">
+                  <input type="number" [ngModel]="activeItem.total" name="total" style="width: 438px;" placeholder="quantity" disabled
+                  class="form-control add-client-input-custom popup_input_height col-10" onfocus="this.select()" />
+                  <div class="col-2 popup_input_symbol" style="width: 37px;" >
+                      <div class="popup_icon_color" style="margin-top: -5px;"> {{mysymbols}}</div>
+                  </div>
+                  
+              </div>
             </div>
           </div>
         </form>
       </div>
+
+      <!-- <div class="col-2 input_symbol">
+        <div class="icon_color">%</div>
+      </div> -->
 
       <div class="modal-footer">
         <button type="button" class="btn save_btn" (click)="closeItemModel()">

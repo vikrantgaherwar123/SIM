@@ -371,7 +371,7 @@
                       <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                     </div>
                     <div class="col-6 text-right">
-                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
+                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | number:'1.2-2' | CurrencyPipe}}</span>
                     </div>
                   </div>
                 </div>
