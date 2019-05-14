@@ -200,8 +200,7 @@
                     translate}}</span>
                 </div>
                 <div *ngIf="settings" class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount |
-                    CurrencyPipe}}</span>
+                  <span class="font-custom-bold">{{activeEst.grossAmount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
 
