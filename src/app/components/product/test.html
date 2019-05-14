@@ -1,0 +1,380 @@
+<div class="row main-wrapper">
+  <div class="col-12" id="main">
+    <div class="row">
+      <!-- Product List -->
+      <div class="col-12 col-sm-3 pr-0">
+        <div class="back list-shadow w-100">
+          <div class="col-12 px-0 filter-box">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-3" style="padding-top: 15px;">
+                  <a (click)="addNew()" title="Add New" class="pull-left list-btn cus-img" style="border: 0px solid #ccc;">
+                    <img src="assets/images/list-icon/add-plus-button24.png" class="plus_list">
+                  </a>
+                </div>
+                <div class="col-6 text-center px-0" style="padding-top: 15px;" >
+                  <!-- <button type="button" class="btn btn-custom-1 btn-raised no-border-radius font-custom-bold" (click)="openBatch()">
+                    Batch Upload
+                  </button> -->
+                </div>
+                <div class="col-3" style="padding-top: 15px;">
+                  <a style="cursor: pointer;background: #ffffff" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" class="pull-right list_drop list-btn cus-img"
+                  >
+                    <img alt="logo" Title="Search By" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right small_dropdown">
+                    <li [class.active]="sortTerm=='prodName'">
+                      <a (click)="sortTerm='prodName'">By Name</a>
+                    </li>
+                    <li [class.active]="sortTerm=='rate'">
+                      <a (click)="sortTerm='rate'">By {{settings.mTvRate ? settings.mTvRate : 'Rate'}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 search-box">
+              <div class="form-group label-floating">
+                <input class="form-control" [(ngModel)]="searchTerm" placeholder="Search {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}" />
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-12 back-add-list text-center list-header-col font-custom-bold">
+            Select {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} to view or edit
+          </div>
+  
+          <div class="col-12 px-0 mCustomScrollbar style-3">
+            <div style="background-color: #fff;" *ngIf="productListLoading">
+              <mat-spinner style="color: #1A73CC" class="loader"></mat-spinner>
+            </div>
+            <div id="prod{{index}}" class="prodname" [class.selected]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct"
+              *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0:productDisplayLimit); index as index"
+            >
+              <div class="row item product-list">
+                <div class="col-2 pl-1">
+                  <img src="assets/images/list-icon/pro.png"
+                    style="vertical-align: middle;width: 36px; height: 36px;"
+                  >
+                </div>
+    
+                <div class="col-9 px-0" (click)="viewThis(product)">
+                  <div class="row mx-0">
+                    <span class="col-7 px-0 font-custom-bold fontsize13">
+                      <div class="ellipsis"> {{ product.prodName }}</div>
+                    </span>
+                    <span class="col-5 px-0 text-right total-color font-custom-book">
+                      Tax: {{ product.taxRate | number:'1.1-2' }}%
+                    </span>
+                    <span class="col-8 px-0 font-custom-book">
+                      <div class="ellipsis">{{product.discription}}</div>
+                    </span>
+                    <span class="col-4 pr-0 font-custom-bold text-truncate">
+                      {{ product.rate | currency:user.setting.currencyInText:codeOrSym:'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+  
+                <div class="col-1 p-0 text-right" [class.selected1]="activeProduct.uniqueKeyProduct == product.uniqueKeyProduct">
+                  <img src="assets/images/next12.png" style="padding-top: 8px;">
+                </div>
+              </div>
+            </div>
+            <div class="no-data-messsage" *ngIf="productList.length == 0 && !productListLoading">
+              <h4>No {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} to display, please create a product</h4>
+            </div>
+            <div class="col-12 px-0" [class.list-shadow]="productList.length > productDisplayLimit">
+              <a (click)="loadMore()" class="btn more" *ngIf="productList.length > productDisplayLimit">
+                Click to view more >>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="col-12 col-sm-9 item-form">
+        <form class="form-horizontal mrg_top_14" #f="ngForm" name="form">
+          <div class="shadow">
+            <div class="form-group back" style="padding: 18px;height: 597px;">
+              <div class="row mx-0" style="margin-top: 10% !important;">
+                <!-- Heading -->
+                <div class="col-7 col-md-8">
+                  <h4 class="form-header product-header" style="margin-left: 59%" *ngIf="createMode">
+                    Create a new {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}
+                  </h4>
+                  <h4 class="form-header product-header" style="margin-left: 66%" *ngIf="editMode">
+                    Edit {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}
+                  </h4>
+                  <h4 class="form-header product-header" *ngIf="viewMode">View {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}</h4>
+                </div>
+
+                <!-- Top Buttons -->
+                <div class="col-5 col-md-4 px-0 pull-right" style="margin-top: -96px;">
+                  <button type="button" *ngIf="viewMode" (click)="editThis(product)"
+                  class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                  >
+                    <img src="assets/images/buttons-icon/pencil-edit-button16.png"
+                      style=" padding: 0px 2px 3px 0px;width: 14px;height: 14px;"
+                    >
+                    Edit
+                  </button>
+                  <button class="btn btn-custom-1 btn-raised no-border-radius pull-right width10btn ml-2 font-custom-bold" type="button"
+                  *ngIf="viewMode"  (click)="openDeleteProductModal()">
+                   Delete
+                 </button>
+                  <div class="rightDivBtns">
+                    <button type="button" id="updateProBtn" (click)="f.submitted = true; save(f.valid, 0)"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                      *ngIf="createMode" 
+                    >
+                      Save
+                    </button>
+                    <button type="button" id="saveProBtn" (click)="save(f.valid, 1)"
+                      class="btn save_btn btn-raised width25btn pull-right font-weight-bold ml-2"
+                      *ngIf="editMode" [disabled]="!f.valid"
+                    >
+                     
+                      Update
+                    </button>
+                    <button type="button" id="cancleProBtn" (click)="cancelThis()"
+                      class="btn btn-custom-2 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
+                      *ngIf="editMode"
+                    >
+                      Cancel
+                    </button>
+                    <button type="button" id="clearProBtn" (click)="clearThis()"
+                      class="btn btn-custom-1 btn-raised no-border-radius pull-right ml-2 width10btn font-custom-bold"
+                      *ngIf="createMode"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="product-form">
+                <div class="row">
+                  <!-- Create / Edit -->
+                  <div class="col-12 mt-2" *ngIf="createMode || editMode">
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group" [class.has-error]="(f.submitted || f.touched) && f.value.prodName == ''">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="assets/images/product-icon/ic_normal_prod_name.png">
+                          </span>
+                          <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Name *"
+                            class="form-control" maxlength="45" onfocus="this.select()" required
+                            [(ngModel)]="activeProduct.prodName"
+                          />
+                        </div>
+                        <div class="form-error" *ngIf="f.submitted || f.value.prodName !== ''">
+                          <span *ngIf="f.value.prodName == ''">{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name required</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="assets/images/product-icon/ic_product_code_grey.png">
+                          </span>
+                          <input type="text" name="productCode" id="productCode"
+                            class="form-control" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} Code"
+                            [(ngModel)]="activeProduct.productCode" onfocus="this.select()"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="assets/images/product-icon/ic_normal_unit.png">
+                          </span>
+                          <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit" maxlength="6"
+                            [(ngModel)]="activeProduct.unit" onfocus="this.select()"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <textarea elastic name="discription" id="discription" class="form-control mCustomScrollbar style-3"
+                          placeholder="Description" style="height: 72px !important;"
+                          [(ngModel)]="activeProduct.discription" onfocus="this.select()"
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="assets/images/product-icon/ic_normal_rate.png">
+                          </span>
+                          <input type="number" name="rate" class="form-control" step="any" min=0.01 placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*"
+                            [(ngModel)]="activeProduct.rate" required onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="margin: 0px auto 10px auto;max-width: 300px;">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                            <img src="assets/images/product-icon/ic_normal_tax_rate.png">
+                          </span>
+                          <input type="number" name="taxRate" class="form-control" step="any" min=0 max=100 placeholder="Tax"
+                            [(ngModel)]="activeProduct.taxRate" onfocus="this.select()"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- View -->
+                  <div class="col-12 mt-2" *ngIf="viewMode">
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-6 client-view-label">
+                          <img src="assets/images/product-icon/ic_normal_prod_name.png">
+                          {{settings.mTvProducts ? settings.mTvProducts : 'Products'}} name:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold">
+                          {{activeProduct.prodName}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class=" col-6 client-view-label ">
+                          <img src="assets/images/product-icon/ic_product_code_grey.png">
+                          {{settings.productCode ? settings.productCode : 'Products Code'}}:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold">
+                          {{activeProduct.productCode}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-6 client-view-label">
+                          <img src="assets/images/product-icon/ic_normal_unit.png">
+                          Unit:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold">
+                          {{activeProduct.unit}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-6 client-view-label">
+                          <img src="assets/images/product-icon/ic_normal_description.png">
+                          Description:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold" style="text-align: justify;">{{activeProduct.discription}}</div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-6 client-view-label">
+                          <img src="assets/images/product-icon/ic_normal_rate.png">
+                          {{settings.mTvRate ? settings.mTvRate : 'Rate'}}:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold">
+                          {{activeProduct.rate}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px;">
+                      <div class="row">
+                        <div class="col-6 client-view-label">
+                          <img src="assets/images/product-icon/ic_normal_tax_rate.png">
+                          Tax Rate:
+                        </div>
+                        <div class="col-6 client-view-body font-custom-bold">
+                          {{activeProduct.taxRate}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             
+              <!-- Delete product MODAL -->
+              <div id="delete-product" class="modal fade" role="dialog" aria-labelledby="productFormLabel" aria-hidden="true"
+                data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title form-header font-custom-bold header-color" id="productFormLabel">
+                          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+                           Delete Product
+                      </h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem -3rem -1rem auto;">
+                        <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+                        <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this {{settings.mTvProducts ? settings.mTvProducts : 'Products'}}?</h5>
+                        <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="close btn btn-raised btn-custom-1 width20btn" 
+                      data-dismiss="modal" aria-label="Close" style="opacity: unset;margin-right: 46%;">
+                        No
+                      </button>
+                      <button type="button" id="clientFormLabel" (click)="deleteProduct()"  
+                      class="close btn btn-raised  btn-success width20btn"
+                        data-dismiss="modal" aria-label="Close" style="opacity: unset;text-shadow: none;">
+                        Yes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Delete Product MODAL ends -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog mod_dialog">
+  <div class="modal-content mod_content">
+    <div class="modal-header mod_header">
+      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+    </div>
+    <div class="modal-body">
+      <h3 class="title">Connection Lost !</h3>
+      <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
+        !!!</p>
+    </div>
+    <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
+      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+        data-dismiss="modal" aria-label="Close">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- Error MODAL ends -->

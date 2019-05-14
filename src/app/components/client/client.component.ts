@@ -25,13 +25,14 @@ export class ClientComponent implements OnInit {
   }
   clientList: client[]
 
-  private activeClient = <client>{}
+  public activeClient = <client>{}
   private errors: object = {}
   clientListLoading: boolean = false
   clientDisplayLimit = 12
   sortTerm: string
   searchTerm: string
   repeatativeClientName: string = ''
+  hideme = []
 
   createMode: boolean = true
   editMode: boolean = false
@@ -39,6 +40,9 @@ export class ClientComponent implements OnInit {
   settings: any;
   emptyClient: boolean;
   searchTerms;
+  downArrow = "assets/images/down1.png";
+  upArrow = "assets/images/up1.png";
+  addClient: boolean;
   
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
@@ -49,6 +53,13 @@ export class ClientComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting;
+    
+     // show more-less button condition depending on height
+     jQuery('.expandClicker').each(function(){
+      if (jQuery(this).parent().height() < 30) {
+        jQuery(this).fadeOut();
+      }
+    });
   }
 
   ngOnInit() {
@@ -58,14 +69,31 @@ export class ClientComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
-          this.store.dispatch(new clientActions.add(response.records))
-          this.clientList = response.records.filter(cli => cli.enabled == 0)
-          
+          this.clientList = this.removeEmptySpaces(response.records.filter(cli => cli.enabled == 0))
+          this.store.dispatch(new clientActions.add(this.clientList))
         }
       },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
      }   
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   save(status, edit) {
@@ -77,7 +105,7 @@ export class ClientComponent implements OnInit {
     }
 
     // If adding or editing client, make sure client with same name doesnt already exist
-    if (!this.activeClient.enabled) {
+    if (this.activeClient.name && !this.addClient) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
       // If empty spaces
@@ -91,7 +119,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
               if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
@@ -142,16 +170,19 @@ export class ClientComponent implements OnInit {
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
             this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
+            this.closeItemModel()
           } else if(self.activeClient.enabled !== 0){// delete
            
             self.store.dispatch(new clientActions.remove(storeIndex))
             this.clientList.splice(index, 1)
             this.toasterService.pop('success', 'Client Deleted Successfully !!!');
+            this.closeItemModel()
           }
             if(self.activeClient.enabled == 0){    //edit
               self.store.dispatch(new clientActions.edit({index: storeIndex, value: self.clientService.changeKeysForStore(response.clientList[0])}))
               this.clientList[index] = self.clientService.changeKeysForStore(response.clientList[0])
               this.toasterService.pop('success', 'Details Edited Successfully !!!');
+              this.closeItemModel()
             }
           self.errors = {}
           // self.activeClient = <client>{}
@@ -189,15 +220,10 @@ export class ClientComponent implements OnInit {
       this.emptyClient = false
     }
   }
-  openDeleteClientModal() {
-    $('#delete-client').modal('show')
-    $('#delete-client').on('shown.bs.modal', (e) => {
-      // $('#delete-client input[type="text"]')[1].focus() //1
-    })
-  }
 
   addNew() {
     this.activeClient = <client>{}
+    this.addClient = true;
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -206,9 +232,6 @@ export class ClientComponent implements OnInit {
     $('#emailLabel').addClass('is-empty')
 
     $('#name').select()
-    this.createMode = true
-    this.editMode = false
-    this.viewMode = false
   }
 
   batchUpload() {
@@ -216,20 +239,38 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
+    this.addClient = true
     this.activeClient.enabled = 1
     this.save(true, null)
-    this.addNew();
   }
+  addClientModal() {
+    this.editMode = false;
+    this.createMode = true;
+    this.activeClient = <client>{}
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+    })
+  }
+  openDeleteClientModal(client) {
+    this.activeClient = client
+    $('#delete-client').modal('show')
+    $('#delete-client').on('shown.bs.modal', (e) => {
+      // $('#delete-product input[type="text"]')[1].focus()
+    })
+  }
+  closeItemModel() {
+    $('#add-client').modal('hide')
+  }
+
  
-  editThis() {
+  editThis(client) {
+    this.addClient = true;
+    this.activeClient = client
     // If there are clients with same name in db, Allow them to make changes
     if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {
       this.repeatativeClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
     }
-
-    this.createMode = false
-    this.editMode = true
-    this.viewMode = false
+    this.editClientModal();
   }
 
   viewThis(client, cancelFlag=false) {
@@ -240,19 +281,19 @@ export class ClientComponent implements OnInit {
     if (!cancelFlag) {
       this.activeClient = {...client}
     }
-
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
+  }
+  editClientModal() {
+    this.editMode = true;
+    this.createMode = false;
+    $('#add-client').modal('show')
+    $('#add-client').on('shown.bs.modal', (e) => {
+    })
   }
   
 
   cancelThis() {
     this.activeClient = {...this.clientList.filter(cli => cli.uniqueKeyClient == this.activeClient.uniqueKeyClient)[0]}
 
-    this.createMode = false
-    this.editMode = false
-    this.viewMode = true
   }
 
   clearThis() {

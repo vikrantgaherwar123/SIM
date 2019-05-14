@@ -1,51 +1,71 @@
 <div class="row main-wrapper" id="hovereffect">
   <!-- Invoice query bar -->
   <div class="col-12 query-container">
-      <div class="query-bar query_padding" *ngIf="!changingQuery">
-          <div class="row">
-            <div class="col-md-9">
-              <span style="color: grey;margin-left: -20px;">Showing results for:</span> <img src="assets/images/menu-logo/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"> <span style="color:#1a73cc">Client: </span><span>
-                <!-- {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}} -->
-                <span *ngIf="invoiceQueryForm.client.value">
-                    {{(invoiceQueryForm.client.value?.length > 0) ? invoiceQueryForm.client.value[0].name : 'None'}}
-                    <span *ngIf="invoiceQueryForm.client.value?.length > 1"
-                      [title]="getNames()"
+      <div *ngIf="!changingQuery">
+        <div class="row">
+            <div class="col-2"><span class="color_white">Showing results for: </span>
+              <span class="color_white" style="float: right;">Clients: </span></div>
+            <div class="col-2">
+              <div class="form-group pl-0" style="margin-top: -7px !important;">
+                  <ng-multiselect-dropdown
+                  [placeholder]="'All Clients'"
+                  [data]="dropdownList"
+                  [settings]="dropdownSettings"
+                  [formControl]="invoiceQueryForm.client"
+                >
+                </ng-multiselect-dropdown>
+                </div>
+            </div>
+            <div class="col-md-2 row" >
+              <div class="col-md-4"><span class="color_white">Clients: </span></div>
+              <ul class="nav col-4">
+                <li class="button-dropdown">
+                  <a href="javascript:void(0)" class="dropdown-toggle">
+                  {{itemSelected}}  
+                  </a><span><img src="assets/images/filter.png" class="month_icon"> </span>
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let item of duration">
+                      <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-2 row" style="margin-left: 68px;">
+                <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+                <label class="color_white col-6" style="text-align: right;">From Date: </label>
+                <input class="col-6 date_inputs" id="anOtherButton" placeholder="Start" required readonly 
+                      matInput [matDatepicker]="picker3" [formControl]="invoiceQueryForm.dateRange.start"
+                      (click)="picker3.open()"  (dateChange)="onDate($event)"
                     >
-                      (+{{invoiceQueryForm.client.value.length - 1}} {{invoiceQueryForm.client.value.length === 2 ? 'other' : 'others'}})
-                    </span>,
-                  </span>
-                <!-- <span *ngFor="let client of invoiceQueryForm.client.value"> {{client.name}}  +</span> -->
-              </span>
-              <img src="assets/images/menu-logo/date.png" 
-              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;">
-               <span  style="color:#1a73cc">{{itemSelected}} :</span>
-              <span *ngIf="disableDateText === false">
-                <span 
-                  style="margin-left: 10px;">{{invoiceQueryForm.dateRange.start.value ? 
-                              invoiceQueryForm.dateRange.start.value.getDate() + '-' +
-                              (invoiceQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-                              invoiceQueryForm.dateRange.start.value.getFullYear() : 0
-                            }}</span>&nbsp; <span style="font-size: 14px;">to</span>&nbsp; <span>{{invoiceQueryForm.dateRange.end.value ?
-                              invoiceQueryForm.dateRange.end.value.getDate() + '-' +
-                              (invoiceQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-                              invoiceQueryForm.dateRange.end.value.getFullYear() : 0
-                            }}</span>
-              </span>
-              <!-- <img src="assets/images/payment2.png" 
-              style="height: 20px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;"><span  style="color:#0299ff">Payment :</span> -->
-            </div>
-    
-            <div class="col-12 col-md-2">
-              <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn change_btn">
-                Change
-              </button>
-            </div>
-          </div>
+                    <mat-datepicker-toggle  matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3 ></mat-datepicker>
+              </div>
+              <div class="col-md-2 row" style="margin-left: -36px;">
+                  <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+                  <label class="color_white col-6" style="text-align: right;">To Date: </label>
+                  <input class="col-6 date_inputs" id="anOtherButton" placeholder="End" required readonly matInput [matDatepicker]="picker4"
+                    [formControl]="invoiceQueryForm.dateRange.end" (click)="picker4.open()" (dateChange)="onDate($event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: -26px;margin-bottom: -68px !important;">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                </div>
+              
+              <div class="col-md-2 row search_btns">
+                  <div class="col-12 row" style="margin-left: 14px;">
+                    <button id="downloadBtn" type="button" (click)="invoiceQueryForm.client.reset();clearItem();itemSelected = 'All Time'"
+                      class="clear_btn col-5">Clear
+                    </button>
+                    <button id="previewBtn" type="button" (click)="showSelectedInvoices(invoiceQueryForm.client)"
+                      class="clear_btn col-5 change_btn_searchbar" style="margin-left: 14px;">Search
+                    </button>
+                  </div>
+              </div>
+        </div>
+          
         </div>
     </div>
-    <div class="w-100" style="padding-top: 44px">
+    <div class="w-100" style="padding-top: 72px">
       <div class="row mx-0">
         
   
@@ -285,31 +305,31 @@
               <!-- Calculations -->
               <div class="col-6">
                 <!-- Total -->
-                <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
+                <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;margin-bottom: 10px;">
                   <div class="col-6 text-left">
                     <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold price">{{activeInv.gross_amount  | CurrencyPipe}}</span>
+                    <span class="font-custom-bold price">{{activeInv.gross_amount  | number:'1.1-2' | CurrencyPipe}}</span>
                   </div>
                 </div>
   
                 <!-- Discount -->
                 <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0" style="margin-top: 6px;">
-                  <div class="col-5 discount-tax-label">
-                    <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                    <div *ngIf="!isRate" class="inline font-custom">
-                      ({{0 | CurrencyPipe| slice:0:1}})
-                    </div>
-                    <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
-                  </div>
+                    <div class="col-5 discount-tax-label">
+                        <span style="text-align: left;vertical-align: bottom;"
+                          class="inline">(-){{settings.discount ? settings.discount : 'Discount'}}</span>
+                        
+                      </div>
                   <div class="col-7">
                     <div class="text-right">
                       <div *ngIf="!activeInv.discountFlag == 0">
-                        {{activeInv.percentageValue | number:'2.'}}
+                        {{activeInv.percentageValue | number:'1.1-2'}}
                       </div>
                       <div  class="price" *ngIf="!activeInv.discountFlag == 1">
-                        {{activeInv.discount | CurrencyPipe}}
+                        
+                        <div *ngIf="activeInv.percentage_flag == 1" class="text-right font-custom">({{activeInv.percentage_value}} %)
+                        {{activeInv.discount | number:'1.1-2' | CurrencyPipe}}</div>
                       </div>
                     </div>
                   </div>
@@ -318,12 +338,12 @@
                 <!-- Tax -->
                 <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                    <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
+                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+)Tax</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeInv.tax_amount | number:'1.1-2'}}
+                        ({{activeInv.tax_rate | number:'1.1-2'}} %)
+                      {{activeInv.tax_amount | number:'1.1-2' | CurrencyPipe}}
                     </div>
                   </div>
                 </div>
@@ -332,12 +352,12 @@
                 <div *ngIf="activeInv.taxList !== 0">
                   <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                     <div class="col-4 discount-tax-label">
-                        <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{tax.taxName}}</div>
-                        <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                        <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+){{tax.taxName}}</div>
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                        ({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)
+                        {{activeInv.taxList[index].calculateValue | number:'1.1-2' | CurrencyPipe}}
                       </div>
                     </div>
                   </div>
@@ -346,11 +366,11 @@
                 <!-- Shipping -->
                 <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
-                      <div class="inline" style="text-align: left;vertical-align: bottom;">{{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                      <div class="inline" style="text-align: left;vertical-align: bottom;">(-){{settings.shipping ? settings.shipping : 'Shipping'}}</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeInv.shipping_charges | number:'1.1-2'}}
+                      {{activeInv.shipping_charges | number:'1.1-2' | CurrencyPipe}}
                     </div>
                   </div>
                 </div>
@@ -359,11 +379,12 @@
                 <div *ngIf="activeInv.adjustment != 0" class="row mx-0">
                   <div class="col-4 discount-tax-label">
                     <div class="inline" style="text-align: left; vertical-align: bottom;">
-                        {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
+                        (-){{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                     </div>
                   </div>
                   <div class="col-8">
                     <div class="text-right">
+                      {{activeInv.shipping_charges | CurrencyPipe}}
                       {{activeInv.adjustment | number:'1.1-2'}}
                     </div>
                   </div>
@@ -377,46 +398,48 @@
                     </span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold price">{{activeInv.amount | CurrencyPipe}}</span>
+                    <span class="font-custom-bold price">{{activeInv.amount | number:'1.1-2' | CurrencyPipe}}</span>
                   </div>
                 </div>
-
-                <!-- inclusive tax -->
-              <div *ngIf="activeInv.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
-                  <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              Taxable :
-                          </span>
-                        </div>
-                        <div class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{(taxable) | CurrencyPipe}}</span>
-                        </div>
-                  </div>
-                  <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div *ngIf="item.tax_rate" class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              (+) Tax ({{item.tax_rate}}%)
-                          </span>
+                
+                 <!-- inclusive tax -->
+                <div *ngIf="activeInv.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
+                    <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                        <div class="col-6 text-left">
+                            <span class="font-custom-bold">
+                                Taxable :
+                            </span>
+                          </div>
+                          <div class="col-6 text-right">
+                            <span
+                              class="font-custom-bold price">{{(taxable) | number:'1.1-2'| CurrencyPipe}}</span>
+                          </div>
+                    </div>
+                    <!-- <div *ngIf="activeInv.listItems.tax_rate" class="row mx-0 col-12">
+                      <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                          <div *ngIf="item.tax_rate" class="col-6 text-left">
+                              <span class="font-custom-bold">
+                                  (+) Tax ({{item.tax_rate}}%)
+                              </span>
+                          </div>
+                          <div *ngIf="item.tax_amount"  class="col-6 text-right">
+                              <span
+                                class="font-custom-bold price">{{item.tax_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                          </div>
                       </div>
-                      <div *ngIf="item.taxAmount"  class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{item.taxAmount | CurrencyPipe}}</span>
-                      </div>
+                    </div> -->
+                    <div *ngIf="activeInv.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                        <div class="col-6 text-left">
+                            <span class="font-custom-bold">
+                                (+) Tax ({{activeInv.tax_rate}}%)
+                            </span>
+                          </div>
+                          <div  class="col-6 text-right">
+                            <span
+                              class="font-custom-bold price">{{activeInv.tax_amount | number:'1.1-2' | CurrencyPipe}}</span>
+                          </div>
+                    </div>
                   </div>
-                  <div *ngIf="activeInv.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
-                      <div class="col-6 text-left">
-                          <span class="font-custom-bold">
-                              (+) Tax ({{activeInv.tax_rate}}%)
-                          </span>
-                        </div>
-                        <div  class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{activeInv.tax_amount | CurrencyPipe}}</span>
-                        </div>
-                  </div>
-                </div>
   
                 <!-- Paid -->
                 <div class="row mx-0" style="padding-top: 10px;padding-bottom: 10px;">
@@ -424,7 +447,7 @@
                     <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="font-custom price">{{paidAmount()|CurrencyPipe}}</span>
+                    <span class="font-custom price">{{paidAmount() | number:'1.1-2' | CurrencyPipe}}</span>
                   </div>
                 </div>
                  <!-- Payment -->
@@ -435,7 +458,7 @@
                       <span class="font-custom">{{item.dateOfPayment | date}}</span>
                     </div>
                     <div class="col-6 text-right pad_rg_5" style="margin-left: -10px;">
-                      <span class="font-custom price">{{item.paidAmount | CurrencyPipe}}</span>
+                      <span class="font-custom price">{{item.paidAmount | number:'1.1-2'| CurrencyPipe}}</span>
                     </div>
                   </div>
               </div>
@@ -446,7 +469,7 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld price">{{activeInv.balance|CurrencyPipe}}</span>
+                    <span class="bld price">{{activeInv.balance | number:'1.1-2' |CurrencyPipe}}</span>
                   </div>
                 </div>
               </div>
@@ -524,7 +547,7 @@
                       {{ invoice.invoice_number }}
                     </div>
                     <div class="col-5 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 37px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
-                      {{ invoice.amount | CurrencyPipe }}
+                      {{ invoice.amount | number:'1.1-2' | CurrencyPipe }}
                     </div>
                   </div>
                 </div>

@@ -160,10 +160,6 @@ export class AddEditComponent implements OnInit {
     store.select('estimate').subscribe(estimates => this.estimateList = estimates);
     store.select('recentEstimates').subscribe(estimates => this.recentEstimateList = estimates);
 
-    
-
-
-
    /*Scroll to top when arrow up clicked BEGIN*/
     $(window).scroll(function () {
       var height = $(window).scrollTop();
@@ -196,9 +192,36 @@ export class AddEditComponent implements OnInit {
       });
     })
     // save button processing script ends
+     // tax / discount dropdown
+     jQuery(document).ready(function (e) {
+      function t(t) {
+        e(t).bind("click", function (t) {
+          t.preventDefault();
+          e(this).parent().fadeOut()
+        })
+      }
+      e(".dropdown-toggle").click(function () {
+        var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+        e(".button-dropdown .dropdown-menu").hide();
+        e(".button-dropdown .dropdown-toggle").removeClass("active");
+        if (t) {
+          e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+        }
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+      })
+    });
+    // tax / discount dropdown
+    
     // show more-less button condition depending on height
     jQuery('.expandClicker').each(function(){
-      if (jQuery(this).parent().height() < 30) {
+      if (jQuery(this).parent().height() < 50) {
         jQuery(this).fadeOut();
       }
     });
@@ -1643,7 +1666,6 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.tax_rate = 0;
         this.activeInvoice.tax_amount = 0;
       }
-
     }
     
     if (this.activeInvoice.tax_rate != null && !this.includeTax) {
@@ -1665,9 +1687,6 @@ export class AddEditComponent implements OnInit {
       var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
       this.activeInvoice.tax_amount = parseFloat(value);
     }
-
-    
-      
 
     // Multiple Taxes
     if (this.activeInvoice.taxList && this.activeInvoice.taxList.length > 0) {

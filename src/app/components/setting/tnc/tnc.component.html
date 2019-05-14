@@ -6,28 +6,23 @@
                   <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
                     <span class="col-8">Primary settings</span>
                     <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-                    <span class="col-2"></span>
                   </div>
                   <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
                     <span class="col-8">Custom Field Name</span>
                     <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-                    <span class="col-2"></span>
                   </div>
                   <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
                     <span class="col-8">Banking Details</span>
                     <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-                    <span class="col-2"></span>
                   </div>
                   <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
                     <span class="col-8">Terms & Conditions</span>
                     <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-                    <span class="col-2"></span>
                   </div>
                   <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
                     <span class="col-8">Profile</span>
                     <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
-                    <span class="col-2"></span>
-                  </div>
+                    </div>
               </div>
             </div>
             
@@ -58,17 +53,24 @@
         <!-- Terms And Conditions List -->
         <div class="col-12 mb-1 mCustomScrollbar style-3" style="margin-bottom: 7.25rem!important;">
           <div class="row term-list-show" *ngFor="let term of tncs | orderBy:'term':'asc' ; let index = index ;" id="term{{index}}">
-          <label class="check">
+          <!-- <label class="check">
             <div class="col-1">
               <input type="checkbox" name="default{{index}}" id="default{{index}}" (click)="setDeafulTerm(index)" [checked]="term.setDefault =='DEFAULT'">
               <span class="checkmark"></span>
             </div>
-          </label>
-            <div class="col-9" style="left: -2%;">
+          </label> -->
+          <label class="check">
+              <div class="checkbox default_checkbox col-1">
+                <input type="checkbox" name="default{{index}}" id="default{{index}}" (click)="setDeafulTerm(index)" [checked]="term.setDefault =='DEFAULT'"
+                  class="ng-pristine ng-valid ng-touched modal-checkbox" style="zoom: 1.5;">
+                <span class="checkmark"></span>
+              </div>
+            </label>
+            <div class="col-7" style="left: -2%;">
               <div style="white-space: pre-wrap;word-break: break-word;" class="pre_term ellipsisterm"> {{term.terms}}</div>
             </div>
           
-            <div class="col-2 text-right" style="margin-left: 30px;">
+            <div class="col-3 text-right" style="margin-left: 100px;">
               <span>
               <img (click)="openDeleteTermModal(index)" class="img_hover" style="width: 16px; height: 16px;cursor: pointer;" Title="Delete Term" src="/assets/images/grey_cross.png">
               </span>

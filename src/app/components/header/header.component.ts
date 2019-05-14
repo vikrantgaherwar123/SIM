@@ -81,6 +81,7 @@ export class HeaderComponent implements OnInit {
       this.BatchSrc = "assets/images/menu-logo/batch_upload_greyb.png";
     }
   }
+ 
 
   onEstHover(){
     if(this.router.url !=='/estimate/add' && this.router.url !=='/estimate/view'){
