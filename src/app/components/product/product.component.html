@@ -51,7 +51,7 @@
                   <div class="col-1 text-right heading">Actions</div>
                 </div>
                 <div id="prod{{index}}" style="border-top: 2px solid #f0f4f5 !important;"
-                *ngFor="let product of (productList | orderBy:sortTerm:(sortTerm=='rate'? true : false):true | filter:searchTerm | slice:0); index as index">
+                *ngFor="let product of (productList | orderBy:'prodName':false | filter:searchTerm | slice:0); index as index">
                   <div class="col-12 row main_row">
                       <div class="col-6" style="padding-top: 6px;">
                         <img src="assets/images/product_box_blue.png" class="img_box product_title">

@@ -39,10 +39,10 @@ export class ClientComponent implements OnInit {
   viewMode: boolean = false
   settings: any;
   emptyClient: boolean;
-  deleteclient : boolean = true
   searchTerms;
   downArrow = "assets/images/down1.png";
   upArrow = "assets/images/up1.png";
+  addClient: boolean;
   
   constructor(public clientService: ClientService,
     public toasterService: ToasterService,
@@ -69,14 +69,31 @@ export class ClientComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         if (response.status === 200) {
-          this.store.dispatch(new clientActions.add(response.records))
-          this.clientList = response.records.filter(cli => cli.enabled == 0)
-          
+          this.clientList = this.removeEmptySpaces(response.records.filter(cli => cli.enabled == 0))
+          this.store.dispatch(new clientActions.add(this.clientList))
         }
       },error => this.openErrorModal())
     } else {
       this.clientListLoading = false
      }   
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   save(status, edit) {
@@ -88,7 +105,7 @@ export class ClientComponent implements OnInit {
     }
 
     // If adding or editing client, make sure client with same name doesnt already exist
-    if (this.activeClient.name && this.deleteclient) {
+    if (this.activeClient.name && !this.addClient) {
       var tempClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')
 
       // If empty spaces
@@ -102,7 +119,7 @@ export class ClientComponent implements OnInit {
       var tempCompare = ''
       if (this.clientList.length > 0) {
         for (var p = 0; p < this.clientList.length; p++) {
-          tempCompare = this.clientList[p].name
+          tempCompare = this.clientList[p].name.toLowerCase().replace(/ /g, '')
           if (tempCompare === tempClientName) {
             if(edit == 1) {
               if(this.activeClient.uniqueKeyClient !== this.clientList[p].uniqueKeyClient && tempClientName !== this.repeatativeClientName) {
@@ -206,6 +223,7 @@ export class ClientComponent implements OnInit {
 
   addNew() {
     this.activeClient = <client>{}
+    this.addClient = true;
 
     // form.$setUntouched();
     if ($('#emailLabel').hasClass('has-error')) {
@@ -221,7 +239,7 @@ export class ClientComponent implements OnInit {
   }
 
   deleteClient() {
-    this.deleteclient = false
+    this.addClient = true
     this.activeClient.enabled = 1
     this.save(true, null)
   }
@@ -246,8 +264,8 @@ export class ClientComponent implements OnInit {
 
  
   editThis(client) {
+    this.addClient = true;
     this.activeClient = client
-    this.deleteclient = false
     // If there are clients with same name in db, Allow them to make changes
     if(this.clientList.filter(cli => cli.name == this.activeClient.name).length > 1) {
       this.repeatativeClientName = this.activeClient.name.toLowerCase().replace(/ /g, '')

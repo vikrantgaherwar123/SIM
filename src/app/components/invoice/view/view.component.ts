@@ -135,8 +135,6 @@ export class ViewComponent implements OnInit {
         this.clientList = response.records;
         this.removeEmptySpaces();
         this.dropdownList = this.clientList;
-        console.log(JSON.stringify(this.clientList));
-        
       },err => this.openErrorModal()
       )
     } else {

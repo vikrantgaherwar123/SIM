@@ -115,9 +115,9 @@ a, a:hover, a:focus {
 	word-wrap: break-word;
 	background-color: #fdfdfe;
 }
-.item:hover{
+/* .item:hover{
 	background-color: #d6e8fa !important;
-}
+} */
 .item span {
 	height: 18px;
 	font-size: 12px;
@@ -396,4 +396,11 @@ button.add-line-item-button {
 }
 .mat-option.mat-active{
 	background: none !important;
+}
+.add_client_modal_body{
+  padding: 1rem 44px !important;
+}
+.add_client_popup_modal {
+	max-width: 618px !important;
+	margin-top: 62px !important;
 }

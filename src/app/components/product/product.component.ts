@@ -45,6 +45,7 @@ hideToggle: boolean = false
   productDisplayLimit = 12
   settings: any;
   emptyRate: boolean;
+  addProduct: any;
   
 
   constructor(private productService: ProductService,
@@ -93,7 +94,7 @@ hideToggle: boolean = false
       this.emptyRate = true;
     }
     // If adding or editing product, make sure product with same name doesnt exist
-    if(this.activeProduct.prodName && this.deleteproduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
+    if(this.activeProduct.prodName && !this.addProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
       var tempProName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
       var tempCompare = ''
       for (var p = 0; p < this.productList.length; p++) {
@@ -185,6 +186,7 @@ hideToggle: boolean = false
   }
 
   addNew() {
+    this.addProduct = true;
     this.activeProduct = <product>{}
     $('#prod_name').select()
   }
@@ -199,10 +201,9 @@ hideToggle: boolean = false
 
 
   deleteProduct() {
-    this.deleteproduct = false
+    this.addProduct = true
     this.activeProduct.enabled = 1
     this.save(true, null)
-    
   }
 
   emptyField(input){
@@ -213,20 +214,16 @@ hideToggle: boolean = false
   }
 
   editThis(product) {
+    this.addProduct = true;
     this.activeProduct = product;
-    this.deleteproduct = false;
     if(this.productList.filter((prod => prod.prodName === this.activeProduct.prodName)).length > 1) {
       this.repeatativeProductName = this.activeProduct.prodName.toLowerCase().replace(/ /g, '')
     }
     this.editProductModal();
-
   }
-
-  
 
   cancelThis() {
     this.activeProduct = {...this.productList.filter(prod => prod.uniqueKeyProduct == this.activeProduct.uniqueKeyProduct)[0]}
-
   }
 
   clearThis() {

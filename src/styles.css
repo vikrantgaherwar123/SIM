@@ -1347,6 +1347,7 @@ textarea{
 }
 .popup_input_height{
   height: 32px !important;
+  border-radius: 0px;
 }
 .mr_4{
   margin-left: -4px !important;
@@ -1615,4 +1616,27 @@ input.mat-input-element {
 }
 .setting_pad{
   padding: 0px 22px;
+}
+.item_input_symbol {
+  border: 1px solid #f2f1f1;
+  background-color: #f2f1f1;
+  padding: 4px 2px 3px 0px;
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
+  width: 25px;
+}
+.side_setting_checkmark{
+  width:18px !important;
+  height:18px !important;
+}
+.check .side_setting_checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
