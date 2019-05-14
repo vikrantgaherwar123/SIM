@@ -135,11 +135,12 @@ export class ViewComponent implements OnInit {
         this.clientList = response.records;
         this.removeEmptySpaces();
         this.dropdownList = this.clientList;
-        // this.store.dispatch(new clientActions.add(response.records))
+        console.log(JSON.stringify(this.clientList));
+        
       },err => this.openErrorModal()
       )
     } else {
-      // this.removeEmptySpaces();
+      this.removeEmptySpaces();
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -149,16 +150,6 @@ export class ViewComponent implements OnInit {
         this.openSearchClientModal()
       }
     })
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'client.id',
-      textField: 'client.name',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
 
 
     // dropdown settings
@@ -198,12 +189,16 @@ export class ViewComponent implements OnInit {
   removeEmptySpaces(){
     //remove whitespaces from clientlist
     for (let i = 0; i < this.clientList.length; i++) {
-      if(this.clientList[i].name === undefined){
-        this.clientList.splice(i,1);
+      if (this.clientList[i].name === undefined) {
+        this.clientList.splice(i, 1);
       }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
+      if (this.clientList[i].name) {
+        var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          this.clientList.splice(i, 1);
+        }
+      }else if(!this.clientList[i].name){
+        this.clientList.splice(i, 1);
       }
     }
   }
