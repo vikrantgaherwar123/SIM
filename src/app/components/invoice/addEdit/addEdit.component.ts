@@ -1674,6 +1674,19 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
     }
+
+    //when user changes to disabled
+    if (this.activeSettings.discountFlagLevel === 2) {
+      this.activeInvoice.discount = 0;
+      deductions = this.activeInvoice.discount;
+      if(this.includeTax){
+        this.activeInvoice.amount = this.activeInvoice.gross_amount;
+        this.activeInvoice.balance = this.activeInvoice.amount
+      }else if(this.activeInvoice.tax_rate && !this.includeTax){
+        this.activeInvoice.amount = this.activeInvoice.gross_amount + this.activeInvoice.tax_amount;
+        this.activeInvoice.balance = this.activeInvoice.amount
+      }
+    }
     
 
     // Tax
@@ -2177,17 +2190,17 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.listItems[i].tax_amount = 0;
       }
     }
-      //when user changes to disabled
-      if (this.activeSettings.discountFlagLevel === 2) {
-        setting.androidSettings.discountFlagLevel = 2;
-        this.activeInvoice.discount = 0;
-      }
+      // //when user changes to disabled
+      // if (this.activeSettings.discountFlagLevel === 2) {
+      //   setting.androidSettings.discountFlagLevel = 2;
+      //   this.activeInvoice.discount = 0;
+      // }
       
-      if (this.activeSettings.taxFlagLevel === 2) {
-        setting.androidSettings.taxFlagLevel = 2;
-        this.activeInvoice.tax_rate = 0;
-        this.activeInvoice.tax_amount = 0;
-      }
+      // if (this.activeSettings.taxFlagLevel === 2) {
+      //   setting.androidSettings.taxFlagLevel = 2;
+      //   this.activeInvoice.tax_rate = 0;
+      //   this.activeInvoice.tax_amount = 0;
+      // }
     
 
     this.settingService.add(setting).subscribe((response: any) => {
