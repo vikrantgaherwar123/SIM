@@ -147,7 +147,9 @@ export class ViewTodaysEstimateComponent implements OnInit {
           if(this.activeEst.alstQuotProduct[i].taxAmount && this.activeEst.alstQuotProduct[i].taxAmount == 0){
             this.activeEst.alstQuotProduct[i].tax_rate = 0;
           }
-         
+          if(this.activeEst.alstQuotProduct[i].tax_rate || this.activeEst.alstQuotProduct[i].tax_rate == 0){
+            this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+          }
           
           if(this.activeEst.alstQuotProduct[i].product_name){
             this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
@@ -186,10 +188,11 @@ export class ViewTodaysEstimateComponent implements OnInit {
           }
       }
 
-      if(this.activeEst.taxableFlag == 1 && this.activeEst.tax_rate){
-        taxPayable = this.activeEst.tax_amount;
-        if(this.activeEst.discount_amount){
-          this.taxable = (this.activeEst.amount - this.activeEst.discount_amount) - taxPayable;
+      if(this.activeEst.taxableFlag == 1 && this.activeEst.taxrate){
+        taxPayable = this.activeEst.taxAmt;
+        if(this.activeEst.discount){
+          var deductedAmount = (this.activeEst.amount - this.activeEst.discount)
+          this.taxable = deductedAmount - taxPayable;
         }
         this.taxable = this.activeEst.amount - taxPayable;
       }

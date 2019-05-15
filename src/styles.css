@@ -1038,7 +1038,7 @@ background-color: none;
 }
 
 .show {
-  /* overflow: scroll; */
+  overflow: visible;
   height: auto;
 }
 

@@ -250,7 +250,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom-bold price">{{activeInv.gross_amount | CurrencyPipe}}</span>
+                    class="font-custom-bold price">{{activeInv.gross_amount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
 

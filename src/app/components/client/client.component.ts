@@ -71,9 +71,21 @@ export class ClientComponent implements OnInit {
         if (response.status === 200) {
           this.clientList = this.removeEmptySpaces(response.records.filter(cli => cli.enabled == 0))
           this.store.dispatch(new clientActions.add(this.clientList))
+          //sort in ascending
+          this.clientList.sort(function (a, b) {
+            var textA = a.name.toUpperCase();
+            var textB = b.name.toUpperCase();
+            return textA.localeCompare(textB);
+          });
         }
       },error => this.openErrorModal())
     } else {
+      //sort in ascending
+      this.clientList.sort(function (a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return textA.localeCompare(textB);
+      });
       this.clientListLoading = false
      }   
   }

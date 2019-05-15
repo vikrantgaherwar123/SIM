@@ -50,7 +50,7 @@
                 </div>
                 
                 <div  style="margin-bottom: -13px;"
-                id="client{{index}}" class="clientname" *ngFor="let client of (clientList | orderBy:'name':false | filter:searchTerms |  slice:0); index as index"
+                id="client{{index}}" class="clientname" *ngFor="let client of (clientList  | filter:searchTerms |  slice:0); index as index"
                  >
                   <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
                     <div class="col-3" style="padding-top: 6px;">

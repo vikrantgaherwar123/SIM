@@ -75,13 +75,45 @@ hideToggle: boolean = false
       this.productService.fetch().subscribe((response: any) => {
         this.productListLoading = false
         if(response.status === 200) {
-          this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
-          this.productList = response.records.filter(prod => prod.enabled == 0)
+          this.productList = this.removeEmptySpaces(response.records.filter(prod => prod.enabled == 0))
+          this.store.dispatch(new productActions.add(this.productList))
+          
+          //sort in ascending
+          this.productList.sort(function (a, b) {
+            var textA = a.prodName.toUpperCase();
+            var textB = b.prodName.toUpperCase();
+            return textA.localeCompare(textB);
+          });
         }
       },error => this.openErrorModal())
     } else {
+      
+      //sort in ascending
+      this.productList.sort(function (a, b) {
+        var textA = a.prodName.toUpperCase();
+        var textB = b.prodName.toUpperCase();
+        return textA.localeCompare(textB);
+      });
       this.productListLoading = false
     }
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].prodName === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].prodName) {
+        var tempClient = data[i].prodName.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].prodName){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   save(status, edit) {
