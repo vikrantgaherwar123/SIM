@@ -48,7 +48,7 @@
         <div class="d-sm-flex">
             <h5 class="menu_list">
               <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn  header_menu_text">
-                <span class="span_text "><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span [class.active_text]="router.url==='/setting/batchUpload'">Batch Upload</span></span>
+                <span class="span_text "><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span [class.active_text]="router.url==='/setting/batchUpload'" style="margin-left: 5px;">Batch Upload</span></span>
               </button>
             </h5>
           </div>

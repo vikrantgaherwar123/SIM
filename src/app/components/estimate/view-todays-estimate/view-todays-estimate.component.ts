@@ -147,6 +147,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
           if(this.activeEst.alstQuotProduct[i].taxAmount && this.activeEst.alstQuotProduct[i].taxAmount == 0){
             this.activeEst.alstQuotProduct[i].tax_rate = 0;
           }
+         
           
           if(this.activeEst.alstQuotProduct[i].product_name){
             this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
