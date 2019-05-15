@@ -272,13 +272,6 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(this.activeEstimate)
     }
 
-    if (this.activeEstimate) {
-
-      if(this.activeEstimate.taxableFlag == 1){
-        this.includeTax = true;
-      }
-
-
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -289,7 +282,11 @@ export class AddEditEstComponent implements OnInit {
           this.user = JSON.parse(localStorage.getItem('user'))
           this.settings = this.user.setting
           this.recentEstListLoading = false;
-          if (this.activeSettings) {
+          if (this.activeSettings && this.activeEstimate ) {
+
+            if(this.activeEstimate.taxableFlag == 1){
+              this.includeTax = true;
+            }
             //set settingFlags according to edit i.e invoice saved previously
             if (this.activeEstimate.discount_on_item == 0) {
               this.activeEstimate.percentage_flag = 1;
@@ -460,188 +457,183 @@ export class AddEditEstComponent implements OnInit {
                 clearInterval(ref)
               }
             }, 50)
+          }else if(this.recentEstListLoading){
+
+            this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
+              if (estimate.records !== null) {
+                this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
+        
+                if(this.activeEstimate.taxableFlag == 1){
+                  this.includeTax = true;
+                }
+        
+                //set settingFlags according to edit i.e invoice saved previously
+                if(this.activeEstimate.discount_on_item == 0){
+                  this.activeEstimate.percentage_flag = 1;
+                  this.settings.discountFlagLevel = 0;
+                  this.activeSettings.discountFlagLevel = 0;
+                  this.noDiscountOnItem = false;
+                  this.discountLabel = "On Bill"
+                }else if(this.activeEstimate.discount_on_item == 1){
+                  this.settings.discountFlagLevel = 1;
+                  this.activeSettings.discountFlagLevel = 1;
+                  this.noDiscountOnItem = true;
+                  this.discountLabel = "On Item"
+                }
+          
+                if(this.activeEstimate.tax_on_item == 0){
+                  this.settings.taxFlagLevel = 0;
+                  this.activeSettings.taxFlagLevel = 0;
+                  this.taxtext = "Tax (on Item)"
+                  this.noTaxOnItem = true;
+                  this.taxLabel = "On Item"
+                }else if(this.activeEstimate.tax_on_item == 1){
+                  this.settings.taxFlagLevel = 1;
+                  this.activeSettings.taxFlagLevel = 1;
+                  this.noTaxOnItem = false;
+                  this.taxLabel = "On Bill"
+                }
+        
+        
+                if(this.activeEstimate.discount > 0){
+                  this.activeEstimate.discount_on_item = 0;
+                }
+        
+        
+                //if item and Disabled condition  
+                if(this.activeEstimate.discount_on_item == 2){
+                  this.discountLabel = "Disabled"
+                }
+        
+                if(this.activeEstimate.tax_on_item == 2){
+                  this.taxLabel = "Disabled"
+                }
+                
+                //item settings
+                //this.activeEstimate.tax_on_item = 0
+                //this.activeEstimate.discount_on_item = 1
+        
+                //Bill settings
+                //this.activeEstimate.tax_on_item = 1
+                //this.activeEstimate.discount_on_item = 0
+        
+                //if Bill setting
+                if(this.activeEstimate.discount_on_item == 0){
+                  this.noDiscountOnItem = false;
+                }
+        
+                if(this.activeEstimate.tax_on_item == 1){
+                  this.noTaxOnItem = false;
+                }
+        
+                //shipping & adjustment
+                if(this.activeEstimate.shipping_charges){
+                  this.noShippingCharges = false
+                }
+                if(this.activeEstimate.adjustment){
+                  this.noAdjustment = false
+                }
+                //set balance
+                this.balance = this.activeEstimate.amount;
+        
+                
+                this.shippingAddressEditMode = true
+                this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
+                if (!this.activeEstimate.taxList)
+                  this.activeEstimate.taxList = [];
+        
+                // Change list item keys compatible
+                if (this.activeEstimate.listItems) {
+                  var temp = []
+                  for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
+                    if(this.activeEstimate.listItems[i].uniqueKeyFKQuotation){
+                      this.activeEstimate.listItems[i].uniqueKeyFKProduct = this.activeEstimate.listItems[i].uniqueKeyFKQuotation;
+                    }
+                    temp.push({
+                      description: this.activeEstimate.listItems[i].description,
+                      product_name: this.activeEstimate.listItems[i].productName,
+                      quantity: this.activeEstimate.listItems[i].qty,
+                      discount: this.activeEstimate.listItems[i].discountRate,
+                      discount_amount: this.activeEstimate.listItems[i].discountAmt,
+                      tax_amount: this.activeEstimate.listItems[i].taxAmount,
+                      rate: this.activeEstimate.listItems[i].rate,
+                      tax_rate: this.activeEstimate.listItems[i].taxRate,
+                      total: this.activeEstimate.listItems[i].price,
+                      unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                      unit: this.activeEstimate.listItems[i].unit
+                    })
+                  }
+                  this.activeEstimate.listItems = temp
+                  //show discount and tax fields when item settings is selected
+                  for(let i=0;i<this.activeEstimate.listItems.length;i++){
+                  this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
+                  if(this.showTaxRate!==0){
+                    this.settings.taxFlagLevel = 0;
+                    // this.setTaxOnItem = true;
+                  }
+                  this.showDiscountRate = this.activeEstimate.listItems[i].discount;
+                  if(this.showDiscountRate!==0){
+                    this.settings.discountFlagLevel = 1;
+                    this.showDiscountRateFlag = false;
+                    this.activeEstimate.discount_on_item = 1;
+                    // this.setDiscountOnItem = true;
+                  }
+                  }
+                }
+        
+                // Change TnC keys compatible
+                if (this.activeEstimate.termsAndConditions) {
+                  temp = []
+                  for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
+                    temp.push({
+                      orgId: this.activeEstimate.termsAndConditions[i].orgId,
+                      terms: this.activeEstimate.termsAndConditions[i].termsConditionText ? this.activeEstimate.termsAndConditions[i].termsConditionText : this.activeEstimate.termsAndConditions[i].terms_condition,
+                      uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms ? this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms : this.activeEstimate.termsAndConditions[i].uniqueKeyTerms,
+                      _id: this.activeEstimate.termsAndConditions[i]._id
+                    })
+                  }
+                  this.activeEstimate.termsAndConditions = temp
+                } 
+        
+                // Set Dates
+                var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
+                this.estimateDate.reset(new Date(y, (m - 1), d))
+        
+                // Tax and discounts show or hide
+                if (this.activeEstimate.discount == 0) {
+                  this.activeEstimate.percentage_flag = null
+                }else{
+                  this.activeEstimate.discount_on_item = 0;
+                }
+                if (this.activeEstimate.shipping_charges == 0) {
+                  this.activeEstimate.shipping_charges = undefined
+                }
+                if (this.activeEstimate.adjustment == 0) {
+                  this.activeEstimate.adjustment = undefined
+                }
+                if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
+                  this.activeEstimate.tax_rate = null
+                }else{
+                  this.activeEstimate.tax_on_item = 1;
+                }
+        
+                // Wait for clients to be loaded before setting active client
+                var ref = setInterval(() => {
+                  if (this.allClientList.length > 0) {
+                    let uid = this.activeEstimate.unique_key_fk_client
+                    this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                    this.billingTo.reset(this.activeClient)
+                    clearInterval(ref)
+                  }
+                }, 50)
+              } else {
+                this.toasterService.pop('failure', 'Invalid estimate id');
+                this.router.navigate(['/estimate/view'])
+              }
+            },err => this.openErrorModal(err))
           }
         }
       }, err => this.openErrorModal(err))
-    }
-
-    else if(this.recentEstListLoading){
-
-    this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
-      if (estimate.records !== null) {
-        this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-
-        if(this.activeEstimate.taxableFlag == 1){
-          this.includeTax = true;
-        }
-
-        //set settingFlags according to edit i.e invoice saved previously
-        if(this.activeEstimate.discount_on_item == 0){
-          this.activeEstimate.percentage_flag = 1;
-          this.settings.discountFlagLevel = 0;
-          this.activeSettings.discountFlagLevel = 0;
-          this.noDiscountOnItem = false;
-          this.discountLabel = "On Bill"
-        }else if(this.activeEstimate.discount_on_item == 1){
-          this.settings.discountFlagLevel = 1;
-          this.activeSettings.discountFlagLevel = 1;
-          this.noDiscountOnItem = true;
-          this.discountLabel = "On Item"
-        }
-  
-        if(this.activeEstimate.tax_on_item == 0){
-          this.settings.taxFlagLevel = 0;
-          this.activeSettings.taxFlagLevel = 0;
-          this.taxtext = "Tax (on Item)"
-          this.noTaxOnItem = true;
-          this.taxLabel = "On Item"
-        }else if(this.activeEstimate.tax_on_item == 1){
-          this.settings.taxFlagLevel = 1;
-          this.activeSettings.taxFlagLevel = 1;
-          this.noTaxOnItem = false;
-          this.taxLabel = "On Bill"
-        }
-
-
-        if(this.activeEstimate.discount > 0){
-          this.activeEstimate.discount_on_item = 0;
-        }
-
-
-        //if item and Disabled condition  
-        if(this.activeEstimate.discount_on_item == 2){
-          this.discountLabel = "Disabled"
-        }
-
-        if(this.activeEstimate.tax_on_item == 2){
-          this.taxLabel = "Disabled"
-        }
-        
-        //item settings
-        //this.activeEstimate.tax_on_item = 0
-        //this.activeEstimate.discount_on_item = 1
-
-        //Bill settings
-        //this.activeEstimate.tax_on_item = 1
-        //this.activeEstimate.discount_on_item = 0
-
-        //if Bill setting
-        if(this.activeEstimate.discount_on_item == 0){
-          this.noDiscountOnItem = false;
-        }
-
-        if(this.activeEstimate.tax_on_item == 1){
-          this.noTaxOnItem = false;
-        }
-
-        //shipping & adjustment
-        if(this.activeEstimate.shipping_charges){
-          this.noShippingCharges = false
-        }
-        if(this.activeEstimate.adjustment){
-          this.noAdjustment = false
-        }
-        //set balance
-        this.balance = this.activeEstimate.amount;
-
-        
-        this.shippingAddressEditMode = true
-        this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
-        if (!this.activeEstimate.taxList)
-          this.activeEstimate.taxList = [];
-
-        // Change list item keys compatible
-        if (this.activeEstimate.listItems) {
-          var temp = []
-          for (let i = 0; i < this.activeEstimate.listItems.length; i++) {
-            if(this.activeEstimate.listItems[i].uniqueKeyFKQuotation){
-              this.activeEstimate.listItems[i].uniqueKeyFKProduct = this.activeEstimate.listItems[i].uniqueKeyFKQuotation;
-            }
-            temp.push({
-              description: this.activeEstimate.listItems[i].description,
-              product_name: this.activeEstimate.listItems[i].productName,
-              quantity: this.activeEstimate.listItems[i].qty,
-              discount: this.activeEstimate.listItems[i].discountRate,
-              discount_amount: this.activeEstimate.listItems[i].discountAmt,
-              tax_amount: this.activeEstimate.listItems[i].taxAmount,
-              rate: this.activeEstimate.listItems[i].rate,
-              tax_rate: this.activeEstimate.listItems[i].taxRate,
-              total: this.activeEstimate.listItems[i].price,
-              unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
-              unit: this.activeEstimate.listItems[i].unit
-            })
-          }
-          this.activeEstimate.listItems = temp
-          //show discount and tax fields when item settings is selected
-          for(let i=0;i<this.activeEstimate.listItems.length;i++){
-          this.showTaxRate = this.activeEstimate.listItems[i].tax_rate;
-          if(this.showTaxRate!==0){
-            this.settings.taxFlagLevel = 0;
-            // this.setTaxOnItem = true;
-          }
-          this.showDiscountRate = this.activeEstimate.listItems[i].discount;
-          if(this.showDiscountRate!==0){
-            this.settings.discountFlagLevel = 1;
-            this.showDiscountRateFlag = false;
-            this.activeEstimate.discount_on_item = 1;
-            // this.setDiscountOnItem = true;
-          }
-          }
-        }
-
-        // Change TnC keys compatible
-        if (this.activeEstimate.termsAndConditions) {
-          temp = []
-          for (let i = 0; i < this.activeEstimate.termsAndConditions.length; i++) {
-            temp.push({
-              orgId: this.activeEstimate.termsAndConditions[i].orgId,
-              terms: this.activeEstimate.termsAndConditions[i].termsConditionText ? this.activeEstimate.termsAndConditions[i].termsConditionText : this.activeEstimate.termsAndConditions[i].terms_condition,
-              uniqueKeyTerms: this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms ? this.activeEstimate.termsAndConditions[i].uniqueKeyQuotTerms : this.activeEstimate.termsAndConditions[i].uniqueKeyTerms,
-              _id: this.activeEstimate.termsAndConditions[i]._id
-            })
-          }
-          this.activeEstimate.termsAndConditions = temp
-        } 
-
-        // Set Dates
-        var [y, m, d] = this.activeEstimate.created_date.split('-').map(x => parseInt(x))
-        this.estimateDate.reset(new Date(y, (m - 1), d))
-
-        // Tax and discounts show or hide
-        if (this.activeEstimate.discount == 0) {
-          this.activeEstimate.percentage_flag = null
-        }else{
-          this.activeEstimate.discount_on_item = 0;
-        }
-        if (this.activeEstimate.shipping_charges == 0) {
-          this.activeEstimate.shipping_charges = undefined
-        }
-        if (this.activeEstimate.adjustment == 0) {
-          this.activeEstimate.adjustment = undefined
-        }
-        if (this.activeEstimate.tax_amount == 0 || this.activeEstimate.tax_rate == 0 ) {
-          this.activeEstimate.tax_rate = null
-        }else{
-          this.activeEstimate.tax_on_item = 1;
-        }
-
-        // Wait for clients to be loaded before setting active client
-        var ref = setInterval(() => {
-          if (this.allClientList.length > 0) {
-            let uid = this.activeEstimate.unique_key_fk_client
-            this.activeClient = this.allClientList.filter(cli => cli.uniqueKeyClient == uid)[0]
-            this.billingTo.reset(this.activeClient)
-            clearInterval(ref)
-          }
-        }, 50)
-      } else {
-        this.toasterService.pop('failure', 'Invalid estimate id');
-        this.router.navigate(['/estimate/view'])
-      }
-    },err => this.openErrorModal(err))
-  } 
-
-    
   }
 
   commonSettingsInit() {
@@ -820,6 +812,7 @@ export class AddEditEstComponent implements OnInit {
 
 
     // Fetch Settings 
+    if(!this.edit){
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -831,19 +824,20 @@ export class AddEditEstComponent implements OnInit {
           this.settings = this.user.setting
         }
       }, err => this.openErrorModal(err))
+    }
+      
 
-
-      // Estimate Number
-      if (!isNaN(parseInt(this.settings.quotNo))) {
-        this.tempEstNo = parseInt(this.settings.quotNo) + 1
-      } else {
-        this.tempEstNo = 1
-      }
-      if (this.settings.quotFormat || this.settings.quotFormat == '') {
-        this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
-      } else {
-        this.activeEstimate.estimate_number = this.tempEstNo.toString();
-      }
+    // Estimate Number
+    if (!isNaN(parseInt(this.settings.quotNo))) {
+      this.tempEstNo = parseInt(this.settings.quotNo) + 1
+    } else {
+      this.tempEstNo = 1
+    }
+    if (this.settings.quotFormat || this.settings.quotFormat == '') {
+      this.activeEstimate.estimate_number = this.settings.quotFormat + this.tempEstNo
+    } else {
+      this.activeEstimate.estimate_number = this.tempEstNo.toString();
+    }
 
     
     
@@ -1670,80 +1664,6 @@ export class AddEditEstComponent implements OnInit {
         })
       }
     }, err => this.openErrorModal(err));
-  }
-
-  setActiveEst(estId: string = '') {
-    this.estimateId = estId;
-    this.estimateListLoading = true;
-    this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
-    if(this.activeEst){
-    for(let i=0; i<this.activeEst.alstQuotProduct.length;i++){
-      if(!this.activeEst.alstQuotProduct[i].productName){
-        this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
-      }
-      if(!this.activeEst.alstQuotProduct[i].qty){
-        this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
-      }
-      if(!this.activeEst.alstQuotProduct[i].taxRate){
-        this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
-      }
-      if(!this.activeEst.alstQuotProduct[i].discountRate){
-        this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
-      }
-      if(!this.activeEst.alstQuotProduct[i].price){
-        this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
-      }
-      if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-          this.activeEst.alstQuotProduct[i].taxRate = 0;
-      }
-      if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-          this.activeEst.alstQuotProduct[i].discountRate = 0;
-      }
-      // if(this.activeEst.alstQuotProduct[i].taxRate){
-      //   this.showTaxOnItem = true;
-      // }else if(this.activeEst.alstQuotProduct[i].taxRate == undefined){
-      //   this.activeEst.alstQuotProduct[i].taxRate = 0;
-      // }else{
-      //   this.showTaxOnItem = false;
-      // }
-      // if(this.activeEst.alstQuotProduct[i].discountRate){
-      //   this.showDiscountOnItem = true;
-      // }else if(this.activeEst.alstQuotProduct[i].discountRate == undefined){
-      //   this.activeEst.alstQuotProduct[i].discountRate = 0;
-      // }else{
-      //   this.showDiscountOnItem = false;
-      // }
-    }
-
-    for(let i=0; i<this.activeEst.alstQuotTermsCondition.length;i++){
-      if(!this.activeEst.alstQuotTermsCondition[i].termsConditionText){
-        this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
-      }
-    }
-  }
-    this.setActiveClient()
-  }
- 
-  setActiveClient() {
-    if (this.clientList.length < 1) {
-      this.clientListLoading = true
-      this.clientService.fetch().subscribe((response: response) => {
-        this.clientListLoading = false
-        this.clientList = response.records;
-        this.removeEmptyNameClients();
-      },err => this.openErrorModal(err)
-      )
-    }
-
-    if (this.activeEst) {
-    
-      var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEst.unique_key_fk_client)[0]
-      if (client) {
-        this.activeClient = client
-      } else {
-        this.activeClient = null
-      }
-    }
   }
 
   goEdit(estId) {
