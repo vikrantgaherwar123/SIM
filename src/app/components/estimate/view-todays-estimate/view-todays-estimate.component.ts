@@ -127,12 +127,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
         var totalDiscount = 0;
         var temp = []
         for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
-          if(this.activeEst.taxableFlag == 1 ){
-            taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
-            if(this.activeEst.alstQuotProduct[i].discountAmount){
-              totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
-            }
-          }
+         
           
           if(this.activeEst.alstQuotProduct[i].discount || this.activeEst.alstQuotProduct[i].discount == 0){
           
@@ -176,9 +171,16 @@ export class ViewTodaysEstimateComponent implements OnInit {
             uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
             unit: this.activeEst.alstQuotProduct[i].unit,
           })
+          if(this.activeEst.taxableFlag == 1 ){
+            taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
+            if(this.activeEst.alstQuotProduct[i].discountAmt){
+              totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
+            }
+          }
         }
         this.activeEst.alstQuotProduct = temp
         //taxable amount
+        
         if(totalDiscount){
          var baseAmount = this.activeEst.grossAmount + totalDiscount
             var allDiscount = (baseAmount - totalDiscount)
@@ -188,7 +190,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
           }
       }
 
-      if(this.activeEst.taxableFlag == 1 && this.activeEst.taxrate){
+      if(this.activeEst.taxrate){
         taxPayable = this.activeEst.taxAmt;
         if(this.activeEst.discount){
           var deductedAmount = (this.activeEst.amount - this.activeEst.discount)
@@ -235,6 +237,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
     //display label and values if tax on Bill & discount on Bill selected and values are there
     if(this.activeEst.discount == 0){
       this.noDiscountOnItem = false;
+      this.activeEst.percentageValue = 0;
     }
 
     if(this.activeEst.taxrate == 0){
@@ -255,20 +258,22 @@ export class ViewTodaysEstimateComponent implements OnInit {
     }
   }
 
-  removeEmptyNameClients(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }else{
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].prodName === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].prodName) {
+        var tempClient = data[i].prodName.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].prodName){
+        data.splice(i, 1);
       }
     }
-    
-    }
-    this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+    return data
   }
 
   getClientName(id) {
