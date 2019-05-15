@@ -274,6 +274,11 @@ export class AddEditEstComponent implements OnInit {
 
     if (this.activeEstimate) {
 
+      if(this.activeEstimate.taxableFlag == 1){
+        this.includeTax = true;
+      }
+
+
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -349,9 +354,6 @@ export class AddEditEstComponent implements OnInit {
 
             //set balnce 
             this.balance = this.activeEstimate.amount;
-
-
-
 
             this.shippingAddressEditMode = true
             this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -469,37 +471,33 @@ export class AddEditEstComponent implements OnInit {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
 
+        if(this.activeEstimate.taxableFlag == 1){
+          this.includeTax = true;
+        }
+
         //set settingFlags according to edit i.e invoice saved previously
         if(this.activeEstimate.discount_on_item == 0){
           this.activeEstimate.percentage_flag = 1;
           this.settings.discountFlagLevel = 0;
-          if(this.appSettings){
-          this.appSettings.androidSettings.discountFlagLevel = 0;
-          }
+          this.activeSettings.discountFlagLevel = 0;
           this.noDiscountOnItem = false;
           this.discountLabel = "On Bill"
         }else if(this.activeEstimate.discount_on_item == 1){
           this.settings.discountFlagLevel = 1;
-          if(this.appSettings){
-          this.appSettings.androidSettings.discountFlagLevel = 1;
-          }
+          this.activeSettings.discountFlagLevel = 1;
           this.noDiscountOnItem = true;
           this.discountLabel = "On Item"
         }
   
         if(this.activeEstimate.tax_on_item == 0){
           this.settings.taxFlagLevel = 0;
-          if(this.appSettings){
-          this.appSettings.androidSettings.taxFlagLevel = 0;
-          }
+          this.activeSettings.taxFlagLevel = 0;
           this.taxtext = "Tax (on Item)"
           this.noTaxOnItem = true;
           this.taxLabel = "On Item"
         }else if(this.activeEstimate.tax_on_item == 1){
           this.settings.taxFlagLevel = 1;
-          if(this.appSettings){
-          this.appSettings.androidSettings.taxFlagLevel = 1;
-          }
+          this.activeSettings.taxFlagLevel = 1;
           this.noTaxOnItem = false;
           this.taxLabel = "On Bill"
         }
@@ -511,12 +509,12 @@ export class AddEditEstComponent implements OnInit {
 
 
         //if item and Disabled condition  
-        if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
-          this.noDiscountOnItem = true;
+        if(this.activeEstimate.discount_on_item == 2){
+          this.discountLabel = "Disabled"
         }
 
-        if(this.activeEstimate.tax_on_item == 0 || this.activeEstimate.tax_on_item == 2){
-          this.noTaxOnItem = true;
+        if(this.activeEstimate.tax_on_item == 2){
+          this.taxLabel = "Disabled"
         }
         
         //item settings
@@ -1517,6 +1515,19 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.percentage_value = this.activeEstimate.discount / this.activeEstimate.gross_amount * 100
     }
 
+    //when user changes to disabled
+    if (this.activeSettings.discountFlagLevel === 2) {
+      this.activeEstimate.discount = 0;
+      deductions = this.activeEstimate.discount;
+      if(this.includeTax){
+        this.activeEstimate.amount = this.activeEstimate.gross_amount;
+        this.balance = this.activeEstimate.amount
+      }else if(this.activeEstimate.tax_rate && !this.includeTax){
+        this.activeEstimate.amount = this.activeEstimate.gross_amount + this.activeEstimate.tax_amount;
+        this.balance = this.activeEstimate.amount
+      }
+    }
+
     // Tax
 
     if(this.activeSettings.taxFlagLevel === 0 && !this.includeTax){
@@ -1787,6 +1798,7 @@ export class AddEditEstComponent implements OnInit {
 
       //when user changes to disabled
       if (this.activeSettings.discountFlagLevel === 2) {
+        setting.androidSettings.discountFlagLevel = 2;
         this.activeEstimate.listItems[i].discount = 0;
         this.activeEstimate.listItems[i].discount_amount = 0;
       }
@@ -1796,12 +1808,6 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.listItems[i].tax_amount = 0;
         
       }
-    }
-
-    //when user changes to disabled
-    if (this.activeSettings.discountFlagLevel === 2) {
-      setting.androidSettings.discountFlagLevel = 2;
-      this.activeEstimate.discount = 0;
     }
     
     if (this.activeSettings.taxFlagLevel === 2) {

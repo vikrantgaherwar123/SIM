@@ -334,7 +334,6 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice = this.recentInvoiceList.find(inv => inv.unique_identifier == invId); //when came from todays component
     }
 
-    if(this.activeInvoice){
       // Fetch Settings
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
@@ -348,7 +347,7 @@ export class AddEditComponent implements OnInit {
           this.settings = this.user.setting
           this.invoiceListLoading = false;
 
-          if (this.activeSettings) {
+          if (this.activeSettings && this.activeInvoice) {
             //set settingFlags according to edit i.e invoice saved previously
             if (this.activeInvoice.discount_on_item == 0) {
               this.activeInvoice.percentage_flag = 1;
@@ -385,12 +384,12 @@ export class AddEditComponent implements OnInit {
             }
 
             //if item and Disabled condition  
-            if (this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2) {
-              this.noDiscountOnItem = true;
+            if (this.activeInvoice.discount_on_item == 2) {
+              this.discountLabel = "Disabled"
             }
 
-            if (this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_on_item == 2) {
-              this.noTaxOnItem = true;
+            if (this.activeInvoice.tax_on_item == 2) {
+              this.taxLabel = "Disabled"
             }
 
             //if Bill setting
@@ -502,167 +501,160 @@ export class AddEditComponent implements OnInit {
                 clearInterval(ref)
               }
             }, 50)
-          }
-        }
-      }, err => this.openErrorModal())
-
-      
-      } else if(this.invoiceListLoading && this.estimateList.length < 1 && this.recentEstimateList.length < 1){
+          }else if(this.invoiceListLoading && this.estimateList.length < 1 && this.recentEstimateList.length < 1){
 
        
-        this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
-          if(invoice.records !== null) {
-            //deleted these objects bcz input was mismatcing for adding while deleting
-            delete invoice.records[0].client
-            delete invoice.records[0].client_id
-            this.activeInvoice = {...invoice.records[0]}
-
-            //set settingFlags according to edit i.e invoice saved previously
-            if(this.activeInvoice.discount_on_item == 0){
-              this.activeInvoice.percentage_flag = 1;
-              this.settings.discountFlagLevel = 0;
-              this.activeSettings.discountFlagLevel = 0;
+            this.invoiceService.fetchById([invId]).subscribe((invoice: any) => {
+              if(invoice.records !== null) {
+                //deleted these objects bcz input was mismatcing for adding while deleting
+                delete invoice.records[0].client
+                delete invoice.records[0].client_id
+                this.activeInvoice = {...invoice.records[0]}
+    
+                //set settingFlags according to edit i.e invoice saved previously
+                if(this.activeInvoice.discount_on_item == 0){
+                  this.activeInvoice.percentage_flag = 1;
+                  this.settings.discountFlagLevel = 0;
+                  this.activeSettings.discountFlagLevel = 0;
+                  
+                  this.noDiscountOnItem = false;
+                  this.discountLabel = "On Bill"
+                }else if(this.activeInvoice.discount_on_item == 1){
+                  this.settings.discountFlagLevel = 1;
+                  this.activeSettings.discountFlagLevel = 1;
+                  this.noDiscountOnItem = true;
+                  this.discountLabel = "On Item"
+                }
+          
+                if(this.activeInvoice.tax_on_item == 0 ){
+                  this.settings.taxFlagLevel = 0;
+                  this.activeSettings.taxFlagLevel = 0;
+                  this.taxtext = "Tax (on Item)"
+                  this.noTaxOnItem = true;
+                  this.taxLabel = "On Item"
+                }else if(this.activeInvoice.tax_on_item == 1){
+                  this.settings.taxFlagLevel = 1;
+                  this.activeSettings.taxFlagLevel = 1;
+                  this.noTaxOnItem = false;
+                  this.taxLabel = "On Bill"
+                }
+    
+                  //if item and Disabled condition  
+                  if(this.activeInvoice.discount_on_item == 2){
+                    this.discountLabel = "Disabled"
+                  }
+            
+                  if(this.activeInvoice.tax_on_item == 2){
+                    this.taxLabel = "Disabled"
+                  }
+                  //if Bill setting
+                  if(this.activeInvoice.discount_on_item == 0){
+                    this.noDiscountOnItem = false;
+                  }
+          
+                  if(this.activeInvoice.tax_on_item == 1){
+                    this.noTaxOnItem = false;
+                  }
+    
+                  //shipping & adjustment
+                  if(this.activeInvoice.shipping_charges){
+                    this.noShippingCharges = false
+                  }
+                  if(this.activeInvoice.adjustment){
+                    this.noAdjustment = false
+                  }
+    
+                  //if setting of bill but no value added
+                  if(this.activeInvoice.discount == 0){
+                    this.noDiscountOnItem = true;
+                  }
+                  if(this.activeInvoice.tax_rate == 0){
+                    this.noTaxOnItem = true;
+                  }
               
-              this.noDiscountOnItem = false;
-              this.discountLabel = "On Bill"
-            }else if(this.activeInvoice.discount_on_item == 1){
-              this.settings.discountFlagLevel = 1;
-              this.activeSettings.discountFlagLevel = 1;
-              this.noDiscountOnItem = true;
-              this.discountLabel = "On Item"
-            }
-      
-            if(this.activeInvoice.tax_on_item == 0 ){
-              this.settings.taxFlagLevel = 0;
-              this.activeSettings.taxFlagLevel = 0;
-              this.taxtext = "Tax (on Item)"
-              this.noTaxOnItem = true;
-              this.taxLabel = "On Item"
-            }else if(this.activeInvoice.tax_on_item == 1){
-              this.settings.taxFlagLevel = 1;
-              this.activeSettings.taxFlagLevel = 1;
-              this.noTaxOnItem = false;
-              this.taxLabel = "On Bill"
-            }
-
-              //if item and Disabled condition  
-              if(this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2){
-                this.noDiscountOnItem = true;
+                
+                this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+                
+                
+                // Change list item keys compatible
+                if (this.activeInvoice.listItems) {
+                  var temp = []
+                  for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+                      if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
+                        this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
+                      }
+                      if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
+                        this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
+                      }
+                    temp.push({
+                      description: this.activeInvoice.listItems[i].description,
+                      discount: this.activeInvoice.listItems[i].discountRate,
+                      discount_amount: this.activeInvoice.listItems[i].discount_amount,
+                      tax_amount: this.activeInvoice.listItems[i].tax_amount,
+                      product_name: this.activeInvoice.listItems[i].productName,
+                      quantity: this.activeInvoice.listItems[i].qty,
+                      rate: this.activeInvoice.listItems[i].rate,
+                      tax_rate: this.activeInvoice.listItems[i].tax_rate,
+                      total: this.activeInvoice.listItems[i].price,
+                      unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+                      unit: this.activeInvoice.listItems[i].unit,
+                    })
+                  }
+                  this.activeInvoice.listItems = temp
+                  
+                }
+    
+                
+                
+               // Change payment keys compatible
+                if(this.activeInvoice.payments){
+                  var temp1 = []
+                  for(let i=0; i < this.activeInvoice.payments.length; i++) {
+                    
+                    temp1.push({
+                      date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
+                      organization_id: this.activeInvoice.payments[i].orgId,
+                      paid_amount: this.activeInvoice.payments[i].paidAmount,
+                      unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
+                      unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
+                      unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
+                      unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
+                    })
+                  }
+                  this.activeInvoice.payments = temp1
+                  for(let i = 0; i < this.activeInvoice.payments.length; i++){
+                    this.amountPaid += this.activeInvoice.payments[i].paid_amount;
+                  }
               }
         
-              if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_on_item == 2){
-                this.noTaxOnItem = true;
-              }
-              //if Bill setting
-              if(this.activeInvoice.discount_on_item == 0){
-                this.noDiscountOnItem = false;
-              }
-      
-              if(this.activeInvoice.tax_on_item == 1){
-                this.noTaxOnItem = false;
-              }
-
-              //shipping & adjustment
-              if(this.activeInvoice.shipping_charges){
-                this.noShippingCharges = false
-              }
-              if(this.activeInvoice.adjustment){
-                this.noAdjustment = false
-              }
-
-              //if setting of bill but no value added
-              if(this.activeInvoice.discount == 0){
-                this.noDiscountOnItem = true;
-              }
-              if(this.activeInvoice.tax_rate == 0){
-                this.noTaxOnItem = true;
-              }
-          
-            
-            this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-            
-            
-            // Change list item keys compatible
-            if (this.activeInvoice.listItems) {
-              var temp = []
-              for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-                  if (this.activeInvoice.listItems[i].discountAmount || this.activeInvoice.listItems[i].discountAmount == 0) {
-                    this.activeInvoice.listItems[i].discount_amount = this.activeInvoice.listItems[i].discountAmount
-                  }
-                  if (this.activeInvoice.listItems[i].taxAmount || this.activeInvoice.listItems[i].taxAmount == 0 ) {
-                    this.activeInvoice.listItems[i].tax_amount = this.activeInvoice.listItems[i].taxAmount
-                  }
-                temp.push({
-                  description: this.activeInvoice.listItems[i].description,
-                  discount: this.activeInvoice.listItems[i].discountRate,
-                  discount_amount: this.activeInvoice.listItems[i].discount_amount,
-                  tax_amount: this.activeInvoice.listItems[i].tax_amount,
-                  product_name: this.activeInvoice.listItems[i].productName,
-                  quantity: this.activeInvoice.listItems[i].qty,
-                  rate: this.activeInvoice.listItems[i].rate,
-                  tax_rate: this.activeInvoice.listItems[i].tax_rate,
-                  total: this.activeInvoice.listItems[i].price,
-                  unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
-                  unit: this.activeInvoice.listItems[i].unit,
-                })
-              }
-              this.activeInvoice.listItems = temp
-              
-            }
-
-            
-            
-           // Change payment keys compatible
-            if(this.activeInvoice.payments){
-              var temp1 = []
-              for(let i=0; i < this.activeInvoice.payments.length; i++) {
+                // Set Dates
+                var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+                this.invoiceDate.reset(new Date(y, (m - 1), d))
+        
                 
-                temp1.push({
-                  date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
-                  organization_id: this.activeInvoice.payments[i].orgId,
-                  paid_amount: this.activeInvoice.payments[i].paidAmount,
-                  unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
-                  unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
-                  unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
-                  unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
-                })
+        
+                this.changeDueDate(this.activeInvoice.due_date_flag.toString())
+                // Wait for clients to be loaded before setting active client
+                var ref = setInterval(() => {
+                  if (this.clientList.length > 0) {
+                    let uid = this.activeInvoice.unique_key_fk_client
+                    if(this.clientList){
+                      this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                    }
+                    this.billingTo.reset(this.activeClient)
+                    clearInterval(ref)
+                  }
+                }, 50)
+              }else {
+                // this.toasterService.pop('failure', 'Invalid estimate id');
+                this.router.navigate(['/estimate/view'])
               }
-              this.activeInvoice.payments = temp1
-              for(let i = 0; i < this.activeInvoice.payments.length; i++){
-                this.amountPaid += this.activeInvoice.payments[i].paid_amount;
-              }
-          }
-    
-            // Set Dates
-            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
-            this.invoiceDate.reset(new Date(y, (m - 1), d))
-    
-            
-    
-            this.changeDueDate(this.activeInvoice.due_date_flag.toString())
-            // Wait for clients to be loaded before setting active client
-            var ref = setInterval(() => {
-              if (this.clientList.length > 0) {
-                let uid = this.activeInvoice.unique_key_fk_client
-                if(this.clientList){
-                  this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
-                }
-                this.billingTo.reset(this.activeClient)
-                clearInterval(ref)
-              }
-            }, 50)
-          }else {
-            // this.toasterService.pop('failure', 'Invalid estimate id');
-            this.router.navigate(['/estimate/view'])
-          }
-          
-          
-          return false
-        },
-        err => this.openErrorModal());
-
-      } 
-      //MAKE INVOICE
+              
+              
+              return false
+            },
+            err => this.openErrorModal());
+          }//MAKE INVOICE
       else {
         this.activeInvoice = <invoice>{}
         this.incrementInvNo = true;
@@ -722,21 +714,12 @@ export class AddEditComponent implements OnInit {
 
 
               //if item and Disabled condition  
-              if(this.activeEstimate.discount_on_item == 1 || this.activeEstimate.discount_on_item == 2){
-                this.noDiscountOnItem = true;
+              if(this.activeEstimate.discount_on_item == 2){
+                this.discountLabel = "Disabled"
               }
         
-              if(this.activeEstimate.tax_on_item == 0 || this.activeEstimate.tax_on_item == 2){
-                this.noTaxOnItem = true;
-              }
-              
-              //if Bill setting
-              if(this.activeEstimate.discount_on_item == 0){
-                this.noDiscountOnItem = false;
-              }
-      
-              if(this.activeEstimate.tax_on_item == 1){
-                this.noTaxOnItem = false;
+              if(this.activeEstimate.tax_on_item == 2){
+                this.taxLabel = "Disabled"
               }
 
               //shipping & adjustment
@@ -858,6 +841,8 @@ export class AddEditComponent implements OnInit {
             this.router.navigate(['/estimate/view'])
           }
       } 
+        }
+      }, err => this.openErrorModal())
        
   }
 
@@ -1019,6 +1004,7 @@ export class AddEditComponent implements OnInit {
       this.setClientFilter()
     }
     // Fetch Settings
+    if(!this.edit){
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
@@ -1030,6 +1016,10 @@ export class AddEditComponent implements OnInit {
           this.settings = this.user.setting
         }
       }, err => this.openErrorModal())
+
+    }
+      
+      
     
 
     // Fetch Terms if not in store
