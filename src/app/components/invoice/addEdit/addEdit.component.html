@@ -861,7 +861,8 @@
                               (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
                           </li>
                           <li data-toggle="collapse">
-                              <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                              <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}"
+                               (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
                           </li>
                         </ul>
                     </li>

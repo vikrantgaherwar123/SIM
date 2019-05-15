@@ -238,6 +238,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
+    
     //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -317,6 +318,7 @@ export class AddEditComponent implements OnInit {
 
 
   editInit(invId) {
+    
     //to view updated or viewed invoice in view page
     // this.commonSettingsInit()
     this.shippingChange = false;
@@ -333,159 +335,178 @@ export class AddEditComponent implements OnInit {
     }
 
     if(this.activeInvoice){
-      this.invoiceListLoading = false;
+      // Fetch Settings
+      this.settingsLoading = true;
+      this.settingService.fetch().subscribe((response: any) => {
+        this.settingsLoading = false;
+        if (response.settings !== null) {
+          this.appSettings = response.settings.appSettings
+          this.activeSettings = response.settings.appSettings.androidSettings
 
-      //set settingFlags according to edit i.e invoice saved previously
-      if(this.activeInvoice.discount_on_item == 0){
-        this.activeInvoice.percentage_flag = 1;
-        this.settings.discountFlagLevel = 0;
-        
-        this.noDiscountOnItem = false;
-        this.discountLabel = "On Bill"
-      }else if(this.activeInvoice.discount_on_item == 1){
-        this.settings.discountFlagLevel = 1;
-        
-        this.noDiscountOnItem = true;
-        this.discountLabel = "On Item"
-      }
+          setStorage(response.settings)
+          this.user = JSON.parse(localStorage.getItem('user'))
+          this.settings = this.user.setting
+          this.invoiceListLoading = false;
 
-      if(this.activeInvoice.tax_on_item == 0){
-        this.settings.taxFlagLevel = 0;
-        
-        this.taxtext = "Tax (on Item)"
-        this.noTaxOnItem = true;
-        this.taxLabel = "On Item"
-      }else if(this.activeInvoice.tax_on_item == 1){
-        this.settings.taxFlagLevel = 1;
-        
-        this.noTaxOnItem = false;
-        this.taxLabel = "On Bill"
-      }
+          if (this.activeSettings) {
+            //set settingFlags according to edit i.e invoice saved previously
+            if (this.activeInvoice.discount_on_item == 0) {
+              this.activeInvoice.percentage_flag = 1;
+              this.settings.discountFlagLevel = 0;
+              if (this.activeSettings) {
+                this.activeSettings.discountFlagLevel = 0;
+              }
+              this.noDiscountOnItem = false;
+              this.discountLabel = "On Bill"
+            } else if (this.activeInvoice.discount_on_item == 1) {
+              this.settings.discountFlagLevel = 1;
+              if (this.activeSettings) {
+                this.activeSettings.discountFlagLevel = 1;
+              }
+              this.noDiscountOnItem = true;
+              this.discountLabel = "On Item"
+            }
 
+            if (this.activeInvoice.tax_on_item == 0) {
+              this.settings.taxFlagLevel = 0;
+              if (this.activeSettings) {
+                this.activeSettings.taxFlagLevel = 0;
+              }
+              this.taxtext = "Tax (on Item)"
+              this.noTaxOnItem = true;
+              this.taxLabel = "On Item"
+            } else if (this.activeInvoice.tax_on_item == 1) {
+              this.settings.taxFlagLevel = 1;
+              if (this.activeSettings) {
+                this.activeSettings.taxFlagLevel = 1;
+              }
+              this.noTaxOnItem = false;
+              this.taxLabel = "On Bill"
+            }
+
+            //if item and Disabled condition  
+            if (this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2) {
+              this.noDiscountOnItem = true;
+            }
+
+            if (this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_on_item == 2) {
+              this.noTaxOnItem = true;
+            }
+
+            //if Bill setting
+            if (this.activeInvoice.discount_on_item == 0) {
+              this.noDiscountOnItem = false;
+            }
+
+            if (this.activeInvoice.tax_on_item == 1) {
+              this.noTaxOnItem = false;
+            }
+
+            //shipping & adjustment
+            if (this.activeInvoice.shipping_charges) {
+              this.noShippingCharges = false
+            }
+            if (this.activeInvoice.adjustment) {
+              this.noAdjustment = false
+            }
+
+            //if setting of bill but no value added
+            if (this.activeInvoice.discount == 0) {
+              this.noDiscountOnItem = true;
+            }
+            if (this.activeInvoice.tax_rate == 0) {
+              this.noTaxOnItem = true;
+            }
+
+            this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
+
+            // Change list item keys compatible
+            if (this.activeInvoice.listItems) {
+              var temp = []
+              for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
+                //set variables according to data comes from API and store 
+                if (this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0) {
+
+                  this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
+                }
+                if (this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount == 0) {
+                  this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
+                }
+                if (this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0) {
+                  this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
+                }
+
+                if (this.activeInvoice.listItems[i].product_name) {
+                  this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
+                }
+                if (this.activeInvoice.listItems[i].quantity) {
+                  this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
+                }
+                if (this.activeInvoice.listItems[i].total) {
+                  this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
+                }
+                if (this.activeInvoice.listItems[i].unique_identifier) {
+                  this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
+                }
+
+                temp.push({
+                  description: this.activeInvoice.listItems[i].description,
+                  discount: this.activeInvoice.listItems[i].discountRate,
+                  discount_amount: this.activeInvoice.listItems[i].discountAmount,
+                  tax_amount: this.activeInvoice.listItems[i].taxAmount,
+                  product_name: this.activeInvoice.listItems[i].productName,
+                  quantity: this.activeInvoice.listItems[i].qty,
+                  rate: this.activeInvoice.listItems[i].rate,
+                  tax_rate: this.activeInvoice.listItems[i].tax_rate,
+                  total: this.activeInvoice.listItems[i].price,
+                  unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+                  unit: this.activeInvoice.listItems[i].unit,
+                })
+              }
+              this.activeInvoice.listItems = temp
+
+            }
+
+            // Change payment keys compatible
+            if (this.activeInvoice.payments) {
+              var temp1 = []
+              for (let i = 0; i < this.activeInvoice.payments.length; i++) {
+
+                temp1.push({
+                  date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
+                  organization_id: this.activeInvoice.payments[i].orgId,
+                  paid_amount: this.activeInvoice.payments[i].paidAmount,
+                  unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
+                  unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
+                  unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
+                  unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
+                })
+              }
+              this.activeInvoice.payments = temp1
+              for (let i = 0; i < this.activeInvoice.payments.length; i++) {
+                this.amountPaid += this.activeInvoice.payments[i].paid_amount;
+              }
+            }
+
+            // Set Dates
+            var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
+            this.invoiceDate.reset(new Date(y, (m - 1), d))
+
+            this.changeDueDate(this.activeInvoice.due_date_flag.toString())
+            // Wait for clients to be loaded before setting active client
+            var ref = setInterval(() => {
+              if (this.clientList.length > 0) {
+                let uid = this.activeInvoice.unique_key_fk_client
+                this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
+                this.billingTo.reset(this.activeClient)
+                clearInterval(ref)
+              }
+            }, 50)
+          }
+        }
+      }, err => this.openErrorModal())
 
       
-
-        //if item and Disabled condition  
-        if(this.activeInvoice.discount_on_item == 1 || this.activeInvoice.discount_on_item == 2){
-          this.noDiscountOnItem = true;
-        }
-
-        if(this.activeInvoice.tax_on_item == 0 || this.activeInvoice.tax_on_item == 2){
-          this.noTaxOnItem = true;
-        }
-
-        //if Bill setting
-        if(this.activeInvoice.discount_on_item == 0){
-          this.noDiscountOnItem = false;
-        }
-
-        if(this.activeInvoice.tax_on_item == 1){
-          this.noTaxOnItem = false;
-        }
-
-        //shipping & adjustment
-        if(this.activeInvoice.shipping_charges){
-          this.noShippingCharges = false
-        }
-        if(this.activeInvoice.adjustment){
-          this.noAdjustment = false
-        }
-
-        //if setting of bill but no value added
-        if(this.activeInvoice.discount == 0){
-          this.noDiscountOnItem = true;
-        }
-        if(this.activeInvoice.tax_rate == 0){
-          this.noTaxOnItem = true;
-        }
-
-
-      
-        this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-        
-        
-        // Change list item keys compatible
-        if (this.activeInvoice.listItems) {
-          var temp = []
-          for (let i = 0; i < this.activeInvoice.listItems.length; i++) {
-            //set variables according to data comes from API and store 
-            if(this.activeInvoice.listItems[i].discount || this.activeInvoice.listItems[i].discount == 0){
-          
-              this.activeInvoice.listItems[i].discountRate = this.activeInvoice.listItems[i].discount;
-            }
-            if(this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.listItems[i].discount_amount ==0){
-              this.activeInvoice.listItems[i].discountAmount = this.activeInvoice.listItems[i].discount_amount;
-            }
-            if(this.activeInvoice.listItems[i].tax_amount || this.activeInvoice.listItems[i].tax_amount == 0){
-              this.activeInvoice.listItems[i].taxAmount = this.activeInvoice.listItems[i].tax_amount;
-            }
-            
-            if(this.activeInvoice.listItems[i].product_name){
-              this.activeInvoice.listItems[i].productName = this.activeInvoice.listItems[i].product_name;
-            }
-            if(this.activeInvoice.listItems[i].quantity){
-              this.activeInvoice.listItems[i].qty = this.activeInvoice.listItems[i].quantity;
-            }
-            if(this.activeInvoice.listItems[i].total){
-              this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
-            }
-            if(this.activeInvoice.listItems[i].unique_identifier){
-              this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
-            }
-            
-            temp.push({
-              description: this.activeInvoice.listItems[i].description,
-              discount: this.activeInvoice.listItems[i].discountRate,
-              discount_amount: this.activeInvoice.listItems[i].discountAmount,
-              tax_amount: this.activeInvoice.listItems[i].taxAmount,
-              product_name: this.activeInvoice.listItems[i].productName,
-              quantity: this.activeInvoice.listItems[i].qty,
-              rate: this.activeInvoice.listItems[i].rate,
-              tax_rate: this.activeInvoice.listItems[i].tax_rate,
-              total: this.activeInvoice.listItems[i].price,
-              unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
-              unit: this.activeInvoice.listItems[i].unit,
-            })
-          }
-          this.activeInvoice.listItems = temp
-          
-        }
-        
-       // Change payment keys compatible
-        if(this.activeInvoice.payments){
-          var temp1 = []
-          for(let i=0; i < this.activeInvoice.payments.length; i++) {
-            
-            temp1.push({
-              date_of_payment: this.activeInvoice.payments[i].dateOfPayment,
-              organization_id: this.activeInvoice.payments[i].orgId,
-              paid_amount: this.activeInvoice.payments[i].paidAmount,
-              unique_identifier: this.activeInvoice.payments[i].uniqueKeyInvoicePayment,
-              unique_key_fk_client: this.activeInvoice.payments[i].uniqueKeyFKClient,
-              unique_key_fk_invoice: this.activeInvoice.payments[i].uniqueKeyFKInvoice,
-              unique_key_voucher_no: this.activeInvoice.payments[i].uniqueKeyVoucherNo
-            })
-          }
-          this.activeInvoice.payments = temp1
-          for(let i = 0; i < this.activeInvoice.payments.length; i++){
-            this.amountPaid += this.activeInvoice.payments[i].paid_amount;
-          }
-      }
-
-        // Set Dates
-        var [y, m, d] = this.activeInvoice.created_date.split('-').map(x => parseInt(x))
-        this.invoiceDate.reset(new Date(y, (m - 1), d))
-
-        this.changeDueDate(this.activeInvoice.due_date_flag.toString())
-        // Wait for clients to be loaded before setting active client
-        var ref = setInterval(() => {
-          if (this.clientList.length > 0) {
-            let uid = this.activeInvoice.unique_key_fk_client
-            this.activeClient = this.clientList.filter(cli => cli.uniqueKeyClient == uid)[0]
-            this.billingTo.reset(this.activeClient)
-            clearInterval(ref)
-          }
-        }, 50)
       } else if(this.invoiceListLoading && this.estimateList.length < 1 && this.recentEstimateList.length < 1){
 
        
@@ -500,33 +521,26 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.discount_on_item == 0){
               this.activeInvoice.percentage_flag = 1;
               this.settings.discountFlagLevel = 0;
-              if(this.appSettings){
-              this.appSettings.androidSettings.discountFlagLevel = 0;
-              }
+              this.activeSettings.discountFlagLevel = 0;
+              
               this.noDiscountOnItem = false;
               this.discountLabel = "On Bill"
             }else if(this.activeInvoice.discount_on_item == 1){
               this.settings.discountFlagLevel = 1;
-              if(this.appSettings){
-              this.appSettings.androidSettings.discountFlagLevel = 1;
-              }
+              this.activeSettings.discountFlagLevel = 1;
               this.noDiscountOnItem = true;
               this.discountLabel = "On Item"
             }
       
             if(this.activeInvoice.tax_on_item == 0 ){
               this.settings.taxFlagLevel = 0;
-              if(this.appSettings){
-              this.appSettings.androidSettings.taxFlagLevel = 0;
-              }
+              this.activeSettings.taxFlagLevel = 0;
               this.taxtext = "Tax (on Item)"
               this.noTaxOnItem = true;
               this.taxLabel = "On Item"
             }else if(this.activeInvoice.tax_on_item == 1){
               this.settings.taxFlagLevel = 1;
-              if(this.appSettings){
-              this.appSettings.androidSettings.taxFlagLevel = 1;
-              }
+              this.activeSettings.taxFlagLevel = 1;
               this.noTaxOnItem = false;
               this.taxLabel = "On Bill"
             }
@@ -1004,6 +1018,19 @@ export class AddEditComponent implements OnInit {
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
       this.setClientFilter()
     }
+    // Fetch Settings
+      this.settingsLoading = true;
+      this.settingService.fetch().subscribe((response: any) => {
+        this.settingsLoading = false;
+        if (response.settings !== null) {
+          this.appSettings = response.settings.appSettings
+          this.activeSettings = response.settings.appSettings.androidSettings
+          setStorage(response.settings)
+          this.user = JSON.parse(localStorage.getItem('user'))
+          this.settings = this.user.setting
+        }
+      }, err => this.openErrorModal())
+    
 
     // Fetch Terms if not in store
     if(this.termList.length < 1) {
@@ -1022,18 +1049,7 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
 
-    // Fetch Settings
-      this.settingsLoading = true;
-      this.settingService.fetch().subscribe((response: any) => {
-        this.settingsLoading = false;
-        if (response.settings !== null) {
-          this.appSettings = response.settings.appSettings
-          this.activeSettings = response.settings.appSettings.androidSettings
-          setStorage(response.settings)
-          this.user = JSON.parse(localStorage.getItem('user'))
-          this.settings = this.user.setting
-        }
-      }, err => this.openErrorModal())
+    
     
 
     
