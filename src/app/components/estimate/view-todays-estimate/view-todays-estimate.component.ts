@@ -79,7 +79,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
         this.clientList = response.records;
         this.clientList = this.clientList.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
-      
   }
 
   fetchEstimates() {

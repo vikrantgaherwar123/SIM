@@ -66,12 +66,11 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
-        this.clientList = response.records;
-        this.removeEmptyNameClients();
         this.clientList = response.records.filter(recs => recs.enabled == 0)
+        this.removeEmptySpaces(this.clientList);
       }, err => this.openErrorModal());
     }else{
-      this.removeEmptyNameClients();
+      this.removeEmptySpaces(this.clientList);
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
     //fetch settings when user comes to this component
@@ -121,6 +120,24 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       })
 
     }, err => this.openErrorModal())
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   setActiveInv(invId: string = '') {

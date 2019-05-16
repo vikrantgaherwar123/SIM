@@ -132,13 +132,13 @@ export class ViewComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
-        this.clientList = response.records;
-        this.removeEmptySpaces();
+        this.clientList = response.records.filter(recs => recs.enabled == 0)
+        this.removeEmptySpaces(this.clientList);
         this.dropdownList = this.clientList;
       },err => this.openErrorModal()
       )
     } else {
-      this.removeEmptySpaces();
+      this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -184,22 +184,24 @@ export class ViewComponent implements OnInit {
   }
   
 
-  removeEmptySpaces(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if (this.clientList[i].name === undefined) {
-        this.clientList.splice(i, 1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
       }
-      if (this.clientList[i].name) {
-        var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
         if (tempClient === "") {
-          this.clientList.splice(i, 1);
+          data.splice(i, 1);
         }
-      }else if(!this.clientList[i].name){
-        this.clientList.splice(i, 1);
+      }else if(!data[i].name){
+        data.splice(i, 1);
       }
     }
+    return data
   }
+
   showItem(item) {
     var curr = new Date;
     var firstday = curr.getDate() - curr.getDay();
