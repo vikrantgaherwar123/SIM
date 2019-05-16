@@ -80,6 +80,7 @@ export class ClientComponent implements OnInit {
         }
       },error => this.openErrorModal())
     } else {
+      this.removeEmptySpaces(this.clientList)
       //sort in ascending
       this.clientList.sort(function (a, b) {
         var textA = a.name.toUpperCase();

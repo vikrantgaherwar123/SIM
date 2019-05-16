@@ -1,52 +1,85 @@
-
 <div class="row main-wrapper">
-  
-    <div class="col-12" id="main" style="background-color: #ffffff !important;">
-      <div class="row pro_row" style="padding: 25px 78px;"> 
-        <div class="col-6 row">
-          <div class="col-3" style="text-align: center;">
-              <h3 class="pro_heading">Client</h3>
-          </div>
-          <div class="col-3" style="margin-left: -40px;">
-            <button type="button" class="btn save_btn"
-              (click)="addClientModal()">
-              + Add Client
-            </button>
-          </div>
-          <div class="col-2" style="display: flex;">
-            <span>
-                <a style="cursor: pointer;background: #e6ecf0" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
-                <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
-              </a>
-              <ul class="dropdown-menu dropdown-menu-right small_dropdown">
-                <li [class.active]="sortTerm=='name'">
-                  <a (click)="sortTerm='name'">By Organization Name</a>
-                </li>
-                <li [class.active]="sortTerm=='contactPersonName'">
-                  <a (click)="sortTerm='contactPersonName'">By Client Name</a>
-                </li>
-              </ul>
-            </span>
-          </div>
+
+  <div class="col-12" id="main" style="background-color: #ffffff !important;">
+    <div class="row pro_row" style="padding: 25px 78px;">
+      <div class="col-6 row">
+        <div class="col-3" style="text-align: center;">
+          <h3 class="pro_heading">Client</h3>
         </div>
-        <div class="col-3"></div>
-        <div class="col-3">
-            <input class="form-control search_input" [(ngModel)]="searchTerms" placeholder="Search Clients" />
+        <div class="col-3" style="margin-left: -40px;">
+          <button type="button" class="btn save_btn" (click)="addClientModal()">
+            + Add Client
+          </button>
         </div>
-        
-        
+        <div class="col-2" style="display: flex;">
+          <span>
+            <a style="cursor: pointer;background: #e6ecf0" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
+              <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right small_dropdown">
+              <li [class.active]="sortTerm=='name'">
+                <a (click)="sortTerm='name'">By Organization Name</a>
+              </li>
+              <li [class.active]="sortTerm=='contactPersonName'">
+                <a (click)="sortTerm=searchTerms">By Client Name</a>
+              </li>
+            </ul>
+          </span>
+        </div>
       </div>
-      <div class="row">
-        <!-- Product List -->
-        <div class="col-12 pr-0">
-            <div style="padding: 39px 79px;" class="item-form">
-                <div class="col-12 row header_title">
-                  <div class="col-3 font_16"><span style="margin-left: 5px;">Client Name</span></div>
-                  <div class="col-3 text-right heading">Contact Person Name</div>
-                  <div class="col-2 text-right heading">Email</div>
-                  <div class="col-2 text-right heading">Number</div>
-                  <div class="col-2 text-right heading">Actions</div>
+      <div class="col-3"></div>
+      <div class="col-3">
+        <input class="form-control search_input" [(ngModel)]="searchTerms" placeholder="Search Clients" />
+      </div>
+
+
+    </div>
+    <div class="row">
+      <!-- Product List -->
+      <div class="col-12 pr-0">
+        <div style="padding: 39px 79px;" class="item-form">
+          <div class="col-12 row header_title">
+            <div class="col-3 font_16"><span style="margin-left: 5px;">Client Name</span></div>
+            <div class="col-3 text-right heading">Contact Person Name</div>
+            <div class="col-2 text-right heading">Email</div>
+            <div class="col-2 text-right heading">Number</div>
+            <div class="col-2 text-right heading">Actions</div>
+          </div>
+
+          <div style="margin-bottom: -13px;" id="client{{index}}" class="clientname"
+            *ngFor="let client of (clientList  | filter:searchTerms ? searchTerms : sortTerm |  slice:0); index as index">
+            <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
+              <div class="col-3" style="padding-top: 6px;">
+                <img src="assets/images/client_blue1.png" class="img_box product_title">
+                <span class="client_name">
+                  {{client.name }}
+                </span>
+              </div>
+              <div class="col-3 text-right color_grey">{{client.contactPersonName}}</div>
+              <div class="col-2 text-right color_grey">{{client.email}}</div>
+              <div class="col-2 text-right color_grey">{{client.number}}</div>
+
+
+              <div class="col-2" style="text-align: right;">
+                <img src="assets/images/edit_blue.png" Title="Edit" alt="" (click)="editThis(client)"
+                  class="hg_20 cross_label_img img_hover">
+                <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteClientModal(client)"
+                  class="hg_20 cross_label_img img_hover">
+                <span class="morebtn"><img src="{{ hideme[index] ? upArrow: downArrow }}"
+                    class="hg_20 cross_label_img img_hover"></span>
+              </div>
+            </div>
+            <div class="moreDiscr col-12 row" [class.show]="hideme[index]">
+              <!--class="moreDiscr" [class.show]="show"-->
+              <div class="row col-12 selected-items selected_description" style="padding: 10px 42px;">
+                <div class="col-3">
+                  <span class="small_title">Address line:</span> &nbsp;
+                  <span class="small_description">{{client.addressLine1}}</span>
+                </div>
+                <div class="col-3">
+                  <span class="small_title">Shipping Address:</span> &nbsp;
+                  <span class="small_description">{{client.shippingAddress}}</span>
                 </div>
                 
                 <div  style="margin-bottom: -13px;"
@@ -95,135 +128,145 @@
                       </div>
                     
                 </div>
+                <div class="col-3">
+                  <span class="small_title">Business detail:</span> &nbsp;
+                  <span class="small_description">{{client.businessDetail}}</span>
+                </div>
+
+              </div>
             </div>
+
+          </div>
         </div>
-        <!-- Body -->
-       
       </div>
-    </div>
-  </div>
-  <!-- accordian development -->
- <!-- Add / Edit Client Modal -->
-<div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-md term_popup_modal">
-  <div class="modal-content">
-      <div class="modal-header">
-          <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-              {{createMode ? 'Add Client' : 'Edit Client'}}
-          </div>
-          <!-- <div *ngIf="editMode == true" class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
-              Edit ProClientduct
-           </div> -->
-        </div>
-    <div class="modal-body term_modal_body">
-      <form class="form-horizontal add-client-form"  #f="ngForm" name="itemform">
-        <div class="row edit_item_row">
-          <div class="row col-12">
-           <span class="edit_span">Organization Name:</span>
-           <input type="text" name="name" id="name" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyClient == true}" class="form-control" placeholder="Organization name *"
-                          onfocus="this.select()" [(ngModel)]="activeClient.name" required />
-          </div>
-          <div class="row col-12">
-            <span class="edit_span">Contact Person Name:</span>
-            <input type="text" name="contactPersonName" id="contactPersonName" class="form-control"
-                          [(ngModel)]="activeClient.contactPersonName" placeholder="Contact person" onfocus="this.select()" />
-           </div>
+      <!-- Body -->
 
-           <div class="row">
-            <div class="col-6 tax_dis_span">
-              <span class="edit_span">Email Id:</span>
-              <input type="text" id="email" name="email" class="form-control" [(ngModel)]="activeClient.email"
-                          placeholder="Email address" onfocus="this.select()" />
-            </div>
-            <div class="col-6 tax_dis_span">
-              <span class="edit_span">Contact Number:</span>
-              <input type="text" id="cont_number" name="cont_number" class="form-control" [(ngModel)]="activeClient.number"
-                          placeholder="Contact number" onfocus="this.select()" />
-            </div>
-          </div>
-          <div class="row col-12">
-            <span class="edit_span">Address Line :</span>
-            <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control mCustomScrollbar style-3"
-                        [(ngModel)]="activeClient.addressLine1" placeholder="Address Line" style="height: 47px !important;"
-                        onfocus="this.select()"></textarea>
-           </div>
-
-           <div class="row col-12">
-            <span class="edit_span">Shipping Address :</span>
-            <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px !important;"
-                        [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="Shipping Address"
-                        onfocus="this.select()"></textarea>
-           </div>
-          <div class="row col-12">
-              <span class="edit_span">Business Id:</span>
-              <input type="text" id="business_id" name="business_id" class="form-control" [(ngModel)]="activeClient.businessId"
-                          placeholder="Business Id" onfocus="this.select()" />
-          </div>
-          <div class="row col-12">
-            <span class="edit_span">Business Details:</span>
-            <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control mCustomScrollbar style-3"
-                        style="height: 47px !important;" [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
-                        onfocus="this.select()"></textarea>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div class="modal-footer">
-      <button type="button" class="btn change_bg change_btn_width" (click)="closeItemModel()">
-        Close
-      </button>
-      <button type="button" id="updateProBtn" (click)="f.submitted = true;save(f.valid, 0)"
-        class="btn save_btn btn-raised width25btn pull-right ml-2">
-        Save
-      </button>
     </div>
   </div>
 </div>
+<!-- accordian development -->
+<!-- Add / Edit Client Modal -->
+<div id="add-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-md term_popup_modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+          {{createMode ? 'Add Client' : 'Edit Client'}}
+        </div>
+        <!-- <div *ngIf="editMode == true" class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+              Edit ProClientduct
+           </div> -->
+      </div>
+      <div class="modal-body term_modal_body">
+        <form class="form-horizontal add-client-form" #f="ngForm" name="itemform">
+          <div class="row edit_item_row">
+            <div class="row col-12">
+              <span class="edit_span">Organization Name:</span>
+              <input type="text" name="name" id="name" (keyup)="emptyField($event)"
+                [ngClass]="{'box_red': emptyClient == true}" class="form-control" placeholder="Organization name *"
+                onfocus="this.select()" [(ngModel)]="activeClient.name" required />
+            </div>
+            <div class="row col-12">
+              <span class="edit_span">Contact Person Name:</span>
+              <input type="text" name="contactPersonName" id="contactPersonName" class="form-control"
+                [(ngModel)]="activeClient.contactPersonName" placeholder="Contact person" onfocus="this.select()" />
+            </div>
+
+            <div class="row">
+              <div class="col-6 tax_dis_span">
+                <span class="edit_span">Email Id:</span>
+                <input type="text" id="email" name="email" class="form-control" [(ngModel)]="activeClient.email"
+                  placeholder="Email address" onfocus="this.select()" />
+              </div>
+              <div class="col-6 tax_dis_span">
+                <span class="edit_span">Contact Number:</span>
+                <input type="text" id="cont_number" name="cont_number" class="form-control"
+                  [(ngModel)]="activeClient.number" placeholder="Contact number" onfocus="this.select()" />
+              </div>
+            </div>
+            <div class="row col-12">
+              <span class="edit_span">Address Line :</span>
+              <textarea elastic type="text" name="addressLine1" id="addressLine1"
+                class="form-control mCustomScrollbar style-3" [(ngModel)]="activeClient.addressLine1"
+                placeholder="Address Line" style="height: 47px !important;" onfocus="this.select()"></textarea>
+            </div>
+
+            <div class="row col-12">
+              <span class="edit_span">Shipping Address :</span>
+              <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px !important;"
+                [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3"
+                placeholder="Shipping Address" onfocus="this.select()"></textarea>
+            </div>
+            <div class="row col-12">
+              <span class="edit_span">Business Id:</span>
+              <input type="text" id="business_id" name="business_id" class="form-control"
+                [(ngModel)]="activeClient.businessId" placeholder="Business Id" onfocus="this.select()" />
+            </div>
+            <div class="row col-12">
+              <span class="edit_span">Business Details:</span>
+              <textarea elastic type="text" id="business_detail" name="business_detail"
+                class="form-control mCustomScrollbar style-3" style="height: 47px !important;"
+                [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
+                onfocus="this.select()"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn change_bg change_btn_width" (click)="closeItemModel()">
+          Close
+        </button>
+        <button type="button" id="updateProBtn" (click)="f.submitted = true;save(f.valid, 0)"
+          class="btn save_btn btn-raised width25btn pull-right ml-2">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- Add / Edit product Modal Ends -->
 
 
 <!-- Delete product MODAL -->
 <div id="delete-client" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog">
- <div class="modal-content">
-   <div class="modal-header">
-     <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-         <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
+          <img src="assets/images/delete-color.png" class="del" style="height:28px;">
           Delete Client
-     </h4>
-     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-       <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
-     </button>
-   </div>
-   <div class="modal-body">
-     <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-       <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
-       <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
+          <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
+          <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
 
-     </form>
-   </div>
-   <div class="modal-footer">
-      <button type="button" class="no_btn btn change_bg change_btn_width" (click)="closeItemModel()" data-dismiss="modal"
-        aria-label="Close">
-        No
-      </button>
-      <button type="button" id="clientFormLabel" (click)="deleteClient()"  
-      class="btn save_btn btn-raised width25btn"
-        data-dismiss="modal" aria-label="Close">
-        Yes
-      </button>
-   </div>
- </div>
-</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="no_btn btn change_bg change_btn_width" (click)="closeItemModel()"
+          data-dismiss="modal" aria-label="Close">
+          No
+        </button>
+        <button type="button" id="clientFormLabel" (click)="deleteClient()" class="btn save_btn btn-raised width25btn"
+          data-dismiss="modal" aria-label="Close">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- Delete Product MODAL ends -->
-  
-  <!-- Error MODAL starts -->
-  <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+
+<!-- Error MODAL starts -->
+<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog mod_dialog">
     <div class="modal-content mod_content">
@@ -236,14 +279,13 @@ data-backdrop="static" data-keyboard="false">
           !!!</p>
       </div>
       <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
-        <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
-          data-dismiss="modal" aria-label="Close">
+        <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center" data-dismiss="modal"
+          aria-label="Close">
           OK
         </button>
-  
+
       </div>
     </div>
   </div>
-  </div>
-  <!-- Error MODAL ends -->
-  
+</div>
+<!-- Error MODAL ends -->
