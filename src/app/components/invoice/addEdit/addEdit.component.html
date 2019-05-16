@@ -1,4 +1,4 @@
-<div *ngIf="activeInvoice" class="row main-wrapper">
+<div *ngIf="activeInvoice && activeSettings" class="row main-wrapper">
   <div class="col-12" id="main">
     <div  class="row">
       <div id="msgInv" 
@@ -771,7 +771,7 @@
                                   placeholder="Add {{settings.mTvAmount ? settings.mTvAmount : 'Amount'}} {{settings.paid ? settings.paid : 'Paid'}}" />
                               </div>
                               <div class="col-2">
-                                <button type="button" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
+                                <button type="button" [ngClass]="{'disableTaxDiscount':addPaymentModal.paid_amount < 1}" class="btn btn-custom-1 pull-right addPaid_btn" (click)="addPaymentInModalPaymentList();">
                                   Add
                                 </button>
                               </div>
