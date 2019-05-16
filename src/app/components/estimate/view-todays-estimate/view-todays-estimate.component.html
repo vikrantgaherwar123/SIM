@@ -296,8 +296,8 @@
                 </div>
   
                 <!-- inclusive tax -->
-                <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
-                  <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0 cal_label_padding">
+                  <div class="row mx-0 col-12 cal_label_padding">
                       <div class="col-6 text-left">
                           <span class="font-custom-bold">
                               Taxable :
@@ -308,7 +308,7 @@
                             class="font-custom-bold price">{{(taxable) | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                   </div>
-                  <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                  <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12 cal_label_padding">
                       <div *ngIf="item.taxRate" class="col-6 text-left">
                           <span class="font-custom-bold">
                               (+) Tax ({{item.taxRate}}%)
@@ -319,7 +319,7 @@
                             class="font-custom-bold price">{{item.taxAmount | number:'1.2-2' | CurrencyPipe}}</span>
                       </div>
                   </div>
-                  <div *ngIf="activeEst.taxrate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                  <div *ngIf="activeEst.taxrate" class="row mx-0 col-12 cal_label_padding">
                       <div class="col-6 text-left">
                           <span class="font-custom-bold">
                               (+) Tax ({{activeEst.taxrate}}%)

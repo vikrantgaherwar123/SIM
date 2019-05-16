@@ -1641,3 +1641,6 @@ input.mat-input-element {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+.cal_label_padding{
+  padding: 6.5px 0px;
+}

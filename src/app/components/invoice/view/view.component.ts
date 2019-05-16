@@ -243,6 +243,8 @@ export class ViewComponent implements OnInit {
 
   clearItem() {
     $("#taxonItem").prop("checked", true);
+    this.invoiceQueryForm.dateRange.end.reset();
+    this.invoiceQueryForm.dateRange.start.reset();
   }
 
 
