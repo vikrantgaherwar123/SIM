@@ -1531,12 +1531,14 @@ input.mat-input-element {
   border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
+  background-color: white;
 }
 .setting_menu_tax{
   cursor: pointer;
   border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
+  background-color: white;
 }
 
 .setting_label{
@@ -1643,4 +1645,16 @@ input.mat-input-element {
 }
 .cal_label_padding{
   padding: 6.5px 0px !important;
+}
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0px !important;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
 }

@@ -49,12 +49,11 @@
                 <div class="col-2 text-right heading">Actions</div>
               </div>
               
-              <div  style="margin-bottom: -13px;"
-              id="client{{index}}" class="clientname" *ngFor="let client of (clientList  | filter:searchTerms |  slice:0); index as index"
+              <div  style="margin-bottom: -13px;" id="client{{index}}" class="clientname" *ngFor="let client of (clientList | filter:searchTerms:(sortTerm=='name'? true : true):false |  slice:0); index as index"
                >
                 <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
+                  <img src="assets/images/client_blue1.png" class="img_box product_title">
                   <div class="col-3" style="padding-top: 6px;">
-                    <img src="assets/images/client_blue1.png" class="img_box product_title">
                     <span class="client_name">
                       {{client.name }}
                     </span>
