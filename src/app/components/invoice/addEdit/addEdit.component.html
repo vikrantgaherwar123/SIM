@@ -1,4 +1,4 @@
-<div *ngIf="activeInvoice && activeSettings" class="row main-wrapper">
+<div *ngIf="activeInvoice" class="row main-wrapper">
   <div class="col-12" id="main">
     <div  class="row">
       <div id="msgInv" 
@@ -854,15 +854,15 @@
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                           <li data-toggle="collapse">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
-                              (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                              (click)="activeInvoice.discount_on_item = 1;updateSettings()">Discount On Item</button>
                           </li>
                           <li data-toggle="collapse">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
-                              (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
+                              (click)="activeInvoice.discount_on_item = 0;updateSettings()">Discount On Bill</button>
                           </li>
                           <li data-toggle="collapse">
                               <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}"
-                               (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                               (click)="activeInvoice.discount_on_item = 2;updateSettings()">Disabled</button>
                           </li>
                         </ul>
                     </li>
@@ -879,15 +879,15 @@
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
                           <li data-toggle="collapse">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
-                              (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                              (click)="activeInvoice.tax_on_item = 0;updateSettings()">Tax On Item</button>
                           </li>
                           <li data-toggle="collapse">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
-                              (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                              (click)="activeInvoice.tax_on_item = 1;updateSettings()">Tax On Bill</button>
                           </li>
                           <li data-toggle="collapse">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
-                              (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                              (click)="activeInvoice.tax_on_item = 2;updateSettings()">Disabled</button>
                           </li>
                         </ul>
                       </li>
