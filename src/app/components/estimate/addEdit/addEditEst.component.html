@@ -1,4 +1,4 @@
-<div *ngIf="activeEstimate && activeSettings" class="row main-wrapper">
+<div *ngIf="activeEstimate" class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
       <div id="msgInv" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
@@ -638,14 +638,15 @@
                             <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                               <li>
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 1}"
-                                  (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                                  (click)="activeEstimate.discount_on_item = 1;updateSettings();calculateEstimate()">Discount On Item</button>
                               </li>
                               <li>
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 0}"
-                                  (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
+                                  (click)="activeEstimate.discount_on_item = 0;updateSettings();calculateEstimate()">Discount On Bill</button>
                               </li>
                               <li>
-                                  <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
+                                  <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}"
+                                   (click)="activeEstimate.discount_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                         </li>
@@ -662,15 +663,15 @@
                             <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
                               <li>
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 0}"
-                                  (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
+                                  (click)="activeEstimate.tax_on_item = 0;updateSettings();calculateEstimate()">Tax On Item</button>
                               </li>
                               <li>
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 1}"
-                                  (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
+                                  (click)="activeEstimate.tax_on_item = 1;updateSettings();calculateEstimate()">Tax On Bill</button>
                               </li>
                               <li>
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 2}"
-                                  (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
+                                  (click)="activeEstimate.tax_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                           </li>
