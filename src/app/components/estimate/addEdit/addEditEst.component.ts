@@ -293,53 +293,38 @@ export class AddEditEstComponent implements OnInit {
             if (this.activeEstimate.discount_on_item == 0) {
               this.activeEstimate.percentage_flag = 1;
               this.settings.discountFlagLevel = 0;
-              if (this.appSettings) {
-                this.appSettings.androidSettings.discountFlagLevel = 0;
-              }
+              this.activeSettings.discountFlagLevel = 0;
               this.noDiscountOnItem = false;
               this.discountLabel = "On Bill"
             } else if (this.activeEstimate.discount_on_item == 1) {
               this.settings.discountFlagLevel = 1;
-              if (this.appSettings) {
-                this.appSettings.androidSettings.discountFlagLevel = 1;
-              }
+              this.activeSettings.discountFlagLevel = 1;
               this.noDiscountOnItem = true;
               this.discountLabel = "On Item"
             }
 
             if (this.activeEstimate.tax_on_item == 0) {
               this.settings.taxFlagLevel = 0;
-              if (this.appSettings) {
-                this.appSettings.androidSettings.taxFlagLevel = 0;
-              }
+              this.activeSettings.taxFlagLevel = 0;
               this.taxtext = "Tax (on Item)"
               this.noTaxOnItem = true;
               this.taxLabel = "On Item"
             } else if (this.activeEstimate.tax_on_item == 1) {
               this.settings.taxFlagLevel = 1;
-              if (this.appSettings) {
-                this.appSettings.androidSettings.taxFlagLevel = 1;
-              }
+              this.activeSettings.taxFlagLevel = 1;
               this.noTaxOnItem = false;
               this.taxLabel = "On Bill"
             }
 
 
             //if item and Disabled condition  
-            if (this.activeEstimate.discount_on_item === 1 || this.activeEstimate.discount_on_item === 2) {
+            if (this.activeEstimate.discount_on_item === 2) {
+              this.discountLabel = "Disabled"
               this.noDiscountOnItem = true;
             }
 
-            if (this.activeEstimate.tax_on_item === 0 || this.activeEstimate.tax_on_item === 2) {
-              this.noTaxOnItem = true;
-            }
-
-            //if Bill setting
-            if (this.activeEstimate.discount_on_item === 0) {
-              this.noDiscountOnItem = false;
-            }
-
-            if (this.activeEstimate.tax_on_item === 1) {
+            if (this.activeEstimate.tax_on_item === 2) {
+              this.taxLabel = "Disabled"
               this.noTaxOnItem = false;
             }
 
@@ -495,13 +480,10 @@ export class AddEditEstComponent implements OnInit {
                   this.noTaxOnItem = false;
                   this.taxLabel = "On Bill"
                 }
-        
-        
-                if(this.activeEstimate.discount > 0){
-                  this.activeEstimate.discount_on_item = 0;
-                }
-        
-        
+                // if(this.activeEstimate.discount > 0){
+                //   this.activeEstimate.discount_on_item = 0;
+                // }
+
                 //if item and Disabled condition  
                 if(this.activeEstimate.discount_on_item == 2){
                   this.discountLabel = "Disabled"
@@ -518,15 +500,6 @@ export class AddEditEstComponent implements OnInit {
                 //Bill settings
                 //this.activeEstimate.tax_on_item = 1
                 //this.activeEstimate.discount_on_item = 0
-        
-                //if Bill setting
-                if(this.activeEstimate.discount_on_item == 0){
-                  this.noDiscountOnItem = false;
-                }
-        
-                if(this.activeEstimate.tax_on_item == 1){
-                  this.noTaxOnItem = false;
-                }
         
                 //shipping & adjustment
                 if(this.activeEstimate.shipping_charges){

@@ -345,9 +345,10 @@ export class AddEditComponent implements OnInit {
           setStorage(response.settings)
           this.user = JSON.parse(localStorage.getItem('user'))
           this.settings = this.user.setting
-          this.invoiceListLoading = false;
+          
 
           if (this.activeSettings && this.activeInvoice) {
+            this.invoiceListLoading = false;
             //set settingFlags according to edit i.e invoice saved previously
             if (this.activeInvoice.discount_on_item == 0) {
               this.activeInvoice.percentage_flag = 1;
@@ -1708,9 +1709,6 @@ export class AddEditComponent implements OnInit {
         } 
       }
       additions += temp_tax_amount
-      //remove digits after two decimal
-      // var b = this.activeInvoice.taxList[i].calculateValue.toString().substring(0, this.activeInvoice.taxList[i].toString().indexOf(".") + 5)
-      // this.activeInvoice.taxList[i].calculateValue = parseFloat(b);
     }
     // this.activeInvoice.tax_amount = additions
 
@@ -1737,8 +1735,10 @@ export class AddEditComponent implements OnInit {
 
     this.activeInvoice.amount = parseFloat((this.activeInvoice.gross_amount - deductions + additions).toFixed(2))
     this.activeInvoice.balance = parseFloat(this.activeInvoice.amount.toFixed(2)) - (
-      this.activeInvoice.payments ? this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0) : 0
+    this.activeInvoice.payments ? this.activeInvoice.payments.reduce((a, b) => a + b.paid_amount, 0) : 0
     )
+    //match paying amount with payable total amount
+    this.addPaymentModal.paid_amount = this.activeInvoice.balance;
   }
 
   removeItem(index) {
@@ -1820,17 +1820,6 @@ export class AddEditComponent implements OnInit {
       }
 
     var self = this
-    // //make tax & discount 0 when disable button selecetd from primary settings
-    // for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
-    //   if(this.settings.taxFlagLevel === 2){
-    //     this.activeInvoice.listItems[i].tax_rate = 0;
-    //   }
-  
-    //   if(this.settings.discountFlagLevel === 2){
-    //     this.activeInvoice.listItems[i].discount = 0;
-    //   }
-    // }
-
     
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
     this.invListLoader = true;
@@ -1903,6 +1892,7 @@ export class AddEditComponent implements OnInit {
   deleteInstallment(index){
     this.amountPaid = this.amountPaid - this.addPaymentModal.payments[index].paid_amount;
     this.activeInvoice.balance = this.activeInvoice.balance + this.addPaymentModal.payments[index].paid_amount;
+    this.addPaymentModal.paid_amount = this.activeInvoice.balance;
     
     this.activeInvoice.payments.splice(index,1);
   }

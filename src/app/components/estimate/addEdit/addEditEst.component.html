@@ -1,4 +1,4 @@
-<div *ngIf="activeEstimate" class="row main-wrapper">
+<div *ngIf="activeEstimate && activeSettings" class="row main-wrapper">
   <div class="col-12" id="main">
     <div class="row">
       <div id="msgInv" class="col-12 col-sm-9 item-form all-invoices inv-generator inv-gen">
@@ -874,7 +874,7 @@
 </div>
 
 <!-- EDIT ITEM MODAL -->
-<div id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+<div *ngIf="activeEstimate" id="edit-item" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-md term_popup_modal">
     <div class="modal-content">
