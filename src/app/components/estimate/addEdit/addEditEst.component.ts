@@ -259,6 +259,7 @@ export class AddEditEstComponent implements OnInit {
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
     // this.commonSettingsInit()
+    this.shippingChange = false;
     this.recentEstListLoading = true;
 
     // Fetch selected invoice
@@ -281,8 +282,9 @@ export class AddEditEstComponent implements OnInit {
           setStorage(response.settings)
           this.user = JSON.parse(localStorage.getItem('user'))
           this.settings = this.user.setting
-          this.recentEstListLoading = false;
+          
           if (this.activeSettings && this.activeEstimate ) {
+            this.recentEstListLoading = false;
 
             if(this.activeEstimate.taxableFlag == 1){
               this.includeTax = true;
@@ -866,11 +868,12 @@ export class AddEditEstComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filterCli(name) : this.clientList.slice())
       )
+    }
+
   }
-  
-}
 
   private _filterCli(value: string): client[] {
+    if (!value) return this.clientList;
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
@@ -889,10 +892,15 @@ export class AddEditEstComponent implements OnInit {
 
   selectedClientChange(client) {
     this.noClientSelected = false;
-    this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
-    var temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
+    var temp
+    if (client.name) { //while adding and showing client invoice page modal
+      temp = this.clientList.filter(cli => cli.name == client.name)[0]
+    } else if(client.option){
+      temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
+    }
 
     if (temp !== undefined) {
+      this.shippingAdressChanged = true;               //this flag is used to show shipping adrress of main client
       this.activeClient = temp
       this.activeEstimate.unique_key_fk_client = temp.uniqueKeyClient
     } else {
@@ -956,16 +964,17 @@ export class AddEditEstComponent implements OnInit {
       $('#saveClientButton').attr("disabled", 'disabled')
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
-          this.store.dispatch(new clientActions.add([this.clientService.changeKeysForStore(response.clientList[0])]))
-          this.clientList = this.allClientList.filter(recs => recs.enabled == 0)
-          this.activeClient = this.clientList.filter((client) => client.uniqueKeyClient == response.clientList[0].unique_identifier)[0]
+          let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
+          this.store.dispatch(new clientActions.add(tempClient))
+          this.clientList.push(tempClient)
+          this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
           this.clientListLoading = false
           $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully
           this.activeEstimate.unique_key_fk_client = this.activeClient.uniqueKeyClient;
-          // window.location.reload(true);
+          this.selectedClientChange(this.activeClient); //this function shows added recent client
         }
         else {
           //notifications.showError({message:'Some error occurred, please try again!', hideDelay: 1500,hide: true})
@@ -1263,7 +1272,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   isTermInEstimate(term) {
-    if (this.activeEstimate) {
+    if (this.activeEstimate && this.activeEstimate.termsAndConditions) {
       return this.activeEstimate.termsAndConditions.findIndex(trm => trm.uniqueKeyTerms == term.uniqueKeyTerms) !== -1
     } else {
       return false
@@ -1350,12 +1359,12 @@ export class AddEditEstComponent implements OnInit {
     }
 
     this.activeEstimate.device_modified_on = new Date().getTime()
-    //add shipping address
-    if(this.shippingAddressEditMode === true){
-    this.activeEstimate.shipping_address = this.shippingAddress;
-    }else{
-      this.activeEstimate.shipping_address = this.activeClient.shippingAddress
-    }
+    //add shipping address 
+    if(this.shippingChange === false){
+      this.activeEstimate.shipping_address = this.shippingAddress;
+      }else{
+        this.activeEstimate.shipping_address = this.activeClient.shippingAddress
+      }
 
     if(this.includeTax){
       this.activeEstimate.taxableFlag = 1;

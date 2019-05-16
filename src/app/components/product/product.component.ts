@@ -87,7 +87,7 @@ hideToggle: boolean = false
         }
       },error => this.openErrorModal())
     } else {
-      
+      this.removeEmptySpaces(this.productList)
       //sort in ascending
       this.productList.sort(function (a, b) {
         var textA = a.prodName.toUpperCase();

@@ -1105,12 +1105,11 @@ export class AddEditComponent implements OnInit {
 
   selectedClientChange(client) {
     this.noClientSelected = false; // to remove red box
+    var temp
 
     if (client.name) { //while adding and showing client invoice page modal
-      var temp
       temp = this.clientList.filter(cli => cli.name == client.name)[0]
     } else if(client.option){
-      var temp
       temp = this.clientList.filter(cli => cli.name == client.option.value.name)[0]
     }
 
