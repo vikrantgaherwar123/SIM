@@ -52,7 +52,7 @@
                 </div>
                 <div id="prod{{index}}" style="border-top: 2px solid #f0f4f5 !important;"
                 *ngFor="let product of (productList  | filter:searchTerm | slice:0); index as index">
-                  <div class="col-12 row main_row">
+                  <div class="col-12 row main_row" (mouseover)="productOnHover()" (mouseleave)="productOffHover()">
                       <div class="col-6" style="padding-top: 6px;">
                         <img src="assets/images/product_box_blue.png" class="img_box product_title">
                         <span style="color: #1f1f1f;">

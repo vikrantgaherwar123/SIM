@@ -46,6 +46,8 @@ hideToggle: boolean = false
   settings: any;
   emptyRate: boolean;
   addProduct: any;
+  productOff: string;
+  productOn: string;
   
 
   constructor(private productService: ProductService,
@@ -215,6 +217,13 @@ hideToggle: boolean = false
       }
       
     }
+  }
+
+  productOnHover(){
+    this.productOn = "assets/images/product_box_grey.png";
+  }
+  productOffHover(){
+    this.productOff = "assets/images/product_box_blue.png";
   }
 
   addNew() {

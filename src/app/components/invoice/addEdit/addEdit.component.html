@@ -564,11 +564,12 @@
                                 </div>
                                 <div *ngIf="activeInvoice.percentage_flag == 1" class="icon_color">%</div>
                               </div>
-
+                            <span class="form-control height_40 dis_tax_label col-9" >{{activeInvoice.discount | number:'1.2-2'}}</span>
                             <input type="number" id="discount_input" name="discount_input"
                               class="form-control height_40 dis_tax_label col-9" placeholder="0.00"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
-                              readonly />
+                              readonly hidden />
+                              
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector" (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
                                 activeInvoice.percentage_value=0;activeInvoice.discount=0;calculateInvoice();
@@ -601,8 +602,9 @@
                               <div class="input_symbol">
                                 <div class="icon_color">%</div>
                               </div>
+                              <span class="col-7 form-control height_40 dis_tax_label" >{{activeInvoice.tax_amount | number:'1.2-2'}}</span>
                               <input type="number" id="tax_inputs" name="tax_inputs" class="col-7 form-control height_40 dis_tax_label" 
-                              placeholder="0.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly
+                              placeholder="0.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly hidden
                             />
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
@@ -629,10 +631,12 @@
                                   max="100" class="form-control col-3"
                                   style="margin-left: -15px;margin-right: 20px;" [(ngModel)]="tax.percentage"
                                   (keyup)="calculateInvoice()" onfocus="this.select()" />
+
+                                <span class="col-7 form-control height_40 dis_tax_label" >{{tax.calculateValue | number:'1.2-2'}}</span>
                                 <input type="number" id="tax_input_list{{taxIndex}}" name="tax_Listinput"
                                   class="col-9 form-control height_40 dis_tax_label"
                                   [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()"
-                                  readonly />
+                                  readonly hidden/>
     
                                 <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pr-0 remove-button">
@@ -1112,7 +1116,7 @@
               <div class="row">
                   <input type="number" 
                   class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
-                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" />
+                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" readonly />
                   <div class="popup_input_symbol" >
                       <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>

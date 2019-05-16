@@ -220,6 +220,8 @@ export class ClientComponent implements OnInit {
     }
   }
 
+ 
+
   // error modal
   openErrorModal() {
     $('#errormessage').modal('show')
