@@ -507,19 +507,19 @@
               *ngFor="let estimate of (estimateList |  orderBy: estSortTerm:true | filter:estSearchTerm | slice:0:estDispLimit); index as key"
               (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13">
-                <span class="inv_date">{{ estimate.createDate  | date: 'dd' }}</span><br />
-                <span class="date_month">{{ estimate.createDate  | date: 'MMM' }}</span>
+                <span class="inv_date" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">{{ estimate.createDate  | date: 'dd' }}</span><br />
+                <span class="date_month" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">{{ estimate.createDate  | date: 'MMM' }}</span>
               </div>
 
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                    <h5 class="font-custom-bold fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5 font-custom-book fontsize13">
+                  <div class="col-5 font-custom-book fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">
                     #{{ estimate.quetationNo }}
                   </div>
-                  <div class="col-6 text-right font-custom-bold fontsize12">
+                  <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">
                     {{ estimate.amount | CurrencyPipe}}
                   </div>
                 </div>

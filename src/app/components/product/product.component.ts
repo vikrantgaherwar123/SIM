@@ -46,6 +46,8 @@ hideToggle: boolean = false
   settings: any;
   emptyRate: boolean;
   addProduct: any;
+  productOff: string;
+  productOn: string;
   
 
   constructor(private productService: ProductService,
@@ -79,22 +81,35 @@ hideToggle: boolean = false
           this.store.dispatch(new productActions.add(this.productList))
           
           //sort in ascending
-          this.productList.sort(function (a, b) {
-            var textA = a.prodName.toUpperCase();
-            var textB = b.prodName.toUpperCase();
-            return textA.localeCompare(textB);
-          });
+          this.sortByNameRate(this.productList);
         }
       },error => this.openErrorModal())
     } else {
       this.removeEmptySpaces(this.productList)
       //sort in ascending
+      this.sortByNameRate(this.productList);
+      this.productListLoading = false
+    }
+  }
+
+  sortByNameRate(value){
+    if(value == 'prodName'){
       this.productList.sort(function (a, b) {
         var textA = a.prodName.toUpperCase();
         var textB = b.prodName.toUpperCase();
         return textA.localeCompare(textB);
       });
-      this.productListLoading = false
+    }
+    else if(value == 'rate'){
+      this.productList.sort(function (a, b) {
+      return b.rate - a.rate;
+      });
+    }else{
+    this.productList.sort(function (a, b) {
+      var textA = a.prodName.toUpperCase();
+      var textB = b.prodName.toUpperCase();
+      return textA.localeCompare(textB);
+    });
     }
   }
 
@@ -215,6 +230,13 @@ hideToggle: boolean = false
       }
       
     }
+  }
+
+  productOnHover(){
+    this.productOn = "assets/images/product_box_grey.png";
+  }
+  productOffHover(){
+    this.productOff = "assets/images/product_box_blue.png";
   }
 
   addNew() {

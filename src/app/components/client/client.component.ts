@@ -72,23 +72,41 @@ export class ClientComponent implements OnInit {
           this.clientList = this.removeEmptySpaces(response.records.filter(cli => cli.enabled == 0))
           this.store.dispatch(new clientActions.add(this.clientList))
           //sort in ascending
-          this.clientList.sort(function (a, b) {
-            var textA = a.name.toUpperCase();
-            var textB = b.name.toUpperCase();
-            return textA.localeCompare(textB);
-          });
+          this.sortByNameContact(this.clientList);
         }
       },error => this.openErrorModal())
     } else {
       this.removeEmptySpaces(this.clientList)
       //sort in ascending
+      this.sortByNameContact(this.clientList);
+      this.clientListLoading = false
+     }   
+  }
+  sortByNameContact(value){
+    if(value == 'name'){
       this.clientList.sort(function (a, b) {
         var textA = a.name.toUpperCase();
         var textB = b.name.toUpperCase();
         return textA.localeCompare(textB);
       });
-      this.clientListLoading = false
-     }   
+    }
+    else if(value == 'contactPersonName'){
+      this.clientList.sort(function (a, b) {
+        if(a.contactPersonName && b.contactPersonName){
+        var textA = a.contactPersonName.toUpperCase();
+        var textB =  b.contactPersonName.toUpperCase();
+        return textA.localeCompare(textB);
+        }
+      });
+    }
+    else{
+      this.clientList.sort(function (a, b) {
+        var textA = a.name.toUpperCase();
+        var textB = b.name.toUpperCase();
+        return textA.localeCompare(textB);
+      });
+    }
+    
   }
 
   removeEmptySpaces(data){
@@ -220,6 +238,8 @@ export class ClientComponent implements OnInit {
       }
     }
   }
+
+ 
 
   // error modal
   openErrorModal() {

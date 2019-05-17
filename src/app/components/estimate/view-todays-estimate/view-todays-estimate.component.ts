@@ -116,11 +116,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.activeEst = this.recentEstimateList.filter(est => est.unique_identifier == estId)[0]
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
-      
-      //discount on bill 
-      if(this.activeEst.discount > 0){
-        this.activeEst.assignDiscountFlag = 0;
-      }
+    
 
       if (this.activeEst.alstQuotProduct) {
         var taxPayable = 0;

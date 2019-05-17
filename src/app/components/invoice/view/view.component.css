@@ -297,3 +297,6 @@ svg {
   min-width: 1px;
   min-height: 1px;
 }
+.item:hover{
+  background-color: #d6e8fa;
+}

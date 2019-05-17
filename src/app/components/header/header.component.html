@@ -4,51 +4,47 @@
       <div  class="row">
         <div class="d-sm-flex">
           <h5 class="menu_list" style="padding-left: 23px !important;">
-            <button (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active">
-              <span class="span_text">
-                <img src="{{invSrc}}" class="nav_img" alt="logo" />
-              <span style="margin-left: 3px;" [class.active_text]="router.url==='/invoice/add' || router.url==='/invoice/view' ">Invoices</span></span>
+            <button (mouseover)="onInvHover()" (mouseleave)="offInvHover()" [class.active]="router.url==='/invoice/add' || router.url==='/invoice/view' " [routerLink]="['/invoice/add']" class="navbtn active header_menu_text">
+                <img src="{{invSrc}}" class="nav_img" alt="logo" /><span class="span_text" [class.active_text]="router.url==='/invoice/add' || router.url==='/invoice/view' ">Invoices</span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
-          <h5 class="menu_list">
+          <h5 class="menu_list header_menu_text">
             <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()"  [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
-              <span class="span_text">
-                <img src="{{estSrc}}" class="nav_img" alt="" /><span class="header_menu_text" [class.active_text]="router.url==='/estimate/add' || router.url==='/estimate/view'">Estimates</span></span>
+                <img src="{{estSrc}}" class="nav_img" alt="" /><span class="span_text" [class.active_text]="router.url==='/estimate/add' || router.url==='/estimate/view'">Estimates</span>
             </button>
-            <ng-template #notShow>
-              <p>
-                Show this only if "show" is not true
-              </p>
-            </ng-template>
           </h5>
         </div>
         <div class="d-sm-flex">
             <h5 class="menu_list">
-              <button (mouseover)="onClientHover()" (mouseleave)="offClientHover()" [class.active]="router.url==='/client'" [routerLink]="['/client']"class="navbtn">
-                <span class="span_text"><img src="{{clientSrc}}" class="nav_img" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/client'">Clients</span></span>
+              <button (mouseover)="onClientHover()" (mouseleave)="offClientHover()" [class.active]="router.url==='/client'" [routerLink]="['/client']"class="navbtn header_menu_text">
+                <span class="span_text">
+                  <img src="{{clientSrc}}" class="nav_img" alt="logo" /><span class="span_text" [class.active_text]="router.url==='/client'">Clients</span></span>
               </button>
             </h5>
           </div>
         <div class="d-sm-flex">
           <h5 class="menu_list">
-            <button (mouseover)="onProductHover()" (mouseleave)="offProductHover()"  [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
-              <span class="span_text"><img src="{{productSrc}}" class="nav_img" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/product'">Products</span></span>
+            <button (mouseover)="onProductHover()" (mouseleave)="offProductHover()"  [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn header_menu_text">
+              <span class="span_text">
+                <img src="{{productSrc}}" class="nav_img" alt="logo" /><span class="span_text" [class.active_text]="router.url==='/product'">Products</span></span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
           <h5 class="menu_list">
-            <button (mouseover)="onSettingHover()" (mouseleave)="offSettingHover()" [class.active]="router.url==='/setting/primary'" [routerLink]="['/setting/primary']" class="navbtn">
-              <span class="span_text"><img class="nav_img" src="{{settingSrc}}" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/setting/primary'">Settings</span></span>
+            <button (mouseover)="onSettingHover()" (mouseleave)="offSettingHover()" [class.active]="router.url==='/setting/primary'" [routerLink]="['/setting/primary']" class="navbtn header_menu_text">
+              <span class="span_text">
+                <img class="nav_img" src="{{settingSrc}}" alt="logo" /><span class="span_text" [class.active_text]="router.url==='/setting/primary'">Settings</span></span>
             </button>
           </h5>
         </div>
         <div class="d-sm-flex">
             <h5 class="menu_list">
-              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn  header_menu_text">
-                <span class="span_text "><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span [class.active_text]="router.url==='/setting/batchUpload'">Batch Upload</span></span>
+              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn header_menu_text">
+                <span class="span_text ">
+                  <img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span class="span_text" [class.active_text]="router.url==='/setting/batchUpload'" >Batch Upload</span></span>
               </button>
             </h5>
           </div>

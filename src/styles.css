@@ -968,12 +968,12 @@ background-color: none;
   padding-right: 12px !important;
 }
 .header_menu_text{
-  margin-left: 4px;
   color: #697887;
 }
 .header_menu_text:hover{
   color: #1a73cc;
 }
+
 .edit_delete_icon{
   margin-top: -5px;
 }
@@ -1005,7 +1005,7 @@ background-color: none;
 /* added by vikrant */
 .morebtn{
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: bold;
   padding-left: 4px;
   font-style: italic;
@@ -1190,8 +1190,14 @@ textarea{
   margin-top: 6px;
 }
 .add_disable{
-  opacity: .7 !important;
+  background: #f6f6f7;
+  height: 70px !important;
+  color: #0299ff !important;
+  border-radius: 0px !important;
   pointer-events: none;
+}
+.add_btn_text{
+  color:red;
 }
 /* payment installment section */
 .payment_row{
@@ -1259,6 +1265,7 @@ textarea{
   border-bottom: 1px solid #e9e9e9 !important;
   height: 51px;
 }
+
 .sub_date{
   color: #8c9299;
   font-size: 10px !important;
@@ -1467,7 +1474,7 @@ textarea{
   /* margin-left: -5px; */
 }
 .color_white{
-  color:white;
+  color:white !important;
   font-size: 12px;
   font-family: helvetica_light;
   letter-spacing: 1px;
@@ -1530,12 +1537,14 @@ input.mat-input-element {
   border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
+  background-color: white;
 }
 .setting_menu_tax{
   cursor: pointer;
   border: 1px solid #ced4da !important;
   padding: 7px 8px 6px 7px;
   width: 165px;
+  background-color: white;
 }
 
 .setting_label{
@@ -1639,4 +1648,19 @@ input.mat-input-element {
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+.cal_label_padding{
+  padding: 6.5px 0px !important;
+}
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0px !important;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
 }

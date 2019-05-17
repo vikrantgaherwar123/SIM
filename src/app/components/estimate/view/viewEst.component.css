@@ -226,6 +226,9 @@ svg {
   background: #ffffff;
   margin-top: -29px !important;
 }
+.item:hover{
+  background-color: #d6e8fa;
+}
 @media (min-width: 576px)
 {
 .modal-dialog {

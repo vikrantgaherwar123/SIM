@@ -17,7 +17,6 @@
 
               <div class="col-12 px-0 mb-1">
                 <!-- Invoice Details Header -->
-                
                 <div class="row">
                     <div class="col-sm-6" id="clientDataAdd" name="clientData">
                           <div class="row">
@@ -252,7 +251,7 @@
                                 <pre class="selected-items selected_description"
                                  >{{item.description}}</pre>
                               </div>
-                              <span *ngIf="item.description.length > 50" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Less': 'More...' }}</span>
+                              <span *ngIf="item.description" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Hide': 'Show' }}</span>
                               <!-- <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span> -->
                             </div>
                           </div>
@@ -368,7 +367,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last"
                         *ngIf="activeInvoice.discount_on_item == 1"><!--|| showDiscountRate !==0 && showDiscountRateFlag == true -->
                           <div class="input-group" style="padding: 4px 2px;">
-                            <input type="number" name="itemDiscountRate" tabindex="5"
+                            <input type="number" name="itemDiscountRate" tabindex="4"
                               class="form-control height_40 text_right input_border_color" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
                              />
@@ -380,7 +379,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last"
                         *ngIf="activeInvoice && activeInvoice.tax_on_item === 0"><!-- || showTaxRate!==0 && showTaxRateFlag == true-->
                           <div class="input-group" style="padding: 4px 2px;">
-                            <input type="number" name="itemTaxRate" tabindex="4"
+                            <input type="number" name="itemTaxRate" tabindex="5"
                               class="form-control height_40 text_right input_border_color" min=0 max=100
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
                               />
@@ -511,39 +510,38 @@
                         </div>
                         <div class="col-6 text-right">
                           <span
-                            class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
+                            class="font-custom-bold price">{{activeInvoice.gross_amount | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                       </div>
                     </div>
 
                     <!-- Discounts -->
-                    <div class="row mr_right mr_4" *ngIf="!noDiscountOnItem">
-                      <div class="col-4 discount-tax-label pr-0">
+                    <div class="row mr_right mr_4 mrg_btm" *ngIf="!noDiscountOnItem">
+                      <div class="col-4 discount-tax-label pr-0" style="padding-top: 4px;">
                         <span style="text-align: left;vertical-align: bottom;">
                           {{settings.discount ? settings.discount : 'Discount'}}
                         </span>
-                        <span *ngIf="activeInvoice.percentage_flag == 0" class="inline font-custom" style="margin-right: 2px;margin-left: -18px;float: right;">
+                        <span *ngIf="activeInvoice.percentage_flag == 0" style="margin-right: 58px !important;">
                           ({{mysymbols}})
                         </span>
-                        <span *ngIf="activeInvoice.percentage_flag == 1" style="margin-right: 0px !important;margin-left: -18px;float: right;" class="inline font-custom">(%)</span>
+                        <span *ngIf="activeInvoice.percentage_flag == 1" style="margin-right: 58px !important;">(%)</span>
                         <div class="px-0" style="padding-right: 10px;">
-                          <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown " data-toggle="dropdown"
+                          <div style="cursor: pointer;" class="dropdown-toggle custom-dropdown drop_arrow" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-menu-down" style="font-size: 14px;vertical-align: middle;"
+                            <span class="fa fa-angle-down discount_drop"
                               title="{{settings.discount ? settings.discount : 'Discount'}}"></span>
                           </div>
                           <ul class="dropdown-menu dropdown-menu-right">
-                              <li [class.active]="activeInvoice.percentage_flag == 1">
-                                <a (click)="activeInvoice.discount=0.00;
-                                   activeInvoice.percentage_flag=1;calculateInvoice()">
-                                  Percent (%)
-                                </a>
-                              </li>
-                              <li [class.active]="activeInvoice.percentage_flag == 0">
-                                <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
-                                  Flat ({{mysymbols}})
-                                </a>
-                              </li>
+                            <li [class.active]="activeInvoice.percentage_flag == 0">
+                              <a (click)="activeInvoice.percentage_flag = 0;activeInvoice.discount=0.00;calculateInvoice()">
+                                Flat ({{mysymbols}})
+                              </a>
+                            </li>
+                            <li [class.active]="activeInvoice.percentage_flag == 1">
+                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;calculateInvoice()">
+                                Percent (%)
+                              </a>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -565,11 +563,12 @@
                                 </div>
                                 <div *ngIf="activeInvoice.percentage_flag == 1" class="icon_color">%</div>
                               </div>
-
+                            <span class="form-control height_40 dis_tax_label col-9" >{{activeInvoice.discount | number:'1.2-2'}}</span>
                             <input type="number" id="discount_input" name="discount_input"
                               class="form-control height_40 dis_tax_label col-9" placeholder="0.00"
                               [(ngModel)]="activeInvoice.discount" (keyup)="calculateInvoice()"
-                              readonly />
+                              readonly hidden />
+                              
                             <div class="input-group-addon pr-0 remove-button">
                               <div class="addon selector" (click)="activeInvoice.discount_on_item=2;activeInvoice.percentage_flag=0;
                                 activeInvoice.percentage_value=0;activeInvoice.discount=0;calculateInvoice();
@@ -585,9 +584,9 @@
                       </div>
                     </div>
                     <!-- tax -->
-                    <div class="row mr_right mr_0" *ngIf="!noTaxOnItem">
+                    <div class="row mr_right mrg_btm mr_0" *ngIf="!noTaxOnItem">
                         <div class="col-4 discount-tax-label pr-0">
-                          <span style="text-align: left;vertical-align: bottom;">
+                          <span style="margin-left: -5px;">
                               Tax (%)
                           </span>
                         </div>
@@ -596,14 +595,15 @@
                           <form #form_discount="ngForm" name="form_discount">
                             <div class="input-group addon-input">
                                 <input type="number" id="tax_input" name="tax_input" class="form-control col-3"
-                                step="any"min="0.00" max="100" required
+                                step="any"min="0.00" max="100" required style="margin-left: -2px;"
                                 [(ngModel)]="activeInvoice.tax_rate" (ngModelChange)="taxListChanged($event)" (keyup)="calculateInvoice()" onfocus="this.select()"
                               />
                               <div class="input_symbol">
                                 <div class="icon_color">%</div>
                               </div>
+                              <span class="col-7 form-control height_40 dis_tax_label" >{{activeInvoice.tax_amount | number:'1.2-2'}}</span>
                               <input type="number" id="tax_inputs" name="tax_inputs" class="col-7 form-control height_40 dis_tax_label" 
-                              placeholder="0.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly
+                              placeholder="0.00" [(ngModel)]="activeInvoice.tax_amount" (keyup)="calculateInvoice()" readonly hidden
                             />
                               <div class="input-group-addon pr-0 remove-button">
                                 <div class="addon selector" (click)="activeInvoice.tax_on_item = 2;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">
@@ -616,7 +616,7 @@
 
                     <!-- Tax list -->
                     <div *ngIf="activeInvoice.taxList">
-                      <div class="row mr_right mr_4" *ngFor="let tax of activeInvoice.taxList; let taxIndex = index">
+                      <div class="row mr_right mr_4 mrg_btm" *ngFor="let tax of activeInvoice.taxList; let taxIndex = index">
                           <div class="col-4 discount-tax-label pr-0 " *ngIf="tax">
                             <div style="text-align: left;vertical-align: bottom;">
                               <div class="d-inline font-custom">{{tax.taxName}} (%)</div>
@@ -630,10 +630,12 @@
                                   max="100" class="form-control col-3"
                                   style="margin-left: -15px;margin-right: 20px;" [(ngModel)]="tax.percentage"
                                   (keyup)="calculateInvoice()" onfocus="this.select()" />
+
+                                <span class="col-7 form-control height_40 dis_tax_label" >{{tax.calculateValue | number:'1.2-2'}}</span>
                                 <input type="number" id="tax_input_list{{taxIndex}}" name="tax_Listinput"
                                   class="col-9 form-control height_40 dis_tax_label"
                                   [(ngModel)]="tax.calculateValue" (keyup)="calculateInvoice()"
-                                  readonly />
+                                  readonly hidden/>
     
                                 <!-- <div class="input-group-addon set-color">%</div>-->
                                 <div class="input-group-addon pr-0 remove-button">
@@ -648,7 +650,7 @@
                     </div>
 
                     <!-- Shipping -->
-                    <div class="row mr_right mr_4" *ngIf="!noShippingCharges">
+                    <div class="row mr_right mr_4 mrg_btm" *ngIf="!noShippingCharges">
                       <div class="col-4 discount-tax-label ">
                         <div style="text-align: left;vertical-align: bottom;">
                           {{settings.shipping ? settings.shipping : 'Shipping'}}(+)
@@ -676,7 +678,7 @@
                     </div>
 
                     <!-- Adjustment -->
-                    <div class="row mr_right mr_4"
+                    <div class="row mr_right mr_4 mrg_btm"
                       *ngIf="!noAdjustment">
                       <div class="col-4 discount-tax-label pr-0 ">
                         <div style="text-align: left;vertical-align: bottom;">
@@ -690,13 +692,9 @@
                             <input type="number" name="tax_input" class="form-control" style="text-align: right;"
                               step="any" required onfocus="this.select()" placeholder="0"
                               [(ngModel)]="activeInvoice.adjustment"
-                               (keyup)="calculateInvoice()" /> 
-                               <!-- (change)=setTwoNumberDecimal(activeInvoice.adjustment) // removed this function-->
-
-                            <!-- <div class="input-group-addon set-color">%</div>-->
+                               (keyup)="calculateInvoice()" />
                             <div class="input-group-addon pr-0 remove-button">
-                              <div class="addon selector"><!--(click)="activeInvoice.adjustment = undefined;noAdjustment = true; calculateInvoice()"-->
-                                <!-- <img src="assets/images/grey_cross.png" Title="Delete" class="hg_20 cross_label_img img_hover"> -->
+                              <div class="addon selector">
                               </div>
                             </div>
                           </div>
@@ -715,7 +713,7 @@
 
                         <div *ngIf="activeInvoice" class="col-6 text-right">
                           <span class="font-custom-bold price">
-                            {{activeInvoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                            {{activeInvoice.amount | number:'1.2-2' | CurrencyPipe}}
                           </span>
                         </div>
                       </div>
@@ -733,7 +731,7 @@
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
-                            class="font-custom price">{{amountPaid | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            class="font-custom price">{{amountPaid | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                         
                         <div class="row mx-0" style="margin-bottom: -15px;width: 100%;">
@@ -747,7 +745,7 @@
                                   </div>
                                   <div class="col-6 pad_rg_5 paid_amt">
                                     <span style="padding-right: 16px;"
-                                      class="font-custom price">{{item.paid_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                                      class="font-custom price">{{item.paid_amount | number:'1.2-2' | CurrencyPipe}}
                                     </span>
                                     
                                   </div>
@@ -790,7 +788,7 @@
                         </div>
                         <div class="col-6 text-right">
                           <span class="bld price"
-                            style="margin-right: -25px !important;">{{activeInvoice.balance | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                            style="margin-right: -25px !important;">{{activeInvoice.balance | number:'1.2-2' | CurrencyPipe}}</span>
                         </div>
                       </div>
                     </div>
@@ -848,19 +846,19 @@
                   <div class="col-5">Discount</div> 
                   <div class="col-7">
                     <li class="button-dropdown" style="list-style: none;">
-                        <a href="javascript:void(0)" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
-                            <span class="setting_span"> Discount ({{discountLabel}})</span>
-                        </a>
+                      <a type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
+                        <span class="setting_span"> Discount ({{discountLabel}})</span>
+                      </a>
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
                               (click)="activeInvoice.discount_on_item = 1;updateSettings();calculateInvoice()">Discount On Item</button>
                           </li>
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
                               (click)="activeInvoice.discount_on_item = 0;updateSettings();calculateInvoice()">Discount On Bill</button>
                           </li>
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                               <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}"
                                (click)="activeInvoice.discount_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
                           </li>
@@ -873,27 +871,27 @@
                   <div class="col-5">Tax</div>
                   <div class="col-7">
                       <li class="button-dropdown" style="list-style: none;">
-                        <a href="javascript:void(0)" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
+                        <a type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
                           <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </a>
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
                               (click)="activeInvoice.tax_on_item = 0;updateSettings();calculateInvoice()">Tax On Item</button>
                           </li>
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
                               (click)="activeInvoice.tax_on_item = 1;updateSettings();calculateInvoice()">Tax On Bill</button>
                           </li>
-                          <li data-toggle="collapse">
+                          <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
                               (click)="activeInvoice.tax_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
                           </li>
                         </ul>
                       </li>
-                  </div>
-        
                 </div>
+            </div>
+            
                 <div class="row mrg_top_14">
                   <div class="col-5">Inclusive Tax</div>
                   <div class="col-7">
@@ -907,13 +905,13 @@
         
                 </div>
           </div>
-        
         </div>
+        
       <!-- settings -->
         <!-- recently added invoice -->
         <div *ngIf="invoiceList" class="row mrg_top_14">
             <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
-            style="margin-top: 4px;margin-left: 2px;" data-toggle="collapse" 
+            style="margin-top: 4px;margin-left: 0px;" data-toggle="collapse" 
              href="#todaysInvoice" role="button" aria-expanded="false" aria-controls="todaysInvoice">
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
            </div>
@@ -935,7 +933,7 @@
                     {{ invoice.invoice_number }}
                   </div>
                   <div class="col-6 text-right fontsize12 today_txt">
-                    {{ invoice.amount | CurrencyPipe}}
+                    {{ invoice.amount | number:'1.2-2' | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -1113,12 +1111,12 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 tax_dis_span" *ngIf="activeInvoice.discount_on_item === 1">
+            <div class="col-12 tax_dis_span">
               <span class="edit_span" style="margin-left: -14px;">{{settings.total ? settings.total : 'Amount'}}</span>
               <div class="row">
                   <input type="number" 
                   class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
-                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" />
+                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" readonly />
                   <div class="popup_input_symbol" >
                       <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>
@@ -1175,7 +1173,7 @@
                 <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
                   class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn term_col1"
                   (click)="saveTerm(termForm.valid)">
-                  <i class="fa fa-plus add_plus"></i><br /> <p style="font-size: 11px !important;">Add To List</p>
+                  <i class="fa fa-plus add_plus"></i><br /> <p class="add_btn_text">Add To List</p>
                 </button>
               </div>
             </div>
@@ -1184,7 +1182,7 @@
         </h5>
 
         <div class="row terms_border">
-          <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;overflow-x: scroll;">
+          <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;overflow-x: hidden;">
             <div class="term_item termlist row product-list" id="term1{{index}}"
               *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index"
               [class.selected]="selectedTerm == index">
@@ -1287,7 +1285,7 @@
             </div>
             <div  *ngIf="activeInvoice" class="col-6 text-right" style="padding-right: 23px !important;">
               <span
-                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | number:'1.2-2' | CurrencyPipe}}</span>
             </div>
           </div>
         </div>
