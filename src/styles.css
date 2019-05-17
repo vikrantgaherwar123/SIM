@@ -1172,7 +1172,7 @@ background-color: none;
   font-size: 16px;
 }
 .add_term_btn{
-  background: #e0edfa;
+  background: #f6f6f7;
   height: 70px !important;
   color: #0299ff !important;
   border-radius: 0px !important;
@@ -1188,9 +1188,14 @@ textarea{
 .add_plus{
   font-size: 16px !important;
   margin-top: 6px;
+  color: #CACBCD;
+}
+.add_btn_text{
+  font-size: 11px !important;
+  color:#CACBCD !important;
 }
 .add_disable{
-  opacity: .7 !important;
+  /* opacity: .7 !important; */
   pointer-events: none;
 }
 /* payment installment section */

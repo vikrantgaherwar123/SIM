@@ -32,10 +32,10 @@
 	padding: 6px 0px 6px 15px;
 	text-align: left !important;
 	width: 100%;
-	background-color: #ffffff;
+	background-color: #f1f6f9;
 	display: table;
 	color: #707780;
-	border-bottom: 2px solid #b2c2cd;
+	border-bottom: 0px solid #b2c2cd;
 	margin-top: -7px;
 }
 .list-btn {

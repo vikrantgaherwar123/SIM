@@ -1375,7 +1375,6 @@ export class AddEditEstComponent implements OnInit {
 
     if (this.activeEstimate.listItems) {
       for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
-        
 
         //inclusive tax
         if (this.includeTax) {
@@ -1393,7 +1392,7 @@ export class AddEditEstComponent implements OnInit {
         }else{
           if (isNaN(this.activeEstimate.listItems[i].tax_rate) || this.activeEstimate.listItems[i].tax_rate == 0) {
             this.activeEstimate.listItems[i].tax_rate = 0
-          }else if (this.activeEstimate.discount_on_item === 0) {         //on bill
+          }else if (this.activeEstimate.discount_on_item === 0 || this.activeEstimate.discount_on_item === 2) {         //on bill as well as on disabled
             this.activeEstimate.listItems[i].discount = 0;
             this.activeEstimate.listItems[i].discount_amount = 0;
             this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
@@ -1407,7 +1406,7 @@ export class AddEditEstComponent implements OnInit {
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) +  this.activeEstimate.listItems[i].tax_amount;
             }
           }
-          if (this.activeEstimate.tax_on_item === 1) {         //on bill
+          if (this.activeEstimate.tax_on_item === 1 || this.activeEstimate.tax_on_item === 2) {         //on bill as well as on disabled
             this.activeEstimate.listItems[i].tax_rate = 0;
             this.activeEstimate.listItems[i].tax_amount = 0;
             if (this.activeEstimate.listItems[i].discount_amount) {
@@ -1424,7 +1423,7 @@ export class AddEditEstComponent implements OnInit {
 
     // Discount
 
-    if(this.activeEstimate.discount_on_item === 1 && !this.includeTax){
+    if(this.activeEstimate.discount_on_item === 1 && !this.includeTax || this.activeEstimate.discount_on_item === 2){
       this.activeEstimate.percentage_value = 0;
       this.activeEstimate.discount = 0;
     }
@@ -1447,26 +1446,14 @@ export class AddEditEstComponent implements OnInit {
       this.activeEstimate.percentage_value = this.activeEstimate.discount / this.activeEstimate.gross_amount * 100
     }
 
-    //when user changes to disabled
-    if (this.activeEstimate.discount_on_item === 2) {
-      this.activeEstimate.discount = 0;
-      deductions = this.activeEstimate.discount;
-      if(this.includeTax){
-        this.activeEstimate.amount = this.activeEstimate.gross_amount;
-        this.balance = this.activeEstimate.amount
-      }else if(this.activeEstimate.tax_rate && !this.includeTax){
-        this.activeEstimate.amount = this.activeEstimate.gross_amount + this.activeEstimate.tax_amount;
-        this.balance = this.activeEstimate.amount
-      }
-    }
-
     // Tax
 
-    if(this.activeEstimate.tax_on_item === 0 && !this.includeTax){
+    if(this.activeEstimate.tax_on_item === 0  && !this.includeTax || this.activeEstimate.tax_on_item === 2){
       this.activeEstimate.tax_rate = 0;
       this.activeEstimate.tax_amount = 0;
+      
     }
-    if (this.activeEstimate.tax_rate != null && !this.includeTax) {
+    if (this.activeEstimate.tax_rate && !this.includeTax) {
       if (isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
       }
