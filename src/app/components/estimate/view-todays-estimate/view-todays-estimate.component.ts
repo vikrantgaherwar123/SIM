@@ -95,6 +95,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.estListLoader = true
     this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
+        console.log(JSON.stringify(response.list));
         this.estListLoader = false
         this.store.dispatch(new estimateActions.resetRecentEstimate(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
         // Set Active invoice whenever invoice list changes

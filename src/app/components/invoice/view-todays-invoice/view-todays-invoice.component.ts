@@ -103,6 +103,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) { 
+        console.log(JSON.stringify(response.list));
          
         this.invListLoader = false
         var obj = []

@@ -1774,6 +1774,8 @@ export class AddEditComponent implements OnInit {
     
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
     this.invListLoader = true;
+    console.log(JSON.stringify(this.activeInvoice));
+    
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
         this.toasterService.pop('failure', 'Couldnt save invoice');
@@ -2022,6 +2024,8 @@ export class AddEditComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
+        console.log(JSON.stringify(response.list));
+        
         this.invListLoader = false
         this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
         this.store.select('recentInvoices').subscribe(invoices => {
