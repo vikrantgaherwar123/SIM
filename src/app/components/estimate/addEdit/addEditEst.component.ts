@@ -232,7 +232,7 @@ export class AddEditEstComponent implements OnInit {
   editInit(estId) {
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
-    // this.commonSettingsInit()
+    this.commonSettingsInit()
     this.recentEstListLoading = true;
 
     // Fetch selected invoice
