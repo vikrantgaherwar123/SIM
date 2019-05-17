@@ -1281,10 +1281,7 @@ export class AddEditEstComponent implements OnInit {
         this.activeEstimate.shipping_address = this.activeClient.shippingAddress
       }
 
-    if(this.includeTax){
-      this.activeEstimate.taxableFlag = 1;
-    }
-
+    
     var self = this
     
     if(this.activeEstimate.estimate_number !=="" && this.activeEstimate.created_date){

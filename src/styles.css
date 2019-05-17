@@ -1005,7 +1005,7 @@ background-color: none;
 /* added by vikrant */
 .morebtn{
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: bold;
   padding-left: 4px;
   font-style: italic;
@@ -1172,7 +1172,7 @@ background-color: none;
   font-size: 16px;
 }
 .add_term_btn{
-  background: #f6f6f7;
+  background: #e0edfa;
   height: 70px !important;
   color: #0299ff !important;
   border-radius: 0px !important;
@@ -1188,15 +1188,16 @@ textarea{
 .add_plus{
   font-size: 16px !important;
   margin-top: 6px;
-  color: #CACBCD;
-}
-.add_btn_text{
-  font-size: 11px !important;
-  color:#CACBCD !important;
 }
 .add_disable{
-  /* opacity: .7 !important; */
+  background: #f6f6f7;
+  height: 70px !important;
+  color: #0299ff !important;
+  border-radius: 0px !important;
   pointer-events: none;
+}
+.add_btn_text{
+  color:red;
 }
 /* payment installment section */
 .payment_row{

@@ -200,7 +200,7 @@
               <!-- Calculations -->
               <div class="col-6">
                 <!-- Total -->
-                <div class="row mx-0 term-cond-label">
+                <div class="row mx-0 term-cond-label cal_label_padding">
                   <div class="col-6 text-left">
                     <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' |
                       translate}}</span>
@@ -286,7 +286,7 @@
                 </div>
   
                 <!-- Gross Total -->
-                <div *ngIf="settings" class="row mx-0 term-cond-label">
+                <div *ngIf="settings" class="row mx-0 term-cond-label cal_label_padding">
                   <div class="col-6 text-left">
                     <span class="font-custom-bold">{{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}</span>
                   </div>

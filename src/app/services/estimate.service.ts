@@ -102,7 +102,7 @@ export class EstimateService {
       alstQuotProduct: estimate.listItems,
       alstQuotTermsCondition: estimate.termsAndConditions,
       amount: estimate.amount,
-      assignDiscountFlag: estimate.percentage_flag,
+      assignDiscountFlag: estimate.discount_on_item,
       assignTaxFlag: estimate.tax_on_item,
       createDate: estimate.created_date,
       discount: estimate.discount,
