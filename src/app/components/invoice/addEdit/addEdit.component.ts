@@ -192,6 +192,32 @@ export class AddEditComponent implements OnInit {
       });
     })
     // save button processing script ends
+     // tax / discount dropdown
+     jQuery(document).ready(function (e) {
+      function t(t) {
+        e(t).bind("click", function (t) {
+          t.preventDefault();
+          e(this).parent().fadeOut()
+        })
+      }
+      e(".dropdown-toggle").click(function () {
+        var t = e(this).parents(".button-dropdown").children(".dropdown-menu").is(":hidden");
+        e(".button-dropdown .dropdown-menu").hide();
+        e(".button-dropdown .dropdown-toggle").removeClass("active");
+        if (t) {
+          e(this).parents(".button-dropdown").children(".dropdown-menu").toggle().parents(".button-dropdown").children(".dropdown-toggle").addClass("active")
+        }
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-menu").hide();
+      });
+      e(document).bind("click", function (t) {
+        var n = e(t.target);
+        if (!n.parents().hasClass("button-dropdown")) e(".button-dropdown .dropdown-toggle").removeClass("active");
+      })
+    });
+    // tax / discount dropdown
     
     // show more-less button condition depending on height
     jQuery('.expandClicker').each(function(){
@@ -1592,21 +1618,6 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.percentage_value = this.activeInvoice.discount / this.activeInvoice.gross_amount * 100
       }
     }
-
-    //when user changes to disabled
-    if (this.activeSettings.discountFlagLevel === 2) {
-      this.activeInvoice.discount = 0;
-      deductions = this.activeInvoice.discount;
-      if(this.includeTax){
-        this.activeInvoice.amount = this.activeInvoice.gross_amount;
-        this.activeInvoice.balance = this.activeInvoice.amount
-      }else if(this.activeInvoice.tax_rate && !this.includeTax){
-        this.activeInvoice.amount = this.activeInvoice.gross_amount + this.activeInvoice.tax_amount;
-        this.activeInvoice.balance = this.activeInvoice.amount
-      }
-    }
-    // when user change from dis/tax on bill to dis/tax on item
-    
     
     // Tax
     if (this.activeInvoice.tax_on_item === 0  && !this.includeTax || this.activeInvoice.tax_on_item === 2) {
@@ -2091,4 +2102,5 @@ export class AddEditComponent implements OnInit {
     this.shippingAddress = null;
     this.router.navigate(['/invoice/add'])
   }
+
 }

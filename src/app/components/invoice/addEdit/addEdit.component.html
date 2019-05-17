@@ -251,7 +251,7 @@
                                 <pre class="selected-items selected_description"
                                  >{{item.description}}</pre>
                               </div>
-                              <span *ngIf="item.description" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Hide Description': 'Show Description' }}</span>
+                              <span *ngIf="item.description" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'Hide': 'Show' }}</span>
                               <!-- <span *ngIf="item.description.length > 90" class="morebtn" (click)="hideme[index] = !hideme[index]">{{ hideme[index] ? 'less': 'more' }}</span> -->
                             </div>
                           </div>
@@ -913,7 +913,7 @@
         <!-- recently added invoice -->
         <div *ngIf="invoiceList" class="row mrg_top_14">
             <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
-            style="margin-top: 4px;margin-left: 2px;" data-toggle="collapse" 
+            style="margin-top: 4px;margin-left: 0px;" data-toggle="collapse" 
              href="#todaysInvoice" role="button" aria-expanded="false" aria-controls="todaysInvoice">
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
            </div>
