@@ -102,7 +102,7 @@ export class EstimateService {
       alstQuotProduct: estimate.listItems,
       alstQuotTermsCondition: estimate.termsAndConditions,
       amount: estimate.amount,
-      assignDiscountFlag: estimate.percentage_flag,
+      assignDiscountFlag: estimate.discount_on_item,
       assignTaxFlag: estimate.tax_on_item,
       createDate: estimate.created_date,
       discount: estimate.discount,
@@ -128,9 +128,6 @@ export class EstimateService {
       version: estimate.version
     }
   }
-
-  
-
 
   changeKeysForApi(estimate) {
     return {
@@ -159,48 +156,4 @@ export class EstimateService {
       unique_key_fk_client: estimate.unique_key_fk_client
     }
   }
-
-  // changeKeysForMakeInvoice(estimate) {
-  //   return {
-  //   taxableFlag: estimate.taxableFlag,
-  //   adjustment: estimate.adjustment,
-  //   amount: estimate.amount,
-  //   client_id: number
-  //   created_date: string
-  //   deletedItems: Array < {} >
-  //   deletedPayments: Array<{ }>
-  //   deletedTerms: Array < {} >
-  //   deleted_flag: number
-  //   device_modified_on: number
-  //   discount: number
-  //   discount_amount: number
-  //   discount_on_item: number
-  //   due_date: string
-  //   due_date_flag: number
-  //   epoch: number
-  //   gross_amount: number
-  //   id: number
-  //   invoiceNote: string
-  //   invoice_number: string
-  //   listItems: Array < any >
-  //     organization_id: number
-  //   payments: Array < any >
-  //     percentage_flag: number
-  //   percentage_value: number
-  //   push_flag: number
-  //   reference: string
-  //   serverUpdateTime: number
-  //   shipping_address: string
-  //   shipping_charges: number
-  //   taxList: Array < any >
-  //     tax_amount: number
-  //   tax_on_item: number
-  //   tax_rate: number
-  //   termsAndConditions: Array < any >
-  //     unique_identifier: string
-  //   unique_key_fk_client: string
-  //   version: number
-  //   _id: number
-  //   }
-  // }
 }
