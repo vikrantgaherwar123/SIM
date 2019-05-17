@@ -22,10 +22,10 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-right small_dropdown">
                 <li [class.active]="sortTerm=='prodName'">
-                  <a (click)="sortTerm='prodName'">By Name</a>
+                  <a (click)="sortByNameRate('prodName')">By Name</a>
                 </li>
                 <li [class.active]="sortTerm=='rate'">
-                  <a (click)="sortTerm='rate'">By {{settings.mTvRate ? settings.mTvRate : 'Rate'}}</a>
+                  <a (click)="sortByNameRate('rate')">By {{settings.mTvRate ? settings.mTvRate : 'Rate'}}</a>
                 </li>
               </ul>
             </span>

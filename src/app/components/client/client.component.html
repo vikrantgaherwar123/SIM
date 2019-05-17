@@ -20,11 +20,11 @@
               <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
             </a>
             <ul class="dropdown-menu dropdown-menu-right small_dropdown">
-              <li [class.active]="sortTerm=='name'">
-                <a (click)="sortTerm='name'">By Organization Name</a>
+              <li [class.active]="sortTerm =='name'">
+                <a (click)="sortByNameContact('name')">By Organization Name</a>
               </li>
-              <li [class.active]="sortTerm=='contactPersonName'">
-                <a (click)="sortTerm='contactPersonName'">By Client Name</a>
+              <li [class.active]="sortTerm == 'contactPersonName'">
+                <a (click)="sortByNameContact('contactPersonName')">By Client Name</a>
               </li>
             </ul>
           </span>
@@ -49,11 +49,11 @@
                 <div class="col-2 text-right heading">Actions</div>
               </div>
               
-              <div  style="margin-bottom: -13px;" id="client{{index}}" class="clientname" *ngFor="let client of (clientList | filter:searchTerms:(sortTerm=='name'? true : true):false |  slice:0); index as index"
+              <div style="margin-bottom: -13px;" id="client{{index}}" class="clientname" *ngFor="let client of (clientList | filter:searchTerms:(sortTerm=='name'? true : true):false); index as index"
                >
                 <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
-                  <img src="assets/images/client_blue1.png" class="img_box product_title">
                   <div class="col-3" style="padding-top: 6px;">
+                    <img src="assets/images/client_blue1.png" class="img_box product_title">
                     <span class="client_name">
                       {{client.name }}
                     </span>

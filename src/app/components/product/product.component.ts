@@ -81,23 +81,39 @@ hideToggle: boolean = false
           this.store.dispatch(new productActions.add(this.productList))
           
           //sort in ascending
-          this.productList.sort(function (a, b) {
-            var textA = a.prodName.toUpperCase();
-            var textB = b.prodName.toUpperCase();
-            return textA.localeCompare(textB);
-          });
+          this.sortByNameRate(this.productList);
         }
       },error => this.openErrorModal())
     } else {
       this.removeEmptySpaces(this.productList)
       //sort in ascending
+      this.sortByNameRate(this.productList);
+      this.productListLoading = false
+    }
+  }
+
+  sortByNameRate(value){
+    if(value == 'prodName'){
       this.productList.sort(function (a, b) {
         var textA = a.prodName.toUpperCase();
         var textB = b.prodName.toUpperCase();
         return textA.localeCompare(textB);
       });
-      this.productListLoading = false
     }
+    else if(value == 'rate'){
+      this.productList.sort(function (a, b) {
+        var textA = a.prodName.toUpperCase();
+        var textB = b.prodName.toUpperCase();
+        if(a.rate > b.rate){
+          return textA.localeCompare(textB);
+        }
+      });
+    }
+    this.productList.sort(function (a, b) {
+      var textA = a.prodName.toUpperCase();
+      var textB = b.prodName.toUpperCase();
+      return textA.localeCompare(textB);
+    });
   }
 
   removeEmptySpaces(data){
