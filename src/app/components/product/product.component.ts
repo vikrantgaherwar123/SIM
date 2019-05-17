@@ -102,18 +102,15 @@ hideToggle: boolean = false
     }
     else if(value == 'rate'){
       this.productList.sort(function (a, b) {
-        var textA = a.prodName.toUpperCase();
-        var textB = b.prodName.toUpperCase();
-        if(a.rate > b.rate){
-          return textA.localeCompare(textB);
-        }
+      return b.rate - a.rate;
       });
-    }
+    }else{
     this.productList.sort(function (a, b) {
       var textA = a.prodName.toUpperCase();
       var textB = b.prodName.toUpperCase();
       return textA.localeCompare(textB);
     });
+    }
   }
 
   removeEmptySpaces(data){

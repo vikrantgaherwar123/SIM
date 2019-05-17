@@ -113,10 +113,7 @@ export class ViewComponent implements OnInit {
     });
     // date and time dropdown ends
 
-    // hide modal when back button pressed
-    $(window).on('popstate', function () {
-      $('#search-client').modal('hide');
-    });
+   
 
 
   }
@@ -133,7 +130,9 @@ export class ViewComponent implements OnInit {
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records.filter(recs => recs.enabled == 0)
+        
         this.removeEmptySpaces(this.clientList);
+        this.store.dispatch(new clientActions.add(this.clientList))
         this.dropdownList = this.clientList;
       },err => this.openErrorModal()
       )

@@ -5,13 +5,11 @@ import * as invoiceActions from '../../../actions/invoice.action'
 import { AppState } from 'src/app/app.state';
 import { invoice, client, setting, recentInvoices } from 'src/app/interface';
 import { ClientService } from 'src/app/services/client.service';
+import * as clientActions from '../../../actions/client.action'
 import { SettingService } from '../../../services/setting.service'
 
 import { response } from '../../../interface'
-import { setStorage } from 'src/app/globalFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
-
-
 
 @Component({
   selector: 'app-view-todays-invoice',
@@ -50,10 +48,11 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   taxable: number;
 
   constructor(private invoiceService: InvoiceService,
+    public clientService: ClientService,
     private route: ActivatedRoute,
     public router: Router,
     private settingService: SettingService,
-    private store: Store<AppState>,private clientService: ClientService,) {
+    private store: Store<AppState>) {
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
       store.select('client').subscribe(clients => this.clientList = clients)
@@ -62,20 +61,23 @@ export class ViewTodaysInvoiceComponent implements OnInit {
      }
 
   ngOnInit() {
+    //fetch settings when user comes to this component
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.settings = this.user.setting
     if (this.clientList.length < 1) {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
         this.clientList = response.records.filter(recs => recs.enabled == 0)
+        
         this.removeEmptySpaces(this.clientList);
+        this.store.dispatch(new clientActions.add(this.clientList))
       }, err => this.openErrorModal());
     }else{
       this.removeEmptySpaces(this.clientList);
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
-    //fetch settings when user comes to this component
-    this.user = JSON.parse(localStorage.getItem('user'))
-    this.settings = this.user.setting
+    
     if(this.recentInvoiceList.length < 1){
       this.fetchInvoices();
     }else{
@@ -90,32 +92,32 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   }
 
   fetchInvoices() {
-    this.getTodaysInvoice = true;  
+    this.getTodaysInvoice = true;
     // Fetch invoices with given query
     var start = new Date();
     start.setHours(0, 0, 0, 0);
-    var  query = {
-        startDate: start.getTime(),
-        endDate: new Date().getTime(),
-        serviceIdentifier: false
-      }
+    var query = {
+      startDate: start.getTime(),
+      endDate: new Date().getTime(),
+      serviceIdentifier: false
+    }
 
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
-      if (response.status === 200) { 
-         
+      if (response.status === 200) {
+
         this.invListLoader = false
         var obj = []
-        obj = response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []              
+        obj = response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []
         this.store.dispatch(new invoiceActions.resetRecentInvoice(obj));
         this.store.select('recentInvoices').subscribe(invoices => {
           this.recentInvoiceList = invoices
         })
       }
-      
+
       this.route.params.subscribe(params => {
         if (params.invId) {
-         this.setActiveInv(params.invId);
+          this.setActiveInv(params.invId);
         }
       })
 
