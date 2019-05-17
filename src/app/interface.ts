@@ -146,6 +146,7 @@ export interface terms {
 }
 
 export interface invoice {
+  taxableFlag:number
   adjustment: number
   amount: number
   balance: number
@@ -189,6 +190,7 @@ export interface invoice {
 
 
 export interface recentInvoices {
+  taxableFlag:number
   adjustment: number
   amount: number
   balance: number
@@ -231,6 +233,8 @@ export interface recentInvoices {
 }
 
 export interface estimate {
+  discount_amount:number,
+  taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
@@ -280,6 +284,8 @@ export interface estimate {
 }
 
 export interface recentEstimates {
+  discount_amount: number,
+  taxableFlag:number,
   adjustment: number
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
@@ -329,6 +335,7 @@ export interface recentEstimates {
 }
 
 export interface addEditEstimate {
+  taxableFlag:number,
   alstQuotProduct: Array<any>
   alstQuotTermsCondition: Array<any>
   assignDiscountFlag: number,

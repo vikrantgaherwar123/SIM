@@ -33,6 +33,7 @@ export class PrimaryComponent implements OnInit {
   }
   settings: any;
   activePatternNumber: string = "Pattern";
+  currency_text: boolean;
 
   constructor(private CONST: CONSTANTS,
     public router: Router,
@@ -64,6 +65,24 @@ export class PrimaryComponent implements OnInit {
         }
 
         this.activeCountry = this.countries.filter(country => country.id == this.activeSettings.countryIndex)[0]
+        //en-us
+        if(this.activeSettings.numberFormat == "###,###,###.00"){
+          this.activePatternNumber = "1,000,000.00"
+        }
+        if(this.activeSettings.numberFormat == "##,##,##,###.00"){
+          this.activePatternNumber = "1,00,00,000.00"
+        }
+        //de-DE
+        if(this.activeSettings.numberFormat == "###.###.###,00"){
+          this.activePatternNumber = "1.000.000,00"
+        }
+        if(this.activeSettings.numberFormat == "##.##.##.###,00"){
+          this.activePatternNumber = "1.00.00.000,00"
+        }
+        //fr
+        if(this.activeSettings.numberFormat == "### ### ###,00"){
+          this.activePatternNumber = "1 000 000,00"
+        }
       }
     },error => this.openErrorModal())
   }
@@ -273,15 +292,18 @@ export class PrimaryComponent implements OnInit {
     this.activeSettings.currencyInText = this.activeCountry.currencyName
     this.activeSettings.currencySymbol = true
     this.activeSettings.currencyText = false
+    
   }
 
   setCurrencySymbol(type){
     if(type == 'symbol') {
       this.activeSettings.currencySymbol = true
       this.activeSettings.currencyText = false
+      this.currency_text = true
     } else {
       this.activeSettings.currencySymbol = false
       this.activeSettings.currencyText = true
+      this.currency_text = false
     }
   }
 

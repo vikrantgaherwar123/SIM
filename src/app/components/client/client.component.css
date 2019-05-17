@@ -48,3 +48,112 @@
 .filter-box{
 	background: #ffffff;
 }
+.modal-content{
+	margin-top: 0px !important;
+}
+.selected{
+	background-color: white !important;
+	color: white !important;
+}
+.small_description{
+  font-size: 11px;
+  color:#a4a4a4;
+}
+
+.mat-expansion-indicator{
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  content: '';
+  display: inline-block;
+  color: white !important;
+  padding: 0px !important;
+  transform: rotate(45deg);
+  vertical-align: middle;
+}
+.search_input{
+  height: 36px !important;
+  font-size: 13px;
+  border-radius: 18px;
+  border: 1px solid white !important;
+}
+.main_row {
+  padding-top: 0px;
+  padding-bottom: 8px;
+  background-color: #ffffff !important;
+}
+.main_row:hover {
+  /* border: 3px solid #cde0f4; */
+  background-color: #e6ecf0 !important;
+  border-radius: 4px;
+}
+.color_grey{
+  color: #716f6f;
+  margin-top: 12px;
+}
+.img_hover { 
+  border: 0px solid white; 
+} 
+.img_hover:hover { 
+  /* background-color: #d0e4f7; */
+  border: 1px solid #1a73cc; 
+} 
+.save_btn{
+  border-radius: 5px !important;
+  background: #1a73cc;
+  height: 38px !important;
+  width: 124px !important;
+  color: white !important;
+  margin-left: 0px !important;
+}
+.save_btn:hover{
+  background: #1e81e3;
+}
+.morebtn {
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: bold;
+  padding-left: 4px;
+  font-style: italic;
+  float: none !important;
+  margin-bottom: -2px;
+  margin-top: -3px;
+  cursor: pointer;
+  color: #1a73cc;
+}
+.desc_div{
+  margin-top: -1px;
+  line-height: 13px;
+  padding-bottom: 10px;
+  margin-left: 30px;
+}
+.cross_label_img {
+	margin-top: 10px !important;
+}
+.moreDiscr {
+  font-size: 16px;
+  /* height: 14px; */
+	line-height: 16px;
+	overflow: hidden;
+	background-color: #f1f6f9;
+	border-radius: 4px;
+}
+.selected-items{
+	font-size: 11px;
+	word-wrap: break-word;
+	white-space: pre-line;
+	color: #a4a4a4;
+	padding-top: 12px;
+	margin-bottom: 27px;
+}
+/* .selected-items:hover{
+	background-color: #e6ecf0;
+} */
+.no_btn{
+  margin-right: 46%;
+  height: 38px !important;
+  width: 124px !important;
+}
+.client_name{
+  color: #1f1f1f;
+  margin-left: 10px;
+}

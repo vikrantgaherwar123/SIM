@@ -136,7 +136,7 @@
   margin: 1.125rem 0 0;
   font-size: 1rem;
   color: #212529;
-  top: 1px !important;
+  top: -1px !important;
   left: 15px !important;
   text-align: left;
   list-style: none;

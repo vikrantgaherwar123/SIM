@@ -112,11 +112,11 @@
                     <td width="17%">
                       <input type="text" id="itemRateLabel" name="rate" class="bld w-100 text-right" disabled value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}">
                     </td>
-                    <td width="17%">
-                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
-                    </td>
-                    <td width="17%">
+                    <td *ngIf="activeEst.assignDiscountFlag == 1" width="17%">
                       <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
+                    </td>
+                    <td *ngIf="activeEst.assignTaxFlag == 0" width="17%">
+                      <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
                     </td>
                     <td width="18%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -145,16 +145,22 @@
                         {{item.rate | number:'2.2-2'}}
                       </div>
                     </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
-                      <div  class="text-right">
-                        {{item.taxAmount | number:'1.2-2'}}<br>
-                        {{item.taxRate | number:'2.2-2'}}
-                      </div>
-                    </td>
-                    <td [class.no-border-last]="last" style="vertical-align: initial;">
+                    <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
                       <div  class="text-right">
                         {{item.discountAmt | number:'1.2-2'}}<br>
-                        {{item.discountRate | number:'2.2-2'}}
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.discountRate | number:'2.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
+                      <div  class="text-right">
+                        {{item.taxAmount | number:'1.2-2'}}<br>
+                        <div class="amount_text_div">
+                            <span class="item_percent_text">{{item.taxRate | number:'2.2-2'}}</span> 
+                            <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -200,29 +206,27 @@
                     translate}}</span>
                 </div>
                 <div *ngIf="settings" class="col-6 text-right">
-                  <span class="font-custom-bold">{{activeEst.grossAmount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                  <span class="font-custom-bold">{{activeEst.grossAmount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
 
               <!-- Discount -->
-              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0) && settings">
+              <div class="row mx-0" *ngIf="(activeEst.percentageValue > 0 || activeEst.discount > 0)">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;" class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.0-3'|
-                    slice:0:1}})
+                    ({{activeEst.discount | CurrencyPipe}})
                   </div>
-                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
+                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">({{activeEst.percentageValue}} %)</div>
                 </div>
 
                 <div class="col-7">
                   <div class="text-right">
                     <div *ngIf="activeEst.discountFlag == 0">
-                      {{activeEst.discount | number:'2.'}}
+                      {{activeEst.discount | number:'1.2-2'}}
                     </div>
                     <div *ngIf="activeEst.discountFlag == 1">
-                      {{activeEst.percentageValue | number:'2.'}}
+                      {{ activeEst.discount| number:'1.2-2'}}
                     </div>
                   </div>
                 </div>
@@ -288,7 +292,44 @@
                 </div>
                 <div class="col-6 text-right">
                   <span class="font-custom-bold price">{{activeEst.amount |
-                    currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    CurrencyPipe}}</span>
+                </div>
+              </div>
+
+              <!-- inclusive tax -->
+              <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
+                <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                    <div class="col-6 text-left">
+                        <span class="font-custom-bold">
+                            Taxable :
+                        </span>
+                      </div>
+                      <div class="col-6 text-right">
+                        <span
+                          class="font-custom-bold price">{{(taxable) | number:'1.2-2' | CurrencyPipe}}</span>
+                      </div>
+                </div>
+                <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                    <div *ngIf="item.taxRate" class="col-6 text-left">
+                        <span class="font-custom-bold">
+                            (+) Tax ({{item.taxRate}}%)
+                        </span>
+                    </div>
+                    <div *ngIf="item.taxAmount"  class="col-6 text-right">
+                        <span
+                          class="font-custom-bold price">{{item.taxAmount | number:'1.2-2' | CurrencyPipe}}</span>
+                    </div>
+                </div>
+                <div *ngIf="activeEst.taxrate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                    <div class="col-6 text-left">
+                        <span class="font-custom-bold">
+                            (+) Tax ({{activeEst.taxrate}}%)
+                        </span>
+                      </div>
+                      <div  class="col-6 text-right">
+                        <span
+                          class="font-custom-bold price">{{activeEst.taxAmt | number:'1.2-2' | CurrencyPipe}}</span>
+                      </div>
                 </div>
               </div>
             </div>
@@ -318,7 +359,7 @@
         
         <div class="row" style="margin-top: 14px;">
          
-          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold" style="border-top: 1px solid #cecece;">
+          <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold">
             {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today
           </div>
 
@@ -328,36 +369,27 @@
             *ngFor="let estimate of recentEstimateList" class="row" style="padding: 10px 2px 2px 16px;;border-bottom: 1px solid #d2d2d2;padding: 10px 1px 2px 0px;
             border-bottom: 1px solid #d2d2d2;" (click)="setActiveEst(estimate.unique_identifier)">
               <div class="col-2 list-date font-custom-bold fontsize13" style="line-height: 16px;">
-                <span style="font-size: 18px;">{{ estimate.createDate  | date: 'dd' }}</span><br />
-                <span style="color: #8c9299;font-size: 10px;">{{ estimate.createDate  | date: 'MMM' }}</span>
+                <span style="font-size: 18px;" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ estimate.createDate  | date: 'dd' }}</span><br />
+                <span style="color: #8c9299;font-size: 10px;" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ estimate.createDate  | date: 'MMM' }}</span>
               </div>
     
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 *ngIf="clientList" class="font-custom-bold fontsize13">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                    <h5 *ngIf="clientList" class="font-custom-bold fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
-                  <div class="col-5 font-custom-book fontsize13">
+                  <div class="col-5 font-custom-book fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
                     #{{ estimate.quetationNo }}
                   </div>
-                  <div class="col-6 text-right font-custom-bold fontsize12">
-                    {{ estimate.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                  <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
+                    {{ estimate.amount | CurrencyPipe }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      <!-- ends -->
-
-        <!-- Delete Estimates Button -->
-        <!-- <button type="button" class="btnd add-line-item-button" *ngIf="edit" (confirm)="deleteEstimate()"
-          [swal]="{ title: 'Are you sure want to delete Estimate?', type: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DD6B55', confirmButtonText: 'Yes, delete it!'}
-          "
-        >
-          Delete Estimates
-        </button> -->
+     
       </div>
     </div>
   </div>
@@ -375,10 +407,10 @@ data-backdrop="static" data-keyboard="false">
     </div>
     <div class="modal-body">
       <h3 class="title">Connection Lost !</h3>
-      <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+      <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
         !!!</p>
     </div>
-    <div class="modal-footer mod_footer">
+    <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
       <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
         data-dismiss="modal" aria-label="Close">
         OK

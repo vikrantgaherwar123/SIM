@@ -47,6 +47,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
   noTaxOnItem: boolean;
   getTodaysInvoice: boolean;
   isRecentInvoice: boolean;
+  taxable: number;
 
   constructor(private invoiceService: InvoiceService,
     private route: ActivatedRoute,
@@ -65,12 +66,11 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
-        this.clientList = response.records;
-        this.removeEmptyNameClients();
         this.clientList = response.records.filter(recs => recs.enabled == 0)
+        this.removeEmptySpaces(this.clientList);
       }, err => this.openErrorModal());
     }else{
-      this.removeEmptyNameClients();
+      this.removeEmptySpaces(this.clientList);
       this.clientList = this.clientList.filter(recs => recs.enabled == 0)
     }
     //fetch settings when user comes to this component
@@ -103,6 +103,7 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) { 
+        console.log(JSON.stringify(response.list));
          
         this.invListLoader = false
         var obj = []
@@ -120,6 +121,24 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       })
 
     }, err => this.openErrorModal())
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   setActiveInv(invId: string = '') {
@@ -168,7 +187,16 @@ export class ViewTodaysInvoiceComponent implements OnInit {
       
         if (this.activeInv.listItems) {
           var temp = []
+          var taxPayable = 0;
+          var totalDiscount = 0;
           for (let i = 0; i < this.activeInv.listItems.length; i++) {
+
+            if(this.activeInv.taxableFlag == 1 ){
+              taxPayable += this.activeInv.listItems[i].taxAmount;
+              if(this.activeInv.listItems[i].discountAmount){
+                totalDiscount += this.activeInv.listItems[i].discountAmount;
+              }
+            }
             
             temp.push({
               description: this.activeInv.listItems[i].description,
@@ -185,7 +213,31 @@ export class ViewTodaysInvoiceComponent implements OnInit {
             })
           }
           this.activeInv.listItems = temp
+          //taxable amount
+          if(totalDiscount){
+          //   this.taxable = (this.activeInv.amount - totalDiscount) - taxPayable;
+          // }else if(taxPayable == 0){
+          //   this.taxable = 0;
+          // }else{
+          //   this.taxable = this.activeInv.amount - taxPayable;
+          // }
+          var baseAmount = this.activeInv.gross_amount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeInv.gross_amount - taxPayable;
+          }
+          
         }
+
+        if(this.activeInv.taxableFlag == 1 && this.activeInv.tax_rate){
+          taxPayable = this.activeInv.tax_amount;
+          if(this.activeInv.discount_amount){
+            this.taxable = (this.activeInv.amount - this.activeInv.discount_amount) - taxPayable;
+          }
+          this.taxable = this.activeInv.amount - taxPayable;
+        }
+        
       
 
       if(this.activeInv.discount_on_item == 2){

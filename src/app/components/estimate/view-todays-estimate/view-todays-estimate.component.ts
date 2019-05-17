@@ -41,6 +41,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   showDiscountLabel: boolean;
   noDiscountOnItem: boolean;
   noTaxOnItem: boolean;
+  taxable: number;
 
   constructor(private route: ActivatedRoute,
     public router: Router,
@@ -78,7 +79,6 @@ export class ViewTodaysEstimateComponent implements OnInit {
         this.clientList = response.records;
         this.clientList = this.clientList.filter(recs => recs.enabled == 0)
       }, err => this.openErrorModal());
-      
   }
 
   fetchEstimates() {
@@ -95,6 +95,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.estListLoader = true
     this.estimateService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
+        console.log(JSON.stringify(response.list));
         this.estListLoader = false
         this.store.dispatch(new estimateActions.resetRecentEstimate(response.list ? response.list.filter(rec => rec.enabled == 0) : []))
         // Set Active invoice whenever invoice list changes
@@ -115,23 +116,87 @@ export class ViewTodaysEstimateComponent implements OnInit {
     this.activeEst = this.recentEstimateList.filter(est => est.unique_identifier == estId)[0]
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeEst !== undefined){
+      
+      //discount on bill 
+      if(this.activeEst.discount > 0){
+        this.activeEst.assignDiscountFlag = 0;
+      }
 
       if (this.activeEst.alstQuotProduct) {
+        var taxPayable = 0;
+        var totalDiscount = 0;
         var temp = []
         for (let i = 0; i < this.activeEst.alstQuotProduct.length; i++) {
+         
+          
+          if(this.activeEst.alstQuotProduct[i].discount || this.activeEst.alstQuotProduct[i].discount == 0){
+          
+            this.activeEst.alstQuotProduct[i].discountRate = this.activeEst.alstQuotProduct[i].discount;
+          }
+          if(this.activeEst.alstQuotProduct[i].discount_amount || this.activeEst.alstQuotProduct[i].discount_amount == 0){
+            this.activeEst.alstQuotProduct[i].discountAmt = this.activeEst.alstQuotProduct[i].discount_amount;
+          }
+          if(this.activeEst.alstQuotProduct[i].tax_amount || this.activeEst.alstQuotProduct[i].tax_amount == 0){
+            this.activeEst.alstQuotProduct[i].taxAmount = this.activeEst.alstQuotProduct[i].tax_amount;
+          }
+          if(this.activeEst.alstQuotProduct[i].taxAmount && this.activeEst.alstQuotProduct[i].taxAmount == 0){
+            this.activeEst.alstQuotProduct[i].tax_rate = 0;
+          }
+          if(this.activeEst.alstQuotProduct[i].tax_rate || this.activeEst.alstQuotProduct[i].tax_rate == 0){
+            this.activeEst.alstQuotProduct[i].taxRate = this.activeEst.alstQuotProduct[i].tax_rate;
+          }
+          
+          if(this.activeEst.alstQuotProduct[i].product_name){
+            this.activeEst.alstQuotProduct[i].productName = this.activeEst.alstQuotProduct[i].product_name;
+          }
+          if(this.activeEst.alstQuotProduct[i].quantity){
+            this.activeEst.alstQuotProduct[i].qty = this.activeEst.alstQuotProduct[i].quantity;
+          }
+          if(this.activeEst.alstQuotProduct[i].total){
+            this.activeEst.alstQuotProduct[i].price = this.activeEst.alstQuotProduct[i].total;
+          }
+          if(this.activeEst.alstQuotProduct[i].unique_identifier){
+            this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct = this.activeEst.alstQuotProduct[i].unique_identifier;
+          }
           temp.push({
             description: this.activeEst.alstQuotProduct[i].description,
-            discountRate: this.activeEst.alstQuotProduct[i].discountRate ? this.activeEst.alstQuotProduct[i].discountRate :this.activeEst.alstQuotProduct[i].discount,
-            productName: this.activeEst.alstQuotProduct[i].productName ? this.activeEst.alstQuotProduct[i].productName :this.activeEst.alstQuotProduct[i].product_name,
-            qty: this.activeEst.alstQuotProduct[i].qty ? this.activeEst.alstQuotProduct[i].qty : this.activeEst.alstQuotProduct[i].quantity ,
+            discountRate: this.activeEst.alstQuotProduct[i].discountRate,
+            discountAmt: this.activeEst.alstQuotProduct[i].discountAmt,
+            taxAmount: this.activeEst.alstQuotProduct[i].taxAmount,
+            productName: this.activeEst.alstQuotProduct[i].productName,
+            qty: this.activeEst.alstQuotProduct[i].qty,
             rate: this.activeEst.alstQuotProduct[i].rate,
-            taxRate: this.activeEst.alstQuotProduct[i].tax_rate ? this.activeEst.alstQuotProduct[i].tax_rate : this.activeEst.alstQuotProduct[i].taxRate,
-            price: this.activeEst.alstQuotProduct[i].price ? this.activeEst.alstQuotProduct[i].price : this.activeEst.alstQuotProduct[i].total,
+            taxRate: this.activeEst.alstQuotProduct[i].taxRate,
+            price: this.activeEst.alstQuotProduct[i].price,
             uniqueKeyFKProduct: this.activeEst.alstQuotProduct[i].uniqueKeyFKProduct,
             unit: this.activeEst.alstQuotProduct[i].unit,
           })
+          if(this.activeEst.taxableFlag == 1 ){
+            taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
+            if(this.activeEst.alstQuotProduct[i].discountAmt){
+              totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
+            }
+          }
         }
         this.activeEst.alstQuotProduct = temp
+        //taxable amount
+        
+        if(totalDiscount){
+         var baseAmount = this.activeEst.grossAmount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeEst.grossAmount - taxPayable;
+          }
+      }
+
+      if(this.activeEst.taxrate){
+        taxPayable = this.activeEst.taxAmt;
+        if(this.activeEst.discount){
+          var deductedAmount = (this.activeEst.amount - this.activeEst.discount)
+          this.taxable = deductedAmount - taxPayable;
+        }
+        this.taxable = this.activeEst.amount - taxPayable;
       }
 
       //make discount value 0 if comes undefined when came back from store
@@ -170,11 +235,12 @@ export class ViewTodaysEstimateComponent implements OnInit {
 
       
     //display label and values if tax on Bill & discount on Bill selected and values are there
-    if(this.activeEst.discount > 0){
+    if(this.activeEst.discount == 0){
       this.noDiscountOnItem = false;
+      this.activeEst.percentageValue = 0;
     }
 
-    if(this.activeEst.taxrate > 0){
+    if(this.activeEst.taxrate == 0){
       this.noTaxOnItem = false;
     }
     }
@@ -192,20 +258,22 @@ export class ViewTodaysEstimateComponent implements OnInit {
     }
   }
 
-  removeEmptyNameClients(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }else{
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].prodName === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].prodName) {
+        var tempClient = data[i].prodName.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].prodName){
+        data.splice(i, 1);
       }
     }
-    
-    }
-    this.clientList = this.clientList.filter(client => !client.name || client.name !== "" );
+    return data
   }
 
   getClientName(id) {

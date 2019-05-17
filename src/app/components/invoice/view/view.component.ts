@@ -69,6 +69,7 @@ export class ViewComponent implements OnInit {
   isTaxPresent: boolean;
   noDiscountOnItem: boolean = false;
   noTaxOnItem: boolean = false;
+  taxable: number;
 
   constructor(private invoiceService: InvoiceService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -120,6 +121,8 @@ export class ViewComponent implements OnInit {
 
   }
 
+  
+
   ngOnInit() {
     this.titleService.setTitle('Simple Invoice | Invoice');
     // Fetch clients if not in store
@@ -129,32 +132,21 @@ export class ViewComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
-        this.clientList = response.records;
-        // this.removeEmptySpaces();
+        this.clientList = response.records.filter(recs => recs.enabled == 0)
+        this.removeEmptySpaces(this.clientList);
         this.dropdownList = this.clientList;
-        // this.store.dispatch(new clientActions.add(response.records))
       },err => this.openErrorModal()
       )
     } else {
-      // this.removeEmptySpaces();
+      this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
       if (params.invId) {
         this.InvoiceId = params.invId;
       } else {
-        this.openSearchClientModal()
+        // this.openSearchClientModal()
       }
-
-      // // Set Active invoice whenever invoice list changes
-      // this.store.select('recentInvoices').subscribe(invoices => {
-      //   this.invoiceList = invoices
-      //   if (this.InvoiceId) {
-      //     this.setActiveInv(this.InvoiceId)
-      //     this.closeSearchModel();
-      //   }
-      // })
-
     })
 
 
@@ -165,7 +157,7 @@ export class ViewComponent implements OnInit {
       textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 10,
+      itemsShowLimit: 1,
       allowSearchFilter: true,
     };
     // keep first item selected in madal
@@ -190,19 +182,26 @@ export class ViewComponent implements OnInit {
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
+  
 
-  removeEmptySpaces(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(this.clientList[i].name === undefined){
-        this.clientList.splice(i,1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
       }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
       }
     }
+    return data
   }
+
   showItem(item) {
     var curr = new Date;
     var firstday = curr.getDate() - curr.getDay();
@@ -367,7 +366,17 @@ export class ViewComponent implements OnInit {
     }
     //display label and values if tax on item & discount on item selected and values are there
     if(this.activeInv !== undefined){
+      var taxPayable = 0;
+      var totalDiscount = 0;
       for (let i = 0; i < this.activeInv.listItems.length; i++) {
+
+        if(this.activeInv.taxableFlag == 1 ){
+          taxPayable += this.activeInv.listItems[i].taxAmount;
+          if(this.activeInv.listItems[i].discountAmount){
+            totalDiscount += this.activeInv.listItems[i].discountAmount;
+          }
+        }
+        
         if(this.activeInv.listItems[i].discount ||this.activeInv.listItems[i].discount == 0){
           this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount
         }
@@ -386,8 +395,29 @@ export class ViewComponent implements OnInit {
         // if(this.activeInv.listItems[i].discountAmount || this.activeInv.listItems[i].discountAmount == 0 ){
         //   this.activeInv.listItems[i].discount_amount = this.activeInv.listItems[i].discountAmount;
         // }
+
+        //taxable amount
+        if(totalDiscount){
+        //   this.taxable = (this.activeInv.amount - totalDiscount) - taxPayable;
+        // }else{
+        //   this.taxable = this.activeInv.amount - taxPayable;
+        // }
+        var baseAmount = this.activeInv.gross_amount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeInv.gross_amount - taxPayable;
+          }
+        
       }
 
+      if(this.activeInv.taxableFlag == 1 && this.activeInv.tax_rate){
+        taxPayable = this.activeInv.tax_amount;
+        if(this.activeInv.discount_amount){
+          this.taxable = (this.activeInv.amount - this.activeInv.discount_amount) - taxPayable;
+        }
+        this.taxable = this.activeInv.amount - taxPayable;
+      }
 
       if(this.activeInv.discount_on_item == 1){
         this.noDiscountOnItem = true;

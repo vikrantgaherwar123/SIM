@@ -249,7 +249,7 @@ export class LoginComponent implements OnInit {
               this.productLoading = false;
                 if (result) {
                   this.productLoading = false;
-                  if (result.status == 200) {
+                  if (result.status == 200 && result.records ) {
                     this.store.dispatch(new productActions.add(result.records.filter(prod => prod.enabled == 0)))
                   }
                   else {
@@ -269,7 +269,7 @@ export class LoginComponent implements OnInit {
             (result: any) => {
               if(result){
                 this.termsLoading = false;
-                if(result.status == 200){
+                if(result.status == 200 && result.termsAndConditionList ){
                 this.store.dispatch(new termActions.add(result.termsAndConditionList.filter(tnc => tnc.enabled == 0)))
                 }
                 else{
@@ -297,7 +297,7 @@ export class LoginComponent implements OnInit {
             }, err => this.openErrorModal())
       $('#userLogout').show()
 
-      $('#userLogout span').html(this.authenticated.registered_email)
+      $('#userLogout span').html(this.authenticated.registered_email) 
     }
   }
 

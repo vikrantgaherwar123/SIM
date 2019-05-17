@@ -12,6 +12,7 @@ import { AppState } from '../../../app.state'
 import { ToasterService } from 'angular2-toaster';
 import { Title }     from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tnc',
@@ -116,6 +117,23 @@ export class TncComponent implements OnInit {
     $('#errormessage').modal('show')
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
+  }
+
+  setDeafulTerm(index){
+    this.store.select('terms').subscribe(terms => this.termList = terms)
+    index = this.tncs.length - (index +1);
+    var defaultTerm = this.termList[index]
+    if(defaultTerm.setDefault == "DEFAULT"){
+      this.operation = 'edit'
+      this.activeTnc = {...this.tncs[index]}
+      this.activeTnc.setDefault = null;
+      this.save(true);
+    }else{
+      this.operation = 'edit'
+      this.activeTnc = {...this.tncs[index]}
+      this.activeTnc.setDefault = 'DEFAULT';
+      this.save(true);
+    }
   }
 
   add() {

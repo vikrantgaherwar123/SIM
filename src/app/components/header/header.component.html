@@ -13,7 +13,7 @@
         </div>
         <div class="d-sm-flex">
           <h5 class="menu_list">
-            <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()" [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
+            <button (mouseover)="onEstHover()" (mouseleave)="offEstHover()"  [class.active]="router.url==='/estimate/add' || router.url==='/estimate/view'" [routerLink]="['/estimate/add']" class="navbtn">
               <span class="span_text">
                 <img src="{{estSrc}}" class="nav_img" alt="" /><span class="header_menu_text" [class.active_text]="router.url==='/estimate/add' || router.url==='/estimate/view'">Estimates</span></span>
             </button>
@@ -33,7 +33,7 @@
           </div>
         <div class="d-sm-flex">
           <h5 class="menu_list">
-            <button  (mouseover)="onProductHover()" (mouseleave)="offProductHover()" [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
+            <button (mouseover)="onProductHover()" (mouseleave)="offProductHover()"  [class.active]="router.url==='/product'" [routerLink]="['/product']"class="navbtn">
               <span class="span_text"><img src="{{productSrc}}" class="nav_img" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/product'">Products</span></span>
             </button>
           </h5>
@@ -47,8 +47,8 @@
         </div>
         <div class="d-sm-flex">
             <h5 class="menu_list">
-              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn">
-                <span class="span_text"><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span class="header_menu_text" [class.active_text]="router.url==='/setting/batchUpload'">Batch Upload</span></span>
+              <button (mouseover)="onBatchHover()" (mouseleave)="offBatchHover()" [class.active]="router.url==='/setting/batchUpload'" [routerLink]="['/setting/batchUpload']" class="navbtn  header_menu_text">
+                <span class="span_text "><img class="nav_img" src="{{BatchSrc}}" alt="logo" /><span [class.active_text]="router.url==='/setting/batchUpload'">Batch Upload</span></span>
               </button>
             </h5>
           </div>
@@ -59,7 +59,8 @@
   <div class="col-4">
     <div id="userLogout" class="row py-3">
       <div class="col-10 col-sm-11 welcome-user d-none d-sm-block">
-      <span>  Hi, </span> <span style="color: #474959;">{{email}}</span>
+     Hi,
+      <span style="color: #474959;">{{email}}</span>
       </div>
       <div class="col-2 col-sm-1 offset-10 offset-sm-0 pl-0 text-right float-right">
         

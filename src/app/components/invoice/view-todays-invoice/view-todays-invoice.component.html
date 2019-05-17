@@ -146,12 +146,12 @@
                         value="{{settings.mTvRate ? settings.mTvRate : 'RATE_LABEL' | translate}}"
                       >
                     </td>
-                    <td *ngIf="!noDiscountOnItem" width="10%" >
+                    <td *ngIf="activeInv.discount_on_item == 1" width="10%" >
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text_right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)"
                           disabled
                         >
                       </td>
-                    <td *ngIf="!noTaxOnItem" width="10%" >
+                    <td *ngIf="activeInv.tax_on_item == 0 " width="10%" >
                       <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
                     </td>
                     <td width="10%" class="last_td">
@@ -187,16 +187,22 @@
                         {{item.rate | number:'1.2-2'}}
                       </div>
                     </td>
-                    <td *ngIf="!noDiscountOnItem"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
+                    <td *ngIf="activeInv.discount_on_item == 1"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
                         {{item.discount_amount | number:'1.2-2'}}<br>
-                        <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                        <div class="amount_text_div">
+                          <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
-                    <td *ngIf="!noTaxOnItem" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
+                    <td *ngIf="activeInv.tax_on_item == 0" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
                         {{item.tax_amount | number:'1.2-2'}}<br>
-                        <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> <span class="item_percent_icon"> %</span>
+                        <div class="amount_text_div">
+                          <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_icon">%</span>
+                        </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
@@ -237,34 +243,33 @@
             <!-- Calculations -->
             <div class="col-6">
               <!-- Total -->
-              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;">
+              <div class="row mx-0 term-cond-label" style="padding: 6.5px 0px;margin-bottom:6px">
                 <div class="col-6 text-left">
                   <span
                     class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom-bold price">{{activeInv.gross_amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    class="font-custom-bold price">{{activeInv.gross_amount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
 
               <!-- Discount -->
-              <div *ngIf="(activeInv.percentageValue > 0 || activeInv.discount > 0)" class="row mx-0">
+              <div *ngIf="(activeInv.percentage_value > 0 || activeInv.discount > 0)" class="row mx-0">
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">{{settings.discount ? settings.discount : 'Discount'}}</span>
-                  <div *ngIf="!isRate" class="inline font-custom">
-                    ({{0 | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}})
+                  <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
+                    ({{activeInv.discount | CurrencyPipe}})
                   </div>
-                  <div *ngIf="isRate" class="inline font-custom">({{activeInv.percentageValue}} %)</div>
                 </div>
                 <div class="col-7">
                   <div class="text-right">
                     <div *ngIf="!activeInv.discountFlag == 0">
-                      {{activeInv.percentageValue | number:'2.'}}
+                      {{activeInv.percentage_value | number:'2.'}}
                     </div>
                     <div class="price" *ngIf="!activeInv.discountFlag == 1">
-                      {{activeInv.discount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}
+                      {{activeInv.discount | CurrencyPipe}}
                     </div>
                   </div>
                 </div>
@@ -273,12 +278,12 @@
               <!-- Tax -->
               <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
-                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
-                  <div class="inline font-custom">({{activeInv.tax_rate | number:'1.1-2'}} %)</div>
+                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+)Tax</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.tax_amount | number:'1.1-2'}}
+                  ({{activeInv.tax_rate | number:'1.2-2'}} %)
+                    {{activeInv.tax_amount | number:'1.2-2' | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -288,12 +293,12 @@
                 <div *ngFor="let tax of activeInv.taxList; index as index" class="row mx-0">
                     <div class="col-4 discount-tax-label">
                       <div *ngIf="tax.taxName" class="inline font-custom" style="text-align: left;vertical-align: bottom;">
-                        {{tax.taxName}}</div>
-                      <div class="inline font-custom">({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)</div>
+                        (+){{tax.taxName}}</div>
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                        {{activeInv.taxList[index].calculateValue | number:'1.1-2'}}
+                          ({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)
+                        {{activeInv.taxList[index].calculateValue | CurrencyPipe}}
                       </div>
                     </div>
                   </div>
@@ -303,11 +308,11 @@
               <div *ngIf="activeInv.shipping_charges !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left;vertical-align: bottom;">
-                    {{settings.shipping ? settings.shipping : 'Shipping'}}</div>
+                    (+){{settings.shipping ? settings.shipping : 'Shipping'}}</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                    {{activeInv.shipping_charges | number:'1.1-2'}}
+                      {{activeInv.shipping_charges | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -316,12 +321,12 @@
               <div *ngIf="activeInv.adjustment" class="row mx-0">
                 <div class="col-4 discount-tax-label">
                   <div class="inline" style="text-align: left; vertical-align: bottom;">
-                    {{settings.adjustment ? settings.adjustment : 'Adjustment'}}
+                    (-){{settings.adjustment ? settings.adjustment : 'Adjustment'}}
                   </div>
                 </div>
                 <div class="col-8">
                   <div class="text-right">
-                    {{activeInv.adjustment | number:'1.1-2'}}
+                      {{activeInv.adjustment | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -335,18 +340,55 @@
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom-bold price">{{activeInv.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    class="font-custom-bold price">{{activeInv.amount | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
+              
+               <!-- inclusive tax -->
+              <div *ngIf="activeInv.taxableFlag === 1 && taxable" class="row mx-0" style="padding: 6.5px 0px;">
+                  <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                      <div class="col-6 text-left">
+                          <span class="font-custom-bold">
+                              Taxable :
+                          </span>
+                        </div>
+                        <div class="col-6 text-right">
+                          <span
+                            class="font-custom-bold price">{{(taxable) | number:'1.2-2' | CurrencyPipe}}</span>
+                        </div>
+                  </div>
+                  <div *ngFor="let item of activeInv.listItems" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                      <div *ngIf="item.tax_rate" class="col-6 text-left">
+                          <span class="font-custom-bold">
+                              (+) Tax ({{item.tax_rate}}%)
+                          </span>
+                      </div>
+                      <div *ngIf="item.tax_amount"  class="col-6 text-right">
+                          <span
+                            class="font-custom-bold price">{{item.tax_amount | number:'1.2-2' | CurrencyPipe}}</span>
+                      </div>
+                  </div>
+                  <div *ngIf="activeInv.tax_rate" class="row mx-0 col-12" style="padding: 6.5px 0px;">
+                      <div class="col-6 text-left">
+                          <span class="font-custom-bold">
+                              (+) Tax ({{activeInv.tax_rate}}%)
+                          </span>
+                        </div>
+                        <div  class="col-6 text-right">
+                          <span
+                            class="font-custom-bold price">{{activeInv.tax_amount | number:'1.2-2' | CurrencyPipe}}</span>
+                        </div>
+                  </div>
+                </div>
 
               <!-- Paid -->
-              <div class="row mx-0" style="padding-top: 10px;padding-bottom: 10px;">
+              <div class="row mx-0" style="padding-bottom: 2px;">
                 <div class="col-6 text-left">
                   <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="font-custom price">{{paidAmount()|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    class="font-custom price">{{paidAmount() | number:'1.2-2' | CurrencyPipe}}</span>
                 </div>
               </div>
               <!-- Payment -->
@@ -358,7 +400,7 @@
                   </div>
                   <div class="col-6 text-right pad_rg_5" style="margin-left: -10px;">
                     <span
-                      class="font-custom price">{{item.paidAmount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                      class="font-custom price">{{item.paidAmount | CurrencyPipe}}</span>
                   </div>
                 </div>
               </div>
@@ -370,7 +412,7 @@
                 </div>
                 <div class="col-6 text-right">
                   <span
-                    class="bld price">{{activeInv.balance|currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2'}}</span>
+                    class="bld price">{{activeInv.balance|CurrencyPipe}}</span>
                 </div>
               </div>
             </div>
@@ -408,7 +450,7 @@
           <div class="col-12 px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <!-- [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}" -->
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == activeInv.unique_identifier)}"
-            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true | filter:invSearchTerm) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
+            *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row" style="padding: 4px 1px 0px 7px;" (click)="setActiveInv(invoice.unique_identifier)"
               >
                 <div class="col-1" class="arrow_img_div">
                   <img src="assets/images/left-arrow.png" class="arrow_img" >
@@ -427,7 +469,7 @@
                       {{ invoice.invoice_number }}
                     </div>
                     <div class="col-5 text-right font-custom-bold fontsize12 today_txt" style="margin-left: 40px;" [ngClass]="{'color_white': (invoice.unique_identifier == activeInv.unique_identifier)}">
-                      {{ invoice.amount | currency:settings.currencyInText:(settings.currencyText ? 'code' : 'symbol'):'1.2-2' }}
+                      {{ invoice.amount | CurrencyPipe }}
                     </div>
                   </div>
                 </div>
@@ -460,10 +502,10 @@
       </div>
       <div class="modal-body">
         <h3 class="title">Connection Lost !</h3>
-        <p class="error_logo">Make sure your wifi or cellular data is turned on and try again
+        <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
           !!!</p>
       </div>
-      <div class="modal-footer mod_footer">
+      <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
         <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
           data-dismiss="modal" aria-label="Close">
           OK

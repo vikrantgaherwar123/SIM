@@ -74,6 +74,7 @@ export class ViewEstComponent implements OnInit {
   isTaxPresent: boolean;
   noTaxOnItem: boolean;
   noDiscountOnItem: boolean;
+  taxable: number;
 
   constructor(private estimateService: EstimateService, private clientService: ClientService,
     private route: ActivatedRoute,
@@ -120,14 +121,14 @@ export class ViewEstComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.fetch().subscribe((response: response) => {
         this.clientListLoading = false
-        this.clientList = response.records;
-        // this.removeEmptySpaces();
+        this.clientList = response.records.filter(recs => recs.enabled == 0)
+        this.removeEmptySpaces(this.clientList);
         this.dropdownList = this.clientList;
         this.store.dispatch(new clientActions.add(response.records))
       },err => this.openErrorModal()
       )
     } else {
-      // this.removeEmptySpaces();
+      this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
     }
     this.route.params.subscribe(params => {
@@ -186,18 +187,7 @@ export class ViewEstComponent implements OnInit {
     }
   }
 
-  removeEmptySpaces(){
-    //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
-      }
-    }
-  }
+  
   showItem(item) {
     var curr = new Date; 
     var firstday = curr.getDate() - curr.getDay();
@@ -231,6 +221,24 @@ export class ViewEstComponent implements OnInit {
       this.estimateQueryForm.dateRange.start.reset(new Date(firstdayoflastmonth))
       this.estimateQueryForm.dateRange.end.reset(new Date(lastdayoflastmonth))
     }
+  }
+
+  removeEmptySpaces(data){
+    //remove whitespaces from clientlist
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
+      }
+    }
+    return data
   }
 
   // error modal
@@ -361,7 +369,17 @@ export class ViewEstComponent implements OnInit {
       this.activeEst = this.estimateList.filter(est => est.unique_identifier == estId)[0]
     }
     if(this.activeEst !== undefined){
+      var taxPayable = 0;
+      var totalDiscount = 0;
       for(let i =0;i<this.activeEst.alstQuotProduct.length;i++){
+        
+        if(this.activeEst.taxableFlag == 1 ){
+          taxPayable += this.activeEst.alstQuotProduct[i].taxAmount;
+          if(this.activeEst.alstQuotProduct[i].discountAmount){
+            totalDiscount += this.activeEst.alstQuotProduct[i].discountAmount;
+          }
+        }
+
         if(this.activeEst.alstQuotProduct[i].taxRate !== 0){
           this.noTaxOnItem = true;
         }else{
@@ -373,11 +391,29 @@ export class ViewEstComponent implements OnInit {
           this.noDiscountOnItem = false;
         }
       }
+
+      //taxable amount
+      if(totalDiscount){
+        var baseAmount = this.activeEst.grossAmount + totalDiscount
+            var allDiscount = (baseAmount - totalDiscount)
+            this.taxable = allDiscount - taxPayable;
+          }else{
+            this.taxable = this.activeEst.grossAmount - taxPayable;
+          }
+
       for(let i = 0;i<this.activeEst.alstQuotTermsCondition.length; i++){
         if(this.activeEst.alstQuotTermsCondition[i].terms_condition !== undefined){
           this.activeEst.alstQuotTermsCondition[i].termsConditionText = this.activeEst.alstQuotTermsCondition[i].terms_condition;
         }
       }
+    }
+
+    if(this.activeEst.taxableFlag == 1 && this.activeEst.tax_rate){
+      taxPayable = this.activeEst.tax_amount;
+      if(this.activeEst.discount_amount){
+        this.taxable = (this.activeEst.amount - this.activeEst.discount_amount) - taxPayable;
+      }
+      this.taxable = this.activeEst.amount - taxPayable;
     }
     this.setActiveClient()
   }

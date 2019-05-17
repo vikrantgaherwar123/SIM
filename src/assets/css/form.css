@@ -32,10 +32,10 @@
 	padding: 6px 0px 6px 15px;
 	text-align: left !important;
 	width: 100%;
-	background-color: #f9f9f9;
+	background-color: #ffffff;
 	display: table;
 	color: #707780;
-	border-bottom: 1px solid #e9e9e9;
+	border-bottom: 2px solid #b2c2cd;
 	margin-top: -7px;
 }
 .list-btn {
@@ -53,7 +53,7 @@
 	height: 38px;
 	padding: 6px 0px 0px 6px;
 	border: #CCCCCC solid 1px;
-	border-radius: 2px;
+	border-radius: 6px !important;
 }
 .list_drop:hover{
 border: #1a73cc solid 1px;
@@ -74,9 +74,9 @@ a, a:hover, a:focus {
 	cursor: pointer;
 }
 .list-header-col {
-	color: #858d94 !important;
+	color: #212121!important;
 	font-size: 12px;
-	font-family: helvetica_light !important;
+	font-family: helvetica_regular !important;
 }
 .mCustomScrollbar {
 	max-height: 492px;/*380*/
@@ -104,7 +104,7 @@ a, a:hover, a:focus {
 	word-wrap: break-word;
 	background-color: #fdfdfe;
 }
-.term_item {
+.terms_item {
 	margin: 0;
 	border-bottom: 1px solid #ecedef;
 	padding-top: 2px !important;
@@ -115,9 +115,9 @@ a, a:hover, a:focus {
 	word-wrap: break-word;
 	background-color: #fdfdfe;
 }
-.item:hover{
+/* .item:hover{
 	background-color: #d6e8fa !important;
-}
+} */
 .item span {
 	height: 18px;
 	font-size: 12px;
@@ -128,7 +128,7 @@ a, a:hover, a:focus {
 .fontsize13 {
 	font-size: 13px !important;
 	color: #474959;
-	margin-bottom: 4px;
+	margin-bottom: 7px;
 }
 .no-data-messsage {
 	text-align: center;
@@ -136,8 +136,12 @@ a, a:hover, a:focus {
 	font-weight: 400;
 	z-index: 2;
 	padding: 10px;
-	background: #ededed;
+	/* background: #ededed; */
 }
+.back_change {
+	background: #ffffff !important;
+}
+
 .no-border-last {
   border-bottom: none !important;
 }
@@ -270,7 +274,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 	letter-spacing: 0.5px !important;
 }
 .hd td, .hd td input {
-	background-color: #666;
+	background-color: #5c5c5d;
 	letter-spacing: 0.5px !important;
 	border: none;
 	color: #fff;
@@ -280,7 +284,7 @@ fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
 .hd td input {
 	/* text-align: right; */
 	letter-spacing: 0.5px !important;
-	border: 1px solid #666;
+	border: 1px solid #5c5c5d;
 }
 input:focus {
   border:2px solid #3399ff;
@@ -349,7 +353,7 @@ button.add-line-item-button {
 .balance-row {
 	margin-top: 8px;
 	padding: 7.5px;
-	background-color: #666666;
+	background-color: #5c5c5d;
 	color: #fff;
 }
 .adr {
@@ -358,7 +362,8 @@ button.add-line-item-button {
 .term-cond-label {
   background: #e0dede;
   border: 1px solid #e3e3e3;
-  padding: 6.5px 10px;
+	padding: 6.5px 10px;
+	margin-top: 4px;
 }
 .width85 {
 	width: 85%;
@@ -391,4 +396,11 @@ button.add-line-item-button {
 }
 .mat-option.mat-active{
 	background: none !important;
+}
+.add_client_modal_body{
+  padding: 1rem 44px !important;
+}
+.add_client_popup_modal {
+	max-width: 618px !important;
+	margin-top: 62px !important;
 }
