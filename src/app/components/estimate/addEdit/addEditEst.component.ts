@@ -1402,6 +1402,22 @@ export class AddEditEstComponent implements OnInit {
     if (this.activeEstimate.listItems) {
       for (var i = 0; i < this.activeEstimate.listItems.length; i++) {
 
+        if (this.activeEstimate.discount_on_item === 0 || this.activeEstimate.discount_on_item === 2) {         //on bill as well as on disabled
+          this.activeEstimate.listItems[i].discount = 0;
+          this.activeEstimate.listItems[i].discount_amount = 0;
+          this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
+          this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount + this.activeEstimate.listItems[i].tax_amount;
+        }
+        if (this.activeEstimate.tax_on_item === 1 || this.activeEstimate.tax_on_item === 2) {         //on bill as well as on disabled
+          this.activeEstimate.listItems[i].tax_rate = 0;
+          this.activeEstimate.listItems[i].tax_amount = 0;
+          if (this.activeEstimate.listItems[i].discount_amount) {
+            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
+          } else {
+            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
+          }
+        }
+
         //inclusive tax
         if (this.includeTax) {
           
@@ -1418,11 +1434,6 @@ export class AddEditEstComponent implements OnInit {
         }else{
           if (isNaN(this.activeEstimate.listItems[i].tax_rate) || this.activeEstimate.listItems[i].tax_rate == 0) {
             this.activeEstimate.listItems[i].tax_rate = 0
-          }else if (this.activeEstimate.discount_on_item === 0 || this.activeEstimate.discount_on_item === 2) {         //on bill as well as on disabled
-            this.activeEstimate.listItems[i].discount = 0;
-            this.activeEstimate.listItems[i].discount_amount = 0;
-            this.activeEstimate.listItems[i].tax_amount = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate / 100;
-            this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount + this.activeEstimate.listItems[i].tax_amount;
           }else { //when tax on item selected from settings
             if (this.activeEstimate.listItems[i].discount_amount) {
               this.activeEstimate.listItems[i].tax_amount = ((this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount) * this.activeEstimate.listItems[i].tax_rate/100;
@@ -1432,15 +1443,7 @@ export class AddEditEstComponent implements OnInit {
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) +  this.activeEstimate.listItems[i].tax_amount;
             }
           }
-          if (this.activeEstimate.tax_on_item === 1 || this.activeEstimate.tax_on_item === 2) {         //on bill as well as on disabled
-            this.activeEstimate.listItems[i].tax_rate = 0;
-            this.activeEstimate.listItems[i].tax_amount = 0;
-            if (this.activeEstimate.listItems[i].discount_amount) {
-              this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount;
-            } else {
-              this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity);
-            }
-          }
+          
         }
         gross_amount += parseFloat(this.activeEstimate.listItems[i].total)
       }
@@ -1482,6 +1485,8 @@ export class AddEditEstComponent implements OnInit {
     if (this.activeEstimate.tax_rate && !this.includeTax) {
       if (isNaN(this.activeEstimate.tax_rate)) {
         this.activeEstimate.tax_rate = 0
+      }else if(this.activeEstimate.tax_on_item === 1 && !this.includeTax ){
+        this.activeEstimate.tax_amount = (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
       }
       additions += (this.activeEstimate.gross_amount - this.activeEstimate.discount) * this.activeEstimate.tax_rate / 100
     }else if(this.includeTax){
@@ -1493,6 +1498,8 @@ export class AddEditEstComponent implements OnInit {
       //remove digits after two decimal
       var value = this.activeEstimate.tax_amount.toString().substring(0, this.activeEstimate.tax_amount.toString().indexOf(".") + 3);
       this.activeEstimate.tax_amount = parseFloat(value);
+    }else{
+      this.activeEstimate.tax_amount = 0;
     }
 
 

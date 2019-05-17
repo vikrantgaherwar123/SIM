@@ -304,6 +304,7 @@ export class AddEditComponent implements OnInit {
 
   
   addInit() {
+    this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
     this.commonSettingsInit()
     var date = new Date()
     this.invoiceDate.reset(date)
@@ -1231,7 +1232,9 @@ export class AddEditComponent implements OnInit {
       product.taxRate = 0; 
     }
     this.activeItem = {
-      unique_identifier: product.uniqueKeyProduct,
+      unique_identifier: generateUUID(this.user.user.orgId),
+      unique_key_fk_invoice : this.activeInvoice.unique_identifier,
+      unique_key_fk_product: product.uniqueKeyProduct,
       description: product.discription == null ? '' : product.discription,
       product_name: product.prodName,
       quantity: product.quantity ? product.quantity : 1,
@@ -1551,10 +1554,26 @@ export class AddEditComponent implements OnInit {
     if (this.activeInvoice.listItems) {
       
       for (var i = 0; i < this.activeInvoice.listItems.length; i++) {
+
+        if (this.activeInvoice.discount_on_item === 0 || this.activeInvoice.discount_on_item === 2) {         //on bill
+          this.activeInvoice.listItems[i].discount = 0;
+          this.activeInvoice.listItems[i].discount_amount = 0;
+          this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
+          this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
+        }
+        if (this.activeInvoice.tax_on_item === 1 || this.activeInvoice.tax_on_item === 2) {         //on bill
+          this.activeInvoice.listItems[i].tax_rate = 0;
+          this.activeInvoice.listItems[i].tax_amount = 0;
+          if (this.activeInvoice.listItems[i].discount_amount) {
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
+          } else {
+            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
+          }
+        }
         
         //inclusive tax
         if (this.includeTax) {
-          
+
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           }
@@ -1564,15 +1583,10 @@ export class AddEditComponent implements OnInit {
             }else{
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity)
             }
-          
-        }else{
+        }
+        else{
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
-          }else if (this.activeInvoice.discount_on_item === 0) {         //on bill
-            this.activeInvoice.listItems[i].discount = 0;
-            this.activeInvoice.listItems[i].discount_amount = 0;
-            this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
-            this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
           } else { //when tax on item selected from settings
             if (this.activeInvoice.listItems[i].discount_amount || this.activeInvoice.discount_on_item === 2) {
               this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount) * this.activeInvoice.listItems[i].tax_rate/100;
@@ -1581,16 +1595,7 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate/100;
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) +  this.activeInvoice.listItems[i].tax_amount;
             }
-          }if (this.activeInvoice.tax_on_item === 1 || this.activeInvoice.tax_on_item === 2) {         //on bill
-            this.activeInvoice.listItems[i].tax_rate = 0;
-            this.activeInvoice.listItems[i].tax_amount = 0;
-            if (this.activeInvoice.listItems[i].discount_amount) {
-              this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount;
-            } else {
-              this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity);
-            }
           }
-          
         }
         gross_amount += parseFloat(this.activeInvoice.listItems[i].total)
       }
@@ -1643,6 +1648,8 @@ export class AddEditComponent implements OnInit {
       //remove digits after two decimal
       var value = this.activeInvoice.tax_amount.toString().substring(0, this.activeInvoice.tax_amount.toString().indexOf(".") + 3);
       this.activeInvoice.tax_amount = parseFloat(value);
+    }else{
+      this.activeInvoice.tax_amount = 0;
     }
 
     // Multiple Taxes
@@ -1730,13 +1737,8 @@ export class AddEditComponent implements OnInit {
     })
     this.activeInvoice.termsAndConditions = temp
 
-    
-
-    if (!this.edit) {
-      this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
-    }
     for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
-      this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+      // this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
       if (!this.activeInvoice.listItems[i - 1].product_name || this.activeInvoice.listItems[i - 1].product_name == '') {
         this.activeInvoice.listItems.splice(i - 1, 1)
       }
