@@ -1,4 +1,4 @@
-<div *ngIf="activeInvoice && activeSettings" class="row main-wrapper">
+<div *ngIf="activeInvoice" class="row main-wrapper">
   <div class="col-12" id="main">
     <div  class="row">
       <div id="msgInv" 
@@ -843,56 +843,57 @@
         </div>
         <div class="collapse show row setting_bg" id="settingCollapseExample" style="background-color: #fdfdfe;">
           <div class="setting_pad">
-            <div class="row mrg_top_14">
-              <div class="col-5">Discount</div> 
-              <div class="col-7">
-                <li class="button-dropdown" style="list-style: none;">
-                    <a type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                     class="dropdown-toggle setting_menu_discount fa fa-angle-down">
+              <div class="row mrg_top_14">
+                  <div class="col-5">Discount</div> 
+                  <div class="col-7">
+                    <li class="button-dropdown" style="list-style: none;">
+                      <a type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle setting_menu_discount fa fa-angle-down">
                         <span class="setting_span"> Discount ({{discountLabel}})</span>
-                    </a>
-                    <ul class="dropdown-menu setting_li_bg" aria-labelledby="dropdownMenuButton1" id="discount_dropdown" style="padding: 0px 0px 0px 0px !important;">
-                      <li class="dropdown-item">
-                        <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
-                          (click)="activeSettings.discountFlagLevel=1;saveSettings()">Discount On Item</button>
+                      </a>
+                        <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
+                          <li class="dropdown-item">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
+                              (click)="activeInvoice.discount_on_item = 1;updateSettings();calculateInvoice()">Discount On Item</button>
+                          </li>
+                          <li class="dropdown-item">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
+                              (click)="activeInvoice.discount_on_item = 0;updateSettings();calculateInvoice()">Discount On Bill</button>
+                          </li>
+                          <li class="dropdown-item">
+                              <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}"
+                               (click)="activeInvoice.discount_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
+                          </li>
+                        </ul>
+                    </li>
+                  </div>
+        
+                </div>
+                <div class="row mrg_top_14">
+                  <div class="col-5">Tax</div>
+                  <div class="col-7">
+                      <li class="button-dropdown" style="list-style: none;">
+                        <a type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
+                          <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </a>
+                        <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
+                          <li class="dropdown-item">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
+                              (click)="activeInvoice.tax_on_item = 0;updateSettings();calculateInvoice()">Tax On Item</button>
+                          </li>
+                          <li class="dropdown-item">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
+                              (click)="activeInvoice.tax_on_item = 1;updateSettings();calculateInvoice()">Tax On Bill</button>
+                          </li>
+                          <li class="dropdown-item">
+                            <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
+                              (click)="activeInvoice.tax_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
+                          </li>
+                        </ul>
                       </li>
-                      <li class="dropdown-item">
-                        <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
-                          (click)="activeSettings.discountFlagLevel=0;saveSettings()">Discount On Bill</button>
-                      </li>
-                      <li class="dropdown-item">
-                          <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}" (click)="activeSettings.discountFlagLevel=2;saveSettings()">Disabled</button>
-                      </li>
-                    </ul>
-                </li>
-              </div>
+                </div>
 
             </div>
-            <div class="row mrg_top_14">
-              <div class="col-5">Tax</div>
-              <div class="col-7">
-                  <li class="button-dropdown" style="list-style: none;">
-                    <a type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle setting_menu_tax fa fa-angle-down">
-                      <span class="setting_span">Tax ({{taxLabel}}) &nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    </a>
-                    <ul class="dropdown-menu setting_li_bg" aria-labelledby="dropdownMenuButton2" style="padding: 0px !important;">
-                      <li class="dropdown-item">
-                        <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
-                          (click)="activeSettings.taxFlagLevel=0;saveSettings()">Tax On Item</button>
-                      </li>
-                      <li class="dropdown-item">
-                        <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
-                          (click)="activeSettings.taxFlagLevel=1;saveSettings()">Tax On Bill</button>
-                      </li>
-                      <li class="dropdown-item">
-                        <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
-                          (click)="activeSettings.taxFlagLevel=2;saveSettings()">Disabled</button>
-                      </li>
-                    </ul>
-                  </li>
-              </div>
-
-            </div>
+            
                 <div class="row mrg_top_14">
                   <div class="col-5">Inclusive Tax</div>
                   <div class="col-7">
