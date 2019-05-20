@@ -1,27 +1,27 @@
 <div class="row main-wrapper">
-    <div class="row col-md-3" id="main"style="padding-top: 0px !important;">
+    <div class="row div_3_width" id="main"style="padding-top: 0px !important;">
         <form class="form-horizontal back shadow settingForm setting_sidebar_form" #addTaxesForm="ngForm" enctype="multipart/form-data">
           <div class="row mx-0">
             <div>
               <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
-                <span class="col-8">Primary settings</span>
-                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-10">Primary settings</span>
+                <span class="col-2"><img src="assets/images/next12.png"></span>
               </div>
               <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
-                <span class="col-8">Custom Field Name</span>
-                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-10">Custom Field Name</span>
+                <span class="col-2"><img src="assets/images/next12.png"></span>
               </div>
               <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                <span class="col-8">Banking Details</span>
-                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-10">Banking Details</span>
+                <span class="col-2"><img src="assets/images/next12.png"></span>
               </div>
               <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
-                <span class="col-8">Terms & Conditions</span>
-                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-10">Terms & Conditions</span>
+                <span class="col-2"><img src="assets/images/next12.png"></span>
               </div>
               <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
-                <span class="col-8">Profile</span>
-                <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                <span class="col-10">Profile</span>
+                <span class="col-2"><img src="assets/images/next12.png"></span>
               </div>
             </div>
           </div>
@@ -29,7 +29,7 @@
         </form>
       </div>
   <div class="col-9" id="main">
-    <div class="back" style="margin-right: -33px;"><!--style="margin: 0px auto; max-width:1000px;" -->
+    <div class="back set_mrg_rignt"><!--style="margin: 0px auto; max-width:1000px;" -->
       <form name="userForm" #form="ngForm">
         <div align="center" class="custom-field-form" style="padding: 120px;height: 645px;">
           <div class="col-12" style="margin-bottom: 10px;">

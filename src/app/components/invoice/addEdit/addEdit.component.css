@@ -342,6 +342,7 @@ a.morelink {
 .inline {
   margin-right: 10px;
   float: left;
+  word-break: break-all;
   font-size:11px;
   padding: 5px 10px 5px 17px !important;
   margin-bottom: 8px;

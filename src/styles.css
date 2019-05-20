@@ -1121,9 +1121,15 @@ background-color: none;
 }
 .label_div{
   font-size: 15px;
-  padding: 12px 2px 16px 22px;
+  padding: 12px 18px 16px 38px;
   text-align: left;
   cursor: pointer;
+}
+.div_3_width{
+  width: 270px;
+}
+.set_mrg_rignt{
+  margin-right: -100px;
 }
 
 .label_div:hover{
@@ -1141,6 +1147,7 @@ background-color: none;
 }
 .term_modal_body{
   padding: 0rem !important;
+  border-top: 1px solid #e9ecef;
 }
 .default_checkbox_span{
   top: 7px !important;
@@ -1197,7 +1204,7 @@ textarea{
   pointer-events: none;
 }
 .add_btn_text{
-  color:red;
+  color:#1e81e3 !important;
 }
 /* payment installment section */
 .payment_row{
@@ -1586,13 +1593,6 @@ input.mat-input-element {
   margin-top: 55px;
   margin-left: 38px;
 }
-/* .mat-menu-item{
-  padding: 8px 12px;
-  border: none;
-  width: 100%;
-  text-align: left;
-  font-size: 13px !important;
-} */
 .setting_drop{
   padding: 8px 12px;
   border: none;
@@ -1663,4 +1663,13 @@ input.mat-input-element {
   white-space: nowrap;
   background-color: transparent;
   border: 0;
+}
+.words_break{
+  word-break: break-all;
+}
+.term_subheading{
+  color: #a6a6a7;
+}
+.add_disable_text{
+  color: #b7b7b7 !important;
 }

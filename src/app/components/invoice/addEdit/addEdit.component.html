@@ -10,7 +10,7 @@
               <div class="col-6">
               </div>
               <div class="col-6 vtop text-right">
-                <span class="c-name" type="text" id="titleAdd" name="title">
+                <span class="c-name words_break" type="text" id="titleAdd" name="title">
                   {{settings.mTvInvoice ? settings.mTvInvoice : 'INV_LABEL' | translate}}
                 </span>
               </div>
@@ -22,7 +22,7 @@
                           <div class="row">
                             <!-- Billing To -->
                             <div class="col-12" style="margin-top: 6px;">
-                                <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold">
+                                <span type="text" value="" id="billToLabelAdd" class="adr bill-to font-custom-bold words_break">
                                   {{settings.mTvBillTo ? settings.mTvBillTo : 'BILL_TO_LABEL' | translate}}
                                 </span>
         
@@ -90,7 +90,7 @@
                       <div class="row"> 
                         <!-- Estimate Number and Dates -->
                         <div class="col-5" style="margin-top: 5px;">
-                          <span class="font-custom-bold text-left w-100"> {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No.</span>
+                          <span class="font-custom-bold text-left w-100 words_break"> {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No.</span>
                         </div>
                         <div class="col-7">
                             <form #invNumberForm="ngForm" name="invNumberForm">
@@ -113,7 +113,7 @@
       
                       <div class="row">
                         <div class="col-5" style="margin-top: 5px;">
-                            <span class="font-custom-bold text-left w-100">
+                            <span class="font-custom-bold text-left w-100 words_break">
                                 {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} Date</span>
                         </div>
                         <div class="col-7">
@@ -464,7 +464,7 @@
                 <div class="row">
                   <!--Term and Condition -->
                   <div class="col-12 col-md-6">
-                    <div class="col-12 term-cond-label font-custom-bold" style="text-align: left">
+                    <div class="col-12 words_break term-cond-label font-custom-bold" style="text-align: left">
                       <span class="bld">
                         {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'TERM_LABEL' | translate}}
                       </span>
@@ -506,7 +506,7 @@
                       <div class="row">
                         <div class="col-6 text-left">
                           <span
-                            class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
+                            class="font-custom-bold words_break">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
                           <span
@@ -706,7 +706,7 @@
                     <div class="col-12 term-cond-label">
                       <div class="row">
                         <div class="col-6 text-left">
-                          <span class="font-custom-bold">
+                          <span class="font-custom-bold words_break">
                             {{settings.total ? settings.total : 'TOTAL_LABEL' | translate}}
                           </span>
                         </div>
@@ -723,7 +723,7 @@
                     <div class="paidBackground">
                       <div class="row paid_border paid_div">
                         <div class="col-6 text-left" style="margin-top: 6px;margin-left: -6px;">
-                          <span class="font-custom">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
+                          <span class="font-custom words_break">{{settings.paid ? settings.paid : 'PAID_LABEL' | translate}}
                           </span>
                           <a class="paidArrow fa fa-angle-down pay_arrow"[ngClass]="{'disable_toggle':activeInvoice.balance == undefined}" (click)="openAddPaymentModal()" data-toggle="collapse" href="#collapseExample" role="button"
                               aria-expanded="false" aria-controls="collapseExample">
@@ -910,7 +910,7 @@
       <!-- settings -->
         <!-- recently added invoice -->
         <div *ngIf="invoiceList" class="row mrg_top_14">
-            <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
+            <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list words_break text-center list-header-col font-custom-bold"
             style="margin-top: 4px;margin-left: 0px;" data-toggle="collapse" 
              href="#todaysInvoice" role="button" aria-expanded="false" aria-controls="todaysInvoice">
             {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
@@ -1144,11 +1144,14 @@
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-md term_popup_modal" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <div class="add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
+      <div class="modal-header row" style="border-bottom: 0px solid #e9ecef !important;">
+        <div class="col-12 add_term_title modal-title form-header header-color font-custom-bold" id="addPaymentLabel">
            {{settings.mTvTermsAndConditions ? settings.mTvTermsAndConditions : 'Terms and Conditions'}}
         </div>
+        <div class="col-12 term_subheading">Make Default Terms and Conditions</div>
+
       </div>
+      
 
       <div class="modal-body term_modal_body">
         <h5 class="modal-title form-header header-color font-custom-bold h5_terms_border" style="height: 70px;" id="addPaymentLabel">
@@ -1173,7 +1176,8 @@
                 <button type="button" id="addtermbtn" [ngClass]="{'add_disable': !termForm.valid }" name="addtermbtn" title="save"
                   class="btn add_term_btn btn-raised pull-right ml-2 add_to_list_btn term_col1"
                   (click)="saveTerm(termForm.valid)">
-                  <i class="fa fa-plus add_plus"></i><br /> <p class="add_btn_text">Add To List</p>
+                  <i class="fa fa-plus add_plus" [ngClass]="{'add_disable_text': !termForm.valid }"></i><br /> 
+                  <p class="add_btn_text" [ngClass]="{'add_disable_text': !termForm.valid }">Add To List</p>
                 </button>
               </div>
             </div>
@@ -1182,6 +1186,7 @@
         </h5>
 
         <div class="row terms_border">
+          <span class="col-12 row term_subheading">Select below term to show on invoice</span>
           <div class="col-12 mCustomScrollbar style-3" style="max-height: 290px;overflow-x: hidden;">
             <div class="term_item termlist row product-list" id="term1{{index}}"
               *ngFor="let term of termList | orderBy: 'term':'desc'; let index = index"
