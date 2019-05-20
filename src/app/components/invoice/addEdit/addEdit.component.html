@@ -904,6 +904,18 @@
                   </div>
         
                 </div>
+                <div class="row mrg_top_14">
+                  <div class="col-5">Show Balance and Paid Amount on PDF</div>
+                  <div class="col-7">
+                      <label class="check">
+                          <div class="checkbox default_checkbox">
+                              <input type="checkbox" [checked]="activeInvoice.showBalPaidAmountFlag"  (change)="showBalPaidOnPdf($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
+                              <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                          </div>
+                        </label>
+                  </div>
+        
+                </div>
           </div>
         </div>
         

@@ -133,6 +133,7 @@ export class AddEditComponent implements OnInit {
   taxLabel: string;
   discountLabel: string;
   includeTax: boolean;
+  showBalPaid: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -1539,6 +1540,21 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.taxableFlag = 0;
       this.calculateInvoice();
       
+    }
+  }
+
+  showBalPaidOnPdf(event){
+    if(event.target.checked === true){
+      this.showBalPaid = true
+      this.activeInvoice.showBalPaidAmountFlag = true;
+      console.log('true');
+      
+    }
+    //exclusive tax
+    else{
+      this.includeTax = false;
+      this.activeInvoice.showBalPaidAmountFlag = false;
+      console.log('false');
     }
   }
 
