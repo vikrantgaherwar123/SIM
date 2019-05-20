@@ -321,7 +321,7 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
    //to view updated or viewed invoice in view page
-    // this.commonSettingsInit()
+    this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
