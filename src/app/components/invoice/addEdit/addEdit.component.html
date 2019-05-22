@@ -47,7 +47,8 @@
                                     <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                                       {{client.name}}
                                     </mat-option>
-                                    <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                                    <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value"
+                                    style="display:none">
                                       Add Client {{billingTo.value}}
                                     </mat-option>
                                   </mat-autocomplete>
@@ -93,21 +94,21 @@
                           <span class="font-custom-bold text-left w-100 words_break"> {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No.</span>
                         </div>
                         <div class="col-7">
-                            <form #invNumberForm="ngForm" name="invNumberForm">
-                                <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
-                                  && invNumberForm.invoiceNumber.$error.required">
-                                  <input type="text" id="invoiceNumber" name="invoiceNumber" class="light_font form-control pr-0 input_border_color"
-                                    style="margin-top: 0px !important;" [(ngModel)]="activeInvoice.invoice_number"
-                                    [ngClass]="{ 'box_red': invoiceFlag === true}" (keyup)="invoiceNoChanged($event)" required
-                                    onfocus="this.select()" />
-                                  <span *ngIf="activeInvoice.invoice_number === '' " class="fa fa-info-circle errspan"></span>
-                                  <!--show error icon if no invoice number-->
-                                  <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
-                                    <span class="span_padng_top" *ngIf="invNumberForm.invoiceNumber.error.required">
-                                      {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No. required</span>
-                                  </div>
-                                </div>
-                              </form>
+                          <form #invNumberForm="ngForm" name="invNumberForm">
+                            <div class="form-group" [class.has-error]="(invNumberForm.submitted || invNumberForm.invoiceNumber )
+                              && invNumberForm.invoiceNumber.$error.required">
+                              <input type="text" id="invoiceNumber" name="invoiceNumber" class="light_font form-control pr-0 input_border_color"
+                                style="margin-top: 0px !important;" [(ngModel)]="activeInvoice.invoice_number"
+                                [ngClass]="{ 'box_red': invoiceFlag === true}" (keyup)="invoiceNoChanged($event)" required
+                                onfocus="this.select()" />
+                              <span *ngIf="activeInvoice.invoice_number === '' " class="fa fa-info-circle errspan"></span>
+                              <!--show error icon if no invoice number-->
+                              <div class="form-error" *ngIf="invNumberForm.submitted || invNumberForm.invoiceNumber">
+                                <span class="span_padng_top" *ngIf="invNumberForm.invoiceNumber.error.required">
+                                  {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoice'}} No. required</span>
+                              </div>
+                            </div>
+                          </form>
                         </div>
                       </div>
       
@@ -224,7 +225,7 @@
                           *ngIf="activeInvoice.tax_on_item === 0 "><!--|| showTaxRate!==0 && showTaxRateFlag == true-->
                           <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="tax-rate" disabled
                             
-                            value="Tax (%)"/>
+                            value="{{settings.taxLable ? settings.taxLable : 'Tax'}} (%)"/>
                         </td>
                         
                         <td width="9%">
@@ -314,13 +315,10 @@
                           <div class="form-group" style="padding-right: -2px;padding-left: 4px;
                           border-radius: 2px;padding: 4px 2px;">
                             <input type="text" name="product-name" class="form-control billing-input input_border_color" tabindex="1"
-                              onfocus="this.select()" [ngClass]="{ 'box_red': noProductSelected ===true }"
+                              onfocus="this.select()" [ngClass]="{ 'box_red': ifProductEmpty == true && addItem !== null }"
                               placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}}"
                               matInput [formControl]="addItem" [matAutocomplete]="auto" required>
-                              <img src="assets/images/product-icon/exclamation-mark.png"  class="errspan help-block" *ngIf="ifProductEmpty === true && addItem !==null">
-
-                            <!-- <span *ngIf="ifProductEmpty === true && addItem !==null"
-                              class="fa fa-info-circle errspan help-block"></span> -->
+                              
 
                             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith"
                               class="mCustomScrollbar style-3" (optionSelected)="fillItemDetails()">
@@ -347,7 +345,7 @@
                           <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" name="itemQty" id="qty" step="any" tabindex="2"
                               class="form-control height_40 text_right input_border_color" min="0" [(ngModel)]="activeItem.quantity"
-                              (keyup)="calculateTotal()" onfocus="this.select()" required />
+                              (keyup)="calculateTotal()" onfocus="this.select()" required [ngClass]="{ 'box_red': this.activeItem.quantity === null }" />
                           </div>
 
                           <button type="button" style="margin-top: 10px;" tabindex="7"
@@ -361,13 +359,13 @@
                           <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" name="itemRate" step="any" tabindex="3"
                               class="form-control height_40 text_right input_border_color" min=0 [(ngModel)]="activeItem.rate"
-                              (keyup)="calculateTotal()" onfocus="this.select()" required />
+                              (keyup)="calculateTotal()" onfocus="this.select()" [ngClass]="{ 'box_red': this.activeItem.rate === null }" required />
                           </div>
                         </td>
                         <td style="vertical-align: top;" [class.no-border-last]="last"
                         *ngIf="activeInvoice.discount_on_item == 1"><!--|| showDiscountRate !==0 && showDiscountRateFlag == true -->
                           <div class="input-group" style="padding: 4px 2px;">
-                            <input type="number" name="itemDiscountRate" tabindex="4"
+                            <input type="number" name="itemDiscountRate" tabindex="4" (ngModelChange)="dataChangedItem($event)"
                               class="form-control height_40 text_right input_border_color" min=0 max=100 [(ngModel)]="activeItem.discount"
                               (keyup)="calculateTotal()" onfocus="this.select()"
                              />
@@ -439,7 +437,7 @@
                     </div>
                     <div *ngIf="activeInvoice.tax_on_item === 1"> <!--&& activeInvoice.tax_rate === 0 || activeInvoice.tax_on_item === 2-->
                       <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noTaxOnItem, 'addLabelBackroundColor':!noTaxOnItem}"
-                        (click)="noTaxOnItem = !noTaxOnItem;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">Tax &nbsp;+</span><!--;activeInvoice.tax_rate = null-->
+                        (click)="noTaxOnItem = !noTaxOnItem;activeInvoice.tax_rate = 0; activeInvoice.tax_amount = 0;calculateInvoice()">{{settings.taxLable ? settings.taxLable : 'Tax'}} &nbsp;+</span><!--;activeInvoice.tax_rate = null-->
                     </div>
                     <div ><!--*ngIf="activeInvoice.adjustment === null || activeInvoice.adjustment === undefined"-->
                       <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment ,
@@ -488,10 +486,8 @@
                           <div class="col-md-2 ml-auto" (click)="addRemoveTermsFromInvoice(term)"
                             style="cursor:pointer;">
                             <a class="closeicon show float-right">
-                              <!-- <img src="assets/images/cross.png" Title="Delete Term" class="img_hover hg_16 del set-color"
-                                alt=""> -->
-                                    <img src="assets/images/cross_grey.png" Title="Delete Term" class="img_hover del set-color"
-                                    alt="">
+                              <img src="assets/images/cross_grey.png" Title="Delete Term" class="img_hover del set-color"
+                              alt="">
                             </a>
                           </div>
                         </div>
@@ -587,7 +583,7 @@
                     <div class="row mr_right mrg_btm mr_0" *ngIf="!noTaxOnItem">
                         <div class="col-4 discount-tax-label pr-0">
                           <span style="margin-left: -5px;">
-                              Tax (%)
+                              {{settings.taxLable ? settings.taxLable : 'Tax'}} (%)
                           </span>
                         </div>
                       
@@ -891,8 +887,7 @@
                       </li>
                 </div>
             </div>
-            
-                <div class="row mrg_top_14">
+                <div class="row mrg_top_14" [ngClass]="{'display_none':activeInvoice.tax_on_item === 2}">
                   <div class="col-5">Inclusive Tax</div>
                   <div class="col-7">
                       <label class="check">

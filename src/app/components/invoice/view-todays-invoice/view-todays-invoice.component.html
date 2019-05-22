@@ -152,7 +152,7 @@
                         >
                       </td>
                     <td *ngIf="activeInv.tax_on_item == 0 " width="10%" >
-                      <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="Tax (%)" disabled>
+                      <input type="text" id="taxLabel" class="bld w-100 text_right" name="rate" value="{{settings.taxLable ? settings.taxLable : 'Tax'}} (%)" disabled>
                     </td>
                     <td width="10%" class="last_td">
                       <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text_right"
@@ -259,16 +259,17 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">(-){{settings.discount ? settings.discount : 'Discount'}}</span>
-                  <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
+                  <!-- <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
                     ({{activeInv.discount | number:'1.2-2' | CurrencyPipe}})
-                  </div>
+                  </div> -->
                 </div>
                 <div class="col-7">
                   <div class="text-right">
-                    <div *ngIf="!activeInv.discountFlag == 0">
-                      <span class="price">{{activeInv.percentage_value | number:'1.2-2'}}</span>
+                    <div *ngIf="activeInv.percentage_flag == 1">
+                      <span class="price">({{activeInv.percentage_value | number:'1.2-2'}} %)</span>&nbsp;
+                      <span class="price">{{activeInv.discount | number:'1.2-2' | CurrencyPipe}}</span>
                     </div>
-                    <div *ngIf="!activeInv.discountFlag == 1">
+                    <div *ngIf="activeInv.percentage_flag == 0">
                       <span class="price">{{activeInv.discount | number:'1.2-2' | CurrencyPipe}}</span>
                     </div>
                   </div>
@@ -278,7 +279,7 @@
               <!-- Tax -->
               <div *ngIf="activeInv.tax_amount !== 0" class="row mx-0">
                 <div class="col-4 discount-tax-label">
-                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+)Tax</div>
+                  <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">(+){{settings.taxLable ? settings.taxLable : 'Tax'}}</div>
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
@@ -361,7 +362,7 @@
                     <div *ngFor="let item of activeInv.listItems" class="row col-12 cal_label_padding">
                       <div *ngIf="item.tax_rate" class="col-6 text-left">
                           <span class="font-custom-bold">
-                              (+) Tax 1 ({{item.tax_rate}}%)
+                              (+){{settings.taxLable ? settings.taxLable : 'Tax'}} ({{item.tax_rate}}%)
                           </span>
                       </div>
                       <div *ngIf="item.tax_amount"  class="col-6 text-right">
@@ -374,7 +375,7 @@
                       <div class="row mx-0 col-12 cal_label_padding">
                         <div class="col-6 text-left">
                           <span class="font-custom-bold">
-                            (+) Tax 2 ({{activeInv.tax_rate}}%)
+                            (+){{settings.taxLable ? settings.taxLable : 'Tax'}} ({{activeInv.tax_rate}}%)
                           </span>
                         </div>
                         <div class="col-6 text-right">

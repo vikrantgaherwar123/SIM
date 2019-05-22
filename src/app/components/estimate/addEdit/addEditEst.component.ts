@@ -1208,10 +1208,12 @@ export class AddEditEstComponent implements OnInit {
       product_name: product.prodName,
       quantity: product.quantity ? product.quantity : 1,
       rate: product.rate,
-      tax_rate: 0.00,
+      // tax_rate: 0.00,
       unique_identifier: generateUUID(this.user.user.orgId),
       unique_key_fk_product: product.uniqueKeyProduct,
-      unit: product.unit
+      unit: product.unit,
+      discount : product.discount,
+      tax_rate: product.taxRate,
     }
     this.calculateTotal()
   }

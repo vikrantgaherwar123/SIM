@@ -43,7 +43,7 @@
                               <mat-option style="color: #2c3e59" *ngFor="let client of (filteredClients | async | orderBy:'name':false:true)" [value]="client">
                                 {{client.name}}
                               </mat-option>
-                              <mat-option *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
+                              <mat-option style="display:none" *ngIf="filteredClients && (filteredClients | async).length == 0" [value]="billingTo.value">
                                 Add Client {{billingTo.value}}
                               </mat-option>
                             </mat-autocomplete>
@@ -139,7 +139,7 @@
                         value=" {{settings.discount ? settings.discount : 'Discount'}} (%)" />
                     </td>
                     <td width="9%" *ngIf="activeEstimate.tax_on_item === 0">
-                      <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="rate" disabled value="Tax (%)" />
+                      <input type="text" id="itemTaxLabel" class="bld w-100 text_right" name="rate" disabled value="{{settings.taxLable ? settings.taxLable : 'Tax'}} (%)" />
                     </td>
                     <td width="9%">
                       <input type="text" id="itemAmtLabelAdd" class="bld w-100 text_right" name="amount" disabled
@@ -319,7 +319,7 @@
                 </div>
                 <div *ngIf="activeEstimate.tax_on_item === 1"> <!-- && activeEstimate.tax_on_item === 2 -->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noTaxOnItem , 'addLabelBackroundColor':!noTaxOnItem}"
-                   (click)="noTaxOnItem = !noTaxOnItem;activeEstimate.tax_rate=0;calculateEstimate()">Tax+</span>
+                   (click)="noTaxOnItem = !noTaxOnItem;activeEstimate.tax_rate=0;calculateEstimate()">{{settings.taxLable ? settings.taxLable : 'Tax'}}+</span>
                 </div>
                 <div ><!--*ngIf="activeEstimate.adjustment === undefined"-->
                   <span class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noAdjustment, 'addLabelBackroundColor':!noAdjustment}"
@@ -456,7 +456,7 @@
                 <div class="row mr_right mr_0 mrg_btm" *ngIf="!noTaxOnItem">
                   <div class="col-4 discount-tax-label pr-0">
                     <span style="text-align: left;vertical-align: bottom;">
-                      Tax (%)
+                      {{settings.taxLable ? settings.taxLable : 'Tax'}} (%)
                     </span>
                 
                   </div>
@@ -626,7 +626,7 @@
                 <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center list-header-col font-custom-bold"
                 style="margin-top: 22px;margin-left: 0px;" data-toggle="collapse" 
                   href="#settingCollapseExample" role="button" aria-expanded="false" aria-controls="settingCollapseExample">
-                    Invoice Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
+                    Estimate Setting <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
                 </div>
                 
             </div>
@@ -682,7 +682,7 @@
                       </div>
         
                     </div>
-                    <div class="row mrg_top_14">
+                    <div class="row mrg_top_14" [ngClass]="{'display_none':activeEstimate.tax_on_item === 2}">
                       <div class="col-5">Inclusive Tax</div>
                       <div class="col-7">
                           <label class="check">
@@ -692,7 +692,18 @@
                               </div>
                             </label>
                       </div>
-        
+                    </div>
+                    <div class="row mrg_top_14">
+                      <div class="col-5">Show Balance and Paid Amount on PDF</div>
+                      <div class="col-7">
+                          <label class="check">
+                              <div class="checkbox default_checkbox">
+                                  <input type="checkbox" [checked]="activeEstimate.showBalPaidAmountFlag"  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                                  <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                              </div>
+                            </label>
+                      </div>
+            
                     </div>
               </div>
           </div>
@@ -727,7 +738,7 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
-                    {{ estimate.amount | CurrencyPipe }}
+                    {{ estimate.amount | number:'1.2-2' | CurrencyPipe }}
                   </div>
                 </div>
               </div>
@@ -931,7 +942,7 @@
                 </div>
               </div>
               <div class="col-6 tax_dis_span" *ngIf="activeEstimate.tax_on_item === 0">
-                <span class="edit_span">Tax</span>
+                <span class="edit_span">{{settings.taxLable ? settings.taxLable : 'Tax'}}</span>
                 <div class="row" style="margin-left: -2px;">
                   <input type="number" name="tax-rate" style="max-width: 186px;" class="form-control add-client-input-custom" min="0"
                     max="100" [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" placeholder="Tax"

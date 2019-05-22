@@ -1674,3 +1674,6 @@ input.mat-input-element {
 .add_disable_text{
   color: #b7b7b7 !important;
 }
+.display_none{
+  display:none !important;
+}
