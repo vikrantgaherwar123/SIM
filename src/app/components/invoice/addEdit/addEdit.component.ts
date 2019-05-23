@@ -1389,6 +1389,10 @@ export class AddEditComponent implements OnInit {
           this.activeItem.total += this.activeItem.tax_amount
         }
       }
+
+      if(this.includeTax && this.activeInvoice.discount_on_item == 0){
+
+      }
     }
   }
 
@@ -1573,6 +1577,7 @@ export class AddEditComponent implements OnInit {
     if(this.activeInvoice.taxableFlag === 1){
       this.includeTax = true;
     }
+
     
     if (this.activeInvoice.listItems) {
       
