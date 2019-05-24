@@ -317,6 +317,54 @@ export class AddEditComponent implements OnInit {
     }
   }
 
+  setSettings(){
+    //set settingFlags according to edit i.e invoice saved previously
+    if(this.activeInvoice.discount_on_item == 0){
+      this.activeInvoice.percentage_flag = 1;
+      this.noDiscountOnItem = false;
+      this.discountLabel = "On Bill"
+    }else if(this.activeInvoice.discount_on_item == 1){
+      this.noDiscountOnItem = true;
+      this.discountLabel = "On Item"
+    }
+
+    if(this.activeInvoice.tax_on_item == 0 ){
+      this.taxtext = "Tax (on Item)"
+      this.noTaxOnItem = true;
+      this.taxLabel = "On Item"
+    }else if(this.activeInvoice.tax_on_item == 1){
+      this.noTaxOnItem = false;
+      this.taxLabel = "On Bill"
+    }
+
+      //if item and Disabled condition  
+      if(this.activeInvoice.discount_on_item == 2){
+        this.noDiscountOnItem = true;
+        this.discountLabel = "Disabled"
+      }
+
+      if(this.activeInvoice.tax_on_item == 2){
+        this.noTaxOnItem = true;
+        this.taxLabel = "Disabled"
+      }
+      //shipping & adjustment
+      if(this.activeInvoice.shipping_charges){
+        this.noShippingCharges = false
+      }
+      if(this.activeInvoice.adjustment){
+        this.noAdjustment = false
+      }
+
+      //if setting of bill but no value added
+      if(this.activeInvoice.discount == 0){
+        this.noDiscountOnItem = true;
+      }
+      if(this.activeInvoice.tax_rate == 0){
+        this.noTaxOnItem = true;
+      }
+     
+  }
+
 
   editInit(invId) {
    //to view updated or viewed invoice in view page
@@ -336,58 +384,9 @@ export class AddEditComponent implements OnInit {
 
     if(this.activeInvoice){
       this.invoiceListLoading = false;
-
-      //set settingFlags according to edit i.e invoice saved previously
-      if(this.activeInvoice.discount_on_item == 0){
-        this.activeInvoice.percentage_flag = 1;
-        this.noDiscountOnItem = false;
-        this.discountLabel = "On Bill"
-      }else if(this.activeInvoice.discount_on_item == 1){
-        this.noDiscountOnItem = true;
-        this.discountLabel = "On Item"
-      }
-
-      if(this.activeInvoice.tax_on_item == 0){
-        this.taxtext = "Tax (on Item)"
-        this.noTaxOnItem = true;
-        this.taxLabel = "On Item"
-      }else if(this.activeInvoice.tax_on_item == 1){
-        this.noTaxOnItem = false;
-        this.taxLabel = "On Bill"
-      }
-
-        //if item and Disabled condition  
-        if(this.activeInvoice.discount_on_item == 2){
-          this.noDiscountOnItem = true;
-          this.discountLabel = "Disabled"
-        }
-  
-        if(this.activeInvoice.tax_on_item == 2){
-          this.noTaxOnItem = true;
-          this.taxLabel = "Disabled"
-        }
-       
-
-        //shipping & adjustment
-        if(this.activeInvoice.shipping_charges){
-          this.noShippingCharges = false
-        }
-        if(this.activeInvoice.adjustment){
-          this.noAdjustment = false
-        }
-
-        //if setting of bill but no value added
-        if(this.activeInvoice.discount == 0){
-          this.noDiscountOnItem = true;
-        }
-        if(this.activeInvoice.tax_rate == 0){
-          this.noTaxOnItem = true;
-        }
-
-
+      this.setSettings();
       
         this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-        
         
         // Change list item keys compatible
         if (this.activeInvoice.listItems) {
@@ -479,58 +478,8 @@ export class AddEditComponent implements OnInit {
             delete invoice.records[0].client
             delete invoice.records[0].client_id
             this.activeInvoice = {...invoice.records[0]}
-
-            //set settingFlags according to edit i.e invoice saved previously
-            if(this.activeInvoice.discount_on_item == 0){
-              this.activeInvoice.percentage_flag = 1;
-              this.noDiscountOnItem = false;
-              this.discountLabel = "On Bill"
-            }else if(this.activeInvoice.discount_on_item == 1){
-              this.noDiscountOnItem = true;
-              this.discountLabel = "On Item"
-            }
-      
-            if(this.activeInvoice.tax_on_item == 0 ){
-              this.taxtext = "Tax (on Item)"
-              this.noTaxOnItem = true;
-              this.taxLabel = "On Item"
-            }else if(this.activeInvoice.tax_on_item == 1){
-              this.noTaxOnItem = false;
-              this.taxLabel = "On Bill"
-            }
-
-              //if item and Disabled condition  
-              if(this.activeInvoice.discount_on_item == 2){
-                this.noDiscountOnItem = true;
-                this.discountLabel = "Disabled"
-              }
-        
-              if(this.activeInvoice.tax_on_item == 2){
-                this.noTaxOnItem = true;
-                this.taxLabel = "Disabled"
-              }
-             
-
-              //shipping & adjustment
-              if(this.activeInvoice.shipping_charges){
-                this.noShippingCharges = false
-              }
-              if(this.activeInvoice.adjustment){
-                this.noAdjustment = false
-              }
-
-              //if setting of bill but no value added
-              if(this.activeInvoice.discount == 0){
-                this.noDiscountOnItem = true;
-              }
-              if(this.activeInvoice.tax_rate == 0){
-                this.noTaxOnItem = true;
-              }
-          
-            
+            this.setSettings();
             this.shippingAddress = this.activeInvoice.shipping_address;     //this shippingAddress is used to show updated shipping adrress from device
-            
-            
             // Change list item keys compatible
             if (this.activeInvoice.listItems) {
               var temp = []
@@ -641,52 +590,20 @@ export class AddEditComponent implements OnInit {
             //settings flagLevels as per estimate was saved
             this.activeInvoice.discount_on_item = this.activeEstimate.discount_on_item
             this.activeInvoice.tax_on_item = this.activeEstimate.tax_on_item
+            this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges
+            this.activeInvoice.adjustment = this.activeEstimate.adjustment
+            this.activeInvoice.discount = this.activeEstimate.discount
+            this.activeInvoice.tax_rate = this.activeEstimate.tax_rate
+            //set reference no of estimate
+            this.activeInvoice.reference =  this.activeEstimate.estimate_number;
+            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
+            this.activeInvoice.amount = this.activeEstimate.amount;
+            this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
+            this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
+            this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
 
-            //set settingFlags according to edit i.e invoice saved previously
-            if(this.activeInvoice.discount_on_item == 0){
-              this.activeInvoice.percentage_flag = 1;
-              this.noDiscountOnItem = false;
-              this.discountLabel = "On Bill"
-            }else if(this.activeInvoice.discount_on_item == 1){
-              this.noDiscountOnItem = true;
-              this.discountLabel = "On Item"
-            }
-      
-            if(this.activeInvoice.tax_on_item == 0){
-              this.taxtext = "Tax (on Item)"
-              this.noTaxOnItem = true;
-              this.taxLabel = "On Item"
-            }else if(this.activeInvoice.tax_on_item == 1){
-              this.noTaxOnItem = false;
-              this.taxLabel = "On Bill"
-            }
-
-              //if item and Disabled condition  
-              if(this.activeEstimate.discount_on_item == 2){
-                this.noDiscountOnItem = true;
-                this.discountLabel = "Disabled"
-              }
-        
-              if(this.activeEstimate.tax_on_item == 2){
-                this.noTaxOnItem = true;
-                this.taxLabel = "Disabled"
-              }
+            this.setSettings();
               
-              //shipping & adjustment
-              if(this.activeEstimate.shipping_charges){
-                this.noShippingCharges = false
-              }
-              if(this.activeEstimate.adjustment){
-                this.noAdjustment = false
-              }
-
-              //if setting of bill but no value added
-              if(this.activeEstimate.discount == 0){
-                this.noDiscountOnItem = true;
-              }
-              if(this.activeEstimate.tax_rate == 0){
-                this.noTaxOnItem = true;
-              }
 
             //set invoice number for making invoice
 
@@ -737,21 +654,7 @@ export class AddEditComponent implements OnInit {
               }
               this.activeInvoice.termsAndConditions = temp
             } 
-            //set reference no of estimate
-            this.activeInvoice.reference =  this.activeEstimate.estimate_number;
-            this.activeInvoice.gross_amount = this.activeEstimate.gross_amount;
-            this.activeInvoice.amount = this.activeEstimate.amount;
-            this.activeInvoice.percentage_value =  this.activeEstimate.percentage_value;
-            this.activeInvoice.discount = this.activeEstimate.discount;
             
-            
-            this.activeInvoice.percentage_flag = this.activeEstimate.percentage_flag;
-            this.activeInvoice.tax_rate = this.activeEstimate.tax_rate;
-            this.activeInvoice.tax_amount = this.activeEstimate.tax_amount;
-
-            this.activeInvoice.shipping_charges = this.activeEstimate.shipping_charges;
-            this.activeInvoice.adjustment = this.activeEstimate.adjustment;
-            this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
             
             // Set Dates
             this.activeInvoice.created_date = new Date().toISOString().slice(0,10).toString();
@@ -760,16 +663,16 @@ export class AddEditComponent implements OnInit {
 
             
             // Tax and discounts show or hide
-            if (this.activeEstimate.discount == 0) {
+            if (this.activeInvoice.discount == 0) {
               this.activeInvoice.percentage_flag = null
             }
-            if (this.activeEstimate.shipping_charges == 0) {
+            if (this.activeInvoice.shipping_charges == 0) {
               this.activeInvoice.shipping_charges = undefined
             }
-            if (this.activeEstimate.adjustment == 0) {
+            if (this.activeInvoice.adjustment == 0) {
               this.activeInvoice.adjustment = undefined
             }
-            if (this.activeEstimate.tax_amount == 0) {
+            if (this.activeInvoice.tax_amount == 0) {
               this.activeInvoice.tax_rate = null
             }
     
@@ -965,9 +868,6 @@ export class AddEditComponent implements OnInit {
       }, err => this.openErrorModal())
 
     }
-      
-      
-    
 
     // Fetch Terms if not in store
     if(this.termList.length < 1) {
@@ -985,10 +885,6 @@ export class AddEditComponent implements OnInit {
     } else {
       this.activeInvoice.termsAndConditions = this.editTerm ? this.termList.filter(trm => trm.setDefault == 'DEFAULT') : []
     }
-
-    
-    
-
     
 
     if (!isNaN(parseInt(this.settings.invNo))) {
@@ -1792,7 +1688,6 @@ export class AddEditComponent implements OnInit {
     
     if(this.activeInvoice.invoice_number !=="" && this.invoiceFlag == false){
     this.invListLoader = true;
-    console.log(JSON.stringify(this.activeInvoice));
     
     this.invoiceService.add([this.activeInvoice]).subscribe((result: any) => {
       if (result.status !== 200) {
@@ -1823,14 +1718,14 @@ export class AddEditComponent implements OnInit {
         if(this.incrementInvNo === true) {
           self.store.dispatch(new invoiceActions.recentInvoice((result.invoiceList[0])))
           this.toasterService.pop('success', 'Invoice saved successfully');
-          this.updateSettings();
+          // this.updateSettings();
           self.resetCreateInvoice()
           this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }
          else if(!this.edit) {
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
-          this.updateSettings();
+          // this.updateSettings();
           self.resetCreateInvoice()
           this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }

@@ -680,7 +680,7 @@ export class AddEditEstComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          this.removeEmptyNameClients();
+          this.removeEmptySpaces(this.clientList);
           //findout shipping address of selected client from clientlist
           if(this.activeEstimate){
           var client = this.clientList.filter(client => client.uniqueKeyClient == this.activeEstimate.unique_key_fk_client)[0]
@@ -733,7 +733,7 @@ export class AddEditEstComponent implements OnInit {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
-        if (response.settings !== null) {
+        if (response.settings) {
           this.appSettings = response.settings.appSettings
           this.activeSettings = response.settings.appSettings.androidSettings
           setStorage(response.settings)
@@ -777,7 +777,7 @@ export class AddEditEstComponent implements OnInit {
         }
       });
       this.clientList = uniqueClients;
-      this.removeEmptyNameClients();
+      this.removeEmptySpaces(this.clientList);
       this.filteredClients = this.billingTo.valueChanges.pipe(
         startWith<string | client>(''),
         map(value => typeof value === 'string' ? value : value.name),
@@ -792,17 +792,22 @@ export class AddEditEstComponent implements OnInit {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()))
   }
 
-  removeEmptyNameClients(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
       }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i);
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
       }
     }
+    return data
   }
 
   selectedClientChange(client) {
