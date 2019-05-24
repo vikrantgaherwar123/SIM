@@ -320,7 +320,7 @@ export class AddEditComponent implements OnInit {
 
   editInit(invId) {
    //to view updated or viewed invoice in view page
-    // this.commonSettingsInit()
+    this.commonSettingsInit()
     this.shippingChange = false;
     this.invoiceListLoading = true;
     // Fetch selected invoice
@@ -414,9 +414,6 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.listItems[i].total){
               this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
             }
-            if(this.activeInvoice.listItems[i].unique_identifier){
-              this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
-            }
             
             temp.push({
               description: this.activeInvoice.listItems[i].description,
@@ -428,7 +425,9 @@ export class AddEditComponent implements OnInit {
               rate: this.activeInvoice.listItems[i].rate,
               tax_rate: this.activeInvoice.listItems[i].tax_rate,
               total: this.activeInvoice.listItems[i].price,
-              unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+              unique_key_fk_invoice:this.activeInvoice.listItems[i].unique_key_fk_invoice,
+              unique_key_fk_product:this.activeInvoice.listItems[i].unique_key_fk_product,
+              unique_identifier: this.activeInvoice.listItems[i].unique_identifier,
               unit: this.activeInvoice.listItems[i].unit,
             })
           }
@@ -552,7 +551,9 @@ export class AddEditComponent implements OnInit {
                   rate: this.activeInvoice.listItems[i].rate,
                   tax_rate: this.activeInvoice.listItems[i].tax_rate,
                   total: this.activeInvoice.listItems[i].price,
-                  unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+                  unique_key_fk_invoice:this.activeInvoice.listItems[i].unique_key_fk_invoice,
+                  unique_key_fk_product:this.activeInvoice.listItems[i].unique_key_fk_product,
+                  unique_identifier: this.activeInvoice.listItems[i].unique_identifier,
                   unit: this.activeInvoice.listItems[i].unit,
                 })
               }
@@ -613,6 +614,7 @@ export class AddEditComponent implements OnInit {
       //MAKE INVOICE
       else {
         this.activeInvoice = <invoice>{}
+        this.activeInvoice.unique_identifier = generateUUID(this.user.user.orgId)
         this.incrementInvNo = true;
         //make edit flag false so that it will work as adding new invoice as addInit fun is doing i.e make invoice
         this.edit = false;
@@ -715,7 +717,8 @@ export class AddEditComponent implements OnInit {
                   rate: this.activeEstimate.listItems[i].rate,
                   tax_rate: this.activeEstimate.listItems[i].taxRate,
                   total: this.activeEstimate.listItems[i].price,
-                  unique_identifier: this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                  unique_key_fk_product:this.activeEstimate.listItems[i].uniqueKeyFKProduct,
+                  unique_identifier: generateUUID(this.user.user.orgId),
                   unit: this.activeEstimate.listItems[i].unit
                 })
               }
@@ -922,7 +925,7 @@ export class AddEditComponent implements OnInit {
         if (response.records) {
           this.store.dispatch(new clientActions.add(response.records))
           this.clientList = response.records.filter(recs => recs.enabled == 0)
-          this.removeEmptyNameClients();
+          this.removeEmptySpaces(this.clientList);
           var obj = {};
           //You can filter based on Id or Name based on the requirement
           var uniqueClients = this.clientList.filter(function (item) {
@@ -938,7 +941,7 @@ export class AddEditComponent implements OnInit {
           this.clientList = this.clientList.filter(recs => recs.enabled == 0)
         }
         
-        this.removeEmptyNameClients();
+        this.removeEmptySpaces(this.clientList);
         this.setClientFilter()
         
       },err => this.openErrorModal())
@@ -952,7 +955,7 @@ export class AddEditComponent implements OnInit {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
-        if (response.settings !== null) {
+        if (response.settings) {
           this.appSettings = response.settings.appSettings
           this.activeSettings = response.settings.appSettings.androidSettings
           setStorage(response.settings)
@@ -1016,7 +1019,7 @@ export class AddEditComponent implements OnInit {
       }
     });
     this.clientList = uniqueClients;
-    this.removeEmptyNameClients();
+    this.removeEmptySpaces(this.clientList);
     // Filter for client autocomplete
     if (this.clientList) {
       this.filteredClients = this.billingTo.valueChanges.pipe(
@@ -1033,18 +1036,22 @@ export class AddEditComponent implements OnInit {
     return this.clientList.filter(cli => cli.name.toLowerCase().includes(value.toLowerCase()));
   }
 
-  removeEmptyNameClients(){
+  removeEmptySpaces(data){
     //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }else{
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === undefined) {
+        data.splice(i, 1);
+      }
+      if (data[i].name) {
+        var tempClient = data[i].name.toLowerCase().replace(/\s/g, "");
+        if (tempClient === "") {
+          data.splice(i, 1);
+        }
+      }else if(!data[i].name){
+        data.splice(i, 1);
       }
     }
-    }
+    return data
   }
 
   selectedClientChange(client) {
@@ -1114,10 +1121,11 @@ export class AddEditComponent implements OnInit {
       this.clientListLoading = true
       this.clientService.add([this.clientService.changeKeysForApi(this.addClientModal)]).subscribe((response: any) => {
         if (response.status === 200) {
-          let tempClient = this.clientService.changeKeysForStore(response.clientList[0])
-          this.store.dispatch(new clientActions.add([tempClient]))
-          this.clientList.push(tempClient)
-          this.activeClient = tempClient
+          let temp = this.clientService.changeKeysForStore(response.clientList[0])
+          this.store.dispatch(new clientActions.add([temp]))
+          this.clientList.push(temp)
+          
+          this.activeClient = temp
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
           this.clientListLoading = false
@@ -1158,6 +1166,7 @@ export class AddEditComponent implements OnInit {
       }
     }
   }
+  
 
   // Product Functions
   setProductFilter() {
@@ -1233,7 +1242,6 @@ export class AddEditComponent implements OnInit {
     }
     this.activeItem = {
       unique_identifier: generateUUID(this.user.user.orgId),
-      unique_key_fk_invoice : this.activeInvoice.unique_identifier,
       unique_key_fk_product: product.uniqueKeyProduct,
       description: product.discription == null ? '' : product.discription,
       product_name: product.prodName,
@@ -1295,7 +1303,7 @@ export class AddEditComponent implements OnInit {
     }
     else  {
 
-    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
+    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value) {
       // this.activeItem.product_name = this.addItem.value;
       var tempCompare = ''
       var duplicateProduct = false;
@@ -1573,7 +1581,7 @@ export class AddEditComponent implements OnInit {
         
         //inclusive tax
         if (this.includeTax) {
-
+          //for item settings
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           }
@@ -1582,6 +1590,14 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount
             }else{
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity)
+            }
+            //for Bill settings
+            if(this.activeInvoice.discount_on_item == 1 ||this.activeInvoice.discount_on_item == 2){
+              this.activeInvoice.discount = 0;
+              this.activeInvoice.percentage_value = 0 ;
+            }
+            if(this.activeInvoice.tax_on_item == 0 ||this.activeInvoice.tax_on_item == 2){
+              this.activeInvoice.tax_rate = 0;
             }
         }
         else{
@@ -1738,7 +1754,7 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice.termsAndConditions = temp
 
     for (var i = this.activeInvoice.listItems.length; i > 0; i--) {
-      // this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
+      this.activeInvoice.listItems[i - 1].unique_key_fk_invoice = this.activeInvoice.unique_identifier
       if (!this.activeInvoice.listItems[i - 1].product_name || this.activeInvoice.listItems[i - 1].product_name == '') {
         this.activeInvoice.listItems.splice(i - 1, 1)
       }
@@ -2056,27 +2072,13 @@ export class AddEditComponent implements OnInit {
     return temp
   }
 
-  removeEmptySpaces(){
-    //remove whitespaces from clientlist
-    for (let i = 0; i < this.clientList.length; i++) {
-      if(!this.clientList[i].name){
-        this.clientList.splice(i,1);
-      }
-      var tempClient = this.clientList[i].name.toLowerCase().replace(/\s/g, "");
-      if (tempClient === "") {
-        this.clientList.splice(i,1);
-      }
-    }
-    
-  }
 
   setActiveClient() {
       if (this.clientList.length < 1) {
         this.clientListLoading = true
         this.clientService.fetch().subscribe((response: response) => {
           this.clientListLoading = false
-          this.clientList = response.records;
-          this.removeEmptySpaces();
+          this.clientList = this.removeEmptySpaces(response.records);
         })
       }
 

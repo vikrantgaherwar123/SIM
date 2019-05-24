@@ -103,6 +103,8 @@ export class LoginComponent implements OnInit {
     event.preventDefault()
     $("#login-btn").prop("disabled", true)
     this.loginLoader = true;
+    console.log(JSON.stringify(this.user));
+    
 
 
     this.authService.login(this.user).subscribe((response: response) => {
