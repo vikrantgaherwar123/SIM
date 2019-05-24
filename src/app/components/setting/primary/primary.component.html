@@ -120,6 +120,40 @@
                 </div>
               </div>
             </div>
+            <!-- Inclusive tax -->
+            <div class="form-group labelSpacing">
+              <div class="row">
+                <label class="col-md-3 font-custom-bold fontsize18 labelText">Price are Inclusive Of Tax</label><br>
+                <!-- <div><span>(e.g. VAT/Sales Tax)</span></div> -->
+                <div class="col-md-9 row">
+                  <div class="col-12 col-md-4">
+                    <label class="check">
+                      <div class="checkbox default_checkbox">
+                          <input type="checkbox"  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                          <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+             <!-- tax label -->
+             <div class="form-group labelSpacing">
+              <div class="row">
+                <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Name Of Tax</label>
+                <!-- <span>(e.g. VAT/Sales Tax)</span> -->
+                <div class="col-md-9 row">
+                  <div class="col-12 col-md-4">
+                    <input class="form-control all_tax" type="text" name="taxLable"  placeholder="Tax Label"
+                      [(ngModel)]="activeSettings.taxLable" onfocus="this.select()"
+                      />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
 
             <!-- Date Format -->
             <div class="form-group labelSpacing">
@@ -290,19 +324,7 @@
                 </div>
               </div>
             </div>
-            <!-- tax label -->
-            <div class="form-group labelSpacing">
-                <div class="row">
-                  <label class="col-12 col-md-3 font-custom-bold fontsize18 labelText">Tax Label</label>
-                  <div class="col-md-9 row">
-                    <div class="col-12 col-md-4">
-                      <input class="form-control all_tax" type="text" name="taxLable"  placeholder="Tax Label"
-                        [(ngModel)]="activeSettings.taxLable" onfocus="this.select()"
-                        />
-                    </div>
-                  </div>
-                </div>
-              </div>
+           
           </div>
         </div>
       </div>

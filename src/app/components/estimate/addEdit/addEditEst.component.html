@@ -716,7 +716,7 @@
           <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list text-center 
           list-header-col font-custom-bold" data-toggle="collapse" 
           href="#todaysEstimates" role="button" aria-expanded="false" aria-controls="todaysEstimates">
-            {{settings.mTvEstimate ? settings.Estimate : 'Estimates'}} Generated Today <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
+           Estimates Generated Today <span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
           </div>
           
 
@@ -879,7 +879,7 @@
           <button type="button" class="btn change_bg save_btn" (click)="closeAddClientModal()">
             Close
           </button>
-          <button type="button" id="saveClientButton" class="btn save_btn" 
+          <button type="button" id="saveClientButton" class="save btn save_btn" 
             data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>" [disabled]="!clientform.valid"
             (click)="saveClient(clientform.valid)">
             Add Client
@@ -958,7 +958,8 @@
               <div class="row">
                   <input type="number" 
                   class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
-                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" readonly />
+                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" hidden readonly />
+                  <span  class="form-control add-client-input-custom popup_input_height amount_span">{{activeItem.total | number:'1.2-2' }}</span>
                   <div class="popup_input_symbol">
                       <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>

@@ -920,13 +920,13 @@
             <div class="row col-sm-12 col-md-12 col-xs-12 col-lg-12 back-add-list words_break text-center list-header-col font-custom-bold"
             style="margin-top: 4px;margin-left: 0px;" data-toggle="collapse" 
              href="#todaysInvoice" role="button" aria-expanded="false" aria-controls="todaysInvoice">
-            {{settings.mTvInvoice ? settings.mTvInvoice : 'Invoices'}} Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
+            Invoices Generated Today<span><i class="paidArrow fa fa-angle-down setting_arrow"></i></span>
            </div>
          
           <div id="todaysInvoice" class="collapse col-12 show px-0 mCustomScrollbar style-3" style="overflow-y: auto !important;">
             <div [ngClass]="{'item': true, 'row': true, 'selected': (invoice.unique_identifier == invoiceId)}"
               *ngFor="let invoice of (recentInvoiceList | orderBy: invSortTerm:true) " class="row side_item_height"  (click)="goView(invoice.unique_identifier)">
-              <div class="col-2 list-date font-custom-bold fontsize13 hr_line" style="line-height: 16px;">
+              <div class="col-2 list-date font-custom-boldfgdd fontsize13 hr_line" style="line-height: 16px;">
                 <span class="inv_date">{{ invoice.created_date | date: 'dd' }}</span><br/>
                 <span class="sub_date">{{ invoice.created_date | date: 'MMM' }}</span>
               </div>
@@ -1044,7 +1044,7 @@
           <button type="button" class="btn change_bg save_btn"  (click)="closeAddClientModal()">
             Close
           </button>
-          <button type="button" id="saveClientButton" class="btn save_btn"
+          <button type="button" id="saveClientButton" class="save btn save_btn"
             data-loading-text="Saving..<i class='fa fa-spinner fa-spin '></i>" [disabled]="!clientform.valid"
             (click)="saveClient(clientform.valid)">
             Add Client
@@ -1123,7 +1123,8 @@
               <div class="row">
                   <input type="number" 
                   class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
-                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" style="max-width: 434px;" readonly />
+                  (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" readonly hidden />
+                  <span  class="form-control add-client-input-custom popup_input_height amount_span">{{activeItem.total | number:'1.2-2' }}</span>
                   <div class="popup_input_symbol" >
                       <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>

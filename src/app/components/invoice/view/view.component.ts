@@ -134,11 +134,15 @@ export class ViewComponent implements OnInit {
         this.removeEmptySpaces(this.clientList);
         this.store.dispatch(new clientActions.add(this.clientList))
         this.dropdownList = this.clientList;
+        this.sortClientAlphabetically();
+        
       },err => this.openErrorModal()
       )
     } else {
       this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
+      this.sortClientAlphabetically();
+      
     }
     this.route.params.subscribe(params => {
       if (params.invId) {
@@ -181,7 +185,13 @@ export class ViewComponent implements OnInit {
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
-  
+  sortClientAlphabetically(){
+    this.dropdownList.sort(function (a, b) {
+      var textA = a.name.toUpperCase();
+      var textB = b.name.toUpperCase();
+      return textA.localeCompare(textB);
+    });
+  }
 
   removeEmptySpaces(data){
     //remove whitespaces from clientlist

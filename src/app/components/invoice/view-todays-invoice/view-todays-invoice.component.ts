@@ -143,6 +143,45 @@ export class ViewTodaysInvoiceComponent implements OnInit {
     return data
   }
 
+  setStoreVariables(){
+
+    for(let i = 0; i < this.activeInv.listItems.length; i++){
+      if(this.activeInv.listItems[i].discount || this.activeInv.listItems[i].discount == 0){
+        
+        this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount;
+      }
+      if(this.activeInv.listItems[i].discount_amount || this.activeInv.listItems[i].discount_amount == 0){
+        this.activeInv.listItems[i].discountAmount = this.activeInv.listItems[i].discount_amount;
+      }
+      if(this.activeInv.listItems[i].tax_amount || this.activeInv.listItems[i].tax_amount == 0){
+        this.activeInv.listItems[i].taxAmount = this.activeInv.listItems[i].tax_amount;
+      }
+      if(this.activeInv.listItems[i].taxAmount && this.activeInv.listItems[i].taxAmount == 0){
+        this.activeInv.listItems[i].tax_rate = 0;
+      }
+      
+      if(this.activeInv.listItems[i].product_name){
+        this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name;
+      }
+      if(this.activeInv.listItems[i].quantity){
+        this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity;
+      }
+      if(this.activeInv.listItems[i].total){
+        this.activeInv.listItems[i].price = this.activeInv.listItems[i].total;
+      }
+      if(this.activeInv.listItems[i].unique_key_fk_product){
+        this.activeInv.listItems[i].uniqueKeyFKProduct = this.activeInv.listItems[i].unique_key_fk_product;
+      }
+      if(this.activeInv.listItems[i].unique_key_fk_invoice){
+        this.activeInv.listItems[i].uniqueKeyFKInvoice = this.activeInv.listItems[i].unique_key_fk_invoice;
+      }
+      if(this.activeInv.listItems[i].unique_identifier){
+        this.activeInv.listItems[i].uniqueKeyListItem = this.activeInv.listItems[i].unique_identifier;
+      }
+    }
+
+  }
+
   setActiveInv(invId: string = '') {
     this.activeInv = this.recentInvoiceList.filter(inv => inv.unique_identifier == invId)[0]
 
@@ -157,35 +196,8 @@ export class ViewTodaysInvoiceComponent implements OnInit {
 
     //set variables according to data comes from API and store 
     if(this.activeInv !== undefined){
-      for(let i = 0; i < this.activeInv.listItems.length; i++){
-        if(this.activeInv.listItems[i].discount || this.activeInv.listItems[i].discount == 0){
-          
-          this.activeInv.listItems[i].discountRate = this.activeInv.listItems[i].discount;
-        }
-        if(this.activeInv.listItems[i].discount_amount || this.activeInv.listItems[i].discount_amount == 0){
-          this.activeInv.listItems[i].discountAmount = this.activeInv.listItems[i].discount_amount;
-        }
-        if(this.activeInv.listItems[i].tax_amount || this.activeInv.listItems[i].tax_amount == 0){
-          this.activeInv.listItems[i].taxAmount = this.activeInv.listItems[i].tax_amount;
-        }
-        if(this.activeInv.listItems[i].taxAmount && this.activeInv.listItems[i].taxAmount == 0){
-          this.activeInv.listItems[i].tax_rate = 0;
-        }
-        
-        if(this.activeInv.listItems[i].product_name){
-          this.activeInv.listItems[i].productName = this.activeInv.listItems[i].product_name;
-        }
-        if(this.activeInv.listItems[i].quantity){
-          this.activeInv.listItems[i].qty = this.activeInv.listItems[i].quantity;
-        }
-        if(this.activeInv.listItems[i].total){
-          this.activeInv.listItems[i].price = this.activeInv.listItems[i].total;
-        }
-        if(this.activeInv.listItems[i].unique_identifier){
-          this.activeInv.listItems[i].uniqueKeyListItem = this.activeInv.listItems[i].unique_identifier;
-        }
-      }
 
+      this.setStoreVariables();
       
         if (this.activeInv.listItems) {
           var temp = []
@@ -210,7 +222,9 @@ export class ViewTodaysInvoiceComponent implements OnInit {
               rate: this.activeInv.listItems[i].rate,
               tax_rate: this.activeInv.listItems[i].tax_rate,
               price: this.activeInv.listItems[i].price,
-              uniqueKeyListItem: this.activeInv.listItems[i].uniqueKeyListItem,
+              unique_key_fk_invoice:this.activeInv.listItems[i].uniqueKeyFKInvoice,
+              unique_key_fk_product:this.activeInv.listItems[i].uniqueKeyFKProduct,
+              unique_identifier: this.activeInv.listItems[i].uniqueKeyListItem,
               unit: this.activeInv.listItems[i].unit,
             })
           }

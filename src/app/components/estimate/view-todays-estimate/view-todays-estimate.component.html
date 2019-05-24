@@ -86,11 +86,14 @@
                   <div class="offset-md-2 col-md-4 col-sm-6 ">
                     <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
-                  <div *ngIf="dateDDMMYY" class="col-sm-6">
-                    {{activeEst.createDate | date:"dd/MM/yyyy"}}
-                  </div>
-                  <div *ngIf="dateMMDDYY" class="col-sm-6">
-                    {{activeEst.createDate | date:"MM/dd/yyyy"}}
+                  <div class="col-sm-6 color_grey">
+                      <div *ngIf="settings.dateDDMMYY == true">
+                          {{activeEst.createDate | date: 'dd/MM/yyyy'}}
+                      </div>
+    
+                      <div *ngIf="settings.dateDDMMYY == false">
+                          {{activeEst.createDate | date: 'MM/dd/yyyy'}}
+                      </div>
                   </div>
                 </div>
               </div>

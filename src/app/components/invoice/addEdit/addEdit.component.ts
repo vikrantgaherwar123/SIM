@@ -421,9 +421,6 @@ export class AddEditComponent implements OnInit {
             if(this.activeInvoice.listItems[i].total){
               this.activeInvoice.listItems[i].price = this.activeInvoice.listItems[i].total;
             }
-            if(this.activeInvoice.listItems[i].unique_identifier){
-              this.activeInvoice.listItems[i].uniqueKeyListItem = this.activeInvoice.listItems[i].unique_identifier;
-            }
             
             temp.push({
               description: this.activeInvoice.listItems[i].description,
@@ -435,7 +432,9 @@ export class AddEditComponent implements OnInit {
               rate: this.activeInvoice.listItems[i].rate,
               tax_rate: this.activeInvoice.listItems[i].tax_rate,
               total: this.activeInvoice.listItems[i].price,
-              unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+              unique_key_fk_invoice:this.activeInvoice.listItems[i].unique_key_fk_invoice,
+              unique_key_fk_product:this.activeInvoice.listItems[i].unique_key_fk_product,
+              unique_identifier: this.activeInvoice.listItems[i].unique_identifier,
               unit: this.activeInvoice.listItems[i].unit,
             })
           }
@@ -559,7 +558,9 @@ export class AddEditComponent implements OnInit {
                   rate: this.activeInvoice.listItems[i].rate,
                   tax_rate: this.activeInvoice.listItems[i].tax_rate,
                   total: this.activeInvoice.listItems[i].price,
-                  unique_identifier: this.activeInvoice.listItems[i].uniqueKeyListItem,
+                  unique_key_fk_invoice:this.activeInvoice.listItems[i].unique_key_fk_invoice,
+                  unique_key_fk_product:this.activeInvoice.listItems[i].unique_key_fk_product,
+                  unique_identifier: this.activeInvoice.listItems[i].unique_identifier,
                   unit: this.activeInvoice.listItems[i].unit,
                 })
               }
@@ -959,7 +960,7 @@ export class AddEditComponent implements OnInit {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
-        if (response.settings !== null) {
+        if (response.settings) {
           this.appSettings = response.settings.appSettings
           this.activeSettings = response.settings.appSettings.androidSettings
           setStorage(response.settings)
@@ -1303,7 +1304,7 @@ export class AddEditComponent implements OnInit {
     }
     else  {
 
-    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="" ) {
+    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value) {
       // this.activeItem.product_name = this.addItem.value;
       var tempCompare = ''
       var duplicateProduct = false;
@@ -1602,7 +1603,7 @@ export class AddEditComponent implements OnInit {
         
         //inclusive tax
         if (this.includeTax) {
-
+          //for item settings
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           }
@@ -1611,6 +1612,14 @@ export class AddEditComponent implements OnInit {
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount
             }else{
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity)
+            }
+            //for Bill settings
+            if(this.activeInvoice.discount_on_item == 1 ||this.activeInvoice.discount_on_item == 2){
+              this.activeInvoice.discount = 0;
+              this.activeInvoice.percentage_value = 0 ;
+            }
+            if(this.activeInvoice.tax_on_item == 0 ||this.activeInvoice.tax_on_item == 2){
+              this.activeInvoice.tax_rate = 0;
             }
         }
         else{

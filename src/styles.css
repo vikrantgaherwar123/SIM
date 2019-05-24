@@ -1674,6 +1674,29 @@ input.mat-input-element {
 .add_disable_text{
   color: #b7b7b7 !important;
 }
+/* common style */
 .display_none{
   display:none !important;
+}
+.amount_span{
+  max-width: 434px !important;
+  padding: 2px 11px !important;
+}
+.height_47{
+  height: 47px !important;
+}
+.delete_modal_cross{
+  height: 30px;
+  margin-top: 6px;
+}
+.delete_span{
+  font-size: 16px;
+  font-weight: bold;
+}
+.bg_white{
+  background-color: #ffffff !important;
+}
+.sort_list_icon{
+  cursor: pointer;
+  background: #e6ecf0
 }

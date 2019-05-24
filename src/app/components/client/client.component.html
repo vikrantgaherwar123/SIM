@@ -1,12 +1,12 @@
 
 <div class="row main-wrapper">
-  <div class="col-12" id="main" style="background-color: #ffffff !important;">
-    <div class="row pro_row" style="padding: 25px 78px;"> 
+  <div class="col-12" id="main">
+    <div class="row pro_row pro_row_pad"> 
       <div class="col-6 row">
-        <div class="col-3" style="text-align: center;">
+        <div class="col-3 text_center">
             <h3 class="pro_heading">Client</h3>
         </div>
-        <div class="col-3" style="margin-left: -40px;">
+        <div class="col-3 mrg_left_40">
           <button type="button" class="btn save_btn"
             (click)="addClientModal()">
             + Add Client
@@ -14,7 +14,7 @@
         </div>
         <div class="col-2" style="display: flex;">
           <span>
-              <a style="cursor: pointer;background: #e6ecf0" data-toggle="dropdown" aria-haspopup="true"
+              <a class="sort_list_icon" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false" class="pull-right list-btn cus-img list_drop ">
               <img alt="logo" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
             </a>
@@ -39,16 +39,16 @@
     <div class="row">
       <!-- Product List -->
       <div class="col-12 pr-0">
-          <div style="padding: 39px 79px;" class="item-form">
+          <div class="product_list_pad item-form">
               <div class="col-12 row header_title">
-                <div class="col-3 font_16"><span style="margin-left: 5px;">Client Name</span></div>
+                <div class="col-3 font_16"><span class="mrg_left_5">Client Name</span></div>
                 <div class="col-3 text-right heading">Contact Person Name</div>
                 <div class="col-2 text-right heading">Email</div>
                 <div class="col-2 text-right heading">Number</div>
                 <div class="col-2 text-right heading">Actions</div>
               </div>
               
-              <div style="margin-bottom: -13px;" id="client{{index}}" class="clientname" *ngFor="let client of (clientList | filter:searchTerms:(sortTerm=='name'? true : true):false); index as index"
+              <div id="client{{index}}" class="clientname client_div" *ngFor="let client of (clientList | filter:searchTerms:(sortTerm=='name'? true : true):false); index as index"
                >
                 <div class="col-12 row main_row" (click)="hideme[index] = !hideme[index]">
                   <div class="col-3" style="padding-top: 6px;">
@@ -62,7 +62,7 @@
                   <div class="col-2 text-right color_grey">{{client.number}}</div>
                 
                 
-                  <div class="col-2" style="text-align: right;">
+                  <div class="col-2 text_center">
                     <img src="assets/images/edit_blue.png" Title="Edit" alt="" (click)="editThis(client)"
                       class="hg_20 cross_label_img img_hover">
                     <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteClientModal(client)"
@@ -71,7 +71,7 @@
                   </div>
                 </div>
                   <div class="moreDiscr col-12 row" [class.show]="hideme[index]"><!--class="moreDiscr" [class.show]="show"-->
-                    <div class="row col-12 selected-items selected_description" style="padding: 15px 42px;">
+                    <div class="row col-12 selected-items selected_description expand_div" >
                       <div class="col-3">
                         <span class="small_title">Address line:</span> &nbsp;
                         <span class="small_description">{{client.addressLine1}}</span>
@@ -140,15 +140,15 @@ data-backdrop="static" data-keyboard="false">
         </div>
         <div class="row col-12">
           <span class="edit_span">Address Line :</span>
-          <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control mCustomScrollbar style-3"
-                      [(ngModel)]="activeClient.addressLine1" placeholder="Address Line" style="height: 47px !important;"
+          <textarea elastic type="text" name="addressLine1" id="addressLine1" class="form-control mCustomScrollbar style-3 height_47"
+                      [(ngModel)]="activeClient.addressLine1" placeholder="Address Line"
                       onfocus="this.select()"></textarea>
          </div>
 
          <div class="row col-12">
           <span class="edit_span">Shipping Address :</span>
-          <textarea elastic type="text" name="shippingAddress" id="shippingAddress" style="height: 47px !important;"
-                      [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3" placeholder="Shipping Address"
+          <textarea elastic type="text" name="shippingAddress" id="shippingAddress"
+                      [(ngModel)]="activeClient.shippingAddress" class="form-control mCustomScrollbar style-3 height_47" placeholder="Shipping Address"
                       onfocus="this.select()"></textarea>
          </div>
         <div class="row col-12">
@@ -158,8 +158,8 @@ data-backdrop="static" data-keyboard="false">
         </div>
         <div class="row col-12">
           <span class="edit_span">Business Details:</span>
-          <textarea elastic type="text" id="business_detail" name="business_detail" class="form-control mCustomScrollbar style-3"
-                      style="height: 47px !important;" [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
+          <textarea elastic type="text" id="business_detail" name="business_detail" class="height_47 form-control mCustomScrollbar style-3"
+                      [(ngModel)]="activeClient.businessDetail" placeholder="Business Details"
                       onfocus="this.select()"></textarea>
         </div>
       </div>
@@ -188,17 +188,17 @@ data-backdrop="static" data-keyboard="false">
 <div class="modal-content">
  <div class="modal-header">
    <h4 class="modal-title form-header font-custom-bold header-color" id="clientFormLabel">
-       <img src="assets/images/delete-color.png" class="del" style="height:28px;">
+       <img src="assets/images/delete-color.png" class="del del_client">
         Delete Client
    </h4>
    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-     <img src="assets/images/cross.png" alt="logo" style="height: 30px;margin-top: 6px;">
+     <img src="assets/images/cross.png" alt="logo" class="delete_modal_cross">
    </button>
  </div>
  <div class="modal-body">
    <form class="form-horizontal add-client-form" name="clientform" #clientform="ngForm">
-     <h5 style="font-size: 16px;font-weight: bold;">Are you sure want to delete this client?</h5>
-     <h5 style="font-size: 16px;font-weight: bold;">You can undo this action</h5>
+     <h5 class="delete_span">Are you sure want to delete this client?</h5>
+     <h5 class="delete_span">You can undo this action</h5>
 
    </form>
  </div>

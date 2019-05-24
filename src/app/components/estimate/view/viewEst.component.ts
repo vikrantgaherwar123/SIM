@@ -124,12 +124,14 @@ export class ViewEstComponent implements OnInit {
         this.clientList = response.records.filter(recs => recs.enabled == 0)
         this.removeEmptySpaces(this.clientList);
         this.dropdownList = this.clientList;
+        this.sortClientAlphabetically();
         this.store.dispatch(new clientActions.add(response.records))
       },err => this.openErrorModal()
       )
     } else {
       this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
+      this.sortClientAlphabetically();
     }
     this.route.params.subscribe(params => {
       if(params.estId){
@@ -169,6 +171,13 @@ export class ViewEstComponent implements OnInit {
    this.estimateQueryForm.dateRange.start.reset(new Date(date.getFullYear(), date.getMonth(), 1))
    this.estimateQueryForm.dateRange.end.reset(new Date(date.getFullYear(), date.getMonth() + 1, 0))
 
+  }
+  sortClientAlphabetically(){
+    this.dropdownList.sort(function (a, b) {
+      var textA = a.name.toUpperCase();
+      var textB = b.name.toUpperCase();
+      return textA.localeCompare(textB);
+    });
   }
 
   onItemSelect(item: any) {
