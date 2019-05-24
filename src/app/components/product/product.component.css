@@ -147,3 +147,7 @@
 .height_72{
   height: 72px !important;
 }
+.icons{
+  text-align: right;
+  margin-top: 12px;
+}

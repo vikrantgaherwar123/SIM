@@ -7,7 +7,7 @@
           <div class="col-3 product_heading">
               <h3 class="pro_heading">Products</h3>
           </div>
-          <div class="col-3" class="mrg_left_18">
+          <div class="col-3" style="margin-left: -14px;">
             <button type="button" class="btn save_btn"
               (click)="addProductModal()">
               + Add Product
@@ -16,7 +16,7 @@
           <div class="col-2" style="display: flex;">
             <span>
               <a class="sort_list_product" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" class="pull-right list_drop list-btn cus-img"
+                aria-haspopup="true" aria-expanded="false" class="pull-right list_drop cus-img"
               >
                 <img alt="logo" Title="Search By" src="assets/images/list-icon/sort-ascending-button24.png" class="plus_list">
               </a>
@@ -38,10 +38,10 @@
         
         
       </div>
-      <div class="row">
+      <div class="row bg_white">
         <!-- Product List -->
         <div class="col-12 pr-0">
-            <div class="prod_list_pad" class="item-form">
+            <div class="prod_list_pad" class="item-form pro_row_pad">
                 <div class="col-12 row header_title">
                   <div class="col-6 font_16"><span>Product</span></div>
                   <div class="col-1 text-right heading">Rate</div>
@@ -69,7 +69,7 @@
                       <div class="col-1 text-right color_grey">{{ product.taxRate | number:'1.2-2'}} %</div>
                       <div class="col-1 text-right color_grey">{{ product.unit }}</div>
                       <div class="col-2 text-right color_grey">{{ product.productCode }}</div>
-                      <div class="col-1 text_center">
+                      <div class="col-1 text_center icons">
                           <img src="assets/images/edit_blue.png" Title="Edit" alt="" (click)="editThis(product)"
                             class="hg_20 cross_label_img img_hover">
                           <img src="assets/images/grey_cross.png" Title="Delete" alt="" (click)="openDeleteProductModal(product)" class="hg_20 cross_label_img img_hover">

@@ -20,7 +20,7 @@ import { BatchuploadComponent } from './components/setting/batchupload/batchuplo
 import { SupportComponent } from './components/support/support.component';
 import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
 import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
-
+import { SubscriptionComponent } from './components/login/subscription/subscription.component';
 
 
 
@@ -52,6 +52,7 @@ const routes: Routes = [
   { path: 'setting/userProfile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'setting/batchUpload', component: BatchuploadComponent, canActivate: [AuthGuard] },
   { path: 'support', component: SupportComponent, canActivate: [AuthGuard] },
+  { path: 'login/subscription', component: SubscriptionComponent},
   { path: '**', redirectTo: 'invoice/add', pathMatch: 'full' },
 ]
 

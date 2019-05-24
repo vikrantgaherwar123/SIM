@@ -191,7 +191,7 @@
           <form name="forgetForm" #forgetForm="ngForm" (ngSubmit)="forgetPassword(forgetForm)">
             <div class="form-group input--with-icon">
               <i class="fa fa-envelope input-icons"></i>
-              <input type="email" class="login-input" name="email" [(ngModel)]="forgetMail" required autocomplete="off"
+              <input type="email" class="login-input" name="email"  [ngClass]="{'pointer_none': loginLoader == true}" [(ngModel)]="forgetMail" required autocomplete="off"
                 placeholder="Email">
             </div>
             <div style="text-align: center" class="margin-bottom-5px" *ngIf="errorMessage">

@@ -199,3 +199,6 @@
   border: none;
   background-color: #ffffff
 }
+.pointer_none{
+  pointer-events: none;
+}

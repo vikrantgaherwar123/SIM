@@ -1,0 +1,16 @@
+@import '../../../../assets/css/form.css';
+
+.number_img{
+    height: 42px;
+}
+.step_img{
+    height: 194px;
+}
+.step_row{
+    padding: 10px 86px;
+}
+.step_heading{
+    text-decoration: underline;
+    color: #515151;
+    font-weight: bold;
+}
