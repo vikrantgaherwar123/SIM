@@ -199,7 +199,7 @@ export class ClientComponent implements OnInit {
 
           if (index == -1) {  // add
             self.store.dispatch(new clientActions.add([self.clientService.changeKeysForStore(response.clientList[0])]))
-            this.clientList.push(self.clientService.changeKeysForStore(response.clientList[0]))
+            this.clientList.push(response.clientList[0])
             this.toasterService.pop('success', 'Client Saved Successfully !!!');
             this.closeItemModel()
           } else if(self.activeClient.enabled !== 0){// delete

@@ -199,6 +199,6 @@
   border: none;
   background-color: #ffffff
 }
-.pointer_none{
+.disable_form{
   pointer-events: none;
 }
