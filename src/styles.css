@@ -29,6 +29,10 @@
   font-family: helvetica_light;
   src: url('./assets/fonts/HelveticaNeue-Light.otf')
 }
+@font-face {
+  font-family: segoe_bold;
+  src: url('./assets/fonts/Segoe-UI-Bold.ttf')
+}
 
 
 b, body, p, button {

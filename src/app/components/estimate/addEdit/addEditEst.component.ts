@@ -733,7 +733,7 @@ export class AddEditEstComponent implements OnInit {
       this.settingsLoading = true;
       this.settingService.fetch().subscribe((response: any) => {
         this.settingsLoading = false;
-        if (response.settings !== null) {
+        if (response.settings) {
           this.appSettings = response.settings.appSettings
           this.activeSettings = response.settings.appSettings.androidSettings
           setStorage(response.settings)

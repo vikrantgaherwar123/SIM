@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
   settingsLoading: boolean;
   loginFailed: boolean;
   loginDone: boolean = false;
+  accountExpired: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -124,7 +125,10 @@ export class LoginComponent implements OnInit {
         this.loggedInFailed = true;
         if (response.status == 410) {
           console.log('purchase error');
-        } else {
+         } else if(response.status == 502){ //keep it as 410
+          this.accountExpired = true;
+        }
+        else {
           $("#login-btn").prop("disabled", false)
           $("#fbbtn").prop("disabled", false)
           $("#googlebtn").prop("disabled", false)

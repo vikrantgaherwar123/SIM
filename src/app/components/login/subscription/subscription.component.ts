@@ -11,8 +11,8 @@ export class SubscriptionComponent implements OnInit {
 
   ngOnInit() {
     
-    $('#userLogout').hide()
-    $('#navbar').hide()
+    $('#userLogout').remove()
+    $('#navbar').remove()
   }
 
 }

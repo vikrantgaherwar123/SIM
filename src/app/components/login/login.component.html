@@ -181,6 +181,55 @@
             </div>
           </form>
         </div>
+        <!-- account expired -->
+        <div class='container' *ngIf="loggedInFailed">
+            <form name="form" class="acc_expired_div">
+              <div class="expired_icon text-center">
+                <img src="assets/images/exclamation16.png">
+              </div>
+            <div class="form-group text-center">
+                <h2 class="h2_font">
+                  Account Expired
+                </h2>
+                <p style="color: #c22929 !important;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                  industry's
+                  standard dummy text ever since the 1500s
+                </p>
+                <div>
+                </div>
+              </div>
+            </form>
+            <div>
+              <button style="margin-top: 24px;" type="submit" id="login-btn" name="login-btn">
+                <span>Contact Support</span>
+              </button>
+            </div>
+          </div>
+  
+          <!-- mail not verified -->
+          <div class='container' *ngIf="mailNotVerified">
+              <form name="form" class="acc_expired_div">
+                <div class="expired_icon text-center">
+                  <img src="assets/images/exclamation16.png">
+                </div>
+              <div class="form-group text-center">
+                  <h2 class="h2_font">
+                    Mail Not Verified
+                  </h2>
+                  <p style="color: #c22929 !important;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's
+                    standard dummy text ever since the 1500s
+                  </p>
+                  <div>
+                  </div>
+                </div>
+              </form>
+              <div>
+                <button style="margin-top: 24px;" type="submit" id="login-btn" name="login-btn">
+                  <span>Resend Mail</span>
+                </button>
+              </div>
+            </div>
       </div>
 
       <div class="login-form" *ngIf="forgetFlag">
