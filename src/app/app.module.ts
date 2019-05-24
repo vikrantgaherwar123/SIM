@@ -62,6 +62,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
 import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
+import { SubscriptionComponent } from './components/login/subscription/subscription.component';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -121,6 +122,7 @@ export const MY_FORMATS = {
     SupportComponent,
     ViewTodaysInvoiceComponent,
     ViewTodaysEstimateComponent,
+    SubscriptionComponent,
   ],
   imports: [
     

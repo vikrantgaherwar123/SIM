@@ -83,8 +83,8 @@ export class ClientService {
   changeKeysForStore(client) {
     return {
       addressLine1: client.address_line1,
-      addressLine2: client.addressLine2,
-      addressLine3: client.addressLine3,
+      addressLine2: client.address_line2,
+      addressLine3: client.address_line3,
       businessDetail: client.business_detail,
       businessId: client.business_id,
       contactPersonName: client.contact_person_name,

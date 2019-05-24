@@ -1128,8 +1128,6 @@ export class AddEditComponent implements OnInit {
           this.activeClient = temp
           this.billingTo.setValue(this.activeClient)
           this.toasterService.pop('success', 'Client Added Successfully');
-          this.store.select('client').subscribe(clients => this.clientList = clients)
-          this.removeEmptySpaces(this.clientList);
           this.clientListLoading = false
           $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully

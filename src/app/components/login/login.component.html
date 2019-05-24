@@ -31,7 +31,7 @@
 
         <div *ngIf="loggedInSuccess == false && loggedInFailed == false || errorMessage"
           [ngClass]="{'loginOpacity':loginLoader && loggingIn}">
-          <form name="form" (ngSubmit)="loginUser($event)">
+          <form name="form" (ngSubmit)="loginUser($event)" [ngClass]="{'disable_form':loginLoader && loggingIn}">
             <div class="form-group" style="margin-bottom: 8px;">
               <i class="fa fa-envelope"></i>
               <input type="text" class="login-input" name="email" [(ngModel)]="user.userName" autocomplete="off"
@@ -69,7 +69,7 @@
           <div id="or-div">
             <div id="h2-div"><span>Or</span></div>
           </div>
-          <div class="social-login-container text-center">
+          <div [ngClass]="{'disable_form':loginLoader && loggingIn}" class="social-login-container text-center">
             <a type="button" id="fbbtn" name="fbbtn" style="cursor: pointer" (click)="socialSignIn('facebook')">
               <img src="assets/images/login/fb.png">
             </a>
@@ -187,7 +187,7 @@
           <div class="font-custom-book" style="margin-top:42.5px;font-weight: 900;font-size: 11px;text-align:center">
             enter your email id to reset password
           </div>
-          <form name="forgetForm" #forgetForm="ngForm" (ngSubmit)="forgetPassword(forgetForm)">
+          <form name="forgetForm" #forgetForm="ngForm"  (ngSubmit)="forgetPassword(forgetForm)">
             <div class="form-group input--with-icon">
               <i class="fa fa-envelope input-icons"></i>
               <input type="email" class="login-input" name="email" [(ngModel)]="forgetMail" required autocomplete="off"
