@@ -88,6 +88,9 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+    
+    
+    
   }
 
   ngOnInit() {
@@ -97,34 +100,6 @@ export class BatchuploadComponent implements OnInit {
 
     //faded background table
     this.backgroundTable();
-    // this.clientListLoading = true
-    // if (this.clientList) {
-    //   this.clientService.fetch().subscribe((response: response) => {
-    //     this.clientListLoading = false
-    //     if (response.status === 200) {
-    //       this.store.dispatch(new clientActions.add(response.records))
-    //       this.clientList = response.records.filter(cli => cli.enabled == 0)
-
-    //     }
-    //   },error => this.openErrorModal())
-    // } else {
-    //   this.clientListLoading = false
-    // }
-
-    //fetching products
-    // this.productListLoading = true
-
-    // if (this.productList) {
-    //   this.productService.fetch().subscribe((response: any) => {
-    //     this.productListLoading = false
-    //     if (response.status === 200) {
-    //       this.store.dispatch(new productActions.add(response.records.filter(prod => prod.enabled == 0)))
-    //       this.productList = response.records.filter(prod => prod.enabled == 0)
-    //     }
-    //   },error => this.openErrorModal())
-    // } else {
-    //   this.productListLoading = false
-    // }
   }
 
   backgroundTable(){
@@ -158,7 +133,7 @@ export class BatchuploadComponent implements OnInit {
       for(let i=0;i< 20;i++){
         this.productRecords.push([]);
       }  
-      //get client btn selected if product file selected
+      //get product btn selected if product file selected
       $("#productbtn").click()
     }
 
@@ -173,6 +148,8 @@ export class BatchuploadComponent implements OnInit {
     this.showProductDiv = true
     this.showClientDiv = false
   }
+  
+
 
   Upload() {
     //make save and clear btn disable
