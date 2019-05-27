@@ -406,8 +406,10 @@ export class ViewComponent implements OnInit {
         var baseAmount = this.activeInv.gross_amount + totalDiscount
             var allDiscount = (baseAmount - totalDiscount)
             this.taxable = allDiscount - taxPayable;
+            
           }else{
             this.taxable = this.activeInv.gross_amount - taxPayable;
+            
           }
         
       }
@@ -440,6 +442,7 @@ export class ViewComponent implements OnInit {
     if(this.activeInv.tax_rate > 0){
       this.noTaxOnItem = false;
     }
+    
     }
     this.setActiveClient()
   }
