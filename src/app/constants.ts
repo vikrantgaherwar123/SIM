@@ -38,9 +38,10 @@ export class CONSTANTS {
     },
     {
       id: 5,
-      currencyCode: '₹',
+      currencyCode: 'Rs',
       currencyName: 'INR',
       countryName: 'India'
+      /*'₹' */
     },
     {
       id: 6,

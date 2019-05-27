@@ -1732,3 +1732,7 @@ input.mat-input-element {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   filter: alpha(opacity=80);
 }
+/* failure toast */
+.toast {
+  background-color: #fbeaea !important;
+}
