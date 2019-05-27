@@ -146,29 +146,29 @@ export class LoginComponent implements OnInit {
     },err => this.openErrorModal())
   }
 
-  // socialSignIn(socialPlatform: string) {
-  //   let socialPlatformProvider
-  //   if (socialPlatform == "facebook") {
-  //     socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID
-  //   } else if (socialPlatform == "google") {
-  //     socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID
-  //   }
+  socialSignIn(socialPlatform: string) {
+    let socialPlatformProvider
+    if (socialPlatform == "facebook") {
+      socialPlatformProvider = FacebookLoginProvider.PROVIDER_ID
+    } else if (socialPlatform == "google") {
+      socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID
+    }
 
-  //   this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
-  //     var creds = { access_token: userData.idToken, provider: userData.provider }
-  //     this.authService.socialLogin(creds).subscribe((response: any) => {
-  //       if (response.status == 410) {
-  //         console.log(response.message)
-  //       } else if (response.status == 200) {
-  //         const access = response.login_info.access_token
-  //         const ids = parseInt(response.login_info.user.orgId)
+    this.socialAuthService.signIn(socialPlatformProvider).then(userData => {
+      var creds = { access_token: userData.idToken, provider: userData.provider }
+      this.authService.socialLogin(creds).subscribe((response: any) => {
+        if (response.status == 410) {
+          console.log(response.message)
+        } else if (response.status == 200) {
+          const access = response.login_info.access_token
+          const ids = parseInt(response.login_info.user.orgId)
 
-  //         // Validate token
-  //         this.validateToken(access, ids, response)
-  //       }
-  //     },err => this.openErrorModal())
-  //   })
-  // }
+          // Validate token
+          this.validateToken(access, ids, response)
+        }
+      },err => this.openErrorModal())
+    })
+  }
 
   validateToken(access, ids, response) {
     this.authService.validateToken(access, ids).subscribe((response2: response) => {
