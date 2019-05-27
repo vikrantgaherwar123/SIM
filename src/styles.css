@@ -1704,3 +1704,31 @@ input.mat-input-element {
   cursor: pointer;
   background: #e6ecf0
 }
+/* toaster */
+.toast-success {
+  background-color: #e1faec !important;
+  color: #21804d !important;
+}
+.toast-success {
+  background-color: #e1faec !important;
+  color: #21804d !important;
+}
+.toast-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+#toast-container > div {
+  border: 2px solid #b1f3cf !important;
+  margin: 0 0 6px;
+  padding: 9px 15px 11px 50px;
+  width: 330px;
+  border-radius: 3px 3px 3px 3px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 12px #999999;
+  line-height: 30px;
+  color: #ffffff;
+  opacity: 1 !important;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+  filter: alpha(opacity=80);
+}

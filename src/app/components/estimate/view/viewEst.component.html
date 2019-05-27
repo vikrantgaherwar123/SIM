@@ -1,36 +1,70 @@
 <div class="row main-wrapper">
   <!-- Estimate query bar -->
-  <div class="col-12 query-container">
-      <div class="query-bar query_padding" *ngIf="!changingQuery">
-          <div class="row">
-            <div class="col-md-9">
-              <span>Showing results for:</span> <img src="assets/images/client.png" 
-              style="height: 13px;margin-bottom: 3px;margin-right: 4px;margin-left: 30px;">
-              <span style="color:#1a73cc">Client: </span>
-              <span style="color: black;font-family: quicksand_bold !important;">
-              </span>
-              <img src="assets/images/date.png" 
-              style="height: 15px;margin-bottom: 3px;margin-right: 6px;margin-left: 30px;"> <span  style="color:#1a73cc">Date :</span> <span style="color: black;font-family: quicksand_bold !important;margin-left: 10px;">{{estimateQueryForm.dateRange.start.value ? 
-                  estimateQueryForm.dateRange.start.value.getDate() + '-' +
-                (estimateQueryForm.dateRange.start.value.getMonth() + 1) + '-' + 
-                estimateQueryForm.dateRange.start.value.getFullYear() : 0
-              }}</span> TO <span style="color: black;font-family: quicksand_bold !important;">{{estimateQueryForm.dateRange.end.value ?
-                  estimateQueryForm.dateRange.end.value.getDate() + '-' +
-                (estimateQueryForm.dateRange.end.value.getMonth() + 1) + '-' + 
-                estimateQueryForm.dateRange.end.value.getFullYear() : 0
-              }}</span>
-            </div>
-    
-            <div class="col-12 col-md-2">
-              <button type="button" (click)="openSearchClientModal()"
-                class="btn save_btn btn-raised pull-right width20btn change_btn"
+   <div class="col-12 query-container">
+    <div *ngIf="!changingQuery">
+      <div class="row">
+          <div class="col-2"><span class="color_white">Showing results for: </span>
+            <span class="color_white" style="float: right;">Clients: </span></div>
+          <div class="col-2">
+            <div class="form-group pl-0" style="margin-top: -7px !important;">
+                <ng-multiselect-dropdown
+                [placeholder]="'All Clients'"
+                [data]="dropdownList"
+                [settings]="dropdownSettings"
+                [formControl]="estimateQueryForm.client"
               >
-                Change
-              </button>
-            </div>
+              </ng-multiselect-dropdown>
+              </div>
           </div>
-        </div>
-    </div>
+          <div class="col-md-2 row" >
+            <div class="col-md-4"><span class="color_white">Duration: </span></div>
+            <ul class="nav col-4">
+              <li class="button-dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle">
+                {{itemSelected}}  
+                </a><span><img src="assets/images/filter.png" class="month_icon"> </span>
+                <ul class="dropdown-menu">
+                  <li *ngFor="let item of duration">
+                    <button (click)="showItem(item)"  id="getValue" class="list_a dropdown-toggle"> {{item}}</button>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 row" style="margin-left: 68px;">
+              <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+              <label class="color_white col-6" style="text-align: right;">From Date: </label>
+              <input class="col-6 date_inputs" id="anOtherButton" placeholder="Start" required readonly 
+                    matInput [matDatepicker]="picker3" [formControl]="estimateQueryForm.dateRange.start"
+                    (click)="picker3.open()"  (dateChange)="onDate($event)"
+                  >
+                  <mat-datepicker-toggle  matSuffix [for]="picker3" style="margin-left: 128px !important;margin-top: -68px !important;"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3 ></mat-datepicker>
+            </div>
+            <div class="col-md-2 row" style="margin-left: -36px;">
+                <!-- <div class="col-md-4"><span class="color_white">From Date: </span></div> -->
+                <label class="color_white col-6" style="text-align: right;">To Date: </label>
+                <input class="col-6 date_inputs" id="anOtherButton" placeholder="End" required readonly matInput [matDatepicker]="picker4"
+                  [formControl]="estimateQueryForm.dateRange.end" (click)="picker4.open()" (dateChange)="onDate($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker4" style="margin-left: -26px;margin-bottom: -68px !important;">
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker4></mat-datepicker>
+              </div>
+            
+            <div class="col-md-2 row search_btns">
+                <div class="col-12 row" style="margin-left: 14px;">
+                  <button id="downloadBtn" type="button" (click)="estimateQueryForm.client.reset();clearItem();itemSelected = 'All Time'"
+                    class="clear_btn col-5">Clear
+                  </button>
+                  <button id="previewBtn" type="button" (click)="showSelectedEstimate(estimateQueryForm.client)"
+                    class="clear_btn col-5 change_btn_searchbar" style="margin-left: 14px;">Search
+                  </button>
+                </div>
+            </div>
+      </div>
+        
+      </div>
+  </div>
 
 
   <!-- SEARCH CLIENT MODAL -->
@@ -110,7 +144,7 @@
   </div>
   <!--Search client modal ends-->
 
-  <div class="py-3 w-100" style="padding-top: 74px !important;">
+  <div class="py-3 w-100" style="padding-top: 95px !important;">
     <div class="row mx-0">
       <!-- View Estimate -->
       <div  class="col-12 col-sm-9 item-form" style="padding-right: 0px !important;">

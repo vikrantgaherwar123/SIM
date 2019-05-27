@@ -138,7 +138,7 @@ export class ViewEstComponent implements OnInit {
         this.estimateId = params.estId;
       }else{
         this.showBackground = true;
-        this.openSearchClientModal()
+        // this.openSearchClientModal()
       }
     })
 

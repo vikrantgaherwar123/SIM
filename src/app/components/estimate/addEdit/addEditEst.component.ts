@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, NavigationStart, NavigationEnd  } from '@angula
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
-import { ToasterService } from 'angular2-toaster'
+import { ToasterService, Toast } from 'angular2-toaster'
 import { DatePipe } from '@angular/common';
 import { Title }     from '@angular/platform-browser';
 import { DateAdapter } from '@angular/material';
@@ -133,6 +133,18 @@ export class AddEditEstComponent implements OnInit {
   taxLabel: string;
   discountLabel: string;
 
+  public success: Toast = {
+    type: 'Success',
+    timeout: 10000000
+  };
+  public failure: Toast = {
+    type: 'Failure',
+    title: 'close button',
+    body:'Product name is empty',
+    showCloseButton: true,
+    timeout: 10000000
+  };
+
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
     public toasterService: ToasterService,
@@ -146,6 +158,7 @@ export class AddEditEstComponent implements OnInit {
     private store: Store<AppState>,
     private titleService: Title
   ) {
+    
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -156,6 +169,7 @@ export class AddEditEstComponent implements OnInit {
     store.select('estimate').subscribe(estimates => this.estimateList = estimates)
     store.select('recentEstimates').subscribe(recentInvoices => this.recentEstimateList = recentInvoices)
 
+  
     
     // save button processing script
     $(document).ready(function () {
@@ -175,6 +189,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.titleService.setTitle('Simple Invoice | Estimate');
     this.activeEstimate = <addEditEstimate>{}
     this.route.params.subscribe(params => {
@@ -1033,6 +1048,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   saveProduct(add_product, callback: Function = null) {
+    
     var d = new Date()
 
     var product = {
@@ -1056,7 +1072,9 @@ export class AddEditEstComponent implements OnInit {
         if (callback !== null) {
           callback(temp)
         }
-        this.toasterService.pop('success', 'Product has been added')
+        this.toasterService.pop(this.success);
+        this.toasterService.pop(this.failure);
+        // this.toasterService.pop('success', 'Success Product','Product has been added')
         //called store and set product here to update store when new product added
         this.store.select('product').subscribe(products => this.productList = products)
         // this.setProductFilter();
