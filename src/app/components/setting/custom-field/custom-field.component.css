@@ -1,11 +1,28 @@
 @import '../../../../assets/css/form.css';
 
 .custom-field-form .form-group {
-  max-width: 300px !important
+  max-width: 300px !;
+}
+.custom-field-form{
+  height: 1305px;
 }
 .form-control{
   box-shadow: none !important;
   border-radius: 0px;
   height: 37px !important;
   letter-spacing: 0.5px;
+}
+
+.label_div_col_3{
+  width: 174px;
+  background: #EAEBEC;
+  border-left: 1px solid #ced4da;
+  border-top: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  text-align: left;
+  padding: 7px 12px !important;
+}
+.row_mrg_btm{
+  margin-bottom: 10px;
+  /* margin-right: -34px; */
 }

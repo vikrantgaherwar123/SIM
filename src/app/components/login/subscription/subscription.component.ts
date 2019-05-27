@@ -10,6 +10,9 @@ export class SubscriptionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
+    $('#userLogout').remove()
+    $('#navbar').remove()
   }
 
 }

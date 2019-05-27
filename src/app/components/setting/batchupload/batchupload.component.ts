@@ -406,8 +406,9 @@ export class BatchuploadComponent implements OnInit {
             this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
           }
           
-          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
-          if (this.clientRecords[i].name !== '') {
+          // this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
+          var clientSpace = (this.clientRecords[i].name || '').trim().length === 0
+          if (!clientSpace) {
             this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
@@ -509,8 +510,9 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.productRecords[i].modifiedDate = d.getTime()
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
-          if (this.productRecords[i].prodName !== '') {
+          // this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
+          var productSpace = (this.productRecords[i].prodName || '').trim().length === 0
+          if (!productSpace) {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list

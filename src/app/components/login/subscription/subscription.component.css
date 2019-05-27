@@ -1,0 +1,61 @@
+/* @import '../../../../assets/css/form.css'; */
+
+.number_img{
+    height: 42px;
+}
+.step_img{
+    height: 168px;
+    width: 132px;
+}
+.step_row{
+    padding: 0px 103px;
+    margin-top: -30px;
+}
+.step_heading{
+    text-decoration: underline;
+    color: #515151;
+    font-weight: bold;
+    font-size: 24px;
+    font-family: segoe_bold;
+}
+.path_arrow{
+    height: 33px;
+    padding: 0px 8px;
+    margin-top: -60px;
+}
+.step_desc{
+    font-size: 14px;
+    color: #808080;
+}
+.col12_mrg_btm{
+    margin-bottom: 38px;
+}
+.header{
+    height: 1px !important;
+}
+.bg_grey{
+    background-color: #eef3f7;
+}
+.side2_mrg{
+    margin-top: -80px !important;
+    height: 658px;
+}
+.side2_heading{
+    font-family: segoe_bold;
+    font-size: 36px;
+    color: #5F6A7D;
+}
+.side2_para{
+    padding: 0px 120px;
+    text-align: center;
+    font-size: 15px !important;
+    line-height: 24px;
+    color: #808791 !important;
+}
+.hr_style{
+    width: 133px;
+    font-weight: bold;
+    border-top: 3px solid #d3dbe8;
+    margin-top: 18px !important;
+    margin-bottom: 20px !important;
+}

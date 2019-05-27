@@ -39,7 +39,7 @@ export class ClientComponent implements OnInit {
   viewMode: boolean = false
   settings: any;
   emptyClient: boolean;
-  searchTerms;
+  searchTerms: string = '';
   downArrow = "assets/images/down1.png";
   upArrow = "assets/images/up1.png";
   addClient: boolean;

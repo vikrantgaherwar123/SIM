@@ -86,11 +86,14 @@
                   <div class="offset-md-2 col-md-4 col-sm-6 ">
                     <span class="font-custom-bold text-left w-100">{{settings.mTvEstimate ? settings.mTvEstimate : 'Estimate'}} Date</span>
                   </div>
-                  <div *ngIf="dateDDMMYY" class="col-sm-6">
-                    {{activeEst.createDate | date:"dd/MM/yyyy"}}
-                  </div>
-                  <div *ngIf="dateMMDDYY" class="col-sm-6">
-                    {{activeEst.createDate | date:"MM/dd/yyyy"}}
+                  <div class="col-sm-6 color_grey">
+                      <div *ngIf="settings.dateDDMMYY == true">
+                          {{activeEst.createDate | date: 'dd/MM/yyyy'}}
+                      </div>
+    
+                      <div *ngIf="settings.dateDDMMYY == false">
+                          {{activeEst.createDate | date: 'MM/dd/yyyy'}}
+                      </div>
                   </div>
                 </div>
               </div>
@@ -116,7 +119,7 @@
                         <input type="text" id="discountLabel" name="rate" class="bld w-100 text-right" value="{{settings.discount ? settings.discount : 'Discount'}} (%)" disabled>
                       </td>
                       <td *ngIf="activeEst.assignTaxFlag == 0" width="17%">
-                        <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="Tax (%)" disabled>
+                        <input type="text" id="taxLabel" name="rate" class="bld w-100 text-right" value="{{settings.taxLable ? settings.taxLable : 'Tax'}} (%)" disabled>
                       </td>
                       <td width="18%" class="last_td">
                         <input type="text" id="itemAmtLabel" name="amount" class="bld w-100 text-right" style="text-align:right;"
@@ -226,7 +229,7 @@
                         {{activeEst.discount | number:'1.2-2'}}
                       </div>
                       <div *ngIf="activeEst.discountFlag == 1">
-                        {{ activeEst.discount| number:'1.2-2'}}
+                        {{ activeEst.discount | number:'1.2-2'}}
                       </div>
                     </div>
                   </div>
@@ -235,7 +238,7 @@
                 <!-- Tax -->
                 <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                   <div class="col-4 discount-tax-label">
-                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">Tax</div>
+                    <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{settings.taxLable ? settings.taxLable : 'Tax'}}</div>
                     <div class="inline font-custom">({{activeEst.taxrate | number:'1.1-2'}} %)</div>
                   </div>
                   <div class="col-8 ">
@@ -311,7 +314,7 @@
                   <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12 cal_label_padding">
                       <div *ngIf="item.taxRate" class="col-6 text-left">
                           <span class="font-custom-bold">
-                              (+) Tax ({{item.taxRate}}%)
+                              (+) {{settings.taxLable ? settings.taxLable : 'Tax'}} ({{item.taxRate}}%)
                           </span>
                       </div>
                       <div *ngIf="item.taxAmount"  class="col-6 text-right">
@@ -322,7 +325,7 @@
                   <div *ngIf="activeEst.taxrate" class="row mx-0 col-12 cal_label_padding">
                       <div class="col-6 text-left">
                           <span class="font-custom-bold">
-                              (+) Tax ({{activeEst.taxrate}}%)
+                              (+) {{settings.taxLable ? settings.taxLable : 'Tax'}} ({{activeEst.taxrate}}%)
                           </span>
                         </div>
                         <div  class="col-6 text-right">
