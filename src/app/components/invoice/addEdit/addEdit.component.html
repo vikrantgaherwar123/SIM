@@ -505,8 +505,10 @@
                             class="font-custom-bold words_break">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span
-                            class="font-custom-bold price">{{activeInvoice.gross_amount | number:'1.2-2' | CurrencyPipe}}</span>
+                          <span *ngIf="activeInvoice.gross_amount"
+                            class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
+                            <span *ngIf="activeInvoice.gross_amount == 0"
+                            class="font-custom-bold price">{{activeInvoice.gross_amount}}</span>
                         </div>
                       </div>
                     </div>
@@ -708,8 +710,11 @@
                         </div>
 
                         <div *ngIf="activeInvoice" class="col-6 text-right">
-                          <span class="font-custom-bold price">
-                            {{activeInvoice.amount | number:'1.2-2' | CurrencyPipe}}
+                          <span *ngIf="activeInvoice.amount" class="font-custom-bold price">
+                            {{activeInvoice.amount | CurrencyPipe}}
+                          </span>
+                          <span *ngIf="activeInvoice.amount == 0" class="font-custom-bold price">
+                            {{activeInvoice.amount}}
                           </span>
                         </div>
                       </div>
@@ -727,7 +732,7 @@
                         </div>
                         <div class="col-6 text-right" style="padding-right: 10px !important;margin-top: 6px;">
                           <span
-                            class="font-custom price">{{amountPaid | number:'1.2-2' | CurrencyPipe}}</span>
+                            class="font-custom price">{{amountPaid | CurrencyPipe}}</span>
                         </div>
                         
                         <div class="row mx-0" style="margin-bottom: -15px;width: 100%;">
@@ -741,7 +746,7 @@
                                   </div>
                                   <div class="col-6 pad_rg_5 paid_amt">
                                     <span style="padding-right: 16px;"
-                                      class="font-custom price">{{item.paid_amount | number:'1.2-2' | CurrencyPipe}}
+                                      class="font-custom price">{{item.paid_amount | CurrencyPipe}}
                                     </span>
                                     
                                   </div>
@@ -783,8 +788,10 @@
                           <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="bld price"
-                            style="margin-right: -25px !important;">{{activeInvoice.balance | number:'1.2-2' | CurrencyPipe}}</span>
+                          <span class="bld price" *ngIf="activeInvoice.balance"
+                            style="margin-right: -25px !important;">{{activeInvoice.balance | CurrencyPipe}}</span>
+                            <span class="bld price" *ngIf="activeInvoice.balance == 0"
+                            style="margin-right: -25px !important;">{{activeInvoice.balance}}</span>
                         </div>
                       </div>
                     </div>
@@ -940,7 +947,7 @@
                     {{ invoice.invoice_number }}
                   </div>
                   <div class="col-6 text-right fontsize12 today_txt">
-                    {{ invoice.amount | number:'1.2-2' | CurrencyPipe}}
+                    {{ invoice.amount | CurrencyPipe}}
                   </div>
                 </div>
               </div>
@@ -1298,7 +1305,7 @@
             </div>
             <div  *ngIf="activeInvoice" class="col-6 text-right" style="padding-right: 23px !important;">
               <span
-                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | number:'1.2-2' | CurrencyPipe}}</span>
+                class="font-custom price">{{(activeInvoice.amount - activeInvoice.balance) | CurrencyPipe}}</span>
             </div>
           </div>
         </div>

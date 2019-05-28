@@ -5,7 +5,8 @@ import { Router, ActivatedRoute, NavigationStart, NavigationEnd  } from '@angula
 import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { map, startWith } from 'rxjs/operators'
-import { ToasterService } from 'angular2-toaster'
+import { ToasterService, Toast } from 'angular2-toaster'
+import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { Title }     from '@angular/platform-browser';
 import { DateAdapter } from '@angular/material';
@@ -144,8 +145,10 @@ export class AddEditEstComponent implements OnInit {
     private productService: ProductService,
     private datePipe: DatePipe,
     private store: Store<AppState>,
+    private toastr: ToastrService,
     private titleService: Title
   ) {
+    
     this.toasterService = toasterService
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -156,6 +159,7 @@ export class AddEditEstComponent implements OnInit {
     store.select('estimate').subscribe(estimates => this.estimateList = estimates)
     store.select('recentEstimates').subscribe(recentInvoices => this.recentEstimateList = recentInvoices)
 
+  
     
     // save button processing script
     $(document).ready(function () {
@@ -266,6 +270,14 @@ export class AddEditEstComponent implements OnInit {
       }else if(this.activeEstimate.tax_on_item == 1){
         this.noTaxOnItem = false;
         this.taxLabel = "On Bill"
+      }
+
+      //if setting of bill but no value added
+      if(this.activeEstimate.discount == 0){
+        this.noDiscountOnItem = true;
+      }
+      if(this.activeEstimate.tax_rate == 0){
+        this.noTaxOnItem = true;
       }
 
         //if item and Disabled condition  
@@ -434,6 +446,15 @@ export class AddEditEstComponent implements OnInit {
           this.noTaxOnItem = true;
           this.taxLabel = "Disabled"
         }
+
+        //if setting of bill but no value added
+        if (this.activeEstimate.discount == 0) {
+          this.noDiscountOnItem = true;
+        }
+        if (this.activeEstimate.tax_rate == 0) {
+          this.noTaxOnItem = true;
+        }
+
         
         //item settings
         //this.activeEstimate.tax_on_item = 0
@@ -545,7 +566,7 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       } else {
-        this.toasterService.pop('failure', 'Invalid estimate id');
+        this.toastr.error('Please enter valid estimate id', 'Invalid estimate id');
         this.router.navigate(['/estimate/view'])
       }
     },err => this.openErrorModal(err))
@@ -854,7 +875,7 @@ export class AddEditEstComponent implements OnInit {
   saveClient(status) {
     // If empty spaces
     if (!this.addClientModal.name.toLowerCase().replace(/ /g, '')) {
-      this.toasterService.pop('failure', 'Organization name required');
+      this.toastr.error('Please enter Organization name', 'Organization name required');
       return false
     }
 
@@ -889,7 +910,7 @@ export class AddEditEstComponent implements OnInit {
           this.clientList.push(tempClient)
           this.activeClient = tempClient
           this.billingTo.setValue(this.activeClient)
-          this.toasterService.pop('success', 'Client Added Successfully');
+          this.toastr.success('Client Added Successfully', 'Success');
           this.clientListLoading = false
           $('#add-client').modal('hide')
           // match a key to select and save a client in a textbox after adding client successfully
@@ -903,7 +924,7 @@ export class AddEditEstComponent implements OnInit {
       )
     }else {
       if (!proStatus) {
-        this.toasterService.pop('failure', 'Client name already exists.');
+        this.toastr.error('Client name already exists', 'Duplicate Client Name');
       }
     }
   }
@@ -960,10 +981,10 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
-      this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
+      this.toastr.error('Quantity can not be 0 or empty', 'Failure');
     }
     if(this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
-      this.toasterService.pop('failure', 'rate can not be 0 or empty');
+      this.toastr.error('Rate can not be 0 or empty', 'Failure');
     }
 
     if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
@@ -1026,13 +1047,14 @@ export class AddEditEstComponent implements OnInit {
         this.calculateEstimate()
       })
     }else{
-      this.toasterService.pop('failure', 'Duplicate name or field is empty!!!');
+      this.toastr.error('Duplicate name or field is empty!!!', 'Failure');
     }
     }
   }
   }
 
   saveProduct(add_product, callback: Function = null) {
+    
     var d = new Date()
 
     var product = {
@@ -1056,7 +1078,7 @@ export class AddEditEstComponent implements OnInit {
         if (callback !== null) {
           callback(temp)
         }
-        this.toasterService.pop('success', 'Product has been added')
+        this.toastr.success('Product has been added', 'Success');
         //called store and set product here to update store when new product added
         this.store.select('product').subscribe(products => this.productList = products)
         // this.setProductFilter();
@@ -1146,7 +1168,7 @@ export class AddEditEstComponent implements OnInit {
 
   saveTerm(status) {
     if (this.addTermModal.terms.replace(/ /g, '') == '') {
-      this.toasterService.pop('failure', 'Term text is mandatory');
+      this.toastr.error('Term text is mandatory', 'Empty Field');
       return false
     }
 
@@ -1175,7 +1197,7 @@ export class AddEditEstComponent implements OnInit {
         } else {
           $('#addtermbtn').removeAttr('disabled')
           // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
-          this.toasterService.pop('failure', 'Error occured');
+          this.toastr.error('Error occured', 'Failure');
         }
       },err => this.openErrorModal(err)
       )
@@ -1226,14 +1248,14 @@ export class AddEditEstComponent implements OnInit {
   save(status) {
     if (!this.activeEstimate.unique_key_fk_client) {
       this.noClientSelected = true;
-      this.toasterService.pop('failure', 'Client not selected');
+      this.toastr.error('Client not selected', 'Failure');
       $('#bill-to-input').select()
       return false
     }
 
     if (this.activeEstimate.listItems.length == 0 || !status) {
       this.noProductSelected = true;  // show red box
-      this.toasterService.pop('failure','You haven\'t added item')
+      this.toastr.error('You haven\'t added item', 'Failure');
       return false
     }
 
@@ -1295,7 +1317,7 @@ export class AddEditEstComponent implements OnInit {
     this.estimateService.add([this.activeEstimate]).subscribe((response: any) => {
       if (response.status !== 200) {
         //alert('Couldnt save Estimate')
-        this.toasterService.pop('failure', 'Error occured')
+        this.toastr.error('Error occured', 'Failure');
       } else if (response.status === 200) {
         // Add Estimate to store
         if (this.edit) {
@@ -1303,12 +1325,12 @@ export class AddEditEstComponent implements OnInit {
         // Add Estimate to recent store
           this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
-            if (response.quotationList[0].deleted_flag == 1) {
+            if (response.quotationList[0].deleted_flag == 1 && index == 0 ) {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
-              this.toasterService.pop('success', 'Estimate Deleted successfully');
+              this.toastr.success('Estimate Deleted successfully', 'Success');
               this.router.navigate(['/estimate/add']);
             }else if(response.quotationList[0].deleted_flag !== 1){
-              this.toasterService.pop('success', 'Estimate Edited successfully');
+              this.toastr.success('Estimate Edited successfully', 'Success');
               self.store.dispatch(new estimateActions.editRecentEstimate({index, value: this.estimateService.changeKeysForStore(response.quotationList[0])}))
               this.router.navigate([`viewtodaysestimate/${this.estimateId}`]);
             }
@@ -1320,8 +1342,8 @@ export class AddEditEstComponent implements OnInit {
         // Reset Create Estimate page for new Estimate creation or redirect to view page if edited
        if(!this.edit) {
           //add recently added esimate in store
-          this.toasterService.pop('success', 'Estimate saved successfully');
-          this.updateSettings();
+          this.toastr.success('Estimate saved successfully', 'Success');
+          // this.updateSettings();
           self.resetFormControls()
           self.addInit()
           this.router.navigate([`viewtodaysestimate/${response.quotationList[0].unique_identifier}`]);
@@ -1332,8 +1354,8 @@ export class AddEditEstComponent implements OnInit {
     )
   }
   // validate user if he removes invoice number and try to save invoice 
-  else {                    
-    this.toasterService.pop('failure', 'Couldnt save estimate Please add estimate Number');
+  else {            
+    this.toastr.error('Couldnt save estimate Please add estimate Number', 'Failure');        
     this.activeEstimate.termsAndConditions = this.termList.filter(term => term.setDefault == 'DEFAULT');
     $('#estSubmitBtn').removeAttr('disabled')
   }

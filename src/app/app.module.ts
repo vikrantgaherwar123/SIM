@@ -57,6 +57,7 @@ import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 import { CurrencyPipe } from './currencyPipe';
+import { ToastrModule } from 'ngx-toastr';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
@@ -84,7 +85,10 @@ export function getAuthServiceConfigs() {
     }
   ])
   
+  
 }
+// toaster class
+
 
 export const MY_FORMATS = {
   parse: {
@@ -123,10 +127,9 @@ export const MY_FORMATS = {
     ViewTodaysInvoiceComponent,
     ViewTodaysEstimateComponent,
     SubscriptionComponent,
+    
   ],
   imports: [
-    
-    
     MatCheckboxModule,
     MatMenuModule,
     ProgressBarModule,
@@ -135,6 +138,11 @@ export const MY_FORMATS = {
     HttpModule,
     SocialLoginModule,
     AppRoutingModule,
+    ToastrModule.forRoot(
+      {
+        timeOut: 100000000,
+      }
+    ),// ToastrModule added
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

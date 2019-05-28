@@ -112,10 +112,6 @@ export class ViewComponent implements OnInit {
       })
     });
     // date and time dropdown ends
-
-   
-
-
   }
 
   
@@ -418,6 +414,7 @@ export class ViewComponent implements OnInit {
             this.taxable = allDiscount - taxPayable;
           }else if(taxPayable){ // condition added because taxable was showing on every condition
             this.taxable = this.activeInv.gross_amount - taxPayable;
+            
           }
         
       }
@@ -450,6 +447,7 @@ export class ViewComponent implements OnInit {
     if(this.activeInv.tax_rate > 0){
       this.noTaxOnItem = false;
     }
+    
     }
     this.setActiveClient()
   }
