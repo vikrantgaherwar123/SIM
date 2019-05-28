@@ -133,7 +133,6 @@ export class AddEditComponent implements OnInit {
   taxLabel: string;
   discountLabel: string;
   includeTax: boolean;
-  showBalPaid: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -277,12 +276,6 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
-  dataChangedItem(input){
-    if(input > 100){
-      alert("Percentage amount must be under 100");
-      this.activeItem.discount = 0;
-    }
-  }
 
   taxListChanged(input){
     if(input > 100){
@@ -327,7 +320,7 @@ export class AddEditComponent implements OnInit {
   setSettings(){
     //set settingFlags according to edit i.e invoice saved previously
     if(this.activeInvoice.discount_on_item == 0){
-      // this.activeInvoice.percentage_flag = 1; removed because getting issue in discount label
+      this.activeInvoice.percentage_flag = 1;
       this.noDiscountOnItem = false;
       this.discountLabel = "On Bill"
     }else if(this.activeInvoice.discount_on_item == 1){
@@ -1151,9 +1144,8 @@ export class AddEditComponent implements OnInit {
       quantity: product.quantity ? product.quantity : 1,
       unit: product.unit,
       rate: product.rate,
-      discount : product.discount,
       tax_rate: product.taxRate,
-      // discount: 0.00,
+      discount: 0.00,
     }
     this.calculateTotal()
   }
@@ -1171,9 +1163,9 @@ export class AddEditComponent implements OnInit {
     }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
       this.toasterService.pop('failure', 'Quantity can not be 0 or empty');
     }
-    // else if(this.activeItem.rate ===null || this.activeItem.rate === 0){
-    //   this.toasterService.pop('failure', 'rate can not be 0 or empty');
-    // }
+    else if( this.activeItem.rate ===null || this.activeItem.rate === 0){
+      this.toasterService.pop('failure', 'rate can not be 0 or empty');
+    }
 
     if(this.activeItem.quantity !==null && this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
       this.activeItem.rate !==null ){
@@ -1292,10 +1284,6 @@ export class AddEditComponent implements OnInit {
         }else{
           this.activeItem.total += this.activeItem.tax_amount
         }
-      }
-
-      if(this.includeTax && this.activeInvoice.discount_on_item == 0){
-
       }
     }
   }
@@ -1460,16 +1448,11 @@ export class AddEditComponent implements OnInit {
 
   showBalPaidOnPdf(event){
     if(event.target.checked === true){
-      this.showBalPaid = true
       this.activeInvoice.showBalPaidAmountFlag = true;
-      console.log('true');
-      
-    }
-    //exclusive tax
-    else{
-      this.includeTax = false;
+      this.updateSettings();
+    }else{
       this.activeInvoice.showBalPaidAmountFlag = false;
-      console.log('false');
+      this.updateSettings();
     }
   }
 
@@ -1481,7 +1464,6 @@ export class AddEditComponent implements OnInit {
     if(this.activeInvoice.taxableFlag === 1){
       this.includeTax = true;
     }
-
     
     if (this.activeInvoice.listItems) {
       
@@ -1493,7 +1475,6 @@ export class AddEditComponent implements OnInit {
           this.activeInvoice.listItems[i].tax_amount = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate / 100;
           this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount + this.activeInvoice.listItems[i].tax_amount;
         }
-
         if (this.activeInvoice.tax_on_item === 1 || this.activeInvoice.tax_on_item === 2) {         //on bill
           this.activeInvoice.listItems[i].tax_rate = 0;
           this.activeInvoice.listItems[i].tax_amount = 0;
@@ -1549,6 +1530,7 @@ export class AddEditComponent implements OnInit {
         this.activeInvoice.discount = 0;
       }
     
+
     if (this.activeInvoice.percentage_flag == 1) {
       var discountFactor = this.activeInvoice.percentage_value / 100
       if (isNaN(discountFactor)) {
@@ -1836,43 +1818,43 @@ export class AddEditComponent implements OnInit {
       user.setting.setInvoiceFormat = this.activeInvoice.invoice_number
     }
 
-    localStorage.setItem('user', JSON.stringify(user))
-    this.user = JSON.parse(localStorage.getItem('user'))
-    this.settings = this.user.setting
+    // localStorage.setItem('user', JSON.stringify(user))
+    // this.user = JSON.parse(localStorage.getItem('user'))
+    // this.settings = this.user.setting
 
-    var discountLevelFlag
-    var taxLevelFlag
-    //for discount
-    if(this.activeInvoice.discount_on_item === 0){
-      discountLevelFlag = 0;
-      this.activeInvoice.percentage_flag = 1;
-      this.discountLabel = "On Bill"
-      this.noDiscountOnItem = false;
-    }else if(this.activeInvoice.discount_on_item === 1){
-      discountLevelFlag = 1;
-      this.discountLabel = "On Item"
-      this.noDiscountOnItem = true;
-    }else{
-      discountLevelFlag = 2;
-      this.discountLabel = "Disabled"
-      this.noDiscountOnItem = true;
-    }
-    //for tax
-    if(this.activeInvoice.tax_on_item === 0){
-      taxLevelFlag = 0;
-      this.taxLabel = "On Item"
-      this.noTaxOnItem = true;
-    }else if(this.activeInvoice.tax_on_item === 1){
-      taxLevelFlag = 1;
-      this.taxLabel = "On Bill"
-      this.noTaxOnItem = false;
-    }else{
-      taxLevelFlag = 2;
-      this.taxLabel = "Disabled"
-      this.noTaxOnItem = true;
-    }
-    user.setting.discountFlagLevel = discountLevelFlag;
-    user.setting.taxFlagLevel = taxLevelFlag;
+    // var discountLevelFlag
+    // var taxLevelFlag
+    // //for discount
+    // if(this.activeInvoice.discount_on_item === 0){
+    //   discountLevelFlag = 0;
+    //   this.activeInvoice.percentage_flag = 1;
+    //   this.discountLabel = "On Bill"
+    //   this.noDiscountOnItem = false;
+    // }else if(this.activeInvoice.discount_on_item === 1){
+    //   discountLevelFlag = 1;
+    //   this.discountLabel = "On Item"
+    //   this.noDiscountOnItem = true;
+    // }else{
+    //   discountLevelFlag = 2;
+    //   this.discountLabel = "Disabled"
+    //   this.noDiscountOnItem = true;
+    // }
+    // //for tax
+    // if(this.activeInvoice.tax_on_item === 0){
+    //   taxLevelFlag = 0;
+    //   this.taxLabel = "On Item"
+    //   this.noTaxOnItem = true;
+    // }else if(this.activeInvoice.tax_on_item === 1){
+    //   taxLevelFlag = 1;
+    //   this.taxLabel = "On Bill"
+    //   this.noTaxOnItem = false;
+    // }else{
+    //   taxLevelFlag = 2;
+    //   this.taxLabel = "Disabled"
+    //   this.noTaxOnItem = true;
+    // }
+    // user.setting.discountFlagLevel = discountLevelFlag;
+    // user.setting.taxFlagLevel = taxLevelFlag;
 
     var settings1 = {
       androidSettings: user.setting,
@@ -1965,7 +1947,7 @@ export class AddEditComponent implements OnInit {
     this.invListLoader = true
     this.invoiceService.fetchTodaysData(query).subscribe((response: any) => {
       if (response.status === 200) {
-        // console.log(JSON.stringify(response.list));
+        console.log(JSON.stringify(response.list));
         
         this.invListLoader = false
         this.store.dispatch(new invoiceActions.recentInvoice(response.list ? response.list.filter(rec => rec.deleted_flag == 0) : []))
