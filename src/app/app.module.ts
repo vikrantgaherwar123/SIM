@@ -57,13 +57,13 @@ import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 import { CurrencyPipe } from './currencyPipe';
+import { ToastrModule } from 'ngx-toastr';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
 import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
 import { SubscriptionComponent } from './components/login/subscription/subscription.component';
-import { ToastrModule } from 'ng6-toastr-notifications';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -130,8 +130,6 @@ export const MY_FORMATS = {
     
   ],
   imports: [
-    
-    
     MatCheckboxModule,
     MatMenuModule,
     ProgressBarModule,
@@ -140,6 +138,11 @@ export const MY_FORMATS = {
     HttpModule,
     SocialLoginModule,
     AppRoutingModule,
+    ToastrModule.forRoot(
+      {
+        timeOut: 100000000,
+      }
+    ),// ToastrModule added
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -155,7 +158,6 @@ export const MY_FORMATS = {
     FilterPipeModule,
     OrderModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
     ToasterModule.forRoot(),
     MaterialModule,
     StoreModule.forRoot({
