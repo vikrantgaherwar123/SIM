@@ -272,6 +272,14 @@ export class AddEditEstComponent implements OnInit {
         this.taxLabel = "On Bill"
       }
 
+      //if setting of bill but no value added
+      if(this.activeEstimate.discount == 0){
+        this.noDiscountOnItem = true;
+      }
+      if(this.activeEstimate.tax_rate == 0){
+        this.noTaxOnItem = true;
+      }
+
         //if item and Disabled condition  
         if(this.activeEstimate.discount_on_item == 2){
           this.noDiscountOnItem = true;
@@ -438,6 +446,15 @@ export class AddEditEstComponent implements OnInit {
           this.noTaxOnItem = true;
           this.taxLabel = "Disabled"
         }
+
+        //if setting of bill but no value added
+        if (this.activeEstimate.discount == 0) {
+          this.noDiscountOnItem = true;
+        }
+        if (this.activeEstimate.tax_rate == 0) {
+          this.noTaxOnItem = true;
+        }
+
         
         //item settings
         //this.activeEstimate.tax_on_item = 0
@@ -1308,7 +1325,7 @@ export class AddEditEstComponent implements OnInit {
         // Add Estimate to recent store
           this.store.select('recentEstimates').subscribe(ests => {
             let index = ests.findIndex(est => est.unique_identifier == response.quotationList[0].unique_identifier)
-            if (response.quotationList[0].deleted_flag == 1) {
+            if (response.quotationList[0].deleted_flag == 1 && index == 0 ) {
               self.store.dispatch(new estimateActions.removeRecentEstimate(index))
               this.toastr.success('Estimate Deleted successfully', 'Success');
               this.router.navigate(['/estimate/add']);
@@ -1326,7 +1343,7 @@ export class AddEditEstComponent implements OnInit {
        if(!this.edit) {
           //add recently added esimate in store
           this.toastr.success('Estimate saved successfully', 'Success');
-          this.updateSettings();
+          // this.updateSettings();
           self.resetFormControls()
           self.addInit()
           this.router.navigate([`viewtodaysestimate/${response.quotationList[0].unique_identifier}`]);

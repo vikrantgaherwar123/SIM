@@ -1727,7 +1727,7 @@ export class AddEditComponent implements OnInit {
           this.store.select('recentInvoices').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
-            if (result.invoiceList[0].deleted_flag == 1) {
+            if (result.invoiceList[0].deleted_flag == 1 && index == 0) {
               self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.router.navigate(['/invoice/add'])

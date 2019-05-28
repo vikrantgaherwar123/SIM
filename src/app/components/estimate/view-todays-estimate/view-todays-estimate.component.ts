@@ -273,9 +273,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList.length !== 0){
-    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
-    }
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0] ? this.clientList.filter(client => client.uniqueKeyClient == id)[0].name : ''
   }
 
   goEdit(estId) {

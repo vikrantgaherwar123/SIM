@@ -505,8 +505,10 @@
                             class="font-custom-bold words_break">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span
+                          <span *ngIf="activeInvoice.gross_amount"
                             class="font-custom-bold price">{{activeInvoice.gross_amount | CurrencyPipe}}</span>
+                            <span *ngIf="activeInvoice.gross_amount == 0"
+                            class="font-custom-bold price">{{activeInvoice.gross_amount}}</span>
                         </div>
                       </div>
                     </div>
@@ -708,8 +710,11 @@
                         </div>
 
                         <div *ngIf="activeInvoice" class="col-6 text-right">
-                          <span class="font-custom-bold price">
+                          <span *ngIf="activeInvoice.amount" class="font-custom-bold price">
                             {{activeInvoice.amount | CurrencyPipe}}
+                          </span>
+                          <span *ngIf="activeInvoice.amount == 0" class="font-custom-bold price">
+                            {{activeInvoice.amount}}
                           </span>
                         </div>
                       </div>
@@ -783,8 +788,10 @@
                           <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                         </div>
                         <div class="col-6 text-right">
-                          <span class="bld price"
+                          <span class="bld price" *ngIf="activeInvoice.balance"
                             style="margin-right: -25px !important;">{{activeInvoice.balance | CurrencyPipe}}</span>
+                            <span class="bld price" *ngIf="activeInvoice.balance == 0"
+                            style="margin-right: -25px !important;">{{activeInvoice.balance}}</span>
                         </div>
                       </div>
                     </div>
