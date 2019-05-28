@@ -88,12 +88,10 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
-    
-    
-    
   }
 
   ngOnInit() {
+    
     this.titleService.setTitle('Simple Invoice | Batch Upload');
     //get client option selected initially
     this.showClient();
@@ -133,7 +131,7 @@ export class BatchuploadComponent implements OnInit {
       for(let i=0;i< 20;i++){
         this.productRecords.push([]);
       }  
-      //get product btn selected if product file selected
+      //get client btn selected if product file selected
       $("#productbtn").click()
     }
 
@@ -148,8 +146,6 @@ export class BatchuploadComponent implements OnInit {
     this.showProductDiv = true
     this.showClientDiv = false
   }
-  
-
 
   Upload() {
     //make save and clear btn disable
@@ -383,8 +379,9 @@ export class BatchuploadComponent implements OnInit {
             this.clientRecords[i].addressLine1 = this.clientRecords[i].addressLine1 + ' ' + this.clientRecords[i].addressLine2 + ' ' + this.clientRecords[i].addressLine3;
           }
           
-          this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
-          if (this.clientRecords[i].name !== '') {
+          // this.clientRecords[i].name = this.clientRecords[i].name.replace(/ /g, '');
+          var clientSpace = (this.clientRecords[i].name || '').trim().length === 0
+          if (!clientSpace) {
             this.clientService.add([this.clientService.changeKeysForApi(this.clientRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list
@@ -402,6 +399,7 @@ export class BatchuploadComponent implements OnInit {
                   this.clientCount++;
                   // this.toasterService.pop('success', 'Clients Saved Successfully !!!');
                 }
+                
                 // notifications.showSuccess({ message: response.message, hideDelay: 1500, hide: true });
               } else if (response.status === 414) {
                 this.toasterService.pop('failure', 'Sorry Your Subscription Expired ');
@@ -409,6 +407,7 @@ export class BatchuploadComponent implements OnInit {
               else {
                 this.toasterService.pop('failure', 'Some error occurred, please try again!');
               }
+             
             })
 
           } else {
@@ -486,8 +485,9 @@ export class BatchuploadComponent implements OnInit {
           var d = new Date()
           this.productRecords[i].modifiedDate = d.getTime()
           this.productRecords[i].inventoryEnabled = this.productRecords[i].inventoryEnabled ? 1 : 0;
-          this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
-          if (this.productRecords[i].prodName !== '') {
+          // this.productRecords[i].prodName = this.productRecords[i].prodName.replace(/ /g, '');
+          var productSpace = (this.productRecords[i].prodName || '').trim().length === 0
+          if (!productSpace) {
             this.productService.add([this.productService.changeKeysForApi(this.productRecords[i])]).subscribe((response: any) => {
               if (response.status === 200) {
                 // Update store and client list

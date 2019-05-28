@@ -2,7 +2,7 @@
 <div class="row main-wrapper">
   <div class="col-12 bg_12">
     <div class="back" style="height:95px">
-      <form class="shadow form-horizontal back edit-setting form_hg" #f="ngForm" name="userForm">
+      <form class="shadow form-horizontal back edit-setting form_hg" #f="ngForm" enctype="multipart/form-data" name="userForm">
         <div class="row">
           <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
             <span class="step_text">Step 1
@@ -347,6 +347,13 @@
     </div>
     <div *ngIf="make_blur_disable == false" class="transparent_div"></div>
   <div *ngIf="make_blur_disable == false" class="row" style="margin-top: -39%;">
+<<<<<<< HEAD
+    <div class="col-5 image-upload">
+        <input type="file" id="file-input" class="file_input" (change)="incomingfile($event)">
+        <div class="drop_icon_div" style="margin: 0 auto;">
+            <img src="assets/images/upload_o.png" style="height: 60px;"/>
+          </div>
+=======
     <div id="dropContainer" class="col-5 image-upload">
         <label for="file-input" class="file-upload dropzone-container dropzone-drop-area" style="margin: 45px auto 15px 38px;">
             <div class="drop_icon_div" style="margin: 0 auto;">
@@ -357,9 +364,12 @@
             required style="display:none"/>
             <br />
         </label>
+>>>>>>> 0b80e2562e287204730e68318545e1cadf80d614
         <div class="drag_txt">Drag File To Upload</div>
+        
     </div>
-    <div class="col-2" style="margin-top: 10px;margin-left: 50px;text-align: center">
+   
+    <div class="col-2" style="margin-top: -36px;margin-left: 50px;text-align: center">
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
@@ -373,7 +383,7 @@
       <div class="clearfix">&nbsp;</div>
       <span class="or">or</span>
     </div>
-    <div class="col-5" style="padding-top:99px;margin-left: -148px;text-align: center;">
+    <div class="col-5" style="padding-top:40px;margin-left: -148px;text-align: center;">
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>
       <div class="clearfix">&nbsp;</div>

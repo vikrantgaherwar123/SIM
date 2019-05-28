@@ -43,6 +43,7 @@
 	height: 38px;
 	padding: 6px 0px 0px 6px;
 	background: #1a73cc;
+	color:white;
 	border-radius: 2px;
 }
 .list-btn:hover{
@@ -398,7 +399,8 @@ button.add-line-item-button {
 	background: none !important;
 }
 .add_client_modal_body{
-  padding: 1rem 44px !important;
+	padding: 1rem 44px !important;
+	margin-bottom: 15px;
 }
 .add_client_popup_modal {
 	max-width: 618px !important;

@@ -157,3 +157,24 @@
   color: #1f1f1f;
   margin-left: 10px;
 }
+.product_list_pad{
+  padding: 39px 79px;
+}
+.del_client{
+  height:28px;
+}
+.pro_row_pad{
+  padding: 25px 78px !important;
+}
+.mrg_left_40{
+  margin-left: -40px !important;
+}
+.mrg_left_5{
+  margin-left: 5px !important;
+}
+.client_div{
+  margin-bottom: -13px !important;
+}
+.expand_div{
+  padding: 15px 42px !important;
+}

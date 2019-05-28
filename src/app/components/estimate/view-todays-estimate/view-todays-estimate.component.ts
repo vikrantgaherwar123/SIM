@@ -181,7 +181,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
          var baseAmount = this.activeEst.grossAmount + totalDiscount
             var allDiscount = (baseAmount - totalDiscount)
             this.taxable = allDiscount - taxPayable;
-          }else{
+          }else if(taxPayable){
             this.taxable = this.activeEst.grossAmount - taxPayable;
           }
       }

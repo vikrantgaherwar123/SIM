@@ -1,27 +1,27 @@
 <div class="row main-wrapper">
-    <div class="row" id="main"style="padding-top: 0px !important;width: 283px;">
+    <div class="row div_3_width" id="main">
           <form class="form-horizontal back shadow settingForm setting_sidebar_form"  #addTaxesForm="ngForm" enctype="multipart/form-data">
             <div class="row mx-0">
               <div>
                 <div class="label_div row" (click)="router.navigate(['/setting/primary'])" [ngClass]="{'selectedSetting' : router.url === '/setting/primary'}">
-                  <span class="col-8">Primary settings</span>
-                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-10">Primary settings</span>
+                  <span class="col-2"><img src="assets/images/next12.png"></span>
                 </div>
                 <div class="label_div row" (click)="router.navigate(['/setting/customField'])" [ngClass]="{'selectedSetting' : router.url === '/setting/customField'}">
-                  <span class="col-8">Custom Field Name</span>
-                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-10">Custom Field Name</span>
+                  <span class="col-2"><img src="assets/images/next12.png"></span>
                 </div>
                 <div class="label_div row" (click)="router.navigate(['/setting/banking'])" [ngClass]="{'selectedSetting' : router.url === '/setting/banking'}">
-                  <span class="col-8">Banking Details</span>
-                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-10">Banking Details</span>
+                  <span class="col-2"><img src="assets/images/next12.png"></span>
                 </div>
                 <div class="label_div row" (click)="router.navigate(['/setting/tnc'])" [ngClass]="{'selectedSetting' : router.url === '/setting/tnc'}">
-                  <span class="col-8">Terms & Conditions</span>
-                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-10">Terms & Conditions</span>
+                  <span class="col-2"><img src="assets/images/next12.png"></span>
                 </div>
                 <div class="label_div row" (click)="router.navigate(['/setting/userProfile'])" [ngClass]="{'selectedSetting' : router.url === '/setting/userProfile'}">
-                  <span class="col-8">Profile</span>
-                  <span class="col-2"><img src="assets/images/next12.png" class="setting_arrow"></span>
+                  <span class="col-10">Profile</span>
+                  <span class="col-2"><img src="assets/images/next12.png"></span>
                 </div>
               </div>
             </div>
@@ -29,221 +29,318 @@
           </form>
         </div>
   <div class="col-9" id="main">
-    <div class="back" style="height: 1293px;margin-right: -33px;margin-right: -86px;"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
+    <div class="back set_mrg_rignt"><!--style="margin: 20px auto 0px auto; max-width:1000px;"-->
       <form class="form-horizontal" name="userForm" #form="ngForm">
-        <div class="custom-field-form">
+        <div class="custom-field-form" >
           <div style="padding-top: 25px;">
             <div align="center">
-              <div class="col-12" style="margin-bottom: 10px;">
+              <div class="col-12" >
                 <span class="font-custom-bold" style="font-size: 21px;">Custom Field Name</span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
+              <div class="col-12" >
                 <span style="font-size: 11px;">
                   Customize field name as they appear on your PDF
                 </span>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" style="margin-top: 20px;">
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Invoice</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvInvoice" name="mTvInvoice"
                     class="form-control" placeholder="Invoice" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm">
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Estimate</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvEstimate" name="mTvEstimate"
                     class="form-control" placeholder="Estimate" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm">
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Product</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvProducts" name="mTvProducts"
                     class="form-control" placeholder="Product" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm">
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Quantity</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvQty" name="mTvQty"
                     class="form-control" placeholder="Qty" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Rate</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvRate" name="mTvRate"
                     class="form-control" placeholder="Rate" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Amount</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvAmount" name="mTvAmount"
                     class="form-control" placeholder="Amount" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Signature</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.signature" name="signature"
                     class="form-control" placeholder="Signature" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Receipt</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.receiptLable" name="receiptLable"
                     class="form-control" placeholder="Receipt" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Terms & Conditions</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvTermsAndConditions" name="mTvTermsAndConditions"
                     class="form-control" placeholder="Terms and Conditions" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Bill</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvBillTo" name="mTvBillTo"
                     class="form-control" placeholder="Bill To" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Ship To</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvShipTo" name="mTvShipTo"
                     class="form-control" placeholder="Ship To" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Due Date</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.mTvDueDate" name="mTvDueDate"
                     class="form-control" placeholder="Due Date:" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Discount</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.discount" name="discount"
                     class="form-control" placeholder="Discount" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Base Amount</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.baseAmount" name="baseAmount"
                     class="form-control" placeholder="Base Amount" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">SubTotal</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.subtotal" name="subtotal"
                     class="form-control" placeholder="SubTotal" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Shipping</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.shipping" name="shipping"
                     class="form-control" placeholder="Shipping" onfocus="this.select()" />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Adjustment</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.adjustment" name="adjustment"
                     class="form-control" placeholder="Adjustment" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Paid</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.paid" name="paid"
                     class="form-control" placeholder="Paid" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Balance</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.balance" name="balance"
                     class="form-control" placeholder="Balance" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Payable To</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.payableTo" name="payableTo"
                     class="form-control" placeholder="Payable To" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Banking Details</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.bankingDetails" name="bankingDetails"
                     class="form-control" placeholder="Banking Details" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Other Details</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.otherDetails" name="otherDetails"
-                    class="form-control" placeholder="Others Details" onfocus="this.select()"
+                    class="form-control" placeholder="Other Details" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Total</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.total" name="total"
                     class="form-control" placeholder="Total" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div class="form-group">
+              <div class="col-12 row row_mrg_btm" >
+                <div class="col-3"></div>
+                <div class="form-group label_div_col_3">
+                  <span class="set_label_span">Product Code</span>
+                </div>
+                <div class="form-group col-4">
                   <input type="text" [(ngModel)]="activeSetting.productCode" name="productCode"
                     class="form-control" placeholder="Product Code" onfocus="this.select()"
                   />
                 </div>
               </div>
 
-              <div class="col-12" style="margin-bottom: 10px;">
-                <div style="width: 300px;">
-                  <button type="button" (click)="cancel();"
-                    class="btn save_btn btn-raised width25btn pull-right pull-left change_bg"
+              <div class="col-12" style="margin-top: 20px;">
+                <div class="col-3"></div>
+                <div class="form-group col-6">
+                  <button type="button" (click)="cancel()"
+                    class="change_bg save_btn btn btn-custom-1 btn-raised no-border-radius font-custom-bold pull-left"
                   >
                     CANCEL
                   </button>
                   <button type="submit" id="customSubmit" (click)="save(form.valid)"
-                    class="btn save_btn btn-raised width25btn pull-right ml-2"
+                    class="save_btn btn btn-raised pull-right"
                   >
                     SAVE
                   </button>

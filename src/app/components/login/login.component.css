@@ -202,3 +202,21 @@
 .disable_form{
   pointer-events: none;
 }
+.h2_font{
+  font-size: 22px;
+}
+.acc_expired_div{
+  border: 1px solid #f1cfcf;
+  padding: 32px;
+  margin-top: 28px;
+  background-color: #fbeaea;
+  color: #c22929;
+}
+.expired_icon{
+  height: 35px;
+  margin-top: -22px;
+}
+
+button {
+  cursor: pointer;
+}

@@ -29,6 +29,10 @@
   font-family: helvetica_light;
   src: url('./assets/fonts/HelveticaNeue-Light.otf')
 }
+@font-face {
+  font-family: segoe_bold;
+  src: url('./assets/fonts/Segoe-UI-Bold.ttf')
+}
 
 
 b, body, p, button {
@@ -1121,9 +1125,15 @@ background-color: none;
 }
 .label_div{
   font-size: 15px;
-  padding: 12px 2px 16px 22px;
+  padding: 12px 18px 16px 38px;
   text-align: left;
   cursor: pointer;
+}
+.div_3_width{
+  width: 270px;
+}
+.set_mrg_rignt{
+  margin-right: -100px;
 }
 
 .label_div:hover{
@@ -1141,6 +1151,7 @@ background-color: none;
 }
 .term_modal_body{
   padding: 0rem !important;
+  border-top: 1px solid #e9ecef;
 }
 .default_checkbox_span{
   top: 7px !important;
@@ -1197,7 +1208,7 @@ textarea{
   pointer-events: none;
 }
 .add_btn_text{
-  color:red;
+  color:#1e81e3 !important;
 }
 /* payment installment section */
 .payment_row{
@@ -1453,9 +1464,7 @@ textarea{
 .font_16{
   font-size: 16px;
 }
-.toast-success {
-  background-color: #1a73cc !important;
-}
+
 .input_symbol{
   border: 1px solid #f2f1f1;
   background-color: #f2f1f1;
@@ -1586,13 +1595,6 @@ input.mat-input-element {
   margin-top: 55px;
   margin-left: 38px;
 }
-/* .mat-menu-item{
-  padding: 8px 12px;
-  border: none;
-  width: 100%;
-  text-align: left;
-  font-size: 13px !important;
-} */
 .setting_drop{
   padding: 8px 12px;
   border: none;
@@ -1663,4 +1665,259 @@ input.mat-input-element {
   white-space: nowrap;
   background-color: transparent;
   border: 0;
+}
+.words_break{
+  word-break: break-all;
+}
+.term_subheading{
+  color: #a6a6a7;
+}
+.add_disable_text{
+  color: #b7b7b7 !important;
+}
+/* common style */
+.display_none{
+  display:none !important;
+}
+.amount_span{
+  max-width: 434px !important;
+  padding: 2px 11px !important;
+}
+.height_47{
+  height: 47px !important;
+}
+.delete_modal_cross{
+  height: 30px;
+  margin-top: 6px;
+}
+.delete_span{
+  font-size: 16px;
+  font-weight: bold;
+}
+.bg_white{
+  background-color: #ffffff !important;
+}
+.sort_list_icon{
+  cursor: pointer;
+  background: #e6ecf0
+}
+
+/* toaster style */
+/* position */
+#toast-container > div {
+  margin: 0 0 6px;
+  padding: 23px 18px 5px 64px !important;
+  width: 338px;
+  border-radius: 3px 3px 3px 3px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 12px #999999;
+  height: 84px;
+ 
+}
+.messageClass	{
+  color:#80ae8b !important;
+}
+.titleClass{
+  font-weight: bold !important;
+}
+.toast-center-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.toast-top-center {
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+.toast-bottom-center {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+.toast-top-full-width {
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+.toast-bottom-full-width {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+.toast-top-left {
+  top: 12px;
+  left: 12px;
+}
+.toast-top-right {
+  top: 12px;
+  right: 12px;
+}
+.toast-bottom-right {
+  right: 12px;
+  bottom: 12px;
+}
+.toast-bottom-left {
+  bottom: 12px;
+  left: 12px;
+}
+
+/* toast styles */
+.toast-title {
+  font-weight: bold;
+}
+.toast-message {
+  word-wrap: break-word;
+}
+.toast-message a,
+.toast-message label {
+  color: #FFFFFF;
+}
+.toast-message a:hover {
+  color: #CCCCCC;
+  text-decoration: none;
+}
+.toast-close-button {
+  position: relative;
+  right: -0.3em;
+  top: -0.3em;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-shadow: 0 1px 0 #ffffff;
+  /* opacity: 0.8; */
+}
+.toast-close-button:hover,
+.toast-close-button:focus {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+}
+/*Additional properties for button version
+ iOS requires the button element instead of an anchor tag.
+ If you want the anchor version, it requires `href="#"`.*/
+button.toast-close-button {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+.toast-container {
+  pointer-events: none;
+  position: fixed;
+  z-index: 999999;
+}
+.toast-container * {
+  box-sizing: border-box;
+}
+.toast-container .ngx-toastr {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  padding: 15px 15px 15px 50px;
+  width: 300px;
+  border-radius: 3px 3px 3px 3px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  box-shadow: 0 0 3px #999999 !important;
+  color: #FFFFFF;
+}
+.toast-container .ngx-toastr:hover {
+  /* box-shadow: 0 0 12px #000000; */
+  opacity: 1;
+  cursor: pointer;
+}
+.toast-info {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'%3E%3Cpath fill='rgb(255,255,255)' d='M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z'/%3E%3C/svg%3E");
+}
+.toast-error {
+  background-image: url('/src/assets/images/settings/error-sign.png');
+}
+.toast-success {
+  background-image: url('/src/assets/images/settings/check-mark.png');
+  
+}
+.toast-warning {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512' width='576' height='512'%3E%3Cpath fill='rgb(255,255,255)' d='M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z'/%3E%3C/svg%3E");
+}
+.toast-container.toast-top-center .ngx-toastr,
+.toast-container.toast-bottom-center .ngx-toastr {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.toast-container.toast-top-full-width .ngx-toastr,
+.toast-container.toast-bottom-full-width .ngx-toastr {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.toast-error .toast-message{
+  font-size: 12px !important;
+  color: #d08f8f !important;
+}
+
+.toast-success .toast-message{
+  font-size: 12px !important;
+  color: #679e80 !important;
+
+}
+.ngx-toastr {
+  background-color: #030303;
+  pointer-events: auto;
+}
+.toast-success {
+  background-color: #e1faec !important;
+  color: #21804d !important;
+  border: 2px solid #b2e8cb;
+}
+.toast-error {
+  background-color: #f3dddd;
+  border: 2px solid #f5d1d1;
+  color: #c22929 !important;
+}
+.toast-info {
+  background-color: #2F96B4;
+}
+.toast-warning {
+  background-color: #F89406;
+}
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background-color: #000000;
+  opacity: 0.4;
+}
+/* Responsive Design */
+@media all and (max-width: 240px) {
+  .toast-container .ngx-toastr.div {
+    padding: 8px 8px 8px 50px;
+    width: 11em;
+  }
+  .toast-container .toast-close-button {
+    right: -0.2em;
+    top: -0.2em;
+  }
+}
+@media all and (min-width: 241px) and (max-width: 480px) {
+  .toast-container .ngx-toastr.div {
+    padding: 8px 8px 8px 50px;
+    width: 18em;
+  }
+  .toast-container .toast-close-button {
+    right: -0.2em;
+    top: -0.2em;
+  }
+}
+@media all and (min-width: 481px) and (max-width: 768px) {
+  .toast-container .ngx-toastr.div {
+    padding: 15px 15px 15px 50px;
+    width: 25em;
+  }
 }

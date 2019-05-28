@@ -63,6 +63,7 @@
   height: 36px !important;
   border-radius: 18px;
   border: 1px solid white !important;
+  font-size: 14px;
 }
 .main_row {
   background-color: #ffffff !important;
@@ -121,4 +122,32 @@
   height: 38px !important;
   width: 124px !important;
 }
+.product_div{
+  border-bottom: 2px solid #f0f4f5 !important;
+}
+.mrg_top_12{
+  margin-top: 12px !important;
+}
 
+.sort_list_product{
+  cursor: pointer;
+  background: #e6ecf0;
+  margin-right: 38px;
+}
+.product_heading{
+  text-align: right;
+  margin-left: 13px;
+}
+.mrg_left_18{
+  margin-left: -18px;
+}
+.pro_row_pad{
+  padding: 36px 88px !important;
+}
+.height_72{
+  height: 72px !important;
+}
+.icons{
+  text-align: right;
+  margin-top: 12px;
+}

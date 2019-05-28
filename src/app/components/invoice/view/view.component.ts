@@ -130,11 +130,15 @@ export class ViewComponent implements OnInit {
         this.removeEmptySpaces(this.clientList);
         this.store.dispatch(new clientActions.add(this.clientList))
         this.dropdownList = this.clientList;
+        this.sortClientAlphabetically();
+        
       },err => this.openErrorModal()
       )
     } else {
       this.removeEmptySpaces(this.clientList);
       this.dropdownList = this.clientList;
+      this.sortClientAlphabetically();
+      
     }
     this.route.params.subscribe(params => {
       if (params.invId) {
@@ -177,7 +181,13 @@ export class ViewComponent implements OnInit {
     $('#errormessage').on('shown.bs.modal', (e) => {
     })
   }
-  
+  sortClientAlphabetically(){
+    this.dropdownList.sort(function (a, b) {
+      var textA = a.name.toUpperCase();
+      var textB = b.name.toUpperCase();
+      return textA.localeCompare(textB);
+    });
+  }
 
   removeEmptySpaces(data){
     //remove whitespaces from clientlist
@@ -402,8 +412,7 @@ export class ViewComponent implements OnInit {
         var baseAmount = this.activeInv.gross_amount + totalDiscount
             var allDiscount = (baseAmount - totalDiscount)
             this.taxable = allDiscount - taxPayable;
-            
-          }else{
+          }else if(taxPayable){ // condition added because taxable was showing on every condition
             this.taxable = this.activeInv.gross_amount - taxPayable;
             
           }
