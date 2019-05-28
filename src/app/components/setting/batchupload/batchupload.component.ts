@@ -88,9 +88,16 @@ export class BatchuploadComponent implements OnInit {
     store.select('client').subscribe(clients => this.clientList = clients.filter(cli => cli.enabled == 0))
     store.select('product').subscribe(products => this.productList = products.filter(prod => prod.enabled == 0))
     this.user = JSON.parse(localStorage.getItem('user'))
+
+    $(document).ready(function(){
+      $('form input').change(function () {
+       
+      });
+    });
   }
 
   ngOnInit() {
+    
     this.titleService.setTitle('Simple Invoice | Batch Upload');
     //get client option selected initially
     this.showClient();

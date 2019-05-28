@@ -135,12 +135,15 @@ export class AddEditEstComponent implements OnInit {
 
   public success: Toast = {
     type: 'Success',
+    title: 'close button',
+    body:'Product Created Successfully !!!',
+    showCloseButton: true,
     timeout: 10000000
   };
   public failure: Toast = {
     type: 'Failure',
     title: 'close button',
-    body:'Product name is empty',
+    body:'Product name',
     showCloseButton: true,
     timeout: 10000000
   };
@@ -1074,7 +1077,7 @@ export class AddEditEstComponent implements OnInit {
         }
         this.toasterService.pop(this.success);
         this.toasterService.pop(this.failure);
-        // this.toasterService.pop('success', 'Success Product','Product has been added')
+        this.toasterService.pop('success', 'Product has been added')
         //called store and set product here to update store when new product added
         this.store.select('product').subscribe(products => this.productList = products)
         // this.setProductFilter();

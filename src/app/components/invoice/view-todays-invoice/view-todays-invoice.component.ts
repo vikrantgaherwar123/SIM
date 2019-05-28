@@ -268,8 +268,11 @@ export class ViewTodaysInvoiceComponent implements OnInit {
         this.noTaxOnItem = false;
       }
       //remove digits after two decimal
-      var value = this.taxable.toString().substring(0, this.taxable.toString().indexOf(".") + 3);
-      this.taxable = parseFloat(value);
+      if(this.taxable){
+        var value = this.taxable.toString().substring(0, this.taxable.toString().indexOf(".") + 3);
+        this.taxable = parseFloat(value);
+      }
+      
 
     
     }

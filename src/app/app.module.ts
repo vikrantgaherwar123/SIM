@@ -63,6 +63,7 @@ import{MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter, DateAdapter, MAT_DAT
 import { ViewTodaysInvoiceComponent } from './components/invoice/view-todays-invoice/view-todays-invoice.component';
 import { ViewTodaysEstimateComponent } from './components/estimate/view-todays-estimate/view-todays-estimate.component';
 import { SubscriptionComponent } from './components/login/subscription/subscription.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -86,6 +87,7 @@ export function getAuthServiceConfigs() {
   
   
 }
+// toaster class
 
 
 export const MY_FORMATS = {
@@ -125,6 +127,7 @@ export const MY_FORMATS = {
     ViewTodaysInvoiceComponent,
     ViewTodaysEstimateComponent,
     SubscriptionComponent,
+    
   ],
   imports: [
     
@@ -152,6 +155,7 @@ export const MY_FORMATS = {
     FilterPipeModule,
     OrderModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     ToasterModule.forRoot(),
     MaterialModule,
     StoreModule.forRoot({

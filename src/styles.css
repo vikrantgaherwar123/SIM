@@ -1705,7 +1705,7 @@ input.mat-input-element {
   background: #e6ecf0
 }
 /* toaster */
-.toast-success {
+/* .toast-success {
   background-color: #e1faec !important;
   color: #21804d !important;
 }
@@ -1731,6 +1731,45 @@ input.mat-input-element {
   opacity: 1 !important;
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   filter: alpha(opacity=80);
+} */
+#toastr-container > div {
+  position: relative;
+  overflow: hidden;
+  margin: 3px 0 6px !important;
+  padding: 15px 15px 15px 60px;
+  width: 345px;
+  border-radius: 3px;
+  background-position: 15px;
+  background-repeat: no-repeat;
+  color: #fff;
+  background-image: url(assets/images/settings/check-mark.png) !important;
+}
+#toastr-container[_ngcontent-c8] > .toastr-success[_ngcontent-c8] {
+  background-image: url(assets/images/settings/check-mark.png) !important;
+}
+#toastr-container > div:hover{
+  box-shadow: 0 0 0px #999 !important;
+}
+#toastr-container > .toastr-success {
+  background-color: #e1faec !important;
+  border: 2px solid #e1faec !important;
+  color: #21804d !important;
+  height:100px;
+  /* background-image: url(assets/images/settings/check-mark.png) !important; */
+}
+.to-title{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #21804d;
+}
+.to-message{
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 20px;
+  display: block;
+  color: #80ae8b !important;
+  background-color: transparent;
 }
 /* failure toast */
 .toast {
