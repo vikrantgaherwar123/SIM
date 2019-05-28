@@ -112,10 +112,6 @@ export class ViewComponent implements OnInit {
       })
     });
     // date and time dropdown ends
-
-   
-
-
   }
 
   

@@ -27,7 +27,7 @@ export class ViewEstComponent implements OnInit {
 
   estimateList: estimate[]
   activeEst: estimate
-  estListLoader: boolean = false
+  estListLoader: boolean = true
   estDispLimit: number = 20
   estSortTerm: string = 'createdDate'
   estSearchTerm: string
@@ -329,9 +329,7 @@ export class ViewEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList){
-    return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
-    }
+    return this.clientList.filter(client => client.uniqueKeyClient == id)[0] ? this.clientList.filter(client => client.uniqueKeyClient == id)[0].name : ''
   }
 
   

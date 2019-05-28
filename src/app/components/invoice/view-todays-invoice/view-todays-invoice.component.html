@@ -249,8 +249,10 @@
                     class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span
+                  <span *ngIf="activeInv.gross_amount"
                     class="font-custom-bold price">{{activeInv.gross_amount | CurrencyPipe}}</span>
+                    <span *ngIf="activeInv.gross_amount == 0"
+                    class="font-custom-bold price">{{activeInv.gross_amount}}</span>
                 </div>
               </div>
 
@@ -339,8 +341,10 @@
                   </span>
                 </div>
                 <div class="col-6 text-right">
-                  <span
+                  <span *ngIf="activeInv.amount"
                     class="font-custom-bold price">{{activeInv.amount | CurrencyPipe}}</span>
+                    <span *ngIf="activeInv.amount== 0"
+                    class="font-custom-bold price">{{activeInv.amount}}</span>
                 </div>
               </div>
               
@@ -414,8 +418,10 @@
                   <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                 </div>
                 <div class="col-6 text-right">
-                  <span
+                  <span *ngIf="activeInv.balance"
                     class="bld price">{{activeInv.balance | CurrencyPipe}}</span>
+                    <span *ngIf="activeInv.balance == 0"
+                    class="bld price">{{activeInv.balance}}</span>
                 </div>
               </div>
             </div>

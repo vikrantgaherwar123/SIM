@@ -329,7 +329,7 @@
                   <div *ngIf="activeEst.discountFlag == 0" class="inline font-custom">
                     ({{0 | CurrencyPipe}})
                   </div>
-                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">(%)</div>
+                  <div *ngIf="activeEst.discountFlag == 1" class="inline font-custom">({{activeEst.percentageValue}} %)</div>
                 </div>
 
                 <div class="col-7">
@@ -514,7 +514,7 @@
               <div class="col-10">
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="font-custom-bold fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
+                    <h5  class="font-custom-bold fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">{{ getClientName(estimate.unique_key_fk_client) }}</h5>
                   </div>
                   <div class="col-5 font-custom-book fontsize13" [ngClass]="{'color_white': (estimate.unique_identifier == activeEst.unique_identifier)}">
                     #{{ estimate.quetationNo }}

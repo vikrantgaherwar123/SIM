@@ -24,42 +24,61 @@ export class CurrencyPipe implements PipeTransform {
         this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
     }
     if(this.settings.numberFormat == '###.###.###,00'){
-       value.toLocaleString(
-        'de-DE', // leave undefined to use the browser's locale,
-        // or use a string like 'en-US' to override it.
-        { minimumFractionDigits: 2 }
-      );
+
+      var formatter = new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+      });
+      
+      value = formatter.format(value);
+      value = value.replace(/\€/g,"")
+      console.log(value);
+      
     }else if(this.settings.numberFormat == '##.##.##.###,00'){
-       value.toLocaleString(
-        'en-IN', // leave undefined to use the browser's locale,
-        // or use a string like 'en-US' to override it.
-        { minimumFractionDigits: 2 }
-      );
+      
+      var formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+      });
+      
+      value = formatter.format(value);
+      value = value.replace(/\₹/g,"")
       var map = { ',': '.', '.': ',' };
-       value.replace(/[,.]/g, function (k) {
+      value = value.replace(/[,.]/g, function (k) {
         return map[k];
       });
+      console.log(value);
     }
     else if(this.settings.numberFormat == '### ### ###,00'){
-       value = value.toLocaleString(
-        'Fr', // leave undefined to use the browser's locale,
-        // or use a string like 'en-US' to override it.
-        { minimumFractionDigits: 2 }
-      );
+      
+      var formatter = new Intl.NumberFormat('Fr', {
+        style: 'currency',
+        currency: 'EUR',
+      });
+      
+      value = formatter.format(value);
+      value = value.replace(/\€/g,"")
+      
       console.log(value);
       
     }else if(this.settings.numberFormat == '###,###,###.00'){
-       value.toLocaleString(
-        'en-US', // leave undefined to use the browser's locale,
-        // or use a string like 'en-US' to override it.
-        { minimumFractionDigits: 2 }
-      );
+      
+      var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+      
+      value = formatter.format(value);
+      value = value.replace(/\$/g,"")
     }else if(this.settings.numberFormat == '##,##,##,###.00'){
-       value.toLocaleString(
-        'en-IN', // leave undefined to use the browser's locale,
-        // or use a string like 'en-US' to override it.
-        { minimumFractionDigits: 2 }
-      );
+      
+      var formatter = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+      });
+      
+      value = formatter.format(value);
+      value = value.replace(/\₹/g,"")
     }
     return this.mysymbols +' ' + value
   }
