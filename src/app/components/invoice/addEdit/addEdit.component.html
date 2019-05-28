@@ -540,7 +540,7 @@
                               </a>
                             </li>
                             <li [class.active]="activeInvoice.percentage_flag == 1">
-                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;calculateInvoice()">
+                              <a (click)="activeInvoice.discount=0.00;activeInvoice.percentage_flag=1;activeInvoice.percentage_value = 0;calculateInvoice()">
                                 Percent (%)
                               </a>
                             </li>
