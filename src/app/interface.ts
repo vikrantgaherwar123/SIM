@@ -82,6 +82,7 @@ export interface setting {
   signature: string
   subtotal: string
   taxFlagLevel: number
+  taxableFlag : number
   taxIDLable: string
   taxLable: string
   templateVersion: number
