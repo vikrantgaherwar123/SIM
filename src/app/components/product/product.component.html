@@ -105,10 +105,10 @@
             <div class="row edit_item_row">
               <div class="row col-12">
                <span class="edit_span">{{settings.mTvProducts ? settings.mTvProducts : 'Products'}}:</span>
-               <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyProduct == true}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} *"
+               <input type="text" id="prodName" (keyup)="emptyField($event)" [ngClass]="{'box_red': activeProduct.prodName === null}" name="prodName" placeholder="{{settings.mTvProducts ? settings.mTvProducts : 'Products'}} *"
                class="form-control" maxlength="45" onfocus="this.select()" required
                [(ngModel)]="activeProduct.prodName"
-             />
+                />
               </div>
   
               <div class="row">
@@ -135,7 +135,7 @@
                 <span class="edit_span">Rate:</span>
                 <input type="number" name="rate" class="form-control" step="any" min=0.01
                   placeholder="{{settings.mTvRate ? settings.mTvRate : 'Rate'}}*" [(ngModel)]="activeProduct.rate" required
-                  onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': emptyRate == true}" />
+                  onfocus="this.select()" (keyup)="emptyField($event)" [ngClass]="{'box_red': activeProduct.rate === null}" />
               </div>
   
               <div class="row col-12">

@@ -433,3 +433,8 @@ select {
   background-clip: padding-box;
   border: 1px solid rgba(0,0,0,.15);
 }
+.no_todays_estimate{
+  width: 210px;
+  margin-top: 55px;
+  margin-left: 57px;
+}

@@ -220,14 +220,13 @@
                   <tr *ngIf="disableProductText === true" class="row-item item_box_shadow" style="background-color: white !important;">
                     <td [class.no-border-last]="last">
                       <div class="form-group" style="padding: 4px 2px;"> 
-                        <input type="text" name="product-name" class="mrg_item_input form-control billing-input" [ngClass]="{ 'box_red': noProductSelected === true }"
+                        <input type="text" name="product-name" class="mrg_item_input form-control billing-input"
                         placeholder="Type or Select {{settings.mTvProducts ? settings.mTvProducts : 'Product'}} "
-                          tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto">
+                          tabindex="1" matInput [formControl]="addItem" [matAutocomplete]="auto"  [ngClass]="{ 'box_red': ifProductEmpty == true && addItem !== null }">
 
-                          <img src="assets/images/product-icon/exclamation-mark.png"  class="errspan help-block" *ngIf="ifProductEmpty === true && addItem !==null">
+                          <!-- <img src="assets/images/product-icon/exclamation-mark.png"  class="errspan help-block" *ngIf="ifProductEmpty === true && addItem !==null"> -->
 
-                          
-                        <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
+                          <mat-autocomplete #auto="matAutocomplete" class="mCustomScrollbar style-3" [displayWith]="displayWith"
                           (optionSelected)="fillItemDetails()">
                           <mat-option *ngFor="let product of (filteredProducts | async | orderBy:'prodName':false:true)"
                             [value]="product">{{product.prodName}}</mat-option>
@@ -246,7 +245,8 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last">
                       <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="2" name="itemQty" id="qty" step="any" class="form-control text_right  height_40"
-                          min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          min="0.01" [(ngModel)]="activeItem.quantity" (keyup)="calculateTotal()" onfocus="this.select()"
+                          [ngClass]="{ 'box_red': this.activeItem.quantity === null }" />
                       </div>
                       <button type="button" tabindex="7" class="change_bg btn save_btn btn-raised add_new_btn" (click)="addEditEstimateItem()"
                         style="margin-top: 10px;"> <!--[disabled]="!addItem.value || activeItem.quantity == 0 || activeItem.rate == 0" -->
@@ -257,7 +257,8 @@
                     <td style="vertical-align: top;" [class.no-border-last]="last">
                       <div class="form-group" style="padding: 4px 2px;">
                         <input type="number" tabindex="3" name="itemRate" step="any" class="form-control text_right  height_40" min="0.01"
-                          [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()" onfocus="this.select()" />
+                          [(ngModel)]="activeItem.rate" (keyup)="calculateTotal()"
+                          [ngClass]="{ 'box_red': this.activeItem.rate === null }" onfocus="this.select()" />
                       </div>
                     </td>
                     <td style="vertical-align: top;" [class.no-border-last]="last" *ngIf="activeEstimate.discount_on_item == 1">
@@ -747,7 +748,7 @@
             </div>
           </div>
           <div *ngIf="recentEstimateList.length == 0" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
-              <img src="assets/images/no_todays_invoice.png" class="no_todays_img">
+              <img src="assets/images/no_todays_estimate.png" class="no_todays_estimate">
           </div>
         </div>
       <!-- ends -->

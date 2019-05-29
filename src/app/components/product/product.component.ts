@@ -134,11 +134,13 @@ hideToggle: boolean = false
   save(status, edit) {
     var proStatus = true
     //prod & rate field validation
-    if(this.activeProduct.prodName == undefined){
+    if(this.activeProduct.prodName == undefined || this.activeProduct.prodName == ''){
       this.emptyProduct = true
+      this.toasterService.pop('failure', 'Product name required');
     }
     if(this.activeProduct.rate == undefined){
       this.emptyRate = true;
+      this.toasterService.pop('failure', 'Rate required');
     }
     // If adding or editing product, make sure product with same name doesnt exist
     if(this.activeProduct.prodName && !this.addProduct) {                   //condition was !this.activeProduct.enabled changed by Vikrant
@@ -187,43 +189,48 @@ hideToggle: boolean = false
       this.productListLoading = true
 
       var self = this
-
-      this.productService.add([this.productService.changeKeysForApi(this.activeProduct)]).subscribe((response: any) => {
-        self.productListLoading = false
-
-        if (response.status === 200) {
-          // Update store and product list
-          let index, storeIndex
-          index = self.productList.findIndex(pro => pro.uniqueKeyProduct == response.productList[0].unique_identifier)
-          self.store.select('product').subscribe(prods => {
-            storeIndex = prods.findIndex(prs => prs.uniqueKeyProduct == response.productList[0].unique_identifier)
-          })
-
-          if (index == -1) {  // add
-            self.store.dispatch(new productActions.add([self.productService.changeKeysForStore(response.productList[0])]))
-            this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
-            this.toasterService.pop('success', 'Product added successfully !!!');
-            this.closeItemModel()
-          } else {
-            if (self.activeProduct.enabled) {   // delete
-              self.store.dispatch(new productActions.remove(storeIndex))
-              this.productList.splice(index, 1)
-              this.activeProduct = this.productList[0]
-              this.toasterService.pop('success','Product deleted successfully !');
+      var productSpace = (this.activeProduct.prodName || '').trim().length === 0
+      if(productSpace == true){
+        this.toasterService.pop('failure', 'Product name cannot be empty');
+      }
+      if(!productSpace){
+        this.productService.add([this.productService.changeKeysForApi(this.activeProduct)]).subscribe((response: any) => {
+          self.productListLoading = false
+  
+          if (response.status === 200) {
+            // Update store and product list
+            let index, storeIndex
+            index = self.productList.findIndex(pro => pro.uniqueKeyProduct == response.productList[0].unique_identifier)
+            self.store.select('product').subscribe(prods => {
+              storeIndex = prods.findIndex(prs => prs.uniqueKeyProduct == response.productList[0].unique_identifier)
+            })
+  
+            if (index == -1) {  // add
+              self.store.dispatch(new productActions.add([self.productService.changeKeysForStore(response.productList[0])]))
+              this.productList.push(self.productService.changeKeysForStore(response.productList[0]))
+              this.toasterService.pop('success', 'Product added successfully !!!');
               this.closeItemModel()
-             
-            } else {    //edit
-              self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
-              this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
-              this.toasterService.pop('success','Product Edited Successfully !!!');
-              this.closeItemModel()
-              // this.ngOnInit();
+            } else {
+              if (self.activeProduct.enabled) {   // delete
+                self.store.dispatch(new productActions.remove(storeIndex))
+                this.productList.splice(index, 1)
+                this.activeProduct = this.productList[0]
+                this.toasterService.pop('success','Product deleted successfully !');
+                this.closeItemModel()
+               
+              } else {    //edit
+                self.store.dispatch(new productActions.edit({index: storeIndex, value: self.productService.changeKeysForStore(response.productList[0])}))
+                this.productList[index] = self.productService.changeKeysForStore(response.productList[0])
+                this.toasterService.pop('success','Product Edited Successfully !!!');
+                this.closeItemModel()
+                // this.ngOnInit();
+              }
             }
+          } else if (response.status != 200) {
           }
-        } else if (response.status != 200) {
-        }
-       
-      },error => this.openErrorModal())
+         
+        },error => this.openErrorModal())
+      }
     } else {
       if(!proStatus) {
         this.toasterService.pop('failure','Product with this name already exists');

@@ -270,6 +270,7 @@ export class AddEditComponent implements OnInit {
     if(input > 100){
       alert("Percentage amount must be under 100");
       this.activeInvoice.percentage_value = 0;
+      this.activeItem.discount = 0;
       this.activeInvoice.discount = 0;
       this.activeInvoice.tax_rate = 0;
       this.activeInvoice.tax_amount = 0;
@@ -277,18 +278,12 @@ export class AddEditComponent implements OnInit {
       this.activeInvoice.balance = this.activeInvoice.gross_amount;
     }
   }
-  dataChangedItem(input){
-    if(input > 100){
-      alert("Percentage amount must be under 100");
-      this.activeItem.discount = 0;
-    }
-  }
-
   taxListChanged(input){
     if(input > 100){
       alert("Percentage amount must be under 100");
       this.activeInvoice.tax_rate = 0;
       this.activeInvoice.tax_amount = 0;
+      this.activeItem.tax_rate = 0;
     }
   }
   //entering proper invoice number 

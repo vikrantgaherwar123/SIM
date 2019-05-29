@@ -980,10 +980,11 @@ export class AddEditEstComponent implements OnInit {
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-    }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
+      this.toastr.error('Product name cannot be empty', 'Failure');
+    }else if(this.activeItem.quantity === null || this.activeItem.quantity === 0){
       this.toastr.error('Quantity can not be 0 or empty', 'Failure');
     }
-    if(this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
+    else if(this.activeItem.rate === null || this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
       this.toastr.error('Rate can not be 0 or empty', 'Failure');
     }
 
@@ -1031,9 +1032,12 @@ export class AddEditEstComponent implements OnInit {
         tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '');
       }
       // If Name is same,
-      if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
-        duplicateProduct = true;
+      if(this.addItem.value){
+        if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
+          duplicateProduct = true;
+        }
       }
+      
     }
     if(duplicateProduct === false){
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
