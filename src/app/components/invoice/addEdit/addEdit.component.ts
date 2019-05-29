@@ -1710,7 +1710,7 @@ export class AddEditComponent implements OnInit {
           this.store.select('recentInvoices').subscribe(invs => {
             let index = invs.findIndex(inv => inv.unique_identifier == result.invoiceList[0].unique_identifier)
             //after delete store getting udated here so we already updating in fetchInvoice fun so simply delete only, from store
-            if (result.invoiceList[0].deleted_flag == 1 && index == 0) {
+            if (result.invoiceList[0].deleted_flag == 1 && index != -1) {
               self.store.dispatch(new invoiceActions.removeRecentInvoice(index))
               this.toasterService.pop('success', 'Invoice Deleted successfully');
               this.router.navigate(['/invoice/add'])
@@ -1736,7 +1736,16 @@ export class AddEditComponent implements OnInit {
          else if(!this.edit) {
           //set recently added invoice list in store
           this.toasterService.pop('success', 'Invoice saved successfully');
-          // this.updateSettings();
+          var user = JSON.parse(localStorage.getItem('user'))
+
+          let matches = this.activeInvoice.invoice_number.match(/\d+$/)
+          if (matches) {
+            this.settings.invNo = matches[0]
+            this.settings.setInvoiceFormat = this.activeInvoice.invoice_number.split(user.setting.invNo)[0]
+          } else {
+            this.settings.invNo = 0
+            this.settings.setInvoiceFormat = this.activeInvoice.invoice_number
+          }
           self.resetCreateInvoice()
           this.router.navigate([`viewtodaysinvoice/${result.invoiceList[0].unique_identifier}`])
         }
@@ -1782,17 +1791,7 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice = <invoice>{}
     this.activeClient = <client>{}
     this.amountPaid = undefined;
-    var user = JSON.parse(localStorage.getItem('user'))
-
-    let matches = this.activeInvoice.invoice_number.match(/\d+$/)
-    if (matches) {
-      user.setting.invNo = matches[0]
-      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number.split(user.setting.invNo)[0]
-    } else {
-      user.setting.invNo = 0
-      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number
-    }
-
+    
     // Invoice Number
     if (!isNaN(parseInt(this.settings.invNo))) {
       this.tempInvNo = parseInt(this.settings.invNo) + 1
