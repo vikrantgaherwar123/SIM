@@ -1785,6 +1785,16 @@ export class AddEditComponent implements OnInit {
     this.activeInvoice = <invoice>{}
     this.activeClient = <client>{}
     this.amountPaid = undefined;
+    var user = JSON.parse(localStorage.getItem('user'))
+
+    let matches = this.activeInvoice.invoice_number.match(/\d+$/)
+    if (matches) {
+      user.setting.invNo = matches[0]
+      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number.split(user.setting.invNo)[0]
+    } else {
+      user.setting.invNo = 0
+      user.setting.setInvoiceFormat = this.activeInvoice.invoice_number
+    }
 
     // Invoice Number
     if (!isNaN(parseInt(this.settings.invNo))) {

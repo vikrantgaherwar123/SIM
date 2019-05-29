@@ -386,7 +386,8 @@
                       <span class="font-custom-bold">{{settings.subtotal ? settings.subtotal : 'SUB_TOT_LABEL' | translate}}</span>
                     </div>
                     <div class="col-6 text-right">
-                      <span class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
+                      <span *ngIf="activeEstimate.gross_amount" class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
+                      <span *ngIf="activeEstimate.gross_amount == 0" class="font-custom-bold price">{{activeEstimate.gross_amount}}</span>
                     </div>
                   </div>
                 </div>
@@ -743,7 +744,7 @@
                     #{{ estimate.quetationNo }}
                   </div>
                   <div class="col-6 text-right font-custom-bold fontsize12" [ngClass]="{'color_white': (estimate.unique_identifier == estimateId)}">
-                    {{ estimate.amount | number:'1.2-2' | CurrencyPipe }}
+                    {{ estimate.amount | CurrencyPipe }}
                   </div>
                 </div>
               </div>
