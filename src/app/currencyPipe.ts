@@ -80,7 +80,7 @@ export class CurrencyPipe implements PipeTransform {
       value = formatter.format(value);
       value = value.replace(/\₹/g,"")
     }
-    return this.mysymbols +' ' + value
+    return value
   }
 
 }

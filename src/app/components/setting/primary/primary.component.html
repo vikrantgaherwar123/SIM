@@ -138,6 +138,24 @@
               </div>
             </div>
 
+            <!-- show balance and paid on PDF  -->
+            <div class="form-group labelSpacing">
+              <div class="row">
+                <label class="col-md-3 font-custom-bold fontsize18 labelText">Show Balance and Paid Amount on PDF</label><br>
+                
+                <div class="col-md-9 row">
+                  <div class="col-12 col-md-4">
+                    <label class="check">
+                      <div class="checkbox default_checkbox">
+                          <input type="checkbox" [checked]="activeSettings.showBalPaidAmountFlag" (change)="showBalPaidOnPdf($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
+                          <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
              <!-- tax label -->
              <div class="form-group labelSpacing">
               <div class="row">

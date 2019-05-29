@@ -140,7 +140,8 @@ export const MY_FORMATS = {
     AppRoutingModule,
     ToastrModule.forRoot(
       {
-        timeOut: 100000000,
+        timeOut: 3000,
+        preventDuplicates: false,
       }
     ),// ToastrModule added
     TranslateModule.forRoot({
