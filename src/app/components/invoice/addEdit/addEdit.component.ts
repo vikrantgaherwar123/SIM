@@ -133,6 +133,7 @@ export class AddEditComponent implements OnInit {
   taxLabel: string;
   discountLabel: string;
   includeTax: boolean;
+  showBalPaidAmountFlag: boolean;
   
   constructor(private CONST: CONSTANTS,public router: Router,
     private adapter: DateAdapter<any>,
@@ -1268,7 +1269,7 @@ export class AddEditComponent implements OnInit {
           this.activeItem.tax_rate = 0
         } else if(this.settings.taxFlagLevel === 0 || this.activeInvoice.tax_on_item === 0){ //when tax on item selected from settings
           if(this.activeItem.discount_amount){
-            this.activeItem.tax_amount = ((this.activeItem.rate - (this.activeItem.rate * this.activeItem.discount/100) * this.activeItem.quantity) * this.activeItem.tax_rate) / (100 + this.activeItem.tax_rate)
+            this.activeItem.tax_amount = ((this.activeItem.rate - (this.activeItem.rate * this.activeItem.discount/100)) * this.activeItem.quantity * this.activeItem.tax_rate) / (100 + this.activeItem.tax_rate)
             this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount
           }
         }
@@ -1448,10 +1449,10 @@ export class AddEditComponent implements OnInit {
 
   showBalPaidOnPdf(event){
     if(event.target.checked === true){
-      this.activeInvoice.showBalPaidAmountFlag = true;
+      this.showBalPaidAmountFlag = true;
       this.updateSettings();
     }else{
-      this.activeInvoice.showBalPaidAmountFlag = false;
+      this.showBalPaidAmountFlag = false;
       this.updateSettings();
     }
   }
@@ -1491,7 +1492,7 @@ export class AddEditComponent implements OnInit {
           if (isNaN(this.activeInvoice.listItems[i].tax_rate) || this.activeInvoice.listItems[i].tax_rate == 0) {
             this.activeInvoice.listItems[i].tax_rate = 0
           }
-            this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate - (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].discount / 100) * this.activeInvoice.listItems[i].quantity) * this.activeInvoice.listItems[i].tax_rate) / (100 + this.activeInvoice.listItems[i].tax_rate)
+            this.activeInvoice.listItems[i].tax_amount = ((this.activeInvoice.listItems[i].rate - (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].discount / 100))* this.activeInvoice.listItems[i].quantity * this.activeInvoice.listItems[i].tax_rate) / (100 + this.activeInvoice.listItems[i].tax_rate)
             if (this.activeInvoice.listItems[i].discount_amount) {
               this.activeInvoice.listItems[i].total = (this.activeInvoice.listItems[i].rate * this.activeInvoice.listItems[i].quantity) - this.activeInvoice.listItems[i].discount_amount
             }else{
@@ -1816,6 +1817,12 @@ export class AddEditComponent implements OnInit {
     } else {
       user.setting.invNo = 0
       user.setting.setInvoiceFormat = this.activeInvoice.invoice_number
+    }
+
+    if(this.showBalPaidAmountFlag){
+      user.setting.showBalPaidAmountFlag = true;
+    }else{
+      user.setting.showBalPaidAmountFlag = false;
     }
 
     // localStorage.setItem('user', JSON.stringify(user))
