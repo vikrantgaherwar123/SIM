@@ -146,7 +146,6 @@ export interface terms {
 }
 
 export interface invoice {
-  showBalPaidAmountFlag: boolean
   taxableFlag:number
   adjustment: number
   amount: number

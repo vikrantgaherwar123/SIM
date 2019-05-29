@@ -129,7 +129,7 @@
                   <div class="col-12 col-md-4">
                     <label class="check">
                       <div class="checkbox default_checkbox">
-                          <input type="checkbox"  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                          <input type="checkbox" (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
                           <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
                       </div>
                     </label>

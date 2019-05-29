@@ -133,6 +133,7 @@ export class AddEditEstComponent implements OnInit {
   includeTax: boolean;
   taxLabel: string;
   discountLabel: string;
+  showBalPaidAmountFlag: boolean;
 
   constructor(private CONST: CONSTANTS, public router: Router,
     private adapter: DateAdapter<any>,
@@ -233,6 +234,66 @@ export class AddEditEstComponent implements OnInit {
     
   }
 
+  setSettings(){
+    //set settingFlags according to edit i.e invoice saved previously
+    if(this.activeEstimate.discount_on_item == 0){
+      this.activeEstimate.percentage_flag = 1;
+      this.noDiscountOnItem = false;
+      this.discountLabel = "On Bill"
+    }else if(this.activeEstimate.discount_on_item == 1){
+      this.noDiscountOnItem = true;
+      this.discountLabel = "On Item"
+    }
+
+    if(this.activeEstimate.tax_on_item == 0){
+      this.taxtext = "Tax (on Item)"
+      this.noTaxOnItem = true;
+      this.taxLabel = "On Item"
+    }else if(this.activeEstimate.tax_on_item == 1){
+      this.noTaxOnItem = false;
+      this.taxLabel = "On Bill"
+    }
+
+    //if item and Disabled condition  
+    if(this.activeEstimate.discount_on_item == 2){
+      this.noDiscountOnItem = true;
+      this.discountLabel = "Disabled"
+    }
+
+    if(this.activeEstimate.tax_on_item == 2){
+      this.noTaxOnItem = true;
+      this.taxLabel = "Disabled"
+    }
+
+    //if setting of bill but no value added
+    if (this.activeEstimate.discount == 0) {
+      this.noDiscountOnItem = true;
+    }
+    if (this.activeEstimate.tax_rate == 0) {
+      this.noTaxOnItem = true;
+    }
+
+    
+    //item settings
+    //this.activeEstimate.tax_on_item = 0
+    //this.activeEstimate.discount_on_item = 1
+
+    //Bill settings
+    //this.activeEstimate.tax_on_item = 1
+    //this.activeEstimate.discount_on_item = 0
+
+
+    //shipping & adjustment
+    if(this.activeEstimate.shipping_charges){
+      this.noShippingCharges = false
+    }
+    if(this.activeEstimate.adjustment){
+      this.noAdjustment = false
+    }
+    //set balance
+    this.balance = this.activeEstimate.amount;
+  }
+
   editInit(estId) {
     //to view updated or viewed estimate in view page
     // Fetch selected estimate
@@ -253,55 +314,8 @@ export class AddEditEstComponent implements OnInit {
     if(this.activeEstimate){
       this.recentEstListLoading = false;
 
-      //set settingFlags according to edit i.e invoice saved previously
-      if(this.activeEstimate.discount_on_item == 0){
-        this.activeEstimate.percentage_flag = 1;
-        this.noDiscountOnItem = false;
-        this.discountLabel = "On Bill"
-      }else if(this.activeEstimate.discount_on_item == 1){
-        this.noDiscountOnItem = true;
-        this.discountLabel = "On Item"
-      }
+      this.setSettings();
 
-      if(this.activeEstimate.tax_on_item == 0){
-        this.taxtext = "Tax (on Item)"
-        this.noTaxOnItem = true;
-        this.taxLabel = "On Item"
-      }else if(this.activeEstimate.tax_on_item == 1){
-        this.noTaxOnItem = false;
-        this.taxLabel = "On Bill"
-      }
-
-      //if setting of bill but no value added
-      if(this.activeEstimate.discount == 0){
-        this.noDiscountOnItem = true;
-      }
-      if(this.activeEstimate.tax_rate == 0){
-        this.noTaxOnItem = true;
-      }
-
-        //if item and Disabled condition  
-        if(this.activeEstimate.discount_on_item == 2){
-          this.noDiscountOnItem = true;
-          this.discountLabel = "Disabled"
-        }
-
-        if(this.activeEstimate.tax_on_item == 2){
-          this.noTaxOnItem = true;
-          this.taxLabel = "Disabled"
-        }
-
-        //shipping & adjustment
-        if(this.activeEstimate.shipping_charges){
-          this.noShippingCharges = false
-        }
-        if(this.activeEstimate.adjustment){
-          this.noAdjustment = false
-        }
-
-        //set balnce 
-        this.balance = this.activeEstimate.amount;
-        
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
         if (!this.activeEstimate.taxList)
@@ -408,73 +422,13 @@ export class AddEditEstComponent implements OnInit {
           }
         }, 50)
       }
-      
-      
 
     else if(this.recentEstListLoading){
 
     this.estimateService.fetchById([estId]).subscribe((estimate: any) => {
       if (estimate.records !== null) {
         this.activeEstimate = <addEditEstimate>this.estimateService.changeKeysForApi(estimate.records[0])
-
-        //set settingFlags according to edit i.e invoice saved previously
-        if(this.activeEstimate.discount_on_item == 0){
-          this.activeEstimate.percentage_flag = 1;
-          this.noDiscountOnItem = false;
-          this.discountLabel = "On Bill"
-        }else if(this.activeEstimate.discount_on_item == 1){
-          this.noDiscountOnItem = true;
-          this.discountLabel = "On Item"
-        }
-  
-        if(this.activeEstimate.tax_on_item == 0){
-          this.taxtext = "Tax (on Item)"
-          this.noTaxOnItem = true;
-          this.taxLabel = "On Item"
-        }else if(this.activeEstimate.tax_on_item == 1){
-          this.noTaxOnItem = false;
-          this.taxLabel = "On Bill"
-        }
-
-        //if item and Disabled condition  
-        if(this.activeEstimate.discount_on_item == 2){
-          this.noDiscountOnItem = true;
-          this.discountLabel = "Disabled"
-        }
-
-        if(this.activeEstimate.tax_on_item == 2){
-          this.noTaxOnItem = true;
-          this.taxLabel = "Disabled"
-        }
-
-        //if setting of bill but no value added
-        if (this.activeEstimate.discount == 0) {
-          this.noDiscountOnItem = true;
-        }
-        if (this.activeEstimate.tax_rate == 0) {
-          this.noTaxOnItem = true;
-        }
-
-        
-        //item settings
-        //this.activeEstimate.tax_on_item = 0
-        //this.activeEstimate.discount_on_item = 1
-
-        //Bill settings
-        //this.activeEstimate.tax_on_item = 1
-        //this.activeEstimate.discount_on_item = 0
-
-
-        //shipping & adjustment
-        if(this.activeEstimate.shipping_charges){
-          this.noShippingCharges = false
-        }
-        if(this.activeEstimate.adjustment){
-          this.noAdjustment = false
-        }
-        //set balance
-        this.balance = this.activeEstimate.amount;
-
+        this.setSettings();
         
         this.shippingAddressEditMode = true
         this.shippingAddress = this.activeEstimate.shipping_address;     //this shippingAddress is used to show updated shipping address from device
@@ -1133,7 +1087,7 @@ export class AddEditEstComponent implements OnInit {
           this.activeItem.tax_rate = 0
         } else if(this.settings.taxFlagLevel === 0 || this.activeEstimate.tax_on_item === 0){ //when tax on item selected from settings
           if(this.activeItem.discount_amount){
-            this.activeItem.tax_amount = ((this.activeItem.rate - (this.activeItem.rate * this.activeItem.discount/100) * this.activeItem.quantity) * this.activeItem.tax_rate) / (100 + this.activeItem.tax_rate)
+            this.activeItem.tax_amount = ((this.activeItem.rate - (this.activeItem.rate * this.activeItem.discount/100)) * this.activeItem.quantity * this.activeItem.tax_rate) / (100 + this.activeItem.tax_rate)
             this.activeItem.total = (this.activeItem.rate * this.activeItem.quantity) - this.activeItem.discount_amount
           }
         }
@@ -1392,6 +1346,16 @@ export class AddEditEstComponent implements OnInit {
       
     }
   }
+  
+  showBalPaidOnPdf(event){
+    if(event.target.checked === true){
+      this.showBalPaidAmountFlag = true;
+      this.updateSettings();
+    }else{
+      this.showBalPaidAmountFlag = false;
+      this.updateSettings();
+    }
+  }
 
 
   calculateEstimate() {
@@ -1428,7 +1392,7 @@ export class AddEditEstComponent implements OnInit {
           if (isNaN(this.activeEstimate.listItems[i].tax_rate) || this.activeEstimate.listItems[i].tax_rate == 0) {
             this.activeEstimate.listItems[i].tax_rate = 0
           }  //when tax on item selected from settings
-            this.activeEstimate.listItems[i].tax_amount = ((this.activeEstimate.listItems[i].rate - (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].discount / 100) * this.activeEstimate.listItems[i].quantity) * this.activeEstimate.listItems[i].tax_rate) / (100 + this.activeEstimate.listItems[i].tax_rate)
+            this.activeEstimate.listItems[i].tax_amount = ((this.activeEstimate.listItems[i].rate - (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].discount / 100)) * this.activeEstimate.listItems[i].quantity * this.activeEstimate.listItems[i].tax_rate) / (100 + this.activeEstimate.listItems[i].tax_rate)
             if (this.activeEstimate.listItems[i].discount_amount) {
               this.activeEstimate.listItems[i].total = (this.activeEstimate.listItems[i].rate * this.activeEstimate.listItems[i].quantity) - this.activeEstimate.listItems[i].discount_amount
             }else{
@@ -1576,43 +1540,49 @@ export class AddEditEstComponent implements OnInit {
       user.setting.setInvoiceFormat = this.activeEstimate.estimate_number
     }
 
-    localStorage.setItem('user', JSON.stringify(user))
-    this.user = JSON.parse(localStorage.getItem('user'))
-    this.settings = this.user.setting
+    if(this.showBalPaidAmountFlag){
+      user.setting.showBalPaidAmountFlag = true;
+    }else{
+      user.setting.showBalPaidAmountFlag = false;
+    }
 
-    var discountLevelFlag
-    var taxLevelFlag
-    //for discount
-    if(this.activeEstimate.discount_on_item === 0){
-      discountLevelFlag = 0;
-      this.activeEstimate.percentage_flag = 1;
-      this.discountLabel = "On Bill"
-      this.noDiscountOnItem = false;
-    }else if(this.activeEstimate.discount_on_item === 1){
-      discountLevelFlag = 1;
-      this.discountLabel = "On Item"
-      this.noDiscountOnItem = true;
-    }else{
-      discountLevelFlag = 2;
-      this.discountLabel = "Disabled"
-      this.noDiscountOnItem = true;
-    }
-    //for tax
-    if(this.activeEstimate.tax_on_item === 0){
-      taxLevelFlag = 0;
-      this.taxLabel = "On Item"
-      this.noTaxOnItem = true;
-    }else if(this.activeEstimate.tax_on_item === 1){
-      taxLevelFlag = 1;
-      this.taxLabel = "On Bill"
-      this.noTaxOnItem = false;
-    }else{
-      taxLevelFlag = 2;
-      this.taxLabel = "Disabled"
-      this.noTaxOnItem = true;
-    }
-    user.setting.discountFlagLevel = discountLevelFlag;
-    user.setting.taxFlagLevel = taxLevelFlag;
+    // localStorage.setItem('user', JSON.stringify(user))
+    // this.user = JSON.parse(localStorage.getItem('user'))
+    // this.settings = this.user.setting
+
+    // var discountLevelFlag
+    // var taxLevelFlag
+    // //for discount
+    // if(this.activeEstimate.discount_on_item === 0){
+    //   discountLevelFlag = 0;
+    //   this.activeEstimate.percentage_flag = 1;
+    //   this.discountLabel = "On Bill"
+    //   this.noDiscountOnItem = false;
+    // }else if(this.activeEstimate.discount_on_item === 1){
+    //   discountLevelFlag = 1;
+    //   this.discountLabel = "On Item"
+    //   this.noDiscountOnItem = true;
+    // }else{
+    //   discountLevelFlag = 2;
+    //   this.discountLabel = "Disabled"
+    //   this.noDiscountOnItem = true;
+    // }
+    // //for tax
+    // if(this.activeEstimate.tax_on_item === 0){
+    //   taxLevelFlag = 0;
+    //   this.taxLabel = "On Item"
+    //   this.noTaxOnItem = true;
+    // }else if(this.activeEstimate.tax_on_item === 1){
+    //   taxLevelFlag = 1;
+    //   this.taxLabel = "On Bill"
+    //   this.noTaxOnItem = false;
+    // }else{
+    //   taxLevelFlag = 2;
+    //   this.taxLabel = "Disabled"
+    //   this.noTaxOnItem = true;
+    // }
+    // user.setting.discountFlagLevel = discountLevelFlag;
+    // user.setting.taxFlagLevel = taxLevelFlag;
 
     var settings1 = {
       androidSettings: user.setting,

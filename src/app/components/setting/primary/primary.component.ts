@@ -229,6 +229,16 @@ export class PrimaryComponent implements OnInit {
     },error => this.openErrorModal())
   }
 
+  inclTax(event){
+    if(event.target.checked === true){
+      this.settings.taxableFlag = 1;
+    }
+    //exclusive tax
+    else{
+      this.settings.taxableFlag = 0;
+    }
+  }
+
   // Setter Functions
   setDateFormat(format) {
     this.activeSettings.date_format=format
