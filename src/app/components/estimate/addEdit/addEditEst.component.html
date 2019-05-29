@@ -307,7 +307,7 @@
                   <span  class="inline label_span" [ngClass]="{'removeaddLabelBackroundColor':noDiscountOnItem , 'addLabelBackroundColor':!noDiscountOnItem}"
                    (click)="noDiscountOnItem  = !noDiscountOnItem;activeEstimate.percentage_flag=0;
                    activeEstimate.percentage_value=0;activeEstimate.discount=0;
-                   activeEstimate.amount=activeEstimate.gross_amount;calculateInvoice();
+                   activeEstimate.amount=activeEstimate.gross_amount;calculateEstimate();
                    activeEstimate.balance=activeEstimate.amount"
                    >
                     {{settings.discount ? settings.discount : 'Discount'}}+
@@ -413,7 +413,7 @@
                           </a>
                         </li>
                         <li [class.active]="activeEstimate.percentage_flag == 1">
-                          <a (click)="activeEstimate.discount=0.00;activeEstimate.percentage_flag=1;calculateEstimate()">
+                          <a (click)="activeEstimate.discount=0.00;activeEstimate.percentage_flag=1;activeEstimate.percentage_value = 0;calculateEstimate()">
                             Percent (%)
                           </a>
                         </li>
@@ -573,7 +573,8 @@
                   </div>
 
                   <div class="col-6 text-right">
-                    <span class="font-custom-bold price">{{activeEstimate.amount | CurrencyPipe}}</span>
+                    <span *ngIf="activeEstimate.amount" class="font-custom-bold price">{{activeEstimate.amount | CurrencyPipe}}</span>
+                    <span *ngIf="activeEstimate.amount == 0" class="font-custom-bold price">{{activeEstimate.amount}}</span>
                   </div>
                 </div>
 
@@ -583,7 +584,8 @@
                     <span class="bld">{{settings.balance ? settings.balance : 'BAL_LABEL' | translate}}</span>
                   </div>
                   <div class="col-6 text-right">
-                    <span class="bld price">{{balance | CurrencyPipe}}</span>
+                    <span *ngIf="balance" class="bld price">{{balance | CurrencyPipe}}</span>
+                    <span *ngIf="balance == 0" class="bld price">{{balance}}</span>
                   </div>
                 </div>
 
@@ -644,15 +646,15 @@
                             <ul aria-labelledby="dropdownMenuButton2" id="discount_dropdown" class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 1}"
-                                  (click)="activeEstimate.discount_on_item = 1;updateSettings();calculateEstimate()">Discount On Item</button>
+                                  (click)="activeEstimate.discount_on_item = 1;setSettings();calculateEstimate()">Discount On Item</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 0}"
-                                  (click)="activeEstimate.discount_on_item = 0;updateSettings();calculateEstimate()">Discount On Bill</button>
+                                  (click)="activeEstimate.discount_on_item = 0;setSettings();calculateEstimate()">Discount On Bill</button>
                               </li>
                               <li class="dropdown-item">
                                   <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}"
-                                   (click)="activeEstimate.discount_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
+                                   (click)="activeEstimate.discount_on_item = 2;setSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                         </li>
@@ -669,15 +671,15 @@
                             <ul class="dropdown-menu setting_li_bg" aria-labelledby="dropdownMenuButton2" id="discount_dropdown" style="padding: 0px !important;">
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 0}"
-                                  (click)="activeEstimate.tax_on_item = 0;updateSettings();calculateEstimate()">Tax On Item</button>
+                                  (click)="activeEstimate.tax_on_item = 0;setSettings();calculateEstimate()">Tax On Item</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 1}"
-                                  (click)="activeEstimate.tax_on_item = 1;updateSettings();calculateEstimate()">Tax On Bill</button>
+                                  (click)="activeEstimate.tax_on_item = 1;setSettings();calculateEstimate()">Tax On Bill</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 2}"
-                                  (click)="activeEstimate.tax_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
+                                  (click)="activeEstimate.tax_on_item = 2;setSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                           </li>
@@ -700,7 +702,7 @@
                       <div class="col-7">
                           <label class="check">
                               <div class="checkbox default_checkbox">
-                                  <input type="checkbox" [checked]="activeEstimate.showBalPaidAmountFlag"  class="ng-pristine ng-valid ng-touched modal-checkbox">
+                                  <input type="checkbox" [checked]="activeEstimate.showBalPaidAmountFlag" (change)="showBalPaidOnPdf($event)"  class="ng-pristine ng-valid ng-touched modal-checkbox">
                                   <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
                               </div>
                             </label>
