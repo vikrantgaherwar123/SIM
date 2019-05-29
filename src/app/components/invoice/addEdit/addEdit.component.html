@@ -358,7 +358,7 @@
                         <td style="vertical-align: top;" [class.no-border-last]="last">
                           <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" name="itemRate" step="any" tabindex="3"
-                              class="form-control height_40 text_right input_border_color" min=0 [(ngModel)]="activeItem.rate"
+                              class="form-control height_40 text_right input_border_color" [(ngModel)]="activeItem.rate"
                               (keyup)="calculateTotal()" onfocus="this.select()" [ngClass]="{ 'box_red': this.activeItem.rate === null }" required />
                           </div>
                         </td>
@@ -366,8 +366,8 @@
                         *ngIf="activeInvoice.discount_on_item == 1"><!--|| showDiscountRate !==0 && showDiscountRateFlag == true -->
                           <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemDiscountRate" tabindex="4"
-                              class="form-control height_40 text_right input_border_color" min=0 max=100 [(ngModel)]="activeItem.discount"
-                              (keyup)="calculateTotal()" onfocus="this.select()"
+                              class="form-control height_40 text_right input_border_color" [(ngModel)]="activeItem.discount"
+                              (keyup)="calculateTotal()" onfocus="this.select()" (ngModelChange)="dataChanged($event)"
                              />
                               <div class="item_input_symbol">
                                   <div class="icon_color">%</div>
@@ -378,16 +378,15 @@
                         *ngIf="activeInvoice && activeInvoice.tax_on_item === 0"><!-- || showTaxRate!==0 && showTaxRateFlag == true-->
                           <div class="input-group" style="padding: 4px 2px;">
                             <input type="number" name="itemTaxRate" tabindex="5"
-                              class="form-control height_40 text_right input_border_color" min=0 max=100
+                              class="form-control height_40 text_right input_border_color"
                               [(ngModel)]="activeItem.tax_rate" (keyup)="calculateTotal()" onfocus="this.select()"
+                              (ngModelChange)="taxListChanged($event)"
                               />
                               <div class="item_input_symbol">
                                   <div class="icon_color">%</div>
                               </div>
                           </div>
                         </td>
-                        
-
                         <td style="vertical-align: top; position: relative !important;" [class.no-border-last]="last">
                           <div class="form-group" style="padding: 4px 2px;">
                             <input type="number" step="any" class="form-control height_40 text_right input_border_color" readonly
@@ -855,15 +854,15 @@
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                           <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 1}"
-                              (click)="activeInvoice.discount_on_item = 1;setSettings();calculateInvoice()">Discount On Item</button>
+                              (click)="activeInvoice.discount_on_item = 1;updateSettings();calculateInvoice()">Discount On Item</button>
                           </li>
                           <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 0}"
-                              (click)="activeInvoice.discount_on_item = 0;setSettings();calculateInvoice()">Discount On Bill</button>
+                              (click)="activeInvoice.discount_on_item = 0;updateSettings();calculateInvoice()">Discount On Bill</button>
                           </li>
                           <li class="dropdown-item">
                               <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.discount_on_item === 2}"
-                               (click)="activeInvoice.discount_on_item = 2;setSettings();calculateInvoice()">Disabled</button>
+                               (click)="activeInvoice.discount_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
                           </li>
                         </ul>
                     </li>
@@ -880,15 +879,15 @@
                         <ul class="dropdown-menu setting_li_bg" style="padding: 0px !important;">
                           <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 0}"
-                              (click)="activeInvoice.tax_on_item = 0;setSettings();calculateInvoice()">Tax On Item</button>
+                              (click)="activeInvoice.tax_on_item = 0;updateSettings();calculateInvoice()">Tax On Item</button>
                           </li>
                           <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 1}"
-                              (click)="activeInvoice.tax_on_item = 1;setSettings();calculateInvoice()">Tax On Bill</button>
+                              (click)="activeInvoice.tax_on_item = 1;updateSettings();calculateInvoice()">Tax On Bill</button>
                           </li>
                           <li class="dropdown-item">
                             <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeInvoice.tax_on_item === 2}"
-                              (click)="activeInvoice.tax_on_item = 2;setSettings();calculateInvoice()">Disabled</button>
+                              (click)="activeInvoice.tax_on_item = 2;updateSettings();calculateInvoice()">Disabled</button>
                           </li>
                         </ul>
                       </li>
@@ -954,7 +953,7 @@
             </div>
           </div>
           <div *ngIf="recentInvoiceList.length == 0" style="text-align: center;"><!--invoiceList.length<1 && !invoiceListLoader-->
-            <img src="assets/images/no_todays_invoice.png" class="no_todays_img">
+            <img src="assets/images/no_todays_invoice.png" class="no_todays_invoice">
         </div>
         </div>
         <!-- ends -->

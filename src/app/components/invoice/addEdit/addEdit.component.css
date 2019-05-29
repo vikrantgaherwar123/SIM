@@ -534,3 +534,8 @@ pointer-events: none;
 .item:hover{
   background-color: #d6e8fa;
 }
+.no_todays_invoice{
+  width: 258px;
+  margin-top: 55px;
+  margin-left: 40px;
+}
