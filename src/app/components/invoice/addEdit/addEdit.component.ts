@@ -1201,7 +1201,7 @@ export class AddEditComponent implements OnInit {
     }
     else  {
 
-    if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value) {
+    if(this.activeItem.quantity !== 0 && this.activeItem.rate && this.addItem.value) {
       // this.activeItem.product_name = this.addItem.value;
       var tempCompare = ''
       var duplicateProduct = false;

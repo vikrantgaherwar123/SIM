@@ -647,15 +647,15 @@
                             <ul aria-labelledby="dropdownMenuButton2" id="discount_dropdown" class="dropdown-menu setting_li_bg" style="padding: 0px 0px 0px 0px !important;">
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 1}"
-                                  (click)="activeEstimate.discount_on_item = 1;setSettings();calculateEstimate()">Discount On Item</button>
+                                  (click)="activeEstimate.discount_on_item = 1;updateSettings();calculateEstimate()">Discount On Item</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 0}"
-                                  (click)="activeEstimate.discount_on_item = 0;setSettings();calculateEstimate()">Discount On Bill</button>
+                                  (click)="activeEstimate.discount_on_item = 0;updateSettings();calculateEstimate()">Discount On Bill</button>
                               </li>
                               <li class="dropdown-item">
                                   <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.discount_on_item === 2}"
-                                   (click)="activeEstimate.discount_on_item = 2;setSettings();calculateEstimate()">Disabled</button>
+                                   (click)="activeEstimate.discount_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                         </li>
@@ -672,15 +672,15 @@
                             <ul class="dropdown-menu setting_li_bg" aria-labelledby="dropdownMenuButton2" id="discount_dropdown" style="padding: 0px !important;">
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 0}"
-                                  (click)="activeEstimate.tax_on_item = 0;setSettings();calculateEstimate()">Tax On Item</button>
+                                  (click)="activeEstimate.tax_on_item = 0;updateSettings();calculateEstimate()">Tax On Item</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 1}"
-                                  (click)="activeEstimate.tax_on_item = 1;setSettings();calculateEstimate()">Tax On Bill</button>
+                                  (click)="activeEstimate.tax_on_item = 1;updateSettings();calculateEstimate()">Tax On Bill</button>
                               </li>
                               <li class="dropdown-item">
                                 <button class="setting_drop dropdown-toggle" [ngClass]="{'disableTaxDiscount':activeEstimate.tax_on_item === 2}"
-                                  (click)="activeEstimate.tax_on_item = 2;setSettings();calculateEstimate()">Disabled</button>
+                                  (click)="activeEstimate.tax_on_item = 2;updateSettings();calculateEstimate()">Disabled</button>
                               </li>
                             </ul>
                           </li>

@@ -978,7 +978,7 @@ export class AddEditEstComponent implements OnInit {
    } 
    else {
    
-   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
+   if(this.activeItem.quantity && this.activeItem.rate && this.addItem.value !=="") {
     var tempCompare = ''
     var duplicateProduct = false;
     for (var p = 0; p < this.productList.length; p++) {
@@ -1336,12 +1336,14 @@ export class AddEditEstComponent implements OnInit {
     if(event.target.checked === true){
       this.includeTax = true
       this.activeEstimate.taxableFlag = 1;
+      this.updateSettings();
       this.calculateEstimate();
     }
     //exclusive tax
     else{
       this.includeTax = false;
       this.activeEstimate.taxableFlag = 0;
+      this.updateSettings();
       this.calculateEstimate();
       
     }
@@ -1550,39 +1552,39 @@ export class AddEditEstComponent implements OnInit {
     // this.user = JSON.parse(localStorage.getItem('user'))
     // this.settings = this.user.setting
 
-    // var discountLevelFlag
-    // var taxLevelFlag
-    // //for discount
-    // if(this.activeEstimate.discount_on_item === 0){
-    //   discountLevelFlag = 0;
-    //   this.activeEstimate.percentage_flag = 1;
-    //   this.discountLabel = "On Bill"
-    //   this.noDiscountOnItem = false;
-    // }else if(this.activeEstimate.discount_on_item === 1){
-    //   discountLevelFlag = 1;
-    //   this.discountLabel = "On Item"
-    //   this.noDiscountOnItem = true;
-    // }else{
-    //   discountLevelFlag = 2;
-    //   this.discountLabel = "Disabled"
-    //   this.noDiscountOnItem = true;
-    // }
-    // //for tax
-    // if(this.activeEstimate.tax_on_item === 0){
-    //   taxLevelFlag = 0;
-    //   this.taxLabel = "On Item"
-    //   this.noTaxOnItem = true;
-    // }else if(this.activeEstimate.tax_on_item === 1){
-    //   taxLevelFlag = 1;
-    //   this.taxLabel = "On Bill"
-    //   this.noTaxOnItem = false;
-    // }else{
-    //   taxLevelFlag = 2;
-    //   this.taxLabel = "Disabled"
-    //   this.noTaxOnItem = true;
-    // }
-    // user.setting.discountFlagLevel = discountLevelFlag;
-    // user.setting.taxFlagLevel = taxLevelFlag;
+    var discountLevelFlag
+    var taxLevelFlag
+    //for discount
+    if(this.activeEstimate.discount_on_item === 0){
+      discountLevelFlag = 0;
+      this.activeEstimate.percentage_flag = 1;
+      this.discountLabel = "On Bill"
+      this.noDiscountOnItem = false;
+    }else if(this.activeEstimate.discount_on_item === 1){
+      discountLevelFlag = 1;
+      this.discountLabel = "On Item"
+      this.noDiscountOnItem = true;
+    }else{
+      discountLevelFlag = 2;
+      this.discountLabel = "Disabled"
+      this.noDiscountOnItem = true;
+    }
+    //for tax
+    if(this.activeEstimate.tax_on_item === 0){
+      taxLevelFlag = 0;
+      this.taxLabel = "On Item"
+      this.noTaxOnItem = true;
+    }else if(this.activeEstimate.tax_on_item === 1){
+      taxLevelFlag = 1;
+      this.taxLabel = "On Bill"
+      this.noTaxOnItem = false;
+    }else{
+      taxLevelFlag = 2;
+      this.taxLabel = "Disabled"
+      this.noTaxOnItem = true;
+    }
+    user.setting.discountFlagLevel = discountLevelFlag;
+    user.setting.taxFlagLevel = taxLevelFlag;
 
     var settings1 = {
       androidSettings: user.setting,
