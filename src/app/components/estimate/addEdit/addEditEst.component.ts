@@ -934,10 +934,11 @@ export class AddEditEstComponent implements OnInit {
     
     if(this.activeItem.product_name === undefined || this.activeItem.product_name ===""){
       this.ifProductEmpty = true;
-    }else if(this.activeItem.quantity ===null || this.activeItem.quantity === 0){
+      this.toastr.error('Product name cannot be empty', 'Failure');
+    }else if(this.activeItem.quantity === null || this.activeItem.quantity === 0){
       this.toastr.error('Quantity can not be 0 or empty', 'Failure');
     }
-    if(this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
+    else if(this.activeItem.rate === null || this.activeItem.rate === 0){ //replace by this  if( this.activeItem.rate ===null || this.activeItem.rate === ""){
       this.toastr.error('Rate can not be 0 or empty', 'Failure');
     }
 
@@ -977,7 +978,7 @@ export class AddEditEstComponent implements OnInit {
    } 
    else {
    
-   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value) {
+   if(this.activeItem.quantity && this.activeItem.rate && this.addItem.value !=="") {
     var tempCompare = ''
     var duplicateProduct = false;
     for (var p = 0; p < this.productList.length; p++) {
@@ -985,9 +986,12 @@ export class AddEditEstComponent implements OnInit {
         tempCompare = this.productList[p].prodName.toLowerCase().replace(/ /g, '');
       }
       // If Name is same,
-      if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
-        duplicateProduct = true;
+      if(this.addItem.value){
+        if (tempCompare === this.addItem.value.toLowerCase().replace(/ /g, '')) {
+          duplicateProduct = true;
+        }
       }
+      
     }
     if(duplicateProduct === false){
       this.saveProduct({ ...this.activeItem, prodName: this.addItem.value }, (product) => {
@@ -1316,7 +1320,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList){
+    if(this.clientList && this.clientList.length !== 0){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }
@@ -1332,12 +1336,14 @@ export class AddEditEstComponent implements OnInit {
     if(event.target.checked === true){
       this.includeTax = true
       this.activeEstimate.taxableFlag = 1;
+      this.updateSettings();
       this.calculateEstimate();
     }
     //exclusive tax
     else{
       this.includeTax = false;
       this.activeEstimate.taxableFlag = 0;
+      this.updateSettings();
       this.calculateEstimate();
       
     }
@@ -1546,39 +1552,39 @@ export class AddEditEstComponent implements OnInit {
     // this.user = JSON.parse(localStorage.getItem('user'))
     // this.settings = this.user.setting
 
-    // var discountLevelFlag
-    // var taxLevelFlag
-    // //for discount
-    // if(this.activeEstimate.discount_on_item === 0){
-    //   discountLevelFlag = 0;
-    //   this.activeEstimate.percentage_flag = 1;
-    //   this.discountLabel = "On Bill"
-    //   this.noDiscountOnItem = false;
-    // }else if(this.activeEstimate.discount_on_item === 1){
-    //   discountLevelFlag = 1;
-    //   this.discountLabel = "On Item"
-    //   this.noDiscountOnItem = true;
-    // }else{
-    //   discountLevelFlag = 2;
-    //   this.discountLabel = "Disabled"
-    //   this.noDiscountOnItem = true;
-    // }
-    // //for tax
-    // if(this.activeEstimate.tax_on_item === 0){
-    //   taxLevelFlag = 0;
-    //   this.taxLabel = "On Item"
-    //   this.noTaxOnItem = true;
-    // }else if(this.activeEstimate.tax_on_item === 1){
-    //   taxLevelFlag = 1;
-    //   this.taxLabel = "On Bill"
-    //   this.noTaxOnItem = false;
-    // }else{
-    //   taxLevelFlag = 2;
-    //   this.taxLabel = "Disabled"
-    //   this.noTaxOnItem = true;
-    // }
-    // user.setting.discountFlagLevel = discountLevelFlag;
-    // user.setting.taxFlagLevel = taxLevelFlag;
+    var discountLevelFlag
+    var taxLevelFlag
+    //for discount
+    if(this.activeEstimate.discount_on_item === 0){
+      discountLevelFlag = 0;
+      this.activeEstimate.percentage_flag = 1;
+      this.discountLabel = "On Bill"
+      this.noDiscountOnItem = false;
+    }else if(this.activeEstimate.discount_on_item === 1){
+      discountLevelFlag = 1;
+      this.discountLabel = "On Item"
+      this.noDiscountOnItem = true;
+    }else{
+      discountLevelFlag = 2;
+      this.discountLabel = "Disabled"
+      this.noDiscountOnItem = true;
+    }
+    //for tax
+    if(this.activeEstimate.tax_on_item === 0){
+      taxLevelFlag = 0;
+      this.taxLabel = "On Item"
+      this.noTaxOnItem = true;
+    }else if(this.activeEstimate.tax_on_item === 1){
+      taxLevelFlag = 1;
+      this.taxLabel = "On Bill"
+      this.noTaxOnItem = false;
+    }else{
+      taxLevelFlag = 2;
+      this.taxLabel = "Disabled"
+      this.noTaxOnItem = true;
+    }
+    user.setting.discountFlagLevel = discountLevelFlag;
+    user.setting.taxFlagLevel = taxLevelFlag;
 
     var settings1 = {
       androidSettings: user.setting,

@@ -102,105 +102,11 @@ export class PrimaryComponent implements OnInit {
   saveSettings() {
     var setting = this.appSettings
     setting.androidSettings = this.activeSettings
+    
 
     this.settingService.add(setting).subscribe((response: any) => {
       if (response.status == 200) {
         var cookie = JSON.parse(localStorage.getItem('user'))
-
-        // if (this.activeSettings.numberFormat === "###,###,###.00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = this.activeSettings.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = this.activeSettings.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern1'
-
-        // } else if (this.activeSettings.numberFormat === "##,##,##,###.00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = this.activeSettings.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = this.activeSettings.commaSeperator
-        //   //$locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   //$locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern2'
-
-        // } else if (this.activeSettings.numberFormat === "###.###.###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = this.activeSettings.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = this.activeSettings.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern1'
-
-        // } else if (this.activeSettings.numberFormat === "##.##.##.###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = this.activeSettings.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = this.activeSettings.commaSeperator
-        //   //$locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   //$locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern2'
-
-        // } else if (this.activeSettings.numberFormat === "### ### ###,00") {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = this.activeSettings.decimalSeperator
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = this.activeSettings.commaSeperator
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern1'
-
-        // } else {
-        //   $locale.NUMBER_FORMATS.DECIMAL_SEP = "."
-        //   $locale.NUMBER_FORMATS.GROUP_SEP = ","
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].gSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].lgSize = 3
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].macFrac = 0
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].maxFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minFrac = 2
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].minInt = 1
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negPre = "- \u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].negSuf = ""
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posPre = "\u00a4"
-        //   $locale.NUMBER_FORMATS.PATTERNS[1].posSuf = ""
-        //   this.settingscurrency_pattern = 'pattern1'
-        // }
 
         if (!this.activeSettings.dateDDMMYY) {
           // $locale.DATETIME_FORMATS.mediumDate = "MM-dd-yyyy"
@@ -227,6 +133,16 @@ export class PrimaryComponent implements OnInit {
         // notifications.showError({ message: response.data.message, hideDelay: 1500, hide: true })
       }
     },error => this.openErrorModal())
+  }
+
+  inclTax(event){
+    if(event.target.checked === true){
+      this.activeSettings.taxableFlag = 1;
+    }
+    //exclusive tax
+    else{
+      this.activeSettings.taxableFlag = 0;
+    }
   }
 
   // Setter Functions

@@ -276,9 +276,6 @@
                   <div class="text-right">
                     <div *ngIf="activeInv.percentage_flag == 1">
                       <span class="price">({{activeInv.percentage_value | number:'1.2-2'}} %)</span>&nbsp;
-                      <span class="price">{{activeInv.discount | number:'1.2-2' | CurrencyPipe}}</span>
-                    </div>
-                    <div *ngIf="!activeInv.discountFlag == 1">
                       <span class="price">{{activeInv.discount | CurrencyPipe}}</span>
                     </div>
                   </div>
@@ -358,7 +355,7 @@
               
                <!-- inclusive tax -->
               <div *ngIf="activeInv.taxableFlag === 1 && taxable" class="row mx-0">
-                  <div class="row mx-0 col-12 cal_label_padding">
+                  <!-- <div class="row mx-0 col-12 cal_label_padding">
                       <div class="col-6 text-left">
                           <span class="font-custom-bold">
                               Taxable :
@@ -368,7 +365,7 @@
                           <span
                             class="font-custom-bold price">{{(taxable) | CurrencyPipe}}</span>
                         </div>
-                  </div>
+                  </div> -->
                   <div *ngIf="activeInv.taxableFlag === 1 && taxable" class="row mx-0 col-12">
                     <div *ngFor="let item of activeInv.listItems" class="row col-12 cal_label_padding">
                       <div *ngIf="item.tax_rate" class="col-6 text-left">
