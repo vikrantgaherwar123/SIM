@@ -941,7 +941,7 @@ export class AddEditEstComponent implements OnInit {
       this.toastr.error('Rate can not be 0 or empty', 'Failure');
     }
 
-    if(this.activeItem.quantity !==null &&  this.activeItem.rate !== 0 && this.activeItem.unique_identifier &&
+    if(this.activeItem.quantity !==null &&  this.activeItem.rate && this.activeItem.unique_identifier &&
        this.activeItem.rate !==null ){
       if (uid == null) {
         //if no tax item and still tax is there then make it 0
@@ -977,7 +977,7 @@ export class AddEditEstComponent implements OnInit {
    } 
    else {
    
-   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value !=="") {
+   if(this.activeItem.quantity !== 0 && this.activeItem.rate !== 0 && this.addItem.value) {
     var tempCompare = ''
     var duplicateProduct = false;
     for (var p = 0; p < this.productList.length; p++) {
