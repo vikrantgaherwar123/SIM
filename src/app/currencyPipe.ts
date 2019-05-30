@@ -31,7 +31,7 @@ export class CurrencyPipe implements PipeTransform {
       });
       
       value = formatter.format(value);
-      value = value.replace(/\€/g,"")
+      value = value.slice(0, -1);
       console.log(value);
       
     }else if(this.settings.numberFormat == '##.##.##.###,00'){
@@ -42,7 +42,7 @@ export class CurrencyPipe implements PipeTransform {
       });
       
       value = formatter.format(value);
-      value = value.replace(/\₹/g,"")
+      value = value.substr(1);
       var map = { ',': '.', '.': ',' };
       value = value.replace(/[,.]/g, function (k) {
         return map[k];
@@ -57,7 +57,7 @@ export class CurrencyPipe implements PipeTransform {
       });
       
       value = formatter.format(value);
-      value = value.replace(/\€/g,"")
+      value = value.slice(0, -1);
       
       console.log(value);
       
@@ -78,7 +78,7 @@ export class CurrencyPipe implements PipeTransform {
       });
       
       value = formatter.format(value);
-      value = value.replace(/\₹/g,"")
+      value = value.substr(1);
     }
     return this.myCurrencySymbol +' ' +value
   }
