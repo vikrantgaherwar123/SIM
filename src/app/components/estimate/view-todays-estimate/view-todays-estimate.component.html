@@ -145,30 +145,30 @@
                       </td>
                       <td [class.no-border-last]="last" style="vertical-align: initial;">
                         <div class="text-right">
-                          {{item.rate | number:'1.2-2'}}
+                          {{item.rate | CurrencyPipe}}
                         </div>
                       </td>
                       <td *ngIf="activeEst.assignDiscountFlag == 1" [class.no-border-last]="last" style="vertical-align: initial;">
                         <div  class="text-right">
-                          {{item.discountAmt | number:'1.2-2'}}<br>
+                          {{item.discountAmt | CurrencyPipe}}<br>
                           <div class="amount_text_div">
-                              <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> 
+                              <span class="item_percent_text">{{item.discountRate | CurrencyPipe}}</span> 
                               <span class="item_percent_icon">%</span>
                           </div>
                         </div>
                       </td>
                       <td *ngIf="activeEst.assignTaxFlag == 0" [class.no-border-last]="last" style="vertical-align: initial;">
                         <div  class="text-right">
-                          {{item.taxAmount | number:'1.2-2'}}<br>
+                          {{item.taxAmount | CurrencyPipe}}<br>
                           <div class="amount_text_div">
-                              <span class="item_percent_text">{{item.taxRate | number:'1.2-2'}}</span> 
+                              <span class="item_percent_text">{{item.taxRate | CurrencyPipe}}</span> 
                               <span class="item_percent_icon">%</span>
                           </div>
                         </div>
                       </td>
                       <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                         <div class="text-right">
-                          {{item.price | number:'1.2-2'}}
+                          {{item.price | CurrencyPipe}}
                         </div>
                       </td>
                     </tr>
@@ -226,10 +226,10 @@
                   <div class="col-7">
                     <div class="text-right">
                       <div *ngIf="activeEst.discountFlag == 0">
-                        {{activeEst.discount | number:'1.2-2'}}
+                        {{activeEst.discount | CurrencyPipe}}
                       </div>
                       <div *ngIf="activeEst.discountFlag == 1">
-                        {{ activeEst.discount | number:'1.2-2'}}
+                        {{ activeEst.discount | CurrencyPipe}}
                       </div>
                     </div>
                   </div>
@@ -239,11 +239,11 @@
                 <div class="row mx-0" *ngIf="activeEst.taxrate > 0">
                   <div class="col-4 discount-tax-label">
                     <div class="inline font-custom" style="text-align: left;vertical-align: bottom;">{{settings.taxLable ? settings.taxLable : 'Tax'}}</div>
-                    <div class="inline font-custom">({{activeEst.taxrate | number:'1.1-2'}} %)</div>
+                    <div class="inline font-custom">({{activeEst.taxrate | CurrencyPipe}} %)</div>
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                      {{activeEst.taxAmt | number:'1.1-2'}}
+                      {{activeEst.taxAmt | CurrencyPipe}}
                     </div>
                   </div>
                 </div>

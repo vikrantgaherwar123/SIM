@@ -174,30 +174,33 @@
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.rate | number:'1.2-2'}}
+                        {{item.rate | CurrencyPipeNoSymbol}}
                       </div>
                     </td>
                     <td *ngIf="activeEstimate.discount_on_item == 1" [class.no-border-last]="last"> <!--|| setDiscountOnItem === true-->
                       <div class="text_right">
-                        {{item.discount_amount | number:'1.2-2'}}<br>
+                        <span *ngIf="item.discount_amount == 0">{{item.discount_amount}}</span>
+                        <span>{{item.discount_amount | CurrencyPipeNoSymbol}}</span><br>
                         <div class="amount_text_div">
-                            <span class="item_percent_text">{{item.discount | number:'1.2-2'}}</span> 
+                            <span class="item_percent_text">{{item.discount}}</span> 
                             <span class="item_percent_icon">%</span>
                           </div>
                       </div>
                     </td>
                     <td *ngIf="activeEstimate.tax_on_item === 0" [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.tax_amount | number:'1.2-2'}}<br>
+                        <span *ngIf="item.tax_amount == 0">{{item.tax_amount}}</span>
+                        <span>{{item.tax_amount | CurrencyPipeNoSymbol}}</span>
+                        <br>
                         <div class="amount_text_div">
-                            <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                            <span class="item_percent_text">{{item.tax_rate}}</span> 
                             <span class="item_percent_icon">%</span>
                           </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
                       <div class="text_right">
-                        {{item.total | number:'1.2-2'}}
+                        {{item.total | CurrencyPipeNoSymbol}}
                       </div>
                     </td>
                     <td [class.no-border-last]="last">
@@ -387,7 +390,7 @@
                     </div>
                     <div class="col-6 text-right">
                       <span *ngIf="activeEstimate.gross_amount" class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
-                      <span *ngIf="activeEstimate.gross_amount == 0" class="font-custom-bold price">{{activeEstimate.gross_amount}}</span>
+                      <span *ngIf="activeEstimate.gross_amount == 0" class="font-custom-bold price">{{activeEstimate.gross_amount | CurrencyPipe}}</span>
                     </div>
                   </div>
                 </div>
@@ -435,14 +438,14 @@
                           required onfocus="this.select()" [(ngModel)]="activeEstimate.discount" (keyup)="calculateEstimate()" />
                         <div class="input_symbol">
                           <div *ngIf="activeEstimate.percentage_flag == 0" class="icon_color">
-                            <span>{{mysymbols}}</span>
+                            <span></span>
                           </div>
                           <div *ngIf="activeEstimate.percentage_flag == 1" class="icon_color">
                             <span>%</span>
                           </div>
                         </div>
 
-                        <span class="form-control text_center height_40 dis_tax_label" >{{activeEstimate.discount | number:'1.2-2'}}</span>
+                        <span class="form-control text_center height_40 dis_tax_label" >{{activeEstimate.discount | CurrencyPipe}}</span>
                         <input type="number" id="discount_input" name="discount_input"
                           class="form-control text_center height_40 dis_tax_label" [(ngModel)]="activeEstimate.discount"
                           (keyup)="calculateEstimate()" readonly hidden style="background-color: white;" />
@@ -476,7 +479,7 @@
                           <input type="number" id="tax_input" name="tax_inputs" class="col-8 form-control text_center height_40 dis_tax_label"
                           placeholder="00.00" [(ngModel)]="activeEstimate.tax_amount"  (keyup)="calculateEstimate()" hidden readonly
                           />
-                        <span class="col-8 form-control text_center height_40 dis_tax_label" >{{activeEstimate.tax_amount | number:'1.2-2'}}</span>
+                        <span class="col-8 form-control text_center height_40 dis_tax_label" >{{activeEstimate.tax_amount | CurrencyPipe}}</span>
                         <div class="input-group-addon pr-0 remove-button">
                           <div class="addon selector">
                           </div>
@@ -502,7 +505,7 @@
                             step="any" min="0.00" max="100" class="mrg_right_20 form-control col-3"
                             [(ngModel)]="tax.percentage" (keyup)="calculateEstimate()" onfocus="this.select()"
                           />
-                          <span class="col-9 form-control text_center height_40 dis_tax_label" >{{tax.calculateValue | number:'1.2-2'}}</span>
+                          <span class="col-9 form-control text_center height_40 dis_tax_label" >{{tax.calculateValue | CurrencyPipe}}</span>
                           <input type="number" id="tax_input_list{{taxIndex}}"  name="tax_Listinput" class="col-9 form-control text_center height_40 dis_tax_label" 
                              [(ngModel)]="tax.calculateValue" (keyup)="calculateEstimate()" hidden readonly
                           />
@@ -576,7 +579,7 @@
 
                   <div class="col-6 text-right">
                     <span *ngIf="activeEstimate.amount" class="font-custom-bold price">{{activeEstimate.amount | CurrencyPipe}}</span>
-                    <span *ngIf="activeEstimate.amount == 0" class="font-custom-bold price">{{activeEstimate.amount}}</span>
+                    <span *ngIf="activeEstimate.amount == 0" class="font-custom-bold price">{{activeEstimate.amount | CurrencyPipe}}</span>
                   </div>
                 </div>
 
@@ -696,10 +699,10 @@
                                   <input type="checkbox" [checked]="activeEstimate.taxableFlag"  (change)="inclTax($event)" class="ng-pristine ng-valid ng-touched modal-checkbox">
                                   <span class="checkmark side_setting_checkmark default_checkbox_span" style="top: 1px !important;"></span>
                               </div>
-                            </label>
+                          </label>
                       </div>
                     </div>
-                    <div class="row mrg_top_14">
+                    <!-- <div class="row mrg_top_14">
                       <div class="col-5">Show Balance and Paid Amount on PDF</div>
                       <div class="col-7">
                           <label class="check">
@@ -710,7 +713,7 @@
                             </label>
                       </div>
             
-                    </div>
+                    </div> -->
               </div>
           </div>
           <!-- settings -->
@@ -965,7 +968,7 @@
                   <input type="number" 
                   class="form-control add-client-input-custom popup_input_height"  [ngModel]="activeItem.total" name="total"
                   (keyup)="calculateTotal()" placeholder="Amount" onfocus="this.select()" hidden readonly />
-                  <span  class="form-control add-client-input-custom popup_input_height amount_span">{{activeItem.total | number:'1.2-2' }}</span>
+                  <span  class="form-control add-client-input-custom popup_input_height amount_span">{{activeItem.total | CurrencyPipeNoSymbol}}</span>
                   <div class="popup_input_symbol">
                       <div class="popup_icon_color" style="margin-left: -8px;">{{mysymbols}}</div>
                   </div>

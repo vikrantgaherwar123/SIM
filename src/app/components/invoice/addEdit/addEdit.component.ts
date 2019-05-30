@@ -15,6 +15,7 @@ import { response, client, invoice, terms, setting, product, addEditEstimate, re
 import { generateUUID, setStorage } from '../../../globalFunctions'
 
 import { InvoiceService } from '../../../services/invoice.service'
+import { CurrencySettingService } from '../../../currency-setting.service'
 import { EstimateService } from '../../../services/estimate.service'
 
 import { ClientService } from '../../../services/client.service'
@@ -147,6 +148,7 @@ export class AddEditComponent implements OnInit {
     private productService: ProductService,
     private store: Store<AppState>,
     private datePipe: DatePipe,
+    private currencyService : CurrencySettingService,
     private titleService: Title
   ) {
     this.toasterService = toasterService; 
@@ -239,7 +241,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    
+    // this.mysymbols = this.currencyService.currencySetting();
     //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -1147,7 +1149,7 @@ export class AddEditComponent implements OnInit {
       unit: product.unit,
       rate: product.rate,
       tax_rate: product.taxRate,
-      discount: 0.00,
+      // discount: 0.00,
     }
     this.calculateTotal()
   }

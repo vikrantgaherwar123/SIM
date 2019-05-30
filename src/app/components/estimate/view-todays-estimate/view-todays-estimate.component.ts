@@ -70,6 +70,7 @@ export class ViewTodaysEstimateComponent implements OnInit {
         }
       })
     }
+    
   }
 
   fetchClients(){

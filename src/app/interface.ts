@@ -76,6 +76,7 @@ export interface setting {
   receiptNo: string
   savePDFOnDrive: boolean
   savePDFOnDropBox: boolean
+  showBalPaidAmountFlag:boolean      
   setInvoiceFormat: string
   shipping: string
   shippingDetails: string

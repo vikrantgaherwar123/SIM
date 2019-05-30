@@ -145,6 +145,14 @@ export class PrimaryComponent implements OnInit {
     }
   }
 
+  showBalPaidOnPdf(event){
+    if(event.target.checked === true){
+      this.activeSettings.showBalPaidAmountFlag = true;
+    }else{
+      this.activeSettings.showBalPaidAmountFlag = false;
+    }
+  }
+
   // Setter Functions
   setDateFormat(format) {
     this.activeSettings.date_format=format

@@ -57,6 +57,8 @@ import { EmailService } from './services/email.service';
 import { HttpModule } from '@angular/http';
 import { Title }     from '@angular/platform-browser';
 import { CurrencyPipe } from './currencyPipe';
+import { CurrencyPipeNoSymbol } from './currencyPipeNoSymbol';
+
 import { ToastrModule } from 'ngx-toastr';
 // search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -105,6 +107,7 @@ export const MY_FORMATS = {
 @NgModule({
   declarations: [
     CurrencyPipe,
+    CurrencyPipeNoSymbol,
     AppComponent,
     HeaderComponent,
     LoginComponent,
@@ -140,7 +143,8 @@ export const MY_FORMATS = {
     AppRoutingModule,
     ToastrModule.forRoot(
       {
-        timeOut: 100000000,
+        timeOut: 3000,
+        preventDuplicates: false,
       }
     ),// ToastrModule added
     TranslateModule.forRoot({
