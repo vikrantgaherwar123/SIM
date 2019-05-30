@@ -1320,7 +1320,7 @@ export class AddEditEstComponent implements OnInit {
   }
 
   getClientName(id) {
-    if(this.clientList){
+    if(this.clientList && this.clientList.length !== 0){
     return this.clientList.filter(client => client.uniqueKeyClient == id)[0].name
     }
   }
