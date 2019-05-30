@@ -1,310 +1,195 @@
 <div class="main_bg">
-<div class="row main-wrapper">
-  <div class="col-12 bg_12">
-    <div class="back" style="height:95px">
-      <form class="shadow form-horizontal back edit-setting form_hg" #f="ngForm" enctype="multipart/form-data" name="userForm">
-        <div class="row">
-          <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
-            <span class="step_text">Step 1
-              <span class="span_text">This is dummy text</span>
-            </span>
-            <div class="row steps_div">
-              <div class="verticle_line"></div>
-              <div class="col-4 col_3_label">
-                <span class="client_label">Choose <br />Client Or <br />Product</span>
-              </div>
-              <div class="col-7" style="padding: 2px 0px 0px 37px;">
-                <div class="row taxradio" style="margin-top: 15px;">
-                  <input type="radio" id="clientbtn" name="fileType" checked (click)="showClient()">
-                  <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold" style="width: 95px;">
-                    <i class="fa fa-check-circle"></i> <span>Client</span>
-                  </label>
-
-                  <input type="radio" id="productbtn" name="fileType" (click)="showProduct()">
-                  <label for="productbtn" class="taxonbill fontsize13 border-left-right-none font-custom-bold" style="width: 92px;">
-                    <span><i class="fa fa-check-circle" style="margin-left: 10px;"></i></span> <span>Product</span>
-                  </label>
-                </div>
-              </div>
-
-            </div>
-          </div>
-          <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
-            <span class="step_text">Step 2
-              <span class="span_text">This is dummy text</span>
-              <div class="row steps_div" *ngIf="showClientDiv == true">
+  <div class="row main-wrapper">
+    <div class="col-12 bg_12">
+      <div class="back" style="height:95px">
+        <form class="shadow form-horizontal back edit-setting form_hg" #f="ngForm" enctype="multipart/form-data" name="userForm">
+          <div class="row">
+            <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
+              <span class="step_text">Step 1
+                <span class="span_text">This is dummy text</span>
+              </span>
+              <div class="row steps_div">
                 <div class="verticle_line"></div>
-                <div class="col-3 col_3_label" style="padding: 14px 3px 6px 13px;">
-                  <span class="client_label">Choose File Format</span>
+                <div class="col-4 col_3_label">
+                  <span class="client_label">Choose <br />Client Or <br />Product</span>
                 </div>
-                <div class="col-9 row" style="padding: 15px 0px 0px 21px;">
-                    <a href="../../../assets/excel_files/clients.csv" download  class="change_bg download_btn btn btnd pull-left">
+                <div class="col-7" style="padding: 2px 0px 0px 37px;">
+                  <div class="row taxradio" style="margin-top: 15px;">
+                    <input type="radio" id="clientbtn" name="fileType" checked (click)="showClient()">
+                    <label for="clientbtn" class="taxonitem fontsize13 border-right-none font-custom-bold" style="width: 95px;">
+                      <i class="fa fa-check-circle"></i> <span>Client</span>
+                    </label>
+  
+                    <input type="radio" id="productbtn" name="fileType" (click)="showProduct()">
+                    <label for="productbtn" class="taxonbill fontsize13 border-left-right-none font-custom-bold" style="width: 92px;">
+                      <span><i class="fa fa-check-circle" style="margin-left: 10px;"></i></span> <span>Product</span>
+                    </label>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+            <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
+              <span class="step_text">Step 2
+                <span class="span_text">This is dummy text</span>
+                <div class="row steps_div" *ngIf="showClientDiv == true">
+                  <div class="verticle_line"></div>
+                  <div class="col-3 col_3_label" style="padding: 14px 3px 6px 13px;">
+                    <span class="client_label">Choose File Format</span>
+                  </div>
+                  <div class="col-9 row" style="padding: 15px 0px 0px 21px;">
+                      <a href="../../../assets/excel_files/clients.csv" download  class="change_bg download_btn btn btnd pull-left">
+                        <img src="assets/images/settings/csv.png" class="file_icon">CSV
+                      </a>
+                      <a href="../../../assets/excel_files/clients.xls" download class="change_bg download_btn btn btnd  pull-left">
+                        <img src="assets/images/settings/xls.png" class="file_icon">XLS
+                      </a>
+                      <a href="../../../assets/excel_files/clients.xlsx" download class="change_bg download_btn btn btnd pull-left">
+                        <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
+                      </a>
+                  </div>
+                </div>
+                <div class="row steps_div" *ngIf="showProductDiv == true">
+                  <div class="verticle_line"></div>
+                  <div class="col-3 col_3_label">
+                    <span class="client_label">Choose File Format</span>
+                  </div>
+                  <div class="col-9 row" style="padding: 13px 2px 2px 21px">
+                      <a href="../../../assets/excel_files/products.csv" download class="change_bg download_btn btn btnd pull-left">
                       <img src="assets/images/settings/csv.png" class="file_icon">CSV
                     </a>
-                    <a href="../../../assets/excel_files/clients.xls" download class="change_bg download_btn btn btnd  pull-left">
+                    <a href="../../../assets/excel_files/products.xls" download class="change_bg download_btn btn btnd pull-left">
                       <img src="assets/images/settings/xls.png" class="file_icon">XLS
                     </a>
-                    <a href="../../../assets/excel_files/clients.xlsx" download class="change_bg download_btn btn btnd pull-left">
+                    <a href="../../../assets/excel_files/products.xlsx" download class="change_bg download_btn btn btnd pull-left">
                       <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
                     </a>
+                  </div>
                 </div>
-              </div>
-              <div class="row steps_div" *ngIf="showProductDiv == true">
+              </span>
+            </div>
+            <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
+              <span class="step_text">Step 3
+                <span class="span_text">This is dummy text</span>
+              </span>
+              <div class="row steps_div">
                 <div class="verticle_line"></div>
-                <div class="col-3 col_3_label">
-                  <span class="client_label">Choose File Format</span>
+                <div class="col-4 col_3_label" style="padding:14px 3px 6px 13px">
+                  <span class="client_label">Drag File<br/> To Upload</span>
                 </div>
-                <div class="col-9 row" style="padding: 13px 2px 2px 21px">
-                    <a href="../../../assets/excel_files/products.csv" download class="change_bg download_btn btn btnd pull-left">
-                    <img src="assets/images/settings/csv.png" class="file_icon">CSV
-                  </a>
-                  <a href="../../../assets/excel_files/products.xls" download class="change_bg download_btn btn btnd pull-left">
-                    <img src="assets/images/settings/xls.png" class="file_icon">XLS
-                  </a>
-                  <a href="../../../assets/excel_files/products.xlsx" download class="change_bg download_btn btn btnd pull-left">
-                    <img src="assets/images/settings/xlsx.png" class="file_icon">XLSX
-                  </a>
+                <div class="col-2" style="padding: 19px 2px 2px 24px;">
+                  <span class="client_label">Or</span>
+                </div>
+                <div class="col-4" style="padding: 11px 2px 2px 30px">
+                  <label style="padding: 9px !important;" class="clear_btn change_bg btn btn-raised save_btn btn-custom-1 width25btn ml-2">Upload
+                    <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
+                  </label> 
                 </div>
               </div>
-            </span>
-          </div>
-          <div class="col-3" [ngClass]="{'give_opacity' : make_blur_disable}">
-            <span class="step_text">Step 3
-              <span class="span_text">This is dummy text</span>
-            </span>
-            <div class="row steps_div">
-              <div class="verticle_line"></div>
-              <div class="col-4 col_3_label" style="padding:14px 3px 6px 13px">
-                <span class="client_label">Drag File<br/> To Upload</span>
-              </div>
-              <div class="col-2" style="padding: 19px 2px 2px 24px;">
-                <span class="client_label">Or</span>
-              </div>
-              <div class="col-4" style="padding: 11px 2px 2px 30px">
-                <label style="padding: 9px !important;" class="clear_btn change_bg btn btn-raised save_btn btn-custom-1 width25btn ml-2">Upload
-                  <input type="file" style="display:none" (change)="incomingfile($event);"  placeholder="Upload file" accept=".xlsx, .xls, .csv" required />
-                </label> 
+            </div>
+            <div class="col-3" [ngClass]="{'give_opacity':make_blur_disable == false}">
+              <span class="step_text">Step 4
+                <span class="span_text">This is dummy text </span>
+              </span>
+              <div class="row steps_div" style="width: 322px;">
+                <div class="verticle_line"></div>
+                <div style="padding: 11px 2px;">
+                  <button type="button" (click)="clearData()"
+                    class="clear_btn change_bg btn btn-raised save_btn btn-custom-1 width25btn pull-right ml-2"
+                    >
+                    Clear
+                  </button>
+                  <button type="button" style="width: 94px;" (click)="save(f.valid,0)" type="button" id="saveClientBtn1"
+                    class="btn save_btn btn-raised width25btn pull-right ml-2">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-3" [ngClass]="{'give_opacity':make_blur_disable == false}">
-            <span class="step_text">Step 4
-              <span class="span_text">This is dummy text </span>
-            </span>
-            <div class="row steps_div" style="width: 322px;">
-              <div class="verticle_line"></div>
-              <div style="padding: 11px 2px;">
-                <button type="button" (click)="clearData()"
-                  class="clear_btn change_bg btn btn-raised save_btn btn-custom-1 width25btn pull-right ml-2"
-                  >
-                  Clear
-                </button>
-                <button type="button" style="width: 94px;" (click)="save(f.valid,0)" type="button" id="saveClientBtn1"
-                  class="btn save_btn btn-raised width25btn pull-right ml-2">
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
- 
-  <div class="col-12 client_div">
-    <!-- clients records table -->
-    <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
-      <thead>
-        <tr>
-          <td class="client_td"><input type="text" class="form-control td_header" readonly />
-          </td>
-          <td style="width: 45px;"><input type="text"  class="form-control td_header" value="Sr.no" readonly /></td>
-          <td style="width: 190px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
-          <td style="width: 126px;"><input type="text" class="form-control td_header" value="Contact Person" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 1" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 2" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 3" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Business Id" readonly /></td>
-          <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Detail" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Contact No" readonly /></td>
-          <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Email Id" readonly /></td>
-          <td style="width: 134px;"><input type="text" class="form-control td_header" value="Shipping Address" readonly /></td>
-        </tr>
-      </thead>
-        <tbody>
-          <tr *ngFor="let item of clientRecords; let in = index">
-            <td class="number_tag number_tag_cross" >
-              <img class="hg_20 img_hover"  (click)="remove(in)" src="assets/images/grey_cross.png">
-            </td>
-            <td style="width: 20px;" class="number_tag td_inputs">{{in+1}}</td>
-            <td>
-              <input type="text" name="name-{{in}}" class="form-control box-red td_inputs" [ngClass]="{ 'box-grey': item.name }"
-                onfocus="this.select()" [(ngModel)]="item.name" required /> </td>
-            <td>
-              <input type="text" name="contactPersonName-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.contactPersonName" />
-            </td>
-            <td>
-              <input type="text" name="addressLine1-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.addressLine1" />
-            </td>
-            <td>
-              <input type="text" name="addressLine2-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.addressLine2" />
-            </td>
-            <td>
-              <input type="text" name="addressLine3-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.addressLine3" />
-            </td>
-            <td>
-              <input type="text" name="businessId-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.businessId" />
-            </td>
-            <td>
-              <input type="text" name="businessDetail-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.businessDetail" />
-            </td>
-            <td>
-              <input type="text" name="number-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.number" />
-            </td>
-            <td>
-              <input type="text" name="email-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.email" />
-            </td>
-            <td>
-              <input type="text" name="shippingAddress-{{in}}" class="form-control td_inputs" onfocus="this.select()"
-                [(ngModel)]="item.shippingAddress" />
-            </td>
-          </tr>
-          
-        </tbody>
-        <div>
-          </div>
-    </table>
-    <button *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> New row</button>
-    <!-- products record table -->
-    <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
-      <thead>
-        <tr>
-          <td class="product_td"><input type="text" class="form-control td_header" readonly />
-          </td>
-          <td style="width: 58px;"><input type="text"  class="form-control td_header" value="Sr.no" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Product Name" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Unit" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Description" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Rate" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Tax Rate" readonly /></td>
-          <td><input type="text" class="form-control td_header" value="Product Code" readonly /></td>
-        </tr>
-      </thead>
-        <tbody>
-          <tr *ngFor="let item of productRecords; let i = index">
-            <td class="number_tag product_cross">
-              <img class="hg_20" style="text-align: center;" (click)="productRemove(i)" src="assets/images/grey_cross.png">
-            </td>
-            <td class="number_tag">
-              <span>{{i+1}}</span>
-            </td>
-            <td>
-                <input type="text" name="prodName-{{i}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.prodName }"
-                onfocus="this.select()" [(ngModel)]="item.prodName" required />
-            </td>
-            <td>
-              <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.unit" />
-            </td>
-            <td>
-              <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.discription" />
-            </td>
-            <td>
-                <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.rate" />
-            </td>
-            <td>
-                <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.taxRate" />
-            </td>
-            <td>
-                <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.productCode" />
-            </td>
-            
-          </tr>
-        </tbody>
-    </table>
-    <button *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> &nbsp;Add</button>
-    <!-- dropdown -->
-    <div class="row">
-      <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
+   
+    <div class="col-12 client_div">
+      <!-- clients records table -->
+      <table width="100%" *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="table">
         <thead>
           <tr>
-            <td class="td_empty"><input type="text" class="form-control td_header" readonly />
+            <td class="client_td"><input type="text" class="form-control td_header" readonly />
             </td>
-            <td style="width: 45px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
-            <td style="width: 180px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
+            <td style="width: 45px;"><input type="text"  class="form-control td_header" value="Sr.no" readonly /></td>
+            <td style="width: 190px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
             <td style="width: 126px;"><input type="text" class="form-control td_header" value="Contact Person" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 1" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 2" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 3" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Id" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 1" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 2" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Address Line 3" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Business Id" readonly /></td>
             <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Detail" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Contact No" readonly /></td>
-            <td style="width: 120px;"><input type="text" class="form-control td_header" value="Email Id" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Contact No" readonly /></td>
+            <td style="width: 120px;"><input type="text"  class="form-control td_header" value="Email Id" readonly /></td>
             <td style="width: 134px;"><input type="text" class="form-control td_header" value="Shipping Address" readonly /></td>
           </tr>
         </thead>
           <tbody>
-            <tr *ngFor="let item of fieldArray; let in = index">
-              <td class="number_tag number_tag_dropdown">
-                <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
+            <tr *ngFor="let item of clientRecords; let in = index">
+              <td class="number_tag number_tag_cross" >
+                <img class="hg_20 img_hover"  (click)="remove(in)" src="assets/images/grey_cross.png">
               </td>
-              <td style="width: 10px;" class="number_tag">{{in+1}}</td>
+              <td style="width: 20px;" class="number_tag td_inputs">{{in+1}}</td>
               <td>
-                <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }"
-                  onfocus="this.select()" required /> </td>
+                <input type="text" name="name-{{in}}" class="form-control box-red td_inputs" [ngClass]="{ 'box-grey': item.name }"
+                  onfocus="this.select()" [(ngModel)]="item.name" required /> </td>
               <td>
-                <input type="text" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()"
-                   />
-              </td>
-              <td>
-                <input type="text" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()"
-                   />
+                <input type="text" name="contactPersonName-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.contactPersonName" />
               </td>
               <td>
-                <input type="text" name="addressLine2-{{in}}" class="form-control" onfocus="this.select()"
-                 />
+                <input type="text" name="addressLine1-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.addressLine1" />
               </td>
               <td>
-                <input type="text" name="addressLine3-{{in}}" class="form-control" onfocus="this.select()"
-                   />
+                <input type="text" name="addressLine2-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.addressLine2" />
               </td>
               <td>
-                <input type="text" name="businessId-{{in}}" class="form-control" onfocus="this.select()"
-                  />
+                <input type="text" name="addressLine3-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.addressLine3" />
               </td>
               <td>
-                <input type="text" name="businessDetail-{{in}}" class="form-control" onfocus="this.select()"
-                   />
+                <input type="text" name="businessId-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.businessId" />
               </td>
               <td>
-                <input type="text" name="number-{{in}}" class="form-control" onfocus="this.select()"
-                 />
+                <input type="text" name="businessDetail-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.businessDetail" />
               </td>
               <td>
-                <input type="text" name="email-{{in}}" class="form-control" onfocus="this.select()"
-                   />
+                <input type="text" name="number-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.number" />
               </td>
               <td>
-                <input type="text" name="shippingAddress-{{in}}" class="form-control" onfocus="this.select()"
-                   />
+                <input type="text" name="email-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.email" />
+              </td>
+              <td>
+                <input type="text" name="shippingAddress-{{in}}" class="form-control td_inputs" onfocus="this.select()"
+                  [(ngModel)]="item.shippingAddress" />
               </td>
             </tr>
+            
           </tbody>
+          <div>
+            </div>
       </table>
-      <!-- empty product table -->
-      <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
+      <button *ngIf="showClientsTable && file !== undefined || addClientManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> New row</button>
+      <!-- products record table -->
+      <table width="100%" *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="table">
         <thead>
           <tr>
-            <td style="width: 58px;background-color: white;font-family: helvetica_regular !important;"><input type="text" class="form-control td_header" readonly />
+            <td class="product_td"><input type="text" class="form-control td_header" readonly />
             </td>
-            <td style="width: 58px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
+            <td style="width: 58px;"><input type="text"  class="form-control td_header" value="Sr.no" readonly /></td>
             <td><input type="text" class="form-control td_header" value="Product Name" readonly /></td>
             <td><input type="text" class="form-control td_header" value="Unit" readonly /></td>
             <td><input type="text" class="form-control td_header" value="Description" readonly /></td>
@@ -314,113 +199,216 @@
           </tr>
         </thead>
           <tbody>
-            <tr *ngFor="let item of fieldArray; let i = index">
-              <td class="number_tag" style="padding: 4px 4px 0px 18px !important;">
-                <img class="hg_20" (click)="productRemove(i)" src="assets/images/grey_cross.png">
+            <tr *ngFor="let item of productRecords; let i = index">
+              <td class="number_tag product_cross">
+                <img class="hg_20" style="text-align: center;" (click)="productRemove(i)" src="assets/images/grey_cross.png">
               </td>
               <td class="number_tag">
                 <span>{{i+1}}</span>
               </td>
               <td>
                   <input type="text" name="prodName-{{i}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.prodName }"
-                  onfocus="this.select()" required />
+                  onfocus="this.select()" [(ngModel)]="item.prodName" required />
               </td>
               <td>
-                <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()"/>
+                <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.unit" />
               </td>
               <td>
-                <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()" />
+                <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.discription" />
               </td>
               <td>
-                  <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" />
+                  <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.rate" />
               </td>
               <td>
-                  <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()"/>
+                  <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.taxRate" />
               </td>
               <td>
-                  <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()"/>
+                  <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()" [(ngModel)]="item.productCode" />
               </td>
+              
             </tr>
           </tbody>
-     
       </table>
-    </div>
-    <div *ngIf="make_blur_disable == false" class="transparent_div"></div>
-  <div *ngIf="make_blur_disable == false" class="row" style="margin-top: -39%;">
-<<<<<<< HEAD
-    <div class="col-5 image-upload">
-        <input type="file" id="file-input" class="file_input" (change)="incomingfile($event)">
-        <div class="drop_icon_div" style="margin: 0 auto;">
-            <img src="assets/images/upload_o.png" style="height: 60px;"/>
-          </div>
-=======
-    <div id="dropContainer" class="col-5 image-upload">
-        <label for="file-input" class="file-upload dropzone-container dropzone-drop-area" style="margin: 45px auto 15px 38px;">
-            <div class="drop_icon_div" style="margin: 0 auto;">
+      <button *ngIf="showProductsTable && file !==undefined || addProductManually == true" class="btn save_btn btn-raised pull-right ml-2 add_btn add_btn" style="float: left;margin-bottom: 20px;" type="button" (click)="addFieldValues()"><i class="fa fa-plus"></i> &nbsp;Add</button>
+      <!-- dropdown -->
+      <div class="row">
+        <table *ngIf="showClientDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
+          <thead>
+            <tr>
+              <td class="td_empty"><input type="text" class="form-control td_header" readonly />
+              </td>
+              <td style="width: 45px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
+              <td style="width: 180px;"><input type="text" class="form-control td_header" value="Organization Name" readonly /></td>
+              <td style="width: 126px;"><input type="text" class="form-control td_header" value="Contact Person" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 1" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 2" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Address Line 3" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Id" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Business Detail" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Contact No" readonly /></td>
+              <td style="width: 120px;"><input type="text" class="form-control td_header" value="Email Id" readonly /></td>
+              <td style="width: 134px;"><input type="text" class="form-control td_header" value="Shipping Address" readonly /></td>
+            </tr>
+          </thead>
+            <tbody>
+              <tr *ngFor="let item of fieldArray; let in = index">
+                <td class="number_tag number_tag_dropdown">
+                  <img class="hg_20"  (click)="remove(in)" src="assets/images/grey_cross.png">
+                </td>
+                <td style="width: 10px;" class="number_tag">{{in+1}}</td>
+                <td>
+                  <input type="text" name="name-{{in}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.name }"
+                    onfocus="this.select()" required /> </td>
+                <td>
+                  <input type="text" name="contactPersonName-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+                <td>
+                  <input type="text" name="addressLine1-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+                <td>
+                  <input type="text" name="addressLine2-{{in}}" class="form-control" onfocus="this.select()"
+                   />
+                </td>
+                <td>
+                  <input type="text" name="addressLine3-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+                <td>
+                  <input type="text" name="businessId-{{in}}" class="form-control" onfocus="this.select()"
+                    />
+                </td>
+                <td>
+                  <input type="text" name="businessDetail-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+                <td>
+                  <input type="text" name="number-{{in}}" class="form-control" onfocus="this.select()"
+                   />
+                </td>
+                <td>
+                  <input type="text" name="email-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+                <td>
+                  <input type="text" name="shippingAddress-{{in}}" class="form-control" onfocus="this.select()"
+                     />
+                </td>
+              </tr>
+            </tbody>
+        </table>
+        <!-- empty product table -->
+        <table *ngIf="showProductDiv == true && make_blur_disable == false" width="100%" class="table" style="position: absolute;">
+          <thead>
+            <tr>
+              <td style="width: 58px;background-color: white;font-family: helvetica_regular !important;"><input type="text" class="form-control td_header" readonly />
+              </td>
+              <td style="width: 58px;"><input type="text" class="form-control td_header" value="Sr.no" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Product Name" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Unit" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Description" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Rate" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Tax Rate" readonly /></td>
+              <td><input type="text" class="form-control td_header" value="Product Code" readonly /></td>
+            </tr>
+          </thead>
+            <tbody>
+              <tr *ngFor="let item of fieldArray; let i = index">
+                <td class="number_tag" style="padding: 4px 4px 0px 18px !important;">
+                  <img class="hg_20" (click)="productRemove(i)" src="assets/images/grey_cross.png">
+                </td>
+                <td class="number_tag">
+                  <span>{{i+1}}</span>
+                </td>
+                <td>
+                    <input type="text" name="prodName-{{i}}" class="form-control box-red" [ngClass]="{ 'box-grey': item.prodName }"
+                    onfocus="this.select()" required />
+                </td>
+                <td>
+                  <input type="text" name="unit-{{i}}" class="form-control" onfocus="this.select()"/>
+                </td>
+                <td>
+                  <input type="text" name="discription-{{i}}" class="form-control" onfocus="this.select()" />
+                </td>
+                <td>
+                    <input type="text" name="rate-{{i}}" class="form-control" onfocus="this.select()" />
+                </td>
+                <td>
+                    <input type="text" name="taxRate-{{i}}" class="form-control" onfocus="this.select()"/>
+                </td>
+                <td>
+                    <input type="text" name="productCode-{{i}}" class="form-control" onfocus="this.select()"/>
+                </td>
+              </tr>
+            </tbody>
+       
+        </table>
+      </div>
+      <div *ngIf="make_blur_disable == false" class="transparent_div"></div>
+    <div *ngIf="make_blur_disable == false" class="row" style="margin-top: -39%;">
+      <div class="col-5 image-upload">
+          <input type="file" id="file-input" class="file_input" (change)="incomingfile($event)">
+          <div class="drop_icon_div" style="margin: 0 auto;">
               <img src="assets/images/upload_o.png" style="height: 60px;"/>
             </div>
-          <input type="file" id="file-input" style="padding: 38px 0px 0px 175px;" (change)="incomingfile($event)"
-            placeholder="Upload file" accept=".xlsx, .xls, .csv"
-            required style="display:none"/>
-            <br />
-        </label>
->>>>>>> 0b80e2562e287204730e68318545e1cadf80d614
-        <div class="drag_txt">Drag File To Upload</div>
-        
+          <div class="drag_txt">Drag File To Upload</div>
+          
+      </div>
+     
+      <div class="col-2" style="margin-top: -36px;margin-left: 50px;text-align: center">
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <span class="or">or</span>
+      </div>
+      <div class="col-5" style="padding-top:40px;margin-left: -148px;text-align: center;">
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
+          <button class="save add_manually save_btn btn-raised center" type="button" (click)="openManuallyAddField()">Add Manually</button>
+      </div>
     </div>
-   
-    <div class="col-2" style="margin-top: -36px;margin-left: 50px;text-align: center">
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <span class="or">or</span>
+          
     </div>
-    <div class="col-5" style="padding-top:40px;margin-left: -148px;text-align: center;">
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-      <div class="clearfix">&nbsp;</div>
-        <button class="save add_manually save_btn btn-raised center" type="button" (click)="openManuallyAddField()">Add Manually</button>
-    </div>
+    
   </div>
-        
   </div>
   
-</div>
-</div>
-
-
-<!-- Error MODAL starts -->
-<div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
-data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog mod_dialog">
-  <div class="modal-content mod_content">
-    <div class="modal-header mod_header">
-      <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
-    </div>
-    <div class="modal-body">
-      <h3 class="title">Connection Lost !</h3>
-      <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
-        !!!</p>
-    </div>
-    <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
-      <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
-        data-dismiss="modal" aria-label="Close">
-        OK
-      </button>
-
+  
+  <!-- Error MODAL starts -->
+  <div id="errormessage" class="modal fade" role="dialog" aria-labelledby="clientFormLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog mod_dialog">
+    <div class="modal-content mod_content">
+      <div class="modal-header mod_header">
+        <img class="center" src="assets/images/connection_lost.png" alt="logo" class="center error_logo">
+      </div>
+      <div class="modal-body">
+        <h3 class="title">Connection Lost !</h3>
+        <p class="error_logo error_text">Make sure your wifi or cellular data is turned on and try again
+          !!!</p>
+      </div>
+      <div class="modal-footer mod_footer" style=" padding: 9px 23px 20px 10px !important;">
+        <button type="button" class="mod_close_btn btn save_btn btn-raised width25btn center"
+          data-dismiss="modal" aria-label="Close">
+          OK
+        </button>
+  
+      </div>
     </div>
   </div>
-</div>
-</div>
-<!-- Error MODAL ends -->
+  </div>
+  <!-- Error MODAL ends -->
+  

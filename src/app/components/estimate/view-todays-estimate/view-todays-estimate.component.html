@@ -299,7 +299,7 @@
                 </div>
   
                 <!-- inclusive tax -->
-                <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0 cal_label_padding">
+                <!-- <div *ngIf="activeEst.taxableFlag === 1 && activeEst.assignTaxFlag !== 0" class="row mx-0 cal_label_padding">
                   <div class="row mx-0 col-12 cal_label_padding">
                       <div class="col-6 text-left">
                           <span class="font-custom-bold">
@@ -333,7 +333,7 @@
                             class="font-custom-bold price">{{activeEst.taxAmt | CurrencyPipe}}</span>
                         </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </form>
