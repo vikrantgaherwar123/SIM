@@ -446,8 +446,8 @@
               </div>
 
               <!-- inclusive tax -->
-              <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
-                <!-- <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
+              <!-- <div *ngIf="activeEst.taxableFlag === 1" class="row mx-0" style="padding: 6.5px 0px;">
+                <div class="row mx-0 col-12" style="padding: 6.5px 0px;">
                     <div class="col-6 text-left">
                         <span class="font-custom-bold">
                             Taxable :
@@ -457,7 +457,7 @@
                         <span
                           class="font-custom-bold price">{{(taxable) | CurrencyPipe}}</span>
                       </div>
-                </div> -->
+                </div>
                 <div *ngFor="let item of activeEst.alstQuotProduct" class="row mx-0 col-12" style="padding: 6.5px 0px;">
                     <div *ngIf="item.taxRate" class="col-6 text-left">
                         <span class="font-custom-bold">
@@ -480,7 +480,7 @@
                           class="font-custom-bold price">{{activeEst.taxAmt | CurrencyPipe}}</span>
                       </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </form>
