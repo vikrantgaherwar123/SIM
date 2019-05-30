@@ -191,30 +191,30 @@
                     </td>
                     <td [class.no-border-last]="last" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.rate | number:'1.2-2'}}
+                        {{item.rate | CurrencyPipeNoSymbol}}
                       </div>
                     </td>
                     <td *ngIf="activeInv.discount_on_item == 1"  [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.discount_on_item == 1-->
                       <div class="text_right">
-                        {{item.discount_amount | number:'1.2-2'}}<br>
+                        {{item.discount_amount | CurrencyPipeNoSymbol}}<br>
                         <div class="amount_text_div">
-                          <span class="item_percent_text">{{item.discountRate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_text">{{item.discountRate | CurrencyPipeNoSymbol}}</span> 
                           <span class="item_percent_icon">%</span>
                         </div>
                       </div>
                     </td>
                     <td *ngIf="activeInv.tax_on_item == 0" [class.no-border-last]="last" style="vertical-align: initial;"> <!--activeInv.tax_on_item == 0-->
                       <div class="text_right">
-                        {{item.tax_amount | number:'1.2-2'}}<br>
+                        {{item.tax_amount | CurrencyPipeNoSymbol}}<br>
                         <div class="amount_text_div">
-                          <span class="item_percent_text">{{item.tax_rate | number:'1.2-2'}}</span> 
+                          <span class="item_percent_text">{{item.tax_rate | CurrencyPipeNoSymbol}}</span> 
                           <span class="item_percent_icon">%</span>
                         </div>
                       </div>
                     </td>
                     <td [class.no-border-last]="last" class="last_td" style="vertical-align: initial;">
                       <div class="text_right">
-                        {{item.price | number:'1.2-2'}}
+                        {{item.price | CurrencyPipeNoSymbol}}
                       </div>
                     </td>
                   </tr>
@@ -268,17 +268,17 @@
                 <div class="col-5 discount-tax-label">
                   <span style="text-align: left;vertical-align: bottom;"
                     class="inline">(-){{settings.discount ? settings.discount : 'Discount'}}</span>
-                  <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
+                  <!-- <div *ngIf="activeInv.percentage_flag == 0" class="inline font-custom">
                     ({{activeInv.discount | CurrencyPipe}})
-                  </div>
+                  </div> -->
                 </div>
                 <div class="col-7">
                   <div class="text-right">
                     <div *ngIf="activeInv.percentage_flag == 1">
-                      <span class="price">({{activeInv.percentage_value | number:'1.2-2'}} %)</span>&nbsp;
-                      <span class="price">{{activeInv.discount | number:'1.2-2' | CurrencyPipe}}</span>
+                      <span class="price">({{activeInv.percentage_value}} %)</span>&nbsp;
+                      <span class="price">{{activeInv.discount | CurrencyPipe}}</span>
                     </div>
-                    <div *ngIf="!activeInv.discountFlag == 1">
+                    <div *ngIf="activeInv.percentage_flag == 0">
                       <span class="price">{{activeInv.discount | CurrencyPipe}}</span>
                     </div>
                   </div>
@@ -292,7 +292,7 @@
                 </div>
                 <div class="col-8 ">
                   <div class="text-right">
-                  ({{activeInv.tax_rate | number:'1.2-2'}} %)
+                  ({{activeInv.tax_rate}} %)
                     {{activeInv.tax_amount | CurrencyPipe}}
                   </div>
                 </div>
@@ -307,7 +307,7 @@
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                          ({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)
+                          ({{activeInv.taxList[index].percentage}} %)
                         {{activeInv.taxList[index].calculateValue | CurrencyPipe}}
                       </div>
                     </div>

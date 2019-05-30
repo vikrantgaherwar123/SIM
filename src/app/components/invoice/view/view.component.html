@@ -330,7 +330,7 @@
                   <div class="col-7">
                     <div class="text-right">
                       <div *ngIf="!activeInv.discountFlag == 0">
-                        {{activeInv.percentageValue | number:'1.1-2'}}
+                        {{activeInv.percentageValue}}
                       </div>
                       <div  class="price" *ngIf="!activeInv.discountFlag == 1">
                         
@@ -348,7 +348,7 @@
                   </div>
                   <div class="col-8 ">
                     <div class="text-right">
-                        ({{activeInv.tax_rate | number:'1.1-2'}} %)
+                        ({{activeInv.tax_rate}} %)
                       {{activeInv.tax_amount | CurrencyPipe}}
                     </div>
                   </div>
@@ -362,7 +362,7 @@
                     </div>
                     <div class="col-8 ">
                       <div class="text-right">
-                        ({{activeInv.taxList[index].percentage | number:'1.1-2'}} %)
+                        ({{activeInv.taxList[index].percentage}} %)
                         {{activeInv.taxList[index].calculateValue | CurrencyPipe}}
                       </div>
                     </div>
@@ -390,8 +390,7 @@
                   </div>
                   <div class="col-8">
                     <div class="text-right">
-                      {{activeInv.shipping_charges | CurrencyPipe}}
-                      {{activeInv.adjustment | number:'1.1-2'}}
+                      {{activeInv.adjustment | CurrencyPipe}}
                     </div>
                   </div>
                 </div>

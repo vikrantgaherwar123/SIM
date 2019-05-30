@@ -2,11 +2,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CONSTANTS } from './constants';
 
 
-@Pipe({name: 'CurrencyPipe',
+@Pipe({name: 'CurrencyPipeNoSymbol',
 pure: true})
-export class CurrencyPipe implements PipeTransform {
+export class CurrencyPipeNoSymbol implements PipeTransform {
   public settings: any
-  myCurrencySymbol
+  mysymbols
 
   transform(value: string): string {
     return this.currencyPattern(value);
@@ -17,12 +17,12 @@ export class CurrencyPipe implements PipeTransform {
     if(value){
     this.settings = JSON.parse(localStorage.getItem('user')).setting
 
-    if (this.settings.currencyText) {
-        this.myCurrencySymbol = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
-    }
-    else {
-        this.myCurrencySymbol = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
-    }
+    // if (this.settings.currencyText) {
+    //     this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
+    // }
+    // else {
+    //     this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
+    // }
     if(this.settings.numberFormat == '###.###.###,00'){
 
       var formatter = new Intl.NumberFormat('de-DE', {
@@ -80,7 +80,7 @@ export class CurrencyPipe implements PipeTransform {
       value = formatter.format(value);
       value = value.replace(/\₹/g,"")
     }
-    return this.myCurrencySymbol +' ' +value
+    return value
   }
 
 }

@@ -241,7 +241,7 @@ export class AddEditComponent implements OnInit {
 
   // Initialisation functions
   ngOnInit() {
-    this.mysymbols = this.currencyService.currencySetting();
+    // this.mysymbols = this.currencyService.currencySetting();
     //fetch settings when user comes to this component
     this.user = JSON.parse(localStorage.getItem('user'))
     this.settings = this.user.setting
@@ -744,12 +744,12 @@ export class AddEditComponent implements OnInit {
     //  this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.currencyName == this.settings.currencyInText)[0].currencyCode;
 
     // Currency Dropdown
-    // if (settings.currencyText) {
-    //   this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
-    // }
-    // else {
-    //   this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
-    // }
+    if (settings.currencyText) {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyName;
+    }
+    else {
+      this.mysymbols = this.CONST.COUNTRIES.filter(symbole => symbole.countryName == this.settings.country)[0].currencyCode;
+    }
     if (settings) {
         this.activeInvoice.tax_on_item = 2
         this.activeInvoice.discount_on_item = 2
